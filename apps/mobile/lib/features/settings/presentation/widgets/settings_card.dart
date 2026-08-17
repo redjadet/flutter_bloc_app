@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SettingsOption<T> {
   const SettingsOption({required this.label, required this.value});
@@ -21,7 +21,7 @@ class SettingsCard<T> extends StatelessWidget {
   final ValueChanged<T> onSelect;
 
   @override
-  Widget build(final BuildContext context) => CommonCard(
+  Widget build(BuildContext context) => CommonCard(
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -50,7 +50,7 @@ class _SettingsTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return PlatformAdaptive.listTile(
       context: context,

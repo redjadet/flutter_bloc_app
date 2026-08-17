@@ -50,8 +50,8 @@ class OfflineFirstProfileRepository
       // In-flight coalescing: concurrent callers share one refresh.
       unawaited(
         _refreshAndCache().catchError((
-          final Object error,
-          final StackTrace st,
+          Object error,
+          StackTrace st,
         ) {
           AppLogger.error(
             'OfflineFirstProfileRepository background refresh failed',
@@ -82,7 +82,7 @@ class OfflineFirstProfileRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     AppLogger.info(
       'OfflineFirstProfileRepository.processOperation: no-op for profile',
     );
@@ -107,7 +107,7 @@ class OfflineFirstProfileRepository
     await _saveProfileToCache(profile);
   }
 
-  Future<void> _saveProfileToCache(final ProfileUser profile) async {
+  Future<void> _saveProfileToCache(ProfileUser profile) async {
     try {
       await _cacheRepository.saveProfile(profile);
     } on Exception catch (error, stackTrace) {

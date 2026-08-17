@@ -1,9 +1,9 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_state.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OrderBookPanel extends StatelessWidget {
   const OrderBookPanel({
@@ -23,17 +23,15 @@ class OrderBookPanel extends StatelessWidget {
   final int askFlex;
   final RealtimeMarketSideTab? compactSide;
 
-  static double _maxQty(final List<OrderBookLevel> rows) {
+  static double _maxQty(List<OrderBookLevel> rows) {
     if (rows.isEmpty) {
       return 1;
     }
-    return rows
-        .map((final e) => e.quantity)
-        .reduce((final a, final b) => a > b ? a : b);
+    return rows.map((e) => e.quantity).reduce((a, b) => a > b ? a : b);
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     final double maxBid = _maxQty(bids);
@@ -42,11 +40,11 @@ class OrderBookPanel extends StatelessWidget {
     final bool compact = compactSide != null;
 
     Widget column(
-      final String title,
-      final List<OrderBookLevel> rows,
-      final Color accent,
-      final int flex,
-      final double maxQty,
+      String title,
+      List<OrderBookLevel> rows,
+      Color accent,
+      int flex,
+      double maxQty,
     ) {
       final Widget content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +86,7 @@ class OrderBookPanel extends StatelessWidget {
               padding: EdgeInsets.zero,
               physics: const ClampingScrollPhysics(),
               itemCount: rows.length,
-              itemBuilder: (final _, final i) {
+              itemBuilder: (_, i) {
                 final OrderBookLevel r = rows[i];
                 final double depth = maxQty > 0
                     ? (r.quantity / maxQty).clamp(0.0, 1.0)

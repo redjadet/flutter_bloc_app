@@ -3,7 +3,7 @@ part of 'session_lifecycle_coordinator.dart';
 extension _SessionLifecycleCoordinatorSession
     on SessionLifecycleCoordinatorImpl {
   Future<void> onSignOutCompletedBody({
-    required final AuthProviderKind provider,
+    required AuthProviderKind provider,
   }) async {
     final Future<void>? inFlight = _onSignOutCompletedInFlight;
     if (inFlight != null) {
@@ -45,8 +45,8 @@ extension _SessionLifecycleCoordinatorSession
   }
 
   Future<void> _clearLocalSessionData({
-    required final AuthProviderKind provider,
-    required final SessionLocalCleanupReason reason,
+    required AuthProviderKind provider,
+    required SessionLocalCleanupReason reason,
   }) async {
     final SessionLocalDataCleanup? cleanup = _localSessionDataCleanup;
     if (cleanup == null) {
@@ -58,8 +58,8 @@ extension _SessionLifecycleCoordinatorSession
   }
 
   Future<void> invalidateSessionBody({
-    required final AuthProviderKind provider,
-    required final SessionInvalidationReason reason,
+    required AuthProviderKind provider,
+    required SessionInvalidationReason reason,
   }) async {
     if (_invalidationInFlight.contains(provider)) {
       return;

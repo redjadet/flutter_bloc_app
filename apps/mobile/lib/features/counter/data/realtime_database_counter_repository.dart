@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -13,10 +14,10 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 /// Firebase Realtime Database backed leaf [CounterDataSource].
 class RealtimeDatabaseCounterRepository implements CounterRepository {
   RealtimeDatabaseCounterRepository({
-    final FirebaseDatabase? database,
-    final DatabaseReference? counterRef,
-    final FirebaseAuth? auth,
-    final String counterPath = _defaultCounterPath,
+    FirebaseDatabase? database,
+    DatabaseReference? counterRef,
+    FirebaseAuth? auth,
+    String counterPath = _defaultCounterPath,
   }) : _counterRef =
            counterRef ??
            (database ?? FirebaseDatabase.instance).ref(counterPath),
@@ -30,7 +31,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async => _executeForUser<CounterSnapshot>(
     operation: 'load',
-    action: (final user) async {
+    action: (user) async {
       AppLogger.debugInDebugMode(
         'RealtimeDatabaseCounterRepository.load requesting counter value',
       );
@@ -44,10 +45,10 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   );
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     await _executeForUser<void>(
       operation: 'save',
-      action: (final user) async {
+      action: (user) async {
         AppLogger.debugInDebugMode(
           'RealtimeDatabaseCounterRepository.save writing counter value',
         );
@@ -66,20 +67,19 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Stream<CounterSnapshot> watch() => streamWithAuthUser<CounterSnapshot>(
     auth: _auth,
     logContext: IntegrationLogMessages.realtimeDatabaseCounterWatchLogContext,
-    streamPerUser: (final user) => _counterRef
+    streamPerUser: (user) => _counterRef
         .child(user.uid)
         .onValue
         .map(
-          (final event) =>
-              snapshotFromValue(event.snapshot.value, userId: user.uid),
+          (event) => snapshotFromValue(event.snapshot.value, userId: user.uid),
         ),
   );
 
   @visibleForTesting
   static CounterSnapshot snapshotFromValue(
-    final Object? value, {
-    required final String userId,
-    final bool logUnexpected = true,
+    Object? value, {
+    required String userId,
+    bool logUnexpected = true,
   }) {
     return switch (value) {
       null => CounterSnapshot(userId: userId, count: 0),
@@ -97,8 +97,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   static CounterSnapshot _snapshotFromMap(
-    final Map<Object?, Object?> data, {
-    required final String userId,
+    Map<Object?, Object?> data, {
+    required String userId,
   }) {
     final Map<Object?, Object?> map = Map<Object?, Object?>.from(data);
     final int count = intFromDynamic(map['count']) ?? 0;
@@ -118,9 +118,9 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   static CounterSnapshot _unexpectedSnapshotValue(
-    final Object? value, {
-    required final String userId,
-    required final bool logUnexpected,
+    Object? value, {
+    required String userId,
+    required bool logUnexpected,
   }) {
     if (logUnexpected) {
       AppLogger.warning(
@@ -132,9 +132,9 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   Future<T> _executeForUser<T>({
-    required final String operation,
-    required final Future<T> Function(User user) action,
-    final Future<T> Function()? onFailureFallback,
+    required String operation,
+    required Future<T> Function(User user) action,
+    Future<T> Function()? onFailureFallback,
   }) => runWithAuthUser<T>(
     auth: _auth,
     logContext: 'RealtimeDatabaseCounterRepository.$operation',
@@ -143,8 +143,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   );
 
   Future<void> _setCounterWithPlatformErrorGuard({
-    required final String userId,
-    required final Map<String, Object?> data,
+    required String userId,
+    required Map<String, Object?> data,
   }) async {
     await guardRealtimeDatabaseWrite(
       () => _counterRef.child(userId).set(data),

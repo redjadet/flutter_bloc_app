@@ -44,28 +44,24 @@ class AppLogger {
   static bool _globalSilence = false;
   static void Function(AppLogEntry entry)? _observer;
 
-  static void error(
-    final String message, [
-    final Object? error,
-    final StackTrace? stackTrace,
-  ]) {
+  static void error(String message, [Object? error, StackTrace? stackTrace]) {
     _log(AppLogLevel.error, message, error: error, stackTrace: stackTrace);
   }
 
-  static void warning(final String message) {
+  static void warning(String message) {
     _log(AppLogLevel.warning, message);
   }
 
-  static void info(final String message) {
+  static void info(String message) {
     _log(AppLogLevel.info, message);
   }
 
-  static void debug(final String message) {
+  static void debug(String message) {
     _log(AppLogLevel.debug, message);
   }
 
   /// Logs [message] at debug level only in debug mode (avoids work in release).
-  static void debugInDebugMode(final String message) {
+  static void debugInDebugMode(String message) {
     if (kDebugMode) {
       _log(AppLogLevel.debug, message, notifyObserver: false);
     }
@@ -73,11 +69,11 @@ class AppLogger {
 
   /// Structured event log: `event key=value…` from redacted [fields].
   static void event(
-    final AppLogLevel level,
-    final String event, {
-    final Map<String, Object?> fields = const {},
-    final Object? error,
-    final StackTrace? stackTrace,
+    AppLogLevel level,
+    String event, {
+    Map<String, Object?> fields = const {},
+    Object? error,
+    StackTrace? stackTrace,
   }) {
     final safeEvent = LogRedaction.sanitizeMessage(event);
     final safe = LogRedaction.safeFields(fields);
@@ -93,12 +89,12 @@ class AppLogger {
 
   /// Returns a stream error handler that logs with [logContext] and swallows.
   static void Function(Object error, StackTrace stackTrace) streamErrorHandler(
-    final String logContext,
+    String logContext,
   ) =>
-      (final err, final stackTrace) =>
+      (err, stackTrace) =>
           AppLogger.error('$logContext failed', err, stackTrace);
 
-  static T silence<T>(final T Function() action) {
+  static T silence<T>(T Function() action) {
     _silenceDepth++;
     try {
       return action();
@@ -107,7 +103,7 @@ class AppLogger {
     }
   }
 
-  static Future<T> silenceAsync<T>(final Future<T> Function() action) async {
+  static Future<T> silenceAsync<T>(Future<T> Function() action) async {
     _silenceDepth++;
     try {
       return await action();
@@ -122,7 +118,7 @@ class AppLogger {
   static void Function(AppLogEntry entry)? get observer => _observer;
 
   @visibleForTesting
-  static set observer(final void Function(AppLogEntry entry)? observer) {
+  static set observer(void Function(AppLogEntry entry)? observer) {
     _observer = observer;
   }
 
@@ -135,11 +131,11 @@ class AppLogger {
   }
 
   static void _log(
-    final AppLogLevel level,
-    final String message, {
-    final Object? error,
-    final StackTrace? stackTrace,
-    final bool notifyObserver = true,
+    AppLogLevel level,
+    String message, {
+    Object? error,
+    StackTrace? stackTrace,
+    bool notifyObserver = true,
   }) {
     final safeMessage = LogRedaction.sanitizeMessage(message);
     final safeError = LogRedaction.sanitizeError(error);
@@ -165,7 +161,7 @@ class AppLogger {
     }
   }
 
-  static String _formatFieldValue(final Object? value) {
+  static String _formatFieldValue(Object? value) {
     if (value == null) {
       return 'null';
     }
@@ -179,14 +175,14 @@ class AppLogger {
     return value.toString();
   }
 
-  static void _notifyObserver(final AppLogEntry entry) {
+  static void _notifyObserver(AppLogEntry entry) {
     _observer?.call(entry);
   }
 }
 
 class _DebugOnlyFilter extends LogFilter {
   @override
-  bool shouldLog(final LogEvent event) {
+  bool shouldLog(LogEvent event) {
     if (_isTestEnvironment()) {
       return false;
     }

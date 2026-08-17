@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shared action-row layouts for narrow widths.
 ///
@@ -32,7 +32,7 @@ class ResponsiveActionOverflowBar extends StatelessWidget {
   final double? overflowSpacing;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return OverflowBar(
       alignment: alignment,
       spacing: spacing,
@@ -61,9 +61,9 @@ class ResponsiveDualCtaRow extends StatelessWidget {
   final double stackBreakpoint;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         // Screen width, not parent max width: fixed-width columns (e.g. auth
         // logged-out body) can be <360dp while the device is still wide enough
         // for a single Row + Expanded row.
@@ -93,7 +93,7 @@ class ResponsiveDualCtaRow extends StatelessWidget {
     );
   }
 
-  Widget _maybeSized(final double? height, final Widget child) {
+  Widget _maybeSized(double? height, Widget child) {
     if (height == null) {
       return child;
     }

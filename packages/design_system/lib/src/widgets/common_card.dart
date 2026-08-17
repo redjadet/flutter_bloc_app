@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 import '../styles/app_styles.dart';
@@ -29,14 +29,14 @@ class CommonCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final Map<MixToken<dynamic>, Object>? tokens = MixScope.maybeOf(
       context,
       'tokens',
     )?.tokens;
 
-    T? tokenOrNull<T>(final MixToken<T> token) {
+    T? tokenOrNull<T>(MixToken<T> token) {
       final Object? value = tokens?[token];
       return value is T ? value : null;
     }

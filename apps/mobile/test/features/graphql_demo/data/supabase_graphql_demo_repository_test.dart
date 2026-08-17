@@ -26,7 +26,7 @@ void main() {
         repository.fetchContinents(),
         throwsA(
           isA<GraphqlDemoException>().having(
-            (final GraphqlDemoException error) => error.type,
+            (GraphqlDemoException error) => error.type,
             'type',
             GraphqlDemoErrorType.network,
           ),
@@ -40,9 +40,9 @@ void main() {
             readAccessToken: () => 'access-token',
             invokeEdgeFunction:
                 ({
-                  required final String functionName,
-                  required final String accessToken,
-                  required final Map<String, dynamic> body,
+                  required String functionName,
+                  required String accessToken,
+                  required Map<String, dynamic> body,
                 }) async {
                   expect(functionName, 'sync-graphql-countries');
                   expect(accessToken, 'access-token');
@@ -79,14 +79,14 @@ void main() {
           readAccessToken: () => 'access-token',
           invokeEdgeFunction:
               ({
-                required final String functionName,
-                required final String accessToken,
-                required final Map<String, dynamic> body,
+                required String functionName,
+                required String accessToken,
+                required Map<String, dynamic> body,
               }) async => FunctionResponse(
                 status: 200,
                 data: <String, dynamic>{'countries': null},
               ),
-          fetchCountryRows: (final code) async {
+          fetchCountryRows: (code) async {
             requestedCode = code;
             return <Map<String, Object?>>[
               <String, Object?>{
@@ -129,7 +129,7 @@ void main() {
         final SupabaseGraphqlDemoRepository repository =
             SupabaseGraphqlDemoRepository(
               readAccessToken: () => null,
-              fetchCountryRows: (final _) async => throw failure,
+              fetchCountryRows: (_) async => throw failure,
             );
 
         await expectLater(
@@ -137,17 +137,17 @@ void main() {
           throwsA(
             isA<GraphqlDemoException>()
                 .having(
-                  (final GraphqlDemoException error) => error.message,
+                  (GraphqlDemoException error) => error.message,
                   'message',
                   'db unavailable',
                 )
                 .having(
-                  (final GraphqlDemoException error) => error.type,
+                  (GraphqlDemoException error) => error.type,
                   'type',
                   GraphqlDemoErrorType.server,
                 )
                 .having(
-                  (final GraphqlDemoException error) => error.cause,
+                  (GraphqlDemoException error) => error.cause,
                   'cause',
                   same(failure),
                 ),

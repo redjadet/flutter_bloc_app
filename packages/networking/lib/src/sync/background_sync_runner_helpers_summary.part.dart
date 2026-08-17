@@ -1,17 +1,17 @@
 part of 'background_sync_runner.dart';
 
 SyncCycleSummary _buildSummary({
-  required final DateTime recordedAt,
-  required final int durationMs,
-  required final int pullRemoteCount,
-  required final int pullRemoteFailures,
-  required final int pendingAtStart,
-  required final int operationsProcessed,
-  required final int operationsFailed,
-  required final Map<String, int> pendingByEntity,
-  final Map<String, double> retryAttemptsByEntity = const <String, double>{},
-  final Map<String, String> lastErrorByEntity = const <String, String>{},
-  final double retrySuccessRate = 0,
+  required DateTime recordedAt,
+  required int durationMs,
+  required int pullRemoteCount,
+  required int pullRemoteFailures,
+  required int pendingAtStart,
+  required int operationsProcessed,
+  required int operationsFailed,
+  required Map<String, int> pendingByEntity,
+  Map<String, double> retryAttemptsByEntity = const <String, double>{},
+  Map<String, String> lastErrorByEntity = const <String, String>{},
+  double retrySuccessRate = 0,
 }) {
   return SyncCycleSummary(
     recordedAt: recordedAt,
@@ -28,7 +28,7 @@ SyncCycleSummary _buildSummary({
   );
 }
 
-Map<String, Object?> _telemetryPayload(final SyncCycleSummary summary) {
+Map<String, Object?> _telemetryPayload(SyncCycleSummary summary) {
   return <String, Object?>{
     'durationMs': summary.durationMs,
     'pullRemoteCount': summary.pullRemoteCount,
@@ -66,19 +66,19 @@ final class _PendingProcessingResult {
   final Map<String, List<int>> _retryCountsByEntity = <String, List<int>>{};
   final Map<String, String> lastErrorByEntity = <String, String>{};
 
-  void recordRetry(final SyncOperation operation) {
+  void recordRetry(SyncOperation operation) {
     _retryCountsByEntity
         .putIfAbsent(operation.entityType, () => <int>[])
         .add(operation.retryCount);
   }
 
-  void recordSuccess(final SyncOperation operation) {
+  void recordSuccess(SyncOperation operation) {
     if (operation.retryCount > 0) {
       successfulAfterRetry++;
     }
   }
 
-  void recordFailure(final String entityType, final Object error) {
+  void recordFailure(String entityType, Object error) {
     failed++;
     lastErrorByEntity[entityType] = error.toString();
   }
@@ -91,16 +91,15 @@ final class _PendingProcessingResult {
       if (counts.isEmpty) {
         continue;
       }
-      averages[entry.key] =
-          counts.reduce((final a, final b) => a + b) / counts.length;
+      averages[entry.key] = counts.reduce((a, b) => a + b) / counts.length;
     }
     return averages;
   }
 
   double get retrySuccessRate {
     final int totalOperationsWithRetries = _retryCountsByEntity.values
-        .expand((final list) => list)
-        .where((final count) => count > 0)
+        .expand((list) => list)
+        .where((count) => count > 0)
         .length;
     if (totalOperationsWithRetries == 0) {
       return 0;

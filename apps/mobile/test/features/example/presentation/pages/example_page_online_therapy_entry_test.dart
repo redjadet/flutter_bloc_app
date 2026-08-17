@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('Example page exposes Online Therapy Demo entry', (tester) async {
@@ -12,7 +13,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
           builder: (context) {

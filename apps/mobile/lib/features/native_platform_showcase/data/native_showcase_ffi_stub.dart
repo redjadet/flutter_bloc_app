@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 
 NativeInteropCallResult invokeNativeShowcaseCpp({
-  required final int left,
-  required final int right,
+  required int left,
+  required int right,
 }) {
   return const NativeInteropCallResult(
     kind: NativeInteropBridgeKind.cpp,

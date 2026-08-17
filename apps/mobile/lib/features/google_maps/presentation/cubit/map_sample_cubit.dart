@@ -50,11 +50,11 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
       isAlive: () => !isClosed && _loadGuard.isCurrent(requestId),
-      onAppError: (final appError) {
+      onAppError: (appError) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         latestError = appError;
       },
-      onSuccess: (final locations) {
+      onSuccess: (locations) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
             ? null
@@ -74,7 +74,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
           ),
         );
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
@@ -103,16 +103,16 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     emit(state.copyWith(trafficEnabled: !state.trafficEnabled));
   }
 
-  void updateCameraPosition(final gmaps.CameraPosition position) {
+  void updateCameraPosition(gmaps.CameraPosition position) {
     emit(state.copyWith(cameraPosition: position));
   }
 
-  void selectLocation(final String locationId) {
+  void selectLocation(String locationId) {
     if (locationId.trim().isEmpty) {
       return;
     }
     final MapLocation? location = state.locations.firstWhereOrNull(
-      (final candidate) => candidate.id == locationId,
+      (candidate) => candidate.id == locationId,
     );
     if (location == null) {
       return;
@@ -120,7 +120,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     _emitSelection(location, updateCameraPosition: null);
   }
 
-  void focusLocation(final MapLocation location) {
+  void focusLocation(MapLocation location) {
     _emitSelection(
       location,
       updateCameraPosition: cameraPositionForLocation(location),
@@ -128,8 +128,8 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   void _emitSelection(
-    final MapLocation location, {
-    required final gmaps.CameraPosition? updateCameraPosition,
+    MapLocation location, {
+    required gmaps.CameraPosition? updateCameraPosition,
   }) {
     final gmaps.MarkerId markerId = gmaps.MarkerId(location.id);
     emit(
@@ -144,13 +144,13 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     );
   }
 
-  gmaps.CameraUpdate cameraUpdateForLocation(final MapLocation location) =>
+  gmaps.CameraUpdate cameraUpdateForLocation(MapLocation location) =>
       gmaps.CameraUpdate.newCameraPosition(
         cameraPositionForLocation(location),
       );
 
   gmaps.CameraPosition cameraPositionForLocation(
-    final MapLocation location,
+    MapLocation location,
   ) => gmaps.CameraPosition(
     target: gmaps.LatLng(
       location.coordinate.latitude,
@@ -161,7 +161,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   );
 
   gmaps.CameraPosition? _resolveInitialCamera(
-    final List<MapLocation> locations,
+    List<MapLocation> locations,
   ) {
     if (locations.isEmpty) {
       return null;
@@ -177,11 +177,11 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   Set<gmaps.Marker> _buildMarkers({
-    required final List<MapLocation> locations,
-    required final gmaps.MarkerId? selectedMarkerId,
+    required List<MapLocation> locations,
+    required gmaps.MarkerId? selectedMarkerId,
   }) => locations
       .map(
-        (final location) => gmaps.Marker(
+        (location) => gmaps.Marker(
           markerId: gmaps.MarkerId(location.id),
           position: gmaps.LatLng(
             location.coordinate.latitude,

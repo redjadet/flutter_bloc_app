@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 /// Dedicated Dio for Render chat — no shared retry/auth interceptors.
-Dio createRenderChatDio({required final String baseUrl}) {
+Dio createRenderChatDio({required String baseUrl}) {
   final String trimmed = baseUrl.trim().replaceAll(RegExp(r'/+$'), '');
   final String resolved = trimmed.isEmpty ? 'http://127.0.0.1' : trimmed;
   return Dio(

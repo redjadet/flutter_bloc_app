@@ -62,8 +62,8 @@ class _DetailLoadResult {
     : this._(unavailable: false, notFound: true);
 
   const _DetailLoadResult.ok({
-    required final CaseStudyRecord record,
-    required final bool usesExpiringCloudPlaybackUrls,
+    required CaseStudyRecord record,
+    required bool usesExpiringCloudPlaybackUrls,
   }) : this._(
          unavailable: false,
          notFound: false,

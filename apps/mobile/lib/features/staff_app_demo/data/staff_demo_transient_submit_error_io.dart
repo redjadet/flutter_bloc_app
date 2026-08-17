@@ -1,5 +1,5 @@
 import 'dart:async';
 import 'dart:io';
 
-bool isStaffDemoTransientNetworkError(final Object error) =>
+bool isStaffDemoTransientNetworkError(Object error) =>
     error is SocketException || error is TimeoutException;

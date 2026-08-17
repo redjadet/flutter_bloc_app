@@ -8,11 +8,11 @@ part 'walletconnect_auth_state.freezed.dart';
 @freezed
 abstract class WalletConnectAuthState with _$WalletConnectAuthState {
   const factory WalletConnectAuthState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    final WalletAddress? walletAddress,
-    final WalletAddress? linkedWalletAddress,
-    final WalletUserProfile? userProfile,
-    final String? errorMessage,
+    @Default(ViewStatus.initial) ViewStatus status,
+    WalletAddress? walletAddress,
+    WalletAddress? linkedWalletAddress,
+    WalletUserProfile? userProfile,
+    String? errorMessage,
   }) = _WalletConnectAuthState;
 
   const WalletConnectAuthState._();

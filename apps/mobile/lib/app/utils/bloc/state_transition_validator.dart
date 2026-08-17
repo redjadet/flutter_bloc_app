@@ -16,7 +16,7 @@ abstract class StateTransitionValidator<S> {
   ///   };
   /// }
   /// ```
-  bool isValidTransition(final S from, final S to);
+  bool isValidTransition(S from, S to);
 
   /// Validates a transition and throws if invalid.
   ///
@@ -29,7 +29,7 @@ abstract class StateTransitionValidator<S> {
   ///   emit(newState);
   /// }
   /// ```
-  void validateTransition(final S from, final S to) {
+  void validateTransition(S from, S to) {
     if (!isValidTransition(from, to)) {
       throw StateError(
         'Invalid state transition from $from to $to. '
@@ -58,14 +58,14 @@ class FunctionStateTransitionValidator<S> extends StateTransitionValidator<S> {
   final bool Function(S from, S to) _validator;
 
   @override
-  bool isValidTransition(final S from, final S to) => _validator(from, to);
+  bool isValidTransition(S from, S to) => _validator(from, to);
 }
 
 /// Extension methods for StateTransitionValidator.
 extension StateTransitionValidatorExtension<S> on StateTransitionValidator<S> {
   /// Creates a validator from a function.
   static StateTransitionValidator<T> fromFunction<T>(
-    final bool Function(T from, T to) validator,
+    bool Function(T from, T to) validator,
   ) => FunctionStateTransitionValidator<T>(validator);
 }
 
@@ -82,7 +82,7 @@ extension StateTransitionValidatorExtension<S> on StateTransitionValidator<S> {
 /// );
 /// ```
 StateTransitionValidator<T> createStateTransitionValidator<T>(
-  final bool Function(T from, T to) validator,
+  bool Function(T from, T to) validator,
 ) => FunctionStateTransitionValidator<T>(validator);
 
 /// Mixin for cubits that want to validate state transitions.
@@ -112,7 +112,7 @@ mixin StateTransitionValidation<S> on Cubit<S> {
   ///
   /// **Note:** Only use this in debug mode or tests. In production,
   /// consider logging invalid transitions instead of throwing.
-  void validateAndEmit(final S newState) {
+  void validateAndEmit(S newState) {
     assert(
       () {
         _validator.validateTransition(state, newState);

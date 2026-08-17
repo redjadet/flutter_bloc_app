@@ -12,7 +12,7 @@ class HiveCounterRepositoryHelpers {
   ///
   /// Returns a valid [DateTime] if the timestamp is reasonable (non-negative,
   /// not too far in the future), otherwise returns `null`.
-  static DateTime? parseTimestamp(final int? timestampMs) {
+  static DateTime? parseTimestamp(int? timestampMs) {
     if (timestampMs == null) {
       return null;
     }
@@ -45,9 +45,9 @@ class HiveCounterRepositoryHelpers {
   /// If the snapshot is empty (null userId, count 0, no lastChanged), returns
   /// the empty snapshot. Otherwise ensures userId is set to the local user ID.
   static CounterSnapshot normalizeSnapshot(
-    final CounterSnapshot snapshot,
-    final CounterSnapshot emptySnapshot,
-    final String localUserId,
+    CounterSnapshot snapshot,
+    CounterSnapshot emptySnapshot,
+    String localUserId,
   ) {
     if (snapshot.userId == null &&
         snapshot.count == 0 &&

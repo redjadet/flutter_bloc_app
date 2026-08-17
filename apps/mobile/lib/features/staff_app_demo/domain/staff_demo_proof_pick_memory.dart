@@ -11,9 +11,9 @@ final class StaffDemoProofPickMemory {
 
   final Map<String, List<int>> _bytesByPath = <String, List<int>>{};
 
-  bool isPickPath(final String path) => path.startsWith(pickPathPrefix);
+  bool isPickPath(String path) => path.startsWith(pickPathPrefix);
 
-  String stage(final List<int> bytes) {
+  String stage(List<int> bytes) {
     final String path =
         '$pickPathPrefix${DateTime.now().microsecondsSinceEpoch}';
     _bytesByPath[path] = List<int>.from(bytes);
@@ -21,7 +21,7 @@ final class StaffDemoProofPickMemory {
   }
 
   /// Returns staged bytes for [path] without removing them.
-  List<int>? peek(final String path) {
+  List<int>? peek(String path) {
     if (!isPickPath(path)) {
       return null;
     }
@@ -30,7 +30,7 @@ final class StaffDemoProofPickMemory {
   }
 
   /// Removes and returns staged bytes for [path], or null if not staged.
-  List<int>? take(final String path) {
+  List<int>? take(String path) {
     if (!isPickPath(path)) {
       return null;
     }
@@ -39,7 +39,7 @@ final class StaffDemoProofPickMemory {
   }
 
   /// Drops staged bytes for [path] without returning them (abandon / cleanup).
-  void release(final String path) {
+  void release(String path) {
     if (isPickPath(path)) {
       _bytesByPath.remove(path);
     }

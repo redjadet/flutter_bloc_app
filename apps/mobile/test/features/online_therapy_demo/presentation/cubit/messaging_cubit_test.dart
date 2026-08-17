@@ -1,9 +1,9 @@
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/messaging_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
 
 void main() {
   group('MessagingCubit success paths', () {
@@ -72,19 +72,13 @@ void main() {
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     onTick();
     return _NoopTimerDisposable();
   }
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopTimerDisposable();
   }

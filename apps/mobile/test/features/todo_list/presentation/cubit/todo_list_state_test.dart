@@ -3,13 +3,13 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list
 import 'package:flutter_test/flutter_test.dart';
 
 TodoItem _item({
-  required final String id,
-  required final String title,
-  final bool completed = false,
-  final String? description,
-  final DateTime? dueDate,
-  final TodoPriority priority = TodoPriority.none,
-  final DateTime? updatedAt,
+  required String id,
+  required String title,
+  bool completed = false,
+  String? description,
+  DateTime? dueDate,
+  TodoPriority priority = TodoPriority.none,
+  DateTime? updatedAt,
 }) {
   final DateTime stamp = updatedAt ?? DateTime.utc(2026, 1, 1);
   return TodoItem(
@@ -40,10 +40,7 @@ void main() {
       searchQuery: 'milk',
     );
 
-    expect(state.filteredItems.map((final e) => e.id).toList(), <String>[
-      '1',
-      '3',
-    ]);
+    expect(state.filteredItems.map((e) => e.id).toList(), <String>['1', '3']);
     expect(
       state
           .copyWith(filter: TodoFilter.completed, searchQuery: '')
@@ -82,14 +79,14 @@ void main() {
       TodoListState(
         items: items,
         sortOrder: TodoSortOrder.titleAsc,
-      ).filteredItems.map((final e) => e.id),
+      ).filteredItems.map((e) => e.id),
       <String>['b', 'a', 'c'],
     );
     expect(
       TodoListState(
         items: items,
         sortOrder: TodoSortOrder.titleDesc,
-      ).filteredItems.map((final e) => e.id),
+      ).filteredItems.map((e) => e.id),
       <String>['c', 'a', 'b'],
     );
     expect(
@@ -139,7 +136,7 @@ void main() {
         items: items,
         sortOrder: TodoSortOrder.manual,
         manualOrder: const <String, int>{'c': 0, 'a': 1, 'b': 2},
-      ).filteredItems.map((final e) => e.id),
+      ).filteredItems.map((e) => e.id),
       <String>['c', 'a', 'b'],
     );
   });

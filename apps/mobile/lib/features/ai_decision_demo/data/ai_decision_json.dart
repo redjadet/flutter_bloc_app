@@ -2,13 +2,12 @@
 ///
 /// Throws [FormatException] on missing/malformed required fields — never
 /// leak raw cast/`TypeError` to callers.
-Never _badAiDecision(final String key, final Object? value) =>
-    throw FormatException(
-      'AI Decision JSON: invalid "$key" (${_jsonValueKind(value)})',
-    );
+Never _badAiDecision(String key, Object? value) => throw FormatException(
+  'AI Decision JSON: invalid "$key" (${_jsonValueKind(value)})',
+);
 
 /// Reports type shape only — never the untrusted payload value.
-String _jsonValueKind(final Object? value) {
+String _jsonValueKind(Object? value) {
   if (value == null) {
     return 'null';
   }
@@ -22,8 +21,8 @@ String _jsonValueKind(final Object? value) {
 }
 
 String requireAiDecisionString(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value is! String || value.isEmpty) {
@@ -33,8 +32,8 @@ String requireAiDecisionString(
 }
 
 String? optionalAiDecisionString(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value == null) {
@@ -47,8 +46,8 @@ String? optionalAiDecisionString(
 }
 
 double requireAiDecisionNumAsDouble(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value is! num) {
@@ -58,8 +57,8 @@ double requireAiDecisionNumAsDouble(
 }
 
 Map<String, dynamic> requireAiDecisionMap(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value is! Map) {
@@ -69,9 +68,9 @@ Map<String, dynamic> requireAiDecisionMap(
 }
 
 Map<String, dynamic> optionalAiDecisionMap(
-  final Map<String, dynamic> json,
-  final String key, {
-  final Map<String, dynamic> fallback = const <String, dynamic>{},
+  Map<String, dynamic> json,
+  String key, {
+  Map<String, dynamic> fallback = const <String, dynamic>{},
 }) {
   final Object? value = json[key];
   if (value == null) {
@@ -84,9 +83,9 @@ Map<String, dynamic> optionalAiDecisionMap(
 }
 
 List<Map<String, dynamic>> requireAiDecisionMapList(
-  final Map<String, dynamic> json,
-  final String key, {
-  final bool required = false,
+  Map<String, dynamic> json,
+  String key, {
+  bool required = false,
 }) {
   final Object? value = json[key];
   if (value == null) {

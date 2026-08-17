@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyLoggedOutPrompt extends StatelessWidget {
   const OnlineTherapyLoggedOutPrompt({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Card(
       child: Padding(

@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 class _MockSyncStatusCubit extends MockCubit<SyncStatusState>
     implements SyncStatusCubit {}
@@ -26,13 +27,13 @@ void main() {
       when(() => cubit.ensureStarted()).thenAnswer((_) {});
     });
 
-    Future<void> pump(final WidgetTester tester) {
+    Future<void> pump(WidgetTester tester) {
       return tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
-            builder: (final context) => buildAppMixScope(
+            builder: (context) => buildAppMixScope(
               context,
               child: BlocProvider<SyncStatusCubit>.value(
                 value: cubit,
@@ -174,8 +175,8 @@ void main() {
                   SyncStatusState,
                   List<SyncCycleSummary>
                 >(
-                  selector: (final state) => state.history,
-                  builder: (final context, final history) {
+                  selector: (state) => state.history,
+                  builder: (context, history) {
                     buildCount++;
                     return Text(
                       'history=${history.length}',

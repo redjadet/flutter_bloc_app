@@ -6,7 +6,7 @@ class StaffDemoShiftDefaults {
   static const Duration duration = Duration(hours: 4);
 
   static ({DateTime startAtUtc, DateTime endAtUtc}) defaultWindowUtc([
-    final DateTime? now,
+    DateTime? now,
   ]) {
     final DateTime startAtUtc = (now ?? DateTime.now()).toUtc().add(leadTime);
     return (

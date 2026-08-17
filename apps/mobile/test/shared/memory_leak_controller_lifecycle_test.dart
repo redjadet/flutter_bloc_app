@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../helpers/memory/leak_safe_test_widgets.dart';
 
@@ -7,7 +7,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   leakSafeTestWidgets('TextEditingController State dispose is leak-safe', (
-    final tester,
+    tester,
   ) async {
     await tester.pumpWidget(const MaterialApp(home: _ControllerHost()));
     await tester.pump();
@@ -41,7 +41,7 @@ class _ControllerHostState extends State<_ControllerHost> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(body: TextField(controller: _controller));
   }
 }

@@ -16,16 +16,16 @@ part 'supabase_graphql_demo_repository_impl.part.dart';
 
 class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
   SupabaseGraphqlDemoRepository({
-    final String? Function()? readAccessToken,
-    final String? Function()? readCurrentUserId,
-    final Future<FunctionResponse> Function({
+    String? Function()? readAccessToken,
+    String? Function()? readCurrentUserId,
+    Future<FunctionResponse> Function({
       required String functionName,
       required String accessToken,
       required Map<String, dynamic> body,
     })?
     invokeEdgeFunction,
-    final Future<Object?> Function()? fetchContinentRows,
-    final Future<Object?> Function(String? code)? fetchCountryRows,
+    Future<Object?> Function()? fetchContinentRows,
+    Future<Object?> Function(String? code)? fetchCountryRows,
   }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
        _readCurrentUserId = readCurrentUserId ?? _defaultReadCurrentUserId,
        _invokeEdgeFunction = invokeEdgeFunction ?? _defaultInvokeEdgeFunction,
@@ -61,7 +61,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
           tryEdge: _tryFetchContinentsFromEdge,
           fetchTables: _fetchContinentsFromTables,
           onPostgrestException: graphqlDemoExceptionFromPostgrest,
-          onGenericException: (final msg, final cause) => GraphqlDemoException(
+          onGenericException: (msg, cause) => GraphqlDemoException(
             msg,
             cause: cause,
           ),
@@ -76,7 +76,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
-    final String? continentCode,
+    String? continentCode,
   }) async {
     _ensureConfigured();
     final String? normalized = _normalizedContinentCode(continentCode);
@@ -86,7 +86,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
           fetchTables: () =>
               _fetchCountriesFromTables(continentCode: normalized),
           onPostgrestException: graphqlDemoExceptionFromPostgrest,
-          onGenericException: (final msg, final cause) => GraphqlDemoException(
+          onGenericException: (msg, cause) => GraphqlDemoException(
             msg,
             cause: cause,
           ),
@@ -106,9 +106,9 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       Supabase.instance.client.auth.currentUser?.id;
 
   static Future<FunctionResponse> _defaultInvokeEdgeFunction({
-    required final String functionName,
-    required final String accessToken,
-    required final Map<String, dynamic> body,
+    required String functionName,
+    required String accessToken,
+    required Map<String, dynamic> body,
   }) {
     return Supabase.instance.client.functions.invoke(
       functionName,
@@ -126,7 +126,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
         .order('name');
   }
 
-  static Future<Object?> _defaultFetchCountryRows(final String? continentCode) {
+  static Future<Object?> _defaultFetchCountryRows(String? continentCode) {
     PostgrestFilterBuilder<dynamic> query = Supabase.instance.client
         .from(_countriesTable)
         .select(

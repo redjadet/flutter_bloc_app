@@ -21,9 +21,8 @@ void main() {
       when(() => user.uid).thenReturn('user-id');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
-      when(
-        () => user.getIdTokenResult(),
-      ).thenAnswer((final invocation) async => tokenResult);
+      when(() => user.getIdTokenResult())
+          .thenAnswer((invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager();
       final String? first = await manager.getValidAuthToken(user);
@@ -55,9 +54,8 @@ void main() {
       when(() => user.uid).thenReturn('user-id');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
-      when(
-        () => user.getIdTokenResult(true),
-      ).thenAnswer((final invocation) async => tokenResult);
+      when(() => user.getIdTokenResult(true))
+          .thenAnswer((invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager(firebaseAuth: auth);
       final bool result = await manager.refreshToken();
@@ -77,9 +75,8 @@ void main() {
       when(() => user.uid).thenReturn('user-id');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
-      when(
-        () => user.getIdTokenResult(true),
-      ).thenAnswer((final invocation) async => tokenResult);
+      when(() => user.getIdTokenResult(true))
+          .thenAnswer((invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager();
       final String? token = await manager.refreshTokenAndGet(user);
@@ -100,9 +97,8 @@ void main() {
       when(() => user.uid).thenReturn('user-id');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
-      when(
-        () => user.getIdTokenResult(true),
-      ).thenAnswer((final invocation) async => tokenResult);
+      when(() => user.getIdTokenResult(true))
+          .thenAnswer((invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager(firebaseAuth: auth);
       final List<Future<bool>> results = List<Future<bool>>.generate(
@@ -126,9 +122,8 @@ void main() {
       when(() => user.uid).thenReturn('user-id');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
-      when(
-        () => user.getIdTokenResult(true),
-      ).thenAnswer((final invocation) async => tokenResult);
+      when(() => user.getIdTokenResult(true))
+          .thenAnswer((invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager();
       final List<Future<String?>> results = List<Future<String?>>.generate(

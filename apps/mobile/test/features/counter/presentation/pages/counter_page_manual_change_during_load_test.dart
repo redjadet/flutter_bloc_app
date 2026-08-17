@@ -1,17 +1,18 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/config/app_constants.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
-import 'package:design_system/responsive.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../test_helpers.dart' show FakeTimerService;
 
@@ -27,7 +28,7 @@ class _DelayedCounterRepository
   Future<CounterSnapshot> load() => completer.future;
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {}
+  Future<void> save(CounterSnapshot snapshot) async {}
 
   @override
   Stream<CounterSnapshot> watch() async* {
@@ -53,7 +54,7 @@ class _FakeErrorNotificationService implements ErrorNotificationService {
 }
 
 Finder _incrementFab() => find.byWidgetPredicate(
-  (final widget) =>
+  (widget) =>
       widget is FloatingActionButton && widget.heroTag == 'fab_increment',
 );
 
@@ -84,7 +85,7 @@ void main() {
 
       final List<int> observedCounts = <int>[];
       final StreamSubscription sub = cubit.stream.listen(
-        (final s) => observedCounts.add(s.count),
+        (s) => observedCounts.add(s.count),
       );
       addTearDown(sub.cancel);
 
@@ -92,7 +93,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: ResponsiveScope(
             child: BlocProvider<CounterCubit>.value(

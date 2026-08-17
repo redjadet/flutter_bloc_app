@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChatContactAvatar extends StatelessWidget {
   const ChatContactAvatar({
@@ -13,7 +13,7 @@ class ChatContactAvatar extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final onlineIndicatorSize = size * 0.28;
     final borderWidth = size > 50 ? 3.0 : 2.0;
@@ -55,7 +55,7 @@ class ChatContactAvatar extends StatelessWidget {
           height: size,
           memCacheWidth: size.toInt(),
           memCacheHeight: size.toInt(),
-          placeholder: (final context, final url) => ColoredBox(
+          placeholder: (context, url) => ColoredBox(
             color: colors.surfaceContainerHighest,
             child: Center(
               child: SizedBox(
@@ -67,16 +67,14 @@ class ChatContactAvatar extends StatelessWidget {
               ),
             ),
           ),
-          errorWidget: (final context, final url, final error) =>
-              buildFallback(),
+          errorWidget: (context, url, error) => buildFallback(),
         );
       }
 
       return Image.asset(
         imagePath,
         fit: BoxFit.cover,
-        errorBuilder: (final context, final error, final stackTrace) =>
-            buildFallback(),
+        errorBuilder: (context, error, stackTrace) => buildFallback(),
       );
     }
 

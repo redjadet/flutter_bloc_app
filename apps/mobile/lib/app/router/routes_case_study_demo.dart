@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:auth/auth.dart';
 import 'package:core/core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -26,10 +25,11 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_supabase_auth_gate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 FutureOr<String?> _redirectCaseStudyRecord(
-  final BuildContext context,
-  final GoRouterState state,
+  BuildContext context,
+  GoRouterState state,
 ) async {
   final AuthRepository auth = getIt<AuthRepository>();
   final String? userId = auth.currentUser?.id;
@@ -55,8 +55,8 @@ FutureOr<String?> _redirectCaseStudyRecord(
 }
 
 FutureOr<String?> _redirectCaseStudyReview(
-  final BuildContext context,
-  final GoRouterState state,
+  BuildContext context,
+  GoRouterState state,
 ) async {
   final AuthRepository auth = getIt<AuthRepository>();
   final String? userId = auth.currentUser?.id;
@@ -75,9 +75,9 @@ FutureOr<String?> _redirectCaseStudyReview(
 }
 
 Widget _buildCaseStudyDemoShell(
-  final BuildContext context,
-  final GoRouterState state,
-  final Widget child,
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
 ) {
   final AuthRepository auth = getIt<AuthRepository>();
   final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
@@ -184,7 +184,7 @@ ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
                       clipStore: getIt<CaseStudyClipFileStore>(),
                       remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
                     ),
-                    init: (final cubit) => cubit.load(),
+                    init: (cubit) => cubit.load(),
                     child: const CaseStudyHistoryDetailPage(),
                   ),
             );

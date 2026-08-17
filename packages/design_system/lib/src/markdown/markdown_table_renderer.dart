@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:material_ui/material_ui.dart';
 
 /// Helper class for rendering markdown tables as formatted text.
 ///
@@ -8,8 +8,8 @@ import 'package:markdown/markdown.dart' as md;
 class MarkdownTableRenderer {
   /// Builds TextSpan list from a markdown table element.
   static List<InlineSpan> buildTableSpans(
-    final md.Element tableNode,
-    final TextStyle baseStyle,
+    md.Element tableNode,
+    TextStyle baseStyle,
   ) {
     final List<List<String>> rows = <List<String>>[];
 
@@ -41,9 +41,7 @@ class MarkdownTableRenderer {
 
     // Calculate column widths
     final int columnCount = rows.isNotEmpty
-        ? rows
-              .map((final r) => r.length)
-              .reduce((final a, final b) => a > b ? a : b)
+        ? rows.map((r) => r.length).reduce((a, b) => a > b ? a : b)
         : 0;
     if (columnCount == 0) {
       return const <InlineSpan>[];
@@ -97,7 +95,7 @@ class MarkdownTableRenderer {
   }
 
   /// Extracts plain text content from a markdown node tree.
-  static String _extractTextFromNode(final md.Node node) {
+  static String _extractTextFromNode(md.Node node) {
     if (node is md.Text) {
       return node.text;
     }

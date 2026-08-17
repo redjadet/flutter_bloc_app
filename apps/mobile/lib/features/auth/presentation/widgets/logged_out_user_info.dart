@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LoggedOutUserInfo extends StatelessWidget {
   const LoggedOutUserInfo({
@@ -13,7 +13,7 @@ class LoggedOutUserInfo extends StatelessWidget {
   final double verticalScale;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     const double nameLineHeight = 15.234;
     const double handleLineHeight = 12.891;
     const double avatarSize = 28;
@@ -36,7 +36,7 @@ class LoggedOutUserInfo extends StatelessWidget {
               width: avatarExtent,
               height: avatarExtent,
               fit: BoxFit.fill,
-              errorBuilder: (final context, final error, final stackTrace) {
+              errorBuilder: (context, error, stackTrace) {
                 final colors = Theme.of(context).colorScheme;
                 return Container(
                   width: avatarExtent,

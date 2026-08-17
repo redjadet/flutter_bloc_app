@@ -1,18 +1,18 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<bool> showClearHistoryDialog(
-  final BuildContext context,
+  BuildContext context,
 ) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
   return await showAdaptiveDialog<bool>(
         context: context,
-        builder: (final dialogContext) {
+        builder: (dialogContext) {
           if (isCupertino) {
             return CupertinoAlertDialog(
               title: Text(l10n.chatHistoryClearAll),
@@ -57,14 +57,14 @@ Future<bool> showClearHistoryDialog(
 }
 
 Future<bool> showDeleteConversationDialog(
-  final BuildContext context,
-  final String conversationTitle,
+  BuildContext context,
+  String conversationTitle,
 ) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
   return await showAdaptiveDialog<bool>(
         context: context,
-        builder: (final dialogContext) {
+        builder: (dialogContext) {
           if (isCupertino) {
             return CupertinoAlertDialog(
               title: Text(l10n.chatHistoryDeleteConversation),
@@ -113,17 +113,17 @@ Future<bool> showDeleteConversationDialog(
 }
 
 String conversationTitle(
-  final BuildContext context,
-  final int index,
-  final ChatConversation conversation,
+  BuildContext context,
+  int index,
+  ChatConversation conversation,
 ) {
   final l10n = context.l10n;
   return conversation.model ?? l10n.chatHistoryConversationTitle(index + 1);
 }
 
 String formatTimestamp(
-  final MaterialLocalizations localizations,
-  final DateTime timestamp,
+  MaterialLocalizations localizations,
+  DateTime timestamp,
 ) {
   final String date = localizations.formatMediumDate(timestamp);
   final TimeOfDay time = TimeOfDay.fromDateTime(timestamp);

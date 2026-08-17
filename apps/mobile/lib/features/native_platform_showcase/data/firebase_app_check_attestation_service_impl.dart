@@ -7,8 +7,9 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/fireba
 
 /// Injectable token reader so tests can avoid the live Firebase App Check
 /// plugin. Production wiring defaults to `FirebaseAppCheck.instance.getToken`.
-typedef AppCheckTokenReader =
-    Future<String?> Function({required bool forceRefresh});
+typedef AppCheckTokenReader = Future<String?> Function({
+  required bool forceRefresh,
+});
 
 /// [FirebaseAppCheckAttestationService] backed by `firebase_app_check`.
 ///
@@ -20,7 +21,7 @@ typedef AppCheckTokenReader =
 class FirebaseAppCheckAttestationServiceImpl
     implements FirebaseAppCheckAttestationService {
   FirebaseAppCheckAttestationServiceImpl({
-    final AppCheckTokenReader? tokenReader,
+    AppCheckTokenReader? tokenReader,
   }) : _readToken = tokenReader ?? _defaultTokenReader,
        _isFirebaseConfigured = tokenReader == null
            ? _defaultFirebaseConfigured
@@ -30,7 +31,7 @@ class FirebaseAppCheckAttestationServiceImpl
   final bool Function() _isFirebaseConfigured;
 
   static Future<String?> _defaultTokenReader({
-    required final bool forceRefresh,
+    required bool forceRefresh,
   }) => FirebaseAppCheck.instance.getToken(forceRefresh);
 
   static bool _defaultFirebaseConfigured() => Firebase.apps.isNotEmpty;
@@ -87,7 +88,7 @@ class FirebaseAppCheckAttestationServiceImpl
       );
 
   /// Soft setup signals only — never echo exception messages into state/UI.
-  static bool _looksLikeNotConfigured(final String code) {
+  static bool _looksLikeNotConfigured(String code) {
     final String normalized = code.toLowerCase();
     return normalized.contains('not-activated') ||
         normalized.contains('not_activated') ||

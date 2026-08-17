@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 
 class _SequenceAdapter implements HttpClientAdapter {
   _SequenceAdapter(this._fetch);
@@ -17,13 +17,13 @@ class _SequenceAdapter implements HttpClientAdapter {
 
   @override
   Future<ResponseBody> fetch(
-    final RequestOptions options,
-    final Stream<List<int>>? requestStream,
-    final Future<void>? cancelFuture,
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
   ) => _fetch(options, requestStream, cancelFuture);
 
   @override
-  void close({final bool force = false}) {}
+  void close({bool force = false}) {}
 }
 
 class _TelemetryEvent {
@@ -48,30 +48,24 @@ void main() {
       dio = Dio(BaseOptions(validateStatus: (_) => true))
         ..interceptors.add(
           TelemetryInterceptor(
-            eventSink:
-                (
-                  final options,
-                  final statusCode,
-                  final error,
-                  final elapsedMilliseconds,
-                ) {
-                  events.add(
-                    _TelemetryEvent(
-                      statusCode: statusCode,
-                      error: error,
-                      elapsedMilliseconds: elapsedMilliseconds,
-                    ),
-                  );
-                },
+            eventSink: (options, statusCode, error, elapsedMilliseconds) {
+              events.add(
+                _TelemetryEvent(
+                  statusCode: statusCode,
+                  error: error,
+                  elapsedMilliseconds: elapsedMilliseconds,
+                ),
+              );
+            },
           ),
         );
     });
 
     test('records response telemetry events', () async {
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         return ResponseBody.fromString(
@@ -96,9 +90,9 @@ void main() {
 
     test('records error telemetry events', () async {
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         throw DioException(

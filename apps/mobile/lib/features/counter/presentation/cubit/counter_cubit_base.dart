@@ -5,11 +5,11 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         CubitSubscriptionMixin<CounterState>,
         StateRestorationMixin<CounterState> {
   _CounterCubitBase({
-    required final CounterRepository repository,
+    required CounterRepository repository,
     required this._timerService,
     required this._now,
     required this._initialLoadDelay,
-    final CounterSyncDiagnosticsPort? syncDiagnostics,
+    CounterSyncDiagnosticsPort? syncDiagnostics,
   }) : _repository = repository,
        _syncDiagnostics =
            syncDiagnostics ??
@@ -79,7 +79,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     _countdownTicker = null;
   }
 
-  void _syncTickerForState(final CounterState nextState) {
+  void _syncTickerForState(CounterState nextState) {
     if (_isLifecyclePaused) {
       return;
     }
@@ -91,15 +91,15 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   }
 
   /// Emits state with the provided countdown, preserving other fields.
-  void _emitCountdown(final int seconds) {
+  void _emitCountdown(int seconds) {
     if (isClosed) return;
     emit(state.copyData(countdownSeconds: seconds));
   }
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
   CounterState _emitCountUpdate({
-    required final int count,
-    final DateTime? timestamp,
+    required int count,
+    DateTime? timestamp,
   }) {
     if (isClosed) {
       // Return current state if cubit is closed to prevent errors
@@ -146,7 +146,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     _syncTickerForState(next);
   }
 
-  Future<void> _persistState(final CounterState snapshotState) async {
+  Future<void> _persistState(CounterState snapshotState) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.save(
         CounterSnapshot(
@@ -158,7 +158,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
       ),
       isAlive: () => !isClosed,
       onError: (_) {},
-      onErrorWithDetails: (final error, final stackTrace) {
+      onErrorWithDetails: (error, stackTrace) {
         _handleError(
           error,
           stackTrace ?? StackTrace.current,
@@ -171,10 +171,10 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   }
 
   void _handleError(
-    final Object error,
-    final StackTrace stackTrace,
-    final CounterError Function({Object? originalError}) errorFactory,
-    final String message,
+    Object error,
+    StackTrace stackTrace,
+    CounterError Function({Object? originalError}) errorFactory,
+    String message,
   ) {
     AppLogger.error(message, error, stackTrace);
     if (isClosed) return;

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('RepositoryWatchHelper', () {
@@ -65,7 +65,7 @@ void main() {
 
       final Completer<void> firstLoad = Completer<void>();
       final StreamSubscription<String> subscription = helper.stream.listen((
-        final value,
+        value,
       ) {
         if (!firstLoad.isCompleted) {
           firstLoad.complete();

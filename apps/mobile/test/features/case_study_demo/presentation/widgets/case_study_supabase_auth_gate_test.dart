@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_supabase_auth_gate.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('CaseStudySupabaseAuthGate', () {
     testWidgets('redirects to auth when Supabase user signs out', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -19,7 +19,7 @@ void main() {
         routes: <GoRoute>[
           GoRoute(
             path: '/',
-            builder: (final context, final state) => CaseStudySupabaseAuthGate(
+            builder: (context, state) => CaseStudySupabaseAuthGate(
               isSupabaseInitialized: true,
               getCurrentUser: () => currentUser,
               authStateChanges: authController.stream,
@@ -31,17 +31,15 @@ void main() {
           ),
           GoRoute(
             path: '/auth',
-            builder: (final context, final state) =>
-                const Scaffold(body: Text('auth')),
+            builder: (context, state) => const Scaffold(body: Text('auth')),
           ),
           GoRoute(
             path: '/counter',
-            builder: (final context, final state) =>
-                const Scaffold(body: Text('counter')),
+            builder: (context, state) => const Scaffold(body: Text('counter')),
           ),
           GoRoute(
             path: '/supabase-auth',
-            builder: (final context, final state) =>
+            builder: (context, state) =>
                 const Scaffold(body: Text('supabase auth')),
           ),
         ],
@@ -61,9 +59,7 @@ void main() {
       expect(find.text('supabase auth'), findsOneWidget);
     });
 
-    testWidgets('shows child when Supabase is not configured', (
-      final tester,
-    ) async {
+    testWidgets('shows child when Supabase is not configured', (tester) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
       addTearDown(authController.close);
@@ -72,7 +68,7 @@ void main() {
         routes: <GoRoute>[
           GoRoute(
             path: '/',
-            builder: (final context, final state) => CaseStudySupabaseAuthGate(
+            builder: (context, state) => CaseStudySupabaseAuthGate(
               isSupabaseInitialized: false,
               getCurrentUser: () => null,
               authStateChanges: authController.stream,
@@ -84,17 +80,15 @@ void main() {
           ),
           GoRoute(
             path: '/auth',
-            builder: (final context, final state) =>
-                const Scaffold(body: Text('auth')),
+            builder: (context, state) => const Scaffold(body: Text('auth')),
           ),
           GoRoute(
             path: '/counter',
-            builder: (final context, final state) =>
-                const Scaffold(body: Text('counter')),
+            builder: (context, state) => const Scaffold(body: Text('counter')),
           ),
           GoRoute(
             path: '/supabase-auth',
-            builder: (final context, final state) =>
+            builder: (context, state) =>
                 const Scaffold(body: Text('supabase auth')),
           ),
         ],

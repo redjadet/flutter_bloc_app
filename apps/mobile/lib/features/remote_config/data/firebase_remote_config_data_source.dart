@@ -10,7 +10,7 @@ import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
   FirebaseRemoteConfigDataSource(
     this._remoteConfig, {
-    final void Function(String message)? debugLogger,
+    void Function(String message)? debugLogger,
   }) : _logDebug = debugLogger ?? AppLogger.debug;
 
   static const Duration _fetchTimeout = Duration(minutes: 1);
@@ -100,16 +100,16 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
   }
 
   @override
-  String getString(final String key) => _remoteConfig.getString(key);
+  String getString(String key) => _remoteConfig.getString(key);
 
   @override
-  bool getBool(final String key) => _remoteConfig.getBool(key);
+  bool getBool(String key) => _remoteConfig.getBool(key);
 
   @override
-  int getInt(final String key) => _remoteConfig.getInt(key);
+  int getInt(String key) => _remoteConfig.getInt(key);
 
   @override
-  double getDouble(final String key) => _remoteConfig.getDouble(key);
+  double getDouble(String key) => _remoteConfig.getDouble(key);
 
   @override
   Future<void> dispose() async {
@@ -122,7 +122,7 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
       return;
     }
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
-      (final update) async {
+      (update) async {
         if (_disableFetchDueToKeychain) return;
         final bool shouldLogTestValue = update.updatedKeys.contains(
           RemoteConfigKeys.testValue1,
@@ -160,7 +160,7 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
           _logAwesomeFeatureFlag(source: 'realtime-update');
         }
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'Remote Config realtime listener error',
           error,
@@ -171,14 +171,14 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
     _subscriptionManager.register(_configUpdatesSubscription);
   }
 
-  void _logTestValue({required final String source}) {
+  void _logTestValue({required String source}) {
     final String value = _remoteConfig.getString(RemoteConfigKeys.testValue1);
     _logDebug(
       'RemoteConfig[$source] ${RemoteConfigKeys.testValue1}="$value"',
     );
   }
 
-  void _logAwesomeFeatureFlag({required final String source}) {
+  void _logAwesomeFeatureFlag({required String source}) {
     final bool value = _remoteConfig.getBool(
       RemoteConfigKeys.awesomeFeatureEnabled,
     );
@@ -187,7 +187,7 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
     );
   }
 
-  static bool _looksLikeKeychainEntitlementError(final Object error) {
+  static bool _looksLikeKeychainEntitlementError(Object error) {
     final String message = error.toString();
     return message.contains('-34018') ||
         message.contains('SecItemAdd') ||

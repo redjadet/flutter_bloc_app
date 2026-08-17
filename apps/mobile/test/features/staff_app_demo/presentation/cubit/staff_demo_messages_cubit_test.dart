@@ -37,15 +37,15 @@ class _InboxRepo implements StaffDemoInboxRepository {
 
   @override
   Stream<List<StaffDemoInboxRecipientSnapshot>> watchRecipients({
-    required final String userId,
+    required String userId,
   }) => Stream<List<StaffDemoInboxRecipientSnapshot>>.value(recipients);
 
   @override
-  Future<StaffDemoInboxMessage?> loadMessage(final String messageId) async =>
+  Future<StaffDemoInboxMessage?> loadMessage(String messageId) async =>
       messages[messageId];
 
   @override
-  Future<String?> loadShiftStatus(final String shiftId) async {
+  Future<String?> loadShiftStatus(String shiftId) async {
     loadShiftStatusCalls.add(shiftId);
     return shiftStatuses[shiftId];
   }
@@ -54,18 +54,18 @@ class _InboxRepo implements StaffDemoInboxRepository {
 class _MessagingRepo implements StaffDemoMessagingRepository {
   @override
   Future<void> confirmShiftAssignment({
-    required final String messageId,
-    required final String shiftId,
+    required String messageId,
+    required String shiftId,
   }) async {}
 
   @override
   Future<String> sendShiftAssignment({
-    required final String toUserId,
-    required final String body,
-    required final String siteId,
-    required final DateTime startAtUtc,
-    required final DateTime endAtUtc,
-    required final String timezoneName,
+    required String toUserId,
+    required String body,
+    required String siteId,
+    required DateTime startAtUtc,
+    required DateTime endAtUtc,
+    required String timezoneName,
   }) async => 'msg-noop';
 }
 
@@ -75,8 +75,7 @@ class _ProfileRepo implements StaffDemoProfileRepository {
       const <StaffDemoProfile>[];
 
   @override
-  Future<StaffDemoProfile?> loadProfile({required final String userId}) async =>
-      null;
+  Future<StaffDemoProfile?> loadProfile({required String userId}) async => null;
 }
 
 void main() {

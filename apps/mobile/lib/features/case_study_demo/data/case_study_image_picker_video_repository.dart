@@ -8,8 +8,8 @@ import 'package:image_picker/image_picker.dart';
 /// [CaseStudyVideoRepository] using [ImagePicker.pickVideo].
 class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
   CaseStudyImagePickerVideoRepository({
-    final ImagePicker? picker,
-    final bool Function()? isAndroid,
+    ImagePicker? picker,
+    bool Function()? isAndroid,
   }) : _picker = picker ?? ImagePicker(),
        _isAndroid = isAndroid ?? _defaultIsAndroid;
 
@@ -28,8 +28,8 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
       _pickVideo(source: ImageSource.gallery, isCamera: false);
 
   Future<MediaPickResult> _pickVideo({
-    required final ImageSource source,
-    required final bool isCamera,
+    required ImageSource source,
+    required bool isCamera,
   }) async {
     try {
       final XFile? file = await _picker.pickVideo(source: source);
@@ -56,7 +56,7 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
     }
   }
 
-  MediaPickResult _mapPlatformException(final PlatformException error) {
+  MediaPickResult _mapPlatformException(PlatformException error) {
     final String code = error.code.toLowerCase();
     final String message = (error.message ?? '').toLowerCase();
 
@@ -89,8 +89,8 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
   }
 
   static bool _isCameraUnavailableCodeOrMessage(
-    final String code,
-    final String? message,
+    String code,
+    String? message,
   ) {
     final String lowerCode = code.toLowerCase();
     if (lowerCode == 'no_available_camera' ||
@@ -110,7 +110,7 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
         lower.contains('no camera found');
   }
 
-  MediaPickResult _mapCameraException(final Object error) {
+  MediaPickResult _mapCameraException(Object error) {
     final String message = error.toString();
     if (_isCameraUnavailableCodeOrMessage('', message)) {
       return const MediaPickResult.failure(
@@ -154,7 +154,7 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
   }
 
   /// Best-effort: treat common video extensions; otherwise rely on [RetrieveType].
-  static bool _isProbablyVideoPath(final String path) {
+  static bool _isProbablyVideoPath(String path) {
     final String lower = path.toLowerCase();
     return lower.endsWith('.mp4') ||
         lower.endsWith('.mov') ||
@@ -162,7 +162,7 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
         lower.endsWith('.webm');
   }
 
-  static String? _extractLostPath(final LostDataResponse response) {
+  static String? _extractLostPath(LostDataResponse response) {
     final String directPath = response.file?.path ?? '';
     if (directPath.isNotEmpty) {
       return directPath;

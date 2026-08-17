@@ -1,11 +1,11 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_formatters.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'calculator_rate_selector_dialog.dart';
 
@@ -53,7 +53,7 @@ class CalculatorRateSelectorConfig {
 }
 
 CalculatorRateSelectorConfig taxRateSelectorConfig(
-  final AppLocalizations l10n,
+  AppLocalizations l10n,
 ) => CalculatorRateSelectorConfig(
   title: l10n.calculatorTaxPresetsLabel,
   options: calculatorTaxRateOptions,
@@ -66,7 +66,7 @@ CalculatorRateSelectorConfig taxRateSelectorConfig(
 );
 
 CalculatorRateSelectorConfig tipRateSelectorConfig(
-  final AppLocalizations l10n,
+  AppLocalizations l10n,
 ) => CalculatorRateSelectorConfig(
   title: l10n.calculatorTipRateLabel,
   options: calculatorTipRateOptions,
@@ -96,7 +96,7 @@ class CalculatorRateSelector extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final NumberFormat percentFormat = CalculatorFormatters.of(context).percent;
     final String suffix = config.suffixText ?? percentFormat.symbols.PERCENT;
     final bool hasCustomSelection =
@@ -131,7 +131,7 @@ class CalculatorRateSelector extends StatelessWidget {
                   : (_) async {
                       final double? value = await showAdaptiveDialog<double>(
                         context: context,
-                        builder: (final context) => _CustomRateDialog(
+                        builder: (context) => _CustomRateDialog(
                           initialValue: selectedRate,
                           title: config.customDialogTitle,
                           fieldLabel: config.customFieldLabel,

@@ -64,7 +64,7 @@ class ScapesCubit extends Cubit<ScapesState>
     emit(current.copyWith(viewMode: newMode));
   }
 
-  void toggleFavorite(final String scapeId) {
+  void toggleFavorite(String scapeId) {
     final current = state;
     if (current is! ScapesReady) return;
     emit(

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:core/core.dart';
 
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
@@ -10,8 +10,8 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_sna
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:storage/storage.dart';
 
 import '../../../test_helpers.dart' as test_helpers;
 
@@ -51,10 +51,7 @@ void main() {
             at: DateTime.utc(2024),
           ),
       ];
-      final List<double> chart = List<double>.generate(
-        80,
-        (final i) => i.toDouble(),
-      );
+      final List<double> chart = List<double>.generate(80, (i) => i.toDouble());
       final MarketFeedSnapshot raw = MarketFeedSnapshot(
         pairId: 'btc_usdt',
         lastPrice: 1,
@@ -156,7 +153,7 @@ void main() {
         final Completer<void> sawTwoSnapshots = Completer<void>();
         final StreamSubscription<MarketFeedSnapshot> sub = repo
             .watch('btc_usdt')
-            .listen((final MarketFeedSnapshot snapshot) {
+            .listen((MarketFeedSnapshot snapshot) {
               emitted.add(snapshot);
               if (emitted.length >= 2 && !sawTwoSnapshots.isCompleted) {
                 sawTwoSnapshots.complete();
@@ -215,7 +212,7 @@ void main() {
         expect(cached.chartCloses.length, greaterThanOrEqualTo(3));
         expect(cached.lastPrice, rich.lastPrice);
         expect(feed.resumeSnapshots, isNotEmpty);
-        expect(feed.resumeSnapshots.every((final s) => s == rich), isTrue);
+        expect(feed.resumeSnapshots.every((s) => s == rich), isTrue);
       },
     );
 
@@ -280,8 +277,8 @@ class _BurstMarketFeed extends SimulatedMarketFeed {
 
   @override
   Stream<MarketFeedSnapshot> watch(
-    final String pairId, {
-    final MarketFeedSnapshot? resumeFrom,
+    String pairId, {
+    MarketFeedSnapshot? resumeFrom,
   }) async* {
     for (final MarketFeedSnapshot snapshot in snapshots) {
       yield snapshot;
@@ -301,8 +298,8 @@ class _ResumeRecordingFeed extends SimulatedMarketFeed {
 
   @override
   Stream<MarketFeedSnapshot> watch(
-    final String pairId, {
-    final MarketFeedSnapshot? resumeFrom,
+    String pairId, {
+    MarketFeedSnapshot? resumeFrom,
   }) async* {
     if (resumeFrom != null) {
       resumeSnapshots.add(resumeFrom);
@@ -323,10 +320,7 @@ class _SlowFirstPersistLocalDataSource extends RealtimeMarketLocalDataSource {
   final MarketFeedSnapshot slowSnapshot;
 
   @override
-  Future<void> saveSnapshot(
-    final String pairId,
-    final MarketFeedSnapshot snapshot,
-  ) async {
+  Future<void> saveSnapshot(String pairId, MarketFeedSnapshot snapshot) async {
     if (snapshot.updatedAt == slowSnapshot.updatedAt &&
         snapshot.lastPrice == slowSnapshot.lastPrice) {
       await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -336,8 +330,8 @@ class _SlowFirstPersistLocalDataSource extends RealtimeMarketLocalDataSource {
 }
 
 MarketFeedSnapshot _sampleSnapshot({
-  required final double lastPrice,
-  required final DateTime updatedAt,
+  required double lastPrice,
+  required DateTime updatedAt,
 }) {
   return MarketFeedSnapshot(
     pairId: 'btc_usdt',

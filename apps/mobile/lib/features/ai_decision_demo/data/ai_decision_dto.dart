@@ -15,7 +15,7 @@ class AiDecisionCaseSummaryDto {
     required this.lastDecisionBand,
   });
 
-  factory AiDecisionCaseSummaryDto.fromJson(final Map<String, dynamic> json) =>
+  factory AiDecisionCaseSummaryDto.fromJson(Map<String, dynamic> json) =>
       AiDecisionCaseSummaryDto(
         id: requireAiDecisionString(json, 'id'),
         applicantName: requireAiDecisionString(json, 'applicant_name'),
@@ -52,7 +52,7 @@ class AiDecisionDecisionResultDto {
   });
 
   factory AiDecisionDecisionResultDto.fromJson(
-    final Map<String, dynamic> json,
+    Map<String, dynamic> json,
   ) => AiDecisionDecisionResultDto(
     riskScore: requireAiDecisionNumAsDouble(json, 'risk_score'),
     riskBand: requireAiDecisionString(json, 'risk_band'),
@@ -89,7 +89,7 @@ class AiDecisionCaseDetailDto {
     required this.latestDecision,
   });
 
-  factory AiDecisionCaseDetailDto.fromJson(final Map<String, dynamic> json) {
+  factory AiDecisionCaseDetailDto.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> caseJson = requireAiDecisionMap(json, 'case');
     final Object? latestRaw = json['latest_decision'];
     AiDecisionDecisionResultDto? latestDecision;

@@ -1,7 +1,7 @@
 part of 'countries_graphql_repository.dart';
 
 extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
-  List<GraphqlContinent> mapContinents(final Object? rawContinents) {
+  List<GraphqlContinent> mapContinents(Object? rawContinents) {
     final List<dynamic>? list = listFromDynamic(rawContinents);
     if (list == null || list.isEmpty) {
       return const <GraphqlContinent>[];
@@ -11,7 +11,7 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
     );
   }
 
-  List<GraphqlCountry> mapCountries(final Object? rawCountries) {
+  List<GraphqlCountry> mapCountries(Object? rawCountries) {
     final List<dynamic>? list = listFromDynamic(rawCountries);
     if (list == null || list.isEmpty) {
       return const <GraphqlCountry>[];
@@ -21,7 +21,7 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
     );
   }
 
-  GraphqlContinent _continentFromJson(final Object? raw) {
+  GraphqlContinent _continentFromJson(Object? raw) {
     final Map<String, dynamic>? json = mapFromDynamic(raw);
     if (json == null) {
       throw _malformedPayload('continent');
@@ -33,7 +33,7 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
     }
   }
 
-  GraphqlCountry _countryFromJson(final Object? raw) {
+  GraphqlCountry _countryFromJson(Object? raw) {
     final Map<String, dynamic>? json = mapFromDynamic(raw);
     if (json == null) {
       throw _malformedPayload('country');
@@ -46,15 +46,15 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
   }
 
   GraphqlDemoException _malformedPayload(
-    final String payload, {
-    final Object? cause,
+    String payload, {
+    Object? cause,
   }) => GraphqlDemoException(
     'Malformed GraphQL $payload payload',
     cause: cause,
     type: GraphqlDemoErrorType.data,
   );
 
-  String? normalizedContinentCode(final String? code) {
+  String? normalizedContinentCode(String? code) {
     if (code == null) {
       return null;
     }
@@ -66,9 +66,9 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
   }
 
   Future<Map<String, dynamic>> postQuery(
-    final String query, {
-    final Map<String, dynamic>? variables,
-    final String? operationName,
+    String query, {
+    Map<String, dynamic>? variables,
+    String? operationName,
   }) async {
     final Map<String, dynamic> payload = <String, dynamic>{
       'query': query.trim(),
@@ -87,11 +87,11 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
           .postQuery(payload, CountriesGraphqlRepository.options())
           .then(bytesResponseFromHttpResponse),
       timeout: timeout,
-      isSuccess: (final statusCode) => statusCode == 200,
+      isSuccess: (statusCode) => statusCode == 200,
       logContext:
           'CountriesGraphqlRepository._postQuery'
           '${operationName != null ? '.$operationName' : ''}',
-      onHttpFailure: (final res) {
+      onHttpFailure: (res) {
         final int? statusCode = res.statusCode;
         final bool isServerError = (statusCode ?? 0) >= 500;
         final String? bodyData = responseBodyAsDiagnosticString(res.data);
@@ -103,12 +103,12 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
               : GraphqlDemoErrorType.invalidRequest,
         );
       },
-      onException: (final error) => GraphqlDemoException(
+      onException: (error) => GraphqlDemoException(
         'Failed to reach GraphQL endpoint',
         cause: error,
         type: GraphqlDemoErrorType.network,
       ),
-      onFailureLog: (final res) {
+      onFailureLog: (res) {
         AppLogger.error(
           'CountriesGraphqlRepository._postQuery non-success: ${res.statusCode}',
           'Response body omitted',
@@ -160,7 +160,7 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
     return data;
   }
 
-  static String? responseBodyAsDiagnosticString(final Object? data) {
+  static String? responseBodyAsDiagnosticString(Object? data) {
     if (data == null) {
       return null;
     }

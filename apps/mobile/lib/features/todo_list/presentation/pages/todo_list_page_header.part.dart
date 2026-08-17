@@ -1,13 +1,13 @@
 part of 'todo_list_page.dart';
 
 List<Widget> _todoHeaderChildren({
-  required final BuildContext context,
-  required final _TodoHeaderLayout layout,
-  required final TodoListListProjection listData,
-  required final List<TodoItem> filteredItems,
-  required final TodoListCubit cubit,
-  required final ThemeData theme,
-  required final ColorScheme colors,
+  required BuildContext context,
+  required _TodoHeaderLayout layout,
+  required TodoListListProjection listData,
+  required List<TodoItem> filteredItems,
+  required TodoListCubit cubit,
+  required ThemeData theme,
+  required ColorScheme colors,
 }) => [
   Visibility(
     visible: layout.showStats,
@@ -64,7 +64,7 @@ List<Widget> _todoHeaderChildren({
           TodoListSelectionData
         >(
           selector: TodoListSelectionData.fromState,
-          builder: (final context, final selection) => TodoBatchActionsBar(
+          builder: (context, selection) => TodoBatchActionsBar(
             items: listData.items,
             filteredItems: filteredItems,
             selectedItemIds: selection.selectedItemIds,
@@ -86,14 +86,14 @@ List<Widget> _todoHeaderChildren({
 ];
 
 Widget _todoHeaderShell({
-  required final List<Widget> headerChildren,
-  required final ScrollController scrollController,
+  required List<Widget> headerChildren,
+  required ScrollController scrollController,
 }) {
   if (headerChildren.isEmpty) {
     return const SizedBox.shrink();
   }
   return Listener(
-    onPointerSignal: (final event) {
+    onPointerSignal: (event) {
       if (event is! PointerScrollEvent || !scrollController.hasClients) {
         return;
       }

@@ -16,7 +16,7 @@ class CaseStudyDraft extends Equatable {
     required this.phase,
   });
 
-  factory CaseStudyDraft.fresh({required final String caseId}) {
+  factory CaseStudyDraft.fresh({required String caseId}) {
     return CaseStudyDraft(
       caseId: caseId,
       doctorName: '',
@@ -54,15 +54,15 @@ class CaseStudyDraft extends Equatable {
       )];
 
   CaseStudyDraft copyWith({
-    final String? caseId,
-    final String? doctorName,
-    final CaseStudyCaseType? caseType,
-    final bool clearCaseType = false,
-    final String? notes,
-    final Map<String, String>? answers,
-    final Map<String, String>? remoteObjectKeysByQuestion,
-    final int? currentQuestionIndex,
-    final CaseStudyDraftPhase? phase,
+    String? caseId,
+    String? doctorName,
+    CaseStudyCaseType? caseType,
+    bool clearCaseType = false,
+    String? notes,
+    Map<String, String>? answers,
+    Map<String, String>? remoteObjectKeysByQuestion,
+    int? currentQuestionIndex,
+    CaseStudyDraftPhase? phase,
   }) {
     return CaseStudyDraft(
       caseId: caseId ?? this.caseId,
@@ -98,7 +98,7 @@ enum CaseStudyDraftPhase {
 }
 
 extension CaseStudyDraftPhaseX on CaseStudyDraftPhase {
-  static CaseStudyDraftPhase? tryParse(final String? raw) {
+  static CaseStudyDraftPhase? tryParse(String? raw) {
     if (raw == null || raw.isEmpty) return null;
     for (final CaseStudyDraftPhase v in CaseStudyDraftPhase.values) {
       if (v.name == raw) return v;

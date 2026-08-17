@@ -4,7 +4,7 @@ class _ClientBookingPanel extends StatelessWidget {
   const _ClientBookingPanel();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final viewState = context
         .selectState<
           ClientBookingCubit,
@@ -19,7 +19,7 @@ class _ClientBookingPanel extends StatelessWidget {
             String? errorMessage,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             therapists: state.therapists,
             selectedTherapistId: state.selectedTherapistId,
             selectedTherapist: state.selectedTherapist,
@@ -45,7 +45,7 @@ class _ClientBookingPanel extends StatelessWidget {
           appointments: viewState.appointments,
           isBusy: viewState.isBusy,
           error: viewState.errorMessage,
-          onBook: (final slot) async {
+          onBook: (slot) async {
             await cubit.createAppointmentFromSlot(slot);
           },
           onCancel: cubit.cancelAppointment,
@@ -88,13 +88,13 @@ class _TherapistList extends StatelessWidget {
   final Future<void> Function(String therapistId) onSelect;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (therapists.isEmpty) {
       return const Center(child: Text('No therapists found.'));
     }
     return ListView.separated(
       itemCount: therapists.length,
-      separatorBuilder: (final _, final index) => const Divider(height: 1),
+      separatorBuilder: (_, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final t = therapists[index];
         final selected = t.id == selectedId;

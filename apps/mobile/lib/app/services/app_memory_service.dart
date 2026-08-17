@@ -29,18 +29,18 @@ class AppMemoryService {
   final Future<void> Function(AppMemoryTrimLevel level) _onImageCacheTrim;
   final Future<void> Function(AppMemoryTrimLevel level) _onChartMemoryTrim;
 
-  static Future<void> _noopChartTrim(final AppMemoryTrimLevel _) async {}
+  static Future<void> _noopChartTrim(AppMemoryTrimLevel _) async {}
 
   Future<void>? _trimInFlight;
   AppMemoryTrimLevel? _queuedLevel;
 
   static Future<void> _missingImageCacheTrim(
-    final AppMemoryTrimLevel level,
+    AppMemoryTrimLevel level,
   ) async {
     throw StateError('Provide either imageCacheManager or onImageCacheTrim.');
   }
 
-  Future<void> trim(final AppMemoryTrimLevel level) async {
+  Future<void> trim(AppMemoryTrimLevel level) async {
     final Future<void>? inFlight = _trimInFlight;
     if (inFlight != null) {
       _queuedLevel = _mergeLevels(_queuedLevel, level);
@@ -66,8 +66,8 @@ class AppMemoryService {
   }
 
   AppMemoryTrimLevel _mergeLevels(
-    final AppMemoryTrimLevel? current,
-    final AppMemoryTrimLevel next,
+    AppMemoryTrimLevel? current,
+    AppMemoryTrimLevel next,
   ) {
     if (current == AppMemoryTrimLevel.pressure ||
         next == AppMemoryTrimLevel.pressure) {
@@ -76,7 +76,7 @@ class AppMemoryService {
     return AppMemoryTrimLevel.background;
   }
 
-  Future<void> _performTrim(final AppMemoryTrimLevel level) async {
+  Future<void> _performTrim(AppMemoryTrimLevel level) async {
     final ImageCache imageCache = PaintingBinding.instance.imageCache
       ..clearLiveImages();
     if (level == AppMemoryTrimLevel.pressure) {
@@ -100,8 +100,8 @@ class AppMemoryService {
   }
 
   Future<void> _runSafely(
-    final String label,
-    final Future<void> Function() action,
+    String label,
+    Future<void> Function() action,
   ) async {
     try {
       await action();

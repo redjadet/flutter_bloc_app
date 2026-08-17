@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:core/core.dart';
 
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.da
 part 'simulated_market_feed_state.part.dart';
 
 /// Highest numeric suffix from simulator trade ids (`t42` -> 42).
-int _initialTradeSeqFromRecentTrades(final List<RecentTrade> recentTrades) {
+int _initialTradeSeqFromRecentTrades(List<RecentTrade> recentTrades) {
   var maxSeq = 0;
   for (final RecentTrade trade in recentTrades) {
     final String id = trade.id;
@@ -33,7 +34,7 @@ class SimulatedMarketFeed {
     required this._timerService,
     this.fastTick = const Duration(milliseconds: 20),
     this.emitInterval = const Duration(milliseconds: 80),
-    final DateTime Function()? clock,
+    DateTime Function()? clock,
   }) : _clock = clock ?? DateTime.now;
 
   final Random _random;
@@ -47,8 +48,8 @@ class SimulatedMarketFeed {
   /// When [resumeFrom] is set (e.g. Hive cache on reconnect), the simulator
   /// continues from that snapshot instead of resetting to [_SimState.initial].
   Stream<MarketFeedSnapshot> watch(
-    final String pairId, {
-    final MarketFeedSnapshot? resumeFrom,
+    String pairId, {
+    MarketFeedSnapshot? resumeFrom,
   }) {
     var state = resumeFrom != null
         ? _SimState.fromSnapshot(resumeFrom)

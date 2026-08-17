@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-String formatDeviceDateTime(
-  final BuildContext context,
-  final DateTime utcOrLocal,
-) {
+String formatDeviceDateTime(BuildContext context, DateTime utcOrLocal) {
   final DateTime local = utcOrLocal.toLocal();
   final MaterialLocalizations material = MaterialLocalizations.of(context);
   final String date = material.formatShortDate(local);
@@ -15,8 +12,8 @@ String formatDeviceDateTime(
 }
 
 String formatDeviceTimeRange(
-  final BuildContext context,
-  final DateTime start,
-  final DateTime end,
+  BuildContext context,
+  DateTime start,
+  DateTime end,
 ) =>
     '${formatDeviceDateTime(context, start)} → ${formatDeviceDateTime(context, end)}';

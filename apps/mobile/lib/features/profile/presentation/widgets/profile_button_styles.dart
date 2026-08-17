@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 /// Builds [ButtonStyle] for profile outlined buttons using Mix design tokens.
@@ -7,8 +7,8 @@ import 'package:mix/mix.dart';
 /// Values align with [AppStyles.profileOutlinedButton] so styling stays
 /// consistent with the design system.
 ButtonStyle profileOutlinedButtonStyle(
-  final BuildContext context, {
-  required final Color backgroundColor,
+  BuildContext context, {
+  required Color backgroundColor,
 }) {
   final bool hasMixScope = MixScope.maybeOf(context, 'tokens') != null;
   final Radius? radius = hasMixScope
@@ -40,9 +40,9 @@ ButtonStyle profileOutlinedButtonStyle(
 ///
 /// Matches [AppStyles.profileOutlinedButton] typography (label large, w900).
 TextStyle profileButtonTextStyle(
-  final BuildContext context, {
-  required final Color color,
-  required final double fontSize,
+  BuildContext context, {
+  required Color color,
+  required double fontSize,
 }) {
   final base = Theme.of(context).textTheme.labelLarge;
   return (base ?? const TextStyle()).copyWith(

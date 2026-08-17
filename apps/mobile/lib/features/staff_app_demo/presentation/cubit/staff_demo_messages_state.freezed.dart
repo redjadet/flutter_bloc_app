@@ -89,8 +89,7 @@ extension StaffDemoMessagesStatePatterns on StaffDemoMessagesState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoMessagesState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoMessagesState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _StaffDemoMessagesState() when $default != null:
 return $default(_that);case _:
@@ -111,8 +110,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoMessagesState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoMessagesState value)  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoMessagesState():
 return $default(_that);case _:
@@ -132,8 +130,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoMessagesState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoMessagesState value)?  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoMessagesState() when $default != null:
 return $default(_that);case _:
@@ -209,7 +206,7 @@ return $default(_that.status,_that.items,_that.knownError,_that.errorMessage);ca
 
 
 class _StaffDemoMessagesState implements StaffDemoMessagesState {
-  const _StaffDemoMessagesState({this.status = StaffDemoMessagesStatus.initial, final  List<StaffDemoInboxItem> items = const <StaffDemoInboxItem>[], this.knownError, this.errorMessage}): _items = items;
+  const _StaffDemoMessagesState({this.status = StaffDemoMessagesStatus.initial, List<StaffDemoInboxItem> items = const <StaffDemoInboxItem>[], this.knownError, this.errorMessage}): _items = items;
   
 
 @override@JsonKey() final  StaffDemoMessagesStatus status;

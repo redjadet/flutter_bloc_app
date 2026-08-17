@@ -24,15 +24,12 @@ void main() {
     messageController = StreamController<WebsocketMessage>.broadcast();
 
     when(() => repository.endpoint).thenReturn(endpoint);
-    when(
-      () => repository.connectionStates,
-    ).thenAnswer((_) => connectionController.stream);
-    when(
-      () => repository.incomingMessages,
-    ).thenAnswer((_) => messageController.stream);
-    when(
-      () => repository.currentState,
-    ).thenReturn(const WebsocketConnectionState.disconnected());
+    when(() => repository.connectionStates)
+        .thenAnswer((_) => connectionController.stream);
+    when(() => repository.incomingMessages)
+        .thenAnswer((_) => messageController.stream);
+    when(() => repository.currentState)
+        .thenReturn(const WebsocketConnectionState.disconnected());
     when(() => repository.disconnect()).thenAnswer((_) async {});
   });
 
@@ -54,12 +51,10 @@ void main() {
       await Future<void>.delayed(Duration.zero);
     },
     expect: () => <WebsocketState>[
-      WebsocketState.initial(
-        endpoint,
-      ).copyWith(status: WebsocketStatus.connecting, errorMessage: null),
-      WebsocketState.initial(
-        endpoint,
-      ).copyWith(status: WebsocketStatus.connected, errorMessage: null),
+      WebsocketState.initial(endpoint)
+          .copyWith(status: WebsocketStatus.connecting, errorMessage: null),
+      WebsocketState.initial(endpoint)
+          .copyWith(status: WebsocketStatus.connected, errorMessage: null),
     ],
   );
 
@@ -96,9 +91,8 @@ void main() {
         direction: WebsocketMessageDirection.incoming,
         text: 'echo: hi',
       );
-      final WebsocketState connected = WebsocketState.initial(
-        endpoint,
-      ).copyWith(status: WebsocketStatus.connected, errorMessage: null);
+      final WebsocketState connected = WebsocketState.initial(endpoint)
+          .copyWith(status: WebsocketStatus.connected, errorMessage: null);
       final WebsocketState sending = connected
           .appendMessage(outgoing)
           .copyWith(
@@ -140,9 +134,8 @@ void main() {
       return cubit;
     },
     expect: () => <WebsocketState>[
-      WebsocketState.initial(
-        endpoint,
-      ).copyWith(status: WebsocketStatus.error, errorMessage: 'boom'),
+      WebsocketState.initial(endpoint)
+          .copyWith(status: WebsocketStatus.error, errorMessage: 'boom'),
     ],
   );
 
@@ -240,7 +233,7 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       final List<int> sequences = cubit.state.messages
-          .map((final WebsocketMessage message) => message.sequence)
+          .map((WebsocketMessage message) => message.sequence)
           .toList();
       expect(sequences.toSet(), hasLength(sequences.length));
       expect(sequences, containsAll(<int>[0, 1, 2]));

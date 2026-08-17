@@ -1,5 +1,5 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Section header + body layout used on the settings screen and related
 /// diagnostics (e.g. remote config) without coupling features to each other.
@@ -16,7 +16,7 @@ class SettingsSection extends StatelessWidget {
   final double? spacing;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final double gap = spacing ?? context.responsiveGapS;
     return Column(

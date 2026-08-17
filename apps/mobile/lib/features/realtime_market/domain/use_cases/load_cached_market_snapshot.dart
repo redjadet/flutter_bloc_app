@@ -6,6 +6,6 @@ class LoadCachedMarketSnapshot {
 
   final RealtimeMarketRepository _repository;
 
-  Future<MarketFeedSnapshot?> call(final String pairId) =>
+  Future<MarketFeedSnapshot?> call(String pairId) =>
       _repository.loadCached(pairId);
 }

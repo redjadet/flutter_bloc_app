@@ -10,8 +10,8 @@ class ToolRegistry {
   final Map<String, ToolHandler> _handlers = {};
 
   void register({
-    required final ToolDescriptor descriptor,
-    required final ToolHandler handler,
+    required ToolDescriptor descriptor,
+    required ToolHandler handler,
   }) {
     _descriptors[descriptor.name] = descriptor;
     _handlers[descriptor.name] = handler;
@@ -19,5 +19,5 @@ class ToolRegistry {
 
   Iterable<ToolDescriptor> get descriptors => _descriptors.values;
 
-  Future<ToolResult> invoke(final ToolCall call) => _handlers[call.name]!(call);
+  Future<ToolResult> invoke(ToolCall call) => _handlers[call.name]!(call);
 }

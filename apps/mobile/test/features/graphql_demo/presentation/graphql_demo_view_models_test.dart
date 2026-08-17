@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_view_models.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const GraphqlContinent europe = GraphqlContinent(code: 'EU', name: 'Europe');

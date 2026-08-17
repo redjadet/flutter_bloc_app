@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart' as core_auth;
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_auth_session_port_adapter.dart';
@@ -16,10 +17,9 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 void main() {
   group('ChatCubit', () {
@@ -219,43 +219,40 @@ void main() {
       ]);
     });
 
-    test(
-      'after direct completion, new cubit plus loadHistory uses hint not sticky direct',
-      () async {
-        final _ConfigurableTransportChatRepository repo =
-            _ConfigurableTransportChatRepository(
-              hint: ChatRemotePath.edgeProxy,
-              successTransport: ChatRemotePath.directApi,
-            );
-        final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+    test('after direct completion, new cubit plus loadHistory uses hint not sticky direct', () async {
+      final _ConfigurableTransportChatRepository repo =
+          _ConfigurableTransportChatRepository(
+            hint: ChatRemotePath.edgeProxy,
+            successTransport: ChatRemotePath.directApi,
+          );
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
 
-        final ChatCubit first = ChatCubit(
-          repository: repo,
-          historyRepository: history,
-          initialModel: 'openai/gpt-oss-20b',
-        );
-        addTearDown(first.close);
+      final ChatCubit first = ChatCubit(
+        repository: repo,
+        historyRepository: history,
+        initialModel: 'openai/gpt-oss-20b',
+      );
+      addTearDown(first.close);
 
-        await first.sendMessage('Hi');
-        expect(first.state.lastCompletionTransport, ChatRemotePath.directApi);
-        expect(first.state.transportForBadge, ChatRemotePath.directApi);
+      await first.sendMessage('Hi');
+      expect(first.state.lastCompletionTransport, ChatRemotePath.directApi);
+      expect(first.state.transportForBadge, ChatRemotePath.directApi);
 
-        await first.close();
+      await first.close();
 
-        final ChatCubit restarted = ChatCubit(
-          repository: repo,
-          historyRepository: history,
-          initialModel: 'openai/gpt-oss-20b',
-        );
-        addTearDown(restarted.close);
+      final ChatCubit restarted = ChatCubit(
+        repository: repo,
+        historyRepository: history,
+        initialModel: 'openai/gpt-oss-20b',
+      );
+      addTearDown(restarted.close);
 
-        await restarted.loadHistory();
+      await restarted.loadHistory();
 
-        expect(restarted.state.lastCompletionTransport, isNull);
-        expect(restarted.state.runnableTransportHint, ChatRemotePath.edgeProxy);
-        expect(restarted.state.transportForBadge, ChatRemotePath.edgeProxy);
-      },
-    );
+      expect(restarted.state.lastCompletionTransport, isNull);
+      expect(restarted.state.runnableTransportHint, ChatRemotePath.edgeProxy);
+      expect(restarted.state.transportForBadge, ChatRemotePath.edgeProxy);
+    });
 
     test('sendMessage persists conversation to history', () async {
       final FakeChatRepository repo = FakeChatRepository();
@@ -761,44 +758,41 @@ void main() {
         },
       );
 
-      test(
-        'after queued flush and loadHistory, transport badge follows hint not replay transportUsed',
-        () async {
-          remoteRepository.shouldFail = true;
-          remoteRepository.hint = ChatRemotePath.edgeProxy;
-          remoteRepository.successTransport = ChatRemotePath.directApi;
-          final ChatCubit cubit = ChatCubit(
-            repository: offlineRepository,
-            historyRepository: localDataSource,
-            initialModel: 'offline-demo',
-          );
-          addTearDown(cubit.close);
+      test('after queued flush and loadHistory, transport badge follows hint not replay transportUsed', () async {
+        remoteRepository.shouldFail = true;
+        remoteRepository.hint = ChatRemotePath.edgeProxy;
+        remoteRepository.successTransport = ChatRemotePath.directApi;
+        final ChatCubit cubit = ChatCubit(
+          repository: offlineRepository,
+          historyRepository: localDataSource,
+          initialModel: 'offline-demo',
+        );
+        addTearDown(cubit.close);
 
-          await cubit.sendMessage('Flush transport');
+        await cubit.sendMessage('Flush transport');
 
-          List<SyncOperation> queued = await pendingRepository
-              .getPendingOperations(now: DateTime.now().toUtc());
-          expect(queued, hasLength(1));
+        List<SyncOperation> queued = await pendingRepository
+            .getPendingOperations(now: DateTime.now().toUtc());
+        expect(queued, hasLength(1));
 
-          remoteRepository.shouldFail = false;
-          await _drainPendingOperations(
-            repository: offlineRepository,
-            pendingRepository: pendingRepository,
-          );
+        remoteRepository.shouldFail = false;
+        await _drainPendingOperations(
+          repository: offlineRepository,
+          pendingRepository: pendingRepository,
+        );
 
-          await cubit.loadHistory();
+        await cubit.loadHistory();
 
-          expect(cubit.state.messages.length, 2);
-          expect(cubit.state.lastCompletionTransport, isNull);
-          expect(cubit.state.runnableTransportHint, ChatRemotePath.edgeProxy);
-          expect(cubit.state.transportForBadge, ChatRemotePath.edgeProxy);
+        expect(cubit.state.messages.length, 2);
+        expect(cubit.state.lastCompletionTransport, isNull);
+        expect(cubit.state.runnableTransportHint, ChatRemotePath.edgeProxy);
+        expect(cubit.state.transportForBadge, ChatRemotePath.edgeProxy);
 
-          queued = await pendingRepository.getPendingOperations(
-            now: DateTime.now().toUtc(),
-          );
-          expect(queued, isEmpty);
-        },
-      );
+        queued = await pendingRepository.getPendingOperations(
+          now: DateTime.now().toUtc(),
+        );
+        expect(queued, isEmpty);
+      });
     });
 
     group('auth-driven transport hint refresh', () {
@@ -1006,7 +1000,7 @@ class _ControllableCoreAuthRepository implements core_auth.AuthRepository {
   @override
   Stream<AuthUser?> get authStateChanges => _controller.stream;
 
-  void emitAuthState(final AuthUser? user) {
+  void emitAuthState(AuthUser? user) {
     _currentUser = user;
     _controller.add(user);
   }
@@ -1032,24 +1026,24 @@ class _ControllableSupabaseAuthRepository implements SupabaseAuthRepository {
   @override
   Stream<AuthUser?> get authStateChanges => _controller.stream;
 
-  void emitAuthState(final AuthUser? user) {
+  void emitAuthState(AuthUser? user) {
     _currentUser = user;
     _controller.add(user);
   }
 
   @override
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) {
     throw UnimplementedError();
   }
 
   @override
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) {
     throw UnimplementedError();
   }
@@ -1183,7 +1177,7 @@ class _ThrowingChatHistoryRepository extends FakeChatHistoryRepository {
 
   bool _shouldThrow;
 
-  void setShouldThrow(final bool value) {
+  void setShouldThrow(bool value) {
     _shouldThrow = value;
   }
 

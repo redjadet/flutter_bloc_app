@@ -55,7 +55,7 @@ void main() {
 
       expect(analytics.eventCount, greaterThan(0));
       expect(
-        analytics.events.map((final e) => e.name),
+        analytics.events.map((e) => e.name),
         containsAll(<String>['showcase_opened', 'release_flag_evaluated']),
       );
     });
@@ -117,10 +117,10 @@ void main() {
         firebaseInitialized: false,
         recordNonFatal:
             (
-              final exception,
-              final stack, {
-              required final bool fatal,
-              required final String reason,
+              exception,
+              stack, {
+              required bool fatal,
+              required String reason,
             }) async {
               callbackCount++;
             },
@@ -150,10 +150,10 @@ void main() {
         firebaseInitialized: true,
         recordNonFatal:
             (
-              final exception,
-              final stack, {
-              required final bool fatal,
-              required final String reason,
+              exception,
+              stack, {
+              required bool fatal,
+              required String reason,
             }) async {
               callbackCount++;
               seenException = exception;
@@ -194,10 +194,10 @@ void main() {
         firebaseInitialized: true,
         recordNonFatal:
             (
-              final exception,
-              final stack, {
-              required final bool fatal,
-              required final String reason,
+              exception,
+              stack, {
+              required bool fatal,
+              required String reason,
             }) async {
               throw StateError('sink failed');
             },
@@ -321,7 +321,7 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
       final int notificationEvents = analytics.events
-          .where((final e) => e.name == 'notification_received')
+          .where((e) => e.name == 'notification_received')
           .length;
       expect(notificationEvents, 1);
     });
@@ -376,7 +376,7 @@ class _FakeFrameMonitor implements FrameTimingMonitor {
   @override
   FrameTimingSummary currentSummary = FrameTimingSummary.empty;
 
-  void emitSummary(final FrameTimingSummary summary) {
+  void emitSummary(FrameTimingSummary summary) {
     currentSummary = summary;
     _onSummary?.call(summary);
   }
@@ -429,7 +429,7 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Future<bool> load() async => enabled;
 
   @override
-  Future<bool> save({required final bool enabled}) async {
+  Future<bool> save({required bool enabled}) async {
     this.enabled = enabled;
     _changes.add(enabled);
     return true;
@@ -467,7 +467,7 @@ class _FakeRemoteConfig implements RemoteConfigService {
   Future<void> clearCache() async {}
 
   @override
-  bool getBool(final String key) {
+  bool getBool(String key) {
     if (key == RemoteConfigKeys.productionDemoEnabled) {
       return enabled;
     }
@@ -475,7 +475,7 @@ class _FakeRemoteConfig implements RemoteConfigService {
   }
 
   @override
-  String getString(final String key) {
+  String getString(String key) {
     if (key == RemoteConfigKeys.productionDemoVariant) {
       return variant;
     }
@@ -486,8 +486,8 @@ class _FakeRemoteConfig implements RemoteConfigService {
   }
 
   @override
-  int getInt(final String key) => 0;
+  int getInt(String key) => 0;
 
   @override
-  double getDouble(final String key) => 0;
+  double getDouble(String key) => 0;
 }

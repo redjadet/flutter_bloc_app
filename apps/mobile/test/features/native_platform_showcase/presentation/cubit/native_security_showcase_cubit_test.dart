@@ -39,17 +39,16 @@ void main() {
       pinningConfig = CertificatePinningConfig.disabled();
     });
 
-    NativeSecurityShowcaseCubit buildCubit({
-      final bool canOpenMutableDemo = false,
-    }) => NativeSecurityShowcaseCubit(
-      runOperation: runOperation,
-      probeAppCheck: probeAppCheck,
-      loadCertSummary: const LoadCertificatePinPolicySummaryUseCase(
-        _fakeCertificateSummary,
-      ),
-      pinningConfig: pinningConfig,
-      canOpenMutableDemo: canOpenMutableDemo,
-    );
+    NativeSecurityShowcaseCubit buildCubit({bool canOpenMutableDemo = false}) =>
+        NativeSecurityShowcaseCubit(
+          runOperation: runOperation,
+          probeAppCheck: probeAppCheck,
+          loadCertSummary: const LoadCertificatePinPolicySummaryUseCase(
+            _fakeCertificateSummary,
+          ),
+          pinningConfig: pinningConfig,
+          canOpenMutableDemo: canOpenMutableDemo,
+        );
 
     test('constructor loads the certificate summary synchronously', () {
       final cubit = buildCubit(canOpenMutableDemo: true);
@@ -62,41 +61,38 @@ void main() {
     blocTest<NativeSecurityShowcaseCubit, NativeSecurityShowcaseState>(
       'runP256 sets inFlight then applies the result to p256Result only',
       build: () {
-        when(
-          () => runOperation(NativeSecurityOperation.p256SignVerify),
-        ).thenAnswer((_) async => successResult);
+        when(() => runOperation(NativeSecurityOperation.p256SignVerify))
+            .thenAnswer((_) async => successResult);
         return buildCubit();
       },
-      act: (final cubit) => cubit.runP256(),
+      act: (cubit) => cubit.runP256(),
       expect: () => <Matcher>[
         isA<NativeSecurityShowcaseState>().having(
-          (final s) => s.inFlight,
+          (s) => s.inFlight,
           'inFlight',
           NativeSecurityOperation.p256SignVerify,
         ),
         isA<NativeSecurityShowcaseState>()
-            .having((final s) => s.inFlight, 'inFlight', isNull)
-            .having((final s) => s.p256Result, 'p256Result', successResult)
-            .having((final s) => s.aesResult, 'aesResult', isNull),
+            .having((s) => s.inFlight, 'inFlight', isNull)
+            .having((s) => s.p256Result, 'p256Result', successResult)
+            .having((s) => s.aesResult, 'aesResult', isNull),
       ],
     );
 
     blocTest<NativeSecurityShowcaseCubit, NativeSecurityShowcaseState>(
       'runAesGcm preserves a prior p256Result',
       build: () {
-        when(
-          () => runOperation(NativeSecurityOperation.p256SignVerify),
-        ).thenAnswer((_) async => successResult);
-        when(
-          () => runOperation(NativeSecurityOperation.aesGcmRoundTrip),
-        ).thenAnswer((_) async => successResult);
+        when(() => runOperation(NativeSecurityOperation.p256SignVerify))
+            .thenAnswer((_) async => successResult);
+        when(() => runOperation(NativeSecurityOperation.aesGcmRoundTrip))
+            .thenAnswer((_) async => successResult);
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.runP256();
         await cubit.runAesGcm();
       },
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.p256Result, successResult);
         expect(cubit.state.aesResult, successResult);
       },
@@ -104,9 +100,8 @@ void main() {
 
     test('ignores a duplicate run while an operation is in flight', () async {
       final completer = Completer<NativeSecurityOperationResult>();
-      when(
-        () => runOperation(NativeSecurityOperation.p256SignVerify),
-      ).thenAnswer((_) => completer.future);
+      when(() => runOperation(NativeSecurityOperation.p256SignVerify))
+          .thenAnswer((_) => completer.future);
       final cubit = buildCubit();
       addTearDown(cubit.close);
 
@@ -115,17 +110,15 @@ void main() {
       completer.complete(successResult);
       await Future.wait<void>(<Future<void>>[first, second]);
 
-      verify(
-        () => runOperation(NativeSecurityOperation.p256SignVerify),
-      ).called(1);
+      verify(() => runOperation(NativeSecurityOperation.p256SignVerify))
+          .called(1);
     });
 
     test(
       'maps a throwing native operation to a failed outcome and clears busy',
       () async {
-        when(
-          () => runOperation(NativeSecurityOperation.secureStorageLifecycle),
-        ).thenThrow(StateError('boom'));
+        when(() => runOperation(NativeSecurityOperation.secureStorageLifecycle))
+            .thenThrow(StateError('boom'));
         final cubit = buildCubit();
         addTearDown(cubit.close);
 
@@ -140,9 +133,8 @@ void main() {
 
     test('never emits after the cubit is closed', () async {
       final completer = Completer<NativeSecurityOperationResult>();
-      when(
-        () => runOperation(NativeSecurityOperation.secureStorageLifecycle),
-      ).thenAnswer((_) => completer.future);
+      when(() => runOperation(NativeSecurityOperation.secureStorageLifecycle))
+          .thenAnswer((_) => completer.future);
       final cubit = buildCubit();
 
       final states = <NativeSecurityShowcaseState>[];
@@ -175,25 +167,21 @@ void main() {
         );
         return buildCubit();
       },
-      act: (final cubit) => cubit.runAppCheck(),
+      act: (cubit) => cubit.runAppCheck(),
       expect: () => <Matcher>[
         isA<NativeSecurityShowcaseState>().having(
-          (final s) => s.appCheckInFlight,
+          (s) => s.appCheckInFlight,
           'appCheckInFlight',
           isTrue,
         ),
         isA<NativeSecurityShowcaseState>()
+            .having((s) => s.appCheckInFlight, 'appCheckInFlight', isFalse)
             .having(
-              (final s) => s.appCheckInFlight,
-              'appCheckInFlight',
-              isFalse,
-            )
-            .having(
-              (final s) => s.appCheckResult?.status,
+              (s) => s.appCheckResult?.status,
               'appCheckResult.status',
               AppCheckAttestationStatus.issued,
             )
-            .having((final s) => s.p256Result, 'p256Result', isNull),
+            .having((s) => s.p256Result, 'p256Result', isNull),
       ],
     );
 
@@ -223,9 +211,8 @@ void main() {
     test('blocks crypto while App Check is in flight', () async {
       final completer = Completer<AppCheckAttestationResult>();
       when(() => probeAppCheck()).thenAnswer((_) => completer.future);
-      when(
-        () => runOperation(NativeSecurityOperation.p256SignVerify),
-      ).thenAnswer((_) async => successResult);
+      when(() => runOperation(NativeSecurityOperation.p256SignVerify))
+          .thenAnswer((_) async => successResult);
       final cubit = buildCubit();
       addTearDown(cubit.close);
 
@@ -247,9 +234,8 @@ void main() {
 
     test('blocks App Check while a native op is in flight', () async {
       final completer = Completer<NativeSecurityOperationResult>();
-      when(
-        () => runOperation(NativeSecurityOperation.p256SignVerify),
-      ).thenAnswer((_) => completer.future);
+      when(() => runOperation(NativeSecurityOperation.p256SignVerify))
+          .thenAnswer((_) => completer.future);
       when(() => probeAppCheck()).thenAnswer(
         (_) async => const AppCheckAttestationResult(
           status: AppCheckAttestationStatus.issued,
@@ -303,8 +289,8 @@ void main() {
         );
         return buildCubit();
       },
-      act: (final cubit) => cubit.runBiometric(),
-      verify: (final cubit) {
+      act: (cubit) => cubit.runBiometric(),
+      verify: (cubit) {
         expect(
           cubit.state.biometricResult?.status,
           NativeSecurityStatus.denied,
@@ -316,10 +302,10 @@ void main() {
     blocTest<NativeSecurityShowcaseCubit, NativeSecurityShowcaseState>(
       'loadCertificateSummary refreshes the certificate summary',
       build: () => buildCubit(),
-      act: (final cubit) => cubit.loadCertificateSummary(),
+      act: (cubit) => cubit.loadCertificateSummary(),
       expect: () => <Matcher>[
         isA<NativeSecurityShowcaseState>().having(
-          (final s) => s.certificateSummary.modeName,
+          (s) => s.certificateSummary.modeName,
           'certificateSummary.modeName',
           pinningConfig.mode.name,
         ),
@@ -329,8 +315,8 @@ void main() {
 }
 
 CertificatePinPolicySummary _fakeCertificateSummary(
-  final CertificatePinningConfig config, {
-  required final bool canOpenMutableDemo,
+  CertificatePinningConfig config, {
+  required bool canOpenMutableDemo,
 }) => CertificatePinPolicySummary(
   modeName: config.mode.name,
   pinHashKindName: config.pinHashKind.name,

@@ -91,8 +91,7 @@ extension CertificatePinPolicySummaryPatterns on CertificatePinPolicySummary {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CertificatePinPolicySummary value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CertificatePinPolicySummary value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _CertificatePinPolicySummary() when $default != null:
 return $default(_that);case _:
@@ -113,8 +112,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CertificatePinPolicySummary value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CertificatePinPolicySummary value)  $default,){final _that = this;
 switch (_that) {
 case _CertificatePinPolicySummary():
 return $default(_that);case _:
@@ -134,8 +132,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CertificatePinPolicySummary value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CertificatePinPolicySummary value)?  $default,){final _that = this;
 switch (_that) {
 case _CertificatePinPolicySummary() when $default != null:
 return $default(_that);case _:

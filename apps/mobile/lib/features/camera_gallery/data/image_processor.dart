@@ -12,8 +12,8 @@ class ImageProcessor {
   static const int maxSourceBytes = 20 * 1024 * 1024;
 
   Uint8List process({
-    required final Uint8List sourceBytes,
-    required final ImageProcessingFilter filter,
+    required Uint8List sourceBytes,
+    required ImageProcessingFilter filter,
   }) {
     if (sourceBytes.length > maxSourceBytes) {
       throw const FormatException('Image source is too large.');

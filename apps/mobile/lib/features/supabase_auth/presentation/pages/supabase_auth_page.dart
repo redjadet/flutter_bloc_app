@@ -3,7 +3,6 @@ import 'dart:math' as math;
 
 import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supab
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'supabase_auth_page_body.part.dart';
 part 'supabase_auth_page_cards.part.dart';
@@ -85,16 +85,16 @@ class _SupabaseAuthPageState extends State<SupabaseAuthPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final redirectAfterLogin = widget.redirectAfterLogin;
     return CommonPageLayout(
       title: l10n.supabaseAuthTitle,
       body: TypeSafeBlocListener<SupabaseAuthCubit, SupabaseAuthState>(
-        listenWhen: (final prev, final curr) =>
+        listenWhen: (prev, curr) =>
             curr.mapOrNull(authenticated: (_) => true) == true &&
             prev.mapOrNull(authenticated: (_) => true) != true,
-        listener: (final context, final state) {
+        listener: (context, state) {
           if (redirectAfterLogin case final String redirectPath
               when AppRoutes.isSafeRedirectPath(redirectPath)) {
             if (!context.mounted) return;
@@ -102,7 +102,7 @@ class _SupabaseAuthPageState extends State<SupabaseAuthPage> {
           }
         },
         child: TypeSafeBlocBuilder<SupabaseAuthCubit, SupabaseAuthState>(
-          builder: (final context, final state) {
+          builder: (context, state) {
             return SingleChildScrollView(
               padding: context.pagePadding,
               child: _SupabaseAuthBody(

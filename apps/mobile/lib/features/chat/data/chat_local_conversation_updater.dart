@@ -10,11 +10,11 @@ part 'chat_local_conversation_updater.freezed.dart';
 @freezed
 abstract class ChatLocalConversationState with _$ChatLocalConversationState {
   const factory ChatLocalConversationState({
-    required final ChatConversation conversation,
-    required final List<ChatMessage> messages,
-    required final List<ChatConversation> existing,
-    required final int index,
-    required final DateTime now,
+    required ChatConversation conversation,
+    required List<ChatMessage> messages,
+    required List<ChatConversation> existing,
+    required int index,
+    required DateTime now,
   }) = _ChatLocalConversationState;
 }
 
@@ -26,11 +26,11 @@ class ChatLocalConversationUpdater {
   final ChatHistoryRepository _localDataSource;
 
   Future<ChatLocalConversationState> ensureUserMessagePersisted(
-    final ChatSyncPayload payload,
+    ChatSyncPayload payload,
   ) async {
     final List<ChatConversation> existing = await _localDataSource.load();
     final int index = existing.indexWhere(
-      (final c) => c.id == payload.conversationId,
+      (c) => c.id == payload.conversationId,
     );
     final DateTime now = DateTime.now().toUtc();
     ChatConversation conversation = index >= 0
@@ -45,7 +45,7 @@ class ChatLocalConversationUpdater {
       conversation.messages,
     );
     final bool hasUserMessage = messages.any(
-      (final m) => m.clientMessageId == payload.clientMessageId,
+      (m) => m.clientMessageId == payload.clientMessageId,
     );
     if (!hasUserMessage) {
       messages.add(payload.userMessage(promptText: payload.prompt));
@@ -74,9 +74,9 @@ class ChatLocalConversationUpdater {
   }
 
   Future<void> applyRemoteResult({
-    required final ChatLocalConversationState state,
-    required final ChatSyncPayload payload,
-    required final ChatResult result,
+    required ChatLocalConversationState state,
+    required ChatSyncPayload payload,
+    required ChatResult result,
   }) async {
     final List<ChatMessage> messages = List<ChatMessage>.from(state.messages);
     for (int i = 0; i < messages.length; i++) {
@@ -125,9 +125,9 @@ class ChatLocalConversationUpdater {
   /// Marks the queued user message as terminal failed after a non-retryable
   /// dequeue error (plan: dead-letter + visible copy).
   Future<void> applyTerminalSyncFailure({
-    required final ChatLocalConversationState state,
-    required final ChatSyncPayload payload,
-    required final String failureCode,
+    required ChatLocalConversationState state,
+    required ChatSyncPayload payload,
+    required String failureCode,
   }) async {
     final List<ChatMessage> messages = List<ChatMessage>.from(state.messages);
     bool found = false;
@@ -167,9 +167,9 @@ class ChatLocalConversationUpdater {
   }
 
   List<ChatConversation> _mergeConversationIntoList(
-    final List<ChatConversation> existing,
-    final ChatConversation conversation,
-    final int index,
+    List<ChatConversation> existing,
+    ChatConversation conversation,
+    int index,
   ) {
     if (index >= 0 && index < existing.length) {
       return <ChatConversation>[

@@ -15,14 +15,14 @@ const List<NativeCapabilityKind> showcaseCapabilityOrder =
       NativeCapabilityKind.adaptiveGestures,
     ];
 
-PlatformShowcaseData mapShowcase(final AppPlatformKind platform) {
+PlatformShowcaseData mapShowcase(AppPlatformKind platform) {
   final Map<NativeCapabilityKind, String>? details =
       platformCapabilityCatalog[platform];
   if (details == null) {
     throw StateError('Missing capability catalog for $platform');
   }
   final List<NativeCapability> capabilities = showcaseCapabilityOrder
-      .map((final kind) {
+      .map((kind) {
         final String? platformDetail = details[kind];
         if (platformDetail == null) {
           throw StateError('Missing platform detail for $kind on $platform');

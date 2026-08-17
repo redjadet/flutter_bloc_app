@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart' show CommonCard;
 import 'package:design_system/responsive.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppMessage extends StatelessWidget {
   const AppMessage({
@@ -19,7 +19,7 @@ class AppMessage extends StatelessWidget {
   final List<Widget>? actions;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     final Color backgroundColor = isError

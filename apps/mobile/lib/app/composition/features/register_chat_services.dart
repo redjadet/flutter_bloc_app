@@ -57,7 +57,7 @@ void registerChatServices() {
       dio: getIt<Dio>(),
       apiKey: SecretConfig.huggingfaceApiKey,
     ),
-    dispose: (final client) => client.dispose(),
+    dispose: (client) => client.dispose(),
   );
   registerLazySingletonIfAbsent<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),

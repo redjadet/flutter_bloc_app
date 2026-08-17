@@ -5,9 +5,9 @@ part 'register_country_option.freezed.dart';
 @freezed
 abstract class CountryOption with _$CountryOption {
   const factory CountryOption({
-    required final String code,
-    required final String name,
-    required final String dialCode,
+    required String code,
+    required String name,
+    required String dialCode,
   }) = _CountryOption;
 
   const CountryOption._();
@@ -21,7 +21,7 @@ abstract class CountryOption with _$CountryOption {
     final List<int> chars = code
         .toUpperCase()
         .codeUnits
-        .map((final unit) => base + unit - alphaBase)
+        .map((unit) => base + unit - alphaBase)
         .toList();
     return String.fromCharCodes(chars);
   }

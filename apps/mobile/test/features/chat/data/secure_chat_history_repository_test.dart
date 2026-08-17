@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
-
 import 'package:flutter_bloc_app/features/chat/data/chat_conversation_dto.dart';
 import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

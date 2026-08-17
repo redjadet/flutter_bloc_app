@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Dio createMockDio(
-  final String body,
-  final int statusCode, {
-  final String contentType = 'application/json',
+  String body,
+  int statusCode, {
+  String contentType = 'application/json',
 }) {
   final dio = Dio();
   dio.interceptors.add(

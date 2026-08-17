@@ -71,8 +71,7 @@ Future<void> main(List<String> args) async {
   final payload = <String, Object?>{
     'generatedAt': DateTime.now().toUtc().toIso8601String(),
     'excludePluginCache': !includePluginCache,
-    'vendorInventoryHint':
-        'dart run tool/skill_vendor_plugin_inventory.dart docs/audits/vendor_plugin_inventory_latest.json',
+    'vendorInventoryHint': 'dart run tool/skill_vendor_plugin_inventory.dart docs/audits/vendor_plugin_inventory_latest.json',
     'roots': roots,
     'skills': skills,
   };

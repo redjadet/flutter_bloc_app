@@ -4,8 +4,7 @@ import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 
 class MockSearchRepository implements SearchRepository {
-  static String _decode(final String encoded) =>
-      utf8.decode(base64Decode(encoded));
+  static String _decode(String encoded) => utf8.decode(base64Decode(encoded));
 
   static final String _imageUrlPrefix = _decode(
     'aHR0cHM6Ly9hcGkuYnVpbGRlci5pby9hcGkvdjEvaW1hZ2UvYXNzZXRzL1RFTVAv',
@@ -14,7 +13,7 @@ class MockSearchRepository implements SearchRepository {
   static final String _imageUrlSuffix = _decode('P3dpZHRoPTIxNA==');
 
   @override
-  Future<List<SearchResult>> search(final String query) async {
+  Future<List<SearchResult>> search(String query) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
     if (query.toLowerCase().contains('not-found')) {
@@ -23,7 +22,7 @@ class MockSearchRepository implements SearchRepository {
 
     return List.generate(
       12,
-      (final index) => SearchResult(
+      (index) => SearchResult(
         id: 'dog_$index',
         imageUrl: _resolveImageUrl(index),
       ),
@@ -45,11 +44,11 @@ class MockSearchRepository implements SearchRepository {
     'c9e00052f89845fa223cf7819c61ddee5b51e541',
   ];
 
-  static String _resolveImageUrl(final int index) {
+  static String _resolveImageUrl(int index) {
     final String imageId = _imageIds[index % _imageIds.length];
     return '$_imageUrlPrefix$imageId$_imageUrlSuffix';
   }
 
   @override
-  Future<List<SearchResult>> call(final String query) => search(query);
+  Future<List<SearchResult>> call(String query) => search(query);
 }

@@ -77,7 +77,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     await _disposeSubscription();
     _subscription = registerSubscription(
       _service.linkStream().listen(
-        (final uri) {
+        (uri) {
           AppLogger.event(
             AppLogLevel.info,
             'deeplink.stream',
@@ -85,7 +85,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
           );
           _handleUri(uri, DeepLinkOrigin.resumed);
         },
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           _consecutiveFailureCount++;
           AppLogger.event(
             AppLogLevel.error,
@@ -106,7 +106,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     );
   }
 
-  void _handleUri(final Uri uri, final DeepLinkOrigin origin) {
+  void _handleUri(Uri uri, DeepLinkOrigin origin) {
     AppLogger.event(
       AppLogLevel.info,
       'deeplink.received',
@@ -145,8 +145,8 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
   }
 
   void _handleInitializeError(
-    final Object error,
-    final StackTrace? stackTrace,
+    Object error,
+    StackTrace? stackTrace,
   ) {
     _consecutiveFailureCount++;
     AppLogger.error('Deep link initialization failed', error, stackTrace);
@@ -158,7 +158,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     }
   }
 
-  void _logFailureTelemetry(final Object error) {
+  void _logFailureTelemetry(Object error) {
     if (_consecutiveFailureCount == 3) {
       AppLogger.event(
         AppLogLevel.warning,
@@ -184,7 +184,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     }
   }
 
-  Map<String, Object?> _uriFields(final Uri uri) => {
+  Map<String, Object?> _uriFields(Uri uri) => {
     'scheme': uri.scheme,
     'host': uri.host,
     'path': uri.path,

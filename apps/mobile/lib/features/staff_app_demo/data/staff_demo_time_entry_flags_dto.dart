@@ -11,7 +11,7 @@ class StaffDemoTimeEntryFlagsDto {
     required this.deviceClockSkewSuspected,
   });
 
-  StaffDemoTimeEntryFlagsDto.fromDomain(final StaffDemoTimeEntryFlags flags)
+  StaffDemoTimeEntryFlagsDto.fromDomain(StaffDemoTimeEntryFlags flags)
     : outsideGeofence = flags.outsideGeofence,
       earlyClockIn = flags.earlyClockIn,
       locationInsufficient = flags.locationInsufficient,
@@ -20,7 +20,7 @@ class StaffDemoTimeEntryFlagsDto {
       deviceClockSkewSuspected = flags.deviceClockSkewSuspected;
 
   factory StaffDemoTimeEntryFlagsDto.fromJson(
-    final Map<String, dynamic> json,
+    Map<String, dynamic> json,
   ) => StaffDemoTimeEntryFlagsDto(
     outsideGeofence: (json['outsideGeofence'] as bool?) ?? false,
     earlyClockIn: (json['earlyClockIn'] as bool?) ?? false,

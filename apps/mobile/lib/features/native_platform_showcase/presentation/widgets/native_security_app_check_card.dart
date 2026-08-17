@@ -1,11 +1,11 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_check_attestation_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_state.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_outcome_text.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef _AppCheckSlice = ({AppCheckAttestationResult? result, bool busy});
 
@@ -26,7 +26,7 @@ class NativeSecurityAppCheckCard extends StatelessWidget {
   };
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
@@ -35,9 +35,8 @@ class NativeSecurityAppCheckCard extends StatelessWidget {
       NativeSecurityShowcaseState,
       _AppCheckSlice
     >(
-      selector: (final state) =>
-          (result: state.appCheckResult, busy: state.isBusy),
-      builder: (final context, final slice) => KeyedSubtree(
+      selector: (state) => (result: state.appCheckResult, busy: state.isBusy),
+      builder: (context, slice) => KeyedSubtree(
         key: const ValueKey<String>('native-security-card-app-check'),
         child: CommonCard(
           child: Column(
@@ -76,7 +75,7 @@ class NativeSecurityAppCheckCard extends StatelessWidget {
     );
   }
 
-  static String sanitizedProviderLabel(final String raw) =>
+  static String sanitizedProviderLabel(String raw) =>
       _allowedProviderLabels.contains(raw) ? raw : 'unknown';
 }
 
@@ -86,7 +85,7 @@ class _AppCheckOutcomePanel extends StatelessWidget {
   final AppCheckAttestationResult? result;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final AppCheckAttestationResult? outcome = result;

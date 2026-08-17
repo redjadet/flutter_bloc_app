@@ -104,8 +104,7 @@ extension MarketFeedSnapshotPatterns on MarketFeedSnapshot {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MarketFeedSnapshot value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MarketFeedSnapshot value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _MarketFeedSnapshot() when $default != null:
 return $default(_that);case _:
@@ -126,8 +125,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MarketFeedSnapshot value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MarketFeedSnapshot value)  $default,){final _that = this;
 switch (_that) {
 case _MarketFeedSnapshot():
 return $default(_that);case _:
@@ -147,8 +145,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MarketFeedSnapshot value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MarketFeedSnapshot value)?  $default,){final _that = this;
 switch (_that) {
 case _MarketFeedSnapshot() when $default != null:
 return $default(_that);case _:
@@ -224,7 +221,7 @@ return $default(_that.pairId,_that.lastPrice,_that.changePct24h,_that.connection
 
 
 class _MarketFeedSnapshot implements MarketFeedSnapshot {
-  const _MarketFeedSnapshot({required this.pairId, required this.lastPrice, required this.changePct24h, required this.connection, required final  List<OrderBookLevel> bids, required final  List<OrderBookLevel> asks, required final  List<RecentTrade> recentTrades, required this.stats, required final  List<double> chartCloses, required this.updatedAt}): _bids = bids,_asks = asks,_recentTrades = recentTrades,_chartCloses = chartCloses;
+  const _MarketFeedSnapshot({required this.pairId, required this.lastPrice, required this.changePct24h, required this.connection, required  List<OrderBookLevel> bids, required  List<OrderBookLevel> asks, required  List<RecentTrade> recentTrades, required this.stats, required  List<double> chartCloses, required this.updatedAt}): _bids = bids,_asks = asks,_recentTrades = recentTrades,_chartCloses = chartCloses;
   
 
 @override final  String pairId;

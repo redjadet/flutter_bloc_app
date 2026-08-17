@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_helpers.dart';
@@ -14,7 +14,7 @@ void main() {
   group('TodoListCubit', () {
     late _FakeTodoRepository repository;
 
-    TodoListCubit buildCubit({final List<TodoItem>? initialItems}) {
+    TodoListCubit buildCubit({List<TodoItem>? initialItems}) {
       repository = _FakeTodoRepository(initialItems: initialItems);
       addTearDown(repository.dispose);
       return TodoListCubit(
@@ -26,7 +26,7 @@ void main() {
     blocTest<TodoListCubit, TodoListState>(
       'loadInitial emits loading then success states',
       build: () => buildCubit(),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.loadInitial();
       },
       expect: () => [
@@ -39,13 +39,13 @@ void main() {
       'addTodo emits updated list',
       build: () => buildCubit(),
       seed: () => const TodoListState(status: ViewStatus.success, items: []),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.addTodo(title: 'Write tests', description: '');
       },
       expect: () => [
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 1)
-            .having((final s) => s.items.first.title, 'title', 'Write tests'),
+            .having((s) => s.items.length, 'items length', 1)
+            .having((s) => s.items.first.title, 'title', 'Write tests'),
       ],
     );
 
@@ -58,12 +58,12 @@ void main() {
         status: ViewStatus.success,
         items: [_todoItem(id: 'a', title: 'Task')],
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.toggleTodo(cubit.state.items.first);
       },
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.items.first.isCompleted,
+          (s) => s.items.first.isCompleted,
           'isCompleted',
           true,
         ),
@@ -79,7 +79,7 @@ void main() {
         status: ViewStatus.success,
         items: [_todoItem(id: 'a', title: 'Old')],
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.updateTodo(
           item: cubit.state.items.first,
           title: 'New',
@@ -87,11 +87,7 @@ void main() {
         );
       },
       expect: () => [
-        isA<TodoListState>().having(
-          (final s) => s.items.first.title,
-          'title',
-          'New',
-        ),
+        isA<TodoListState>().having((s) => s.items.first.title, 'title', 'New'),
       ],
     );
 
@@ -104,11 +100,11 @@ void main() {
         status: ViewStatus.success,
         items: [_todoItem(id: 'a', title: 'Task')],
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.deleteTodo(cubit.state.items.first);
       },
       expect: () => [
-        isA<TodoListState>().having((final s) => s.items, 'items', isEmpty),
+        isA<TodoListState>().having((s) => s.items, 'items', isEmpty),
       ],
     );
 
@@ -127,13 +123,13 @@ void main() {
           _todoItem(id: 'b', title: 'Done', isCompleted: true),
         ],
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.clearCompleted();
       },
       expect: () => [
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 1)
-            .having((final s) => s.items.first.id, 'remaining id', 'a'),
+            .having((s) => s.items.length, 'items length', 1)
+            .having((s) => s.items.first.id, 'remaining id', 'a'),
       ],
     );
 
@@ -141,12 +137,12 @@ void main() {
       'setFilter updates the filter',
       build: () => buildCubit(),
       seed: () => const TodoListState(status: ViewStatus.success, items: []),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.setFilter(TodoFilter.completed);
       },
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.filter,
+          (s) => s.filter,
           'filter',
           TodoFilter.completed,
         ),
@@ -157,7 +153,7 @@ void main() {
       'setFilter is a no-op when filter is unchanged',
       build: () => buildCubit(),
       seed: () => const TodoListState(status: ViewStatus.success, items: []),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.setFilter(TodoFilter.all);
       },
       expect: () => <TodoListState>[],
@@ -167,7 +163,7 @@ void main() {
       'deleteTodo is a no-op when item is missing',
       build: () => buildCubit(),
       seed: () => const TodoListState(status: ViewStatus.success, items: []),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.deleteTodo(_todoItem(id: 'missing', title: 'Missing'));
       },
       expect: () => <TodoListState>[],
@@ -182,7 +178,7 @@ void main() {
         status: ViewStatus.success,
         items: [_todoItem(id: 'a', title: 'Active')],
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.clearCompleted();
       },
       expect: () => <TodoListState>[],
@@ -206,7 +202,7 @@ void main() {
         sortOrder: TodoSortOrder.manual,
         manualOrder: const <String, int>{'a': 0, 'b': 1},
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.reorderItems(oldIndex: 0, newIndex: 1);
       },
       expect: () => <TodoListState>[],
@@ -230,7 +226,7 @@ void main() {
         sortOrder: TodoSortOrder.manual,
         manualOrder: const <String, int>{'a': 0, 'b': 1},
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.reorderItems(oldIndex: 0, newIndex: 1);
       },
       expect: () => <TodoListState>[],
@@ -253,12 +249,12 @@ void main() {
         sortOrder: TodoSortOrder.manual,
         manualOrder: const <String, int>{'a': 0, 'b': 1},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.deleteTodo(_todoItem(id: 'a', title: 'Alpha'));
       },
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.manualOrder.containsKey('a'),
+          (s) => s.manualOrder.containsKey('a'),
           'manual order contains deleted id',
           false,
         ),
@@ -280,7 +276,7 @@ void main() {
         cubit.reorderItems(oldIndex: 0, newIndex: 1);
 
         final int maxOrder = cubit.state.manualOrder.values.reduce(
-          (final a, final b) => a > b ? a : b,
+          (a, b) => a > b ? a : b,
         );
 
         await repository.save(_todoItem(id: 'c', title: 'Gamma'));
@@ -310,9 +306,9 @@ void main() {
 
         final List<MapEntry<String, int>> entries =
             cubit.state.manualOrder.entries.toList()
-              ..sort((final a, final b) => a.value.compareTo(b.value));
+              ..sort((a, b) => a.value.compareTo(b.value));
         final List<String> orderedIds = entries
-            .map((final entry) => entry.key)
+            .map((entry) => entry.key)
             .toList(growable: false);
 
         expect(orderedIds, <String>['b', 'a', 'c']);
@@ -348,8 +344,8 @@ void main() {
 
 typedef _StatePredicate = bool Function(TodoListState state);
 
-_TodoListStateMatcher _hasStatus(final ViewStatus status) =>
-    _TodoListStateMatcher((final state) => state.status == status);
+_TodoListStateMatcher _hasStatus(ViewStatus status) =>
+    _TodoListStateMatcher((state) => state.status == status);
 
 class _TodoListStateMatcher extends Matcher {
   _TodoListStateMatcher(this._predicate);
@@ -357,11 +353,11 @@ class _TodoListStateMatcher extends Matcher {
   final _StatePredicate _predicate;
 
   @override
-  Description describe(final Description description) =>
+  Description describe(Description description) =>
       description.add('TodoListState with matching status');
 
   @override
-  bool matches(final Object? item, final Map<Object?, Object?> matchState) {
+  bool matches(Object? item, Map<Object?, Object?> matchState) {
     if (item is! TodoListState) {
       return false;
     }
@@ -372,7 +368,7 @@ class _TodoListStateMatcher extends Matcher {
 class _FakeTodoRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
-  _FakeTodoRepository({final List<TodoItem>? initialItems})
+  _FakeTodoRepository({List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(
       onListen: _emitCurrent,
@@ -389,10 +385,8 @@ class _FakeTodoRepository
   Future<List<TodoItem>> fetchAll() async => _snapshot();
 
   @override
-  Future<void> save(final TodoItem item) async {
-    final int index = _items.indexWhere(
-      (final current) => current.id == item.id,
-    );
+  Future<void> save(TodoItem item) async {
+    final int index = _items.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       _items.add(item);
     } else {
@@ -402,14 +396,14 @@ class _FakeTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final item) => item.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((item) => item.id == id);
     _emitCurrent();
   }
 
   @override
   Future<void> clearCompleted() async {
-    _items.removeWhere((final item) => item.isCompleted);
+    _items.removeWhere((item) => item.isCompleted);
     _emitCurrent();
   }
 
@@ -430,9 +424,9 @@ class _FakeTodoRepository
 }
 
 TodoItem _todoItem({
-  required final String id,
-  required final String title,
-  final bool isCompleted = false,
+  required String id,
+  required String title,
+  bool isCompleted = false,
 }) {
   final DateTime now = DateTime.utc(2024, 1, 1);
   return TodoItem(

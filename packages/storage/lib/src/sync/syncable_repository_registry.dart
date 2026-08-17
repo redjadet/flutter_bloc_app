@@ -7,7 +7,7 @@ class SyncableRepositoryRegistry {
   final Map<String, SyncableRepository> _repositories =
       <String, SyncableRepository>{};
 
-  void register(final SyncableRepository repository) {
+  void register(SyncableRepository repository) {
     final String key = repository.entityType;
     if (_repositories.containsKey(key)) {
       AppLogger.warning(
@@ -17,12 +17,11 @@ class SyncableRepositoryRegistry {
     _repositories[key] = repository;
   }
 
-  void unregister(final String entityType) {
+  void unregister(String entityType) {
     _repositories.remove(entityType);
   }
 
-  SyncableRepository? resolve(final String entityType) =>
-      _repositories[entityType];
+  SyncableRepository? resolve(String entityType) => _repositories[entityType];
 
   List<SyncableRepository> get repositories =>
       List<SyncableRepository>.unmodifiable(

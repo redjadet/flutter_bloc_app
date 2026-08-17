@@ -12,13 +12,13 @@ class NetworkGuard {
   /// On HTTP failure, [onHttpFailure] is invoked with the Dio [Response].
   /// On [DioException] or other errors, [onException] builds the domain error.
   static Future<Response<T>> executeDio<T, E extends Exception>({
-    required final Future<Response<T>> Function() request,
-    required final Duration timeout,
-    required final bool Function(int statusCode) isSuccess,
-    required final String logContext,
-    required final E Function(Response<T> response) onHttpFailure,
-    required final E Function(Object error) onException,
-    final void Function(Response<T> response)? onFailureLog,
+    required Future<Response<T>> Function() request,
+    required Duration timeout,
+    required bool Function(int statusCode) isSuccess,
+    required String logContext,
+    required E Function(Response<T> response) onHttpFailure,
+    required E Function(Object error) onException,
+    void Function(Response<T> response)? onFailureLog,
   }) async {
     try {
       final Response<T> response = await request().timeout(timeout);

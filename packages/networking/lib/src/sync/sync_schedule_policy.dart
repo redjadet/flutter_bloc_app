@@ -9,9 +9,9 @@ class SyncSchedulePolicy {
   /// [networkStatus] must be [NetworkStatus.online] for sync to run.
   /// [immediate] true when triggered by user/event; [isRunning] when coordinator is started.
   bool shouldRunCycle(
-    final NetworkStatus networkStatus, {
-    required final bool immediate,
-    required final bool isRunning,
+    NetworkStatus networkStatus, {
+    required bool immediate,
+    required bool isRunning,
   }) {
     if (networkStatus != NetworkStatus.online) {
       return false;

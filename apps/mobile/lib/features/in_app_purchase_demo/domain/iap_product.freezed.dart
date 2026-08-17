@@ -90,8 +90,7 @@ extension IapProductPatterns on IapProduct {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IapProduct value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IapProduct value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _IapProduct() when $default != null:
 return $default(_that);case _:
@@ -112,8 +111,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IapProduct value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IapProduct value)  $default,){final _that = this;
 switch (_that) {
 case _IapProduct():
 return $default(_that);case _:
@@ -133,8 +131,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IapProduct value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IapProduct value)?  $default,){final _that = this;
 switch (_that) {
 case _IapProduct() when $default != null:
 return $default(_that);case _:

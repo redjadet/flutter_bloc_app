@@ -15,7 +15,7 @@ class StaffDemoAdminCubit extends Cubit<StaffDemoAdminState> {
     await CubitExceptionHandler.executeAsync(
       operation: () => _timeEntriesRepository.fetchRecent(limit: 25),
       isAlive: () => !isClosed,
-      onSuccess: (final entries) {
+      onSuccess: (entries) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -25,7 +25,7 @@ class StaffDemoAdminCubit extends Cubit<StaffDemoAdminState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(

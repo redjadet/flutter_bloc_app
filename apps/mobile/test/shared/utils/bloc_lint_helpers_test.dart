@@ -24,10 +24,10 @@ void main() {
         final bool result =
             BlocLintHelpers.validateStateExhaustiveness<TestState, String>(
               allStates,
-              (final state) => state.when(
+              (state) => state.when(
                 idle: () => 'idle',
                 loading: () => 'loading',
-                error: (final message) => 'error',
+                error: (message) => 'error',
               ),
             );
 
@@ -44,7 +44,7 @@ void main() {
       final bool result =
           BlocLintHelpers.validateStateExhaustiveness<TestState, String>(
             allStates,
-            (final state) {
+            (state) {
               if (state is TestIdleState) {
                 throw Exception('Handler error');
               }
@@ -104,10 +104,10 @@ class TestCubit extends Cubit<TestState> {
 
 class TestBloc extends Bloc<TestEvent, TestState> {
   TestBloc() : super(const TestState.idle()) {
-    on<TestIncrementEvent>((final event, final emit) {
+    on<TestIncrementEvent>((event, emit) {
       emit(const TestState.loading());
     });
-    on<TestDecrementEvent>((final event, final emit) {
+    on<TestDecrementEvent>((event, emit) {
       emit(const TestState.idle());
     });
   }
@@ -118,12 +118,12 @@ sealed class TestState {
 
   const factory TestState.idle() = TestIdleState;
   const factory TestState.loading() = TestLoadingState;
-  const factory TestState.error(final String message) = TestErrorState;
+  const factory TestState.error(String message) = TestErrorState;
 
   R when<R>({
-    required final R Function() idle,
-    required final R Function() loading,
-    required final R Function(String message) error,
+    required R Function() idle,
+    required R Function() loading,
+    required R Function(String message) error,
   }) {
     return switch (this) {
       TestIdleState() => idle(),

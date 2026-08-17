@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-typedef HiveSchemaMigrator =
-    Future<void> Function(Box<dynamic> box, {required String? fromFingerprint});
+typedef HiveSchemaMigrator = Future<void> Function(
+  Box<dynamic> box, {
+  required String? fromFingerprint,
+});
 
 /// Declares a schema fingerprint for a Hive box namespace.
 ///
@@ -69,14 +71,14 @@ class HiveSchemaMigratorService {
   static bool? get enabledOverrideForTest => _enabledOverride;
 
   @visibleForTesting
-  static set enabledOverrideForTest(final bool? enabled) {
+  static set enabledOverrideForTest(bool? enabled) {
     _enabledOverride = enabled;
   }
 
   Future<void> ensureSchema({
-    required final Box<dynamic> box,
-    required final HiveBoxSchema schema,
-    required final Future<void> Function(Future<void> Function() action)
+    required Box<dynamic> box,
+    required HiveBoxSchema schema,
+    required Future<void> Function(Future<void> Function() action)
     runWithBoxLock,
   }) async {
     if (!_enableMigrations || !isEnabled) {
@@ -132,9 +134,9 @@ class HiveSchemaMigratorService {
   }
 
   Future<bool> _tryMigrateOrCleanup({
-    required final Box<dynamic> box,
-    required final HiveBoxSchema schema,
-    required final String? fromFingerprint,
+    required Box<dynamic> box,
+    required HiveBoxSchema schema,
+    required String? fromFingerprint,
   }) async {
     final HiveSchemaMigrator? migrator = schema.migrate ?? schema.cleanup;
     if (migrator == null) {
@@ -158,7 +160,7 @@ class HiveSchemaMigratorService {
     }
   }
 
-  Map<String, String> _readFingerprints(final Box<dynamic> box) {
+  Map<String, String> _readFingerprints(Box<dynamic> box) {
     dynamic raw;
     try {
       raw = box.get(metaKeyFingerprints);
@@ -167,7 +169,7 @@ class HiveSchemaMigratorService {
     }
     if (raw is Map) {
       final Map<String, String> out = <String, String>{};
-      raw.forEach((final dynamic k, final dynamic v) {
+      raw.forEach((dynamic k, dynamic v) {
         if (k is String && v is String && k.isNotEmpty && v.isNotEmpty) {
           out[k] = v;
         }
@@ -178,8 +180,8 @@ class HiveSchemaMigratorService {
   }
 
   Future<void> _writeFingerprints(
-    final Box<dynamic> box,
-    final Map<String, String> fingerprints,
+    Box<dynamic> box,
+    Map<String, String> fingerprints,
   ) async {
     // Store as Map<String, String> (Hive supports dynamic map payloads).
     await box.put(metaKeyFingerprints, Map<String, String>.from(fingerprints));

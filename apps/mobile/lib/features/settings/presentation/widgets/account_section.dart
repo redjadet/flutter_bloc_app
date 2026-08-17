@@ -1,10 +1,10 @@
 import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AccountSection extends StatelessWidget {
   const AccountSection({super.key, this.authRepository});
@@ -12,7 +12,7 @@ class AccountSection extends StatelessWidget {
   final AuthRepository? authRepository;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final AuthRepository? auth = authRepository;
@@ -32,7 +32,7 @@ class AccountSection extends StatelessWidget {
                 StreamBuilder<AuthUser?>(
                   initialData: auth.currentUser,
                   stream: auth.authStateChanges,
-                  builder: (final context, final snapshot) {
+                  builder: (context, snapshot) {
                     final AuthUser? user = snapshot.data ?? auth.currentUser;
                     final bool waitingForFirstAuthEvent =
                         snapshot.connectionState == ConnectionState.waiting &&
@@ -136,7 +136,7 @@ class AccountSection extends StatelessWidget {
     );
   }
 
-  static String _resolveDisplayName(final AuthUser user) {
+  static String _resolveDisplayName(AuthUser user) {
     final String? trimmedName = user.displayName?.trim();
     if (trimmedName != null && trimmedName.isNotEmpty) {
       return trimmedName;

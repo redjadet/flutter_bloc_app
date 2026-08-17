@@ -55,8 +55,7 @@ extension CounterErrorPatterns on CounterError {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _CannotGoBelowZero value)?  cannotGoBelowZero,TResult Function( _LoadCounterError value)?  load,TResult Function( _SaveCounterError value)?  save,TResult Function( _UnknownCounterError value)?  unknown,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _CannotGoBelowZero value)?  cannotGoBelowZero,TResult Function( _LoadCounterError value)?  load,TResult Function( _SaveCounterError value)?  save,TResult Function( _UnknownCounterError value)?  unknown,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _CannotGoBelowZero() when cannotGoBelowZero != null:
 return cannotGoBelowZero(_that);case _LoadCounterError() when load != null:
@@ -80,8 +79,7 @@ return unknown(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _CannotGoBelowZero value)  cannotGoBelowZero,required TResult Function( _LoadCounterError value)  load,required TResult Function( _SaveCounterError value)  save,required TResult Function( _UnknownCounterError value)  unknown,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _CannotGoBelowZero value)  cannotGoBelowZero,required TResult Function( _LoadCounterError value)  load,required TResult Function( _SaveCounterError value)  save,required TResult Function( _UnknownCounterError value)  unknown,}){final _that = this;
 switch (_that) {
 case _CannotGoBelowZero():
 return cannotGoBelowZero(_that);case _LoadCounterError():
@@ -101,8 +99,7 @@ return unknown(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _CannotGoBelowZero value)?  cannotGoBelowZero,TResult? Function( _LoadCounterError value)?  load,TResult? Function( _SaveCounterError value)?  save,TResult? Function( _UnknownCounterError value)?  unknown,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _CannotGoBelowZero value)?  cannotGoBelowZero,TResult? Function( _LoadCounterError value)?  load,TResult? Function( _SaveCounterError value)?  save,TResult? Function( _UnknownCounterError value)?  unknown,}){final _that = this;
 switch (_that) {
 case _CannotGoBelowZero() when cannotGoBelowZero != null:
 return cannotGoBelowZero(_that);case _LoadCounterError() when load != null:

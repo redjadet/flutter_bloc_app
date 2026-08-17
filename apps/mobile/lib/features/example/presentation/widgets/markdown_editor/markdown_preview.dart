@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Preview component that renders markdown using a custom RenderObject.
 class MarkdownPreview extends StatelessWidget {
@@ -12,7 +12,7 @@ class MarkdownPreview extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 
@@ -31,7 +31,7 @@ class MarkdownPreview extends StatelessWidget {
                 theme.textTheme.bodyMedium ??
                 const TextStyle(fontSize: 16),
             textDirection: Directionality.of(context),
-            onTextChanged: (final value) {},
+            onTextChanged: (value) {},
           ),
         ),
       ),
@@ -54,19 +54,18 @@ class _MarkdownRenderObjectWidget extends LeafRenderObjectWidget {
   final TextDirection textDirection;
 
   @override
-  RenderObject createRenderObject(final BuildContext context) =>
-      MarkdownRenderObject(
-        text: text,
-        textStyle: textStyle,
-        onTextChanged: onTextChanged,
-        textDirection: textDirection,
-        padding: const EdgeInsets.all(8),
-      );
+  RenderObject createRenderObject(BuildContext context) => MarkdownRenderObject(
+    text: text,
+    textStyle: textStyle,
+    onTextChanged: onTextChanged,
+    textDirection: textDirection,
+    padding: const EdgeInsets.all(8),
+  );
 
   @override
   void updateRenderObject(
-    final BuildContext context,
-    final MarkdownRenderObject renderObject,
+    BuildContext context,
+    MarkdownRenderObject renderObject,
   ) {
     renderObject
       ..text = text

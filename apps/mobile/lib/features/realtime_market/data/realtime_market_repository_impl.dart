@@ -15,7 +15,7 @@ abstract final class RealtimeMarketSnapshotCaps {
 /// Simulated feed + Hive cache; emits throttled snapshots from [SimulatedMarketFeed].
 class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
   RealtimeMarketRepositoryImpl({
-    required final RealtimeMarketLocalDataSource localDataSource,
+    required RealtimeMarketLocalDataSource localDataSource,
     required this._feed,
   }) : _local = localDataSource;
 
@@ -33,7 +33,7 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
   /// `watch`/`reconnect`/`dispose` cannot orphan feed subscriptions.
   Future<void> _restartSerial = Future<void>.value();
 
-  static MarketFeedSnapshot capSnapshot(final MarketFeedSnapshot raw) {
+  static MarketFeedSnapshot capSnapshot(MarketFeedSnapshot raw) {
     final trades =
         raw.recentTrades.length > RealtimeMarketSnapshotCaps.recentTradesMax
         ? raw.recentTrades
@@ -55,11 +55,11 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
   }
 
   @override
-  Future<MarketFeedSnapshot?> loadCached(final String pairId) =>
+  Future<MarketFeedSnapshot?> loadCached(String pairId) =>
       _local.loadCached(pairId);
 
   @override
-  Stream<MarketFeedSnapshot> watch(final String pairId) {
+  Stream<MarketFeedSnapshot> watch(String pairId) {
     if (_disposed) {
       return const Stream<MarketFeedSnapshot>.empty();
     }
@@ -68,7 +68,7 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
   }
 
   @override
-  Future<void> reconnect(final String pairId) {
+  Future<void> reconnect(String pairId) {
     if (_disposed) {
       return Future<void>.value();
     }
@@ -95,8 +95,8 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
   }
 
   Future<MarketFeedSnapshot> _persistSnapshotIfActive(
-    final String pairId,
-    final MarketFeedSnapshot capped,
+    String pairId,
+    MarketFeedSnapshot capped,
   ) async {
     if (_disposed) {
       return capped;
@@ -111,14 +111,14 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     return capped;
   }
 
-  Future<void> _restartWatch(final String pairId) {
+  Future<void> _restartWatch(String pairId) {
     return _restartSerial = _restartSerial.then<void>(
       (_) => _restartWatchBody(pairId),
       onError: (_) {},
     );
   }
 
-  Future<void> _restartWatchBody(final String pairId) async {
+  Future<void> _restartWatchBody(String pairId) async {
     if (_disposed) {
       return;
     }
@@ -140,7 +140,7 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     final StreamSubscription<MarketFeedSnapshot> next = _feed
         .watch(pairId, resumeFrom: resumeFrom)
         .asyncExpand(
-          (final raw) => Stream<MarketFeedSnapshot>.fromFuture(
+          (raw) => Stream<MarketFeedSnapshot>.fromFuture(
             _persistSnapshotIfActive(pairId, capSnapshot(raw)),
           ),
         )

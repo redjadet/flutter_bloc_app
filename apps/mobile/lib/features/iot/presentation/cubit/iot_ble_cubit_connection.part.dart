@@ -9,7 +9,7 @@ mixin IotBleCubitConnection on IotBleCubitCore {
     await connect(deviceId);
   }
 
-  Future<void> connect(final String deviceId) async {
+  Future<void> connect(String deviceId) async {
     if (state.isScanning) {
       await activeRepository.stopScan();
       if (isClosed) {
@@ -30,7 +30,7 @@ mixin IotBleCubitConnection on IotBleCubitCore {
       activeRepository
           .watchConnection(deviceId)
           .listen(
-            (final phase) {
+            (phase) {
               if (isClosed) {
                 return;
               }
@@ -40,7 +40,7 @@ mixin IotBleCubitConnection on IotBleCubitCore {
                 ),
               );
             },
-            onError: (final Object error, final StackTrace stackTrace) {
+            onError: (Object error, StackTrace stackTrace) {
               AppLogger.error(
                 'IotBleCubit connection stream',
                 error,

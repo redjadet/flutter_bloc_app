@@ -6,6 +6,5 @@ class WatchRealtimeMarket {
 
   final RealtimeMarketRepository _repository;
 
-  Stream<MarketFeedSnapshot> call(final String pairId) =>
-      _repository.watch(pairId);
+  Stream<MarketFeedSnapshot> call(String pairId) => _repository.watch(pairId);
 }

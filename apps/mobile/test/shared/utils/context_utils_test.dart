@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('ContextUtils', () {
     testWidgets('ensureMounted returns true when context is mounted', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: TestWidget())),
@@ -18,7 +18,7 @@ void main() {
     });
 
     testWidgets('ensureMounted returns false when context is not mounted', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: TestWidget())),
@@ -39,7 +39,7 @@ void main() {
 
     testWidgets(
       'ensureMounted logs when debugLabel is provided and not mounted',
-      (final tester) async {
+      (tester) async {
         await tester.pumpWidget(
           const MaterialApp(home: Scaffold(body: TestWidget())),
         );
@@ -69,5 +69,5 @@ class TestWidget extends StatelessWidget {
   const TestWidget({super.key});
 
   @override
-  Widget build(final BuildContext context) => const SizedBox();
+  Widget build(BuildContext context) => const SizedBox();
 }

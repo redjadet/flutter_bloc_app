@@ -38,9 +38,9 @@ void main() {
         readAccessToken: () => 'access-token',
         invokeEdgeFunction:
             ({
-              required final String functionName,
-              required final String accessToken,
-              required final Map<String, dynamic> body,
+              required String functionName,
+              required String accessToken,
+              required Map<String, dynamic> body,
             }) async {
               expect(functionName, 'sync-chart-trending');
               expect(accessToken, 'access-token');
@@ -74,9 +74,9 @@ void main() {
         readAccessToken: () => 'access-token',
         invokeEdgeFunction:
             ({
-              required final String functionName,
-              required final String accessToken,
-              required final Map<String, dynamic> body,
+              required String functionName,
+              required String accessToken,
+              required Map<String, dynamic> body,
             }) async => FunctionResponse(
               status: 200,
               data: const <String, dynamic>{'points': null},
@@ -105,9 +105,9 @@ void main() {
           readAccessToken: () => 'access-token',
           invokeEdgeFunction:
               ({
-                required final String functionName,
-                required final String accessToken,
-                required final Map<String, dynamic> body,
+                required String functionName,
+                required String accessToken,
+                required Map<String, dynamic> body,
               }) async => FunctionResponse(
                 status: 200,
                 data: const <String, dynamic>{'points': <dynamic>[]},
@@ -119,7 +119,7 @@ void main() {
           repository.fetchTrendingCounts(),
           throwsA(
             isA<ChartDataException>().having(
-              (final ChartDataException e) => e.message,
+              (ChartDataException e) => e.message,
               'message',
               SupabaseChartRepository.noChartPointsMessage,
             ),
@@ -139,9 +139,9 @@ void main() {
           readAccessToken: () => 'access-token',
           invokeEdgeFunction:
               ({
-                required final String functionName,
-                required final String accessToken,
-                required final Map<String, dynamic> body,
+                required String functionName,
+                required String accessToken,
+                required Map<String, dynamic> body,
               }) async {
                 edgeCalls += 1;
                 return completer.future;
@@ -185,9 +185,9 @@ void main() {
           readAccessToken: () => 'access-token',
           invokeEdgeFunction:
               ({
-                required final String functionName,
-                required final String accessToken,
-                required final Map<String, dynamic> body,
+                required String functionName,
+                required String accessToken,
+                required Map<String, dynamic> body,
               }) async => FunctionResponse(
                 status: 200,
                 data: const <String, dynamic>{'points': null},
@@ -225,12 +225,12 @@ void main() {
           throwsA(
             isA<ChartDataException>()
                 .having(
-                  (final ChartDataException error) => error.message,
+                  (ChartDataException error) => error.message,
                   'message',
                   'Failed to load chart data from Supabase',
                 )
                 .having(
-                  (final ChartDataException error) => error.cause,
+                  (ChartDataException error) => error.cause,
                   'cause',
                   same(failure),
                 ),
@@ -255,12 +255,12 @@ void main() {
         throwsA(
           isA<ChartDataException>()
               .having(
-                (final ChartDataException error) => error.message,
+                (ChartDataException error) => error.message,
                 'message',
                 'permission denied',
               )
               .having(
-                (final ChartDataException error) => error.cause,
+                (ChartDataException error) => error.cause,
                 'cause',
                 same(failure),
               ),

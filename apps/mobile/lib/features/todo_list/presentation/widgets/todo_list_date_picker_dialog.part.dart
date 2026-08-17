@@ -1,18 +1,18 @@
 part of 'todo_list_date_picker.dart';
 
 Future<DateTime?> showAdaptiveTodoDatePicker({
-  required final BuildContext context,
-  required final bool isCupertino,
-  required final DateTime? initialDate,
-  required final DateTime firstDate,
-  required final DateTime lastDate,
-  required final String title,
-  required final String cancelLabel,
-  required final String clearLabel,
-  required final String saveLabel,
+  required BuildContext context,
+  required bool isCupertino,
+  required DateTime? initialDate,
+  required DateTime firstDate,
+  required DateTime lastDate,
+  required String title,
+  required String cancelLabel,
+  required String clearLabel,
+  required String saveLabel,
 }) async {
   // Normalize dates to compare only the date part (ignore time)
-  DateTime normalizeDate(final DateTime date) =>
+  DateTime normalizeDate(DateTime date) =>
       DateTime(date.year, date.month, date.day);
 
   // Ensure initial date is within valid range
@@ -58,90 +58,91 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
 
   if (isCupertino) {
     // Use modal bottom sheet for iOS - CupertinoAlertDialog is too constrained
-    final _DatePickerResult?
-    result = await showCupertinoModalPopup<_DatePickerResult>(
-      context: context,
-      builder: (final popupContext) => StatefulBuilder(
-        builder: (final context, final setState) {
-          // Ensure initialDateTime is not before minimumDate for CupertinoDatePicker
-          final DateTime safeInitialDateTime = selected.isBefore(firstDate)
-              ? firstDate
-              : selected.isAfter(lastDate)
-              ? lastDate
-              : selected;
+    final _DatePickerResult? result =
+        await showCupertinoModalPopup<_DatePickerResult>(
+          context: context,
+          builder: (popupContext) => StatefulBuilder(
+            builder: (context, setState) {
+              // Ensure initialDateTime is not before minimumDate for CupertinoDatePicker
+              final DateTime safeInitialDateTime = selected.isBefore(firstDate)
+                  ? firstDate
+                  : selected.isAfter(lastDate)
+                  ? lastDate
+                  : selected;
 
-          final theme = Theme.of(context);
-          return Container(
-            height: 350,
-            padding: const EdgeInsets.only(top: 6),
-            margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            color: CupertinoColors.systemBackground.resolveFrom(context),
-            child: SafeArea(
-              top: false,
-              child: Column(
-                children: [
-                  // Title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  // Date Picker
-                  Expanded(
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.date,
-                      initialDateTime: safeInitialDateTime,
-                      minimumDate: firstDate,
-                      maximumDate: lastDate,
-                      onDateTimeChanged: (final value) {
-                        setState(() {
-                          selected = value;
-                        });
-                      },
-                    ),
-                  ),
-                  // Actions
-                  ResponsiveActionOverflowBar(
-                    alignment: MainAxisAlignment.center,
-                    spacing: 8,
-                    children: <Widget>[
-                      CupertinoButton(
-                        onPressed: () => NavigationUtils.maybePop(popupContext),
-                        child: Text(cancelLabel),
-                      ),
-                      if (initialDate != null)
-                        CupertinoButton(
-                          onPressed: () => NavigationUtils.maybePop(
-                            popupContext,
-                            result: const _DatePickerResult.cleared(),
+              final theme = Theme.of(context);
+              return Container(
+                height: 350,
+                padding: const EdgeInsets.only(top: 6),
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                color: CupertinoColors.systemBackground.resolveFrom(context),
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    children: [
+                      // Title
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        child: Text(
+                          title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
                           ),
-                          child: Text(clearLabel),
                         ),
-                      CupertinoButton(
-                        onPressed: () => NavigationUtils.maybePop(
-                          popupContext,
-                          result: _DatePickerResult.confirmed(selected),
+                      ),
+                      // Date Picker
+                      Expanded(
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          initialDateTime: safeInitialDateTime,
+                          minimumDate: firstDate,
+                          maximumDate: lastDate,
+                          onDateTimeChanged: (value) {
+                            setState(() {
+                              selected = value;
+                            });
+                          },
                         ),
-                        child: Text(saveLabel),
+                      ),
+                      // Actions
+                      ResponsiveActionOverflowBar(
+                        alignment: MainAxisAlignment.center,
+                        spacing: 8,
+                        children: <Widget>[
+                          CupertinoButton(
+                            onPressed: () =>
+                                NavigationUtils.maybePop(popupContext),
+                            child: Text(cancelLabel),
+                          ),
+                          if (initialDate != null)
+                            CupertinoButton(
+                              onPressed: () => NavigationUtils.maybePop(
+                                popupContext,
+                                result: const _DatePickerResult.cleared(),
+                              ),
+                              child: Text(clearLabel),
+                            ),
+                          CupertinoButton(
+                            onPressed: () => NavigationUtils.maybePop(
+                              popupContext,
+                              result: _DatePickerResult.confirmed(selected),
+                            ),
+                            child: Text(saveLabel),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+                ),
+              );
+            },
+          ),
+        );
 
     if (result == null || !result.didConfirm) {
       return null;
@@ -152,15 +153,15 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
   // Material dialog for Android
   final _DatePickerResult? result = await showDialog<_DatePickerResult>(
     context: context,
-    builder: (final context) => StatefulBuilder(
-      builder: (final context, final setState) {
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) {
         final Widget picker = SizedBox(
           height: 320,
           child: CalendarDatePicker(
             initialDate: selected,
             firstDate: firstDate,
             lastDate: lastDate,
-            onDateChanged: (final value) {
+            onDateChanged: (value) {
               setState(() {
                 selected = value;
               });

@@ -25,9 +25,9 @@ final class RealCertificatePinValidator implements CertificatePinValidator {
 
   @override
   Future<CertificatePinResult> validate({
-    required final String host,
-    required final int port,
-    required final Uint8List certificateBytes,
+    required String host,
+    required int port,
+    required Uint8List certificateBytes,
   }) async {
     final Stopwatch sw = Stopwatch()..start();
     final CertificatePinResult result = validateSync(
@@ -47,9 +47,9 @@ final class RealCertificatePinValidator implements CertificatePinValidator {
 
   /// Sync path for Dio [IOHttpClientAdapter.validateCertificate].
   CertificatePinResult validateSync({
-    required final String host,
-    required final int port,
-    required final Uint8List certificateBytes,
+    required String host,
+    required int port,
+    required Uint8List certificateBytes,
   }) {
     if (certificateBytes.isEmpty) {
       return const CertificatePinFailureResult(CertificateMalformedFailure());
@@ -89,7 +89,7 @@ final class RealCertificatePinValidator implements CertificatePinValidator {
     return const CertificatePinFailureResult(PinMismatchFailure());
   }
 
-  Uint8List? _hashMaterial(final Uint8List certificateBytes) {
+  Uint8List? _hashMaterial(Uint8List certificateBytes) {
     switch (_config.pinHashKind) {
       case CertificatePinHashKind.spki:
         return CertificateSpkiExtractor.extract(certificateBytes);

@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('CachedNetworkImageWidget', () {
-    testWidgets('renders CachedNetworkImage with provided URL', (
-      final tester,
-    ) async {
+    testWidgets('renders CachedNetworkImage with provided URL', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -21,7 +19,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('respects fit parameter', (final tester) async {
+    testWidgets('respects fit parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -37,7 +35,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('respects width and height parameters', (final tester) async {
+    testWidgets('respects width and height parameters', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -54,7 +52,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('uses custom placeholder when provided', (final tester) async {
+    testWidgets('uses custom placeholder when provided', (tester) async {
       bool placeholderShown = false;
 
       await tester.pumpWidget(
@@ -62,7 +60,7 @@ void main() {
           home: Scaffold(
             body: CachedNetworkImageWidget(
               imageUrl: 'https://example.com/image.jpg',
-              placeholder: (final context, final url) {
+              placeholder: (context, url) {
                 placeholderShown = true;
                 return const CircularProgressIndicator();
               },
@@ -77,13 +75,13 @@ void main() {
       expect(placeholderShown, isTrue);
     });
 
-    testWidgets('uses custom errorWidget when provided', (final tester) async {
+    testWidgets('uses custom errorWidget when provided', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: CachedNetworkImageWidget(
               imageUrl: 'https://invalid-url-that-will-fail.com/image.jpg',
-              errorWidget: (final context, final url, final error) {
+              errorWidget: (context, url, error) {
                 return const Icon(Icons.error);
               },
             ),
@@ -97,7 +95,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('respects fadeInDuration parameter', (final tester) async {
+    testWidgets('respects fadeInDuration parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -113,7 +111,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('respects fadeOutDuration parameter', (final tester) async {
+    testWidgets('respects fadeOutDuration parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -130,7 +128,7 @@ void main() {
     });
 
     testWidgets('respects memCacheWidth and memCacheHeight parameters', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(

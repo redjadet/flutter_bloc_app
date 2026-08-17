@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Maps Render/FastAPI + Dio failures to [ChatRemoteFailureException] (`isEdge: false`).
-ChatRemoteFailureException mapRenderChatFailure(final Object error) {
+ChatRemoteFailureException mapRenderChatFailure(Object error) {
   if (error is ChatRemoteFailureException) {
     return error;
   }
@@ -18,7 +18,7 @@ ChatRemoteFailureException mapRenderChatFailure(final Object error) {
   );
 }
 
-ChatRemoteFailureException _fromDio(final DioException e) {
+ChatRemoteFailureException _fromDio(DioException e) {
   final int? status = e.response?.statusCode;
   final Map<String, dynamic>? data = mapFromDynamic(e.response?.data);
 

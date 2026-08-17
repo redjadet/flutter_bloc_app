@@ -47,8 +47,8 @@ abstract class _ProductionReadinessCubitBase
     this._frameMonitor,
     this._simulationController,
     this.recordNonFatal,
-    final FcmDemoMode? fcmMode,
-    final bool? firebaseInitialized,
+    FcmDemoMode? fcmMode,
+    bool? firebaseInitialized,
   }) : _fcmMode = fcmMode ?? FcmDemoMode.simulated,
        _firebaseInitialized =
            firebaseInitialized ??

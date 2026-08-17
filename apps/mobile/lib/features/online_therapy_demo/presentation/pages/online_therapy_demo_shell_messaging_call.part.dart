@@ -30,7 +30,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final viewState = context
         .selectState<
@@ -45,7 +45,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
             String? errorMessage,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isBusy: state.isBusy,
             conversations: state.conversations,
             messages: state.messages,
@@ -80,7 +80,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
 
     final convId = viewState.selectedConversationId;
     Widget buildMessagesPane({
-      required final bool compact,
+      required bool compact,
     }) {
       return Column(
         children: <Widget>[
@@ -184,7 +184,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                       .toList(growable: false),
                   onChanged: viewState.isBusy
                       ? null
-                      : (final id) {
+                      : (id) {
                           if (id == null) return;
                           // check-ignore: side_effects_build - user gesture (dropdown).
                           unawaited(cubit.selectConversation(id));
@@ -250,7 +250,7 @@ class _CallPanel extends StatelessWidget {
   const _CallPanel();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final viewState = context
         .selectState<
@@ -266,7 +266,7 @@ class _CallPanel extends StatelessWidget {
             String? errorMessage,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isBusy: state.isBusy,
             cameraPermissionGranted: state.cameraPermissionGranted,
             microphonePermissionGranted: state.microphonePermissionGranted,
@@ -294,7 +294,7 @@ class _CallPanel extends StatelessWidget {
               hint: Text(l10n.selectAppointmentHintLabel),
               onChanged: viewState.isBusy
                   ? null
-                  : (final v) => v == null ? null : cubit.selectAppointment(v),
+                  : (v) => v == null ? null : cubit.selectAppointment(v),
               items: viewState.appointments
                   .map(
                     (a) => DropdownMenuItem<String>(
@@ -310,7 +310,7 @@ class _CallPanel extends StatelessWidget {
               value: viewState.cameraPermissionGranted,
               onChanged: viewState.isBusy
                   ? null
-                  : (final v) => v == null
+                  : (v) => v == null
                         ? null
                         : cubit.toggleCameraPermission(granted: v),
               title: Text(l10n.cameraLabel),
@@ -322,7 +322,7 @@ class _CallPanel extends StatelessWidget {
               value: viewState.microphonePermissionGranted,
               onChanged: viewState.isBusy
                   ? null
-                  : (final v) => v == null
+                  : (v) => v == null
                         ? null
                         : cubit.toggleMicrophonePermission(granted: v),
               title: Text(l10n.microphoneLabel),

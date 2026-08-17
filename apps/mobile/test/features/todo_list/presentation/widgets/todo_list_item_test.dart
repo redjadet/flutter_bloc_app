@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('TodoListItem swipe actions', () {
@@ -21,12 +21,12 @@ void main() {
     });
 
     Widget buildWidget({
-      required final TodoItem item,
-      final Size size = const Size(400, 800),
-      final VoidCallback? onToggle,
-      final VoidCallback? onEdit,
-      final VoidCallback? onDelete,
-      final VoidCallback? onDeleteWithoutConfirmation,
+      required TodoItem item,
+      Size size = const Size(400, 800),
+      VoidCallback? onToggle,
+      VoidCallback? onEdit,
+      VoidCallback? onDelete,
+      VoidCallback? onDeleteWithoutConfirmation,
     }) {
       return MaterialApp(
         home: MediaQuery(
@@ -60,7 +60,7 @@ void main() {
     }
 
     testWidgets('swipe right on active item completes it', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem activeItem = TodoItem.create(
         title: 'Active Task',
@@ -94,7 +94,7 @@ void main() {
     });
 
     testWidgets('swipe right on completed item uncompletes it', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem completedItem = TodoItem.create(
         title: 'Completed Task',
@@ -128,7 +128,7 @@ void main() {
     });
 
     testWidgets('swipe right does not dismiss item', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem item = TodoItem.create(title: 'Task', description: null);
 
@@ -159,7 +159,7 @@ void main() {
     });
 
     testWidgets('swipe left shows delete confirmation dialog', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem item = TodoItem.create(
         title: 'Task to Delete',
@@ -207,7 +207,7 @@ void main() {
     });
 
     testWidgets('swipe left cancel does not delete item', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem item = TodoItem.create(
         title: 'Task to Keep',
@@ -244,7 +244,7 @@ void main() {
     });
 
     testWidgets('item height is reduced on compact-height screens', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem item = TodoItem.create(
         title: 'This is a long todo title that wraps on regular-height screens',
@@ -274,7 +274,7 @@ void main() {
     });
 
     testWidgets('item height is reduced in phone landscape orientation', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem item = TodoItem.create(
         title: 'Landscape scaling title that would normally take more space',
@@ -307,7 +307,7 @@ void main() {
     // can only be changed from the edit dialog now.
 
     testWidgets('swipe actions only work on mobile', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final TodoItem item = TodoItem.create(title: 'Task', description: null);
 

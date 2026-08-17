@@ -6,6 +6,6 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 /// narrower port for adapters that only read/write storage or network.
 abstract class CounterDataSource {
   Future<CounterSnapshot> load();
-  Future<void> save(final CounterSnapshot snapshot);
+  Future<void> save(CounterSnapshot snapshot);
   Stream<CounterSnapshot> watch();
 }

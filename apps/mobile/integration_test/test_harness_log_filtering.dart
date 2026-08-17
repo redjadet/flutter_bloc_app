@@ -1,8 +1,8 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 
 bool isUnexpectedIntegrationLog(
-  final AppLogEntry entry, {
-  required final bool isWeb,
+  AppLogEntry entry, {
+  required bool isWeb,
 }) {
   final bool isWarnOrError =
       entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
@@ -13,8 +13,8 @@ bool isUnexpectedIntegrationLog(
 }
 
 bool isIgnoredIntegrationLog(
-  final AppLogEntry entry, {
-  required final bool isWeb,
+  AppLogEntry entry, {
+  required bool isWeb,
 }) {
   // iOS integration runs occasionally surface transient Remote Config
   // cancellation from the plugin while the app is tearing down / relaunching
@@ -179,7 +179,7 @@ bool isIgnoredIntegrationLog(
   return false;
 }
 
-String formatIntegrationLogEntry(final AppLogEntry entry) {
+String formatIntegrationLogEntry(AppLogEntry entry) {
   final StringBuffer buffer = StringBuffer()
     ..write(entry.level.name)
     ..write(': ')

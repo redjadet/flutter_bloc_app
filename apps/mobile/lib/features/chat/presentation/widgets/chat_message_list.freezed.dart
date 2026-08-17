@@ -88,8 +88,7 @@ extension _ChatListDataPatterns on _ChatListData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __ChatListData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __ChatListData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __ChatListData() when $default != null:
 return $default(_that);case _:
@@ -110,8 +109,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __ChatListData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __ChatListData value)  $default,){final _that = this;
 switch (_that) {
 case __ChatListData():
 return $default(_that);case _:
@@ -131,8 +129,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __ChatListData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __ChatListData value)?  $default,){final _that = this;
 switch (_that) {
 case __ChatListData() when $default != null:
 return $default(_that);case _:
@@ -208,7 +205,7 @@ return $default(_that.hasMessages,_that.isLoading,_that.messages);case _:
 
 
 class __ChatListData implements _ChatListData {
-  const __ChatListData({required this.hasMessages, required this.isLoading, required final  List<ChatMessage> messages}): _messages = messages;
+  const __ChatListData({required this.hasMessages, required this.isLoading, required  List<ChatMessage> messages}): _messages = messages;
   
 
 @override final  bool hasMessages;

@@ -22,7 +22,7 @@ void _installFirebasePluginChannelMocks() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
-  Future<Object?> handler(final MethodCall call) async {
+  Future<Object?> handler(MethodCall call) async {
     // Tolerate both method-channel and pigeon-style invocations.
     return null;
   }
@@ -39,7 +39,7 @@ void _installFirebasePluginChannelMocks() {
 
   messenger.setMockMethodCallHandler(
     const MethodChannel('dev.fluttercommunity.plus/device_info'),
-    (final MethodCall call) async {
+    (MethodCall call) async {
       // Incomplete map forces fromMap to throw; ensureIosSimulatorDebugFlag
       // must stay best-effort and leave the flag false.
       return <String, dynamic>{};

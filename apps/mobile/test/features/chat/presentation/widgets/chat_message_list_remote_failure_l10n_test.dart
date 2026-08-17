@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -8,17 +9,17 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message_list.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 void main() {
   testWidgets(
     'SnackBar uses chatTokenMissing when remoteFailureL10nCode is token_missing',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       final _StubChatCubit cubit = _StubChatCubit(const ChatState());
       addTearDown(cubit.close);
 
@@ -52,7 +53,7 @@ void main() {
 
   testWidgets(
     'SnackBar uses chatSessionEnded when remoteFailureL10nCode is rate_limited',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       final _StubChatCubit cubit = _StubChatCubit(const ChatState());
       addTearDown(cubit.close);
 
@@ -86,7 +87,7 @@ void main() {
 
   testWidgets(
     'SnackBar uses chatSwitchAccount when remoteFailureL10nCode is forbidden',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       final _StubChatCubit cubit = _StubChatCubit(const ChatState());
       addTearDown(cubit.close);
 
@@ -120,7 +121,7 @@ void main() {
 
   testWidgets(
     'shows terminal chatTokenMissing for token_missing dead-letter user messages',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       final _StubChatCubit cubit = _StubChatCubit(
         const ChatState(
           messages: <ChatMessage>[
@@ -154,7 +155,7 @@ void main() {
 
   testWidgets(
     'shows terminal chatSwitchAccount for forbidden dead-letter user messages',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       final _StubChatCubit cubit = _StubChatCubit(
         const ChatState(
           messages: <ChatMessage>[
@@ -187,10 +188,10 @@ void main() {
   );
 }
 
-Widget _wrapWithApp(final ChatCubit cubit, final Widget child) {
+Widget _wrapWithApp(ChatCubit cubit, Widget child) {
   return MaterialApp(
     locale: const Locale('en'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
@@ -208,7 +209,7 @@ Widget _wrapWithApp(final ChatCubit cubit, final Widget child) {
 }
 
 class _StubChatCubit extends ChatCubit {
-  _StubChatCubit(final ChatState initialState)
+  _StubChatCubit(ChatState initialState)
     : super(
         repository: _StubChatRepository(),
         historyRepository: _StubHistoryRepository(),
@@ -234,12 +235,12 @@ class _StubChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async => const ChatResult(
     reply: ChatMessage(author: ChatAuthor.assistant, text: ''),
     pastUserInputs: <String>[],
@@ -252,7 +253,7 @@ class _StubHistoryRepository implements ChatHistoryRepository {
   Future<List<ChatConversation>> load() async => const <ChatConversation>[];
 
   @override
-  Future<void> save(final List<ChatConversation> conversations) async {}
+  Future<void> save(List<ChatConversation> conversations) async {}
 }
 
 class _FakeNetworkStatusService implements NetworkStatusService {
@@ -299,7 +300,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 

@@ -48,16 +48,13 @@ final class _FailFirstFreshDraftSaveRepository
   bool _failFreshDraftSave = true;
 
   @override
-  Future<void> clearDraft(final String userId) async {}
+  Future<void> clearDraft(String userId) async {}
 
   @override
   Future<void> ensureReady() async {}
 
   @override
-  Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
-  ) async {
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId) async {
     for (final CaseStudyRecord record in records) {
       if (record.id == recordId) {
         return record;
@@ -67,17 +64,14 @@ final class _FailFirstFreshDraftSaveRepository
   }
 
   @override
-  Future<CaseStudyDraft?> loadDraft(final String userId) async => null;
+  Future<CaseStudyDraft?> loadDraft(String userId) async => null;
 
   @override
-  Future<List<CaseStudyRecord>> loadRecords(final String userId) async =>
+  Future<List<CaseStudyRecord>> loadRecords(String userId) async =>
       List<CaseStudyRecord>.from(records);
 
   @override
-  Future<void> saveDraft(
-    final String userId,
-    final CaseStudyDraft draft,
-  ) async {
+  Future<void> saveDraft(String userId, CaseStudyDraft draft) async {
     if (draft.caseId == 'fresh-case' && _failFreshDraftSave) {
       _failFreshDraftSave = false;
       throw StateError('fresh draft write failed');
@@ -86,8 +80,8 @@ final class _FailFirstFreshDraftSaveRepository
 
   @override
   Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> nextRecords,
+    String userId,
+    List<CaseStudyRecord> nextRecords,
   ) async {
     records
       ..clear()

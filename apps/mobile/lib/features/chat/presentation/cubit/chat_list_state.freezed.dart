@@ -55,8 +55,7 @@ extension ChatListStatePatterns on ChatListState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ChatListInitial value)?  initial,TResult Function( ChatListLoading value)?  loading,TResult Function( ChatListLoaded value)?  loaded,TResult Function( ChatListError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ChatListInitial value)?  initial,TResult Function( ChatListLoading value)?  loading,TResult Function( ChatListLoaded value)?  loaded,TResult Function( ChatListError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case ChatListInitial() when initial != null:
 return initial(_that);case ChatListLoading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ChatListInitial value)  initial,required TResult Function( ChatListLoading value)  loading,required TResult Function( ChatListLoaded value)  loaded,required TResult Function( ChatListError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ChatListInitial value)  initial,required TResult Function( ChatListLoading value)  loading,required TResult Function( ChatListLoaded value)  loaded,required TResult Function( ChatListError value)  error,}){final _that = this;
 switch (_that) {
 case ChatListInitial():
 return initial(_that);case ChatListLoading():
@@ -101,8 +99,7 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ChatListInitial value)?  initial,TResult? Function( ChatListLoading value)?  loading,TResult? Function( ChatListLoaded value)?  loaded,TResult? Function( ChatListError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ChatListInitial value)?  initial,TResult? Function( ChatListLoading value)?  loading,TResult? Function( ChatListLoaded value)?  loaded,TResult? Function( ChatListError value)?  error,}){final _that = this;
 switch (_that) {
 case ChatListInitial() when initial != null:
 return initial(_that);case ChatListLoading() when loading != null:
@@ -251,7 +248,7 @@ String toString() {
 
 
 class ChatListLoaded implements ChatListState {
-  const ChatListLoaded({required final  List<ChatContact> contacts}): _contacts = contacts;
+  const ChatListLoaded({required  List<ChatContact> contacts}): _contacts = contacts;
   
 
  final  List<ChatContact> _contacts;

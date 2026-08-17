@@ -100,7 +100,7 @@ class LayeredRenderOrchestrationHfTokenProvider
   }
 
   /// Debug-only: which path supplied the HF read token (never logs token material).
-  void _logOrchestrationHfTokenSource(final String source) {
+  void _logOrchestrationHfTokenSource(String source) {
     if (kDebugMode) {
       AppLogger.debug(
         'LayeredRenderOrchestrationHfTokenProvider: hf_token_source=$source '
@@ -123,7 +123,7 @@ class LayeredRenderOrchestrationHfTokenProvider
     return null;
   }
 
-  Future<void> _writeCache(final String token) async {
+  Future<void> _writeCache(String token) async {
     await _storage.write(cacheKey, token);
   }
 

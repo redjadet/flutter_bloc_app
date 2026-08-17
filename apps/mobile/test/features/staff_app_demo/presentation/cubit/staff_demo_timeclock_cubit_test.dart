@@ -38,25 +38,25 @@ class _LocalStore implements StaffDemoTimeclockLocalStore {
   StaffDemoOpenEntrySnapshot? _open;
 
   @override
-  Future<void> clearOpenEntry({required final String userId}) async {
+  Future<void> clearOpenEntry({required String userId}) async {
     _open = null;
   }
 
   @override
   Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({
-    required final String userId,
+    required String userId,
   }) async => _open;
 
   @override
   Future<void> saveOpenEntry({
-    required final String userId,
-    required final StaffDemoOpenEntrySnapshot snapshot,
+    required String userId,
+    required StaffDemoOpenEntrySnapshot snapshot,
   }) async {
     _open = snapshot;
   }
 }
 
-StaffDemoClockResult _clockResult(final String entryId) => StaffDemoClockResult(
+StaffDemoClockResult _clockResult(String entryId) => StaffDemoClockResult(
   entryId: entryId,
   flags: StaffDemoTimeEntryFlags.none(),
   shiftId: 'shift-1',

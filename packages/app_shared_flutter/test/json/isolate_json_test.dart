@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 
 void main() {
   group('decodeJsonMap', () {
@@ -324,7 +324,7 @@ void main() {
   });
 }
 
-String _repeat(final String value, final int count) {
+String _repeat(String value, int count) {
   final StringBuffer buffer = StringBuffer();
   for (int i = 0; i < count; i++) {
     buffer.write(value);

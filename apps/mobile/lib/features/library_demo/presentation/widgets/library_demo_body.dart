@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_asset_tile.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_top_nav.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibraryDemoBody extends StatelessWidget {
   const LibraryDemoBody({
@@ -31,13 +31,13 @@ class LibraryDemoBody extends StatelessWidget {
   final TimerService timerService;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
     final EpochThemeExtension epoch = context.epoch;
     final List<LibraryAsset> assets = _libraryAssets(l10n, epoch);
 
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final bool isCompactHeight = constraints.maxHeight < 700;
         final bool isCompactWidth = constraints.maxWidth < 360;
         final double navTopPadding = isCompactHeight
@@ -147,7 +147,7 @@ class LibraryDemoBody extends StatelessWidget {
                 trailing: [
                   SizedBox(height: sectionGap),
                   ...assets.map(
-                    (final asset) => LibraryAssetTile(asset: asset),
+                    (asset) => LibraryAssetTile(asset: asset),
                   ),
                 ],
               ),
@@ -159,8 +159,8 @@ class LibraryDemoBody extends StatelessWidget {
   }
 
   List<LibraryAsset> _libraryAssets(
-    final AppLocalizations l10n,
-    final EpochThemeExtension epoch,
+    AppLocalizations l10n,
+    EpochThemeExtension epoch,
   ) => [
     LibraryAsset(
       name: l10n.libraryDemoAssetName,

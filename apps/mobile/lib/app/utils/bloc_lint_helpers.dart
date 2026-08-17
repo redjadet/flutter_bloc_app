@@ -28,7 +28,7 @@ class BlocLintHelpers {
   ///
   /// **Note:** This requires reflection or code analysis, which is limited in Dart.
   /// Consider using static analysis tools or code generation for true compile-time checks.
-  static void validateLifecycleGuards<T extends Cubit<Object?>>(final T cubit) {
+  static void validateLifecycleGuards<T extends Cubit<Object?>>(T cubit) {
     // Runtime validation would require reflection or code analysis
     // This is a placeholder for future implementation
     // For now, rely on static analysis and testing
@@ -63,8 +63,8 @@ class BlocLintHelpers {
   /// **Note:** Dart 3.0+ compiler ensures exhaustiveness at compile time.
   /// This helper is for documentation and testing purposes.
   static bool validateStateExhaustiveness<T, R>(
-    final List<T> allStates,
-    final R Function(T) handler,
+    List<T> allStates,
+    R Function(T) handler,
   ) {
     // This is a runtime check - compile-time exhaustiveness is handled by Dart
     for (final state in allStates) {
@@ -97,8 +97,8 @@ class BlocLintHelpers {
   /// });
   /// ```
   static bool validateEventHandlers<TEvent, TState>(
-    final Bloc<TEvent, TState> bloc,
-    final List<TEvent> allEvents,
+    Bloc<TEvent, TState> bloc,
+    List<TEvent> allEvents,
   ) {
     // Runtime check - compile-time validation requires code generation
     for (final event in allEvents) {

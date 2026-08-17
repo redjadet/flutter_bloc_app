@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_adapter_status.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class IotBleStatusCard extends StatelessWidget {
   const IotBleStatusCard({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final IotBleState state = context.watchState<IotBleCubit, IotBleState>();
     final BleAdapterStatus? adapter = state.adapterStatus;
@@ -46,7 +46,7 @@ class IotBleStatusCard extends StatelessWidget {
               ],
               selected: <bool>{state.useMockBle},
               onSelectionChanged: state.canToggleRealBle || state.useMockBle
-                  ? (final selected) => _toggleMode(context, selected)
+                  ? (selected) => _toggleMode(context, selected)
                   : null,
             ),
           ],
@@ -55,7 +55,7 @@ class IotBleStatusCard extends StatelessWidget {
     );
   }
 
-  void _toggleMode(final BuildContext context, final Set<bool> selected) {
+  void _toggleMode(BuildContext context, Set<bool> selected) {
     final bool? useMock = selected.firstOrNull;
     if (useMock != null) {
       unawaited(

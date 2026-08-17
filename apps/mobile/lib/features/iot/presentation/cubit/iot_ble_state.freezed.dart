@@ -112,8 +112,7 @@ extension IotBleStatePatterns on IotBleState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IotBleState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IotBleState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _IotBleState() when $default != null:
 return $default(_that);case _:
@@ -134,8 +133,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IotBleState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IotBleState value)  $default,){final _that = this;
 switch (_that) {
 case _IotBleState():
 return $default(_that);case _:
@@ -155,8 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IotBleState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IotBleState value)?  $default,){final _that = this;
 switch (_that) {
 case _IotBleState() when $default != null:
 return $default(_that);case _:
@@ -232,7 +229,7 @@ return $default(_that.status,_that.useMockBle,_that.canToggleRealBle,_that.isSca
 
 
 class _IotBleState extends IotBleState {
-  const _IotBleState({this.status = IotBleStatus.initial, this.useMockBle = true, this.canToggleRealBle = false, this.isScanning = false, this.scanTimeout = const Duration(seconds: 30), this.adapterStatus, final  List<BleDiscoveredDevice> devices = const <BleDiscoveredDevice>[], this.connectionLifecycle = const IotBleConnectionLifecycle.idle(), final  List<BleService> services = const <BleService>[], this.selectedCharacteristic, final  List<int>? lastReadValue, this.isSubscribed = false, final  List<BleLogEntry> logs = const <BleLogEntry>[], final  List<ClassicBtDevice> classicDevices = const <ClassicBtDevice>[], this.selectedClassicDeviceId, final  List<ClassicBtMessage> classicMessages = const <ClassicBtMessage>[], this.errorCode, this.errorDetail}): _devices = devices,_services = services,_lastReadValue = lastReadValue,_logs = logs,_classicDevices = classicDevices,_classicMessages = classicMessages,super._();
+  const _IotBleState({this.status = IotBleStatus.initial, this.useMockBle = true, this.canToggleRealBle = false, this.isScanning = false, this.scanTimeout = const Duration(seconds: 30), this.adapterStatus, List<BleDiscoveredDevice> devices = const <BleDiscoveredDevice>[], this.connectionLifecycle = const IotBleConnectionLifecycle.idle(), List<BleService> services = const <BleService>[], this.selectedCharacteristic, List<int>? lastReadValue, this.isSubscribed = false, List<BleLogEntry> logs = const <BleLogEntry>[], List<ClassicBtDevice> classicDevices = const <ClassicBtDevice>[], this.selectedClassicDeviceId, List<ClassicBtMessage> classicMessages = const <ClassicBtMessage>[], this.errorCode, this.errorDetail}): _devices = devices,_services = services,_lastReadValue = lastReadValue,_logs = logs,_classicDevices = classicDevices,_classicMessages = classicMessages,super._();
   
 
 @override@JsonKey() final  IotBleStatus status;
@@ -258,8 +255,7 @@ class _IotBleState extends IotBleState {
 
 @override final  BleCharacteristicRef? selectedCharacteristic;
  final  List<int>? _lastReadValue;
-@override List<int>? get lastReadValue {
-  final value = _lastReadValue;
+@override List<int>? get lastReadValue {final value = _lastReadValue;
   if (value == null) return null;
   if (_lastReadValue is EqualUnmodifiableListView) return _lastReadValue;
   // ignore: implicit_dynamic_type

@@ -1,6 +1,5 @@
 import 'package:auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:go_router/go_router.dart' show GoRouter, RouteBase;
+import 'package:material_ui/material_ui.dart';
 
 /// Main application widget
 class MyApp extends StatefulWidget {
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(final BuildContext context) => AppScope(router: _router);
+  Widget build(BuildContext context) => AppScope(router: _router);
 
   @override
   void dispose() {

@@ -201,16 +201,14 @@ class _FakeGateway implements FirebaseAnalyticsGateway {
       <({String name, Map<String, Object>? parameters})>[];
 
   @override
-  Future<void> setAnalyticsCollectionEnabled({
-    required final bool enabled,
-  }) async {
+  Future<void> setAnalyticsCollectionEnabled({required bool enabled}) async {
     collectionEnabled = enabled;
   }
 
   @override
   Future<void> logEvent({
-    required final String name,
-    final Map<String, Object>? parameters,
+    required String name,
+    Map<String, Object>? parameters,
   }) async {
     events.add((name: name, parameters: parameters));
   }

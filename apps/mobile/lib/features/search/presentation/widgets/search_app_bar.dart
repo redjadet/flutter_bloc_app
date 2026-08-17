@@ -1,15 +1,15 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final bool hasMixTheme = MixScope.maybeOf(context) != null;

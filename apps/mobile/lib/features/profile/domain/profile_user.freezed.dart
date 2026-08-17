@@ -89,8 +89,7 @@ extension ProfileUserPatterns on ProfileUser {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProfileUser value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProfileUser value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ProfileUser() when $default != null:
 return $default(_that);case _:
@@ -111,8 +110,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProfileUser value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProfileUser value)  $default,){final _that = this;
 switch (_that) {
 case _ProfileUser():
 return $default(_that);case _:
@@ -132,8 +130,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProfileUser value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProfileUser value)?  $default,){final _that = this;
 switch (_that) {
 case _ProfileUser() when $default != null:
 return $default(_that);case _:
@@ -209,7 +206,7 @@ return $default(_that.name,_that.location,_that.avatarUrl,_that.galleryImages);c
 
 
 class _ProfileUser implements ProfileUser {
-  const _ProfileUser({required this.name, required this.location, required this.avatarUrl, required final  List<ProfileImage> galleryImages}): _galleryImages = galleryImages;
+  const _ProfileUser({required this.name, required this.location, required this.avatarUrl, required  List<ProfileImage> galleryImages}): _galleryImages = galleryImages;
   
 
 @override final  String name;
@@ -359,8 +356,7 @@ extension ProfileImagePatterns on ProfileImage {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProfileImage value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProfileImage value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ProfileImage() when $default != null:
 return $default(_that);case _:
@@ -381,8 +377,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProfileImage value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProfileImage value)  $default,){final _that = this;
 switch (_that) {
 case _ProfileImage():
 return $default(_that);case _:
@@ -402,8 +397,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProfileImage value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProfileImage value)?  $default,){final _that = this;
 switch (_that) {
 case _ProfileImage() when $default != null:
 return $default(_that);case _:

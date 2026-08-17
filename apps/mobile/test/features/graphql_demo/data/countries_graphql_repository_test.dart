@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Dio createMockDio(final String body, final int statusCode) {
+  Dio createMockDio(String body, int statusCode) {
     final dio = Dio();
     dio.interceptors.add(
       InterceptorsWrapper(
@@ -65,7 +65,7 @@ void main() {
           repository.fetchContinents(),
           throwsA(
             isA<GraphqlDemoException>().having(
-              (final error) => error.type,
+              (error) => error.type,
               'type',
               GraphqlDemoErrorType.data,
             ),
@@ -128,7 +128,7 @@ void main() {
             repository.fetchCountries(),
             throwsA(
               isA<GraphqlDemoException>().having(
-                (final e) => e.type,
+                (e) => e.type,
                 'type',
                 GraphqlDemoErrorType.data,
               ),
@@ -148,7 +148,7 @@ void main() {
           repository.fetchCountries(),
           throwsA(
             isA<GraphqlDemoException>().having(
-              (final error) => error.type,
+              (error) => error.type,
               'type',
               GraphqlDemoErrorType.data,
             ),

@@ -10,7 +10,7 @@ sealed class MediaPickResult with _$MediaPickResult {
   const MediaPickResult._();
 
   /// User took or selected media; [imagePath] is the temporary file path.
-  const factory MediaPickResult.success(final String imagePath) =
+  const factory MediaPickResult.success(String imagePath) =
       _MediaPickResultSuccess;
 
   /// User cancelled the picker.
@@ -18,7 +18,7 @@ sealed class MediaPickResult with _$MediaPickResult {
 
   /// Operation failed; [errorKey] is an l10n key for user-facing message.
   const factory MediaPickResult.failure({
-    required final String errorKey,
-    final String? message,
+    required String errorKey,
+    String? message,
   }) = _MediaPickResultFailure;
 }

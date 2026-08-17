@@ -26,8 +26,8 @@ class FrameTimingSummary {
 
 /// Pure percentile math for unit tests and monitor updates.
 FrameTimingSummary frameTimingSummaryFromDurationsMs(
-  final List<double> samples, {
-  final int maxSamples = 120,
+  List<double> samples, {
+  int maxSamples = 120,
 }) {
   if (samples.isEmpty) {
     return FrameTimingSummary.empty;
@@ -38,7 +38,7 @@ FrameTimingSummary frameTimingSummaryFromDurationsMs(
       : samples.sublist(samples.length - maxSamples);
   final List<double> sorted = List<double>.from(bounded)..sort();
 
-  double percentile(final double p) {
+  double percentile(double p) {
     if (sorted.length == 1) {
       return sorted.first;
     }
@@ -52,7 +52,7 @@ FrameTimingSummary frameTimingSummaryFromDurationsMs(
     return sorted[lower] * (1 - weight) + sorted[upper] * weight;
   }
 
-  final int missed = bounded.where((final ms) => ms > 16.7).length;
+  final int missed = bounded.where((ms) => ms > 16.7).length;
 
   return FrameTimingSummary(
     sampleCount: bounded.length,
@@ -79,7 +79,7 @@ class SchedulerFrameTimingMonitor implements FrameTimingMonitor {
   void Function(FrameTimingSummary summary)? _onSummary;
   bool _started = false;
 
-  void _timingsCallback(final List<FrameTiming> timings) {
+  void _timingsCallback(List<FrameTiming> timings) {
     for (final FrameTiming timing in timings) {
       final double ms = timing.totalSpan.inMicroseconds / 1000;
       _durationsMs.addLast(ms);

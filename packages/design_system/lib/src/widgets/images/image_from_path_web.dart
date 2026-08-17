@@ -11,7 +11,6 @@ ImageFromPathWidget buildImageFromPath({
   return CachedNetworkImageWidget(
     imageUrl: path,
     fit: fit,
-    errorWidget: (final context, final _, final error) =>
-        errorBuilder(context, error, null),
+    errorWidget: (context, _, error) => errorBuilder(context, error, null),
   );
 }

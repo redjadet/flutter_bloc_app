@@ -14,9 +14,7 @@ void main() {
 
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(_flutterTtsChannel, (
-          final MethodCall call,
-        ) async {
+        .setMockMethodCallHandler(_flutterTtsChannel, (MethodCall call) async {
           return null;
         });
   });

@@ -12,10 +12,10 @@ sealed class ChatListState with _$ChatListState {
   const factory ChatListState.loading() = ChatListLoading;
 
   const factory ChatListState.loaded({
-    required final List<ChatContact> contacts,
+    required List<ChatContact> contacts,
   }) = ChatListLoaded;
 
   const factory ChatListState.error({
-    required final ChatFailure failure,
+    required ChatFailure failure,
   }) = ChatListError;
 }

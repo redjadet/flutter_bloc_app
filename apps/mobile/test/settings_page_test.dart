@@ -1,21 +1,22 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 void main() {
   group('SettingsPage', () {
@@ -54,7 +55,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: MultiBlocProvider(
             providers: [
@@ -113,7 +114,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: MultiBlocProvider(
             providers: [
@@ -158,7 +159,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: MultiBlocProvider(
             providers: [
@@ -307,7 +308,7 @@ class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> stop() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 

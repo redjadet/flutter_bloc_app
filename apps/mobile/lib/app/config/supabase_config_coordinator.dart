@@ -37,14 +37,14 @@ final class SupabaseConfigCoordinator {
     // Auth refresh path: fetch when a user signs in.
     _subscriptions.register(
       _auth.authStateChanges().listen(
-        (final user) {
+        (user) {
           if (user == null) {
             // D3 default: keep cached SUPABASE_* on sign-out, so no action here.
             return;
           }
           unawaited(_safeFetch());
         },
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'SupabaseConfigCoordinator authStateChanges failed',
             error,
@@ -64,7 +64,7 @@ final class SupabaseConfigCoordinator {
       final Future<SupabaseConfigFetchResult> Function() fetcher =
           _fetchAndApplyIfNeeded ?? _provider.fetchAndApplyIfNeeded;
       final Future<void> fetch = fetcher().then((
-        final result,
+        result,
       ) {
         if (result.updated) {
           AppLogger.info(

@@ -17,12 +17,12 @@ void main() {
 
   test('isFlagged true for each flag bit', () {
     StaffDemoTimeEntrySummary withFlags({
-      final bool outsideGeofence = false,
-      final bool earlyClockIn = false,
-      final bool locationInsufficient = false,
-      final bool missingScheduledShift = false,
-      final bool duplicatePunchAttempt = false,
-      final bool deviceClockSkewSuspected = false,
+      bool outsideGeofence = false,
+      bool earlyClockIn = false,
+      bool locationInsufficient = false,
+      bool missingScheduledShift = false,
+      bool duplicatePunchAttempt = false,
+      bool deviceClockSkewSuspected = false,
     }) => StaffDemoTimeEntrySummary(
       entryId: 'e1',
       userId: 'u1',

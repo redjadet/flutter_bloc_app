@@ -10,12 +10,11 @@ sealed class RemoteConfigState with _$RemoteConfigState {
   const factory RemoteConfigState.loading() = RemoteConfigLoading;
 
   const factory RemoteConfigState.loaded({
-    required final bool isAwesomeFeatureEnabled,
-    required final String testValue,
-    final String? dataSource,
-    final DateTime? lastSyncedAt,
+    required bool isAwesomeFeatureEnabled,
+    required String testValue,
+    String? dataSource,
+    DateTime? lastSyncedAt,
   }) = RemoteConfigLoaded;
 
-  const factory RemoteConfigState.error(final String message) =
-      RemoteConfigError;
+  const factory RemoteConfigState.error(String message) = RemoteConfigError;
 }

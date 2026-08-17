@@ -13,7 +13,7 @@ final class CertificatePinningDemoPinFailure
   const CertificatePinningDemoPinFailure({required super.l10nCode});
 
   factory CertificatePinningDemoPinFailure.fromDomain(
-    final CertificatePinningFailure failure,
+    CertificatePinningFailure failure,
   ) {
     final String code = switch (failure) {
       PinMismatchFailure() => 'pinMismatch',

@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 import 'package:utilities/utilities.dart';
 
 /// Maps domain [Failure] to presentation [AppError].
-AppError appErrorFromFailure(final Failure failure) => switch (failure) {
+AppError appErrorFromFailure(Failure failure) => switch (failure) {
   PermissionFailure(:final PermissionFailureReason reason) => UnknownError(
     message: switch (reason) {
       PermissionFailureReason.denied => 'Permission denied.',
@@ -40,9 +40,8 @@ AppError appErrorFromFailure(final Failure failure) => switch (failure) {
   ),
 };
 
-StorageErrorKind _storageErrorKind(final StorageFailureKind kind) =>
-    switch (kind) {
-      StorageFailureKind.read => StorageErrorKind.read,
-      StorageFailureKind.write => StorageErrorKind.write,
-      StorageFailureKind.delete => StorageErrorKind.delete,
-    };
+StorageErrorKind _storageErrorKind(StorageFailureKind kind) => switch (kind) {
+  StorageFailureKind.read => StorageErrorKind.read,
+  StorageFailureKind.write => StorageErrorKind.write,
+  StorageFailureKind.delete => StorageErrorKind.delete,
+};

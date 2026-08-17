@@ -18,7 +18,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
   final Widget Function(BuildContext, T)? itemBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
     return SafeArea(
@@ -41,7 +41,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: items.length,
-                itemBuilder: (final itemContext, final index) {
+                itemBuilder: (itemContext, index) {
                   final T item = items[index];
                   final Object? keyValue = itemKey?.call(item) ?? item;
                   return _MaterialPickerItemTile<T>(
@@ -76,7 +76,7 @@ class _MaterialPickerItemTile<T> extends StatelessWidget {
   final Widget Function(BuildContext, T)? itemBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
     return ListTile(
@@ -150,7 +150,7 @@ class _CupertinoPickerSheetContentState<T>
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
       height: 250,
@@ -175,7 +175,7 @@ class _CupertinoPickerSheetContentState<T>
               child: CupertinoPicker(
                 scrollController: _scrollController,
                 itemExtent: 32,
-                onSelectedItemChanged: (final index) {
+                onSelectedItemChanged: (index) {
                   if (index >= 0 && index < widget.items.length) {
                     setState(() {
                       _currentSelection = widget.items[index];
@@ -183,7 +183,7 @@ class _CupertinoPickerSheetContentState<T>
                   }
                 },
                 children: widget.items.map(
-                  (final item) {
+                  (item) {
                     final Object? keyValue = widget.itemKey?.call(item) ?? item;
                     return KeyedSubtree(
                       key: ValueKey<Object?>(keyValue),

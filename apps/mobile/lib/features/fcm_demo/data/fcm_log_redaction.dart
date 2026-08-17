@@ -5,7 +5,7 @@ import 'package:utilities/utilities.dart';
 /// Redacted FCM logging helpers — never log title, body, data values, or tokens.
 abstract final class FcmLogRedaction {
   static Map<String, Object?> summaryFromPushMessage(
-    final PushMessage message,
+    PushMessage message,
   ) => <String, Object?>{
     'source': message.source.name,
     'hasMessageId': message.messageId.isNotEmpty,
@@ -15,8 +15,8 @@ abstract final class FcmLogRedaction {
   };
 
   static Map<String, Object?> summaryFromRemoteMessage(
-    final RemoteMessage message, {
-    required final String source,
+    RemoteMessage message, {
+    required String source,
   }) {
     final String? title = message.notification?.title;
     final String? body = message.notification?.body;
@@ -30,8 +30,8 @@ abstract final class FcmLogRedaction {
   }
 
   static void logPushMessage(
-    final String event, {
-    required final PushMessage message,
+    String event, {
+    required PushMessage message,
   }) {
     AppLogger.event(
       AppLogLevel.debug,
@@ -41,9 +41,9 @@ abstract final class FcmLogRedaction {
   }
 
   static void logRemoteMessage(
-    final String event, {
-    required final RemoteMessage message,
-    required final String source,
+    String event, {
+    required RemoteMessage message,
+    required String source,
   }) {
     AppLogger.event(
       AppLogLevel.debug,

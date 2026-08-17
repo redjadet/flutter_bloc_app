@@ -1,9 +1,9 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart' show PlatformAdaptive;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/root_aware_back_button.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A reusable AppBar widget that provides consistent styling and behavior
 /// across the app with automatic back button handling.
@@ -40,7 +40,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? scrolledUnderElevation;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final String effectiveHomeTooltip = homeTooltip ?? l10n.homeTitle;

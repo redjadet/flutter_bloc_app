@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_last_changed_text.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_status_chip.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_value_text.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CounterDisplayCard extends StatelessWidget {
   const CounterDisplayCard({
@@ -30,10 +30,10 @@ class CounterDisplayCard extends StatelessWidget {
   final Duration animMedium;
 
   @override
-  Widget build(final BuildContext context) => TweenAnimationBuilder<Color?>(
+  Widget build(BuildContext context) => TweenAnimationBuilder<Color?>(
     duration: animMedium,
     tween: ColorTween(end: cardColor),
-    builder: (final context, final animatedColor, _) {
+    builder: (context, animatedColor, _) {
       final Color resolvedColor = animatedColor ?? cardColor;
       return CommonCard(
         elevation: 0,

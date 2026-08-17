@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_file_store_web.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 import '../../../support/hive_test_helpers.dart' as test_helpers;
 
@@ -18,7 +18,7 @@ Future<HiveService> _createHiveService() async {
   return hiveService;
 }
 
-Future<void> _deleteBox(final String boxName) async {
+Future<void> _deleteBox(String boxName) async {
   if (Hive.isBoxOpen(boxName)) {
     await Hive.box<dynamic>(boxName).close();
   }

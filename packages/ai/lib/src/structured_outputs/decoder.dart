@@ -12,8 +12,8 @@ abstract interface class StructuredOutputDecoder {
 class MapStructuredOutputDecoder implements StructuredOutputDecoder {
   @override
   Map<String, Object?> decode({
-    required final OutputSchema schema,
-    required final Map<String, Object?> payload,
+    required OutputSchema schema,
+    required Map<String, Object?> payload,
   }) {
     for (final field in schema.fields) {
       if (field.required && !payload.containsKey(field.name)) {

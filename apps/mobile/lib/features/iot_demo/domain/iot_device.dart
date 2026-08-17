@@ -22,14 +22,14 @@ enum IotDeviceType {
 @freezed
 abstract class IotDevice with _$IotDevice {
   const factory IotDevice({
-    required final String id,
-    required final String name,
-    required final IotDeviceType type,
-    final DateTime? lastSeen,
+    required String id,
+    required String name,
+    required IotDeviceType type,
+    DateTime? lastSeen,
     @Default(IotConnectionState.disconnected)
-    final IotConnectionState connectionState,
-    @Default(false) final bool toggledOn,
-    @Default(0.0) final double value,
+    IotConnectionState connectionState,
+    @Default(false) bool toggledOn,
+    @Default(0.0) double value,
   }) = _IotDevice;
 
   const IotDevice._();

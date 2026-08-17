@@ -16,7 +16,7 @@ abstract class WalletConnectAuthRepository {
   /// Stores the wallet address in Firestore and optionally updates user profile.
   ///
   /// Throws [WalletConnectException] if linking fails.
-  Future<void> linkWalletToFirebaseUser(final String walletAddress);
+  Future<void> linkWalletToFirebaseUser(String walletAddress);
 
   /// Retrieves the linked wallet address for the current Firebase Auth user.
   ///
@@ -35,14 +35,14 @@ abstract class WalletConnectAuthRepository {
   ///
   /// Throws [WalletConnectException] if the write fails.
   Future<void> upsertWalletUserProfile(
-    final String walletAddress, {
-    final WalletUserProfile? profile,
+    String walletAddress, {
+    WalletUserProfile? profile,
   });
 
   /// Retrieves the wallet-keyed user profile for [walletAddress].
   ///
   /// Returns `null` if the document does not exist or is invalid.
-  Future<WalletUserProfile?> getWalletUserProfile(final String walletAddress);
+  Future<WalletUserProfile?> getWalletUserProfile(String walletAddress);
 }
 
 /// Exception thrown by WalletConnect operations.

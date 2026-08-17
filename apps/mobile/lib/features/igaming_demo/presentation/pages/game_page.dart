@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'game_page_legend.part.dart';
 part 'game_page_sections.part.dart';
@@ -22,12 +22,12 @@ class GamePage extends StatelessWidget {
   const GamePage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.igamingDemoGameTitle,
       body: Builder(
-        builder: (final context) {
+        builder: (context) {
           final errorMessage = context
               .selectState<GameCubit, GameState, String?>(
                 selector: _gameErrorMessage,
@@ -45,27 +45,26 @@ class GamePage extends StatelessWidget {
   }
 }
 
-String? _gameErrorMessage(final GameState state) =>
-    state.mapOrNull(error: (final error) => error.message);
+String? _gameErrorMessage(GameState state) =>
+    state.mapOrNull(error: (error) => error.message);
 
-DemoBalance? _displayBalance(final GameState state) => state.when(
-  idle: (final balance, final selectedStake) => balance,
-  placingBet: (final balance, final selectedStake) => balance,
-  spinning: (final balance, final bet, final targetIndices) => DemoBalance(
+DemoBalance? _displayBalance(GameState state) => state.when(
+  idle: (balance, selectedStake) => balance,
+  placingBet: (balance, selectedStake) => balance,
+  spinning: (balance, bet, targetIndices) => DemoBalance(
     amountUnits: (balance.amountUnits - bet).clamp(0, balance.amountUnits),
   ),
-  result:
-      (
-        final roundResult,
-        final newBalance,
-        final selectedStake,
-        final targetIndices,
-      ) => newBalance,
-  error: (final message) => null,
+  result: (
+    roundResult,
+    newBalance,
+    selectedStake,
+    targetIndices,
+  ) => newBalance,
+  error: (message) => null,
 );
 
-bool _isSpinning(final GameState state) =>
-    state.mapOrNull(spinning: (final spinning) => true) ?? false;
+bool _isSpinning(GameState state) =>
+    state.mapOrNull(spinning: (spinning) => true) ?? false;
 
-GameRoundResult? _roundResult(final GameState state) =>
-    state.mapOrNull(result: (final result) => result.roundResult);
+GameRoundResult? _roundResult(GameState state) =>
+    state.mapOrNull(result: (result) => result.roundResult);

@@ -2,11 +2,11 @@ part of 'supabase_chat_repository.dart';
 
 extension _SupabaseChatRepositoryEdge on SupabaseChatRepository {
   Future<ChatResult> invokeEdgeAndParse({
-    required final String token,
-    required final Map<String, dynamic> body,
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
+    required String token,
+    required Map<String, dynamic> body,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
   }) async {
     final FunctionResponse response = await invokeEdge(
       token: token,
@@ -21,8 +21,8 @@ extension _SupabaseChatRepositoryEdge on SupabaseChatRepository {
   }
 
   Future<FunctionResponse> invokeEdge({
-    required final String token,
-    required final Map<String, dynamic> body,
+    required String token,
+    required Map<String, dynamic> body,
   }) async {
     final String? anonKey = _readAnonKey();
     if (anonKey == null || anonKey.isEmpty) {
@@ -37,10 +37,10 @@ extension _SupabaseChatRepositoryEdge on SupabaseChatRepository {
   }
 
   ChatResult parseSuccess(
-    final FunctionResponse response, {
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
+    FunctionResponse response, {
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
   }) {
     if (response.status != 200) {
       throw ChatRemoteFailureException(
@@ -99,9 +99,9 @@ String? _defaultReadAccessToken() =>
 String? _defaultReadAnonKey() => SecretConfig.supabaseAnonKey;
 
 Future<FunctionResponse> _defaultInvoke({
-  required final String accessToken,
-  required final String anonKey,
-  required final Map<String, dynamic> body,
+  required String accessToken,
+  required String anonKey,
+  required Map<String, dynamic> body,
 }) {
   return Supabase.instance.client.functions.invoke(
     SupabaseChatRepository.functionName,

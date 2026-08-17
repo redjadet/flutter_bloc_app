@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> pumpUntilFound(
-  final WidgetTester tester,
-  final Finder finder, {
-  final Duration timeout = const Duration(seconds: 5),
-  final Duration step = const Duration(milliseconds: 100),
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 5),
+  Duration step = const Duration(milliseconds: 100),
 }) async {
   final Stopwatch stopwatch = Stopwatch()..start();
   while (stopwatch.elapsed < timeout) {
@@ -20,10 +20,10 @@ Future<void> pumpUntilFound(
 
 /// Pumps until [finder] is gone or [timeout] elapses (throws on timeout).
 Future<void> pumpUntilAbsent(
-  final WidgetTester tester,
-  final Finder finder, {
-  final Duration timeout = const Duration(seconds: 5),
-  final Duration step = const Duration(milliseconds: 50),
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 5),
+  Duration step = const Duration(milliseconds: 50),
 }) async {
   final Stopwatch stopwatch = Stopwatch()..start();
   while (stopwatch.elapsed < timeout) {
@@ -39,9 +39,9 @@ Future<void> pumpUntilAbsent(
 /// Bounded [WidgetTester.pumpAndSettle] — avoids the default long timeout when
 /// animations should finish quickly (integration runs).
 Future<void> pumpSettleWithin(
-  final WidgetTester tester, {
-  final Duration step = const Duration(milliseconds: 50),
-  final Duration timeout = const Duration(seconds: 3),
+  WidgetTester tester, {
+  Duration step = const Duration(milliseconds: 50),
+  Duration timeout = const Duration(seconds: 3),
 }) async {
   try {
     await tester.pumpAndSettle(
@@ -68,10 +68,10 @@ Future<void> pumpSettleWithin(
 /// scroll physics (avoids simulator flakiness). Falls back to [pumpSettleWithin]
 /// if no descendant [Scrollable] is found.
 Future<void> pumpUntilScrollIdle(
-  final WidgetTester tester,
-  final Finder scrollViewFinder, {
-  final Duration step = const Duration(milliseconds: 50),
-  final Duration timeout = const Duration(seconds: 4),
+  WidgetTester tester,
+  Finder scrollViewFinder, {
+  Duration step = const Duration(milliseconds: 50),
+  Duration timeout = const Duration(seconds: 4),
 }) async {
   final Finder scrollableFinder = find.descendant(
     of: scrollViewFinder,
@@ -101,10 +101,10 @@ Future<void> pumpUntilScrollIdle(
 
 /// Bounded post-[WidgetTester.fling] stabilization for scroll views.
 Future<void> pumpAfterScrollFling(
-  final WidgetTester tester,
-  final Finder scrollViewFinder, {
-  final Duration step = const Duration(milliseconds: 50),
-  final Duration timeout = const Duration(seconds: 4),
+  WidgetTester tester,
+  Finder scrollViewFinder, {
+  Duration step = const Duration(milliseconds: 50),
+  Duration timeout = const Duration(seconds: 4),
 }) async {
   await pumpUntilScrollIdle(
     tester,
@@ -115,13 +115,13 @@ Future<void> pumpAfterScrollFling(
 }
 
 Future<void> tapAndPump(
-  final WidgetTester tester,
-  final Finder finder, {
-  final Duration settle = const Duration(milliseconds: 100),
+  WidgetTester tester,
+  Finder finder, {
+  Duration settle = const Duration(milliseconds: 100),
 
   /// When false, skip scroll/ensureVisible — caller already positioned the
   /// target (e.g. overflow menu nudge). Re-scrolling can undo that placement.
-  final bool scrollIntoView = true,
+  bool scrollIntoView = true,
 }) async {
   if (scrollIntoView) {
     // On small emulator viewports, ensureVisible alone often leaves controls

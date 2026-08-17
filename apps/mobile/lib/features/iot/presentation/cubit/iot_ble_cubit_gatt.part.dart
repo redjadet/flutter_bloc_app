@@ -23,8 +23,8 @@ mixin IotBleCubitGatt on IotBleCubitCore {
   }
 
   Future<void> writeSelectedCharacteristic(
-    final List<int> value, {
-    final bool withoutResponse = false,
+    List<int> value, {
+    bool withoutResponse = false,
   }) async {
     final BleCharacteristicRef? ref = state.selectedCharacteristic;
     if (ref == null) {
@@ -58,7 +58,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
       activeRepository
           .subscribeCharacteristic(ref)
           .listen(
-            (final value) {
+            (value) {
               if (isClosed) {
                 return;
               }
@@ -70,7 +70,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
               );
               appendLog(BleLogKind.notify, 'Notify ${value.length} bytes');
             },
-            onError: (final Object error, final StackTrace stackTrace) {
+            onError: (Object error, StackTrace stackTrace) {
               AppLogger.error('IotBleCubit notify stream', error, stackTrace);
               emitBleFailure(IotBleErrorCode.subscribe, error);
             },
@@ -83,7 +83,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
     appendLog(BleLogKind.notify, 'Subscribed to ${ref.characteristicUuid}');
   }
 
-  Future<void> connectClassicDevice(final String deviceId) async {
+  Future<void> connectClassicDevice(String deviceId) async {
     final Result<void> result = await classicRepository.connect(deviceId);
     if (isClosed) {
       return;
@@ -98,7 +98,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
       classicRepository
           .watchIncoming(deviceId)
           .listen(
-            (final message) {
+            (message) {
               if (isClosed) {
                 return;
               }
@@ -111,7 +111,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
                 ),
               );
             },
-            onError: (final Object error, final StackTrace stackTrace) {
+            onError: (Object error, StackTrace stackTrace) {
               AppLogger.error(
                 'IotBleCubit classic message stream',
                 error,
@@ -122,7 +122,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
     );
   }
 
-  Future<void> sendClassicMessage(final String text) async {
+  Future<void> sendClassicMessage(String text) async {
     final String? deviceId = state.selectedClassicDeviceId;
     if (deviceId == null || text.trim().isEmpty) {
       return;

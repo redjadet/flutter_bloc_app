@@ -4,21 +4,21 @@ class _AdminPanel extends StatelessWidget {
   const _AdminPanel();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isBusy = context.selectState<AdminCubit, AdminState, bool>(
-      selector: (final state) => state.isBusy,
+      selector: (state) => state.isBusy,
     );
     final errorMessage = context.selectState<AdminCubit, AdminState, String?>(
-      selector: (final state) => state.errorMessage,
+      selector: (state) => state.errorMessage,
     );
     final pendingTherapists = context
         .selectState<AdminCubit, AdminState, List<TherapistProfile>>(
-          selector: (final state) => state.pendingTherapists,
+          selector: (state) => state.pendingTherapists,
         );
     final auditEvents = context
         .selectState<AdminCubit, AdminState, List<AuditEvent>>(
-          selector: (final state) => state.auditEvents,
+          selector: (state) => state.auditEvents,
         );
     final cubit = context.cubit<AdminCubit>();
 

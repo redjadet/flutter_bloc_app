@@ -29,32 +29,31 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.websocketPath,
     name: AppRoutes.websocket,
-    builder: (final context, final state) => DeferredPage(
+    builder: (context, state) => DeferredPage(
       loadLibrary: websocket_page.loadLibrary,
-      builder: (final context) => websocket_page.buildWebsocketPage(),
+      builder: (context) => websocket_page.buildWebsocketPage(),
     ),
   ),
   GoRoute(
     path: AppRoutes.realtimeMarketPath,
     name: AppRoutes.realtimeMarket,
-    builder: (final context, final state) => DeferredPage(
+    builder: (context, state) => DeferredPage(
       loadLibrary: realtime_market_page.loadLibrary,
-      builder: (final context) =>
-          realtime_market_page.buildRealtimeMarketPage(),
+      builder: (context) => realtime_market_page.buildRealtimeMarketPage(),
     ),
   ),
   GoRoute(
     path: AppRoutes.googleMapsPath,
     name: AppRoutes.googleMaps,
-    builder: (final context, final state) => DeferredPage(
+    builder: (context, state) => DeferredPage(
       loadLibrary: google_maps_page.loadLibrary,
-      builder: (final context) => google_maps_page.buildGoogleMapsPage(),
+      builder: (context) => google_maps_page.buildGoogleMapsPage(),
     ),
   ),
   GoRoute(
     path: AppRoutes.searchPath,
     name: AppRoutes.search,
-    builder: (final context, final state) => SearchPage(
+    builder: (context, state) => SearchPage(
       repository: getIt<SearchRepository>(),
       timerService: getIt<TimerService>(),
     ),
@@ -62,20 +61,20 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.todoListPath,
     name: AppRoutes.todoList,
-    builder: (final context, final state) =>
+    builder: (context, state) =>
         BlocProviderHelpers.withAsyncInit<TodoListCubit>(
           create: () => TodoListCubit(
             repository: getIt<TodoRepository>(),
             timerService: getIt<TimerService>(),
           ),
-          init: (final cubit) => cubit.loadInitial(),
+          init: (cubit) => cubit.loadInitial(),
           child: const TodoListPage(),
         ),
   ),
   GoRoute(
     path: AppRoutes.walletconnectAuthPath,
     name: AppRoutes.walletconnectAuth,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final l10n = context.l10n;
       return AppRouteAuthGate(
         policy: AppRoutePolicies.walletconnectAuth,
@@ -87,7 +86,7 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
             repository: getIt<WalletConnectAuthRepository>(),
             l10n: l10n,
           ),
-          init: (final cubit) => cubit.loadLinkedWallet(),
+          init: (cubit) => cubit.loadLinkedWallet(),
           child: const WalletConnectAuthPage(),
         ),
       );
@@ -96,7 +95,7 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.supabaseAuthPath,
     name: AppRoutes.supabaseAuth,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final l10n = context.l10n;
       final redirectAfterLogin = state.uri.queryParameters['redirect'];
       return BlocProviderHelpers.withAsyncInit<SupabaseAuthCubit>(
@@ -107,7 +106,7 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
               ? getIt<SessionLifecycleCoordinator>()
               : null,
         ),
-        init: (final cubit) => cubit.loadSession(),
+        init: (cubit) => cubit.loadSession(),
         child: SupabaseAuthPage(
           redirectAfterLogin: redirectAfterLogin,
         ),

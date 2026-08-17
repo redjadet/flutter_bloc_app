@@ -2,7 +2,7 @@ part of 'online_therapy_messaging_view.dart';
 
 extension _OnlineTherapyMessagingViewStateBuild
     on _OnlineTherapyMessagingViewState {
-  Widget buildMessagingContentImpl(final BuildContext context) {
+  Widget buildMessagingContentImpl(BuildContext context) {
     final l10n = context.l10n;
     final viewState = context
         .selectState<
@@ -17,7 +17,7 @@ extension _OnlineTherapyMessagingViewStateBuild
             String? errorMessage,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isBusy: state.isBusy,
             conversations: state.conversations,
             messages: state.messages,
@@ -52,7 +52,7 @@ extension _OnlineTherapyMessagingViewStateBuild
 
     final convId = viewState.selectedConversationId;
 
-    Widget buildMessagesPane({required final bool compact}) {
+    Widget buildMessagesPane({required bool compact}) {
       return Column(
         children: <Widget>[
           Expanded(
@@ -155,7 +155,7 @@ extension _OnlineTherapyMessagingViewStateBuild
                       .toList(growable: false),
                   onChanged: viewState.isBusy
                       ? null
-                      : (final id) {
+                      : (id) {
                           if (id == null) return;
                           // check-ignore: side_effects_build - user gesture (dropdown).
                           unawaited(cubit.selectConversation(id));

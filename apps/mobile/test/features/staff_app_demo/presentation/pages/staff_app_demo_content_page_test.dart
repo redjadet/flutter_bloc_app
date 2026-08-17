@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_content_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_content_page.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 class _FakeStaffDemoContentRepository implements StaffDemoContentRepository {
   @override
-  Future<Uri> getDownloadUrl({required final String storagePath}) async {
+  Future<Uri> getDownloadUrl({required String storagePath}) async {
     return Uri.parse('https://example.com/video.mp4');
   }
 
@@ -66,35 +66,35 @@ class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   }
 
   @override
-  Stream<VideoEvent> videoEventsFor(final int playerId) {
+  Stream<VideoEvent> videoEventsFor(int playerId) {
     return _streams[playerId]!.stream;
   }
 
   @override
-  Future<void> dispose(final int playerId) async {
+  Future<void> dispose(int playerId) async {
     await _streams.remove(playerId)?.close();
   }
 
   @override
-  Future<void> play(final int playerId) async {}
+  Future<void> play(int playerId) async {}
 
   @override
-  Future<void> pause(final int playerId) async {}
+  Future<void> pause(int playerId) async {}
 
   @override
-  Future<void> setLooping(final int playerId, final bool looping) async {}
+  Future<void> setLooping(int playerId, bool looping) async {}
 
   @override
-  Future<void> setVolume(final int playerId, final double volume) async {}
+  Future<void> setVolume(int playerId, double volume) async {}
 
   @override
-  Future<void> seekTo(final int playerId, final Duration position) async {}
+  Future<void> seekTo(int playerId, Duration position) async {}
 
   @override
-  Future<void> setPlaybackSpeed(final int playerId, final double speed) async {}
+  Future<void> setPlaybackSpeed(int playerId, double speed) async {}
 
   @override
-  Widget buildViewWithOptions(final VideoViewOptions options) {
+  Widget buildViewWithOptions(VideoViewOptions options) {
     return const SizedBox.shrink();
   }
 }

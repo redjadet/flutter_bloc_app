@@ -1,5 +1,4 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -7,12 +6,13 @@ import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoTimeclockPage extends StatelessWidget {
   const StaffAppDemoTimeclockPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final state = context.watch<StaffDemoTimeclockCubit>().state;
     final last = state.lastResult;
     final l10n = context.l10n;

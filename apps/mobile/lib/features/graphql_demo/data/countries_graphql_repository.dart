@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/api/countries_graphql_api.dart';
@@ -21,10 +22,9 @@ part 'countries_graphql_repository_queries.part.dart';
 /// when the app shuts down.
 class CountriesGraphqlRepository
     implements GraphqlDemoRepository, GraphqlRemoteRepository {
-  CountriesGraphqlRepository({required final Dio client})
-    : this._fromClient(client);
+  CountriesGraphqlRepository({required Dio client}) : this._fromClient(client);
 
-  CountriesGraphqlRepository._fromClient(final Dio client)
+  CountriesGraphqlRepository._fromClient(Dio client)
     : _api = CountriesGraphqlApi(client);
 
   static const String _opContinents = 'Continents';
@@ -51,7 +51,7 @@ class CountriesGraphqlRepository
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
-    final String? continentCode,
+    String? continentCode,
   }) async {
     final String? normalizedCode = normalizedContinentCode(continentCode);
     if (normalizedCode == null) {

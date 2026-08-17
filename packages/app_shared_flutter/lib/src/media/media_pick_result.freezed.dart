@@ -55,8 +55,7 @@ extension MediaPickResultPatterns on MediaPickResult {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _MediaPickResultSuccess value)?  success,TResult Function( _MediaPickResultCancelled value)?  cancelled,TResult Function( _MediaPickResultFailure value)?  failure,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _MediaPickResultSuccess value)?  success,TResult Function( _MediaPickResultCancelled value)?  cancelled,TResult Function( _MediaPickResultFailure value)?  failure,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _MediaPickResultSuccess() when success != null:
 return success(_that);case _MediaPickResultCancelled() when cancelled != null:
@@ -79,8 +78,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _MediaPickResultSuccess value)  success,required TResult Function( _MediaPickResultCancelled value)  cancelled,required TResult Function( _MediaPickResultFailure value)  failure,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _MediaPickResultSuccess value)  success,required TResult Function( _MediaPickResultCancelled value)  cancelled,required TResult Function( _MediaPickResultFailure value)  failure,}){final _that = this;
 switch (_that) {
 case _MediaPickResultSuccess():
 return success(_that);case _MediaPickResultCancelled():
@@ -99,8 +97,7 @@ return failure(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _MediaPickResultSuccess value)?  success,TResult? Function( _MediaPickResultCancelled value)?  cancelled,TResult? Function( _MediaPickResultFailure value)?  failure,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _MediaPickResultSuccess value)?  success,TResult? Function( _MediaPickResultCancelled value)?  cancelled,TResult? Function( _MediaPickResultFailure value)?  failure,}){final _that = this;
 switch (_that) {
 case _MediaPickResultSuccess() when success != null:
 return success(_that);case _MediaPickResultCancelled() when cancelled != null:

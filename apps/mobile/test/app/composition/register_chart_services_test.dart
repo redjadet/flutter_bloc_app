@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_chart_services.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/auth_aware_chart_remote_repository.dart';
@@ -20,8 +20,8 @@ class _FakeCoingeckoApi implements CoingeckoApi {
 
   @override
   Future<List<int>> getBitcoinMarketChart(
-    final Map<String, String> query,
-    final String accept,
+    Map<String, String> query,
+    String accept,
   ) async {
     requestCount += 1;
     return utf8.encode(
@@ -35,11 +35,11 @@ class _FakeChartCacheRepository implements ChartCacheRepository {
   List<ChartPoint>? lastWritten;
 
   @override
-  Future<List<ChartPoint>> readTrendingCounts({final Duration? maxAge}) async =>
+  Future<List<ChartPoint>> readTrendingCounts({Duration? maxAge}) async =>
       cached;
 
   @override
-  Future<void> writeTrendingCounts(final List<ChartPoint> points) async {
+  Future<void> writeTrendingCounts(List<ChartPoint> points) async {
     lastWritten = points;
   }
 }
@@ -56,8 +56,8 @@ class _FakeSupabaseAuthRepository implements SupabaseAuthRepository {
 
   @override
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) async {}
 
   @override
@@ -65,9 +65,9 @@ class _FakeSupabaseAuthRepository implements SupabaseAuthRepository {
 
   @override
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) async {}
 }
 

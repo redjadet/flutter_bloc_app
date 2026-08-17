@@ -21,7 +21,7 @@ class _CaseStudyStepRedirectState extends State<_CaseStudyStepRedirect> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return const Center(child: CircularProgressIndicator());
   }
 }

@@ -1,7 +1,7 @@
 part of 'chat_cubit.dart';
 
 mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
-  void selectModel(final String model) {
+  void selectModel(String model) {
     final String? normalized = _normalize(model);
     if (normalized == null ||
         !_models.contains(normalized) ||
@@ -27,7 +27,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     unawaited(_persistHistory(history));
   }
 
-  Future<void> selectConversation(final String conversationId) async {
+  Future<void> selectConversation(String conversationId) async {
     if (state.activeConversationId == conversationId &&
         state.messages.isNotEmpty) {
       return;
@@ -117,8 +117,8 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<_LoadedConversation?> _loadConversationFromRepository(
-    final String conversationId, {
-    required final List<ChatConversation> existingHistory,
+    String conversationId, {
+    required List<ChatConversation> existingHistory,
   }) async {
     final List<ChatConversation> refreshed = await _historyRepository.load();
     // Use refreshed if available, otherwise fall back to existingHistory
@@ -144,7 +144,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   ChatConversation _rebuildFromTranscripts(
-    final ChatConversation conversation,
+    ChatConversation conversation,
   ) {
     final List<ChatMessage> messages = <ChatMessage>[];
     final int pairs = conversation.pastUserInputs.length;

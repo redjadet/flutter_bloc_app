@@ -1,8 +1,8 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
   ThemeCubit({required this._repository}) : super(ThemeMode.system);
@@ -15,7 +15,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
     if (loaded != null) emit(_toThemeMode(loaded));
   }
 
-  Future<void> setMode(final ThemeMode mode) async {
+  Future<void> setMode(ThemeMode mode) async {
     if (state == mode) return;
     final ThemeMode previous = state;
     emit(mode);
@@ -43,14 +43,13 @@ class ThemeCubit extends Cubit<ThemeMode> {
     await setMode(next);
   }
 
-  ThemeMode _toThemeMode(final ThemePreference preference) =>
-      switch (preference) {
-        ThemePreference.light => ThemeMode.light,
-        ThemePreference.dark => ThemeMode.dark,
-        ThemePreference.system => ThemeMode.system,
-      };
+  ThemeMode _toThemeMode(ThemePreference preference) => switch (preference) {
+    ThemePreference.light => ThemeMode.light,
+    ThemePreference.dark => ThemeMode.dark,
+    ThemePreference.system => ThemeMode.system,
+  };
 
-  ThemePreference _toPreference(final ThemeMode mode) => switch (mode) {
+  ThemePreference _toPreference(ThemeMode mode) => switch (mode) {
     ThemeMode.light => ThemePreference.light,
     ThemeMode.dark => ThemePreference.dark,
     ThemeMode.system => ThemePreference.system,

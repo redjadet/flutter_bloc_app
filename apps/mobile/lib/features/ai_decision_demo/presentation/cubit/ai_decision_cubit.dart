@@ -10,12 +10,12 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
 
   final AiDecisionRepository repository;
 
-  AiDecisionFailure _failure(final Object error) => AiDecisionFailure.load(
+  AiDecisionFailure _failure(Object error) => AiDecisionFailure.load(
     message: NetworkErrorMapper.getErrorMessage(error),
     cause: error,
   );
 
-  void _safeEmit(final AiDecisionState next) {
+  void _safeEmit(AiDecisionState next) {
     if (isClosed) return;
     emit(next);
   }
@@ -46,8 +46,8 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
   }
 
   Future<void> loadCase(
-    final String caseId, {
-    final bool preserveDecision = false,
+    String caseId, {
+    bool preserveDecision = false,
   }) async {
     _safeEmit(
       state.copyWith(
@@ -65,7 +65,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
     }
   }
 
-  Future<void> runDecisionSupport({required final String operatorNote}) async {
+  Future<void> runDecisionSupport({required String operatorNote}) async {
     final caseId = state.selectedCaseId;
     if (caseId == null) return;
     _safeEmit(state.copyWith(isRunningDecision: true, failure: null));
@@ -87,8 +87,8 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
   }
 
   Future<void> saveAction({
-    required final String actionType,
-    required final String note,
+    required String actionType,
+    required String note,
   }) async {
     final caseId = state.selectedCaseId;
     if (caseId == null) return;

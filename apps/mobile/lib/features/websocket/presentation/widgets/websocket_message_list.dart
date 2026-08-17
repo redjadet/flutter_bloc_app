@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
+import 'package:material_ui/material_ui.dart';
 
 class WebsocketMessageList extends StatelessWidget {
   const WebsocketMessageList({
@@ -14,7 +14,7 @@ class WebsocketMessageList extends StatelessWidget {
   final String emptyLabel;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (messages.isEmpty) {
       return AppMessage(message: emptyLabel);
     }
@@ -27,7 +27,7 @@ class WebsocketMessageList extends StatelessWidget {
         ),
         reverse: true,
         itemCount: messages.length,
-        itemBuilder: (final context, final index) {
+        itemBuilder: (context, index) {
           final int messageIndex = messages.length - 1 - index;
           final WebsocketMessage message = messages[messageIndex];
           return RepaintBoundary(

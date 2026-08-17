@@ -70,7 +70,7 @@ extension _OfflineFirstStaffDemoTimeclockRepositorySync
     // v1: timeclock writes are push-based via pending sync ops; pull is a no-op.
   }
 
-  Future<void> processOperationImpl(final SyncOperation operation) async {
+  Future<void> processOperationImpl(SyncOperation operation) async {
     final payload = operation.payload;
     final String? opUserId = payload['userId'] as String?;
     if (opUserId == null || opUserId.isEmpty) {

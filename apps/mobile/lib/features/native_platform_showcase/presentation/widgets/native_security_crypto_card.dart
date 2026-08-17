@@ -1,11 +1,11 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_operation_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_state.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_outcome_text.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef _CryptoSlice = ({
   NativeSecurityOperationResult? p256,
@@ -18,7 +18,7 @@ class NativeSecurityCryptoCard extends StatelessWidget {
   const NativeSecurityCryptoCard({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
@@ -27,12 +27,12 @@ class NativeSecurityCryptoCard extends StatelessWidget {
       NativeSecurityShowcaseState,
       _CryptoSlice
     >(
-      selector: (final state) => (
+      selector: (state) => (
         p256: state.p256Result,
         aes: state.aesResult,
         busy: state.isBusy,
       ),
-      builder: (final context, final slice) {
+      builder: (context, slice) {
         final bool busy = slice.busy;
         return KeyedSubtree(
           key: const ValueKey<String>('native-security-card-crypto'),

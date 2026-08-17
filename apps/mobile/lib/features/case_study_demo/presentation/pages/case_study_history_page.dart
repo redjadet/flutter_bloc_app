@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
@@ -10,15 +9,16 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/c
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CaseStudyHistoryPage extends StatelessWidget {
   const CaseStudyHistoryPage({super.key});
 
-  Future<bool> _confirmDelete(final BuildContext context) async {
+  Future<bool> _confirmDelete(BuildContext context) async {
     final l10n = context.l10n;
     final bool? confirmed = await showAdaptiveDialog<bool>(
       context: context,
-      builder: (final dialogContext) => AlertDialog.adaptive(
+      builder: (dialogContext) => AlertDialog.adaptive(
         title: Text(l10n.caseStudyDeleteDialogTitle),
         content: Text(l10n.caseStudyDeleteDialogBody),
         actions: [
@@ -43,13 +43,13 @@ class CaseStudyHistoryPage extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return TypeSafeBlocListener<CaseStudyHistoryCubit, CaseStudyHistoryState>(
-      listenWhen: (final prev, final curr) =>
+      listenWhen: (prev, curr) =>
           prev.transientError != curr.transientError &&
           curr.transientError != null,
-      listener: (final context, final state) {
+      listener: (context, state) {
         final Object? error = state.transientError;
         if (error == null) return;
         ErrorHandling.handleCubitError(context, error);
@@ -58,7 +58,7 @@ class CaseStudyHistoryPage extends StatelessWidget {
       child: CommonPageLayout(
         title: l10n.caseStudyHistoryTitle,
         body: TypeSafeBlocBuilder<CaseStudyHistoryCubit, CaseStudyHistoryState>(
-          builder: (final context, final state) {
+          builder: (context, state) {
             if (state.isLoading && state.records.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }

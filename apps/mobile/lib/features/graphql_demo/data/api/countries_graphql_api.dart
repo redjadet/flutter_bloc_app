@@ -9,13 +9,13 @@ part 'countries_graphql_api.g.dart';
 /// repository.
 @RestApi(baseUrl: 'https://countries.trevorblades.com')
 abstract class CountriesGraphqlApi {
-  factory CountriesGraphqlApi(final Dio dio, {final String? baseUrl}) =
+  factory CountriesGraphqlApi(Dio dio, {String? baseUrl}) =
       _CountriesGraphqlApi;
 
   @POST('/')
   @DioResponseType(ResponseType.bytes)
   Future<HttpResponse<List<int>>> postQuery(
-    @Body() final Map<String, dynamic> body,
-    @DioOptions() final Options? options,
+    @Body() Map<String, dynamic> body,
+    @DioOptions() Options? options,
   );
 }

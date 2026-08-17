@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_cubit.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_error_messages.dart';
@@ -10,14 +9,15 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_ter
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_terms_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RegisterForm extends StatelessWidget {
   const RegisterForm({super.key});
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocBuilder<RegisterCubit, RegisterState>(
-        builder: (final context, final state) {
+        builder: (context, state) {
           final cubit = context.cubit<RegisterCubit>();
           final l10n = AppLocalizations.of(context);
           final theme = Theme.of(context);
@@ -27,8 +27,8 @@ class RegisterForm extends StatelessWidget {
           final bool isCupertino = PlatformAdaptive.isCupertino(context);
 
           InputDecoration decorationBuilder({
-            required final String hint,
-            final String? errorText,
+            required String hint,
+            String? errorText,
           }) => registerInputDecoration(
             context,
             hint: hint,
@@ -38,7 +38,7 @@ class RegisterForm extends StatelessWidget {
           Future<void> openTermsDialog() async {
             final bool? accepted = await showAdaptiveDialog<bool>(
               context: context,
-              builder: (final dialogContext) => const RegisterTermsDialog(),
+              builder: (dialogContext) => const RegisterTermsDialog(),
             );
             if (!context.mounted) return;
             cubit
@@ -47,8 +47,8 @@ class RegisterForm extends StatelessWidget {
           }
 
           Widget buildLabeledField({
-            required final String label,
-            required final Widget field,
+            required String label,
+            required Widget field,
           }) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -100,8 +100,8 @@ class RegisterForm extends StatelessWidget {
                   state: state,
                   decorationBuilder:
                       ({
-                        required final hint,
-                        final errorText,
+                        required hint,
+                        errorText,
                       }) => decorationBuilder(
                         hint: hint,
                         errorText: errorText,

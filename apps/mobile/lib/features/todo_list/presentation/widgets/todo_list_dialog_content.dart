@@ -1,26 +1,26 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialog_due_date.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds the content widget for the todo editor dialog.
 Widget buildTodoEditorDialogContent({
-  required final BuildContext context,
-  required final TextEditingController titleController,
-  required final TextEditingController descriptionController,
-  required final bool isCupertino,
-  required final DateTime? selectedDueDate,
-  required final TodoPriority selectedPriority,
-  required final bool isCompleted,
-  required final ValueChanged<String> onTitleChanged,
-  required final ValueChanged<String> onDescriptionChanged,
-  required final ValueChanged<DateTime?> onDueDateChanged,
-  required final ValueChanged<TodoPriority> onPriorityChanged,
-  required final ValueChanged<bool> onCompletedChanged,
-  final FocusNode? titleFocusNode,
-  final FocusNode? descriptionFocusNode,
+  required BuildContext context,
+  required TextEditingController titleController,
+  required TextEditingController descriptionController,
+  required bool isCupertino,
+  required DateTime? selectedDueDate,
+  required TodoPriority selectedPriority,
+  required bool isCompleted,
+  required ValueChanged<String> onTitleChanged,
+  required ValueChanged<String> onDescriptionChanged,
+  required ValueChanged<DateTime?> onDueDateChanged,
+  required ValueChanged<TodoPriority> onPriorityChanged,
+  required ValueChanged<bool> onCompletedChanged,
+  FocusNode? titleFocusNode,
+  FocusNode? descriptionFocusNode,
 }) {
   final l10n = context.l10n;
 

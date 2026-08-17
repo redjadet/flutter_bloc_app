@@ -1,16 +1,16 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.graphqlSampleTitle,
@@ -18,9 +18,8 @@ class GraphqlDemoPage extends StatelessWidget {
         children: [
           // Only rebuild progress bar when loading state changes
           TypeSafeBlocSelector<GraphqlDemoCubit, GraphqlDemoState, bool>(
-            selector: (final state) =>
-                state.isLoading && state.countries.isNotEmpty,
-            builder: (final context, final showProgressBar) => showProgressBar
+            selector: (state) => state.isLoading && state.countries.isNotEmpty,
+            builder: (context, showProgressBar) => showProgressBar
                 ? const LinearProgressIndicator(minHeight: 2)
                 : const SizedBox.shrink(),
           ),
@@ -30,12 +29,12 @@ class GraphqlDemoPage extends StatelessWidget {
             GraphqlDemoState,
             GraphqlFilterBarData
           >(
-            selector: (final state) => GraphqlFilterBarData(
+            selector: (state) => GraphqlFilterBarData(
               continents: state.continents,
               activeContinentCode: state.activeContinentCode,
               isLoading: state.isLoading,
             ),
-            builder: (final context, final filterData) => Padding(
+            builder: (context, filterData) => Padding(
               padding: context.pageHorizontalPaddingWithVertical(
                 context.responsiveGapM,
               ),
@@ -52,8 +51,8 @@ class GraphqlDemoPage extends StatelessWidget {
             GraphqlDemoState,
             GraphqlDataSource
           >(
-            selector: (final state) => state.dataSource,
-            builder: (final context, final source) => Align(
+            selector: (state) => state.dataSource,
+            builder: (context, source) => Align(
               alignment: AlignmentDirectional.centerEnd,
               child: Padding(
                 padding: EdgeInsetsDirectional.only(
@@ -74,7 +73,7 @@ class GraphqlDemoPage extends StatelessWidget {
                     GraphqlDemoState,
                     GraphqlBodyData
                   >(
-                    selector: (final state) => GraphqlBodyData(
+                    selector: (state) => GraphqlBodyData(
                       isLoading: state.isLoading,
                       hasError: state.hasError,
                       countries: state.countries,
@@ -82,14 +81,13 @@ class GraphqlDemoPage extends StatelessWidget {
                       errorMessage: state.errorMessage,
                       lastError: state.lastError,
                     ),
-                    isLoading: (final data) =>
+                    isLoading: (data) =>
                         data.isLoading && data.countries.isEmpty,
-                    isError: (final data) =>
-                        data.hasError && data.countries.isEmpty,
-                    loadingBuilder: (final _) => const CommonLoadingWidget(),
-                    errorBuilder: (final context, final data) =>
+                    isError: (data) => data.hasError && data.countries.isEmpty,
+                    loadingBuilder: (_) => const CommonLoadingWidget(),
+                    errorBuilder: (context, data) =>
                         buildGraphqlErrorWidget(context, data, l10n),
-                    builder: (final context, final bodyData) => RepaintBoundary(
+                    builder: (context, bodyData) => RepaintBoundary(
                       child: GraphqlBody(bodyData: bodyData, l10n: l10n),
                     ),
                   ),

@@ -14,13 +14,13 @@ class ChatSyncOperationFactory {
   String generateChangeId() => generateOfflineChangeId();
 
   SyncOperation createOperation({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    required final String conversationId,
-    required final String clientMessageId,
-    required final DateTime createdAt,
-    final String? model,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    required String conversationId,
+    required String clientMessageId,
+    required DateTime createdAt,
+    String? model,
   }) => SyncOperation.create(
     entityType: _entityType,
     payload: <String, dynamic>{
@@ -35,7 +35,7 @@ class ChatSyncOperationFactory {
     idempotencyKey: clientMessageId,
   );
 
-  ChatSyncPayload readPayload(final SyncOperation operation) {
+  ChatSyncPayload readPayload(SyncOperation operation) {
     final Map<String, dynamic> payload = operation.payload;
     final String conversationId =
         (payload['conversationId'] ?? generateConversationId()).toString();
@@ -64,9 +64,9 @@ class ChatSyncOperationFactory {
     );
   }
 
-  List<String> _readStringList(final dynamic raw) {
+  List<String> _readStringList(dynamic raw) {
     if (raw is List) {
-      return raw.map((final dynamic item) => item.toString()).toList();
+      return raw.map((dynamic item) => item.toString()).toList();
     }
     return const <String>[];
   }

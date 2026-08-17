@@ -13,7 +13,7 @@ import 'package:storage/storage.dart';
 void registerRemoteConfigServices() {
   registerLazySingletonIfAbsent<RemoteConfigRemoteDataSource>(
     createRemoteConfigRemoteDataSource,
-    dispose: (final repository) => repository.dispose(),
+    dispose: (repository) => repository.dispose(),
   );
   registerLazySingletonIfAbsent<RemoteConfigCacheRepository>(
     () => RemoteConfigCacheRepository(hiveService: getIt<HiveService>()),

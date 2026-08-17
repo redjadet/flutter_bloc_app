@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_avatar.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('ChatContactTile', () {

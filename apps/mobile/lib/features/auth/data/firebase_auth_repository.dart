@@ -16,7 +16,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Stream<AuthUser?> get authStateChanges =>
-      _firebaseAuth.authStateChanges().map((final user) {
+      _firebaseAuth.authStateChanges().map((user) {
         return user == null ? null : _toAuthUser(user);
       });
 
@@ -26,7 +26,7 @@ class FirebaseAuthRepository implements AuthRepository {
   @override
   Future<void> signOut() => _firebaseAuth.signOut();
 
-  static AuthUser _toAuthUser(final User user) => AuthUser(
+  static AuthUser _toAuthUser(User user) => AuthUser(
     id: user.uid,
     email: user.email?.trim(),
     displayName: user.displayName?.trim(),

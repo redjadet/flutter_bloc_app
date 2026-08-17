@@ -15,13 +15,13 @@ import 'package:networking/networking.dart';
 RouteBase createCertificatePinningDemoRoute() => GoRoute(
   path: AppRoutes.certificatePinningDemoPath,
   name: AppRoutes.certificatePinningDemo,
-  redirect: (final context, final state) {
+  redirect: (context, state) {
     if (kReleaseMode || FlavorManager.I.isProd) {
       return AppRoutes.counterPath;
     }
     return null;
   },
-  builder: (final context, final state) =>
+  builder: (context, state) =>
       BlocProviderHelpers.withAsyncInit<CertificatePinningDemoCubit>(
         create: () => CertificatePinningDemoCubit(
           config: getIt<CertificatePinningConfig>(),
@@ -31,7 +31,7 @@ RouteBase createCertificatePinningDemoRoute() => GoRoute(
           selectMockScenario: getIt<SelectMockScenario>(),
           resetMockScenario: getIt<ResetMockScenario>(),
         ),
-        init: (final cubit) async => cubit.refreshSnapshot(),
+        init: (cubit) async => cubit.refreshSnapshot(),
         child: const CertificatePinningDemoPage(),
       ),
 );

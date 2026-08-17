@@ -19,48 +19,47 @@ import 'package:go_router/go_router.dart';
 /// **Anonymous Account Upgrading:**
 /// Anonymous users may stay on `/auth` only when `?upgrade=true` is present
 /// (e.g. from Settings). Fresh guest sign-in redirects to `/counter`.
-GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
-    (final context, final state) {
-      final bool loggedIn = auth.currentUser != null;
-      final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
-      final bool upgradeIntent =
-          state.uri.queryParameters[AppRoutes.authUpgradeQueryKey] ==
-          AppRoutes.authUpgradeQueryValue;
-      final String? redirectAfterLogin = state.uri.queryParameters['redirect'];
+GoRouterRedirect createAuthRedirect(AuthRepository auth) => (context, state) {
+  final bool loggedIn = auth.currentUser != null;
+  final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
+  final bool upgradeIntent =
+      state.uri.queryParameters[AppRoutes.authUpgradeQueryKey] ==
+      AppRoutes.authUpgradeQueryValue;
+  final String? redirectAfterLogin = state.uri.queryParameters['redirect'];
 
-      // Deep link detection: Allow navigation to any route other than
-      // root paths (/counter, /auth, /) to proceed without authentication.
-      // This enables universal links and custom scheme deep links to work
-      // seamlessly, allowing users to access specific features via links.
-      final String currentLocation = state.matchedLocation;
-      final bool isDeepLinkNavigation =
-          currentLocation != AppRoutes.counterPath &&
-          currentLocation != AppRoutes.authPath &&
-          currentLocation != '/';
+  // Deep link detection: Allow navigation to any route other than
+  // root paths (/counter, /auth, /) to proceed without authentication.
+  // This enables universal links and custom scheme deep links to work
+  // seamlessly, allowing users to access specific features via links.
+  final String currentLocation = state.matchedLocation;
+  final bool isDeepLinkNavigation =
+      currentLocation != AppRoutes.counterPath &&
+      currentLocation != AppRoutes.authPath &&
+      currentLocation != '/';
 
-      // Unauthenticated user flow
-      if (!loggedIn) {
-        // Allow deep links to proceed (e.g., /chat, /graphql).
-        // Some deep links may still be protected by a route-level auth gate.
-        if (isDeepLinkNavigation) {
-          return null; // Allow navigation to proceed
-        }
-        // Redirect to auth page unless already there
-        return loggingIn ? null : AppRoutes.authPath;
-      }
+  // Unauthenticated user flow
+  if (!loggedIn) {
+    // Allow deep links to proceed (e.g., /chat, /graphql).
+    // Some deep links may still be protected by a route-level auth gate.
+    if (isDeepLinkNavigation) {
+      return null; // Allow navigation to proceed
+    }
+    // Redirect to auth page unless already there
+    return loggingIn ? null : AppRoutes.authPath;
+  }
 
-      // Authenticated user flow
-      if (loggingIn) {
-        final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
-        if (upgradingAnonymous && upgradeIntent) {
-          return null;
-        }
-        if (AppRoutes.isSafeRedirectPath(redirectAfterLogin)) {
-          return redirectAfterLogin;
-        }
-        return AppRoutes.counterPath;
-      }
-
-      // No redirect needed - allow navigation to proceed
+  // Authenticated user flow
+  if (loggingIn) {
+    final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
+    if (upgradingAnonymous && upgradeIntent) {
       return null;
-    };
+    }
+    if (AppRoutes.isSafeRedirectPath(redirectAfterLogin)) {
+      return redirectAfterLogin;
+    }
+    return AppRoutes.counterPath;
+  }
+
+  // No redirect needed - allow navigation to proceed
+  return null;
+};

@@ -1,7 +1,7 @@
 part of 'rest_counter_repository.dart';
 
 Future<CounterSnapshot> _restCounterRepositoryLoad(
-  final RestCounterRepository repository,
+  RestCounterRepository repository,
 ) async {
   final Response<String> response =
       await _restCounterRepositorySendRequest<String>(
@@ -11,7 +11,7 @@ Future<CounterSnapshot> _restCounterRepositoryLoad(
             .getCounter(Options(headers: _headers(repository)))
             .then(stringResponseFromHttpResponse),
         errorFactory: CounterError.load,
-        onHttpFailure: (final res) => CounterError.load(
+        onHttpFailure: (res) => CounterError.load(
           message: 'REST load failed (HTTP ${_statusCodeLabel(res)}).',
         ),
       );
@@ -21,8 +21,8 @@ Future<CounterSnapshot> _restCounterRepositoryLoad(
 }
 
 Future<void> _restCounterRepositorySave(
-  final RestCounterRepository repository,
-  final CounterSnapshot snapshot,
+  RestCounterRepository repository,
+  CounterSnapshot snapshot,
 ) async {
   final CounterSnapshot normalized = _normalizeSnapshot(repository, snapshot);
   // check-ignore: small payload (<8KB) - request body is small
@@ -42,9 +42,9 @@ Future<void> _restCounterRepositorySave(
             contentType: 'application/json',
           ),
         )
-        .then((final hr) => hr.response),
+        .then((hr) => hr.response),
     errorFactory: CounterError.save,
-    onHttpFailure: (final res) => CounterError.save(
+    onHttpFailure: (res) => CounterError.save(
       originalError: Exception(
         'Counter save failed (HTTP ${_statusCodeLabel(res)})',
       ),
@@ -55,21 +55,21 @@ Future<void> _restCounterRepositorySave(
 }
 
 Future<Response<T>> _restCounterRepositorySendRequest<T>({
-  required final RestCounterRepository repository,
-  required final String operation,
-  required final Future<Response<T>> Function() request,
-  required final CounterError Function({
+  required RestCounterRepository repository,
+  required String operation,
+  required Future<Response<T>> Function() request,
+  required CounterError Function({
     Object? originalError,
     String? message,
   })
   errorFactory,
-  final CounterError Function(Response<T> response)? onHttpFailure,
+  CounterError Function(Response<T> response)? onHttpFailure,
 }) => NetworkGuard.executeDio<T, CounterError>(
   request: request,
   timeout: repository._requestTimeout,
   isSuccess: _isSuccess,
   logContext: 'RestCounterRepository.$operation',
-  onHttpFailure: (final response) =>
+  onHttpFailure: (response) =>
       onHttpFailure?.call(response) ??
       errorFactory(
         originalError: Exception(
@@ -77,26 +77,26 @@ Future<Response<T>> _restCounterRepositorySendRequest<T>({
         ),
         message: 'REST $operation failed (HTTP ${_statusCodeLabel(response)}).',
       ),
-  onException: (final error) => errorFactory(originalError: error),
-  onFailureLog: (final response) => _logHttpError<T>(operation, response),
+  onException: (error) => errorFactory(originalError: error),
+  onFailureLog: (response) => _logHttpError<T>(operation, response),
 );
 
 Map<String, String> _headers(
-  final RestCounterRepository repository, {
-  final Map<String, String>? overrides,
+  RestCounterRepository repository, {
+  Map<String, String>? overrides,
 }) => {
   ...repository._defaultHeaders,
   ...?overrides,
 };
 
-bool _isSuccess(final int statusCode) => statusCode >= 200 && statusCode < 300;
+bool _isSuccess(int statusCode) => statusCode >= 200 && statusCode < 300;
 
-String _statusCodeLabel<T>(final Response<T> response) =>
+String _statusCodeLabel<T>(Response<T> response) =>
     response.statusCode?.toString() ?? 'unknown';
 
 CounterSnapshot _storeSnapshot(
-  final RestCounterRepository repository,
-  final CounterSnapshot snapshot,
+  RestCounterRepository repository,
+  CounterSnapshot snapshot,
 ) {
   final CounterSnapshot normalized = _normalizeSnapshot(repository, snapshot);
   repository
@@ -106,8 +106,8 @@ CounterSnapshot _storeSnapshot(
 }
 
 CounterSnapshot _normalizeSnapshot(
-  final RestCounterRepository repository,
-  final CounterSnapshot snapshot,
+  RestCounterRepository repository,
+  CounterSnapshot snapshot,
 ) {
   final String? userId = snapshot.userId;
   if (userId == null || userId.isEmpty) {
@@ -118,7 +118,7 @@ CounterSnapshot _normalizeSnapshot(
   return snapshot;
 }
 
-CounterSnapshot _parseSnapshot(final String body) {
+CounterSnapshot _parseSnapshot(String body) {
   try {
     // check-ignore: small payload (<8KB) - counter snapshot responses are small
     final dynamic decoded = jsonDecode(body);
@@ -154,8 +154,8 @@ CounterSnapshot _parseSnapshot(final String body) {
 }
 
 void _logHttpError<T>(
-  final String operation,
-  final Response<T> response,
+  String operation,
+  Response<T> response,
 ) {
   AppLogger.error(
     'RestCounterRepository.$operation non-success: ${_statusCodeLabel(response)}',

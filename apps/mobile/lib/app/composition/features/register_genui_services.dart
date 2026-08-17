@@ -5,6 +5,6 @@ import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dar
 void registerGenUiServices() {
   registerLazySingletonIfAbsent<GenUiDemoAgent>(
     () => GenUiDemoAgentImpl(),
-    dispose: (final agent) => agent.dispose(),
+    dispose: (agent) => agent.dispose(),
   );
 }

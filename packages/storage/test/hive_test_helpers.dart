@@ -20,7 +20,7 @@ Future<HiveService> createHiveService() async {
   return hiveService;
 }
 
-Future<void> cleanupHiveBoxes(final List<String> boxNames) async {
+Future<void> cleanupHiveBoxes(List<String> boxNames) async {
   for (final String boxName in boxNames) {
     try {
       if (Hive.isBoxOpen(boxName)) {

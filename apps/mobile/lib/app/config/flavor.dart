@@ -13,7 +13,7 @@ class FlavorManager {
 
   static Flavor get current => _instance._flavor;
 
-  static set current(final Flavor flavor) {
+  static set current(Flavor flavor) {
     _instance._flavor = flavor;
   }
 
@@ -32,7 +32,7 @@ class FlavorManager {
   };
 }
 
-Flavor _parseFlavor(final String value) {
+Flavor _parseFlavor(String value) {
   switch (value.toLowerCase()) {
     case 'dev':
       return Flavor.dev;
@@ -52,4 +52,4 @@ Flavor _parseFlavor(final String value) {
 }
 
 @visibleForTesting
-Flavor parseFlavorForTest(final String value) => _parseFlavor(value);
+Flavor parseFlavorForTest(String value) => _parseFlavor(value);

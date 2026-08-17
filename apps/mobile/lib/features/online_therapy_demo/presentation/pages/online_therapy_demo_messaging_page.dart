@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/messaging_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_messaging_view.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoMessagingPage extends StatefulWidget {
   const OnlineTherapyDemoMessagingPage({super.key});
@@ -28,17 +28,17 @@ class _OnlineTherapyDemoMessagingPageState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final isLoggedIn = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final isBusy = context.selectState<MessagingCubit, MessagingState, bool>(
-      selector: (final state) => state.isBusy,
+      selector: (state) => state.isBusy,
     );
     final cubit = context.cubit<MessagingCubit>();
 

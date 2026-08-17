@@ -32,7 +32,7 @@ class MapStateManager {
   gmaps.CameraPosition get cameraPosition => _cameraPosition;
 
   /// Initialize state from the provided initial state.
-  void initialize(final MapSampleState initialState) {
+  void initialize(MapSampleState initialState) {
     _mapType = initialState.mapType;
     _trafficEnabled = initialState.trafficEnabled;
     _markers = initialState.markers;
@@ -42,7 +42,7 @@ class MapStateManager {
   }
 
   /// Apply state update and return what changed.
-  MapStateChanges applyStateUpdate(final MapSampleState state) {
+  MapStateChanges applyStateUpdate(MapSampleState state) {
     final MapStateChanges changes = MapStateChanges(
       mapTypeChanged: state.mapType != _mapType,
       trafficChanged: state.trafficEnabled != _trafficEnabled,
@@ -65,8 +65,8 @@ class MapStateManager {
 
   /// Update camera position from map events.
   void updateCameraPosition(
-    final gmaps.CameraPosition position, {
-    final bool notifyCubit = true,
+    gmaps.CameraPosition position, {
+    bool notifyCubit = true,
   }) {
     _cameraPosition = position;
     if (notifyCubit) {
@@ -75,7 +75,7 @@ class MapStateManager {
   }
 
   /// Sync local camera position without notifying listeners.
-  void setCameraPosition(final gmaps.CameraPosition position) =>
+  void setCameraPosition(gmaps.CameraPosition position) =>
       updateCameraPosition(position, notifyCubit: false);
 }
 

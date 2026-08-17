@@ -5,24 +5,24 @@ part of 'client_booking_cubit.dart';
 
 extension _ClientBookingCubitHelpers on ClientBookingCubit {
   void _handleOperationError(
-    final int requestId,
-    final Object error,
-    final StackTrace stackTrace,
-    final String operation,
+    int requestId,
+    Object error,
+    StackTrace stackTrace,
+    String operation,
   ) {
     if (!_isRequestStillActive(requestId)) return;
     CubitExceptionHandler.handleException(
       error,
       stackTrace,
       operation,
-      onError: (final message) =>
+      onError: (message) =>
           emit(state.copyWith(isBusy: false, errorMessage: message)),
     );
   }
 }
 
 extension _ClientBookingCubitLoaders on ClientBookingCubit {
-  Future<void> _loadTherapistsBody(final int requestId) async {
+  Future<void> _loadTherapistsBody(int requestId) async {
     final list = await _therapists.listTherapists();
     if (!_isRequestStillActive(requestId)) return;
     final currentSelection = state.selectedTherapistId;
@@ -43,13 +43,13 @@ extension _ClientBookingCubitLoaders on ClientBookingCubit {
     );
   }
 
-  Future<void> _loadAppointmentsBody(final int requestId) async {
+  Future<void> _loadAppointmentsBody(int requestId) async {
     final list = await _appointments.listAppointmentsForCurrentRole();
     if (!_isRequestStillActive(requestId)) return;
     emit(state.copyWith(appointments: list));
   }
 
-  Future<void> _loadSelectedAvailabilityBody(final int requestId) async {
+  Future<void> _loadSelectedAvailabilityBody(int requestId) async {
     final selected = state.selectedTherapistId;
     if (selected == null) return;
     final slots = await _therapists.listAvailability(

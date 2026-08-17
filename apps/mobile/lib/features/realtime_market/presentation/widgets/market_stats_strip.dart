@@ -1,7 +1,7 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MarketStatsStrip extends StatelessWidget {
   const MarketStatsStrip({
@@ -14,10 +14,10 @@ class MarketStatsStrip extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
-    Widget cell(final String title, final String value) => ConstrainedBox(
+    Widget cell(String title, String value) => ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

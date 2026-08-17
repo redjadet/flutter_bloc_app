@@ -38,7 +38,7 @@ class _FakeRemoteRepository
   }
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     saved = snapshot;
     _snapshot = snapshot;
   }
@@ -70,7 +70,7 @@ class _ReReadAwareLocalRepository
   }
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) => _inner.save(snapshot);
+  Future<void> save(CounterSnapshot snapshot) => _inner.save(snapshot);
 
   @override
   Stream<CounterSnapshot> watch() => _inner.watch();
@@ -99,7 +99,7 @@ class _GatedSaveLocalRepository
   Future<CounterSnapshot> load() => _inner.load();
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     final Completer<void>? gate = _saveGate;
     if (gate != null) {
       _saveGate = null;
@@ -126,16 +126,16 @@ class _StreamRemoteRepository
   Future<CounterSnapshot> load() async => const CounterSnapshot(count: 0);
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {}
+  Future<void> save(CounterSnapshot snapshot) async {}
 
   @override
   Stream<CounterSnapshot> watch() => controller.stream;
 }
 
 Future<CounterSnapshot> _waitForLocalSnapshot(
-  final CounterRepository repository,
-  final bool Function(CounterSnapshot snapshot) matches, {
-  final Duration timeout = const Duration(seconds: 2),
+  CounterRepository repository,
+  bool Function(CounterSnapshot snapshot) matches, {
+  Duration timeout = const Duration(seconds: 2),
 }) async {
   final DateTime deadline = DateTime.now().add(timeout);
   while (DateTime.now().isBefore(deadline)) {
@@ -149,8 +149,8 @@ Future<CounterSnapshot> _waitForLocalSnapshot(
 }
 
 Future<void> _waitForWatchMergeSettled(
-  final CounterRepository repository, {
-  final Duration timeout = const Duration(seconds: 2),
+  CounterRepository repository, {
+  Duration timeout = const Duration(seconds: 2),
 }) async {
   final DateTime deadline = DateTime.now().add(timeout);
   var stableReads = 0;
@@ -208,9 +208,8 @@ void main() {
 
       final SyncOperation operation = SyncOperation.create(
         entityType: counterSyncEntityType,
-        payload: CounterSnapshotDto.fromDomain(
-          const CounterSnapshot(count: 5),
-        ).toJson(),
+        payload: CounterSnapshotDto.fromDomain(const CounterSnapshot(count: 5))
+            .toJson(),
         idempotencyKey: 'op-1',
       );
 
@@ -549,7 +548,7 @@ void main() {
         );
         final CounterSnapshot stored = await _waitForLocalSnapshot(
           localRepository,
-          (final CounterSnapshot snapshot) =>
+          (CounterSnapshot snapshot) =>
               snapshot.count == 4 && snapshot.lastChanged == newerChanged,
         );
         expect(stored.count, 4);

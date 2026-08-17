@@ -36,18 +36,18 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
     }
   }
 
-  String _draftKey(final String userId) => 'draft_v1_$userId';
+  String _draftKey(String userId) => 'draft_v1_$userId';
 
-  String _recordsKey(final String userId) => 'records_v1_$userId';
+  String _recordsKey(String userId) => 'records_v1_$userId';
 
-  void _assertUserId(final String userId) {
+  void _assertUserId(String userId) {
     if (userId.isEmpty) {
       throw ArgumentError.value(userId, 'userId', 'must be non-empty');
     }
   }
 
   @override
-  Future<CaseStudyDraft?> loadDraft(final String userId) async {
+  Future<CaseStudyDraft?> loadDraft(String userId) async {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();
@@ -58,8 +58,8 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
 
   @override
   Future<void> saveDraft(
-    final String userId,
-    final CaseStudyDraft draft,
+    String userId,
+    CaseStudyDraft draft,
   ) async {
     _assertUserId(userId);
     await ensureReady();
@@ -68,7 +68,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
   }
 
   @override
-  Future<void> clearDraft(final String userId) async {
+  Future<void> clearDraft(String userId) async {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();
@@ -76,7 +76,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
   }
 
   @override
-  Future<List<CaseStudyRecord>> loadRecords(final String userId) async {
+  Future<List<CaseStudyRecord>> loadRecords(String userId) async {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();
@@ -87,8 +87,8 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
 
   @override
   Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
+    String userId,
+    String recordId,
   ) async {
     final List<CaseStudyRecord> list = await loadRecords(userId);
     for (final CaseStudyRecord r in list) {
@@ -99,8 +99,8 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
 
   @override
   Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> records,
+    String userId,
+    List<CaseStudyRecord> records,
   ) async {
     _assertUserId(userId);
     await ensureReady();

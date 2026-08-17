@@ -55,8 +55,7 @@ extension _DatePickerResultPatterns on _DatePickerResult {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _DatePickerResultConfirmed value)?  confirmed,TResult Function( _DatePickerResultCleared value)?  cleared,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _DatePickerResultConfirmed value)?  confirmed,TResult Function( _DatePickerResultCleared value)?  cleared,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _DatePickerResultConfirmed() when confirmed != null:
 return confirmed(_that);case _DatePickerResultCleared() when cleared != null:
@@ -78,8 +77,7 @@ return cleared(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _DatePickerResultConfirmed value)  confirmed,required TResult Function( _DatePickerResultCleared value)  cleared,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _DatePickerResultConfirmed value)  confirmed,required TResult Function( _DatePickerResultCleared value)  cleared,}){final _that = this;
 switch (_that) {
 case _DatePickerResultConfirmed():
 return confirmed(_that);case _DatePickerResultCleared():
@@ -100,8 +98,7 @@ return cleared(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _DatePickerResultConfirmed value)?  confirmed,TResult? Function( _DatePickerResultCleared value)?  cleared,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _DatePickerResultConfirmed value)?  confirmed,TResult? Function( _DatePickerResultCleared value)?  cleared,}){final _that = this;
 switch (_that) {
 case _DatePickerResultConfirmed() when confirmed != null:
 return confirmed(_that);case _DatePickerResultCleared() when cleared != null:

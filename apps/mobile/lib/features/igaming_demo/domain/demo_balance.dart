@@ -9,7 +9,7 @@ const int initialDemoBalanceUnits = 10_000;
 @freezed
 abstract class DemoBalance with _$DemoBalance {
   const factory DemoBalance({
-    required final int amountUnits,
+    required int amountUnits,
   }) = _DemoBalance;
 
   const DemoBalance._();

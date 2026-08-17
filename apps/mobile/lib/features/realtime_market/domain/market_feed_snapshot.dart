@@ -9,15 +9,15 @@ part 'market_feed_snapshot.freezed.dart';
 @freezed
 abstract class MarketFeedSnapshot with _$MarketFeedSnapshot {
   const factory MarketFeedSnapshot({
-    required final String pairId,
-    required final double lastPrice,
-    required final double changePct24h,
-    required final MarketConnectionStatus connection,
-    required final List<OrderBookLevel> bids,
-    required final List<OrderBookLevel> asks,
-    required final List<RecentTrade> recentTrades,
-    required final MarketStats stats,
-    required final List<double> chartCloses,
-    required final DateTime updatedAt,
+    required String pairId,
+    required double lastPrice,
+    required double changePct24h,
+    required MarketConnectionStatus connection,
+    required List<OrderBookLevel> bids,
+    required List<OrderBookLevel> asks,
+    required List<RecentTrade> recentTrades,
+    required MarketStats stats,
+    required List<double> chartCloses,
+    required DateTime updatedAt,
   }) = _MarketFeedSnapshot;
 }

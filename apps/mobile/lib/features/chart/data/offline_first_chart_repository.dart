@@ -70,8 +70,8 @@ class OfflineFirstChartRepository extends ChartRepository {
   }
 
   Future<List<ChartPoint>> _fetchRemoteAndCache({
-    required final List<ChartPoint> cachedFallback,
-    required final bool allowCacheFallback,
+    required List<ChartPoint> cachedFallback,
+    required bool allowCacheFallback,
   }) async {
     try {
       final List<ChartPoint> remote = await _remoteRepository

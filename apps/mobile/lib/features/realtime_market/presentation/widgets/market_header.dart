@@ -1,9 +1,9 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/connection_status_pill.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MarketHeader extends StatelessWidget {
   const MarketHeader({
@@ -16,7 +16,7 @@ class MarketHeader extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     final String pairLabel = snapshot.pairId.replaceAll('_', '/').toUpperCase();
@@ -25,7 +25,7 @@ class MarketHeader extends StatelessWidget {
         ? RealtimeMarketUiTokens.bidAccent(scheme)
         : RealtimeMarketUiTokens.askAccent(scheme);
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final bool stackStatus = constraints.maxWidth < 430;
         final Widget priceBlock = Column(
           crossAxisAlignment: CrossAxisAlignment.start,

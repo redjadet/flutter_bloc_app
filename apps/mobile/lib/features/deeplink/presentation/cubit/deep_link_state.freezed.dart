@@ -55,8 +55,7 @@ extension DeepLinkStatePatterns on DeepLinkState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DeepLinkIdle value)?  idle,TResult Function( DeepLinkLoading value)?  loading,TResult Function( DeepLinkNavigate value)?  navigate,TResult Function( DeepLinkError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DeepLinkIdle value)?  idle,TResult Function( DeepLinkLoading value)?  loading,TResult Function( DeepLinkNavigate value)?  navigate,TResult Function( DeepLinkError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case DeepLinkIdle() when idle != null:
 return idle(_that);case DeepLinkLoading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DeepLinkIdle value)  idle,required TResult Function( DeepLinkLoading value)  loading,required TResult Function( DeepLinkNavigate value)  navigate,required TResult Function( DeepLinkError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DeepLinkIdle value)  idle,required TResult Function( DeepLinkLoading value)  loading,required TResult Function( DeepLinkNavigate value)  navigate,required TResult Function( DeepLinkError value)  error,}){final _that = this;
 switch (_that) {
 case DeepLinkIdle():
 return idle(_that);case DeepLinkLoading():
@@ -101,8 +99,7 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DeepLinkIdle value)?  idle,TResult? Function( DeepLinkLoading value)?  loading,TResult? Function( DeepLinkNavigate value)?  navigate,TResult? Function( DeepLinkError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DeepLinkIdle value)?  idle,TResult? Function( DeepLinkLoading value)?  loading,TResult? Function( DeepLinkNavigate value)?  navigate,TResult? Function( DeepLinkError value)?  error,}){final _that = this;
 switch (_that) {
 case DeepLinkIdle() when idle != null:
 return idle(_that);case DeepLinkLoading() when loading != null:

@@ -13,17 +13,17 @@ class _ScriptedAdapter implements HttpClientAdapter {
   final Future<ResponseBody> Function(RequestOptions options) _handler;
 
   @override
-  void close({final bool force = false}) {}
+  void close({bool force = false}) {}
 
   @override
   Future<ResponseBody> fetch(
-    final RequestOptions options,
-    final Stream<Uint8List>? requestStream,
-    final Future<void>? cancelFuture,
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
   ) => _handler(options);
 }
 
-CertificatePinningConfig _realConfig({final String? probeUrl}) =>
+CertificatePinningConfig _realConfig({String? probeUrl}) =>
     CertificatePinningConfig(
       mode: CertificatePinningMode.real,
       allowedHosts: const <String>{'example.com'},
@@ -79,7 +79,7 @@ void main() {
     expect(
       outcome,
       isA<SecureProbeFailure>().having(
-        (final f) => f.failure.l10nCode,
+        (f) => f.failure.l10nCode,
         'l10nCode',
         'pinMismatch',
       ),
@@ -97,10 +97,10 @@ void main() {
     expect(
       outcome,
       isA<SecureProbeFailure>().having(
-        (final f) => f.failure,
+        (f) => f.failure,
         'failure',
         isA<CertificatePinningDemoPinFailure>().having(
-          (final p) => p.l10nCode,
+          (p) => p.l10nCode,
           'l10nCode',
           'validation',
         ),
@@ -111,7 +111,7 @@ void main() {
   test('real mode Dio success maps to SecureProbeSuccess', () async {
     const String url = 'https://example.com/health';
     dio.httpClientAdapter = _ScriptedAdapter(
-      (final options) async => ResponseBody.fromString(
+      (options) async => ResponseBody.fromString(
         '{}',
         200,
         headers: <String, List<String>>{
@@ -129,7 +129,7 @@ void main() {
     expect(
       outcome,
       isA<SecureProbeSuccess>().having(
-        (final s) => s.matchKind,
+        (s) => s.matchKind,
         'matchKind',
         CertificatePinMatchKind.primary,
       ),
@@ -138,7 +138,7 @@ void main() {
 
   test('real mode badCertificate maps to pinMismatch', () async {
     const String url = 'https://example.com/pin-fail';
-    dio.httpClientAdapter = _ScriptedAdapter((final options) async {
+    dio.httpClientAdapter = _ScriptedAdapter((options) async {
       throw DioException.badCertificate(requestOptions: options);
     });
 
@@ -151,7 +151,7 @@ void main() {
     expect(
       outcome,
       isA<SecureProbeFailure>().having(
-        (final f) => f.failure.l10nCode,
+        (f) => f.failure.l10nCode,
         'l10nCode',
         'pinMismatch',
       ),
@@ -160,7 +160,7 @@ void main() {
 
   test('real mode other Dio errors map to unknown failure', () async {
     const String url = 'https://example.com/down';
-    dio.httpClientAdapter = _ScriptedAdapter((final options) async {
+    dio.httpClientAdapter = _ScriptedAdapter((options) async {
       throw DioException(
         requestOptions: options,
         type: DioExceptionType.connectionError,
@@ -176,7 +176,7 @@ void main() {
     expect(
       outcome,
       isA<SecureProbeFailure>().having(
-        (final f) => f.failure,
+        (f) => f.failure,
         'failure',
         isA<CertificatePinningDemoUnknownFailure>(),
       ),

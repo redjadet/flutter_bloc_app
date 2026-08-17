@@ -2,13 +2,13 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 
 /// Pure conversation-history list transforms (no emit / I/O).
 int compareChatConversationsByUpdatedAtDesc(
-  final ChatConversation a,
-  final ChatConversation b,
+  ChatConversation a,
+  ChatConversation b,
 ) => b.updatedAt.compareTo(a.updatedAt);
 
 List<ChatConversation> sortChatConversationHistory(
-  final List<ChatConversation> conversations, {
-  final bool clone = true,
+  List<ChatConversation> conversations, {
+  bool clone = true,
 }) {
   final List<ChatConversation> target =
       (clone ? List<ChatConversation>.from(conversations) : conversations)
@@ -17,8 +17,8 @@ List<ChatConversation> sortChatConversationHistory(
 }
 
 ChatConversation? chatConversationById(
-  final List<ChatConversation> conversations,
-  final String? id,
+  List<ChatConversation> conversations,
+  String? id,
 ) {
   if (id == null) return null;
   for (final ChatConversation conversation in conversations) {
@@ -31,12 +31,12 @@ ChatConversation? chatConversationById(
 
 /// Upsert [conversation] into history (or remove if empty / no content).
 List<ChatConversation> replaceChatConversation(
-  final ChatConversation conversation, {
-  required final List<ChatConversation> history,
+  ChatConversation conversation, {
+  required List<ChatConversation> history,
 }) {
   final List<ChatConversation> updated = List<ChatConversation>.from(history);
   final int index = updated.indexWhere(
-    (final c) => c.id == conversation.id,
+    (c) => c.id == conversation.id,
   );
 
   if (index >= 0) {

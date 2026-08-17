@@ -14,7 +14,7 @@ class _InMemoryChatHistoryRepository implements ChatHistoryRepository {
       List<ChatConversation>.from(_store);
 
   @override
-  Future<void> save(final List<ChatConversation> conversations) async {
+  Future<void> save(List<ChatConversation> conversations) async {
     _store = List<ChatConversation>.from(conversations);
   }
 }

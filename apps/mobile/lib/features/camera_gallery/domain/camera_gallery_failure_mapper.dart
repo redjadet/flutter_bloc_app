@@ -3,15 +3,15 @@ import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_e
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 
 /// Maps [CameraGalleryResult] failure keys to domain [Failure] for Cubits.
-Failure? failureFromCameraGalleryResult(final CameraGalleryResult result) =>
+Failure? failureFromCameraGalleryResult(CameraGalleryResult result) =>
     result.whenOrNull(
       failure: (errorKey, message) =>
           failureFromCameraGalleryErrorKey(errorKey, message: message),
     );
 
 Failure? failureFromCameraGalleryErrorKey(
-  final String errorKey, {
-  final String? message,
+  String errorKey, {
+  String? message,
 }) {
   return switch (errorKey) {
     CameraGalleryErrorKeys.permissionDenied => PermissionFailure(

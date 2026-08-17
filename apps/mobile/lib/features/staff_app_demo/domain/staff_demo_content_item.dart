@@ -7,10 +7,10 @@ enum StaffDemoContentType { pdf, video }
 @freezed
 abstract class StaffDemoContentItem with _$StaffDemoContentItem {
   const factory StaffDemoContentItem({
-    required final String contentId,
-    required final String title,
-    required final StaffDemoContentType type,
-    required final String storagePath,
-    required final bool isPublished,
+    required String contentId,
+    required String title,
+    required StaffDemoContentType type,
+    required String storagePath,
+    required bool isPublished,
   }) = _StaffDemoContentItem;
 }

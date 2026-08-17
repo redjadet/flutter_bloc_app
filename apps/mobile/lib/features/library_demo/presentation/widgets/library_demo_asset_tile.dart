@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_favorite_icon.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_models.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_three_dot_icon.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_waveform.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibraryAssetTile extends StatelessWidget {
   const LibraryAssetTile({
@@ -14,7 +14,7 @@ class LibraryAssetTile extends StatelessWidget {
   final LibraryAsset asset;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     return Container(
       padding: EdgeInsets.symmetric(
@@ -103,8 +103,8 @@ class LibraryAssetTile extends StatelessWidget {
   }
 
   Widget _buildThumbnail(
-    final BuildContext context,
-    final EpochThemeExtension epoch,
+    BuildContext context,
+    EpochThemeExtension epoch,
   ) {
     if (asset.isAudio) {
       return Container(

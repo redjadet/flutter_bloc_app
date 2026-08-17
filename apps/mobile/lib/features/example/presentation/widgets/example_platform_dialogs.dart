@@ -1,13 +1,13 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> showExamplePlatformInfoDialog({
-  required final BuildContext context,
-  required final NativePlatformInfo info,
+  required BuildContext context,
+  required NativePlatformInfo info,
 }) async {
   if (!context.mounted) {
     ContextUtils.logNotMounted('ExamplePlatformDialogs.showInfo');
@@ -47,7 +47,7 @@ Future<void> showExamplePlatformInfoDialog({
 
   await showAdaptiveDialog<void>(
     context: context,
-    builder: (final dialogContext) => AlertDialog.adaptive(
+    builder: (dialogContext) => AlertDialog.adaptive(
       title: Text(l10n.exampleNativeInfoDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -66,8 +66,8 @@ Future<void> showExamplePlatformInfoDialog({
 }
 
 Future<void> showExamplePlatformInfoErrorDialog({
-  required final BuildContext context,
-  final String? message,
+  required BuildContext context,
+  String? message,
 }) async {
   if (!context.mounted) {
     ContextUtils.logNotMounted('ExamplePlatformDialogs.showError');
@@ -80,7 +80,7 @@ Future<void> showExamplePlatformInfoErrorDialog({
   };
   await showAdaptiveDialog<void>(
     context: context,
-    builder: (final dialogContext) => AlertDialog.adaptive(
+    builder: (dialogContext) => AlertDialog.adaptive(
       title: Text(l10n.exampleNativeInfoDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -105,9 +105,9 @@ Future<void> showExamplePlatformInfoErrorDialog({
 }
 
 Widget _buildInfoRow({
-  required final BuildContext context,
-  required final String label,
-  required final String value,
+  required BuildContext context,
+  required String label,
+  required String value,
 }) => Padding(
   padding: EdgeInsets.only(bottom: context.responsiveGapS),
   child: Row(

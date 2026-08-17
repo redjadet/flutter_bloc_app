@@ -7,10 +7,9 @@ part 'app_auth_state.freezed.dart';
 abstract class AppAuthState with _$AppAuthState {
   const factory AppAuthState.initial() = _Initial;
   const factory AppAuthState.loading() = _Loading;
-  const factory AppAuthState.authenticated(final AuthUser user) =
-      _Authenticated;
+  const factory AppAuthState.authenticated(AuthUser user) = _Authenticated;
   const factory AppAuthState.unauthenticated() = _Unauthenticated;
   const factory AppAuthState.sessionExpired(
-    final SessionInvalidationReason reason,
+    SessionInvalidationReason reason,
   ) = _SessionExpired;
 }

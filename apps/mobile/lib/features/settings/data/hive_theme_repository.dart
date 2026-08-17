@@ -12,7 +12,7 @@ class HiveThemeRepository extends HiveSettingsRepository<ThemePreference>
         toStringValue: _themePreferenceToString,
       );
 
-  static ThemePreference? _parseThemePreference(final String value) =>
+  static ThemePreference? _parseThemePreference(String value) =>
       switch (value) {
         'light' => ThemePreference.light,
         'dark' => ThemePreference.dark,
@@ -20,7 +20,7 @@ class HiveThemeRepository extends HiveSettingsRepository<ThemePreference>
         _ => null,
       };
 
-  static String _themePreferenceToString(final ThemePreference preference) =>
+  static String _themePreferenceToString(ThemePreference preference) =>
       switch (preference) {
         ThemePreference.light => 'light',
         ThemePreference.dark => 'dark',

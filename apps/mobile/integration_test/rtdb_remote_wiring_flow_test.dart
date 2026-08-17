@@ -20,7 +20,7 @@ void main() {
       authMode: IntegrationAuthMode.realFirebaseAuth,
       overrideCounterRepository: false,
     ),
-    body: (final tester) async {
+    body: (tester) async {
       expect(
         FirebaseBootstrapService.isFirebaseInitialized,
         isTrue,
@@ -67,7 +67,7 @@ void main() {
           DateTime.now().microsecondsSinceEpoch.remainder(100000) + 1;
       final Future<void> counterWatchProof = counter
           .watch()
-          .firstWhere((final s) => s.count == remoteCounterProbe)
+          .firstWhere((s) => s.count == remoteCounterProbe)
           .timeout(
             const Duration(seconds: 8),
             onTimeout: () => throw TestFailure(
@@ -107,7 +107,7 @@ void main() {
       final Future<void> todoWatchProof = todo
           .watchAll()
           .firstWhere(
-            (final items) => items.any((final item) => item.id == todoId),
+            (items) => items.any((item) => item.id == todoId),
           )
           .timeout(
             const Duration(seconds: 8),

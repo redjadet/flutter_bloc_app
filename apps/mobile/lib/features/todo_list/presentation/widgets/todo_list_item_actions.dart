@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum TodoItemOverflowAction { edit, delete }
 
 Widget buildTodoItemActions({
-  required final BuildContext context,
-  required final TodoItem item,
-  required final bool isCompactLayout,
-  required final TodoItemDensity density,
-  required final VoidCallback onEdit,
-  required final VoidCallback onDelete,
+  required BuildContext context,
+  required TodoItem item,
+  required bool isCompactLayout,
+  required TodoItemDensity density,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
 }) {
   final l10n = context.l10n;
   final colors = Theme.of(context).colorScheme;
@@ -23,14 +23,14 @@ Widget buildTodoItemActions({
   if (isCompactLayout) {
     return PopupMenuButton<TodoItemOverflowAction>(
       tooltip: '',
-      onSelected: (final action) {
+      onSelected: (action) {
         if (action == TodoItemOverflowAction.edit) {
           onEdit();
         } else {
           onDelete();
         }
       },
-      itemBuilder: (final context) => [
+      itemBuilder: (context) => [
         PopupMenuItem<TodoItemOverflowAction>(
           value: TodoItemOverflowAction.edit,
           child: Text(l10n.todoListEditAction),

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
+import 'package:flutter_bloc_app/app/config/app_constants.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -25,9 +25,8 @@ void main() {
       );
 
       verify(() => manager.ensureInitialized()).called(1);
-      verify(
-        () => manager.setMinimumSize(AppConstants.minWindowSize),
-      ).called(1);
+      verify(() => manager.setMinimumSize(AppConstants.minWindowSize))
+          .called(1);
     });
   });
 }

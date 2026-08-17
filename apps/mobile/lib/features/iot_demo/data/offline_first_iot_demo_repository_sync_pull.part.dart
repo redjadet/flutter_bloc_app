@@ -1,8 +1,8 @@
 part of 'offline_first_iot_demo_repository.dart';
 
 Future<void> processOperationImpl(
-  final OfflineFirstIotDemoRepository r,
-  final SyncOperation operation,
+  OfflineFirstIotDemoRepository r,
+  SyncOperation operation,
 ) async {
   final Map<String, dynamic> payload = operation.payload;
   final String? opUserId = stringFromDynamicTrimmed(
@@ -20,7 +20,7 @@ Future<void> processOperationImpl(
   await applyIotDemoSyncOperation(remote, payload);
 }
 
-Future<void> pullRemoteImpl(final OfflineFirstIotDemoRepository r) async {
+Future<void> pullRemoteImpl(OfflineFirstIotDemoRepository r) async {
   final SupabaseIotDemoRepository? remote = r._remoteRepository;
   final PersistentIotDemoRepository? local = r._getLocalRepository();
   final String? userId = r._currentSupabaseUserId();
@@ -53,19 +53,19 @@ Future<void> pullRemoteImpl(final OfflineFirstIotDemoRepository r) async {
 }
 
 Future<bool> _shouldSkipPullRemoteReplaceImpl({
-  required final OfflineFirstIotDemoRepository r,
-  required final PersistentIotDemoRepository local,
-  required final String userId,
+  required OfflineFirstIotDemoRepository r,
+  required PersistentIotDemoRepository local,
+  required String userId,
 }) async {
   final List<SyncOperation> pending = await r._pendingSyncRepository
       .getPendingOperations(
         supabaseUserIdFilter: userId,
       );
   final bool hasPendingIotOps = pending.any(
-    (final op) => op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
+    (op) => op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
   );
   final bool hasDebouncedSetValue = r._pendingSetValueByDevice.keys.any(
-    (final key) => key.startsWith('$userId::'),
+    (key) => key.startsWith('$userId::'),
   );
   if (!hasPendingIotOps && !hasDebouncedSetValue) {
     return false;
@@ -75,10 +75,10 @@ Future<bool> _shouldSkipPullRemoteReplaceImpl({
 }
 
 Future<void> _doPullRemoteImpl({
-  required final OfflineFirstIotDemoRepository r,
-  required final SupabaseIotDemoRepository remote,
-  required final PersistentIotDemoRepository local,
-  required final String userIdBefore,
+  required OfflineFirstIotDemoRepository r,
+  required SupabaseIotDemoRepository remote,
+  required PersistentIotDemoRepository local,
+  required String userIdBefore,
 }) async {
   try {
     if (await _shouldSkipPullRemoteReplaceImpl(

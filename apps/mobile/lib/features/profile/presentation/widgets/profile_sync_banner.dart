@@ -1,6 +1,5 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 /// Banner widget that surfaces profile sync status (offline/syncing) and
@@ -33,7 +33,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
     context.ensureSyncStartedIfAvailable();
   }
 
-  Future<void> _handleSyncNow(final SyncStatusCubit cubit) async {
+  Future<void> _handleSyncNow(SyncStatusCubit cubit) async {
     if (_isManualSyncing) {
       return;
     }
@@ -54,7 +54,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
@@ -65,8 +65,8 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
       SyncStatusState,
       (NetworkStatus, SyncStatus)
     >(
-      selector: (final s) => (s.networkStatus, s.syncStatus),
-      builder: (final context, final pair) {
+      selector: (s) => (s.networkStatus, s.syncStatus),
+      builder: (context, pair) {
         final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
         final bool isOffline = pair.$1 == NetworkStatus.offline;
         final bool isSyncing = pair.$2 == SyncStatus.syncing;

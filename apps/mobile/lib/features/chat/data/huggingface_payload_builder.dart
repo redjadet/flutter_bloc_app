@@ -5,9 +5,9 @@ class HuggingFacePayloadBuilder {
   const HuggingFacePayloadBuilder();
 
   JsonMap buildInferencePayload({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
   }) => <String, dynamic>{
     'inputs': <String, dynamic>{
       'past_user_inputs': pastUserInputs,
@@ -17,10 +17,10 @@ class HuggingFacePayloadBuilder {
   };
 
   JsonMap buildChatCompletionsPayload({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    required final String model,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    required String model,
   }) => <String, dynamic>{
     'model': model,
     'messages': _composeMessages(
@@ -32,9 +32,9 @@ class HuggingFacePayloadBuilder {
   };
 
   List<Map<String, String>> _composeMessages({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
   }) {
     final List<Map<String, String>> messages = <Map<String, String>>[];
 

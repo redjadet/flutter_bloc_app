@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:storage/storage.dart';
 
 class SharedPreferencesThemeRepository implements ThemeRepository {
-  SharedPreferencesThemeRepository([final SharedPreferences? instance])
+  SharedPreferencesThemeRepository([SharedPreferences? instance])
     : _preferencesInstance = instance;
 
   static const String _preferencesKey = 'theme_mode';
@@ -31,7 +31,7 @@ class SharedPreferencesThemeRepository implements ThemeRepository {
   );
 
   @override
-  Future<void> save(final ThemePreference mode) async => StorageGuard.run<void>(
+  Future<void> save(ThemePreference mode) async => StorageGuard.run<void>(
     logContext: 'SharedPreferencesThemeRepository.save',
     action: () async {
       final SharedPreferences preferences = await _preferences();

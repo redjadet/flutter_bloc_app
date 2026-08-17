@@ -13,10 +13,10 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 
 class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
   NativePlatformShowcaseCubit({
-    required final LoadNativePlatformShowcaseUseCase loadShowcase,
-    required final WatchNativeShowcaseTelemetryUseCase watchTelemetry,
-    required final TriggerNativeShowcaseHapticUseCase triggerHaptic,
-    required final ShareNativeShowcaseTextUseCase shareText,
+    required LoadNativePlatformShowcaseUseCase loadShowcase,
+    required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
+    required TriggerNativeShowcaseHapticUseCase triggerHaptic,
+    required ShareNativeShowcaseTextUseCase shareText,
   }) : this._(loadShowcase, watchTelemetry, triggerHaptic, shareText);
 
   NativePlatformShowcaseCubit._(
@@ -58,18 +58,18 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
   Future<void> triggerHaptic() =>
       _runAction(NativePlatformShowcaseAction.haptic, () => _triggerHaptic());
 
-  Future<void> shareDemoText(final String text) =>
+  Future<void> shareDemoText(String text) =>
       _runAction(NativePlatformShowcaseAction.share, () => _shareText(text));
 
   Future<void> _runAction(
-    final NativePlatformShowcaseAction action,
-    final Future<NativeInteropCallResult> Function() invoke,
+    NativePlatformShowcaseAction action,
+    Future<NativeInteropCallResult> Function() invoke,
   ) async {
     if (isClosed) {
       return;
     }
 
-    final loaded = state.mapOrNull(loaded: (final value) => value);
+    final loaded = state.mapOrNull(loaded: (value) => value);
     if (loaded == null || loaded.actionInFlight != null) {
       return;
     }
@@ -89,7 +89,7 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       return;
     }
 
-    final current = state.mapOrNull(loaded: (final value) => value);
+    final current = state.mapOrNull(loaded: (value) => value);
     if (current == null) {
       return;
     }
@@ -120,12 +120,12 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
     );
   }
 
-  void _onTelemetrySnapshot(final NativeShowcaseTelemetrySnapshot snapshot) {
+  void _onTelemetrySnapshot(NativeShowcaseTelemetrySnapshot snapshot) {
     if (isClosed) {
       return;
     }
 
-    final loaded = state.mapOrNull(loaded: (final value) => value);
+    final loaded = state.mapOrNull(loaded: (value) => value);
     if (loaded == null) {
       return;
     }
@@ -150,12 +150,12 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
     );
   }
 
-  void _onTelemetryError(final Object error) {
+  void _onTelemetryError(Object error) {
     if (isClosed) {
       return;
     }
 
-    final loaded = state.mapOrNull(loaded: (final value) => value);
+    final loaded = state.mapOrNull(loaded: (value) => value);
     if (loaded == null) {
       return;
     }

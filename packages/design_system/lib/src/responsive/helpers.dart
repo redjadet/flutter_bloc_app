@@ -1,20 +1,20 @@
 part of 'responsive.dart';
 
-double _responsiveWidth(final BuildContext context) =>
+double _responsiveWidth(BuildContext context) =>
     ResponsiveConfig.screenWidth(context);
 
-double _responsiveHeight(final BuildContext context) =>
+double _responsiveHeight(BuildContext context) =>
     ResponsiveConfig.screenHeight(context);
 
-Orientation _responsiveOrientation(final BuildContext context) =>
+Orientation _responsiveOrientation(BuildContext context) =>
     ResponsiveConfig.orientation(context);
 
 double _scaledDimension(
-  final BuildContext context, {
-  required final double Function(double value) convert,
-  required final double mobile,
-  final double? tablet,
-  final double? desktop,
+  BuildContext context, {
+  required double Function(double value) convert,
+  required double mobile,
+  double? tablet,
+  double? desktop,
 }) {
   final double baseValue = _responsiveValue<double>(
     context,
@@ -26,10 +26,10 @@ double _scaledDimension(
 }
 
 double _scaledWidth(
-  final BuildContext context, {
-  required final double mobile,
-  final double? tablet,
-  final double? desktop,
+  BuildContext context, {
+  required double mobile,
+  double? tablet,
+  double? desktop,
 }) => _scaledDimension(
   context,
   mobile: mobile,
@@ -39,10 +39,10 @@ double _scaledWidth(
 );
 
 double _scaledHeight(
-  final BuildContext context, {
-  required final double mobile,
-  final double? tablet,
-  final double? desktop,
+  BuildContext context, {
+  required double mobile,
+  double? tablet,
+  double? desktop,
 }) => _scaledDimension(
   context,
   mobile: mobile,
@@ -52,10 +52,10 @@ double _scaledHeight(
 );
 
 double _scaledFont(
-  final BuildContext context, {
-  required final double mobile,
-  final double? tablet,
-  final double? desktop,
+  BuildContext context, {
+  required double mobile,
+  double? tablet,
+  double? desktop,
 }) => _scaledDimension(
   context,
   mobile: mobile,
@@ -65,10 +65,10 @@ double _scaledFont(
 );
 
 double _scaledRadius(
-  final BuildContext context, {
-  required final double mobile,
-  final double? tablet,
-  final double? desktop,
+  BuildContext context, {
+  required double mobile,
+  double? tablet,
+  double? desktop,
 }) => _scaledDimension(
   context,
   mobile: mobile,
@@ -78,10 +78,10 @@ double _scaledRadius(
 );
 
 T _responsiveValue<T>(
-  final BuildContext context, {
-  required final T mobile,
-  final T? tablet,
-  final T? desktop,
+  BuildContext context, {
+  required T mobile,
+  T? tablet,
+  T? desktop,
 }) {
   if (tablet == null && desktop == null) {
     return mobile;

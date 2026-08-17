@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/layout_overflow_expectations.dart';
 
@@ -13,7 +13,7 @@ void main() {
       );
     }
 
-    Widget buildSubject({final Widget? child}) {
+    Widget buildSubject({Widget? child}) {
       return MaterialApp(
         home: Scaffold(body: Center(child: child ?? buildActionRow())),
       );

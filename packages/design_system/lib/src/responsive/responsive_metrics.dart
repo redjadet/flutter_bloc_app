@@ -49,18 +49,15 @@ extension ResponsiveContextMetrics on BuildContext {
   EdgeInsets get viewInsets => MediaQuery.viewInsetsOf(this);
   double get keyboardInset => viewInsets.bottom;
 
-  double widthFraction(final double fraction) => screenWidth * fraction;
-  double heightFraction(final double fraction) => screenHeight * fraction;
-  double clampWidthTo(final double max) => math.min(screenWidth, max);
+  double widthFraction(double fraction) => screenWidth * fraction;
+  double heightFraction(double fraction) => screenHeight * fraction;
+  double clampWidthTo(double max) => math.min(screenWidth, max);
 
-  T responsiveValue<T>({
-    required final T mobile,
-    final T? tablet,
-    final T? desktop,
-  }) => _responsiveValue<T>(
-    this,
-    mobile: mobile,
-    tablet: tablet,
-    desktop: desktop,
-  );
+  T responsiveValue<T>({required T mobile, T? tablet, T? desktop}) =>
+      _responsiveValue<T>(
+        this,
+        mobile: mobile,
+        tablet: tablet,
+        desktop: desktop,
+      );
 }

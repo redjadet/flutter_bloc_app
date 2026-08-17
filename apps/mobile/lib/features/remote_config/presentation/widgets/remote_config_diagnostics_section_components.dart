@@ -6,7 +6,7 @@ class _RemoteConfigFlagRow extends StatelessWidget {
   final bool isEnabled;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle? style = theme.textTheme.bodyMedium;
     final String label = isEnabled
@@ -26,7 +26,7 @@ class _RemoteConfigTestValueRow extends StatelessWidget {
   final String testValue;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle? style = theme.textTheme.bodyMedium;
     final String resolvedValue = testValue.trim().isEmpty
@@ -50,7 +50,7 @@ class _RemoteConfigStatusBadge extends StatelessWidget {
   final ThemeData theme;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ColorScheme scheme = theme.colorScheme;
     final _StatusPalette palette = switch (status) {
       RemoteConfigDiagnosticsStatus.loading => _StatusPalette(

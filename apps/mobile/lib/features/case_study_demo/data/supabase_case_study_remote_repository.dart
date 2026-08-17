@@ -22,9 +22,9 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<String> uploadClip({
-    required final String caseId,
-    required final String questionId,
-    required final String localPath,
+    required String caseId,
+    required String questionId,
+    required String localPath,
   }) async {
     ensureSupabaseConfigured();
     final User? user = Supabase.instance.client.auth.currentUser;
@@ -62,11 +62,11 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<void> upsertRemoteDraft({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
   }) async {
     await upsertRow(
       caseId: caseId,
@@ -81,12 +81,12 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<void> finalizeRemoteSubmission({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
-    required final DateTime submittedAtUtc,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
+    required DateTime submittedAtUtc,
   }) async {
     await upsertRow(
       caseId: caseId,
@@ -105,13 +105,13 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required final String caseId,
+    required String caseId,
   }) => getSubmittedCaseImpl(caseId: caseId);
 
   @override
   Future<String> createSignedPlaybackUrl({
-    required final String objectKey,
-    required final Duration ttl,
+    required String objectKey,
+    required Duration ttl,
   }) async {
     ensureSupabaseConfigured();
     final Duration capped = ttl > _maxTtl ? _maxTtl : ttl;

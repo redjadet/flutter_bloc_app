@@ -5,11 +5,11 @@ extension ResponsiveGridContext on BuildContext {
   /// Calculates grid layout parameters for a responsive grid
   /// Returns a [ResponsiveGridLayout] with column count, item width, and spacing
   ResponsiveGridLayout calculateGridLayout({
-    required final int mobileColumns,
-    required final int tabletColumns,
-    required final int desktopColumns,
-    final double? customSpacing,
-    final double? maxContentWidth,
+    required int mobileColumns,
+    required int tabletColumns,
+    required int desktopColumns,
+    double? customSpacing,
+    double? maxContentWidth,
   }) {
     final spacing = customSpacing ?? responsiveGap;
     final columns = responsiveValue<int>(
@@ -44,12 +44,12 @@ extension ResponsiveGridContext on BuildContext {
 
   /// Creates a responsive grid delegate with calculated columns and spacing
   SliverGridDelegate createResponsiveGridDelegate({
-    required final int mobileColumns,
-    required final int tabletColumns,
-    required final int desktopColumns,
-    final double? customSpacing,
-    final double? crossAxisSpacing,
-    final double? mainAxisSpacing,
+    required int mobileColumns,
+    required int tabletColumns,
+    required int desktopColumns,
+    double? customSpacing,
+    double? crossAxisSpacing,
+    double? mainAxisSpacing,
   }) {
     final layout = calculateGridLayout(
       mobileColumns: mobileColumns,

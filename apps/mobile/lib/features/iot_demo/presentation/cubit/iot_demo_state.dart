@@ -13,13 +13,13 @@ abstract class IotDemoState with _$IotDemoState {
   const factory IotDemoState.loading() = _IotDemoLoading;
 
   const factory IotDemoState.loaded(
-    final List<IotDevice> devices, {
-    final String? selectedDeviceId,
-    @Default(IotDemoDeviceFilter.all) final IotDemoDeviceFilter filter,
+    List<IotDevice> devices, {
+    String? selectedDeviceId,
+    @Default(IotDemoDeviceFilter.all) IotDemoDeviceFilter filter,
   }) = _IotDemoLoaded;
 
   const factory IotDemoState.error({
-    required final IotDemoErrorCode code,
-    final String? detail,
+    required IotDemoErrorCode code,
+    String? detail,
   }) = _IotDemoError;
 }

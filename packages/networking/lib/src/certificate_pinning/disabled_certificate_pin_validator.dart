@@ -9,9 +9,9 @@ final class DisabledCertificatePinValidator implements CertificatePinValidator {
 
   @override
   Future<CertificatePinResult> validate({
-    required final String host,
-    required final int port,
-    required final Uint8List certificateBytes,
+    required String host,
+    required int port,
+    required Uint8List certificateBytes,
   }) async =>
       const CertificatePinSuccess(matchKind: CertificatePinMatchKind.primary);
 }

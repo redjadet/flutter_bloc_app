@@ -8,6 +8,6 @@ class WatchNativeShowcaseTelemetryUseCase {
   final NativeShowcaseTelemetryService _service;
 
   Stream<NativeShowcaseTelemetrySnapshot> call({
-    required final NativeShowcaseTelemetryStreamConfig config,
+    required NativeShowcaseTelemetryStreamConfig config,
   }) => _service.watchTelemetry(config: config);
 }

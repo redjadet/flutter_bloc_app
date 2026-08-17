@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/nft_metadata.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
@@ -8,10 +8,11 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/widgets/connect_wallet_button.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockWalletConnectAuthCubit extends MockCubit<WalletConnectAuthState>
@@ -34,7 +35,7 @@ void main() {
     });
 
     testWidgets('shows connect action for initial state', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       const WalletConnectAuthState state = WalletConnectAuthState();
       _stubState(cubit, state);
@@ -56,7 +57,7 @@ void main() {
     });
 
     testWidgets('shows linked wallet profile, actions, and dismissible error', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final WalletConnectAuthState state = WalletConnectAuthState(
         status: ViewStatus.success,
@@ -109,7 +110,7 @@ void main() {
     });
 
     testWidgets('shows loading state for linked wallet without relink button', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final WalletConnectAuthState state = WalletConnectAuthState(
         status: ViewStatus.loading,
@@ -126,7 +127,7 @@ void main() {
     });
 
     testWidgets('shows link and disconnect actions for connected wallet', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final WalletConnectAuthState state = WalletConnectAuthState(
         status: ViewStatus.success,
@@ -152,8 +153,8 @@ void main() {
 }
 
 void _stubState(
-  final _MockWalletConnectAuthCubit cubit,
-  final WalletConnectAuthState state,
+  _MockWalletConnectAuthCubit cubit,
+  WalletConnectAuthState state,
 ) {
   when(() => cubit.state).thenReturn(state);
   whenListen(
@@ -163,9 +164,9 @@ void _stubState(
   );
 }
 
-Widget _buildTestApp(final WalletConnectAuthCubit cubit) {
+Widget _buildTestApp(WalletConnectAuthCubit cubit) {
   return MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: BlocProvider<WalletConnectAuthCubit>.value(
       value: cubit,

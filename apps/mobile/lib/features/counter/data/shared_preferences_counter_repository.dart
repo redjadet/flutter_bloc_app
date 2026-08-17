@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 
 /// SharedPreferences-backed leaf [CounterDataSource].
 class SharedPreferencesCounterRepository implements CounterRepository {
-  SharedPreferencesCounterRepository([final SharedPreferences? instance])
+  SharedPreferencesCounterRepository([SharedPreferences? instance])
     : _preferencesInstance = instance;
 
   static const String _preferencesKeyCount = 'last_count';
@@ -54,26 +54,25 @@ class SharedPreferencesCounterRepository implements CounterRepository {
   );
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async =>
-      StorageGuard.run<void>(
-        logContext: 'SharedPreferencesCounterRepository.save',
-        action: () async {
-          final SharedPreferences preferences = await _preferences();
-          final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
-          await preferences.setInt(_preferencesKeyCount, normalized.count);
-          final DateTime? lastChanged = normalized.lastChanged;
-          if (lastChanged case final timestamp?) {
-            await preferences.setInt(
-              _preferencesKeyChanged,
-              timestamp.millisecondsSinceEpoch,
-            );
-          } else {
-            await preferences.remove(_preferencesKeyChanged);
-          }
-          _emitSnapshot(normalized);
-        },
-        fallback: () {},
-      );
+  Future<void> save(CounterSnapshot snapshot) async => StorageGuard.run<void>(
+    logContext: 'SharedPreferencesCounterRepository.save',
+    action: () async {
+      final SharedPreferences preferences = await _preferences();
+      final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+      await preferences.setInt(_preferencesKeyCount, normalized.count);
+      final DateTime? lastChanged = normalized.lastChanged;
+      if (lastChanged case final timestamp?) {
+        await preferences.setInt(
+          _preferencesKeyChanged,
+          timestamp.millisecondsSinceEpoch,
+        );
+      } else {
+        await preferences.remove(_preferencesKeyChanged);
+      }
+      _emitSnapshot(normalized);
+    },
+    fallback: () {},
+  );
 
   @override
   Stream<CounterSnapshot> watch() {
@@ -116,7 +115,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
     }
   }
 
-  CounterSnapshot _normalizeSnapshot(final CounterSnapshot snapshot) {
+  CounterSnapshot _normalizeSnapshot(CounterSnapshot snapshot) {
     if (snapshot.userId == null &&
         snapshot.count == 0 &&
         snapshot.lastChanged == null) {
@@ -128,7 +127,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
     };
   }
 
-  void _emitSnapshot(final CounterSnapshot snapshot) {
+  void _emitSnapshot(CounterSnapshot snapshot) {
     _cachedSnapshot = snapshot;
     final StreamController<CounterSnapshot>? controller = _watchController;
     if (controller == null || controller.isClosed) {

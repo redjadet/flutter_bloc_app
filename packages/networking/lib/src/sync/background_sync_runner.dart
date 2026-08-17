@@ -21,13 +21,12 @@ part 'background_sync_runner_helpers_summary.part.dart';
 /// pulling shared Firebase offline data if the provider auth uid changes
 /// mid-cycle (e.g. A→B account switch before session cleanup quiesces).
 Future<SyncCycleSummary> runSyncCycle({
-  required final SyncableRepositoryRegistry registry,
-  required final PendingSyncRepository pendingRepository,
-  required final void Function(SyncStatus status) emitStatus,
-  required final void Function(String event, Map<String, Object?> payload)
-  telemetry,
-  final String? supabaseUserIdForUserScopedSync,
-  final String? Function()? getSharedSyncAuthUserId,
+  required SyncableRepositoryRegistry registry,
+  required PendingSyncRepository pendingRepository,
+  required void Function(SyncStatus status) emitStatus,
+  required void Function(String event, Map<String, Object?> payload) telemetry,
+  String? supabaseUserIdForUserScopedSync,
+  String? Function()? getSharedSyncAuthUserId,
 }) async {
   final Stopwatch stopwatch = Stopwatch()..start();
   final _PullRemoteResult initialPullResult = _PullRemoteResult();

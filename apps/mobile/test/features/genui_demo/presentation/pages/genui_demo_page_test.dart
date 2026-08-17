@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.dart';
@@ -8,9 +7,9 @@ import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_de
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/widgets/genui_demo_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart' as genui;
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _FakeGenUiDemoAgent implements GenUiDemoAgent {
@@ -29,7 +28,7 @@ class _FakeGenUiDemoAgent implements GenUiDemoAgent {
   }
 
   @override
-  Future<void> sendMessage(final String text) async {
+  Future<void> sendMessage(String text) async {
     // No-op for testing
   }
 
@@ -52,17 +51,17 @@ class _FakeGenUiDemoAgent implements GenUiDemoAgent {
     await _errorsController.close();
   }
 
-  void emitSurfaceAdded(final String surfaceId) {
+  void emitSurfaceAdded(String surfaceId) {
     _surfaceEventsController.add(GenUiSurfaceEvent.added(surfaceId: surfaceId));
   }
 
-  void emitSurfaceRemoved(final String surfaceId) {
+  void emitSurfaceRemoved(String surfaceId) {
     _surfaceEventsController.add(
       GenUiSurfaceEvent.removed(surfaceId: surfaceId),
     );
   }
 
-  void emitError(final String error) {
+  void emitError(String error) {
     _errorsController.add(error);
   }
 }
@@ -76,7 +75,7 @@ class _GenUiDemoView extends StatelessWidget {
   const _GenUiDemoView();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.genuiDemoPageTitle)),
@@ -85,10 +84,7 @@ class _GenUiDemoView extends StatelessWidget {
   }
 }
 
-Widget buildSubject({
-  final GenUiDemoAgent? agent,
-  final GenUiDemoState? initialState,
-}) {
+Widget buildSubject({GenUiDemoAgent? agent, GenUiDemoState? initialState}) {
   final GenUiDemoAgent testAgent = agent ?? _FakeGenUiDemoAgent();
   final GenUiDemoCubit cubit = GenUiDemoCubit(agent: testAgent);
 
@@ -101,9 +97,7 @@ Widget buildSubject({
     theme: ThemeData(useMaterial3: false),
     localizationsDelegates: const [
       AppLocalizations.delegate,
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
+      ...GlobalMaterialLocalizations.delegates,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     home: BlocProvider<GenUiDemoCubit>.value(
@@ -115,7 +109,7 @@ Widget buildSubject({
 
 void main() {
   group('GenUiDemoPage', () {
-    testWidgets('renders page with initial state', (final tester) async {
+    testWidgets('renders page with initial state', (tester) async {
       await tester.pumpWidget(buildSubject());
       await tester.pump();
 
@@ -123,9 +117,7 @@ void main() {
       expect(find.byType(GenUiDemoContent), findsOneWidget);
     });
 
-    testWidgets('displays loading widget in initial state', (
-      final tester,
-    ) async {
+    testWidgets('displays loading widget in initial state', (tester) async {
       await tester.pumpWidget(
         buildSubject(initialState: const GenUiDemoState.initial()),
       );
@@ -135,9 +127,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsWidgets);
     });
 
-    testWidgets('displays ready state with empty surfaces', (
-      final tester,
-    ) async {
+    testWidgets('displays ready state with empty surfaces', (tester) async {
       final agent = _FakeGenUiDemoAgent();
       await agent.initialize();
 
@@ -156,7 +146,7 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('displays error state', (final tester) async {
+    testWidgets('displays error state', (tester) async {
       final agent = _FakeGenUiDemoAgent();
       await agent.initialize();
 
@@ -174,7 +164,7 @@ void main() {
       expect(find.text('Test error message'), findsOneWidget);
     });
 
-    testWidgets('displays input field and send button', (final tester) async {
+    testWidgets('displays input field and send button', (tester) async {
       final agent = _FakeGenUiDemoAgent();
       await agent.initialize();
 
@@ -196,7 +186,7 @@ void main() {
       expect(find.text(l10n.genuiDemoSendButton), findsOneWidget);
     });
 
-    testWidgets('sends message when button is tapped', (final tester) async {
+    testWidgets('sends message when button is tapped', (tester) async {
       final agent = _FakeGenUiDemoAgent();
       await agent.initialize();
 
@@ -224,9 +214,7 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('disables send button when isSending is true', (
-      final tester,
-    ) async {
+    testWidgets('disables send button when isSending is true', (tester) async {
       final agent = _FakeGenUiDemoAgent();
       await agent.initialize();
 
@@ -246,9 +234,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsWidgets);
     });
 
-    testWidgets('displays ready state with empty surfaces', (
-      final tester,
-    ) async {
+    testWidgets('displays ready state with empty surfaces', (tester) async {
       final agent = _FakeGenUiDemoAgent();
       await agent.initialize();
 

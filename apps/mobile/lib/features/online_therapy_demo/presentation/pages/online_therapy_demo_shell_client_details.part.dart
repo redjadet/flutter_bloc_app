@@ -22,7 +22,7 @@ class _TherapistDetails extends StatelessWidget {
   final Future<void> Function() onRefresh;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final t = therapist;
     if (t == null) {

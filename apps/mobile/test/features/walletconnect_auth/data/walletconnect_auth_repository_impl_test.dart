@@ -1,12 +1,12 @@
 // ignore_for_file: subtype_of_sealed_class
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/wallet_user_profile_mapper.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_auth_repository_impl.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_service.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -63,9 +63,8 @@ void main() {
             return ref;
           });
 
-          when(
-            () => mockWalletConnectService.connect(),
-          ).thenAnswer((_) async => const WalletAddress(walletAddress));
+          when(() => mockWalletConnectService.connect())
+              .thenAnswer((_) async => const WalletAddress(walletAddress));
 
           final repository = WalletConnectAuthRepositoryImpl(
             walletConnectService: mockWalletConnectService,
@@ -123,9 +122,8 @@ void main() {
             ));
             return Future<void>.value();
           });
-          when(
-            () => mockUsersCollection.doc('test-uid'),
-          ).thenReturn(mockDocRef);
+          when(() => mockUsersCollection.doc('test-uid'))
+              .thenReturn(mockDocRef);
           when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
             final docId = invocation.positionalArguments[0] as String;
             if (docId == 'test-uid') return mockDocRef;
@@ -171,8 +169,7 @@ void main() {
             isEmpty,
           );
         },
-        skip:
-            'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
+        skip: 'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
       );
       test(
         'writes provided profile to users/{uid} when profile is not null',
@@ -201,9 +198,8 @@ void main() {
             ));
             return Future<void>.value();
           });
-          when(
-            () => mockUsersCollection.doc('test-uid'),
-          ).thenReturn(mockDocRef);
+          when(() => mockUsersCollection.doc('test-uid'))
+              .thenReturn(mockDocRef);
           when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
             final docId = invocation.positionalArguments[0] as String;
             if (docId == 'test-uid') return mockDocRef;
@@ -219,9 +215,8 @@ void main() {
             });
             return ref;
           });
-          when(
-            () => mockUsersCollection.doc('test-uid'),
-          ).thenReturn(mockDocRef);
+          when(() => mockUsersCollection.doc('test-uid'))
+              .thenReturn(mockDocRef);
 
           final repository = WalletConnectAuthRepositoryImpl(
             walletConnectService: mockWalletConnectService,
@@ -256,8 +251,7 @@ void main() {
             isEmpty,
           );
         },
-        skip:
-            'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
+        skip: 'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
       );
     });
 
@@ -276,9 +270,8 @@ void main() {
           if (docId == 'test-uid') return mockDocRef;
           final ref = MockDocumentReference();
           when(() => ref.id).thenReturn(docId);
-          when(
-            () => ref.set(any(), any()),
-          ).thenAnswer((_) => Future<void>.value());
+          when(() => ref.set(any(), any()))
+              .thenAnswer((_) => Future<void>.value());
           return ref;
         });
         when(() => mockUsersCollection.doc('test-uid')).thenReturn(mockDocRef);
@@ -316,9 +309,8 @@ void main() {
           if (docId == 'test-uid') return mockDocRef;
           final ref = MockDocumentReference();
           when(() => ref.id).thenReturn(docId);
-          when(
-            () => ref.set(any(), any()),
-          ).thenAnswer((_) => Future<void>.value());
+          when(() => ref.set(any(), any()))
+              .thenAnswer((_) => Future<void>.value());
           return ref;
         });
         when(() => mockUsersCollection.doc('test-uid')).thenReturn(mockDocRef);
@@ -361,14 +353,12 @@ void main() {
             if (docId == 'test-uid') return mockDocRef;
             final ref = MockDocumentReference();
             when(() => ref.id).thenReturn(docId);
-            when(
-              () => ref.set(any(), any()),
-            ).thenAnswer((_) => Future<void>.value());
+            when(() => ref.set(any(), any()))
+                .thenAnswer((_) => Future<void>.value());
             return ref;
           });
-          when(
-            () => mockUsersCollection.doc('test-uid'),
-          ).thenReturn(mockDocRef);
+          when(() => mockUsersCollection.doc('test-uid'))
+              .thenReturn(mockDocRef);
 
           final repository = WalletConnectAuthRepositoryImpl(
             walletConnectService: mockWalletConnectService,
@@ -386,8 +376,7 @@ void main() {
           expect(result.rewards, 0.5);
           expect(result.nfts, isEmpty);
         },
-        skip:
-            'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
+        skip: 'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
       );
     });
   });

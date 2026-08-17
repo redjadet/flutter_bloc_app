@@ -34,8 +34,8 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
   }
 
   Future<void> _runLoadInitialAfterDelay({
-    required final int requestId,
-    required final int startingRevision,
+    required int requestId,
+    required int startingRevision,
   }) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
@@ -53,7 +53,7 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
         );
         await applyRestorationOutcome(
           restoration,
-          onHoldChanged: ({required final holdSideEffects}) =>
+          onHoldChanged: ({required holdSideEffects}) =>
               _pauseCountdownForOneTick = holdSideEffects,
           onAfterEmit: _syncTickerForState,
           onPersist: _persistState,
@@ -65,7 +65,7 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
       isAlive: () => !isClosed,
       onError: (_) {},
       logContext: 'CounterCubit.loadInitial',
-      onErrorWithDetails: (final error, final stackTrace) {
+      onErrorWithDetails: (error, stackTrace) {
         _handleError(
           error,
           stackTrace ?? StackTrace.current,

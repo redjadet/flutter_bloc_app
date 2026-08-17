@@ -11,19 +11,19 @@ class AiDecisionRepositoryImpl implements AiDecisionRepository {
   Future<List<AiDecisionCaseSummary>> getCases() => api.getCases();
 
   @override
-  Future<AiDecisionCaseDetail> getCaseDetail(final String caseId) =>
+  Future<AiDecisionCaseDetail> getCaseDetail(String caseId) =>
       api.getCaseDetail(caseId);
 
   @override
   Future<AiDecisionDecisionResult> runDecisionSupport({
-    required final String caseId,
-    required final String operatorNote,
+    required String caseId,
+    required String operatorNote,
   }) => api.runDecisionSupport(caseId: caseId, operatorNote: operatorNote);
 
   @override
   Future<void> createAction({
-    required final String caseId,
-    required final String actionType,
-    required final String note,
+    required String caseId,
+    required String actionType,
+    required String note,
   }) => api.createAction(caseId: caseId, actionType: actionType, note: note);
 }

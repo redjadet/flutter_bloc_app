@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 
 class _SequenceAdapter implements HttpClientAdapter {
   _SequenceAdapter(this._fetch);
@@ -17,26 +17,26 @@ class _SequenceAdapter implements HttpClientAdapter {
 
   @override
   Future<ResponseBody> fetch(
-    final RequestOptions options,
-    final Stream<List<int>>? requestStream,
-    final Future<void>? cancelFuture,
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
   ) => _fetch(options, requestStream, cancelFuture);
 
   @override
-  void close({final bool force = false}) {}
+  void close({bool force = false}) {}
 }
 
 void main() {
   group('RetryInterceptor', () {
     late Dio dio;
 
-    Dio buildDio({final int maxRetries = 2}) {
+    Dio buildDio({int maxRetries = 2}) {
       final Dio built = Dio(BaseOptions(validateStatus: (_) => true));
       built.interceptors.add(
         RetryInterceptor(
           dio: built,
           maxRetries: maxRetries,
-          waitForDelay: (final _) async {},
+          waitForDelay: (_) async {},
         ),
       );
       return built;
@@ -47,9 +47,9 @@ void main() {
       int requestCount = 0;
       dio = buildDio();
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         seenRetryCounts.add(
@@ -87,9 +87,9 @@ void main() {
       int requestCount = 0;
       dio = buildDio(maxRetries: 1);
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -114,9 +114,9 @@ void main() {
       int requestCount = 0;
       dio = buildDio(maxRetries: 2);
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -151,9 +151,9 @@ void main() {
       int requestCount = 0;
       dio = buildDio(maxRetries: 2);
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -187,9 +187,9 @@ void main() {
       int requestCount = 0;
       dio = buildDio(maxRetries: 2);
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -231,9 +231,9 @@ void main() {
         int requestCount = 0;
         dio = buildDio(maxRetries: 1);
         dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
+          options,
+          _,
+          cancelFuture,
         ) async {
           if (cancelFuture != null) {}
           requestCount += 1;
@@ -266,9 +266,9 @@ void main() {
       int requestCount = 0;
       dio = buildDio(maxRetries: 2);
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -296,9 +296,9 @@ void main() {
         int requestCount = 0;
         dio = buildDio(maxRetries: 3);
         dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
+          options,
+          _,
+          cancelFuture,
         ) async {
           if (cancelFuture != null) {}
           requestCount += 1;
@@ -329,9 +329,9 @@ void main() {
         int requestCount = 0;
         dio = buildDio(maxRetries: 3);
         dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
+          options,
+          _,
+          cancelFuture,
         ) async {
           if (cancelFuture != null) {}
           requestCount += 1;
@@ -362,9 +362,9 @@ void main() {
         int requestCount = 0;
         dio = buildDio(maxRetries: 2);
         dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
+          options,
+          _,
+          cancelFuture,
         ) async {
           if (cancelFuture != null) {}
           requestCount += 1;

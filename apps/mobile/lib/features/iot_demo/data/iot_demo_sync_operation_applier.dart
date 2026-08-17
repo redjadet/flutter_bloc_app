@@ -13,8 +13,8 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 /// validating user and payload. [payload] must contain at least
 /// `deviceId` and `action`; action-specific fields are validated here.
 Future<void> applyIotDemoSyncOperation(
-  final SupabaseIotDemoRepository remote,
-  final Map<String, dynamic> payload,
+  SupabaseIotDemoRepository remote,
+  Map<String, dynamic> payload,
 ) async {
   final String? deviceId = stringFromDynamicTrimmed(payload['deviceId']);
   final String? action = stringFromDynamicTrimmed(payload['action']);
@@ -97,7 +97,7 @@ Future<void> applyIotDemoSyncOperation(
   }
 }
 
-IotDeviceType? _parseDeviceTypeFromName(final String value) => switch (value) {
+IotDeviceType? _parseDeviceTypeFromName(String value) => switch (value) {
   'light' => IotDeviceType.light,
   'thermostat' => IotDeviceType.thermostat,
   'plug' => IotDeviceType.plug,
@@ -106,7 +106,7 @@ IotDeviceType? _parseDeviceTypeFromName(final String value) => switch (value) {
   _ => null,
 };
 
-IotDeviceCommand? _payloadToCommand(final Map<String, dynamic> payload) {
+IotDeviceCommand? _payloadToCommand(Map<String, dynamic> payload) {
   final String? kind = stringFromDynamicTrimmed(payload['kind']);
   return switch (kind) {
     'toggle' => const IotDeviceCommand.toggle(),

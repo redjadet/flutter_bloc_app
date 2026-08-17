@@ -20,8 +20,7 @@ class HiveCounterRepositoryWatchState {
 
   bool get hasActiveListeners => _watchController?.hasListener ?? false;
 
-  set cachedSnapshot(final CounterSnapshot snapshot) =>
-      _cachedSnapshot = snapshot;
+  set cachedSnapshot(CounterSnapshot snapshot) => _cachedSnapshot = snapshot;
 
   Stream<CounterSnapshot> get stream {
     final controller = _watchController ??=
@@ -30,8 +29,8 @@ class HiveCounterRepositoryWatchState {
   }
 
   void createController({
-    required final void Function() onListen,
-    required final Future<void> Function() onCancel,
+    required void Function() onListen,
+    required Future<void> Function() onCancel,
   }) {
     final StreamController<CounterSnapshot>? existing = _watchController;
     if (existing case final controller?) {
@@ -60,7 +59,7 @@ class HiveCounterRepositoryWatchState {
     }
   }
 
-  void emitSnapshot(final CounterSnapshot snapshot) {
+  void emitSnapshot(CounterSnapshot snapshot) {
     _cachedSnapshot = snapshot;
     final StreamController<CounterSnapshot>? controller = _watchController;
     if (controller == null || controller.isClosed) {

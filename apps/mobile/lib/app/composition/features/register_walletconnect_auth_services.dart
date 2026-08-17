@@ -13,7 +13,7 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnec
 void registerWalletConnectAuthServices() {
   registerLazySingletonIfAbsent<WalletConnectService>(
     () => WalletConnectService(),
-    dispose: (final service) => service.dispose(),
+    dispose: (service) => service.dispose(),
   );
 
   registerLazySingletonIfAbsent<WalletConnectAuthRepository>(
@@ -41,7 +41,7 @@ void registerWalletConnectAuthServices() {
 
 /// Creates a mock repository for testing or when Firebase is unavailable.
 WalletConnectAuthRepository _createMockWalletConnectAuthRepository({
-  required final WalletConnectService walletConnectService,
+  required WalletConnectService walletConnectService,
 }) => _MockWalletConnectAuthRepository(
   walletConnectService: walletConnectService,
 );
@@ -70,7 +70,7 @@ class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
   Future<WalletAddress?> getLinkedWalletAddress() async => _linkedAddress;
 
   @override
-  Future<void> linkWalletToFirebaseUser(final String walletAddress) async {
+  Future<void> linkWalletToFirebaseUser(String walletAddress) async {
     final address = WalletAddress(walletAddress);
     if (!address.isValid) {
       throw WalletConnectException(
@@ -84,14 +84,14 @@ class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
 
   @override
   Future<void> upsertWalletUserProfile(
-    final String walletAddress, {
-    final WalletUserProfile? profile,
+    String walletAddress, {
+    WalletUserProfile? profile,
   }) async {
     // No-op for mock
   }
 
   @override
   Future<WalletUserProfile?> getWalletUserProfile(
-    final String walletAddress,
+    String walletAddress,
   ) async => null;
 }

@@ -10,7 +10,7 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
   }
 
   Future<void> _pickAndCommit(
-    final Future<MediaPickResult> Function() pick,
+    Future<MediaPickResult> Function() pick,
   ) async {
     final String? userId = _requireUserId();
     if (userId == null) return;
@@ -32,7 +32,7 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
     );
   }
 
-  Future<void> _commitVideoPath(final String path, final String userId) async {
+  Future<void> _commitVideoPath(String path, String userId) async {
     final int commitId = _commitGuard.next();
     final CaseStudyQuestionId qid = state.draft.currentQuestionId;
     final String? oldPath = state.draft.answers[qid];

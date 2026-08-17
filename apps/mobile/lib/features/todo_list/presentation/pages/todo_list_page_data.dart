@@ -12,7 +12,7 @@ class TodoListLifecycleData {
     required this.errorMessage,
   });
 
-  factory TodoListLifecycleData.fromState(final TodoListState state) =>
+  factory TodoListLifecycleData.fromState(TodoListState state) =>
       TodoListLifecycleData(
         isLoading: state.isLoading,
         hasError: state.hasError,
@@ -24,7 +24,7 @@ class TodoListLifecycleData {
   final String? errorMessage;
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is TodoListLifecycleData &&
           other.isLoading == isLoading &&
@@ -48,7 +48,7 @@ class TodoListListProjection {
     required this.manualOrder,
   });
 
-  factory TodoListListProjection.fromState(final TodoListState state) =>
+  factory TodoListListProjection.fromState(TodoListState state) =>
       TodoListListProjection(
         items: state.items,
         filter: state.filter,
@@ -66,7 +66,7 @@ class TodoListListProjection {
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
 
   /// Derived only when the list projection rebuilds, not on selection emits.
-  bool get hasCompleted => items.any((final item) => item.isCompleted);
+  bool get hasCompleted => items.any((item) => item.isCompleted);
 
   /// Derive filtered/sorted rows only when this projection rebuilds.
   List<TodoItem> get filteredItems {
@@ -82,7 +82,7 @@ class TodoListListProjection {
   }
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is TodoListListProjection &&
           _collectionEq.equals(other.items, items) &&
@@ -110,7 +110,7 @@ class TodoListSelectionData {
     required this.selectedCount,
   });
 
-  factory TodoListSelectionData.fromState(final TodoListState state) =>
+  factory TodoListSelectionData.fromState(TodoListState state) =>
       TodoListSelectionData(
         selectedItemIds: state.selectedItemIds,
         hasSelectedItems: state.hasSelectedItems,
@@ -124,7 +124,7 @@ class TodoListSelectionData {
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is TodoListSelectionData &&
           _collectionEq.equals(other.selectedItemIds, selectedItemIds) &&

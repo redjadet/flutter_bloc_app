@@ -87,8 +87,7 @@ extension IapPurchaseResultPatterns on IapPurchaseResult {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _IapPurchaseSuccess value)?  success,TResult Function( _IapPurchaseCancelled value)?  cancelled,TResult Function( _IapPurchasePending value)?  pending,TResult Function( _IapPurchaseFailure value)?  failure,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _IapPurchaseSuccess value)?  success,TResult Function( _IapPurchaseCancelled value)?  cancelled,TResult Function( _IapPurchasePending value)?  pending,TResult Function( _IapPurchaseFailure value)?  failure,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _IapPurchaseSuccess() when success != null:
 return success(_that);case _IapPurchaseCancelled() when cancelled != null:
@@ -112,8 +111,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _IapPurchaseSuccess value)  success,required TResult Function( _IapPurchaseCancelled value)  cancelled,required TResult Function( _IapPurchasePending value)  pending,required TResult Function( _IapPurchaseFailure value)  failure,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _IapPurchaseSuccess value)  success,required TResult Function( _IapPurchaseCancelled value)  cancelled,required TResult Function( _IapPurchasePending value)  pending,required TResult Function( _IapPurchaseFailure value)  failure,}){final _that = this;
 switch (_that) {
 case _IapPurchaseSuccess():
 return success(_that);case _IapPurchaseCancelled():
@@ -136,8 +134,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _IapPurchaseSuccess value)?  success,TResult? Function( _IapPurchaseCancelled value)?  cancelled,TResult? Function( _IapPurchasePending value)?  pending,TResult? Function( _IapPurchaseFailure value)?  failure,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _IapPurchaseSuccess value)?  success,TResult? Function( _IapPurchaseCancelled value)?  cancelled,TResult? Function( _IapPurchasePending value)?  pending,TResult? Function( _IapPurchaseFailure value)?  failure,}){final _that = this;
 switch (_that) {
 case _IapPurchaseSuccess() when success != null:
 return success(_that);case _IapPurchaseCancelled() when cancelled != null:

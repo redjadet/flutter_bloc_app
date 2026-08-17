@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_conte
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_content_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_content_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -18,7 +18,7 @@ class StaffAppDemoContentPage extends StatelessWidget {
   const StaffAppDemoContentPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final state = context.watch<StaffDemoContentCubit>().state;
     final l10n = context.l10n;
     final contentItems = List<StaffDemoContentItem>.of(

@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:auth/auth.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/widgets.dart';
-import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
@@ -51,9 +51,8 @@ void main() {
     test('emits unauthenticated when configured and no user', () async {
       when(() => mockRepository.isConfigured).thenReturn(true);
       when(() => mockRepository.currentUser).thenReturn(null);
-      when(
-        () => mockRepository.authStateChanges,
-      ).thenAnswer((_) => Stream<AuthUser?>.value(null));
+      when(() => mockRepository.authStateChanges)
+          .thenAnswer((_) => Stream<AuthUser?>.value(null));
 
       await cubit.loadSession();
 
@@ -64,9 +63,8 @@ void main() {
       const user = AuthUser(id: 'uid', isAnonymous: false, email: 'a@b.c');
       when(() => mockRepository.isConfigured).thenReturn(true);
       when(() => mockRepository.currentUser).thenReturn(user);
-      when(
-        () => mockRepository.authStateChanges,
-      ).thenAnswer((_) => Stream<AuthUser?>.value(user));
+      when(() => mockRepository.authStateChanges)
+          .thenAnswer((_) => Stream<AuthUser?>.value(user));
 
       await cubit.loadSession();
 
@@ -80,9 +78,8 @@ void main() {
       const user = AuthUser(id: 'uid', isAnonymous: false, email: 'a@b.c');
       when(() => mockRepository.isConfigured).thenReturn(true);
       when(() => mockRepository.currentUser).thenReturn(null);
-      when(
-        () => mockRepository.authStateChanges,
-      ).thenAnswer((_) => controller.stream);
+      when(() => mockRepository.authStateChanges)
+          .thenAnswer((_) => controller.stream);
 
       final states = <SupabaseAuthState>[];
       final subscription = cubit.stream.listen(states.add);
@@ -107,9 +104,8 @@ void main() {
       const user = AuthUser(id: 'uid', isAnonymous: false, email: 'a@b.c');
       when(() => mockRepository.isConfigured).thenReturn(true);
       when(() => mockRepository.currentUser).thenReturn(null);
-      when(
-        () => mockRepository.authStateChanges,
-      ).thenAnswer((_) => controller.stream);
+      when(() => mockRepository.authStateChanges)
+          .thenAnswer((_) => controller.stream);
 
       await cubit.loadSession();
       controller.addError(
@@ -133,9 +129,8 @@ void main() {
 
       when(() => mockRepository.isConfigured).thenReturn(true);
       when(() => mockRepository.currentUser).thenReturn(null);
-      when(
-        () => mockRepository.authStateChanges,
-      ).thenAnswer((_) => controller.stream);
+      when(() => mockRepository.authStateChanges)
+          .thenAnswer((_) => controller.stream);
 
       final states = <SupabaseAuthState>[];
       final subscription = cubit.stream.listen(states.add);
@@ -196,9 +191,8 @@ void main() {
         );
         when(() => mockRepository.isConfigured).thenReturn(true);
         when(() => mockRepository.currentUser).thenReturn(null);
-        when(
-          () => mockRepository.authStateChanges,
-        ).thenAnswer((_) => const Stream<AuthUser?>.empty());
+        when(() => mockRepository.authStateChanges)
+            .thenAnswer((_) => const Stream<AuthUser?>.empty());
 
         await testCubit.loadSession();
         await coordinator.invalidateSession(

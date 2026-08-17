@@ -5,5 +5,5 @@ class ReconnectRealtimeMarket {
 
   final RealtimeMarketRepository _repository;
 
-  Future<void> call(final String pairId) => _repository.reconnect(pairId);
+  Future<void> call(String pairId) => _repository.reconnect(pairId);
 }

@@ -14,12 +14,12 @@ class FirestoreStaffDemoMessagingRepository
 
   @override
   Future<String> sendShiftAssignment({
-    required final String toUserId,
-    required final String body,
-    required final String siteId,
-    required final DateTime startAtUtc,
-    required final DateTime endAtUtc,
-    required final String timezoneName,
+    required String toUserId,
+    required String body,
+    required String siteId,
+    required DateTime startAtUtc,
+    required DateTime endAtUtc,
+    required String timezoneName,
   }) async {
     final fromUserId = _authRepository.currentUser?.id;
     if (fromUserId == null || fromUserId.isEmpty) {
@@ -62,8 +62,8 @@ class FirestoreStaffDemoMessagingRepository
 
   @override
   Future<void> confirmShiftAssignment({
-    required final String messageId,
-    required final String shiftId,
+    required String messageId,
+    required String shiftId,
   }) async {
     final userId = _authRepository.currentUser?.id;
     if (userId == null || userId.isEmpty) {

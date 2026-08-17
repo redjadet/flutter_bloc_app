@@ -17,7 +17,7 @@ Future<void> Function(Flavor flavor) bootstrapFlavorApp =
 String Function() readAppVersion = AppVersionService.getAppVersion;
 
 /// Bootstrap the app with the given flavor
-Future<void> runAppWithFlavor(final Flavor flavor) async {
+Future<void> runAppWithFlavor(Flavor flavor) async {
   ensureBootstrapBindingInitialized();
   registerFcmBackgroundHandler(fcmBackgroundHandler);
   await bootstrapFlavorApp(flavor);

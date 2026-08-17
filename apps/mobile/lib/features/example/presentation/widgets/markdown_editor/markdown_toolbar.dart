@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Toolbar for the markdown editor with preview toggle and markdown shortcuts.
 class MarkdownToolbar extends StatelessWidget {
@@ -17,7 +17,7 @@ class MarkdownToolbar extends StatelessWidget {
   final TextEditingController controller;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 
@@ -61,7 +61,7 @@ class MarkdownShortcutsMenu extends StatelessWidget {
 
   final TextEditingController controller;
 
-  void _insertMarkdown(final String type) {
+  void _insertMarkdown(String type) {
     final String text = controller.text;
     final int selectionStart = _normalizeSelectionIndex(
       controller.selection.start,
@@ -112,7 +112,7 @@ class MarkdownShortcutsMenu extends StatelessWidget {
     );
   }
 
-  int _normalizeSelectionIndex(final int index, final int maxLength) {
+  int _normalizeSelectionIndex(int index, int maxLength) {
     if (index.isNegative) {
       return maxLength;
     }
@@ -123,10 +123,10 @@ class MarkdownShortcutsMenu extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) => PopupMenuButton<String>(
+  Widget build(BuildContext context) => PopupMenuButton<String>(
     icon: const Icon(Icons.more_vert),
     onSelected: _insertMarkdown,
-    itemBuilder: (final context) => <PopupMenuEntry<String>>[
+    itemBuilder: (context) => <PopupMenuEntry<String>>[
       const PopupMenuItem<String>(
         value: 'header',
         child: Text('Header (#)'),

@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/pages/ai_decision_demo_page.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../test_helpers.dart';
 
 class _MockAiDecisionRepository extends Mock implements AiDecisionRepository {}
 
-Widget _wrapPage(final AiDecisionRepository repository) => wrapWithProviders(
+Widget _wrapPage(AiDecisionRepository repository) => wrapWithProviders(
   child: BlocProvider(
     create: (_) => AiDecisionCubit(repository: repository)..loadQueue(),
     child: const AiDecisionDemoPage(),
@@ -23,7 +23,7 @@ Widget _wrapPage(final AiDecisionRepository repository) => wrapWithProviders(
 
 void main() {
   testWidgets('AiDecisionDemoPage disables actions until case detail loads', (
-    final tester,
+    tester,
   ) async {
     final repository = _MockAiDecisionRepository();
     final queue = <AiDecisionCaseSummary>[
@@ -50,9 +50,8 @@ void main() {
     );
 
     when(repository.getCases).thenAnswer((_) async => queue);
-    when(
-      () => repository.getCaseDetail('case_1'),
-    ).thenAnswer((_) => detailCompleter.future);
+    when(() => repository.getCaseDetail('case_1'))
+        .thenAnswer((_) => detailCompleter.future);
 
     await tester.pumpWidget(_wrapPage(repository));
     await tester.pump();
@@ -83,7 +82,7 @@ void main() {
   });
 
   testWidgets('AiDecisionDemoPage shows friendly network error with retry', (
-    final tester,
+    tester,
   ) async {
     final repository = _MockAiDecisionRepository();
     final queue = <AiDecisionCaseSummary>[
@@ -140,7 +139,7 @@ void main() {
   });
 
   testWidgets('AiDecisionDemoPage renders proof DataTable after decision', (
-    final tester,
+    tester,
   ) async {
     final repository = _MockAiDecisionRepository();
 
@@ -240,7 +239,7 @@ void main() {
   });
 
   testWidgets('AiDecisionDemoPage gives case selector top space and ellipsis', (
-    final tester,
+    tester,
   ) async {
     final repository = _MockAiDecisionRepository();
     final queue = <AiDecisionCaseSummary>[
@@ -279,7 +278,7 @@ void main() {
     expect(
       tester
           .widgetList<SizedBox>(find.byType(SizedBox))
-          .any((final box) => box.height == 8),
+          .any((box) => box.height == 8),
       isTrue,
     );
   });

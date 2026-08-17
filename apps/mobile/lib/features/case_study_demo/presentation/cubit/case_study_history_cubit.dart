@@ -15,11 +15,11 @@ export 'case_study_history_state.dart';
 class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
   CaseStudyHistoryCubit({
     required this._authRepository,
-    required final CaseStudyLocalRepository localRepository,
-    required final CaseStudyRemoteRepository remoteRepository,
-    required final CaseStudyRemoteDeleteRepository remoteDeleteRepository,
+    required CaseStudyLocalRepository localRepository,
+    required CaseStudyRemoteRepository remoteRepository,
+    required CaseStudyRemoteDeleteRepository remoteDeleteRepository,
     required this._clipStore,
-    required final RemoteBackendAuthPort remoteBackendAuth,
+    required RemoteBackendAuthPort remoteBackendAuth,
   }) : _local = localRepository,
        _remote = remoteRepository,
        _remoteDelete = remoteDeleteRepository,
@@ -54,7 +54,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
       operation: _fetchRecords,
       isAlive: () => !isClosed,
       logContext: 'CaseStudyHistoryCubit.load',
-      onSuccess: (final records) {
+      onSuccess: (records) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           CaseStudyHistoryState(
@@ -64,7 +64,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
@@ -78,7 +78,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
 
   Future<void> refresh() => load();
 
-  Future<void> deleteRecord({required final String recordId}) async {
+  Future<void> deleteRecord({required String recordId}) async {
     if (isClosed || state.deletingRecordId != null || recordId.isEmpty) return;
 
     final String? userId = _authRepository.currentUser?.id;
@@ -101,7 +101,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
         await _local.ensureReady();
         final List<CaseStudyRecord> records = await _local.loadRecords(userId);
         final List<CaseStudyRecord> next = records
-            .where((final r) => r.id != recordId)
+            .where((r) => r.id != recordId)
             .toList();
         await _local.saveRecords(userId, next);
         await _clipStore.deleteCaseFolder(recordId);
@@ -132,7 +132,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
           .listSubmittedCases();
       return summaries
           .map(
-            (final s) => CaseStudyRecord(
+            (s) => CaseStudyRecord(
               id: s.caseId,
               submittedAt: s.submittedAtUtc,
               doctorName: s.doctorName,

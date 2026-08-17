@@ -32,7 +32,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<List<SearchResult>?> loadCachedResults(final String query) async =>
+  Future<List<SearchResult>?> loadCachedResults(String query) async =>
       StorageGuard.run<List<SearchResult>?>(
         logContext: 'HiveSearchCacheRepository.loadCachedResults',
         action: () async {
@@ -49,8 +49,8 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
 
   @override
   Future<void> saveCachedResults(
-    final String query,
-    final List<SearchResult> results,
+    String query,
+    List<SearchResult> results,
   ) async => StorageGuard.run<void>(
     logContext: 'HiveSearchCacheRepository.saveCachedResults',
     action: () async {
@@ -62,7 +62,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
       final String key = '$_keyPrefix$normalizedQuery';
 
       final List<Map<String, dynamic>> serialized = results
-          .map((final r) => SearchResultDto.fromDomain(r).toJson())
+          .map((r) => SearchResultDto.fromDomain(r).toJson())
           .toList(growable: false);
       await box.put(key, serialized);
 
@@ -95,7 +95,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
       final Box<dynamic> box = await getBox();
       final List<String> keys = box.keys
           .whereType<String>()
-          .where((final k) => k.startsWith(_keyPrefix))
+          .where((k) => k.startsWith(_keyPrefix))
           .toList(growable: false);
       for (final String key in keys) {
         await safeDeleteKey(box, key);
@@ -105,8 +105,8 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
   );
 
   Future<void> _addToRecentQueries(
-    final Box<dynamic> box,
-    final String query,
+    Box<dynamic> box,
+    String query,
   ) async {
     final dynamic raw = box.get(_keyRecentQueries);
     final List<String> recent =
@@ -121,7 +121,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
     await box.put(_keyRecentQueries, trimmed);
   }
 
-  Future<List<SearchResult>?> _parseStored(final dynamic raw) async {
+  Future<List<SearchResult>?> _parseStored(dynamic raw) async {
     if (raw == null) {
       return null;
     }
@@ -139,29 +139,28 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
     return null;
   }
 
-  List<SearchResult> _parseIterable(final Iterable<dynamic> raw) => raw
+  List<SearchResult> _parseIterable(Iterable<dynamic> raw) => raw
       .whereType<Map<dynamic, dynamic>>()
       .map(_mapToResult)
       .toList(growable: false);
 
-  SearchResult _mapToResult(final Map<dynamic, dynamic> raw) {
+  SearchResult _mapToResult(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
-      (final dynamic key, final dynamic value) =>
-          MapEntry(key.toString(), value),
+      (dynamic key, dynamic value) => MapEntry(key.toString(), value),
     );
     return SearchResultDto.fromJson(normalized).toDomain();
   }
 
-  String _normalizeQuery(final String query) => query.trim().toLowerCase();
+  String _normalizeQuery(String query) => query.trim().toLowerCase();
 
   Future<void> _cleanupLegacyAndMalformed(
-    final Box<dynamic> box, {
-    required final String? fromFingerprint,
+    Box<dynamic> box, {
+    required String? fromFingerprint,
   }) async {
     // Cleanup only. Never clear the whole box.
     final List<String> queryKeys = box.keys
         .whereType<String>()
-        .where((final k) => k.startsWith(_keyPrefix))
+        .where((k) => k.startsWith(_keyPrefix))
         .toList(growable: false);
 
     for (final String key in queryKeys) {
@@ -181,7 +180,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
     }
   }
 
-  Future<bool> _canParseStored(final dynamic raw) async {
+  Future<bool> _canParseStored(dynamic raw) async {
     try {
       return await _parseStored(raw) != null;
     } on Exception {

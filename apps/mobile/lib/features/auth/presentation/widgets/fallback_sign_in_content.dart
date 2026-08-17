@@ -1,7 +1,7 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FallbackSignInContent extends StatelessWidget {
   const FallbackSignInContent({
@@ -20,7 +20,7 @@ class FallbackSignInContent extends StatelessWidget {
   final Future<void> Function() signInAnonymously;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final bool useCupertino = Theme.of(context).platform == TargetPlatform.iOS;
     final Widget content = Center(
       child: Padding(

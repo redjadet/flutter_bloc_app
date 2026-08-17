@@ -24,7 +24,7 @@ class RetryNotification {
 abstract class RetryNotificationService {
   Stream<RetryNotification> get notifications;
 
-  void notifyRetrying(final RetryNotification notification);
+  void notifyRetrying(RetryNotification notification);
 
   Future<void> dispose();
 }
@@ -37,7 +37,7 @@ class InMemoryRetryNotificationService implements RetryNotificationService {
   Stream<RetryNotification> get notifications => _controller.stream;
 
   @override
-  void notifyRetrying(final RetryNotification notification) {
+  void notifyRetrying(RetryNotification notification) {
     if (_controller.isClosed) return;
     _controller.add(notification);
   }

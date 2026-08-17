@@ -28,9 +28,9 @@ extension _IotDemoCubitDevices on IotDemoCubit {
   }
 
   Future<void> restartDevicesSubscriptionImpl({
-    required final IotDemoDeviceFilter filter,
-    final String? previousSelectedDeviceId,
-    final bool emitLoadingState = false,
+    required IotDemoDeviceFilter filter,
+    String? previousSelectedDeviceId,
+    bool emitLoadingState = false,
   }) async {
     final int requestId = ++_devicesWatchRequestId;
     if (emitLoadingState) {
@@ -45,28 +45,28 @@ extension _IotDemoCubitDevices on IotDemoCubit {
   }
 
   void subscribeToDevicesImpl(
-    final IotDemoDeviceFilter filter,
-    final String? previousSelectedDeviceId,
-    final int requestId,
+    IotDemoDeviceFilter filter,
+    String? previousSelectedDeviceId,
+    int requestId,
   ) {
     _devicesSubscription = registerSubscription(
       _repository.watchDevices().listen(
-        (final list) {
+        (list) {
           if (isClosed || requestId != _devicesWatchRequestId) return;
           _allDevices = List<IotDevice>.unmodifiable(list);
           final IotDemoDeviceFilter activeFilter =
-              state.mapOrNull(loaded: (final s) => s.filter) ?? filter;
+              state.mapOrNull(loaded: (s) => s.filter) ?? filter;
           emitIotState(
             buildLoadedStateImpl(
               devices: list,
               filter: activeFilter,
               selectedDeviceId:
-                  state.mapOrNull(loaded: (final s) => s.selectedDeviceId) ??
+                  state.mapOrNull(loaded: (s) => s.selectedDeviceId) ??
                   previousSelectedDeviceId,
             ),
           );
         },
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'IotDemoCubit watchDevices error',
             error,
@@ -86,14 +86,14 @@ extension _IotDemoCubitDevices on IotDemoCubit {
   }
 
   IotDemoState buildLoadedStateImpl({
-    required final List<IotDevice> devices,
-    required final IotDemoDeviceFilter filter,
-    required final String? selectedDeviceId,
+    required List<IotDevice> devices,
+    required IotDemoDeviceFilter filter,
+    required String? selectedDeviceId,
   }) {
     final List<IotDevice> filteredDevices = applyFilterImpl(devices, filter);
     final String? resolvedSelection =
         selectedDeviceId != null &&
-            filteredDevices.any((final d) => d.id == selectedDeviceId)
+            filteredDevices.any((d) => d.id == selectedDeviceId)
         ? selectedDeviceId
         : null;
     return IotDemoState.loaded(
@@ -104,16 +104,16 @@ extension _IotDemoCubitDevices on IotDemoCubit {
   }
 
   List<IotDevice> applyFilterImpl(
-    final List<IotDevice> devices,
-    final IotDemoDeviceFilter filter,
+    List<IotDevice> devices,
+    IotDemoDeviceFilter filter,
   ) {
     switch (filter) {
       case IotDemoDeviceFilter.all:
         return devices;
       case IotDemoDeviceFilter.toggledOnOnly:
-        return devices.where((final d) => d.toggledOn).toList();
+        return devices.where((d) => d.toggledOn).toList();
       case IotDemoDeviceFilter.toggledOffOnly:
-        return devices.where((final d) => !d.toggledOn).toList();
+        return devices.where((d) => !d.toggledOn).toList();
     }
   }
 }

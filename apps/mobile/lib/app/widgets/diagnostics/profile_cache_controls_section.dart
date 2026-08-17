@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/app/widgets/diagnostics/settings_diagnostics_widgets.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 class ProfileCacheControlsSection extends StatefulWidget {
@@ -103,7 +103,7 @@ class _ProfileCacheControlsSectionState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final double gap = context.responsiveGapS;
 
@@ -143,8 +143,8 @@ class _ProfileCacheControlsSectionState
   }
 
   String _formatMetadata(
-    final BuildContext context,
-    final ProfileCacheMetadata metadata,
+    BuildContext context,
+    ProfileCacheMetadata metadata,
   ) {
     final List<String> parts = <String>[];
     if (metadata.lastSyncedAt case final t?) {

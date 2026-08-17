@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
-import 'package:networking/networking.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 export 'test_helpers_firebase.dart';
 
@@ -32,7 +32,7 @@ class InMemoryRepository<T> {
     return _value;
   }
 
-  Future<void> save(final T value) async {
+  Future<void> save(T value) async {
     if (shouldThrowOnSave) {
       throw Exception('Mock save error');
     }
@@ -79,7 +79,7 @@ Future<void> waitForCounterCubitsToLoad(
     final List<Element> elements = counterPageFinder.evaluate().toList();
     if (elements.isNotEmpty) {
       sawCounterPage = true;
-      final bool allLoaded = elements.every((final element) {
+      final bool allLoaded = elements.every((element) {
         final CounterCubit cubit = element.read<CounterCubit>();
         return !cubit.state.isLoading;
       });
@@ -161,7 +161,7 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 
@@ -182,7 +182,7 @@ class FakePendingSyncRepository implements PendingSyncRepository {
   Stream<void> get onOperationEnqueued => const Stream<void>.empty();
 
   @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+  Future<SyncOperation> enqueue(SyncOperation operation) async {
     _operations.add(operation);
     return operation;
   }
@@ -201,7 +201,7 @@ class FakePendingSyncRepository implements PendingSyncRepository {
   }) async {
     Iterable<SyncOperation> out = _operations;
     if (supabaseUserIdFilter != null) {
-      out = out.where((final op) {
+      out = out.where((op) {
         if (op.entityType != 'iot_demo') {
           return true;
         }
@@ -214,29 +214,29 @@ class FakePendingSyncRepository implements PendingSyncRepository {
   }
 
   @override
-  Future<void> markCompleted(final String operationId) async {}
+  Future<void> markCompleted(String operationId) async {}
 
   @override
   Future<void> markFailed({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
+    required String operationId,
+    required DateTime nextRetryAt,
+    int? retryCount,
   }) async {}
 
   @override
   Future<void> clear() async => _operations.clear();
 
   @override
-  Future<int> clearEntityTypes(final Iterable<String> types) async {
+  Future<int> clearEntityTypes(Iterable<String> types) async {
     final Set<String> entityTypes = types
-        .where((final type) => type.isNotEmpty)
+        .where((type) => type.isNotEmpty)
         .toSet();
     if (entityTypes.isEmpty) {
       return 0;
     }
     final int before = _operations.length;
     _operations.removeWhere(
-      (final SyncOperation op) => entityTypes.contains(op.entityType),
+      (SyncOperation op) => entityTypes.contains(op.entityType),
     );
     return before - _operations.length;
   }
@@ -249,10 +249,9 @@ class FakePendingSyncRepository implements PendingSyncRepository {
       Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
 
   @override
-  Future<T> runWithBox<T>(
-    final Future<T> Function(Box<dynamic> box) action,
-  ) async => Future<T>.error(UnimplementedError('Not used in fake'));
+  Future<T> runWithBox<T>(Future<T> Function(Box<dynamic> box) action) async =>
+      Future<T>.error(UnimplementedError('Not used in fake'));
 
   @override
-  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
+  Future<void> safeDeleteKey(Box<dynamic> box, String key) async {}
 }

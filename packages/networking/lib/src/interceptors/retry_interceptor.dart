@@ -12,7 +12,7 @@ class RetryInterceptor extends Interceptor {
     required this._dio,
     required this._maxRetries,
     this._retryNotificationService,
-    final Future<void> Function(Duration delay)? waitForDelay,
+    Future<void> Function(Duration delay)? waitForDelay,
   }) : _waitForDelay = waitForDelay ?? Future<void>.delayed;
 
   final Dio _dio;
@@ -27,8 +27,8 @@ class RetryInterceptor extends Interceptor {
 
   @override
   Future<void> onResponse(
-    final Response<dynamic> response,
-    final ResponseInterceptorHandler handler,
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
   ) async {
     if (!_isTransientStatusCode(response.statusCode ?? 0)) {
       handler.next(response);
@@ -53,8 +53,8 @@ class RetryInterceptor extends Interceptor {
 
   @override
   Future<void> onError(
-    final DioException err,
-    final ErrorInterceptorHandler handler,
+    DioException err,
+    ErrorInterceptorHandler handler,
   ) async {
     if (!_canRetry(err)) {
       handler.next(err);
@@ -86,10 +86,10 @@ class _RetryResult {
 
   const _RetryResult.noRetry() : this._();
 
-  const _RetryResult.response(final Response<dynamic> response)
+  const _RetryResult.response(Response<dynamic> response)
     : this._(response: response);
 
-  const _RetryResult.error(final DioException error) : this._(error: error);
+  const _RetryResult.error(DioException error) : this._(error: error);
 
   final Response<dynamic>? response;
   final DioException? error;

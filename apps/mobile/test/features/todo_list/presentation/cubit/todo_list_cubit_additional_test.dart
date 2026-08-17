@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_helpers.dart';
@@ -17,7 +17,7 @@ void main() {
     late _FakeTodoRepository repository;
     late FakeTimerService timerService;
 
-    TodoListCubit buildCubit({final List<TodoItem>? initialItems}) {
+    TodoListCubit buildCubit({List<TodoItem>? initialItems}) {
       repository = _FakeTodoRepository(initialItems: initialItems);
       addTearDown(repository.dispose);
       timerService = FakeTimerService();
@@ -32,10 +32,10 @@ void main() {
         items: [],
         sortOrder: TodoSortOrder.dateDesc,
       ),
-      act: (final cubit) => cubit.setSortOrder(TodoSortOrder.titleAsc),
+      act: (cubit) => cubit.setSortOrder(TodoSortOrder.titleAsc),
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.sortOrder,
+          (s) => s.sortOrder,
           'sortOrder',
           TodoSortOrder.titleAsc,
         ),
@@ -50,7 +50,7 @@ void main() {
         items: [],
         sortOrder: TodoSortOrder.dateDesc,
       ),
-      act: (final cubit) => cubit.setSortOrder(TodoSortOrder.dateDesc),
+      act: (cubit) => cubit.setSortOrder(TodoSortOrder.dateDesc),
       expect: () => <TodoListState>[],
     );
 
@@ -62,13 +62,9 @@ void main() {
         items: [],
         searchQuery: 'old query',
       ),
-      act: (final cubit) => cubit.setSearchQuery(''),
+      act: (cubit) => cubit.setSearchQuery(''),
       expect: () => [
-        isA<TodoListState>().having(
-          (final s) => s.searchQuery,
-          'searchQuery',
-          '',
-        ),
+        isA<TodoListState>().having((s) => s.searchQuery, 'searchQuery', ''),
       ],
     );
 
@@ -80,13 +76,13 @@ void main() {
         items: [],
         searchQuery: '',
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.setSearchQuery('test');
         timerService.elapse(const Duration(milliseconds: 300));
       },
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.searchQuery,
+          (s) => s.searchQuery,
           'searchQuery',
           'test',
         ),
@@ -101,13 +97,13 @@ void main() {
         items: [],
         searchQuery: '',
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.setSearchQuery('  test  ');
         timerService.elapse(const Duration(milliseconds: 300));
       },
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.searchQuery,
+          (s) => s.searchQuery,
           'searchQuery',
           'test',
         ),
@@ -130,10 +126,10 @@ void main() {
         ],
         selectedItemIds: {},
       ),
-      act: (final cubit) => cubit.toggleItemSelection('a'),
+      act: (cubit) => cubit.toggleItemSelection('a'),
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.selectedItemIds.contains('a'),
+          (s) => s.selectedItemIds.contains('a'),
           'selectedItemIds contains a',
           isTrue,
         ),
@@ -150,10 +146,10 @@ void main() {
         items: [_todoItem(id: 'a', title: 'Task A')],
         selectedItemIds: {'a'},
       ),
-      act: (final cubit) => cubit.toggleItemSelection('a'),
+      act: (cubit) => cubit.toggleItemSelection('a'),
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.selectedItemIds.contains('a'),
+          (s) => s.selectedItemIds.contains('a'),
           'selectedItemIds contains a',
           isFalse,
         ),
@@ -170,7 +166,7 @@ void main() {
         items: [_todoItem(id: 'a', title: 'Task A')],
         selectedItemIds: {},
       ),
-      act: (final cubit) => cubit.toggleItemSelection('non_existent'),
+      act: (cubit) => cubit.toggleItemSelection('non_existent'),
       expect: () => <TodoListState>[],
     );
 
@@ -191,15 +187,15 @@ void main() {
         selectedItemIds: {},
         filter: TodoFilter.all,
       ),
-      act: (final cubit) => cubit.selectAllItems(),
+      act: (cubit) => cubit.selectAllItems(),
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.selectedItemIds.length,
+          (s) => s.selectedItemIds.length,
           'selectedItemIds length',
           2,
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.selectedItemIds, {'a', 'b'});
       },
     );
@@ -221,15 +217,15 @@ void main() {
         selectedItemIds: {},
         filter: TodoFilter.active,
       ),
-      act: (final cubit) => cubit.selectAllItems(),
+      act: (cubit) => cubit.selectAllItems(),
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.selectedItemIds.length,
+          (s) => s.selectedItemIds.length,
           'selectedItemIds length',
           1,
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.selectedItemIds, {'a'});
       },
     );
@@ -242,10 +238,10 @@ void main() {
         items: [],
         selectedItemIds: {'a', 'b', 'c'},
       ),
-      act: (final cubit) => cubit.clearSelection(),
+      act: (cubit) => cubit.clearSelection(),
       expect: () => [
         isA<TodoListState>().having(
-          (final s) => s.selectedItemIds.isEmpty,
+          (s) => s.selectedItemIds.isEmpty,
           'selectedItemIds isEmpty',
           isTrue,
         ),
@@ -270,20 +266,20 @@ void main() {
         ],
         selectedItemIds: {'a', 'b'},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.batchDeleteSelected();
       },
       expect: () => [
         // First delete (item 'a') - state with items [b, c], selection trimmed to {b}
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 2)
-            .having((final s) => s.selectedItemIds, 'selectedItemIds', {'b'}),
+            .having((s) => s.items.length, 'items length', 2)
+            .having((s) => s.selectedItemIds, 'selectedItemIds', {'b'}),
         // Second delete (item 'b') - state with items [c], selection cleared
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 1)
-            .having((final s) => s.items.first.id, 'remaining id', 'c')
+            .having((s) => s.items.length, 'items length', 1)
+            .having((s) => s.items.first.id, 'remaining id', 'c')
             .having(
-              (final s) => s.selectedItemIds.isEmpty,
+              (s) => s.selectedItemIds.isEmpty,
               'selectedItemIds isEmpty',
               isTrue,
             ),
@@ -308,49 +304,46 @@ void main() {
         ],
         selectedItemIds: {'a', 'b', 'c'},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.batchCompleteSelected();
       },
       expect: () => [
         // First toggle (item 'a') - 'a' completed, 'b' and 'c' unchanged, selection still {a, b, c}
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 3)
+            .having((s) => s.items.length, 'items length', 3)
             .having(
-              (final s) =>
-                  s.items.where((final item) => item.isCompleted).length,
+              (s) => s.items.where((item) => item.isCompleted).length,
               'completed count',
               2,
             )
-            .having((final s) => s.selectedItemIds, 'selectedItemIds', {
+            .having((s) => s.selectedItemIds, 'selectedItemIds', {
               'a',
               'b',
               'c',
             }),
         // Second toggle (item 'b') - 'a' and 'b' completed, 'c' unchanged, selection still {a, b, c}
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 3)
+            .having((s) => s.items.length, 'items length', 3)
             .having(
-              (final s) =>
-                  s.items.where((final item) => item.isCompleted).length,
+              (s) => s.items.where((item) => item.isCompleted).length,
               'completed count',
               3,
             )
-            .having((final s) => s.selectedItemIds, 'selectedItemIds', {
+            .having((s) => s.selectedItemIds, 'selectedItemIds', {
               'a',
               'b',
               'c',
             }),
         // Final state - selection cleared
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 3)
+            .having((s) => s.items.length, 'items length', 3)
             .having(
-              (final s) =>
-                  s.items.where((final item) => item.isCompleted).length,
+              (s) => s.items.where((item) => item.isCompleted).length,
               'completed count',
               3,
             )
             .having(
-              (final s) => s.selectedItemIds.isEmpty,
+              (s) => s.selectedItemIds.isEmpty,
               'selectedItemIds isEmpty',
               isTrue,
             ),
@@ -375,49 +368,46 @@ void main() {
         ],
         selectedItemIds: {'a', 'b', 'c'},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.batchUncompleteSelected();
       },
       expect: () => [
         // First toggle (item 'a') - 'a' uncompleted, 'b' and 'c' unchanged, selection still {a, b, c}
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 3)
+            .having((s) => s.items.length, 'items length', 3)
             .having(
-              (final s) =>
-                  s.items.where((final item) => item.isCompleted).length,
+              (s) => s.items.where((item) => item.isCompleted).length,
               'completed count',
               1,
             )
-            .having((final s) => s.selectedItemIds, 'selectedItemIds', {
+            .having((s) => s.selectedItemIds, 'selectedItemIds', {
               'a',
               'b',
               'c',
             }),
         // Second toggle (item 'b') - 'a' and 'b' uncompleted, 'c' unchanged, selection still {a, b, c}
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 3)
+            .having((s) => s.items.length, 'items length', 3)
             .having(
-              (final s) =>
-                  s.items.where((final item) => item.isCompleted).length,
+              (s) => s.items.where((item) => item.isCompleted).length,
               'completed count',
               0,
             )
-            .having((final s) => s.selectedItemIds, 'selectedItemIds', {
+            .having((s) => s.selectedItemIds, 'selectedItemIds', {
               'a',
               'b',
               'c',
             }),
         // Final state - selection cleared
         isA<TodoListState>()
-            .having((final s) => s.items.length, 'items length', 3)
+            .having((s) => s.items.length, 'items length', 3)
             .having(
-              (final s) =>
-                  s.items.where((final item) => item.isCompleted).length,
+              (s) => s.items.where((item) => item.isCompleted).length,
               'completed count',
               0,
             )
             .having(
-              (final s) => s.selectedItemIds.isEmpty,
+              (s) => s.selectedItemIds.isEmpty,
               'selectedItemIds isEmpty',
               isTrue,
             ),
@@ -434,20 +424,20 @@ void main() {
         items: [_todoItem(id: 'a', title: 'Task A')],
         selectedItemIds: {},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.deleteTodo(_todoItem(id: 'a', title: 'Task A'));
         await cubit.undoDelete();
       },
       expect: () => [
         // deleteTodo emits state with empty items
         isA<TodoListState>().having(
-          (final s) => s.items.isEmpty,
+          (s) => s.items.isEmpty,
           'items isEmpty',
           isTrue,
         ),
         // undoDelete restores the item
         isA<TodoListState>().having(
-          (final s) => s.items.length,
+          (s) => s.items.length,
           'items length',
           greaterThan(0),
         ),
@@ -462,7 +452,7 @@ void main() {
         items: [],
         selectedItemIds: {},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.undoDelete();
       },
       expect: () => <TodoListState>[],
@@ -478,7 +468,7 @@ void main() {
         items: [_todoItem(id: 'a', title: 'Task A')],
         selectedItemIds: {},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.batchDeleteSelected();
       },
       expect: () => <TodoListState>[],
@@ -517,7 +507,7 @@ void main() {
         sortOrder: TodoSortOrder.manual,
         manualOrder: const <String, int>{'a': 0, 'b': 1},
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.reorderItems(oldIndex: -1, newIndex: 0);
         cubit.reorderItems(oldIndex: 0, newIndex: -1);
         cubit.reorderItems(oldIndex: 10, newIndex: 0);
@@ -543,7 +533,7 @@ void main() {
         sortOrder: TodoSortOrder.manual,
         manualOrder: const <String, int>{'a': 0, 'b': 1},
       ),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.close();
         cubit.reorderItems(oldIndex: 0, newIndex: 1);
       },
@@ -566,22 +556,14 @@ void main() {
         ],
         sortOrder: TodoSortOrder.dateDesc,
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.reorderItems(oldIndex: 0, newIndex: 1);
       },
       expect: () => [
         isA<TodoListState>()
-            .having((final s) => s.sortOrder, 'sortOrder', TodoSortOrder.manual)
-            .having(
-              (final s) => s.manualOrder.containsKey('a'),
-              'has a',
-              isTrue,
-            )
-            .having(
-              (final s) => s.manualOrder.containsKey('b'),
-              'has b',
-              isTrue,
-            ),
+            .having((s) => s.sortOrder, 'sortOrder', TodoSortOrder.manual)
+            .having((s) => s.manualOrder.containsKey('a'), 'has a', isTrue)
+            .having((s) => s.manualOrder.containsKey('b'), 'has b', isTrue),
       ],
     );
 
@@ -614,7 +596,7 @@ void main() {
 
       // Manual order should be preserved (a should be last)
       final List<String> orderedIds = cubit.state.filteredItems
-          .map((final item) => item.id)
+          .map((item) => item.id)
           .toList();
       expect(orderedIds.last, 'c');
     });
@@ -698,12 +680,12 @@ class _ErrorTodoRepository
   }
 
   @override
-  Future<void> save(final TodoItem item) async {
+  Future<void> save(TodoItem item) async {
     throw Exception('Test error');
   }
 
   @override
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     throw Exception('Test error');
   }
 
@@ -716,7 +698,7 @@ class _ErrorTodoRepository
 class _FakeTodoRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
-  _FakeTodoRepository({final List<TodoItem>? initialItems})
+  _FakeTodoRepository({List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(
       onListen: _emitCurrent,
@@ -733,10 +715,8 @@ class _FakeTodoRepository
   Future<List<TodoItem>> fetchAll() async => _snapshot();
 
   @override
-  Future<void> save(final TodoItem item) async {
-    final int index = _items.indexWhere(
-      (final current) => current.id == item.id,
-    );
+  Future<void> save(TodoItem item) async {
+    final int index = _items.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       _items.add(item);
     } else {
@@ -746,14 +726,14 @@ class _FakeTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final item) => item.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((item) => item.id == id);
     _emitCurrent();
   }
 
   @override
   Future<void> clearCompleted() async {
-    _items.removeWhere((final item) => item.isCompleted);
+    _items.removeWhere((item) => item.isCompleted);
     _emitCurrent();
   }
 
@@ -774,9 +754,9 @@ class _FakeTodoRepository
 }
 
 TodoItem _todoItem({
-  required final String id,
-  required final String title,
-  final bool isCompleted = false,
+  required String id,
+  required String title,
+  bool isCompleted = false,
 }) {
   final DateTime now = DateTime.utc(2024, 1, 1, 10);
   return TodoItem(
@@ -790,10 +770,10 @@ TodoItem _todoItem({
 }
 
 TodoItem _todoItemWithTime({
-  required final String id,
-  required final String title,
-  required final DateTime time,
-  final bool isCompleted = false,
+  required String id,
+  required String title,
+  required DateTime time,
+  bool isCompleted = false,
 }) {
   return TodoItem(
     id: id,

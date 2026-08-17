@@ -4,7 +4,7 @@ class _GameScaffold extends StatelessWidget {
   const _GameScaffold();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: context.pagePadding,
       child: Column(
@@ -30,7 +30,7 @@ class _GameBalanceCard extends StatelessWidget {
   const _GameBalanceCard();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final balance = context.selectState<GameCubit, GameState, DemoBalance?>(
@@ -73,7 +73,7 @@ class _StakeSection extends StatelessWidget {
   const _StakeSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final cubit = context.cubit<GameCubit>();
@@ -83,7 +83,7 @@ class _StakeSection extends StatelessWidget {
           GameState,
           ({int? selectedStake, bool isSpinning})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             selectedStake: state.selectedStakeOrNull,
             isSpinning: _isSpinning(state),
           ),
@@ -108,7 +108,7 @@ class _StakeSection extends StatelessWidget {
           spacing: context.responsiveGapS,
           runSpacing: context.responsiveGapS,
           children: _stakeOptions
-              .map((final amount) {
+              .map((amount) {
                 final bool selected = selectedStake == amount;
                 return ChoiceChip(
                   label: Text('$amount'),
@@ -129,7 +129,7 @@ class _GameLegendSection extends StatelessWidget {
   const _GameLegendSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
 
@@ -154,7 +154,7 @@ class _GameLegendSection extends StatelessWidget {
           spacing: context.responsiveGapM,
           runSpacing: context.responsiveGapS,
           children: kSlotReelSymbols
-              .map((final symbol) {
+              .map((symbol) {
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -185,7 +185,7 @@ class _SpinDisplaySection extends StatelessWidget {
   const _SpinDisplaySection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final spinState = context
         .selectState<
           GameCubit,
@@ -196,7 +196,7 @@ class _SpinDisplaySection extends StatelessWidget {
             List<int> targetReelSymbolIndices,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isSpinning: _isSpinning(state),
             result: _roundResult(state),
             targetReelSymbolIndices: state.targetReelSymbolIndicesOrEmpty,
@@ -229,7 +229,7 @@ class _PrimaryActionSection extends StatelessWidget {
   const _PrimaryActionSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final cubit = context.cubit<GameCubit>();
     final isSpinning = context.selectState<GameCubit, GameState, bool>(
@@ -247,7 +247,7 @@ class _ResultSummarySection extends StatelessWidget {
   const _ResultSummarySection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final cubit = context.cubit<GameCubit>();
@@ -257,7 +257,7 @@ class _ResultSummarySection extends StatelessWidget {
           GameState,
           ({GameRoundResult? result, DemoBalance? balance})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             result: _roundResult(state),
             balance: _displayBalance(state),
           ),

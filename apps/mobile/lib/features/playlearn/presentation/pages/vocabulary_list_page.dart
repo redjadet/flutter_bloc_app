@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn
 import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn_state.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/widgets/word_card.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Vocabulary list page (tap-to-hear words) for a topic.
 class VocabularyListPage extends StatelessWidget {
@@ -25,10 +25,10 @@ class VocabularyListPage extends StatelessWidget {
   final AudioPlaybackService audioService;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return BlocProvider(
-      create: (final _) => PlaylearnCubit(
+      create: (_) => PlaylearnCubit(
         repository: repository,
         audioService: audioService,
         l10n: l10n,
@@ -36,14 +36,14 @@ class VocabularyListPage extends StatelessWidget {
       child: CommonPageLayout(
         title: l10n.playlearnTitle,
         body: Builder(
-          builder: (final context) {
+          builder: (context) {
             final viewState = context
                 .selectState<
                   PlaylearnCubit,
                   PlaylearnState,
                   ({bool isLoading, List<VocabularyItem> words})
                 >(
-                  selector: (final state) => (
+                  selector: (state) => (
                     isLoading: state.isLoading,
                     words: state.words,
                   ),
@@ -54,7 +54,7 @@ class VocabularyListPage extends StatelessWidget {
             final words = List.of(viewState.words, growable: false);
             return ListView.builder(
               itemCount: words.length,
-              itemBuilder: (final context, final index) {
+              itemBuilder: (context, index) {
                 if (index >= words.length) {
                   return const SizedBox.shrink();
                 }

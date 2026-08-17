@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_sync_queue_inspector_sheet.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Dev/QA control to inspect counter pending-sync queue entries.
 ///
@@ -63,7 +63,7 @@ class _CounterSyncQueueInspectorButtonState
   }
 
   @override
-  void didUpdateWidget(final CounterSyncQueueInspectorButton oldWidget) {
+  void didUpdateWidget(CounterSyncQueueInspectorButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.repository != null &&
         widget.repository != oldWidget.repository) {
@@ -91,7 +91,7 @@ class _CounterSyncQueueInspectorButtonState
       (_) {
         unawaited(_refreshRepositoryPendingCount());
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'CounterSyncQueueInspectorButton enqueue stream error',
           error,
@@ -114,7 +114,7 @@ class _CounterSyncQueueInspectorButtonState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!kShowPendingSyncQueueUi) {
       return const SizedBox.shrink();
     }
@@ -130,7 +130,7 @@ class _CounterSyncQueueInspectorButtonState
     }
 
     return TypeSafeBlocListener<SyncStatusCubit, SyncStatusState>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (widget.repository != null) {
           // check-ignore: listener callback is event-driven, not a build side effect
           unawaited(_refreshRepositoryPendingCount());
@@ -148,7 +148,7 @@ class _CounterSyncQueueInspectorButtonState
     );
   }
 
-  Widget _buildRepositoryBacked(final BuildContext context) {
+  Widget _buildRepositoryBacked(BuildContext context) {
     final int pendingCount = _repositoryPendingCount ?? 0;
     if (_repositoryPendingCount == null || pendingCount == 0) {
       return const SizedBox.shrink();
@@ -156,13 +156,13 @@ class _CounterSyncQueueInspectorButtonState
     return _inspectorButton(context);
   }
 
-  Widget _buildCubitBacked(final BuildContext context) {
+  Widget _buildCubitBacked(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(context)) {
       return const SizedBox.shrink();
     }
 
     return TypeSafeBlocBuilder<CounterCubit, CounterState>(
-      builder: (final context, final counterState) {
+      builder: (context, counterState) {
         if (counterState.pendingSyncCount == 0) {
           return const SizedBox.shrink();
         }
@@ -171,7 +171,7 @@ class _CounterSyncQueueInspectorButtonState
     );
   }
 
-  Widget _inspectorButton(final BuildContext context) => Align(
+  Widget _inspectorButton(BuildContext context) => Align(
     alignment: AlignmentDirectional.centerEnd,
     child: Semantics(
       button: true,
@@ -185,8 +185,8 @@ class _CounterSyncQueueInspectorButtonState
   );
 
   Future<void> _showInspector(
-    final BuildContext context,
-    final AppLocalizations l10n,
+    BuildContext context,
+    AppLocalizations l10n,
   ) async {
     final List<CounterSyncQueueEntry> entries;
     if (widget.repository case final CounterSyncDiagnosticsPort repository) {
@@ -199,7 +199,7 @@ class _CounterSyncQueueInspectorButtonState
     }
     await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
-      builder: (final sheetContext) => CounterSyncQueueInspectorSheet(
+      builder: (sheetContext) => CounterSyncQueueInspectorSheet(
         entries: entries,
         l10n: l10n,
       ),

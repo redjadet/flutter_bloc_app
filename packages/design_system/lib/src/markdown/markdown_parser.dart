@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:material_ui/material_ui.dart';
 
 import 'markdown_table_renderer.dart';
 
@@ -11,7 +11,7 @@ class MarkdownParser {
 
   final md.Document _document;
 
-  TextSpan buildTextSpan(final String text, final TextStyle baseStyle) {
+  TextSpan buildTextSpan(String text, TextStyle baseStyle) {
     if (text.isEmpty) {
       return TextSpan(text: '', style: baseStyle);
     }
@@ -26,10 +26,7 @@ class MarkdownParser {
     return TextSpan(style: baseStyle, children: _trimTrailingBreaks(spans));
   }
 
-  List<InlineSpan> _buildNodeSpans(
-    final md.Node node,
-    final TextStyle currentStyle,
-  ) {
+  List<InlineSpan> _buildNodeSpans(md.Node node, TextStyle currentStyle) {
     if (node is md.Text) {
       return <InlineSpan>[
         TextSpan(text: _decodeHtmlEntities(node.text), style: currentStyle),
@@ -106,7 +103,7 @@ class MarkdownParser {
     }
   }
 
-  TextStyle? _styleForTag(final String? tag, final TextStyle baseStyle) {
+  TextStyle? _styleForTag(String? tag, TextStyle baseStyle) {
     switch (tag) {
       case 'h1':
         return baseStyle.copyWith(
@@ -154,7 +151,7 @@ class MarkdownParser {
     }
   }
 
-  List<InlineSpan> _trimTrailingBreaks(final List<InlineSpan> spans) {
+  List<InlineSpan> _trimTrailingBreaks(List<InlineSpan> spans) {
     final List<InlineSpan> result = List<InlineSpan>.from(spans);
     while (result.isNotEmpty) {
       final InlineSpan last = result.last;
@@ -175,7 +172,7 @@ class MarkdownParser {
     return result;
   }
 
-  String _decodeHtmlEntities(final String input) => input
+  String _decodeHtmlEntities(String input) => input
       .replaceAll('&quot;', '"')
       .replaceAll('&apos;', "'")
       .replaceAll('&amp;', '&')

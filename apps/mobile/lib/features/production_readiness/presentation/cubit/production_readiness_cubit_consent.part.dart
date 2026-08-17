@@ -1,7 +1,7 @@
 part of 'production_readiness_cubit.dart';
 
 mixin _ProductionReadinessCubitConsent on _ProductionReadinessCubitBase {
-  Future<void> setAnalyticsConsent({required final bool enabled}) async {
+  Future<void> setAnalyticsConsent({required bool enabled}) async {
     final bool saved = await _consentRepository.save(enabled: enabled);
     if (!saved) {
       return;
@@ -22,20 +22,20 @@ mixin _ProductionReadinessCubitConsent on _ProductionReadinessCubitBase {
   void _subscribeToConsentChanges() {
     registerSubscription(
       _consentRepository.changes.listen(
-        (final enabled) {
+        (enabled) {
           if (isClosed) {
             return;
           }
           unawaited(_applyExternalConsent(enabled: enabled));
         },
-        onError: (final Object _, final StackTrace _) {
+        onError: (Object _, StackTrace _) {
           // Consent stream errors are non-fatal; keep last known toggle state.
         },
       ),
     );
   }
 
-  Future<void> _applyExternalConsent({required final bool enabled}) async {
+  Future<void> _applyExternalConsent({required bool enabled}) async {
     await _analytics.setCollectionEnabled(enabled: enabled);
     if (isClosed || state.analyticsConsentEnabled == enabled) {
       return;

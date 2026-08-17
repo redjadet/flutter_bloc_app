@@ -14,8 +14,8 @@ class _ThrowingLoginTherapyAuthRepository implements TherapyAuthRepository {
 
   @override
   Future<TherapyUser> login({
-    required final String email,
-    required final TherapyRole role,
+    required String email,
+    required TherapyRole role,
   }) async {
     throw StateError('network');
   }
@@ -26,7 +26,7 @@ class _ThrowingLoginTherapyAuthRepository implements TherapyAuthRepository {
   }
 }
 
-TherapyUser _sampleUser(final TherapyRole role) => TherapyUser(
+TherapyUser _sampleUser(TherapyRole role) => TherapyUser(
   id: 'u1',
   role: role,
   displayName: 'Demo',

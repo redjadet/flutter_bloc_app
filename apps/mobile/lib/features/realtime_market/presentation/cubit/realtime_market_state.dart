@@ -9,10 +9,10 @@ enum RealtimeMarketSideTab { bids, asks }
 @freezed
 abstract class RealtimeMarketState with _$RealtimeMarketState {
   const factory RealtimeMarketState({
-    required final String pairId,
-    final MarketFeedSnapshot? snapshot,
-    @Default(false) final bool bootstrapComplete,
-    final String? loadErrorMessage,
-    @Default(RealtimeMarketSideTab.bids) final RealtimeMarketSideTab sideTab,
+    required String pairId,
+    MarketFeedSnapshot? snapshot,
+    @Default(false) bool bootstrapComplete,
+    String? loadErrorMessage,
+    @Default(RealtimeMarketSideTab.bids) RealtimeMarketSideTab sideTab,
   }) = _RealtimeMarketState;
 }

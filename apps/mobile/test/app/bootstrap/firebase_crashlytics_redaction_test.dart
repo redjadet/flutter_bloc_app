@@ -32,15 +32,15 @@ void main() {
     String? recordedReason;
     var recordedFatal = false;
 
-    FirebaseCrashlyticsBootstrap.setCustomKey = (final key, final value) {
+    FirebaseCrashlyticsBootstrap.setCustomKey = (key, value) {
       written[key] = value;
     };
     FirebaseCrashlyticsBootstrap.recordCrash =
         (
-          final exception,
-          final stack, {
-          required final bool fatal,
-          required final String reason,
+          exception,
+          stack, {
+          required bool fatal,
+          required String reason,
         }) async {
           recordedException = exception;
           recordedStack = stack;

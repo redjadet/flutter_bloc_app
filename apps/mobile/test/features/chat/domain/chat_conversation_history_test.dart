@@ -9,9 +9,9 @@ void main() {
   final DateTime t3 = DateTime.utc(2026, 1, 3);
 
   ChatConversation conversation({
-    required final String id,
-    required final DateTime updatedAt,
-    final List<ChatMessage> messages = const <ChatMessage>[],
+    required String id,
+    required DateTime updatedAt,
+    List<ChatMessage> messages = const <ChatMessage>[],
   }) => ChatConversation(
     id: id,
     createdAt: updatedAt,
@@ -21,14 +21,15 @@ void main() {
 
   group('sortChatConversationHistory', () {
     test('orders by updatedAt descending', () {
-      final List<ChatConversation> sorted =
-          sortChatConversationHistory(<ChatConversation>[
-            conversation(id: 'a', updatedAt: t1),
-            conversation(id: 'c', updatedAt: t3),
-            conversation(id: 'b', updatedAt: t2),
-          ]);
+      final List<ChatConversation> sorted = sortChatConversationHistory(
+        <ChatConversation>[
+          conversation(id: 'a', updatedAt: t1),
+          conversation(id: 'c', updatedAt: t3),
+          conversation(id: 'b', updatedAt: t2),
+        ],
+      );
 
-      expect(sorted.map((final c) => c.id), <String>['c', 'b', 'a']);
+      expect(sorted.map((c) => c.id), <String>['c', 'b', 'a']);
     });
   });
 
@@ -60,7 +61,7 @@ void main() {
         history: <ChatConversation>[conversation(id: 'old', updatedAt: t1)],
       );
 
-      expect(history.map((final c) => c.id), <String>['new', 'old']);
+      expect(history.map((c) => c.id), <String>['new', 'old']);
     });
 
     test('updates existing conversation in place', () {
@@ -99,7 +100,7 @@ void main() {
         ],
       );
 
-      expect(history.map((final c) => c.id), <String>['b']);
+      expect(history.map((c) => c.id), <String>['b']);
     });
   });
 }

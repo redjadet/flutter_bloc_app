@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_helper.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
@@ -123,44 +124,43 @@ class HiveCounterRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async =>
-      StorageGuard.run<void>(
-        logContext: 'HiveCounterRepository.save',
-        action: () async {
-          final Box<dynamic> box = await getBox();
-          final CounterSnapshot normalized =
-              HiveCounterRepositoryHelpers.normalizeSnapshot(
-                snapshot,
-                _emptySnapshot,
-                _localUserId,
-              );
+  Future<void> save(CounterSnapshot snapshot) async => StorageGuard.run<void>(
+    logContext: 'HiveCounterRepository.save',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      final CounterSnapshot normalized =
+          HiveCounterRepositoryHelpers.normalizeSnapshot(
+            snapshot,
+            _emptySnapshot,
+            _localUserId,
+          );
 
-          await box.put(_keyCount, normalized.count);
-          if (normalized.lastChanged case final d?) {
-            await box.put(_keyChanged, d.millisecondsSinceEpoch);
-          } else {
-            await box.delete(_keyChanged);
-          }
-          if (normalized.changeId case final id?) {
-            if (id.isNotEmpty) {
-              await box.put(_keyChangeId, id);
-            } else {
-              await box.delete(_keyChangeId);
-            }
-          } else {
-            await box.delete(_keyChangeId);
-          }
-          if (normalized.lastSyncedAt case final t?) {
-            await box.put(_keyLastSynced, t.millisecondsSinceEpoch);
-          } else {
-            await box.delete(_keyLastSynced);
-          }
-          await box.put(_keySynchronized, normalized.synchronized);
-          await box.put(_keyUserId, normalized.userId ?? _localUserId);
+      await box.put(_keyCount, normalized.count);
+      if (normalized.lastChanged case final d?) {
+        await box.put(_keyChanged, d.millisecondsSinceEpoch);
+      } else {
+        await box.delete(_keyChanged);
+      }
+      if (normalized.changeId case final id?) {
+        if (id.isNotEmpty) {
+          await box.put(_keyChangeId, id);
+        } else {
+          await box.delete(_keyChangeId);
+        }
+      } else {
+        await box.delete(_keyChangeId);
+      }
+      if (normalized.lastSyncedAt case final t?) {
+        await box.put(_keyLastSynced, t.millisecondsSinceEpoch);
+      } else {
+        await box.delete(_keyLastSynced);
+      }
+      await box.put(_keySynchronized, normalized.synchronized);
+      await box.put(_keyUserId, normalized.userId ?? _localUserId);
 
-          _watchHelper.emitSnapshot(normalized);
-        },
-      );
+      _watchHelper.emitSnapshot(normalized);
+    },
+  );
 
   @override
   Stream<CounterSnapshot> watch() {

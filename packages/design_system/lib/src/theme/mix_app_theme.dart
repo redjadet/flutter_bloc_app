@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 import '../tokens/layout_breakpoints.dart';
@@ -94,7 +94,7 @@ class AppMaterialColorTokens {
 /// Wraps [child] with a [MixScope] configured for this app.
 ///
 /// Call from inside `MaterialApp.builder` so [Theme] and [UI] are available.
-Widget buildAppMixScope(final BuildContext context, {required Widget child}) {
+Widget buildAppMixScope(BuildContext context, {required Widget child}) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
   final textTheme = theme.textTheme;

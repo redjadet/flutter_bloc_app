@@ -4,7 +4,7 @@ mixin _MockBleRepositoryScan on _MockBleRepositoryBase {
   Stream<List<BleDiscoveredDevice>> watchScanResults() =>
       _scanController.stream;
 
-  Future<Result<void>> startScan({final Duration? timeout}) async {
+  Future<Result<void>> startScan({Duration? timeout}) async {
     if (_scanning) {
       return const Success<void>(null);
     }
@@ -36,11 +36,11 @@ mixin _MockBleRepositoryScan on _MockBleRepositoryBase {
     _scanTimeoutHandle = null;
   }
 
-  Stream<BleConnectionPhase> watchConnection(final String deviceId) {
+  Stream<BleConnectionPhase> watchConnection(String deviceId) {
     return _connectionController(deviceId).stream;
   }
 
-  Future<Result<void>> connect(final String deviceId) async {
+  Future<Result<void>> connect(String deviceId) async {
     if (MockBleDeviceCatalog.profileForId(deviceId) == null) {
       return const FailureResult<void>(
         UnknownFailure(message: 'device_not_found'),

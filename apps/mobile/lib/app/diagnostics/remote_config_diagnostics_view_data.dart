@@ -10,12 +10,12 @@ enum RemoteConfigDiagnosticsStatus { idle, loading, loaded, error }
 abstract class RemoteConfigDiagnosticsViewData
     with _$RemoteConfigDiagnosticsViewData {
   const factory RemoteConfigDiagnosticsViewData({
-    required final RemoteConfigDiagnosticsStatus status,
-    final String? errorMessage,
-    @Default(false) final bool isAwesomeFeatureEnabled,
-    final String? testValue,
-    final String? dataSource,
-    final DateTime? lastSyncedAt,
+    required RemoteConfigDiagnosticsStatus status,
+    String? errorMessage,
+    @Default(false) bool isAwesomeFeatureEnabled,
+    String? testValue,
+    String? dataSource,
+    DateTime? lastSyncedAt,
   }) = _RemoteConfigDiagnosticsViewData;
 
   const RemoteConfigDiagnosticsViewData._();

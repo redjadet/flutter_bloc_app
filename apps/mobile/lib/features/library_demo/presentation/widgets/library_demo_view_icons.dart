@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Grid view icon matching EPOCH design
 class LibraryGridViewIcon extends StatelessWidget {
@@ -8,7 +8,7 @@ class LibraryGridViewIcon extends StatelessWidget {
   final bool isActive;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final String assetPath = isActive
         ? 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_grid_view_icon_selected.svg'
         : 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_grid_view_icon.svg';
@@ -31,7 +31,7 @@ class LibraryListViewIcon extends StatelessWidget {
   final bool isActive;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final String assetPath = isActive
         ? 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon.svg'
         : 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon_inactive.svg';

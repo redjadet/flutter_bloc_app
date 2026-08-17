@@ -7,11 +7,11 @@ part 'playlearn_state.freezed.dart';
 @freezed
 abstract class PlaylearnState with _$PlaylearnState {
   const factory PlaylearnState({
-    @Default(<TopicItem>[]) final List<TopicItem> topics,
-    final String? selectedTopicId,
-    @Default(<VocabularyItem>[]) final List<VocabularyItem> words,
-    @Default(false) final bool isLoading,
-    final String? errorMessage,
+    @Default(<TopicItem>[]) List<TopicItem> topics,
+    String? selectedTopicId,
+    @Default(<VocabularyItem>[]) List<VocabularyItem> words,
+    @Default(false) bool isLoading,
+    String? errorMessage,
   }) = _PlaylearnState;
 
   const PlaylearnState._();

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/bootstrap/app_version_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
@@ -16,6 +15,7 @@ import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:storage/storage.dart';
 
 part 'bootstrap_coordinator_backends.part.dart';
@@ -33,10 +33,9 @@ class BootstrapCoordinator {
   static Future<void> Function({
     required bool allowAssetFallback,
   })
-  loadSecrets =
-      ({
-        required final allowAssetFallback,
-      }) => SecretConfig.load(allowAssetFallback: allowAssetFallback);
+  loadSecrets = ({
+    required allowAssetFallback,
+  }) => SecretConfig.load(allowAssetFallback: allowAssetFallback);
 
   @visibleForTesting
   static Future<void> Function() loadAppVersion =
@@ -105,7 +104,7 @@ class BootstrapCoordinator {
       BackendAvailabilityUpdates.instance.notifyUpdated;
 
   /// Run the complete application bootstrap with the given flavor
-  static Future<void> bootstrapApp(final Flavor flavor) async {
+  static Future<void> bootstrapApp(Flavor flavor) async {
     ensureBindingInitialized();
     FlavorManager.current = flavor;
 
@@ -134,10 +133,9 @@ class BootstrapCoordinator {
   static void resetForTest() {
     ensureBindingInitialized = WidgetsFlutterBinding.ensureInitialized;
     initializePlatform = PlatformInit.initialize;
-    loadSecrets =
-        ({
-          required final allowAssetFallback,
-        }) => SecretConfig.load(allowAssetFallback: allowAssetFallback);
+    loadSecrets = ({
+      required allowAssetFallback,
+    }) => SecretConfig.load(allowAssetFallback: allowAssetFallback);
     loadAppVersion = AppVersionService.loadAppVersion;
     initializeFirebase = FirebaseBootstrapService.initializeFirebase;
     configureFirebaseUi = FirebaseBootstrapService.configureFirebaseUI;

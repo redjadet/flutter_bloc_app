@@ -9,7 +9,7 @@ class _PreviewSection extends StatelessWidget {
   final ThemeData theme;
   final ColorScheme colors;
 
-  Widget _buildEmptyPreview(final BuildContext context) {
+  Widget _buildEmptyPreview(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -33,17 +33,17 @@ class _PreviewSection extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TypeSafeBlocSelector<
       CameraGalleryCubit,
       CameraGalleryState,
       _PreviewViewData
     >(
-      selector: (final state) => _PreviewViewData(
+      selector: (state) => _PreviewViewData(
         isLoading: state.isLoading,
         imagePath: state.imagePath,
       ),
-      builder: (final context, final preview) {
+      builder: (context, preview) {
         return _PreviewContainer(
           colors: colors,
           child: switch (preview) {
@@ -70,7 +70,7 @@ class _PreviewContainer extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Semantics(
       container: true,
       child: Container(
@@ -93,7 +93,7 @@ class _PreviewLoadingState extends StatelessWidget {
   final ColorScheme colors;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
         width: context.responsiveIconSize * 2,
@@ -125,14 +125,14 @@ class _PreviewImageState extends State<_PreviewImage> {
   }
 
   @override
-  void didUpdateWidget(covariant final _PreviewImage oldWidget) {
+  void didUpdateWidget(covariant _PreviewImage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.path != widget.path) {
       _syncDecodedBytes(widget.path);
     }
   }
 
-  void _syncDecodedBytes(final String path) {
+  void _syncDecodedBytes(String path) {
     if (!path.startsWith('data:')) {
       _decodedPath = path;
       _dataUrlBytes = null;
@@ -153,7 +153,7 @@ class _PreviewImageState extends State<_PreviewImage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final String path = widget.path;
     if (path.startsWith('data:')) {
       final Uint8List? bytes = path == _decodedPath ? _dataUrlBytes : null;
@@ -171,9 +171,9 @@ class _PreviewImageState extends State<_PreviewImage> {
       fit: BoxFit.contain,
       errorBuilder:
           (
-            final BuildContext _,
-            final Object error,
-            final StackTrace? stackTrace,
+            BuildContext _,
+            Object error,
+            StackTrace? stackTrace,
           ) {
             AppLogger.error(
               'CameraGalleryPage.imagePreviewLoad',
@@ -190,18 +190,18 @@ class _ProcessingControls extends StatelessWidget {
   const _ProcessingControls();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TypeSafeBlocSelector<
       CameraGalleryCubit,
       CameraGalleryState,
       _ProcessingViewData
     >(
-      selector: (final state) => _ProcessingViewData(
+      selector: (state) => _ProcessingViewData(
         canProcess: state.canProcess,
         isLoading: state.isLoading,
         selectedFilter: state.selectedFilter,
       ),
-      builder: (final context, final data) {
+      builder: (context, data) {
         if (!data.canProcess) return const SizedBox.shrink();
         final AppLocalizations l10n = context.l10n;
         return Semantics(
@@ -244,8 +244,8 @@ class _ProcessingControls extends StatelessWidget {
   }
 
   static String _labelFor(
-    final AppLocalizations l10n,
-    final ImageProcessingFilter filter,
+    AppLocalizations l10n,
+    ImageProcessingFilter filter,
   ) => switch (filter) {
     ImageProcessingFilter.original => l10n.cameraGalleryFilterOriginal,
     ImageProcessingFilter.grayscale => l10n.cameraGalleryFilterGrayscale,
@@ -270,11 +270,11 @@ class _ActionButtons extends StatelessWidget {
   const _ActionButtons();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
     return TypeSafeBlocSelector<CameraGalleryCubit, CameraGalleryState, bool>(
-      selector: (final state) => state.isLoading,
-      builder: (final context, final loading) {
+      selector: (state) => state.isLoading,
+      builder: (context, loading) {
         return Column(
           children: [
             PlatformAdaptive.filledButton(
@@ -319,14 +319,14 @@ class _ErrorSection extends StatelessWidget {
   final ColorScheme colors;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TypeSafeBlocSelector<
       CameraGalleryCubit,
       CameraGalleryState,
       String?
     >(
-      selector: (final s) => s.errorKey,
-      builder: (final context, final errorKey) {
+      selector: (s) => s.errorKey,
+      builder: (context, errorKey) {
         if (errorKey == null || errorKey.isEmpty) {
           return const SizedBox.shrink();
         }
@@ -346,8 +346,8 @@ class _ErrorSection extends StatelessWidget {
   }
 
   static String _errorKeyToMessage(
-    final AppLocalizations l10n,
-    final String key,
+    AppLocalizations l10n,
+    String key,
   ) {
     switch (key) {
       case CameraGalleryErrorKeys.permissionDenied:

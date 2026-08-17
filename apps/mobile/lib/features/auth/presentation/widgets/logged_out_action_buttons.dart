@@ -1,11 +1,11 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Border radius for auth action buttons (scaled by layout).
-double _authButtonRadius(final double scale) => UI.radiusS * scale * 0.75;
+double _authButtonRadius(double scale) => UI.radiusS * scale * 0.75;
 
 class LoggedOutActionButtons extends StatelessWidget {
   const LoggedOutActionButtons({
@@ -18,7 +18,7 @@ class LoggedOutActionButtons extends StatelessWidget {
   final double verticalScale;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final String signInLabel = context.l10n.accountSignInButton.toUpperCase();
     final String registerLabel = context.l10n.registerTitle.toUpperCase();
@@ -66,7 +66,7 @@ class _LoggedOutActionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
     height: double.infinity,
     child: border != null
         ? PlatformAdaptive.outlinedButton(

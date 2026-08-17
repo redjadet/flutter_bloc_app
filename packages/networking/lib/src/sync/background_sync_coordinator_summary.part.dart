@@ -21,7 +21,7 @@ extension _BackgroundSyncCoordinatorSummary on BackgroundSyncCoordinator {
     _publishSummary(enriched);
   }
 
-  void _emit(final SyncStatus status) {
+  void _emit(SyncStatus status) {
     if (_currentStatus == status) {
       return;
     }
@@ -29,7 +29,7 @@ extension _BackgroundSyncCoordinatorSummary on BackgroundSyncCoordinator {
     StreamControllerSafeEmit.safeAdd(_statusController, status);
   }
 
-  void _publishSummary(final SyncCycleSummary summary) {
+  void _publishSummary(SyncCycleSummary summary) {
     _latestSummary = summary;
     _history.add(summary);
     if (_history.length > _maxHistory) {

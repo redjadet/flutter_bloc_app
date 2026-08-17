@@ -6,9 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/http/app_dio.dart';
 import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 class _MockUser extends Mock implements User {}
 
@@ -18,7 +18,7 @@ class _MockIdTokenResult extends Mock implements IdTokenResult {}
 
 class _TestNetworkStatusService implements NetworkStatusService {
   _TestNetworkStatusService({
-    final Iterable<NetworkStatus> statuses = const <NetworkStatus>[],
+    Iterable<NetworkStatus> statuses = const <NetworkStatus>[],
   }) : _fallbackStatus = NetworkStatus.online,
        _statuses = Queue<NetworkStatus>.from(statuses);
 
@@ -54,13 +54,13 @@ class _SequenceAdapter implements HttpClientAdapter {
 
   @override
   Future<ResponseBody> fetch(
-    final RequestOptions options,
-    final Stream<List<int>>? requestStream,
-    final Future<void>? cancelFuture,
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
   ) => _fetch(options, requestStream, cancelFuture);
 
   @override
-  void close({final bool force = false}) {}
+  void close({bool force = false}) {}
 }
 
 void main() {
@@ -86,31 +86,27 @@ void main() {
       when(() => user1.uid).thenReturn('user-1');
       when(() => user2.uid).thenReturn('user-2');
       when(() => user1InitialResult.token).thenReturn('token-user-1-initial');
-      when(
-        () => user1InitialResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
-      when(
-        () => user1RefreshedResult.token,
-      ).thenReturn('token-user-1-refreshed');
-      when(
-        () => user1RefreshedResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => user1InitialResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => user1RefreshedResult.token)
+          .thenReturn('token-user-1-refreshed');
+      when(() => user1RefreshedResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
       when(() => user2TokenResult.token).thenReturn('token-user-2');
-      when(
-        () => user2TokenResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => user2TokenResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
     });
 
     Dio buildDio({
-      final void Function(
+      void Function(
         RequestOptions options,
         int? statusCode,
         String? error,
         int elapsedMilliseconds,
       )?
       telemetryEventSink,
-      final Future<void> Function(Duration delay)? waitForRetryDelay,
-      final int maxRetries = 1,
+      Future<void> Function(Duration delay)? waitForRetryDelay,
+      int maxRetries = 1,
     }) {
       return createAppDio(
         networkStatusService: networkStatusService,
@@ -123,86 +119,78 @@ void main() {
       );
     }
 
-    test(
-      'retries a managed 401 with the original user token when current user changes',
-      () async {
-        User? currentUser = user1;
-        when(() => auth.currentUser).thenAnswer((_) => currentUser);
+    test('retries a managed 401 with the original user token when current user changes', () async {
+      User? currentUser = user1;
+      when(() => auth.currentUser).thenAnswer((_) => currentUser);
 
-        when(
-          () => user1.getIdTokenResult(false),
-        ).thenAnswer((_) async => user1InitialResult);
-        when(
-          () => user1.getIdTokenResult(true),
-        ).thenAnswer((_) async => user1RefreshedResult);
-        when(
-          () => user2.getIdTokenResult(),
-        ).thenAnswer((_) async => user2TokenResult);
+      when(() => user1.getIdTokenResult(false))
+          .thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdTokenResult(true))
+          .thenAnswer((_) async => user1RefreshedResult);
+      when(() => user2.getIdTokenResult())
+          .thenAnswer((_) async => user2TokenResult);
 
-        final List<String?> seenAuthorizationHeaders = <String?>[];
-        int requestCount = 0;
-        dio = buildDio();
-        dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
-        ) async {
-          if (cancelFuture != null) {}
-          requestCount += 1;
-          seenAuthorizationHeaders.add(
-            options.headers['Authorization'] as String?,
-          );
-          if (requestCount == 1) {
-            currentUser = user2;
-            return ResponseBody.fromString(
-              jsonEncode(<String, Object?>{'error': 'unauthorized'}),
-              401,
-              headers: <String, List<String>>{
-                Headers.contentTypeHeader: <String>[Headers.jsonContentType],
-              },
-            );
-          }
+      final List<String?> seenAuthorizationHeaders = <String?>[];
+      int requestCount = 0;
+      dio = buildDio();
+      dio.httpClientAdapter = _SequenceAdapter((
+        options,
+        _,
+        cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        seenAuthorizationHeaders.add(
+          options.headers['Authorization'] as String?,
+        );
+        if (requestCount == 1) {
+          currentUser = user2;
           return ResponseBody.fromString(
-            jsonEncode(<String, Object?>{'ok': true}),
-            200,
+            jsonEncode(<String, Object?>{'error': 'unauthorized'}),
+            401,
             headers: <String, List<String>>{
               Headers.contentTypeHeader: <String>[Headers.jsonContentType],
             },
           );
-        });
-
-        final Response<dynamic> response = await dio.get<dynamic>(
-          'https://example.com/protected',
+        }
+        return ResponseBody.fromString(
+          jsonEncode(<String, Object?>{'ok': true}),
+          200,
+          headers: <String, List<String>>{
+            Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+          },
         );
+      });
 
-        expect(response.statusCode, 200);
-        expect(seenAuthorizationHeaders, <String?>[
-          'Bearer token-user-1-initial',
-          'Bearer token-user-1-refreshed',
-        ]);
-        expect(networkStatusService.statusChecks, 2);
-        verify(() => user1.getIdTokenResult(true)).called(1);
-        verifyNever(() => user2.getIdTokenResult(true));
-      },
-    );
+      final Response<dynamic> response = await dio.get<dynamic>(
+        'https://example.com/protected',
+      );
+
+      expect(response.statusCode, 200);
+      expect(seenAuthorizationHeaders, <String?>[
+        'Bearer token-user-1-initial',
+        'Bearer token-user-1-refreshed',
+      ]);
+      expect(networkStatusService.statusChecks, 2);
+      verify(() => user1.getIdTokenResult(true)).called(1);
+      verifyNever(() => user2.getIdTokenResult(true));
+    });
 
     test(
       'does not retry 401 for externally managed authorization headers',
       () async {
         when(() => auth.currentUser).thenReturn(user1);
-        when(
-          () => user1.getIdTokenResult(false),
-        ).thenAnswer((_) async => user1InitialResult);
-        when(
-          () => user1.getIdTokenResult(true),
-        ).thenAnswer((_) async => user1RefreshedResult);
+        when(() => user1.getIdTokenResult(false))
+            .thenAnswer((_) async => user1InitialResult);
+        when(() => user1.getIdTokenResult(true))
+            .thenAnswer((_) async => user1RefreshedResult);
 
         int requestCount = 0;
         dio = buildDio();
         dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
+          options,
+          _,
+          cancelFuture,
         ) async {
           if (cancelFuture != null) {}
           requestCount += 1;
@@ -233,19 +221,17 @@ void main() {
 
     test('does not auth-retry non-idempotent methods by default', () async {
       when(() => auth.currentUser).thenReturn(user1);
-      when(
-        () => user1.getIdTokenResult(false),
-      ).thenAnswer((_) async => user1InitialResult);
-      when(
-        () => user1.getIdTokenResult(true),
-      ).thenAnswer((_) async => user1RefreshedResult);
+      when(() => user1.getIdTokenResult(false))
+          .thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdTokenResult(true))
+          .thenAnswer((_) async => user1RefreshedResult);
 
       int requestCount = 0;
       dio = buildDio();
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -270,19 +256,17 @@ void main() {
 
     test('auth-retries idempotent delete methods by default', () async {
       when(() => auth.currentUser).thenReturn(user1);
-      when(
-        () => user1.getIdTokenResult(false),
-      ).thenAnswer((_) async => user1InitialResult);
-      when(
-        () => user1.getIdTokenResult(true),
-      ).thenAnswer((_) async => user1RefreshedResult);
+      when(() => user1.getIdTokenResult(false))
+          .thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdTokenResult(true))
+          .thenAnswer((_) async => user1RefreshedResult);
 
       int requestCount = 0;
       dio = buildDio();
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -313,70 +297,63 @@ void main() {
       verify(() => user1.getIdTokenResult(true)).called(1);
     });
 
-    test(
-      'propagates retry DioException instead of returning the original 401 response',
-      () async {
-        when(() => auth.currentUser).thenReturn(user1);
+    test('propagates retry DioException instead of returning the original 401 response', () async {
+      when(() => auth.currentUser).thenReturn(user1);
 
-        when(
-          () => user1.getIdTokenResult(false),
-        ).thenAnswer((_) async => user1InitialResult);
-        when(
-          () => user1.getIdTokenResult(true),
-        ).thenAnswer((_) async => user1RefreshedResult);
+      when(() => user1.getIdTokenResult(false))
+          .thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdTokenResult(true))
+          .thenAnswer((_) async => user1RefreshedResult);
 
-        int requestCount = 0;
-        dio = buildDio();
-        dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
-        ) async {
-          if (cancelFuture != null) {}
-          requestCount += 1;
-          if (requestCount == 1) {
-            return ResponseBody.fromString(
-              jsonEncode(<String, Object?>{'error': 'unauthorized'}),
-              401,
-              headers: <String, List<String>>{
-                Headers.contentTypeHeader: <String>[Headers.jsonContentType],
-              },
-            );
-          }
-          throw DioException(
-            requestOptions: options,
-            error: StateError('retry failed'),
+      int requestCount = 0;
+      dio = buildDio();
+      dio.httpClientAdapter = _SequenceAdapter((
+        options,
+        _,
+        cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        if (requestCount == 1) {
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'unauthorized'}),
+            401,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
           );
-        });
-
-        await expectLater(
-          dio.get<dynamic>('https://example.com/protected'),
-          throwsA(
-            isA<DioException>().having(
-              (final DioException error) => error.error,
-              'error',
-              isA<StateError>(),
-            ),
-          ),
+        }
+        throw DioException(
+          requestOptions: options,
+          error: StateError('retry failed'),
         );
+      });
 
-        expect(requestCount, 2);
-        expect(networkStatusService.statusChecks, 2);
-        verify(() => user1.getIdTokenResult(true)).called(1);
-      },
-    );
+      await expectLater(
+        dio.get<dynamic>('https://example.com/protected'),
+        throwsA(
+          isA<DioException>().having(
+            (DioException error) => error.error,
+            'error',
+            isA<StateError>(),
+          ),
+        ),
+      );
+
+      expect(requestCount, 2);
+      expect(networkStatusService.statusChecks, 2);
+      verify(() => user1.getIdTokenResult(true)).called(1);
+    });
 
     test(
       'uses shared retry, network, and telemetry interceptors for auth retries',
       () async {
         when(() => auth.currentUser).thenReturn(user1);
 
-        when(
-          () => user1.getIdTokenResult(false),
-        ).thenAnswer((_) async => user1InitialResult);
-        when(
-          () => user1.getIdTokenResult(true),
-        ).thenAnswer((_) async => user1RefreshedResult);
+        when(() => user1.getIdTokenResult(false))
+            .thenAnswer((_) async => user1InitialResult);
+        when(() => user1.getIdTokenResult(true))
+            .thenAnswer((_) async => user1RefreshedResult);
 
         int telemetryEventCount = 0;
         final List<String?> seenAuthorizationHeaders = <String?>[];
@@ -384,20 +361,15 @@ void main() {
         int requestCount = 0;
         dio = buildDio(
           telemetryEventSink:
-              (
-                final options,
-                final statusCode,
-                final error,
-                final elapsedMilliseconds,
-              ) {
+              (options, statusCode, error, elapsedMilliseconds) {
                 telemetryEventCount += 1;
               },
-          waitForRetryDelay: (final _) async {},
+          waitForRetryDelay: (_) async {},
         );
         dio.httpClientAdapter = _SequenceAdapter((
-          final options,
-          final _,
-          final cancelFuture,
+          options,
+          _,
+          cancelFuture,
         ) async {
           if (cancelFuture != null) {}
           requestCount += 1;
@@ -464,19 +436,17 @@ void main() {
       );
       when(() => auth.currentUser).thenReturn(user1);
 
-      when(
-        () => user1.getIdTokenResult(false),
-      ).thenAnswer((_) async => user1InitialResult);
-      when(
-        () => user1.getIdTokenResult(true),
-      ).thenAnswer((_) async => user1RefreshedResult);
+      when(() => user1.getIdTokenResult(false))
+          .thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdTokenResult(true))
+          .thenAnswer((_) async => user1RefreshedResult);
 
       int requestCount = 0;
       dio = buildDio();
       dio.httpClientAdapter = _SequenceAdapter((
-        final options,
-        final _,
-        final cancelFuture,
+        options,
+        _,
+        cancelFuture,
       ) async {
         if (cancelFuture != null) {}
         requestCount += 1;
@@ -493,7 +463,7 @@ void main() {
         dio.get<dynamic>('https://example.com/protected'),
         throwsA(
           isA<DioException>().having(
-            (final DioException error) => error.type,
+            (DioException error) => error.type,
             'type',
             DioExceptionType.connectionError,
           ),

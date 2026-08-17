@@ -151,6 +151,6 @@ class OfflineFirstStaffDemoTimeclockRepository
   Future<void> pullRemote() => pullRemoteImpl();
 
   @override
-  Future<void> processOperation(final SyncOperation operation) =>
+  Future<void> processOperation(SyncOperation operation) =>
       processOperationImpl(operation);
 }

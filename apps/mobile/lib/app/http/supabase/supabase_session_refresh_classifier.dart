@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Supabase Auth error shapes that indicate the session cannot be recovered
 /// without signing the user out (not transient network failures).
-bool isAuthClassifiedSupabaseRefreshFailure(final Object error) {
+bool isAuthClassifiedSupabaseRefreshFailure(Object error) {
   if (error is AuthRetryableFetchException) {
     return false;
   }
@@ -16,7 +16,7 @@ bool isAuthClassifiedSupabaseRefreshFailure(final Object error) {
   return statusCode == 400 || statusCode == 401 || statusCode == 403;
 }
 
-int? _parseStatusCode(final Object? statusCode) {
+int? _parseStatusCode(Object? statusCode) {
   if (statusCode is int) {
     return statusCode;
   }

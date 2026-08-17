@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Optional QA/dev-only sections (cache diagnostics, remote config, etc.).
 /// Built in [lib/app/router/routes_core.dart] so settings stays decoupled from
@@ -51,7 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => BlocProvider.value(
+  Widget build(BuildContext context) => BlocProvider.value(
     value: _cubit,
     child: _SettingsView(
       authRepository: widget.authRepository,
@@ -73,7 +73,7 @@ class _SettingsView extends StatelessWidget {
   final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final List<Widget> sections = <Widget>[
       AccountSection(

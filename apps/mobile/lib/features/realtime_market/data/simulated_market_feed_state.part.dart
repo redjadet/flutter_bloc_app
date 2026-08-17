@@ -12,7 +12,7 @@ class _SimState {
     required this.chartCloses,
   });
 
-  factory _SimState.fromSnapshot(final MarketFeedSnapshot snapshot) {
+  factory _SimState.fromSnapshot(MarketFeedSnapshot snapshot) {
     final double denominator = 1 + snapshot.changePct24h / 100;
     final double reconstructedOpen = denominator > 0
         ? snapshot.lastPrice / denominator
@@ -32,7 +32,7 @@ class _SimState {
     );
   }
 
-  factory _SimState.initial({required final String pairId}) {
+  factory _SimState.initial({required String pairId}) {
     const double price = 43250;
     const double open = 43000;
     final List<OrderBookLevel> bids = <OrderBookLevel>[
@@ -79,7 +79,7 @@ class _SimState {
   final MarketStats stats;
   final List<double> chartCloses;
 
-  _SimState nudgePrices(final Random random) {
+  _SimState nudgePrices(Random random) {
     final double delta = (random.nextDouble() - 0.5) * 8;
     final double next = (lastPrice + delta).clamp(open24 * 0.95, open24 * 1.08);
     final List<OrderBookLevel> nb = bids
@@ -110,8 +110,8 @@ class _SimState {
       pairId: pairId,
       lastPrice: next,
       open24: open24,
-      bids: nb..sort((final a, final b) => b.price.compareTo(a.price)),
-      asks: na..sort((final a, final b) => a.price.compareTo(b.price)),
+      bids: nb..sort((a, b) => b.price.compareTo(a.price)),
+      asks: na..sort((a, b) => a.price.compareTo(b.price)),
       recentTrades: recentTrades,
       stats: stats,
       chartCloses: chartCloses,
@@ -119,9 +119,9 @@ class _SimState {
   }
 
   _SimState withNewTrade({
-    required final int seq,
-    required final Random random,
-    required final DateTime Function() clock,
+    required int seq,
+    required Random random,
+    required DateTime Function() clock,
   }) {
     final bool isBuy = random.nextBool();
     final double qty = 0.01 + random.nextDouble() * 0.5;
@@ -150,7 +150,7 @@ class _SimState {
     );
   }
 
-  MarketFeedSnapshot toSnapshot(final DateTime now) {
+  MarketFeedSnapshot toSnapshot(DateTime now) {
     final double changePct = ((lastPrice - open24) / open24) * 100;
     return MarketFeedSnapshot(
       pairId: pairId,

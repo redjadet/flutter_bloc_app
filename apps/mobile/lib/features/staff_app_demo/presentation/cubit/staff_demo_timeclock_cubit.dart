@@ -34,7 +34,7 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
     await CubitExceptionHandler.executeAsync<StaffDemoOpenEntrySnapshot?>(
       operation: () => _localRepository.loadOpenEntry(userId: userId),
       isAlive: () => !isClosed,
-      onSuccess: (final open) {
+      onSuccess: (open) {
         if (isClosed) return;
         if (open == null) {
           emit(
@@ -54,7 +54,7 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -73,7 +73,7 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
     await CubitExceptionHandler.executeAsync<StaffDemoClockResult>(
       operation: () => _repository.clockIn(),
       isAlive: () => !isClosed,
-      onSuccess: (final result) {
+      onSuccess: (result) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -84,7 +84,7 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -103,7 +103,7 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
     await CubitExceptionHandler.executeAsync<StaffDemoClockResult>(
       operation: () => _repository.clockOut(),
       isAlive: () => !isClosed,
-      onSuccess: (final result) {
+      onSuccess: (result) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -114,7 +114,7 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(

@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/firebase_functions_test_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
@@ -35,23 +34,20 @@ void main() {
     helloCallable = _MockHttpsCallable();
     tokenCallable = _MockHttpsCallable();
     when(() => functions.httpsCallable('helloWorld')).thenReturn(helloCallable);
-    when(
-      () => functions.httpsCallable('issueRenderChatDemoHfReadToken'),
-    ).thenReturn(tokenCallable);
+    when(() => functions.httpsCallable('issueRenderChatDemoHfReadToken'))
+        .thenReturn(tokenCallable);
   });
 
   Future<void> pumpPage(
-    final WidgetTester tester, {
-    required final bool isFirebaseReady,
-    required final bool isAuthenticated,
+    WidgetTester tester, {
+    required bool isFirebaseReady,
+    required bool isAuthenticated,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: FirebaseFunctionsTestPage(
@@ -64,9 +60,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('disables actions when Firebase unavailable', (
-    final tester,
-  ) async {
+  testWidgets('disables actions when Firebase unavailable', (tester) async {
     await pumpPage(tester, isFirebaseReady: false, isAuthenticated: false);
     final hello = tester.widget<FilledButton>(
       find.byKey(const ValueKey('firebase-functions-hello-button')),
@@ -82,7 +76,7 @@ void main() {
     );
   });
 
-  testWidgets('signed-out enables helloWorld only', (final tester) async {
+  testWidgets('signed-out enables helloWorld only', (tester) async {
     await pumpPage(tester, isFirebaseReady: true, isAuthenticated: false);
     final hello = tester.widget<FilledButton>(
       find.byKey(const ValueKey('firebase-functions-hello-button')),
@@ -98,9 +92,9 @@ void main() {
     );
   });
 
-  testWidgets('helloWorld renders safe message', (final tester) async {
+  testWidgets('helloWorld renders safe message', (tester) async {
     when(() => helloCallable.call<Map<String, dynamic>>(any())).thenAnswer(
-      (final _) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
+      (_) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
         <String, dynamic>{'message': 'Hello World'},
       ),
     );
@@ -112,12 +106,10 @@ void main() {
     expect(find.text('Hello World'), findsOneWidget);
   });
 
-  testWidgets('token success shows presence and length only', (
-    final tester,
-  ) async {
+  testWidgets('token success shows presence and length only', (tester) async {
     const String secret = 'super-secret-token-value';
     when(() => tokenCallable.call<dynamic>(any())).thenAnswer(
-      (final _) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
+      (_) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
         <String, dynamic>{'hf_read_token': secret},
       ),
     );
@@ -133,10 +125,10 @@ void main() {
     expect(find.textContaining(secret), findsNothing);
   });
 
-  testWidgets('token accepts legacy token key', (final tester) async {
+  testWidgets('token accepts legacy token key', (tester) async {
     const String secret = 'legacy-token';
     when(() => tokenCallable.call<dynamic>(any())).thenAnswer(
-      (final _) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
+      (_) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
         <String, dynamic>{'token': secret},
       ),
     );
@@ -152,7 +144,7 @@ void main() {
     expect(find.textContaining(secret), findsNothing);
   });
 
-  testWidgets('token Functions exception hides details', (final tester) async {
+  testWidgets('token Functions exception hides details', (tester) async {
     when(() => tokenCallable.call<dynamic>(any())).thenThrow(
       FirebaseFunctionsException(
         code: 'unauthenticated',
@@ -170,12 +162,9 @@ void main() {
     expect(find.textContaining('secret-details'), findsNothing);
   });
 
-  testWidgets('token generic error exposes no error text', (
-    final tester,
-  ) async {
-    when(
-      () => tokenCallable.call<dynamic>(any()),
-    ).thenThrow(StateError('secret-generic-error'));
+  testWidgets('token generic error exposes no error text', (tester) async {
+    when(() => tokenCallable.call<dynamic>(any()))
+        .thenThrow(StateError('secret-generic-error'));
     await pumpPage(tester, isFirebaseReady: true, isAuthenticated: true);
     await tester.tap(
       find.byKey(const ValueKey('firebase-functions-token-button')),
@@ -185,11 +174,11 @@ void main() {
     expect(find.textContaining('secret-generic-error'), findsNothing);
   });
 
-  testWidgets('pending token call ignores a second tap', (final tester) async {
+  testWidgets('pending token call ignores a second tap', (tester) async {
     final Completer<HttpsCallableResult<dynamic>> result =
         Completer<HttpsCallableResult<dynamic>>();
     var callCount = 0;
-    when(() => tokenCallable.call<dynamic>(any())).thenAnswer((final _) {
+    when(() => tokenCallable.call<dynamic>(any())).thenAnswer((_) {
       callCount++;
       return result.future;
     });
@@ -212,13 +201,12 @@ void main() {
   });
 
   testWidgets('disposing during token call causes no exception', (
-    final tester,
+    tester,
   ) async {
     final Completer<HttpsCallableResult<dynamic>> result =
         Completer<HttpsCallableResult<dynamic>>();
-    when(
-      () => tokenCallable.call<dynamic>(any()),
-    ).thenAnswer((final _) => result.future);
+    when(() => tokenCallable.call<dynamic>(any()))
+        .thenAnswer((_) => result.future);
     await pumpPage(tester, isFirebaseReady: true, isAuthenticated: true);
     await tester.tap(
       find.byKey(const ValueKey('firebase-functions-token-button')),
@@ -235,9 +223,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('malformed token payload shows safe error', (final tester) async {
+  testWidgets('malformed token payload shows safe error', (tester) async {
     when(() => tokenCallable.call<dynamic>(any())).thenAnswer(
-      (final _) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
+      (_) async => _FakeHttpsCallableResult<Map<String, dynamic>>(
         <String, dynamic>{'oops': true},
       ),
     );

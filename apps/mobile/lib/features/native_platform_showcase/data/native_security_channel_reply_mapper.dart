@@ -56,8 +56,8 @@ abstract final class NativeSecurityChannelReplyMapper {
   static const Set<String> allowedAlgorithms = <String>{'P256', 'AES-GCM'};
 
   static NativeSecurityOperationResult fromChannelReply(
-    final Object? reply, {
-    final NativeSecurityOperation? operation,
+    Object? reply, {
+    NativeSecurityOperation? operation,
   }) {
     if (reply is! Map) {
       return const NativeSecurityOperationResult(
@@ -68,7 +68,7 @@ abstract final class NativeSecurityChannelReplyMapper {
     }
 
     final Map<String, Object?> map = reply.map(
-      (final key, final value) => MapEntry(key.toString(), value),
+      (key, value) => MapEntry(key.toString(), value),
     );
 
     final Object? schemaVersion = map['schemaVersion'];
@@ -139,11 +139,11 @@ abstract final class NativeSecurityChannelReplyMapper {
   /// Requires evidence for known operations before accepting a native success.
   /// A generic mapper call may omit the operation for isolated schema tests.
   static bool _requiredChecksArePresent({
-    required final NativeSecurityOperation? operation,
-    required final bool? verified,
-    required final bool? wrote,
-    required final bool? readMatched,
-    required final bool? deleted,
+    required NativeSecurityOperation? operation,
+    required bool? verified,
+    required bool? wrote,
+    required bool? readMatched,
+    required bool? deleted,
   }) => switch (operation) {
     null => true,
     NativeSecurityOperation.p256SignVerify ||
@@ -155,10 +155,10 @@ abstract final class NativeSecurityChannelReplyMapper {
 
   /// True when no check flags are present, or all present flags are true.
   static bool _operationChecksPassed({
-    required final bool? verified,
-    required final bool? wrote,
-    required final bool? readMatched,
-    required final bool? deleted,
+    required bool? verified,
+    required bool? wrote,
+    required bool? readMatched,
+    required bool? deleted,
   }) {
     if (verified == false) {
       return false;
@@ -169,7 +169,7 @@ abstract final class NativeSecurityChannelReplyMapper {
     return true;
   }
 
-  static NativeSecurityStatus? _parseStatus(final Object? raw) {
+  static NativeSecurityStatus? _parseStatus(Object? raw) {
     if (raw is! String) {
       return null;
     }
@@ -182,7 +182,7 @@ abstract final class NativeSecurityChannelReplyMapper {
     };
   }
 
-  static NativeSecurityKeyResidency? _parseResidency(final Object? raw) {
+  static NativeSecurityKeyResidency? _parseResidency(Object? raw) {
     if (raw is! String) {
       return null;
     }
@@ -196,22 +196,21 @@ abstract final class NativeSecurityChannelReplyMapper {
     };
   }
 
-  static String _platformOrUnknown(final Object? raw) {
+  static String _platformOrUnknown(Object? raw) {
     if (raw is String && allowedPlatforms.contains(raw)) {
       return raw;
     }
     return 'unknown';
   }
 
-  static String? _parseAlgorithm(final Object? raw) {
+  static String? _parseAlgorithm(Object? raw) {
     if (raw is! String) {
       return null;
     }
     return allowedAlgorithms.contains(raw) ? raw : null;
   }
 
-  static bool? _boolOrNull(final Object? raw) => raw is bool ? raw : null;
+  static bool? _boolOrNull(Object? raw) => raw is bool ? raw : null;
 
-  static int? _intOrNull(final Object? raw) =>
-      raw is int && raw >= 0 ? raw : null;
+  static int? _intOrNull(Object? raw) => raw is int && raw >= 0 ? raw : null;
 }

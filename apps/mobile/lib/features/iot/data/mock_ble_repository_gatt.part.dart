@@ -21,7 +21,7 @@ mixin _MockBleRepositoryGatt on _MockBleRepositoryBase {
   }
 
   Future<Result<List<int>>> readCharacteristic(
-    final BleCharacteristicRef ref,
+    BleCharacteristicRef ref,
   ) async {
     final BleCharacteristic? characteristic = _findCharacteristic(ref);
     if (characteristic == null || !characteristic.canRead) {
@@ -32,9 +32,9 @@ mixin _MockBleRepositoryGatt on _MockBleRepositoryBase {
   }
 
   Future<Result<void>> writeCharacteristic(
-    final BleCharacteristicRef ref,
-    final List<int> value, {
-    final bool withoutResponse = false,
+    BleCharacteristicRef ref,
+    List<int> value, {
+    bool withoutResponse = false,
   }) async {
     final BleCharacteristic? characteristic = _findCharacteristic(ref);
     if (characteristic == null ||
@@ -60,7 +60,7 @@ mixin _MockBleRepositoryGatt on _MockBleRepositoryBase {
     return const Success<void>(null);
   }
 
-  Stream<List<int>> subscribeCharacteristic(final BleCharacteristicRef ref) {
+  Stream<List<int>> subscribeCharacteristic(BleCharacteristicRef ref) {
     final BleCharacteristic? characteristic = _findCharacteristic(ref);
     if (characteristic == null ||
         (!characteristic.canNotify && !characteristic.canIndicate)) {
@@ -70,7 +70,7 @@ mixin _MockBleRepositoryGatt on _MockBleRepositoryBase {
     return _notifyChannelFor(ref).stream;
   }
 
-  BleCharacteristic? _findCharacteristic(final BleCharacteristicRef ref) {
+  BleCharacteristic? _findCharacteristic(BleCharacteristicRef ref) {
     final MockBleDeviceProfile? profile = MockBleDeviceCatalog.profileForId(
       ref.deviceId,
     );

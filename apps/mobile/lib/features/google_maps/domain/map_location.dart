@@ -7,9 +7,9 @@ part 'map_location.freezed.dart';
 @freezed
 abstract class MapLocation with _$MapLocation {
   const factory MapLocation({
-    required final String id,
-    required final String title,
-    required final String description,
-    required final MapCoordinate coordinate,
+    required String id,
+    required String title,
+    required String description,
+    required MapCoordinate coordinate,
   }) = _MapLocation;
 }

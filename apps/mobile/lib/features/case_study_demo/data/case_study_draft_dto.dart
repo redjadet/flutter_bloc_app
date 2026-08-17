@@ -16,7 +16,7 @@ class CaseStudyDraftDto {
     required this.phase,
   });
 
-  CaseStudyDraftDto.fromDomain(final CaseStudyDraft draft)
+  CaseStudyDraftDto.fromDomain(CaseStudyDraft draft)
     : caseId = draft.caseId,
       doctorName = draft.doctorName,
       caseType = draft.caseType,
@@ -59,21 +59,21 @@ class CaseStudyDraftDto {
     'phase': phase.name,
   };
 
-  static CaseStudyDraftDto? fromJson(final Map<String, Object?>? json) {
+  static CaseStudyDraftDto? fromJson(Map<String, Object?>? json) {
     if (json == null) return null;
     try {
       final Map<String, dynamic> answersRaw = Map<String, dynamic>.from(
         json['answers'] as Map? ?? const {},
       );
       final Map<String, String> answers = answersRaw.map(
-        (final k, final v) => MapEntry(k, v?.toString() ?? ''),
+        (k, v) => MapEntry(k, v?.toString() ?? ''),
       );
 
       final Map<String, dynamic> remoteRaw = Map<String, dynamic>.from(
         json['remoteObjectKeysByQuestion'] as Map? ?? const {},
       );
       final Map<String, String> remoteObjectKeysByQuestion = remoteRaw.map(
-        (final k, final v) => MapEntry(k, v?.toString() ?? ''),
+        (k, v) => MapEntry(k, v?.toString() ?? ''),
       );
 
       return CaseStudyDraftDto(
@@ -94,11 +94,11 @@ class CaseStudyDraftDto {
   }
 
   // check-ignore: small payload (<8KB) - demo draft
-  static String encode(final CaseStudyDraft draft) => jsonEncode(
+  static String encode(CaseStudyDraft draft) => jsonEncode(
     CaseStudyDraftDto.fromDomain(draft).toJson(),
   );
 
-  static CaseStudyDraft? decode(final String? raw) {
+  static CaseStudyDraft? decode(String? raw) {
     if (raw == null || raw.isEmpty) return null;
     try {
       // check-ignore: small payload (<8KB) - demo draft
@@ -109,8 +109,7 @@ class CaseStudyDraftDto {
       if (parsed is Map) {
         return CaseStudyDraftDto.fromJson(
           parsed.map(
-            (final dynamic k, final dynamic v) =>
-                MapEntry(k.toString(), v as Object?),
+            (dynamic k, dynamic v) => MapEntry(k.toString(), v as Object?),
           ),
         )?.toDomain();
       }

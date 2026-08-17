@@ -42,7 +42,7 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
       _authStateSubscription;
 
   @override
-  set supabaseAuthStateSubscription(final StreamSubscription<Object?>? value) {
+  set supabaseAuthStateSubscription(StreamSubscription<Object?>? value) {
     _authStateSubscription = value;
   }
 
@@ -52,7 +52,7 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
 
   @override
   set supabaseInvalidationSubscription(
-    final StreamSubscription<SessionInvalidationEvent>? value,
+    StreamSubscription<SessionInvalidationEvent>? value,
   ) {
     _invalidationSubscription = value;
   }
@@ -96,8 +96,8 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
 
   /// Signs in with email and password.
   Future<void> signIn({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) async {
     await _runAuthAction(
       logContext: 'SupabaseAuthCubit.signIn',
@@ -110,9 +110,9 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
 
   /// Signs up with email, password, and optional display name.
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) async {
     await _runAuthAction(
       logContext: 'SupabaseAuthCubit.signUp',

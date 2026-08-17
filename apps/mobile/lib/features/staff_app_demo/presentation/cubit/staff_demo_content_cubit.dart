@@ -15,7 +15,7 @@ class StaffDemoContentCubit extends Cubit<StaffDemoContentState> {
     await CubitExceptionHandler.executeAsync<List<StaffDemoContentItem>>(
       operation: _repository.listPublished,
       isAlive: () => !isClosed,
-      onSuccess: (final items) {
+      onSuccess: (items) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -25,7 +25,7 @@ class StaffDemoContentCubit extends Cubit<StaffDemoContentState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -38,7 +38,7 @@ class StaffDemoContentCubit extends Cubit<StaffDemoContentState> {
     );
   }
 
-  Future<Uri?> resolveUrl(final StaffDemoContentItem item) async {
+  Future<Uri?> resolveUrl(StaffDemoContentItem item) async {
     try {
       return await _repository.getDownloadUrl(storagePath: item.storagePath);
     } on Exception {

@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Large tap-to-hear button (min 48x48 for accessibility).
 class ListenButton extends StatelessWidget {
@@ -14,7 +14,7 @@ class ListenButton extends StatelessWidget {
   final bool compact;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
     return Semantics(

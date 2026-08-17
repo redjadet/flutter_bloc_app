@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../ui/ui_constants.dart';
@@ -35,7 +35,7 @@ class _ResponsiveScopeState extends State<ResponsiveScope> {
   }
 
   @override
-  Widget build(final BuildContext context) => ScreenUtilInit(
+  Widget build(BuildContext context) => ScreenUtilInit(
     designSize: widget.designSize,
     minTextAdapt: true,
     splitScreenMode: true,
@@ -46,7 +46,7 @@ class _ResponsiveScopeState extends State<ResponsiveScope> {
         child: widget.child,
       ),
     ),
-    builder: (final context, final child) {
+    builder: (context, child) {
       UI.markScreenUtilReady();
       return child ?? const SizedBox.shrink();
     },

@@ -9,27 +9,27 @@ enum TodoPriority { none, low, medium, high }
 @freezed
 abstract class TodoItem with _$TodoItem {
   const factory TodoItem({
-    required final String id,
-    required final String title,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
-    final String? description,
-    @Default(false) final bool isCompleted,
-    final DateTime? dueDate,
-    @Default(TodoPriority.none) final TodoPriority priority,
-    final String? changeId,
-    final DateTime? lastSyncedAt,
-    @Default(false) final bool synchronized,
+    required String id,
+    required String title,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    String? description,
+    @Default(false) bool isCompleted,
+    DateTime? dueDate,
+    @Default(TodoPriority.none) TodoPriority priority,
+    String? changeId,
+    DateTime? lastSyncedAt,
+    @Default(false) bool synchronized,
   }) = _TodoItem;
 
   const TodoItem._();
 
   factory TodoItem.create({
-    required final String title,
-    final String? description,
-    final DateTime? dueDate,
-    final TodoPriority priority = TodoPriority.none,
-    final DateTime? now,
+    required String title,
+    String? description,
+    DateTime? dueDate,
+    TodoPriority priority = TodoPriority.none,
+    DateTime? now,
   }) {
     final DateTime timestamp = (now ?? DateTime.now()).toUtc();
     return TodoItem(

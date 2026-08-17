@@ -7,7 +7,7 @@ void staffAppDemoWalkthroughMain() {
     options: const IntegrationDependencyOptions(
       authMode: IntegrationAuthMode.realFirebaseAuth,
     ),
-    body: (final tester) async {
+    body: (tester) async {
       final bool firebaseReady =
           await FirebaseBootstrapService.initializeFirebase();
       expect(firebaseReady, isTrue, reason: 'Firebase must be configured.');

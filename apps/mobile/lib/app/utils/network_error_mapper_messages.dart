@@ -1,9 +1,9 @@
 part of 'network_error_mapper.dart';
 
 String? _getTypedErrorMessage(
-  final AppError appError, {
-  required final dynamic originalError,
-  required final AppLocalizations? l10n,
+  AppError appError, {
+  required dynamic originalError,
+  required AppLocalizations? l10n,
 }) {
   if (appError case final NetworkError networkError) {
     return _networkMessage(
@@ -21,8 +21,8 @@ String? _getTypedErrorMessage(
 }
 
 String? _getHeuristicMessage(
-  final String errorString, {
-  required final AppLocalizations? l10n,
+  String errorString, {
+  required AppLocalizations? l10n,
 }) {
   if (_containsNetworkHint(errorString)) {
     return _networkMessage(NetworkErrorKind.offline, l10n: l10n);
@@ -67,8 +67,8 @@ String? _getHeuristicMessage(
 }
 
 String? _getMessageForStatusCode(
-  final int statusCode, {
-  final AppLocalizations? l10n,
+  int statusCode, {
+  AppLocalizations? l10n,
 }) => switch (statusCode) {
   401 => _authMessage(AuthErrorKind.unauthorized, l10n: l10n),
   403 => _authMessage(AuthErrorKind.forbidden, l10n: l10n),
@@ -86,9 +86,9 @@ String? _getMessageForStatusCode(
 };
 
 String? _networkMessage(
-  final NetworkErrorKind kind, {
-  final Object? originalError,
-  final AppLocalizations? l10n,
+  NetworkErrorKind kind, {
+  Object? originalError,
+  AppLocalizations? l10n,
 }) => switch (kind) {
   NetworkErrorKind.timeout =>
     l10n?.errorTimeout ?? 'Request timed out. Please try again.',
@@ -112,8 +112,8 @@ String? _networkMessage(
 };
 
 String _authMessage(
-  final AuthErrorKind kind, {
-  final AppLocalizations? l10n,
+  AuthErrorKind kind, {
+  AppLocalizations? l10n,
 }) => switch (kind) {
   AuthErrorKind.unauthorized || AuthErrorKind.tokenExpired =>
     l10n?.errorUnauthorized ?? 'Authentication required. Please sign in again.',
@@ -122,5 +122,5 @@ String _authMessage(
         "Access denied. You don't have permission for this action.",
 };
 
-String _notFoundMessage({final AppLocalizations? l10n}) =>
+String _notFoundMessage({AppLocalizations? l10n}) =>
     l10n?.errorNotFound ?? 'The requested resource was not found.';

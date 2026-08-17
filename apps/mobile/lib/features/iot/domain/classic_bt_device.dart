@@ -11,9 +11,9 @@ class ClassicBtDevice {
   final bool isConnected;
 
   ClassicBtDevice copyWith({
-    final String? id,
-    final String? name,
-    final bool? isConnected,
+    String? id,
+    String? name,
+    bool? isConnected,
   }) => ClassicBtDevice(
     id: id ?? this.id,
     name: name ?? this.name,

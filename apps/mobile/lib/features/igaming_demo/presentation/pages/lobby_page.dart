@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -9,25 +8,26 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Lobby page for the iGaming demo: shows virtual balance and entry to game.
 class LobbyPage extends StatelessWidget {
   const LobbyPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.igamingDemoLobbyTitle,
       body: Builder(
-        builder: (final context) {
+        builder: (context) {
           final viewState = context
               .selectState<
                 LobbyCubit,
                 LobbyState,
                 ({bool isLoading, DemoBalance? balance, String? errorMessage})
               >(
-                selector: (final state) => state.when(
+                selector: (state) => state.when(
                   initial: () => (
                     isLoading: true,
                     balance: null,
@@ -38,12 +38,12 @@ class LobbyPage extends StatelessWidget {
                     balance: null,
                     errorMessage: null,
                   ),
-                  ready: (final balance) => (
+                  ready: (balance) => (
                     isLoading: false,
                     balance: balance,
                     errorMessage: null,
                   ),
-                  error: (final message) => (
+                  error: (message) => (
                     isLoading: false,
                     balance: null,
                     errorMessage: message,
@@ -81,7 +81,7 @@ class _LoadingBody extends StatelessWidget {
   const _LoadingBody();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return const Center(child: CircularProgressIndicator());
   }
 }
@@ -96,7 +96,7 @@ class _ReadyBody extends StatelessWidget {
   final VoidCallback onPlayGame;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     return SingleChildScrollView(

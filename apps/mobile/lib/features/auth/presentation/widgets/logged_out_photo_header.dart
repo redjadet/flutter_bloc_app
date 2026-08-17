@@ -1,6 +1,6 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LoggedOutPhotoHeader extends StatelessWidget {
   const LoggedOutPhotoHeader({
@@ -13,7 +13,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
   final double verticalScale;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       height: 54 * verticalScale,

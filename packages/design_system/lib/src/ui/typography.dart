@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Typography helpers that use the theme as the single source of truth.
 ///
@@ -27,12 +27,12 @@ class AppTypography {
   /// Uses `labelLarge` from theme as base, which is the standard for buttons.
   /// Customizations (fontWeight, fontSize, etc.) are applied on top of theme.
   static TextStyle buttonText(
-    final BuildContext context, {
-    final FontWeight? fontWeight,
-    final double? fontSize,
-    final Color? color,
-    final double? letterSpacing,
-    final double? height,
+    BuildContext context, {
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? color,
+    double? letterSpacing,
+    double? height,
   }) {
     final baseStyle = Theme.of(context).textTheme.labelLarge;
     return (baseStyle ?? const TextStyle()).copyWith(
@@ -48,12 +48,12 @@ class AppTypography {
   ///
   /// Uses `bodyMedium` from theme as base.
   static TextStyle bodyText(
-    final BuildContext context, {
-    final FontWeight? fontWeight,
-    final double? fontSize,
-    final Color? color,
-    final double? letterSpacing,
-    final double? height,
+    BuildContext context, {
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? color,
+    double? letterSpacing,
+    double? height,
   }) {
     final baseStyle = Theme.of(context).textTheme.bodyMedium;
     return (baseStyle ?? const TextStyle()).copyWith(
@@ -69,12 +69,12 @@ class AppTypography {
   ///
   /// Uses `titleLarge` from theme as base.
   static TextStyle titleText(
-    final BuildContext context, {
-    final FontWeight? fontWeight,
-    final double? fontSize,
-    final Color? color,
-    final double? letterSpacing,
-    final double? height,
+    BuildContext context, {
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? color,
+    double? letterSpacing,
+    double? height,
   }) {
     final baseStyle = Theme.of(context).textTheme.titleLarge;
     return (baseStyle ?? const TextStyle()).copyWith(
@@ -90,12 +90,12 @@ class AppTypography {
   ///
   /// Uses `headlineMedium` from theme as base.
   static TextStyle headlineText(
-    final BuildContext context, {
-    final FontWeight? fontWeight,
-    final double? fontSize,
-    final Color? color,
-    final double? letterSpacing,
-    final double? height,
+    BuildContext context, {
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? color,
+    double? letterSpacing,
+    double? height,
   }) {
     final baseStyle = Theme.of(context).textTheme.headlineMedium;
     return (baseStyle ?? const TextStyle()).copyWith(
@@ -111,12 +111,12 @@ class AppTypography {
   ///
   /// Uses `displayMedium` from theme as base (uses Comfortaa font per app_config).
   static TextStyle displayText(
-    final BuildContext context, {
-    final FontWeight? fontWeight,
-    final double? fontSize,
-    final Color? color,
-    final double? letterSpacing,
-    final double? height,
+    BuildContext context, {
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? color,
+    double? letterSpacing,
+    double? height,
   }) {
     final baseStyle = Theme.of(context).textTheme.displayMedium;
     return (baseStyle ?? const TextStyle()).copyWith(
@@ -132,12 +132,12 @@ class AppTypography {
   ///
   /// Uses `labelMedium` from theme as base.
   static TextStyle labelText(
-    final BuildContext context, {
-    final FontWeight? fontWeight,
-    final double? fontSize,
-    final Color? color,
-    final double? letterSpacing,
-    final double? height,
+    BuildContext context, {
+    FontWeight? fontWeight,
+    double? fontSize,
+    Color? color,
+    double? letterSpacing,
+    double? height,
   }) {
     final baseStyle = Theme.of(context).textTheme.labelMedium;
     return (baseStyle ?? const TextStyle()).copyWith(

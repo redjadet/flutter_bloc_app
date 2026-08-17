@@ -1,6 +1,6 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CountdownStatus extends StatelessWidget {
   const CountdownStatus({
@@ -17,7 +17,7 @@ class CountdownStatus extends StatelessWidget {
   final Duration animDuration;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final TextStyle? base = Theme.of(context).textTheme.bodyMedium;
     final double baseSize = (base?.fontSize ?? 14).spMax;
     return Row(
@@ -25,7 +25,7 @@ class CountdownStatus extends StatelessWidget {
       children: [
         AnimatedSwitcher(
           duration: animDuration,
-          transitionBuilder: (final child, final animation) =>
+          transitionBuilder: (child, animation) =>
               FadeTransition(opacity: animation, child: child),
           child: Icon(
             active ? Icons.timer : Icons.pause_circle_filled,
@@ -38,7 +38,7 @@ class CountdownStatus extends StatelessWidget {
         Flexible(
           child: AnimatedSwitcher(
             duration: animDuration,
-            transitionBuilder: (final child, final animation) =>
+            transitionBuilder: (child, animation) =>
                 FadeTransition(opacity: animation, child: child),
             child: Text(
               label,

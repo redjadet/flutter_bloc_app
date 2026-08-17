@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_models.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibraryCategoryList extends StatelessWidget {
   const LibraryCategoryList({required this.l10n, super.key});
@@ -9,7 +9,7 @@ class LibraryCategoryList extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     final List<LibraryCategory> categories = [
       LibraryCategory(label: l10n.libraryDemoCategoryScapes),
@@ -53,7 +53,7 @@ class _LibraryCategoryRow extends StatelessWidget {
   final Color caretColor;
 
   @override
-  Widget build(final BuildContext context) => InkWell(
+  Widget build(BuildContext context) => InkWell(
     onTap: () {},
     child: Row(
       children: [
@@ -80,7 +80,7 @@ class _CaretPainter extends CustomPainter {
   final Color color;
 
   @override
-  void paint(final Canvas canvas, final Size size) {
+  void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -98,6 +98,6 @@ class _CaretPainter extends CustomPainter {
 
   @override
   @override
-  bool shouldRepaint(covariant final _CaretPainter oldDelegate) =>
+  bool shouldRepaint(covariant _CaretPainter oldDelegate) =>
       oldDelegate.color != color;
 }

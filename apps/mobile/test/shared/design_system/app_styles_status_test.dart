@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 import '../../helpers/pump_with_mix_theme.dart';
 
 void main() {
   group('AppStyles status styles', () {
-    testWidgets('resolve documented status and outline styles', (
-      final tester,
-    ) async {
+    testWidgets('resolve documented status and outline styles', (tester) async {
       await pumpWithMixTheme(
         tester,
         child: Column(
@@ -29,7 +27,7 @@ void main() {
       expect(find.byType(Box), findsNWidgets(3));
     });
 
-    testWidgets('resolve layout and button styles', (final tester) async {
+    testWidgets('resolve layout and button styles', (tester) async {
       await pumpWithMixTheme(
         tester,
         child: Column(

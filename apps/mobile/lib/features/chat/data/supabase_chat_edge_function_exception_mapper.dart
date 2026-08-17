@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// When [chat-complete] is not deployed, the gateway responds with 404 and/or
 /// a reason phrase like "Requested function was not found".
-bool looksLikeUndeployedChatCompleteFunction(final FunctionException e) {
+bool looksLikeUndeployedChatCompleteFunction(FunctionException e) {
   if (e.status == 404) {
     return true;
   }
@@ -37,7 +37,7 @@ bool looksLikeUndeployedChatCompleteFunction(final FunctionException e) {
 
 /// Maps [FunctionException] from Supabase Functions `chat-complete` invoke.
 ChatRemoteFailureException mapSupabaseChatCompleteFunctionException(
-  final FunctionException e,
+  FunctionException e,
 ) {
   final Object? details = e.details;
   if (details is Map) {

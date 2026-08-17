@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
 
 /// Maps [Failure] to [IotBleErrorCode] for cubit/UI.
-IotBleErrorCode mapFailureToIotBleErrorCode(final Failure failure) {
+IotBleErrorCode mapFailureToIotBleErrorCode(Failure failure) {
   return switch (failure) {
     PermissionFailure() => IotBleErrorCode.permissionDenied,
     PlatformFailure() => IotBleErrorCode.unsupportedPlatform,

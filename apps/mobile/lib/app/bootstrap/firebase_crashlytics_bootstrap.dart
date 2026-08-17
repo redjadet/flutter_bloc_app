@@ -25,10 +25,10 @@ class FirebaseCrashlyticsBootstrap {
       _defaultSetCustomKey;
 
   static Future<void> _defaultRecordCrash(
-    final Object exception,
-    final StackTrace? stack, {
-    required final bool fatal,
-    required final String reason,
+    Object exception,
+    StackTrace? stack, {
+    required bool fatal,
+    required String reason,
   }) {
     return FirebaseCrashlytics.instance.recordError(
       exception,
@@ -39,7 +39,7 @@ class FirebaseCrashlyticsBootstrap {
     );
   }
 
-  static void _defaultSetCustomKey(final String key, final Object value) {
+  static void _defaultSetCustomKey(String key, Object value) {
     if (!FirebaseBootstrapService.isFirebaseInitialized) {
       return;
     }
@@ -49,9 +49,9 @@ class FirebaseCrashlyticsBootstrap {
   /// Allowlisted Crashlytics metadata only (no PII / tokens / device IDs).
   @visibleForTesting
   static Map<String, String> metadataKeys({
-    final String? flavorName,
-    final String? appVersion,
-    final bool? firebaseReady,
+    String? flavorName,
+    String? appVersion,
+    bool? firebaseReady,
   }) {
     return <String, String>{
       'flavor': flavorName ?? FlavorManager.I.name,
@@ -70,7 +70,7 @@ class FirebaseCrashlyticsBootstrap {
     }
 
     final previousFlutterHandler = FlutterError.onError;
-    FlutterError.onError = (final details) {
+    FlutterError.onError = (details) {
       final Object? sanitized = LogRedaction.sanitizeError(details.exception);
       unawaited(
         recordCrash(
@@ -84,7 +84,7 @@ class FirebaseCrashlyticsBootstrap {
     };
 
     final previousPlatformHandler = PlatformDispatcher.instance.onError;
-    PlatformDispatcher.instance.onError = (final error, final stackTrace) {
+    PlatformDispatcher.instance.onError = (error, stackTrace) {
       final Object? sanitized = LogRedaction.sanitizeError(error);
       unawaited(
         recordCrash(
@@ -103,10 +103,10 @@ class FirebaseCrashlyticsBootstrap {
   /// Signature matches the production-readiness cubit non-fatal sink so the
   /// router can pass this method as a tear-off without touching test-only APIs.
   static Future<void> recordProductionReadinessTestNonFatal(
-    final Object exception,
-    final StackTrace? stack, {
-    required final bool fatal,
-    required final String reason,
+    Object exception,
+    StackTrace? stack, {
+    required bool fatal,
+    required String reason,
   }) {
     return recordCrash(
       exception,

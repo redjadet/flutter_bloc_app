@@ -3,8 +3,8 @@ part of 'offline_first_remote_config_repository.dart';
 extension _OfflineFirstRemoteConfigRepositorySync
     on OfflineFirstRemoteConfigRepository {
   Future<void> _refreshFromRemote({
-    required final String reason,
-    final bool skipNetworkCheck = false,
+    required String reason,
+    bool skipNetworkCheck = false,
   }) async {
     if (!skipNetworkCheck) {
       final NetworkStatus status = await _networkStatusService
@@ -32,7 +32,7 @@ extension _OfflineFirstRemoteConfigRepositorySync
     await _fetchCoalescer.run(() => _doRefreshFromRemote(reason));
   }
 
-  Future<void> _doRefreshFromRemote(final String reason) async {
+  Future<void> _doRefreshFromRemote(String reason) async {
     final Stopwatch stopwatch = Stopwatch()..start();
     try {
       await _remoteRepository.forceFetch();

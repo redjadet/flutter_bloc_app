@@ -7,18 +7,18 @@ part 'native_showcase_telemetry_snapshot.freezed.dart';
 abstract class NativeShowcaseTelemetrySnapshot
     with _$NativeShowcaseTelemetrySnapshot {
   const factory NativeShowcaseTelemetrySnapshot({
-    required final NativeShowcaseTelemetryStatus status,
-    required final int schemaVersion,
-    required final String sessionId,
-    required final int sequence,
-    required final int acceptedCount,
-    required final int sourceReceivedCount,
-    required final double averageValue,
-    required final int sourceRateHz,
-    required final int deliveredRateHz,
-    required final int droppedBeforeBridgeCount,
-    required final DateTime windowStartedAt,
-    required final DateTime emittedAt,
-    final String? message,
+    required NativeShowcaseTelemetryStatus status,
+    required int schemaVersion,
+    required String sessionId,
+    required int sequence,
+    required int acceptedCount,
+    required int sourceReceivedCount,
+    required double averageValue,
+    required int sourceRateHz,
+    required int deliveredRateHz,
+    required int droppedBeforeBridgeCount,
+    required DateTime windowStartedAt,
+    required DateTime emittedAt,
+    String? message,
   }) = _NativeShowcaseTelemetrySnapshot;
 }

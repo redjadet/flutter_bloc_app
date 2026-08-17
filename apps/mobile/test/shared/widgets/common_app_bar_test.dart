@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/app/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/app/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   Widget createTestWidget({
@@ -11,7 +12,7 @@ void main() {
     List<Widget>? actions,
   }) {
     return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         appBar: CommonAppBar(
@@ -110,7 +111,7 @@ void main() {
               foregroundColor: Colors.white,
             ),
           ),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             appBar: CommonAppBar(title: title, homeTooltip: homeTooltip),

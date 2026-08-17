@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_bottom_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _profileScreenLabel = 'Profile Screen';
 const _registerScreenLabel = 'Register Screen';
@@ -10,7 +10,7 @@ const _chatScreenLabel = 'Chat Screen';
 const _exampleScreenLabel = 'Example Screen';
 
 Future<void> _pumpBottomNavApp(
-  final WidgetTester tester, {
+  WidgetTester tester, {
   String initialLocation = AppRoutes.profilePath,
 }) async {
   final GoRouter router = GoRouter(
@@ -18,29 +18,29 @@ Future<void> _pumpBottomNavApp(
     routes: <GoRoute>[
       GoRoute(
         path: AppRoutes.profilePath,
-        builder: (final context, final state) => const Scaffold(
+        builder: (context, state) => const Scaffold(
           body: Center(child: Text(_profileScreenLabel)),
           bottomNavigationBar: ProfileBottomNav(),
         ),
       ),
       GoRoute(
         path: AppRoutes.registerPath,
-        builder: (final context, final state) =>
+        builder: (context, state) =>
             const Scaffold(body: Center(child: Text(_registerScreenLabel))),
       ),
       GoRoute(
         path: AppRoutes.chatListPath,
-        builder: (final context, final state) =>
+        builder: (context, state) =>
             const Scaffold(body: Center(child: Text(_chatScreenLabel))),
       ),
       GoRoute(
         path: AppRoutes.examplePath,
-        builder: (final context, final state) =>
+        builder: (context, state) =>
             const Scaffold(body: Center(child: Text(_exampleScreenLabel))),
       ),
       GoRoute(
         path: AppRoutes.searchPath,
-        builder: (final context, final state) =>
+        builder: (context, state) =>
             const Scaffold(body: Center(child: Text('Search Screen'))),
       ),
     ],
@@ -51,7 +51,7 @@ Future<void> _pumpBottomNavApp(
   await tester.pumpAndSettle();
 }
 
-Future<void> _tapNavLabel(final WidgetTester tester, final String label) async {
+Future<void> _tapNavLabel(WidgetTester tester, String label) async {
   await tester.tap(find.text(label));
   await tester.pumpAndSettle();
 }
@@ -59,7 +59,7 @@ Future<void> _tapNavLabel(final WidgetTester tester, final String label) async {
 void main() {
   group('ProfileBottomNav', () {
     testWidgets('stays on profile when current destination is tapped', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpBottomNavApp(tester);
 
@@ -72,7 +72,7 @@ void main() {
     });
 
     testWidgets('pushes register route from add action', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpBottomNavApp(tester);
 
@@ -83,7 +83,7 @@ void main() {
     });
 
     testWidgets('pushes chat list route from chat destination', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpBottomNavApp(tester);
 
@@ -94,7 +94,7 @@ void main() {
     });
 
     testWidgets('goes to example route when no route can be popped', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpBottomNavApp(tester);
 

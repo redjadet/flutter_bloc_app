@@ -13,7 +13,7 @@ import 'dart:io';
 /// When enabled, the script replaces `assets/config/secrets.json` with the
 /// sanitized contents of `assets/config/secrets.sample.json`, or a minimal
 /// placeholder if the sample is unavailable.
-void main(final List<String> args) {
+void main(List<String> args) {
   final bool scrubEnabled =
       Platform.environment['SCRUB_ASSET_SECRETS']?.toLowerCase().trim() ==
       'true';

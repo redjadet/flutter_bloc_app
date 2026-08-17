@@ -1,8 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FirebaseFunctionsTestPage extends StatefulWidget {
   const FirebaseFunctionsTestPage({
@@ -137,7 +137,7 @@ class _FirebaseFunctionsTestPageState extends State<FirebaseFunctionsTestPage> {
     }
   }
 
-  static String? _extractToken(final Object? data) {
+  static String? _extractToken(Object? data) {
     if (data is! Map) {
       return null;
     }
@@ -150,14 +150,14 @@ class _FirebaseFunctionsTestPageState extends State<FirebaseFunctionsTestPage> {
   }
 
   static String _safeFunctionsError(
-    final FirebaseFunctionsException exception,
-    final AppLocalizations l10n,
+    FirebaseFunctionsException exception,
+    AppLocalizations l10n,
   ) {
     return '${exception.code}: ${l10n.firebaseFunctionsSafeError}';
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
     final bool helloEnabled = _isFirebaseReady && !_isCalling;
     final bool tokenEnabled =

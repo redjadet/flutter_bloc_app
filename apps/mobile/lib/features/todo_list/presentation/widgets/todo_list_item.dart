@@ -1,11 +1,11 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_actions.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_content.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_dismissible.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TodoListItem extends StatelessWidget {
   const TodoListItem({
@@ -30,7 +30,7 @@ class TodoListItem extends StatelessWidget {
   final ValueChanged<bool>? onSelectionChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final selectionChanged = onSelectionChanged;
     final l10n = context.l10n;
     final theme = Theme.of(context);
@@ -82,7 +82,7 @@ class TodoListItem extends StatelessWidget {
         vertical: cardVerticalPadding,
       ),
       child: LayoutBuilder(
-        builder: (final context, final constraints) {
+        builder: (context, constraints) {
           final bool isCompactLayout = constraints.maxWidth < 340;
 
           final Widget actions = buildTodoItemActions(
@@ -99,7 +99,7 @@ class TodoListItem extends StatelessWidget {
               if (selectionChanged case final onSelectionChanged?) ...[
                 Checkbox.adaptive(
                   value: isSelected,
-                  onChanged: (final value) {
+                  onChanged: (value) {
                     if (value case final selected?) {
                       onSelectionChanged(selected);
                     }

@@ -43,73 +43,66 @@ void main() {
     expect(pending.first.id, equals(operation.id));
   });
 
-  test(
-    'enqueue dedupes by entityType + idempotencyKey (+ user scope when present)',
-    () async {
-      final SyncOperation op1 = SyncOperation.create(
-        entityType: 'counter',
-        payload: <String, dynamic>{'count': 1},
-        idempotencyKey: 'same-key',
-      );
-      final SyncOperation op2 = SyncOperation.create(
-        entityType: 'counter',
-        payload: <String, dynamic>{'count': 2},
-        idempotencyKey: 'same-key',
-      );
+  test('enqueue dedupes by entityType + idempotencyKey (+ user scope when present)', () async {
+    final SyncOperation op1 = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 1},
+      idempotencyKey: 'same-key',
+    );
+    final SyncOperation op2 = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 2},
+      idempotencyKey: 'same-key',
+    );
 
-      await repository.enqueue(op1);
-      await repository.enqueue(op2);
+    await repository.enqueue(op1);
+    await repository.enqueue(op2);
 
-      final List<SyncOperation> pending = await repository.getPendingOperations(
-        now: DateTime.now().toUtc(),
-      );
+    final List<SyncOperation> pending = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    );
 
-      expect(pending, hasLength(1));
-      expect(pending.single.payload['count'], equals(2));
-    },
-  );
+    expect(pending, hasLength(1));
+    expect(pending.single.payload['count'], equals(2));
+  });
 
-  test(
-    'enqueue does not dedupe iot_demo operations across different supabase user scopes',
-    () async {
-      final SyncOperation userA = SyncOperation.create(
-        entityType: 'iot_demo',
-        payload: <String, dynamic>{
-          'deviceId': 'light-1',
-          'action': 'connect',
-          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
-        },
-        idempotencyKey: 'same-key',
-      );
-      final SyncOperation userB = SyncOperation.create(
-        entityType: 'iot_demo',
-        payload: <String, dynamic>{
-          'deviceId': 'light-1',
-          'action': 'connect',
-          PendingSyncRepository.payloadKeySupabaseUserId: 'user-b',
-        },
-        idempotencyKey: 'same-key',
-      );
+  test('enqueue does not dedupe iot_demo operations across different supabase user scopes', () async {
+    final SyncOperation userA = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{
+        'deviceId': 'light-1',
+        'action': 'connect',
+        PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+      },
+      idempotencyKey: 'same-key',
+    );
+    final SyncOperation userB = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{
+        'deviceId': 'light-1',
+        'action': 'connect',
+        PendingSyncRepository.payloadKeySupabaseUserId: 'user-b',
+      },
+      idempotencyKey: 'same-key',
+    );
 
-      await repository.enqueue(userA);
-      await repository.enqueue(userB);
+    await repository.enqueue(userA);
+    await repository.enqueue(userB);
 
-      final List<SyncOperation> pending = await repository.getPendingOperations(
-        now: DateTime.now().toUtc(),
-      );
+    final List<SyncOperation> pending = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    );
 
-      expect(pending, hasLength(2));
-      expect(
-        pending
-            .map(
-              (final op) =>
-                  op.payload[PendingSyncRepository.payloadKeySupabaseUserId],
-            )
-            .toSet(),
-        containsAll(<String>['user-a', 'user-b']),
-      );
-    },
-  );
+    expect(pending, hasLength(2));
+    expect(
+      pending
+          .map(
+            (op) => op.payload[PendingSyncRepository.payloadKeySupabaseUserId],
+          )
+          .toSet(),
+      containsAll(<String>['user-a', 'user-b']),
+    );
+  });
 
   test(
     'enqueue dedupes iot_demo operations within the same supabase user scope',
@@ -171,10 +164,7 @@ void main() {
     );
 
     expect(pending, hasLength(2));
-    expect(pending.map((final op) => op.entityType).toSet(), {
-      'counter',
-      'chat',
-    });
+    expect(pending.map((op) => op.entityType).toSet(), {'counter', 'chat'});
   });
 
   test('onOperationEnqueued emits after each successful enqueue', () async {
@@ -393,69 +383,65 @@ void main() {
   });
 
   group('schema migrate: pending_sync_operations:v1', () {
-    test(
-      'quarantines malformed legacy ops to dead_letter:<originalKey> then deletes originals',
-      () async {
-        await hiveService.openBoxAndRun<void>(
-          'pending_sync_operations',
-          action: (final box) async {
-            await box.put('not-a-map', 123);
-            await box.put('missing-fields', <String, dynamic>{
-              'entityType': 'x',
-            });
-            final SyncOperation legacyIot = SyncOperation.create(
-              entityType: 'iot_demo',
-              payload: <String, dynamic>{'deviceId': 'd1', 'action': 'connect'},
-              idempotencyKey: 'k1',
-            );
-            await box.put('legacy-iot', legacyIot.toJson());
-          },
-        );
+    test('quarantines malformed legacy ops to dead_letter:<originalKey> then deletes originals', () async {
+      await hiveService.openBoxAndRun<void>(
+        'pending_sync_operations',
+        action: (box) async {
+          await box.put('not-a-map', 123);
+          await box.put('missing-fields', <String, dynamic>{'entityType': 'x'});
+          final SyncOperation legacyIot = SyncOperation.create(
+            entityType: 'iot_demo',
+            payload: <String, dynamic>{'deviceId': 'd1', 'action': 'connect'},
+            idempotencyKey: 'k1',
+          );
+          await box.put('legacy-iot', legacyIot.toJson());
+        },
+      );
 
-        // Triggers ensureSchema + migration.
-        final List<SyncOperation> pending = await repository
-            .getPendingOperations(now: DateTime.now().toUtc());
-        expect(pending, isEmpty);
+      // Triggers ensureSchema + migration.
+      final List<SyncOperation> pending = await repository.getPendingOperations(
+        now: DateTime.now().toUtc(),
+      );
+      expect(pending, isEmpty);
 
-        final box = await repository.getBox();
-        expect(box.get('not-a-map'), isNull);
-        expect(box.get('missing-fields'), isNull);
-        expect(box.get('legacy-iot'), isNull);
+      final box = await repository.getBox();
+      expect(box.get('not-a-map'), isNull);
+      expect(box.get('missing-fields'), isNull);
+      expect(box.get('legacy-iot'), isNull);
 
-        final dynamic dl1 = box.get('dead_letter:not-a-map');
-        expect(dl1, isA<Map>());
-        expect((dl1 as Map)['schema'], equals('dead_letter:v1'));
-        expect(dl1['originalKey'], equals('not-a-map'));
-        expect(dl1['error'], equals('value_not_map'));
-        expect(dl1['originalValue'], equals(123));
-        expect(dl1['quarantinedAt'], isA<String>());
+      final dynamic dl1 = box.get('dead_letter:not-a-map');
+      expect(dl1, isA<Map>());
+      expect((dl1 as Map)['schema'], equals('dead_letter:v1'));
+      expect(dl1['originalKey'], equals('not-a-map'));
+      expect(dl1['error'], equals('value_not_map'));
+      expect(dl1['originalValue'], equals(123));
+      expect(dl1['quarantinedAt'], isA<String>());
 
-        final dynamic dl2 = box.get('dead_letter:missing-fields');
-        expect(dl2, isA<Map>());
-        expect((dl2 as Map)['schema'], equals('dead_letter:v1'));
-        expect(dl2['originalKey'], equals('missing-fields'));
-        expect(dl2['error'], equals('sync_operation_parse_failed'));
+      final dynamic dl2 = box.get('dead_letter:missing-fields');
+      expect(dl2, isA<Map>());
+      expect((dl2 as Map)['schema'], equals('dead_letter:v1'));
+      expect(dl2['originalKey'], equals('missing-fields'));
+      expect(dl2['error'], equals('sync_operation_parse_failed'));
 
-        final dynamic dl3 = box.get('dead_letter:legacy-iot');
-        expect(dl3, isA<Map>());
-        expect((dl3 as Map)['schema'], equals('dead_letter:v1'));
-        expect(dl3['originalKey'], equals('legacy-iot'));
-        expect(dl3['error'], equals('iot_demo_missing_user_id'));
-        expect(dl3['originalValue'], isA<Map>());
+      final dynamic dl3 = box.get('dead_letter:legacy-iot');
+      expect(dl3, isA<Map>());
+      expect((dl3 as Map)['schema'], equals('dead_letter:v1'));
+      expect(dl3['originalKey'], equals('legacy-iot'));
+      expect(dl3['error'], equals('iot_demo_missing_user_id'));
+      expect(dl3['originalValue'], isA<Map>());
 
-        final Map<dynamic, dynamic>? meta =
-            box.get(HiveSchemaMigratorService.metaKeyFingerprints)
-                as Map<dynamic, dynamic>?;
-        expect(meta?['pending_sync_operations:v1'], isNotNull);
-      },
-    );
+      final Map<dynamic, dynamic>? meta = box.get(
+        HiveSchemaMigratorService.metaKeyFingerprints,
+      ) as Map<dynamic, dynamic>?;
+      expect(meta?['pending_sync_operations:v1'], isNotNull);
+    });
 
     test(
       'migration rerun is idempotent and does not overwrite dead-letter',
       () async {
         await hiveService.openBoxAndRun<void>(
           'pending_sync_operations',
-          action: (final box) async {
+          action: (box) async {
             await box.put('not-a-map', 123);
           },
         );
@@ -477,7 +463,7 @@ void main() {
     test('migration does not emit onOperationEnqueued', () async {
       await hiveService.openBoxAndRun<void>(
         'pending_sync_operations',
-        action: (final box) async {
+        action: (box) async {
           await box.put('not-a-map', 123);
         },
       );
@@ -497,7 +483,7 @@ void main() {
       () async {
         await hiveService.openBoxAndRun<void>(
           'pending_sync_operations',
-          action: (final box) async {
+          action: (box) async {
             await box.put('not-a-map', 123);
           },
         );
@@ -519,12 +505,12 @@ void main() {
         );
 
         // Assert no event for the original key (it should be deleted, not updated).
-        expect(events.any((final e) => e.key == 'not-a-map'), isFalse);
+        expect(events.any((e) => e.key == 'not-a-map'), isFalse);
 
         // Assert any watch events are only for meta/dead-letter.
         expect(
           events.every(
-            (final e) =>
+            (e) =>
                 e.key == HiveSchemaMigratorService.metaKeyFingerprints ||
                 (e.key is String &&
                     (e.key as String).startsWith('dead_letter:')),
@@ -537,103 +523,94 @@ void main() {
     );
   });
 
-  test(
-    'getPendingOperations with supabaseUserIdFilter returns only iot_demo ops for that user',
-    () async {
-      final SyncOperation counterOp = SyncOperation.create(
-        entityType: 'counter',
-        payload: <String, dynamic>{'count': 1},
-        idempotencyKey: 'counter-1',
-      );
-      final SyncOperation iotUserA = SyncOperation.create(
-        entityType: 'iot_demo',
-        payload: <String, dynamic>{
-          'deviceId': 'light-1',
-          'action': 'connect',
-          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
-        },
-        idempotencyKey: 'iot-a-1',
-      );
-      final SyncOperation iotUserB = SyncOperation.create(
-        entityType: 'iot_demo',
-        payload: <String, dynamic>{
-          'deviceId': 'light-1',
-          'action': 'connect',
-          PendingSyncRepository.payloadKeySupabaseUserId: 'user-b',
-        },
-        idempotencyKey: 'iot-b-1',
-      );
-      await repository.enqueue(counterOp);
-      await repository.enqueue(iotUserA);
-      await repository.enqueue(iotUserB);
+  test('getPendingOperations with supabaseUserIdFilter returns only iot_demo ops for that user', () async {
+    final SyncOperation counterOp = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 1},
+      idempotencyKey: 'counter-1',
+    );
+    final SyncOperation iotUserA = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{
+        'deviceId': 'light-1',
+        'action': 'connect',
+        PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+      },
+      idempotencyKey: 'iot-a-1',
+    );
+    final SyncOperation iotUserB = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{
+        'deviceId': 'light-1',
+        'action': 'connect',
+        PendingSyncRepository.payloadKeySupabaseUserId: 'user-b',
+      },
+      idempotencyKey: 'iot-b-1',
+    );
+    await repository.enqueue(counterOp);
+    await repository.enqueue(iotUserA);
+    await repository.enqueue(iotUserB);
 
-      final List<SyncOperation> forUserA = await repository
-          .getPendingOperations(
-            now: DateTime.now().toUtc(),
-            supabaseUserIdFilter: 'user-a',
-          );
-      expect(forUserA, hasLength(2));
-      expect(
-        forUserA.map((final o) => o.entityType).toSet(),
-        containsAll(<String>['counter', 'iot_demo']),
-      );
-      expect(
-        forUserA
-            .where((final o) => o.entityType == 'iot_demo')
-            .every(
-              (final o) =>
-                  o.payload[PendingSyncRepository.payloadKeySupabaseUserId] ==
-                  'user-a',
-            ),
-        isTrue,
-      );
+    final List<SyncOperation> forUserA = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+      supabaseUserIdFilter: 'user-a',
+    );
+    expect(forUserA, hasLength(2));
+    expect(
+      forUserA.map((o) => o.entityType).toSet(),
+      containsAll(<String>['counter', 'iot_demo']),
+    );
+    expect(
+      forUserA
+          .where((o) => o.entityType == 'iot_demo')
+          .every(
+            (o) =>
+                o.payload[PendingSyncRepository.payloadKeySupabaseUserId] ==
+                'user-a',
+          ),
+      isTrue,
+    );
 
-      final List<SyncOperation> forUserB = await repository
-          .getPendingOperations(
-            now: DateTime.now().toUtc(),
-            supabaseUserIdFilter: 'user-b',
-          );
-      expect(
-        forUserB
-            .where((final o) => o.entityType == 'iot_demo')
-            .single
-            .payload[PendingSyncRepository.payloadKeySupabaseUserId],
-        equals('user-b'),
-      );
-    },
-  );
+    final List<SyncOperation> forUserB = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+      supabaseUserIdFilter: 'user-b',
+    );
+    expect(
+      forUserB
+          .where((o) => o.entityType == 'iot_demo')
+          .single
+          .payload[PendingSyncRepository.payloadKeySupabaseUserId],
+      equals('user-b'),
+    );
+  });
 
-  test(
-    'getPendingOperations with supabaseUserIdFilter excludes legacy iot_demo ops without user id',
-    () async {
-      final SyncOperation legacyIotOp = SyncOperation.create(
-        entityType: 'iot_demo',
-        payload: <String, dynamic>{
-          'deviceId': 'legacy-device',
-          'action': 'connect',
-        },
-        idempotencyKey: 'legacy-iot',
-      );
-      final SyncOperation scopedIotOp = SyncOperation.create(
-        entityType: 'iot_demo',
-        payload: <String, dynamic>{
-          'deviceId': 'scoped-device',
-          'action': 'connect',
-          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
-        },
-        idempotencyKey: 'scoped-iot',
-      );
-      await repository.enqueue(legacyIotOp);
-      await repository.enqueue(scopedIotOp);
+  test('getPendingOperations with supabaseUserIdFilter excludes legacy iot_demo ops without user id', () async {
+    final SyncOperation legacyIotOp = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{
+        'deviceId': 'legacy-device',
+        'action': 'connect',
+      },
+      idempotencyKey: 'legacy-iot',
+    );
+    final SyncOperation scopedIotOp = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{
+        'deviceId': 'scoped-device',
+        'action': 'connect',
+        PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+      },
+      idempotencyKey: 'scoped-iot',
+    );
+    await repository.enqueue(legacyIotOp);
+    await repository.enqueue(scopedIotOp);
 
-      final List<SyncOperation> filtered = await repository
-          .getPendingOperations(
-            now: DateTime.now().toUtc(),
-            supabaseUserIdFilter: 'user-a',
-          );
+    final List<SyncOperation> filtered = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+      supabaseUserIdFilter: 'user-a',
+    );
 
-      expect(filtered, hasLength(1));
-      expect(filtered.single.id, scopedIotOp.id);
-    },
-  );
+    expect(filtered, hasLength(1));
+    expect(filtered.single.id, scopedIotOp.id);
+  });
 }

@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialogs.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Bar of batch actions (complete, uncomplete, delete) for selected todo items.
 class TodoBatchActionsBar extends StatelessWidget {
@@ -23,23 +23,23 @@ class TodoBatchActionsBar extends StatelessWidget {
   final TodoListCubit cubit;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final bool hasSelectedCompleted = items.any(
-      (final item) => selectedItemIds.contains(item.id) && item.isCompleted,
+      (item) => selectedItemIds.contains(item.id) && item.isCompleted,
     );
     final bool hasSelectedActive = items.any(
-      (final item) => selectedItemIds.contains(item.id) && !item.isCompleted,
+      (item) => selectedItemIds.contains(item.id) && !item.isCompleted,
     );
 
     // Check if all filtered items are selected
     final Set<String> filteredItemIds = filteredItems
-        .map((final item) => item.id)
+        .map((item) => item.id)
         .toSet();
     final bool allFilteredItemsSelected =
         filteredItems.isNotEmpty &&
-        filteredItemIds.every((final id) => selectedItemIds.contains(id));
+        filteredItemIds.every((id) => selectedItemIds.contains(id));
 
     return Wrap(
       spacing: context.responsiveHorizontalGapS,

@@ -8,9 +8,9 @@ import 'package:networking/networking.dart';
 
 class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
   CertificatePinningDemoCubit({
-    required final CertificatePinningConfig config,
-    required final MockCertificateScenarioController scenarioController,
-    required final CertificatePinningLogger logger,
+    required CertificatePinningConfig config,
+    required MockCertificateScenarioController scenarioController,
+    required CertificatePinningLogger logger,
     required this._triggerSecureProbe,
     required this._selectMockScenario,
     required this._resetMockScenario,
@@ -21,7 +21,7 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
          CertificatePinningDemoState(
            mode: config.mode,
            scenario: scenarioController.scenario,
-           logLines: logger.entries.map((final e) => e.displayLine).toList(),
+           logLines: logger.entries.map((e) => e.displayLine).toList(),
          ),
        );
 
@@ -40,12 +40,12 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
       state.copyWith(
         mode: _config.mode,
         scenario: _scenarioController.scenario,
-        logLines: _logger.entries.map((final e) => e.displayLine).toList(),
+        logLines: _logger.entries.map((e) => e.displayLine).toList(),
       ),
     );
   }
 
-  void selectScenario(final MockCertificateScenario scenario) {
+  void selectScenario(MockCertificateScenario scenario) {
     _selectMockScenario(scenario);
     if (isClosed) {
       return;
@@ -101,7 +101,7 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
     }
 
     final List<String> logs = _logger.entries
-        .map((final e) => e.displayLine)
+        .map((e) => e.displayLine)
         .toList();
 
     switch (outcome) {

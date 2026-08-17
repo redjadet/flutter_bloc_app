@@ -1,20 +1,20 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('NavigationUtils', () {
-    testWidgets('maybePop returns true when can pop', (final tester) async {
+    testWidgets('maybePop returns true when can pop', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           initialRoute: '/first',
           routes: {
-            '/first': (final context) => const FirstPage(),
-            '/second': (final context) => const SecondPage(),
+            '/first': (context) => const FirstPage(),
+            '/second': (context) => const SecondPage(),
           },
         ),
       );
@@ -31,7 +31,7 @@ void main() {
       expect(result, isTrue);
     });
 
-    testWidgets('maybePop returns false when cannot pop', (final tester) async {
+    testWidgets('maybePop returns false when cannot pop', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: FirstPage()));
 
       final bool result = NavigationUtils.maybePop(
@@ -41,13 +41,13 @@ void main() {
       expect(result, isFalse);
     });
 
-    testWidgets('popOrGoHome pops when possible', (final tester) async {
+    testWidgets('popOrGoHome pops when possible', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           initialRoute: '/first',
           routes: {
-            '/first': (final context) => const FirstPage(),
-            '/second': (final context) => const SecondPage(),
+            '/first': (context) => const FirstPage(),
+            '/second': (context) => const SecondPage(),
           },
         ),
       );
@@ -63,15 +63,13 @@ void main() {
       expect(find.byType(FirstPage), findsOneWidget);
     });
 
-    testWidgets('popOrGoHome navigates home when cannot pop', (
-      final tester,
-    ) async {
+    testWidgets('popOrGoHome navigates home when cannot pop', (tester) async {
       final GoRouter router = GoRouter(
         initialLocation: AppRoutes.counterPath,
         routes: [
           GoRoute(
             path: AppRoutes.counterPath,
-            builder: (final context, final state) => const FirstPage(),
+            builder: (context, state) => const FirstPage(),
           ),
         ],
       );
@@ -87,14 +85,14 @@ void main() {
     });
 
     testWidgets('safeGo navigates after delay when context is mounted', (
-      final tester,
+      tester,
     ) async {
       final GoRouter router = GoRouter(
         initialLocation: AppRoutes.counterPath,
         routes: [
           GoRoute(
             path: AppRoutes.counterPath,
-            builder: (final context, final state) => const FirstPage(),
+            builder: (context, state) => const FirstPage(),
           ),
         ],
       );
@@ -117,14 +115,14 @@ void main() {
     });
 
     testWidgets('safeGo skips navigation when context is not mounted', (
-      final tester,
+      tester,
     ) async {
       final GoRouter router = GoRouter(
         initialLocation: AppRoutes.counterPath,
         routes: [
           GoRoute(
             path: AppRoutes.counterPath,
-            builder: (final context, final state) => const FirstPage(),
+            builder: (context, state) => const FirstPage(),
           ),
         ],
       );
@@ -155,13 +153,13 @@ void main() {
       expect(onSkippedCalled, isTrue);
     });
 
-    testWidgets('safeGo handles navigation errors', (final tester) async {
+    testWidgets('safeGo handles navigation errors', (tester) async {
       final GoRouter router = GoRouter(
         initialLocation: AppRoutes.counterPath,
         routes: [
           GoRoute(
             path: AppRoutes.counterPath,
-            builder: (final context, final state) => const FirstPage(),
+            builder: (context, state) => const FirstPage(),
           ),
         ],
       );
@@ -185,7 +183,7 @@ class FirstPage extends StatelessWidget {
   const FirstPage({super.key});
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       const Scaffold(body: Text('First Page'));
 }
 
@@ -193,6 +191,6 @@ class SecondPage extends StatelessWidget {
   const SecondPage({super.key});
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       const Scaffold(body: Text('Second Page'));
 }

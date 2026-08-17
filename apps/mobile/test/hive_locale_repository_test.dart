@@ -1,8 +1,8 @@
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 import 'test_helpers.dart' as test_helpers;
 

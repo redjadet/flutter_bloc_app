@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart' show RetryNotification;
 
 /// Listens to [RetryNotification] stream and shows a SnackBar with retry action.
@@ -35,7 +35,7 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
   }
 
   @override
-  void didUpdateWidget(final RetrySnackBarListener oldWidget) {
+  void didUpdateWidget(RetrySnackBarListener oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.notifications != widget.notifications) {
       final StreamSubscription<RetryNotification>? previousSubscription =
@@ -51,7 +51,7 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
     _subscription = _disposables.trackSubscription(
       widget.notifications.listen(
         _handleNotification,
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'RetrySnackBarListener stream error',
             error,
@@ -62,7 +62,7 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
     );
   }
 
-  void _handleNotification(final RetryNotification notification) {
+  void _handleNotification(RetryNotification notification) {
     if (!mounted) {
       ContextUtils.logNotMounted('RetrySnackBarListener._handleNotification');
       return;
@@ -99,5 +99,5 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
   }
 
   @override
-  Widget build(final BuildContext context) => widget.child;
+  Widget build(BuildContext context) => widget.child;
 }

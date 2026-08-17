@@ -5,14 +5,14 @@ class _CalculatorDisplay extends StatelessWidget {
 
   @override
   Widget build(
-    final BuildContext context,
+    BuildContext context,
   ) => TypeSafeBlocSelector<CalculatorCubit, CalculatorState, _DisplayData>(
-    selector: (final state) => _DisplayData(
+    selector: (state) => _DisplayData(
       display: state.display,
       history: state.history,
       error: state.error,
     ),
-    builder: (final context, final data) {
+    builder: (context, data) {
       final ThemeData theme = Theme.of(context);
       final ColorScheme colors = theme.colorScheme;
       final double historySpacing = context.responsiveGapS;
@@ -49,7 +49,7 @@ class _CalculatorDisplay extends StatelessWidget {
         null => data.display,
       };
       return LayoutBuilder(
-        builder: (final context, final constraints) {
+        builder: (context, constraints) {
           final double maxPad = constraints.maxWidth * 0.12;
           final double minPad = math.min(12, maxPad).toDouble();
           final double safeHorizontalPadding = context.responsiveHorizontalGapL
@@ -97,8 +97,8 @@ class _CalculatorDisplay extends StatelessWidget {
 @freezed
 abstract class _DisplayData with _$DisplayData {
   const factory _DisplayData({
-    required final String display,
-    required final String history,
-    required final CalculatorError? error,
+    required String display,
+    required String history,
+    required CalculatorError? error,
   }) = __DisplayData;
 }

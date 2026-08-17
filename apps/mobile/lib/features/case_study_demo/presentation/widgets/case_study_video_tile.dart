@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/case_study_local_video_exists.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/case_study_video_blob_lifecycle.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/case_study_video_controller_factory.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:video_player/video_player.dart';
 
 /// Inline video preview with lifecycle-safe controller ownership.
@@ -110,7 +110,7 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
   }
 
   @override
-  void didUpdateWidget(covariant final CaseStudyVideoTile oldWidget) {
+  void didUpdateWidget(covariant CaseStudyVideoTile oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.videoPath != widget.videoPath) {
       _disposeController();
@@ -121,7 +121,7 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
   }
 
   @override
-  void didChangeAppLifecycleState(final AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     final VideoPlayerController? c = _controller;
     if (c == null || !c.value.isInitialized) return;
     if (state == AppLifecycleState.inactive ||
@@ -149,7 +149,7 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (_fileMissing || _initFailed) {
       return Text(
         _fileMissing

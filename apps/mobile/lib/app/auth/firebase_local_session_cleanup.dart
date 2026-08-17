@@ -59,8 +59,8 @@ void _resumeSharedOfflineRemoteWatches() {
 /// Quiesces [BackgroundSyncCoordinator] before mutating the queue so an
 /// in-flight cycle cannot process previous-user ops under the new session.
 Future<void> clearFirebaseLocalSessionData({
-  required final AuthProviderKind provider,
-  required final SessionLocalCleanupReason reason,
+  required AuthProviderKind provider,
+  required SessionLocalCleanupReason reason,
 }) async {
   if (provider != AuthProviderKind.firebase) {
     return;

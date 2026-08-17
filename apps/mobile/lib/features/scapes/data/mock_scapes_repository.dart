@@ -17,7 +17,7 @@ class MockScapesRepository implements ScapesRepository {
       'blue',
     ];
 
-    return List.generate(6, (final index) {
+    return List.generate(6, (index) {
       final color = colors[index % colors.length];
       return Scape(
         id: 'scape_$index',

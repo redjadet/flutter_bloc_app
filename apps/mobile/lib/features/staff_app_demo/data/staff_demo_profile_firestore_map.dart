@@ -6,9 +6,9 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_role.
 /// When [omitInactive] is true, returns null for inactive profiles (used when
 /// building assignable staff lists).
 StaffDemoProfile? staffDemoProfileFromFirestoreDoc({
-  required final String userId,
-  required final Map<String, dynamic> data,
-  final bool omitInactive = false,
+  required String userId,
+  required Map<String, dynamic> data,
+  bool omitInactive = false,
 }) {
   final role = StaffDemoRole.tryParse(data['role'] as String?);
   if (role == null) return null;

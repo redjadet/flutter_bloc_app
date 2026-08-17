@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_cubit.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_state.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -29,9 +29,8 @@ void main() {
       parser = _MockDeepLinkParser();
       streamController = StreamController<Uri>.broadcast();
 
-      when(
-        () => service.linkStream(),
-      ).thenAnswer((_) => streamController.stream);
+      when(() => service.linkStream())
+          .thenAnswer((_) => streamController.stream);
       when(() => parser.parse(any())).thenReturn(DeepLinkTarget.counter);
     });
 
@@ -144,9 +143,8 @@ void main() {
       'ignores overlapping initialize calls',
       build: () {
         pendingInitialLink = Completer<Uri?>();
-        when(
-          service.getInitialLink,
-        ).thenAnswer((_) => pendingInitialLink.future);
+        when(service.getInitialLink)
+            .thenAnswer((_) => pendingInitialLink.future);
         return DeepLinkCubit(service: service, parser: parser);
       },
       act: (cubit) async {

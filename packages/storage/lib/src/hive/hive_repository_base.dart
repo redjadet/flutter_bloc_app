@@ -28,12 +28,10 @@ abstract class HiveRepositoryBase {
   ///
   /// Prefer this over [getBox] when reading or writing box entries so
   /// recoverable decrypt failures stay inside [HiveService.openBoxAndRun].
-  Future<T> runWithBox<T>(
-    final Future<T> Function(Box<dynamic> box) action,
-  ) async {
+  Future<T> runWithBox<T>(Future<T> Function(Box<dynamic> box) action) async {
     return _hiveService.openBoxAndRun<T>(
       boxName,
-      action: (final box) async {
+      action: (box) async {
         await _ensureSchema(box);
         return action(box);
       },
@@ -43,9 +41,9 @@ abstract class HiveRepositoryBase {
   /// Opens and returns the Hive box for this repository.
   ///
   /// The box is opened with encryption enabled by default.
-  Future<Box<dynamic>> getBox() async => runWithBox((final box) async => box);
+  Future<Box<dynamic>> getBox() async => runWithBox((box) async => box);
 
-  Future<void> _ensureSchema(final Box<dynamic> box) async {
+  Future<void> _ensureSchema(Box<dynamic> box) async {
     final HiveBoxSchema? s = schema;
     if (s == null) {
       return;
@@ -57,7 +55,7 @@ abstract class HiveRepositoryBase {
       box: box,
       schema: s,
       // Already under per-box lock.
-      runWithBoxLock: (final Future<void> Function() runAction) => runAction(),
+      runWithBoxLock: (Future<void> Function() runAction) => runAction(),
     );
   }
 
@@ -65,7 +63,7 @@ abstract class HiveRepositoryBase {
   ///
   /// This is useful for cleanup operations where failures should not
   /// propagate to the caller.
-  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {
+  Future<void> safeDeleteKey(Box<dynamic> box, String key) async {
     try {
       await box.delete(key);
     } on Object {

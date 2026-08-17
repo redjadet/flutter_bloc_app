@@ -20,7 +20,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
     return anonKey.isEmpty ? null : anonKey;
   }
 
-  void _debugLogAuthSnapshot(final String label) {
+  void _debugLogAuthSnapshot(String label) {
     if (!kDebugMode) return;
     if (!SupabaseBootstrapService.isSupabaseInitialized) return;
     try {
@@ -54,7 +54,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
   }
 
   @override
-  Future<void> deleteCaseStudyRemote({required final String caseId}) async {
+  Future<void> deleteCaseStudyRemote({required String caseId}) async {
     final String trimmed = caseId.trim();
     if (trimmed.isEmpty) return;
     if (!SupabaseBootstrapService.isSupabaseInitialized) return;
@@ -107,8 +107,8 @@ class SupabaseCaseStudyRemoteDeleteRepository
   }
 
   Future<void> _invokeDelete({
-    required final String caseId,
-    required final String token,
+    required String caseId,
+    required String token,
   }) async {
     final String? apiKey = _readSupabaseAnonKey();
     if (apiKey == null) {

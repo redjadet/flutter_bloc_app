@@ -8,10 +8,10 @@ class _RetryUnauthorizedResult {
 
   const _RetryUnauthorizedResult.noRetry() : this._();
 
-  const _RetryUnauthorizedResult.response(final Response<dynamic> response)
+  const _RetryUnauthorizedResult.response(Response<dynamic> response)
     : this._(response: response);
 
-  const _RetryUnauthorizedResult.error(final DioException error)
+  const _RetryUnauthorizedResult.error(DioException error)
     : this._(error: error);
 
   final Response<dynamic>? response;
@@ -30,7 +30,7 @@ class _AuthTokenUnauthorizedRetrier {
   final SessionLifecycleCoordinator? sessionCoordinator;
 
   Future<_RetryUnauthorizedResult> retry(
-    final Response<dynamic> response,
+    Response<dynamic> response,
   ) async {
     if (response.statusCode != 401) {
       return const _RetryUnauthorizedResult.noRetry();
@@ -107,13 +107,13 @@ class _AuthTokenUnauthorizedRetrier {
     }
   }
 
-  User? _managedUserFrom(final RequestOptions options) {
+  User? _managedUserFrom(RequestOptions options) {
     final Object? value =
         options.extra[AuthTokenInterceptor.requestExtraManagedAuthUser];
     return value is User ? value : null;
   }
 
-  Future<String?> _refreshManagedUserToken(final User user) async {
+  Future<String?> _refreshManagedUserToken(User user) async {
     try {
       return await authTokenManager.refreshTokenAndGet(user);
     } on Object catch (error, stackTrace) {
@@ -132,7 +132,7 @@ class _AuthTokenUnauthorizedRetrier {
   }
 
   Future<void> _invalidateFirebaseSession(
-    final SessionInvalidationReason reason,
+    SessionInvalidationReason reason,
   ) async {
     final SessionLifecycleCoordinator? coordinator = sessionCoordinator;
     if (coordinator == null) {
@@ -144,7 +144,7 @@ class _AuthTokenUnauthorizedRetrier {
     );
   }
 
-  bool _isIdempotentMethod(final String method) {
+  bool _isIdempotentMethod(String method) {
     switch (method.toUpperCase()) {
       case 'GET':
       case 'HEAD':

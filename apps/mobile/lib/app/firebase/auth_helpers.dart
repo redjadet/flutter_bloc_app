@@ -12,8 +12,8 @@ const Duration _defaultAuthWaitTimeout = Duration(seconds: 5);
 ///
 /// Throws [FirebaseAuthException] if no user is available within [timeout].
 Future<User> waitForAuthUser(
-  final FirebaseAuth auth, {
-  final Duration timeout = _defaultAuthWaitTimeout,
+  FirebaseAuth auth, {
+  Duration timeout = _defaultAuthWaitTimeout,
 }) async {
   final User? current = auth.currentUser;
   if (current != null) {
@@ -23,7 +23,7 @@ Future<User> waitForAuthUser(
   try {
     return await auth
         .authStateChanges()
-        .where((final user) => user != null)
+        .where((user) => user != null)
         .cast<User>()
         .first
         .timeout(timeout);

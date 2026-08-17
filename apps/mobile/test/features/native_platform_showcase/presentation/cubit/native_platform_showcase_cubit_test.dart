@@ -85,9 +85,8 @@ void main() {
       shareText = _MockShareNativeShowcaseTextUseCase();
       telemetryController =
           StreamController<NativeShowcaseTelemetrySnapshot>.broadcast();
-      when(
-        () => watchTelemetry(config: any(named: 'config')),
-      ).thenAnswer((_) => telemetryController.stream);
+      when(() => watchTelemetry(config: any(named: 'config')))
+          .thenAnswer((_) => telemetryController.stream);
     });
 
     tearDown(() async {
@@ -107,7 +106,7 @@ void main() {
         when(() => loadShowcase()).thenAnswer((_) async => loadedData);
         return buildCubit();
       },
-      act: (final cubit) => cubit.load(),
+      act: (cubit) => cubit.load(),
       expect: () => <NativePlatformShowcaseState>[
         const NativePlatformShowcaseState.loading(),
         NativePlatformShowcaseState.loaded(loadedData),
@@ -123,7 +122,7 @@ void main() {
         when(() => loadShowcase()).thenAnswer((_) async => loadedData);
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.load();
         telemetryController.add(telemetrySnapshot);
       },
@@ -143,7 +142,7 @@ void main() {
         when(() => loadShowcase()).thenAnswer((_) async => loadedData);
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.load();
         telemetryController.add(telemetrySnapshot);
         telemetryController.add(
@@ -176,13 +175,7 @@ void main() {
 
         cubit.state.maybeWhen(
           loaded:
-              (
-                final data,
-                final telemetry,
-                final lastAction,
-                final lastActionResult,
-                final actionInFlight,
-              ) {
+              (data, telemetry, lastAction, lastActionResult, actionInFlight) {
                 expect(data, loadedData);
                 expect(telemetry?.status, NativeShowcaseTelemetryStatus.failed);
                 expect(telemetry?.message, contains('stream failed'));
@@ -198,7 +191,7 @@ void main() {
         when(() => loadShowcase()).thenThrow(Exception('fail'));
         return buildCubit();
       },
-      act: (final cubit) => cubit.load(),
+      act: (cubit) => cubit.load(),
       expect: () => <NativePlatformShowcaseState>[
         const NativePlatformShowcaseState.loading(),
         const NativePlatformShowcaseState.error(
@@ -219,7 +212,7 @@ void main() {
         });
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         final first = cubit.load();
         final second = cubit.load();
         await Future.wait<void>(<Future<void>>[first, second]);
@@ -274,7 +267,7 @@ void main() {
         when(() => triggerHaptic()).thenAnswer((_) async => hapticSuccess);
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.load();
         telemetryController.add(telemetrySnapshot);
         await Future<void>.delayed(Duration.zero);
@@ -308,7 +301,7 @@ void main() {
         when(() => triggerHaptic()).thenAnswer((_) async => hapticSuccess);
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.load();
         await cubit.triggerHaptic();
         telemetryController.add(telemetrySnapshot);
@@ -344,7 +337,7 @@ void main() {
         });
         return buildCubit();
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.load();
         final first = cubit.triggerHaptic();
         final second = cubit.triggerHaptic();

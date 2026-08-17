@@ -56,7 +56,7 @@ void main() {
       addTearDown(() => debugDefaultTargetPlatformOverride = null);
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             if (call.method == 'invokeSwift') {
               return 'Swift ok';
             }
@@ -77,7 +77,7 @@ void main() {
       addTearDown(() => debugDefaultTargetPlatformOverride = null);
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             if (call.method == 'triggerHaptic') {
               return 'Haptic impact triggered';
             }
@@ -110,7 +110,7 @@ void main() {
 
       var invoked = false;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             invoked = true;
             return 'should not run';
           });
@@ -131,7 +131,7 @@ void main() {
 
       Object? capturedArgs;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             if (call.method == 'shareText') {
               capturedArgs = call.arguments;
               return 'Share chooser launched';

@@ -27,7 +27,7 @@ class _SyncThrowScapesRepository implements ScapesRepository {
 
 List<Scape> _defaultScapes() => List.generate(
   6,
-  (final i) => Scape(
+  (i) => Scape(
     id: 'scape_$i',
     name: 'Scape ${i + 1}',
     imageUrl: 'https://example.com/$i.jpg',
@@ -52,14 +52,9 @@ void main() {
     blocTest<ScapesCubit, ScapesState>(
       'initial state emits loading then loads scapes',
       build: buildCubit,
-      act: (final cubit) =>
-          timerService.elapse(const Duration(milliseconds: 350)),
+      act: (cubit) => timerService.elapse(const Duration(milliseconds: 350)),
       expect: () => [
-        isA<ScapesReady>().having(
-          (final s) => s.scapes.length,
-          'scapes length',
-          6,
-        ),
+        isA<ScapesReady>().having((s) => s.scapes.length, 'scapes length', 6),
       ],
     );
 
@@ -70,7 +65,7 @@ void main() {
         scapes: <Scape>[],
         viewMode: ScapesViewMode.grid,
       ),
-      act: (final cubit) => cubit.toggleViewMode(),
+      act: (cubit) => cubit.toggleViewMode(),
       expect: () => [
         const ScapesState.ready(
           scapes: <Scape>[],
@@ -86,7 +81,7 @@ void main() {
         scapes: <Scape>[],
         viewMode: ScapesViewMode.list,
       ),
-      act: (final cubit) => cubit.toggleViewMode(),
+      act: (cubit) => cubit.toggleViewMode(),
       expect: () => [
         const ScapesState.ready(
           scapes: <Scape>[],
@@ -116,15 +111,15 @@ void main() {
           ),
         ],
       ),
-      act: (final cubit) => cubit.toggleFavorite('scape_0'),
+      act: (cubit) => cubit.toggleFavorite('scape_0'),
       expect: () => [
         isA<ScapesReady>().having(
-          (final s) => s.scapes.first.isFavorite,
+          (s) => s.scapes.first.isFavorite,
           'first scape isFavorite',
           true,
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.scapes.first.isFavorite, isTrue);
         expect(cubit.state.scapes[1].isFavorite, isFalse);
       },
@@ -145,10 +140,10 @@ void main() {
           ),
         ],
       ),
-      act: (final cubit) => cubit.toggleFavorite('scape_0'),
+      act: (cubit) => cubit.toggleFavorite('scape_0'),
       expect: () => [
         isA<ScapesReady>().having(
-          (final s) => s.scapes.first.isFavorite,
+          (s) => s.scapes.first.isFavorite,
           'first scape isFavorite',
           false,
         ),

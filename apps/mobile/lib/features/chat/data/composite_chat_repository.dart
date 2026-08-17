@@ -10,9 +10,9 @@ bool _defaultAllowLocalFallback() => false;
 /// HF fallback for allowed Edge failures while **online** only.
 class CompositeChatRepository implements ChatRepository {
   CompositeChatRepository({
-    required final ChatRepository supabaseRepository,
-    required final HuggingfaceChatRepository directRepository,
-    required final NetworkStatusService networkStatusService,
+    required ChatRepository supabaseRepository,
+    required HuggingfaceChatRepository directRepository,
+    required NetworkStatusService networkStatusService,
     required this._isSupabaseProxyRunnable,
     required this._isDirectPolicyAllowed,
     this._allowLocalFallback = _defaultAllowLocalFallback,
@@ -46,7 +46,7 @@ class CompositeChatRepository implements ChatRepository {
     return null;
   }
 
-  bool _shouldEdgeFailureFallbackToDirect(final ChatRemoteFailureException e) {
+  bool _shouldEdgeFailureFallbackToDirect(ChatRemoteFailureException e) {
     if (!e.isEdge || !e.retryable) {
       return false;
     }
@@ -54,12 +54,12 @@ class CompositeChatRepository implements ChatRepository {
   }
 
   Future<ChatResult> _sendSupabase({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) => _supabase.sendMessage(
     pastUserInputs: pastUserInputs,
     generatedResponses: generatedResponses,
@@ -70,12 +70,12 @@ class CompositeChatRepository implements ChatRepository {
   );
 
   Future<ChatResult> _sendViaDirect({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     try {
       return await _direct.sendMessage(
@@ -92,10 +92,10 @@ class CompositeChatRepository implements ChatRepository {
   }
 
   ChatResult _sendViaLocalFallback({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? clientMessageId,
   }) {
     final List<String> nextPastInputs = <String>[...pastUserInputs, prompt];
     const String text = 'Backend disabled on web: using local demo response.';
@@ -115,12 +115,12 @@ class CompositeChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     final NetworkStatus connectivity = await _networkStatus.getCurrentStatus();
     final bool offline = connectivity == NetworkStatus.offline;

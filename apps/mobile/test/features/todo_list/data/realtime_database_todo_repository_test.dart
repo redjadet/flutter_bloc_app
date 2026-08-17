@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/realtime_database_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -138,9 +138,8 @@ void main() {
 
       when(() => rootRef.path).thenReturn('todos');
       when(() => rootRef.child('user-456')).thenReturn(userRef);
-      when(
-        () => userRef.get(),
-      ).thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
+      when(() => userRef.get())
+          .thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
 
       final RealtimeDatabaseTodoRepository repository =
           RealtimeDatabaseTodoRepository(todoRef: rootRef, auth: auth);
@@ -269,42 +268,36 @@ void main() {
       expect(writtenData['userId'], 'user-123');
     });
 
-    test(
-      'save falls back gracefully when FlutterFire throws details cast TypeError',
-      () async {
-        final MockFirebaseAuth auth = MockFirebaseAuth(
-          signedIn: true,
-          mockUser: MockUser(uid: 'user-123'),
-        );
-        final _MockDatabaseReference rootRef = _MockDatabaseReference();
-        final _MockDatabaseReference userRef = _MockDatabaseReference();
-        final _MockDatabaseReference todoRef = _MockDatabaseReference();
-        final DateTime now = DateTime.now().toUtc();
-        final TodoItem item = TodoItem.create(
-          title: 'Type Error Todo',
-          now: now,
-        );
+    test('save falls back gracefully when FlutterFire throws details cast TypeError', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-123'),
+      );
+      final _MockDatabaseReference rootRef = _MockDatabaseReference();
+      final _MockDatabaseReference userRef = _MockDatabaseReference();
+      final _MockDatabaseReference todoRef = _MockDatabaseReference();
+      final DateTime now = DateTime.now().toUtc();
+      final TodoItem item = TodoItem.create(title: 'Type Error Todo', now: now);
 
-        when(() => rootRef.path).thenReturn('todos');
-        when(() => rootRef.child('user-123')).thenReturn(userRef);
-        when(() => userRef.child(item.id)).thenReturn(todoRef);
-        when(() => todoRef.set(any())).thenAnswer((_) async {
-          final dynamic details = 'permission-denied';
-          // Simulate FlutterFire internals cast failure:
-          // String cannot be cast to Map<dynamic, dynamic>.
-          details as Map<dynamic, dynamic>;
-        });
+      when(() => rootRef.path).thenReturn('todos');
+      when(() => rootRef.child('user-123')).thenReturn(userRef);
+      when(() => userRef.child(item.id)).thenReturn(todoRef);
+      when(() => todoRef.set(any())).thenAnswer((_) async {
+        final dynamic details = 'permission-denied';
+        // Simulate FlutterFire internals cast failure:
+        // String cannot be cast to Map<dynamic, dynamic>.
+        details as Map<dynamic, dynamic>;
+      });
 
-        final RealtimeDatabaseTodoRepository repository =
-            RealtimeDatabaseTodoRepository(todoRef: rootRef, auth: auth);
+      final RealtimeDatabaseTodoRepository repository =
+          RealtimeDatabaseTodoRepository(todoRef: rootRef, auth: auth);
 
-        await AppLogger.silenceAsync(() {
-          return repository.save(item);
-        });
+      await AppLogger.silenceAsync(() {
+        return repository.save(item);
+      });
 
-        verify(() => todoRef.set(any())).called(1);
-      },
-    );
+      verify(() => todoRef.set(any())).called(1);
+    });
 
     test('delete removes todo from database', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(
@@ -342,9 +335,8 @@ void main() {
       when(() => rootRef.path).thenReturn('todos');
       when(() => rootRef.child('user-123')).thenReturn(userRef);
       when(() => userRef.child('todo-1')).thenReturn(todoRef);
-      when(
-        () => todoRef.remove(),
-      ).thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
+      when(() => todoRef.remove())
+          .thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
 
       final RealtimeDatabaseTodoRepository repository =
           RealtimeDatabaseTodoRepository(todoRef: rootRef, auth: auth);

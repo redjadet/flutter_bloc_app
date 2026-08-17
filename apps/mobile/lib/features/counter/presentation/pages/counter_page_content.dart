@@ -16,7 +16,7 @@ class _CounterPageContent extends StatelessWidget {
   final VoidCallback onOpenSettings;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     return Stack(
@@ -64,7 +64,7 @@ class _CounterPageConfettiOverlay extends StatelessWidget {
   final ConfettiController confettiController;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return IgnorePointer(
       child: Align(
         alignment: Alignment.topCenter,

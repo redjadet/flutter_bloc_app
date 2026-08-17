@@ -1,17 +1,17 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability_kind.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Presentation-only platform chrome for the native platform showcase.
 class NativePlatformShowcaseAdaptive {
   const NativePlatformShowcaseAdaptive._();
 
-  static bool isCupertino(final BuildContext context) =>
+  static bool isCupertino(BuildContext context) =>
       PlatformAdaptive.isCupertino(context);
 
   static IconData capabilityIcon(
-    final NativeCapabilityKind kind,
+    NativeCapabilityKind kind,
   ) => switch (kind) {
     NativeCapabilityKind.nativeViewEmbedding => Icons.view_in_ar_outlined,
     NativeCapabilityKind.platformPackageManager => Icons.inventory_2_outlined,
@@ -22,14 +22,14 @@ class NativePlatformShowcaseAdaptive {
 
   /// Label/value rows for the platform summary (runtime platform, UI family).
   static Widget summarySection({
-    required final BuildContext context,
-    required final List<({String label, String value})> rows,
+    required BuildContext context,
+    required List<({String label, String value})> rows,
   }) {
     if (isCupertino(context)) {
       return CupertinoListSection.insetGrouped(
         children: rows
             .map(
-              (final row) => CupertinoListTile(
+              (row) => CupertinoListTile(
                 title: Text(row.label),
                 additionalInfo: Text(row.value),
               ),
@@ -56,12 +56,12 @@ class NativePlatformShowcaseAdaptive {
   }
 
   static Widget capabilityTile({
-    required final BuildContext context,
-    required final Widget title,
-    final Widget? subtitle,
-    final Widget? leading,
-    final Widget? trailing,
-    final VoidCallback? onTap,
+    required BuildContext context,
+    required Widget title,
+    Widget? subtitle,
+    Widget? leading,
+    Widget? trailing,
+    VoidCallback? onTap,
   }) => PlatformAdaptive.listTile(
     context: context,
     title: title,
@@ -84,7 +84,7 @@ class _MaterialSummaryRow extends StatelessWidget {
   final ThemeData theme;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

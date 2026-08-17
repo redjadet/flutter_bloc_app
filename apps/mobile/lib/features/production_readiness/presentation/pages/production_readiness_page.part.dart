@@ -6,8 +6,8 @@ class _CrashlyticsCard extends StatelessWidget {
   final ProductionReadinessState state;
 
   static String _nonFatalLabel(
-    final ProductionReadinessNonFatalStatus status,
-    final AppLocalizations l10n,
+    ProductionReadinessNonFatalStatus status,
+    AppLocalizations l10n,
   ) {
     return switch (status) {
       ProductionReadinessNonFatalStatus.idle =>
@@ -24,7 +24,7 @@ class _CrashlyticsCard extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final bool recording =
         state.lastNonFatalStatus == ProductionReadinessNonFatalStatus.recording;
@@ -78,8 +78,8 @@ class _FcmCard extends StatelessWidget {
   final bool showSimulatedButton;
 
   static String _permissionLabel(
-    final FcmPermissionState? permission,
-    final AppLocalizations l10n,
+    FcmPermissionState? permission,
+    AppLocalizations l10n,
   ) {
     return switch (permission) {
       FcmPermissionState.authorized => l10n.fcmDemoPermissionAuthorized,
@@ -91,7 +91,7 @@ class _FcmCard extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final String modeLabel = state.fcmMode == FcmDemoMode.live
         ? l10n.productionReadinessFcmModeLive
@@ -148,7 +148,7 @@ class _FrameTimingCard extends StatelessWidget {
   final ProductionReadinessState state;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return _StatusCard(
       title: l10n.productionReadinessFrameTimingLabel,
@@ -172,7 +172,7 @@ class _ConsentCard extends StatelessWidget {
   final ValueChanged<bool> onChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonCard(
       child: Column(
@@ -210,7 +210,7 @@ class _ReleaseFlagCard extends StatelessWidget {
   final VoidCallback onRefresh;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonCard(
       child: Column(
@@ -254,7 +254,7 @@ class _StatusCard extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(final BuildContext context) => CommonCard(
+  Widget build(BuildContext context) => CommonCard(
     child: ListTile(
       title: Text(title),
       subtitle: Text(value),

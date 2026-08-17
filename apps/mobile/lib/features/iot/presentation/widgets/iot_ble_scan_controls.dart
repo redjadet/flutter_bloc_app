@@ -1,15 +1,15 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class IotBleScanControls extends StatelessWidget {
   const IotBleScanControls({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final IotBleState state = context.watchState<IotBleCubit, IotBleState>();
     final IotBleCubit cubit = context.cubit<IotBleCubit>();
@@ -42,7 +42,7 @@ class IotBleScanControls extends StatelessWidget {
               ],
               onChanged: state.isScanning
                   ? null
-                  : (final value) {
+                  : (value) {
                       if (value != null) {
                         cubit.setScanTimeout(value);
                       }

@@ -55,8 +55,7 @@ extension IotBleConnectionLifecyclePatterns on IotBleConnectionLifecycle {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( IotBleConnectionIdle value)?  idle,TResult Function( IotBleConnectionActive value)?  active,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( IotBleConnectionIdle value)?  idle,TResult Function( IotBleConnectionActive value)?  active,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case IotBleConnectionIdle() when idle != null:
 return idle(_that);case IotBleConnectionActive() when active != null:
@@ -78,8 +77,7 @@ return active(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( IotBleConnectionIdle value)  idle,required TResult Function( IotBleConnectionActive value)  active,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( IotBleConnectionIdle value)  idle,required TResult Function( IotBleConnectionActive value)  active,}){final _that = this;
 switch (_that) {
 case IotBleConnectionIdle():
 return idle(_that);case IotBleConnectionActive():
@@ -97,8 +95,7 @@ return active(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( IotBleConnectionIdle value)?  idle,TResult? Function( IotBleConnectionActive value)?  active,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( IotBleConnectionIdle value)?  idle,TResult? Function( IotBleConnectionActive value)?  active,}){final _that = this;
 switch (_that) {
 case IotBleConnectionIdle() when idle != null:
 return idle(_that);case IotBleConnectionActive() when active != null:

@@ -36,11 +36,11 @@ class _StaffDemoShiftComposeDialogState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return FutureBuilder<List<StaffDemoProfile>>(
       future: widget.staffFuture,
-      builder: (final context, final snapshot) {
+      builder: (context, snapshot) {
         final staff = snapshot.data ?? const <StaffDemoProfile>[];
         final isLoading = snapshot.connectionState == ConnectionState.waiting;
         final hasError = snapshot.hasError;
@@ -112,7 +112,7 @@ class _StaffDemoShiftComposeDialogState
                     isExpanded: true,
                     items: staff
                         .map(
-                          (final p) => DropdownMenuItem<String>(
+                          (p) => DropdownMenuItem<String>(
                             value: p.userId,
                             child: Text(
                               p.email.trim().isEmpty
@@ -123,9 +123,9 @@ class _StaffDemoShiftComposeDialogState
                           ),
                         )
                         .toList(),
-                    selectedItemBuilder: (final context) => staff
+                    selectedItemBuilder: (context) => staff
                         .map(
-                          (final p) => Align(
+                          (p) => Align(
                             alignment: AlignmentDirectional.centerStart,
                             child: Text(
                               p.email.trim().isEmpty
@@ -137,7 +137,7 @@ class _StaffDemoShiftComposeDialogState
                           ),
                         )
                         .toList(),
-                    onChanged: (final value) => setState(() {
+                    onChanged: (value) => setState(() {
                       _selectedUserId = value?.trim();
                       _recipientController.text = '';
                     }),
@@ -160,7 +160,7 @@ class _StaffDemoShiftComposeDialogState
                 ],
                 _ShiftComposeSiteDropdown(
                   selectedSiteId: _selectedSiteId,
-                  onChanged: (final value) => setState(() {
+                  onChanged: (value) => setState(() {
                     _selectedSiteId = value;
                   }),
                 ),

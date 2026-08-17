@@ -1,8 +1,8 @@
 part of 'background_sync_coordinator.dart';
 
 Future<void> _triggerSyncImpl(
-  final BackgroundSyncCoordinator c, {
-  required final bool immediate,
+  BackgroundSyncCoordinator c, {
+  required bool immediate,
 }) {
   if (c._sessionQuiesced) {
     return Future<void>.value();
@@ -50,8 +50,8 @@ Future<void> _triggerSyncImpl(
 }
 
 Future<void> _runCoalescedSyncImpl(
-  final BackgroundSyncCoordinator c, {
-  required final bool immediate,
+  BackgroundSyncCoordinator c, {
+  required bool immediate,
 }) async {
   // Coalesce multiple immediate triggers that happen while a sync is running
   // into a single follow-up sync. If another immediate trigger arrives during

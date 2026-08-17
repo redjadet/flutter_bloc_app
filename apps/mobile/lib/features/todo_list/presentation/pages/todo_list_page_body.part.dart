@@ -15,10 +15,10 @@ class _TodoHeaderLayout {
   });
 
   factory _TodoHeaderLayout.resolve({
-    required final BuildContext context,
-    required final TodoListListProjection listData,
-    required final List<TodoItem> filteredItems,
-    required final double availableHeight,
+    required BuildContext context,
+    required TodoListListProjection listData,
+    required List<TodoItem> filteredItems,
+    required double availableHeight,
   }) {
     // Window height (not layout height) so keyboard insets do not steal focus.
     final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
@@ -87,13 +87,13 @@ class _TodoHeaderLayout {
 }
 
 Widget _todoListPane({
-  required final BuildContext context,
-  required final _TodoHeaderLayout layout,
-  required final TodoListListProjection listData,
-  required final List<TodoItem> filteredItems,
-  required final TodoListCubit cubit,
-  required final ScrollController scrollController,
-  required final bool padTop,
+  required BuildContext context,
+  required _TodoHeaderLayout layout,
+  required TodoListListProjection listData,
+  required List<TodoItem> filteredItems,
+  required TodoListCubit cubit,
+  required ScrollController scrollController,
+  required bool padTop,
 }) => Expanded(
   child: Padding(
     padding: EdgeInsets.only(top: padTop ? layout.gapS : 0),
@@ -102,13 +102,13 @@ Widget _todoListPane({
       sortOrder: listData.sortOrder,
       scrollController: scrollController,
       cubit: cubit,
-      onItemSelectionChanged: (final itemId, {required final selected}) {
+      onItemSelectionChanged: (itemId, {required selected}) {
         cubit.toggleItemSelection(itemId);
       },
       onAddTodo: () => _handleAddTodo(context),
-      onEditTodo: (final item) => _handleEditTodo(context, item),
-      onDeleteTodo: (final item) => _handleDeleteTodo(context, item),
-      onDeleteWithUndo: (final item, final cubit) =>
+      onEditTodo: (item) => _handleEditTodo(context, item),
+      onDeleteTodo: (item) => _handleDeleteTodo(context, item),
+      onDeleteWithUndo: (item, cubit) =>
           _handleDeleteWithUndo(context, item, cubit),
     ),
   ),

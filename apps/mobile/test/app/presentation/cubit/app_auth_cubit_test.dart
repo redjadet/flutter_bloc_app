@@ -25,9 +25,8 @@ void main() {
       authRepository = _MockAuthRepository();
       sessionCoordinator = SessionLifecycleCoordinatorImpl();
       authController = StreamController<AuthUser?>.broadcast();
-      when(
-        () => authRepository.authStateChanges,
-      ).thenAnswer((_) => authController.stream);
+      when(() => authRepository.authStateChanges)
+          .thenAnswer((_) => authController.stream);
       when(() => authRepository.currentUser).thenReturn(null);
       cubit = AppAuthCubit(
         authRepository: authRepository,
@@ -90,36 +89,32 @@ void main() {
       expect(cubit.state, AppAuthState.authenticated(user));
     });
 
-    test(
-      'acknowledgeSessionExpired does not re-authenticate before sign-out completes',
-      () async {
-        const AuthUser user = AuthUser(id: 'u1', isAnonymous: false);
-        when(() => authRepository.currentUser).thenReturn(user);
+    test('acknowledgeSessionExpired does not re-authenticate before sign-out completes', () async {
+      const AuthUser user = AuthUser(id: 'u1', isAnonymous: false);
+      when(() => authRepository.currentUser).thenReturn(user);
 
-        await cubit.start();
-        authController.add(user);
-        await Future<void>.delayed(Duration.zero);
+      await cubit.start();
+      authController.add(user);
+      await Future<void>.delayed(Duration.zero);
 
-        await sessionCoordinator.invalidateSession(
-          provider: AuthProviderKind.firebase,
-          reason: SessionInvalidationReason.remoteRejected,
-        );
-        await Future<void>.delayed(Duration.zero);
+      await sessionCoordinator.invalidateSession(
+        provider: AuthProviderKind.firebase,
+        reason: SessionInvalidationReason.remoteRejected,
+      );
+      await Future<void>.delayed(Duration.zero);
 
-        cubit.acknowledgeSessionExpired();
+      cubit.acknowledgeSessionExpired();
 
-        expect(cubit.state, const AppAuthState.unauthenticated());
-      },
-    );
+      expect(cubit.state, const AppAuthState.unauthenticated());
+    });
 
     test('cancels auth and invalidation subscriptions on close', () async {
       final StreamController<SessionInvalidationEvent> invalidationController =
           StreamController<SessionInvalidationEvent>.broadcast();
       final _MockSessionLifecycleCoordinator closeCoordinator =
           _MockSessionLifecycleCoordinator();
-      when(
-        () => closeCoordinator.invalidationEvents,
-      ).thenAnswer((_) => invalidationController.stream);
+      when(() => closeCoordinator.invalidationEvents)
+          .thenAnswer((_) => invalidationController.stream);
       final AppAuthCubit closeCubit = AppAuthCubit(
         authRepository: authRepository,
         sessionCoordinator: closeCoordinator,
@@ -170,9 +165,8 @@ void main() {
       rawRepository = _MockAuthRepository();
       sessionCoordinator = SessionLifecycleCoordinatorImpl();
       rawAuthController = StreamController<AuthUser?>.broadcast();
-      when(
-        () => rawRepository.authStateChanges,
-      ).thenAnswer((_) => rawAuthController.stream);
+      when(() => rawRepository.authStateChanges)
+          .thenAnswer((_) => rawAuthController.stream);
       when(() => rawRepository.currentUser).thenReturn(null);
       gatedRepository = SignOutAwareAuthRepository(
         delegate: rawRepository,
@@ -200,8 +194,8 @@ void main() {
         final Completer<void> cleanupStarted = Completer<void>();
         final Completer<void> releaseCleanup = Completer<void>();
         sessionCoordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           cleanupStarted.complete();
           await releaseCleanup.future;

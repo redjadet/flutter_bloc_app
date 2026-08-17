@@ -1,14 +1,14 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_date_picker.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds a due date picker widget for the todo editor dialog.
 Widget buildTodoDueDatePicker({
-  required final BuildContext context,
-  required final bool isCupertino,
-  required final DateTime? selectedDueDate,
-  required final ValueChanged<DateTime?> onDueDateChanged,
+  required BuildContext context,
+  required bool isCupertino,
+  required DateTime? selectedDueDate,
+  required ValueChanged<DateTime?> onDueDateChanged,
 }) {
   final l10n = context.l10n;
   return Material(

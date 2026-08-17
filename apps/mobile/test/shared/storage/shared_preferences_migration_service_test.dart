@@ -1,8 +1,9 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
+
 import '../../test_helpers.dart' as test_helpers;
 
 class _FailingHiveService extends HiveService {
@@ -11,10 +12,7 @@ class _FailingHiveService extends HiveService {
   final Set<String> _failingBoxes;
 
   @override
-  Future<Box<dynamic>> openBox(
-    final String name, {
-    final bool encrypted = true,
-  }) {
+  Future<Box<dynamic>> openBox(String name, {bool encrypted = true}) {
     if (_failingBoxes.contains(name)) {
       throw Exception('Failed to open box: $name');
     }

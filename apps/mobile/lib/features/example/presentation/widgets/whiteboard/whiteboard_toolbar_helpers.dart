@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Stroke width presets (logical pixels) for whiteboard toolbar.
 const double kStrokeWidthThin = 2;
@@ -22,7 +22,7 @@ class WidthPreset {
 }
 
 /// Returns width presets with localized labels for the whiteboard toolbar.
-List<WidthPreset> defaultWidthPresetsFor(final AppLocalizations l10n) =>
+List<WidthPreset> defaultWidthPresetsFor(AppLocalizations l10n) =>
     <WidthPreset>[
       WidthPreset(
         label: l10n.whiteboardStrokeWidthThin,
@@ -66,7 +66,7 @@ class WidthPresetButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) => Tooltip(
+  Widget build(BuildContext context) => Tooltip(
     message: preset.label,
     child: Material(
       color: isSelected
@@ -134,7 +134,7 @@ class WhiteboardActionButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(final BuildContext context) => Tooltip(
+  Widget build(BuildContext context) => Tooltip(
     message: tooltip,
     child: PlatformAdaptive.textButton(
       context: context,

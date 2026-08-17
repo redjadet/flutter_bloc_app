@@ -44,8 +44,8 @@ class OnlineTherapyDemoSessionState {
 class OnlineTherapyDemoSessionCubit
     extends Cubit<OnlineTherapyDemoSessionState> {
   OnlineTherapyDemoSessionCubit({
-    required final TherapyAuthRepository auth,
-    required final OnlineTherapyNetworkModeController networkModeController,
+    required TherapyAuthRepository auth,
+    required OnlineTherapyNetworkModeController networkModeController,
   }) : _auth = auth,
        _networkModeController = networkModeController,
        super(
@@ -61,7 +61,7 @@ class OnlineTherapyDemoSessionCubit
   final TherapyAuthRepository _auth;
   final OnlineTherapyNetworkModeController _networkModeController;
 
-  Future<void> setRole(final TherapyRole role) async {
+  Future<void> setRole(TherapyRole role) async {
     if (state.role == role) return;
     if (!state.isLoggedIn) {
       emit(state.copyWith(role: role));
@@ -94,13 +94,13 @@ class OnlineTherapyDemoSessionCubit
     );
   }
 
-  void setNetworkMode(final OnlineTherapyNetworkMode mode) {
+  void setNetworkMode(OnlineTherapyNetworkMode mode) {
     if (state.networkMode == mode) return;
     _networkModeController.mode = mode;
     emit(state.copyWith(networkMode: mode));
   }
 
-  void setEmailDraft(final String value) {
+  void setEmailDraft(String value) {
     emit(state.copyWith(emailDraft: value));
   }
 

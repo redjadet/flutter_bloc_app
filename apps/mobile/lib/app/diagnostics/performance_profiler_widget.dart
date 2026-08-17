@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/diagnostics/performance_profiler.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Widget wrapper for tracking rebuilds.
 ///
@@ -34,11 +34,11 @@ class _TrackedWidgetState extends State<TrackedWidget> {
   }
 
   @override
-  void didUpdateWidget(final TrackedWidget oldWidget) {
+  void didUpdateWidget(TrackedWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     _recordRebuild();
   }
 
   @override
-  Widget build(final BuildContext context) => widget.child;
+  Widget build(BuildContext context) => widget.child;
 }

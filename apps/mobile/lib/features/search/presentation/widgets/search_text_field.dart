@@ -1,10 +1,10 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SearchTextField extends StatefulWidget {
   const SearchTextField({super.key});
@@ -29,16 +29,16 @@ class _SearchTextFieldState extends State<SearchTextField> {
   }
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocListener<SearchCubit, SearchState>(
-        listenWhen: (final prev, final curr) => prev.query != curr.query,
-        listener: (final context, final state) {
+        listenWhen: (prev, curr) => prev.query != curr.query,
+        listener: (context, state) {
           if (state.query.isEmpty && _controller.text.isNotEmpty) {
             _controller.clear();
           }
         },
         child: Builder(
-          builder: (final context) {
+          builder: (context) {
             final l10n = context.l10n;
             final theme = Theme.of(context);
             final colors = theme.colorScheme;
@@ -56,7 +56,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
                 ? CupertinoTextField(
                     controller: _controller,
                     placeholder: l10n.searchHint,
-                    onChanged: (final value) =>
+                    onChanged: (value) =>
                         context.cubit<SearchCubit>().search(value),
                     style: textStyle,
                     padding: EdgeInsets.symmetric(
@@ -69,7 +69,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
                     context: context,
                     controller: _controller,
                     hintText: l10n.searchHint,
-                    onChanged: (final value) =>
+                    onChanged: (value) =>
                         context.cubit<SearchCubit>().search(value),
                     style: textStyle,
                     decoration: InputDecoration(

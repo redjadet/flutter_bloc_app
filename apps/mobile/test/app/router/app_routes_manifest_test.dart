@@ -9,14 +9,14 @@ void main() {
     test('createCoreRoutes returns non-empty GoRoute list', () {
       final routes = createCoreRoutes();
       expect(routes, isNotEmpty);
-      expect(routes.every((final r) => r is GoRoute), isTrue);
+      expect(routes.every((r) => r is GoRoute), isTrue);
     });
 
     test('createDemoRoutes returns non-empty route list', () {
       final routes = createDemoRoutes();
       expect(routes, isNotEmpty);
       expect(
-        routes.every((final RouteBase r) => r is GoRoute || r is ShellRoute),
+        routes.every((RouteBase r) => r is GoRoute || r is ShellRoute),
         isTrue,
       );
     });

@@ -1,11 +1,11 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_device_type_label.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'iot_demo_add_device_dialog_helpers.part.dart';
 part 'iot_demo_add_device_dialog_models.part.dart';
@@ -51,7 +51,7 @@ class _IotDemoAddDeviceDialogBodyState
     }
   }
 
-  void _submit(final BuildContext context) {
+  void _submit(BuildContext context) {
     final String name = _nameController.text.trim();
     if (name.isEmpty) {
       setState(() => _nameError = widget.l10n.iotDemoAddDeviceNameRequired);
@@ -86,7 +86,7 @@ class _IotDemoAddDeviceDialogBodyState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = widget.l10n;
     final cancelLabel = l10n.cancelButtonLabel;
     final okLabel = MaterialLocalizations.of(context).okButtonLabel;

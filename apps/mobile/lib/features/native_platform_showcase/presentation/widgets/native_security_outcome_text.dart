@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_operation_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_status.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Renders a native security operation outcome as `status • reason`.
 ///
@@ -14,7 +14,7 @@ class NativeSecurityOutcomeText extends StatelessWidget {
   final NativeSecurityOperationResult? result;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final NativeSecurityOperationResult? outcome = result;
@@ -48,8 +48,8 @@ class NativeSecurityOutcomeText extends StatelessWidget {
 
 /// Maps [NativeSecurityStatus] to its l10n label.
 String nativeSecurityStatusLabel(
-  final NativeSecurityStatus status,
-  final AppLocalizations l10n,
+  NativeSecurityStatus status,
+  AppLocalizations l10n,
 ) => switch (status) {
   NativeSecurityStatus.success => l10n.nativeSecurityStatusSuccess,
   NativeSecurityStatus.unavailable => l10n.nativeSecurityStatusUnavailable,
@@ -59,8 +59,8 @@ String nativeSecurityStatusLabel(
 
 /// Maps [NativeSecurityStatus] to a themed emphasis color.
 Color nativeSecurityStatusColor(
-  final NativeSecurityStatus status,
-  final ThemeData theme,
+  NativeSecurityStatus status,
+  ThemeData theme,
 ) => switch (status) {
   NativeSecurityStatus.success => theme.colorScheme.primary,
   NativeSecurityStatus.unavailable => theme.colorScheme.onSurfaceVariant,
@@ -73,8 +73,8 @@ Color nativeSecurityStatusColor(
 /// Unknown codes never render raw channel text (zero-secrets UI contract);
 /// they fall back to the locked `platform_error` label.
 String nativeSecurityReasonLabel(
-  final String reasonCode,
-  final AppLocalizations l10n,
+  String reasonCode,
+  AppLocalizations l10n,
 ) => switch (reasonCode) {
   'ok' => l10n.nativeSecurityReasonOk,
   'mobile_only' => l10n.nativeSecurityReasonMobileOnly,
@@ -98,7 +98,7 @@ String nativeSecurityReasonLabel(
 
 /// Compact allowlisted metadata line (never channel-raw strings).
 String? nativeSecurityOutcomeDetail(
-  final NativeSecurityOperationResult result,
+  NativeSecurityOperationResult result,
 ) {
   final List<String> parts = <String>[];
   final String? algorithm = result.algorithm;
@@ -139,7 +139,7 @@ String? nativeSecurityOutcomeDetail(
   return parts.join(' · ');
 }
 
-String _residencyWireLabel(final NativeSecurityKeyResidency residency) =>
+String _residencyWireLabel(NativeSecurityKeyResidency residency) =>
     switch (residency) {
       NativeSecurityKeyResidency.secureEnclave => 'secure_enclave',
       NativeSecurityKeyResidency.androidKeystore => 'android_keystore',

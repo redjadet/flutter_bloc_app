@@ -1,14 +1,14 @@
 import 'dart:developer' as dev;
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../widget_tester_pumps.dart';
 
 Future<void> openExampleDestination(
-  final WidgetTester tester,
-  final String destinationLabel,
+  WidgetTester tester,
+  String destinationLabel,
 ) async {
   await pumpUntilFound(tester, find.byTooltip('Open example page'));
   await tapAndPump(tester, find.byTooltip('Open example page'));
@@ -24,8 +24,8 @@ Future<void> openExampleDestination(
 }
 
 Future<void> openOverflowDestination(
-  final WidgetTester tester,
-  final String destinationLabel,
+  WidgetTester tester,
+  String destinationLabel,
 ) async {
   await pumpUntilFound(tester, find.byTooltip('More'));
   await tapAndPump(tester, find.byTooltip('More'));
@@ -33,34 +33,33 @@ Future<void> openOverflowDestination(
   await tapAndPump(tester, find.text(destinationLabel));
 }
 
-Finder findAdaptiveButtonByText(final String text, {final Finder? scope}) =>
-    find
-        .ancestor(
-          of: scope == null
-              ? find.text(text)
-              : find.descendant(of: scope, matching: find.text(text)),
-          matching: find.byWidgetPredicate(
-            (final widget) =>
-                widget is CupertinoButton ||
-                widget is CupertinoDialogAction ||
-                widget is ElevatedButton ||
-                widget is FilledButton ||
-                widget is FloatingActionButton ||
-                widget is IconButton ||
-                widget is OutlinedButton ||
-                widget is TextButton,
-          ),
-        )
-        .first;
+Finder findAdaptiveButtonByText(String text, {Finder? scope}) => find
+    .ancestor(
+      of: scope == null
+          ? find.text(text)
+          : find.descendant(of: scope, matching: find.text(text)),
+      matching: find.byWidgetPredicate(
+        (widget) =>
+            widget is CupertinoButton ||
+            widget is CupertinoDialogAction ||
+            widget is ElevatedButton ||
+            widget is FilledButton ||
+            widget is FloatingActionButton ||
+            widget is IconButton ||
+            widget is OutlinedButton ||
+            widget is TextButton,
+      ),
+    )
+    .first;
 
 Finder findDialog() => find.byWidgetPredicate(
-  (final widget) => widget is AlertDialog || widget is CupertinoAlertDialog,
+  (widget) => widget is AlertDialog || widget is CupertinoAlertDialog,
 );
 
 Finder findDialogTextField() {
   final Finder dialog = findDialog();
   final Finder textField = find.byWidgetPredicate(
-    (final widget) => widget is TextField || widget is CupertinoTextField,
+    (widget) => widget is TextField || widget is CupertinoTextField,
   );
   return find.descendant(of: dialog, matching: textField).first;
 }
@@ -68,17 +67,17 @@ Finder findDialogTextField() {
 Finder findDialogCheckbox() {
   final Finder dialog = findDialog();
   final Finder checkbox = find.byWidgetPredicate(
-    (final widget) => widget is Checkbox || widget is CupertinoCheckbox,
+    (widget) => widget is Checkbox || widget is CupertinoCheckbox,
   );
   return find.descendant(of: dialog, matching: checkbox).first;
 }
 
-Finder findDialogButtonByText(final String text) =>
+Finder findDialogButtonByText(String text) =>
     findAdaptiveButtonByText(text, scope: findDialog());
 
 Future<T> timelineTask<T>(
-  final String name,
-  final Future<T> Function() body,
+  String name,
+  Future<T> Function() body,
 ) async {
   final dev.TimelineTask task = dev.TimelineTask()..start(name);
   try {
@@ -88,7 +87,7 @@ Future<T> timelineTask<T>(
   }
 }
 
-Finder findScrollTarget(final WidgetTester tester) {
+Finder findScrollTarget(WidgetTester tester) {
   final List<Finder> candidates = <Finder>[
     find.byType(ListView),
     find.byType(CustomScrollView),
@@ -103,9 +102,9 @@ Finder findScrollTarget(final WidgetTester tester) {
 }
 
 Future<void> setSwitchListTileValue(
-  final WidgetTester tester, {
-  required final Finder switchTileFinder,
-  required final bool value,
+  WidgetTester tester, {
+  required Finder switchTileFinder,
+  required bool value,
 }) async {
   final SwitchListTile tile = tester.widget<SwitchListTile>(switchTileFinder);
   if (tile.value == value) {

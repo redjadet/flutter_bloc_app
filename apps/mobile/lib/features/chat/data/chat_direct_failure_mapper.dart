@@ -1,9 +1,9 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 
 ChatRemoteFailureException _directRemoteFailure(
-  final ChatException error, {
-  required final String code,
-  required final bool retryable,
+  ChatException error, {
+  required String code,
+  required bool retryable,
 }) => ChatRemoteFailureException(
   error.message,
   code: code,
@@ -13,7 +13,7 @@ ChatRemoteFailureException _directRemoteFailure(
 
 /// Maps direct Hugging Face [ChatException] messages to [ChatRemoteFailureException]
 /// for queue classification (plan: terminal vs retryable).
-ChatRemoteFailureException mapDirectChatException(final ChatException error) {
+ChatRemoteFailureException mapDirectChatException(ChatException error) {
   final String m = error.message;
   final String lower = m.toLowerCase();
 

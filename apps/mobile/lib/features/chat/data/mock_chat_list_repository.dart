@@ -22,8 +22,7 @@ class MockChatListRepository implements ChatListRepository {
     ChatContact(
       id: '3',
       name: 'Beth Williams',
-      lastMessage:
-          "I'm looking for tips around capturing the milky way. I have a 6D with a 24-100mm...",
+      lastMessage: "I'm looking for tips around capturing the milky way. I have a 6D with a 24-100mm...",
       profileImageUrl: 'assets/figma/Chats_mockup_0-702/Ellipse_0-723.svg',
       lastMessageTime: DateTime.now().subtract(const Duration(hours: 3)),
       isOnline: true,
@@ -47,16 +46,16 @@ class MockChatListRepository implements ChatListRepository {
   }
 
   @override
-  Future<void> deleteChatContact(final String contactId) async {
+  Future<void> deleteChatContact(String contactId) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    _mockContacts.removeWhere((final contact) => contact.id == contactId);
+    _mockContacts.removeWhere((contact) => contact.id == contactId);
   }
 
   @override
-  Future<void> markAsRead(final String contactId) async {
+  Future<void> markAsRead(String contactId) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     final index = _mockContacts.indexWhere(
-      (final contact) => contact.id == contactId,
+      (contact) => contact.id == contactId,
     );
     if (index != -1) {
       _mockContacts[index] = _mockContacts[index].copyWith(unreadCount: 0);

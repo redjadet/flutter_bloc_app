@@ -7,22 +7,22 @@ abstract class IotDemoRepository {
   /// Stream of the current device list; emits whenever devices change.
   /// [filter] controls whether all devices or only toggled-on devices are returned.
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]);
 
   /// Connects to the device with [deviceId].
-  Future<void> connect(final String deviceId);
+  Future<void> connect(String deviceId);
 
   /// Disconnects from the device with [deviceId].
-  Future<void> disconnect(final String deviceId);
+  Future<void> disconnect(String deviceId);
 
   /// Sends [command] to the device with [deviceId].
   Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   );
 
   /// Adds a new device. Writes to local storage and remote (Supabase) when
   /// available.
-  Future<void> addDevice(final IotDevice device);
+  Future<void> addDevice(IotDevice device);
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
@@ -14,8 +13,8 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_se
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../helpers/memory/leak_safe_test_widgets.dart';
 import '../../../../test_helpers.dart';
@@ -23,7 +22,7 @@ import '../../../../test_helpers.dart';
 class _FakeTodoRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
-  _FakeTodoRepository({final List<TodoItem>? initialItems})
+  _FakeTodoRepository({List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(
       onListen: _emitCurrent,
@@ -40,10 +39,8 @@ class _FakeTodoRepository
   Future<List<TodoItem>> fetchAll() async => _snapshot();
 
   @override
-  Future<void> save(final TodoItem item) async {
-    final int index = _items.indexWhere(
-      (final current) => current.id == item.id,
-    );
+  Future<void> save(TodoItem item) async {
+    final int index = _items.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       _items.add(item);
     } else {
@@ -53,14 +50,14 @@ class _FakeTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final item) => item.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((item) => item.id == id);
     _emitCurrent();
   }
 
   @override
   Future<void> clearCompleted() async {
-    _items.removeWhere((final item) => item.isCompleted);
+    _items.removeWhere((item) => item.isCompleted);
     _emitCurrent();
   }
 
@@ -84,7 +81,7 @@ class _FakeTodoRepository
 class _ControllableTodoRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
-  _ControllableTodoRepository({final List<TodoItem>? initialItems})
+  _ControllableTodoRepository({List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(
       onListen: _emitCurrent,
@@ -116,10 +113,8 @@ class _ControllableTodoRepository
   }
 
   @override
-  Future<void> save(final TodoItem item) async {
-    final int index = _items.indexWhere(
-      (final current) => current.id == item.id,
-    );
+  Future<void> save(TodoItem item) async {
+    final int index = _items.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       _items.add(item);
     } else {
@@ -129,14 +124,14 @@ class _ControllableTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final item) => item.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((item) => item.id == id);
     _emitCurrent();
   }
 
   @override
   Future<void> clearCompleted() async {
-    _items.removeWhere((final item) => item.isCompleted);
+    _items.removeWhere((item) => item.isCompleted);
     _emitCurrent();
   }
 
@@ -161,9 +156,9 @@ class _ControllableTodoRepository
 }
 
 TodoItem _todoItem({
-  required final String id,
-  required final String title,
-  final bool isCompleted = false,
+  required String id,
+  required String title,
+  bool isCompleted = false,
 }) {
   final DateTime now = DateTime.utc(2024, 1, 1, 10);
   return TodoItem(
@@ -198,8 +193,8 @@ void main() {
     _ControllableTodoRepository? ownedControllable;
 
     Widget buildSubject({
-      final List<TodoItem>? initialItems,
-      final TodoRepository? repositoryOverride,
+      List<TodoItem>? initialItems,
+      TodoRepository? repositoryOverride,
     }) {
       if (repositoryOverride != null) {
         repository = repositoryOverride;
@@ -217,9 +212,7 @@ void main() {
       return MaterialApp(
         localizationsDelegates: const [
           AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<TodoListCubit>.value(
@@ -237,7 +230,7 @@ void main() {
 
     leakSafeTestWidgets(
       'TodoListPage controller ownership teardown is leak-safe',
-      (final tester) async {
+      (tester) async {
         addTearDown(() {
           tester.view.resetPhysicalSize();
           tester.view.resetDevicePixelRatio();
@@ -363,7 +356,7 @@ void main() {
 
       final List<TodoItem> items = List<TodoItem>.generate(
         80,
-        (final i) => _todoItem(id: '${i + 1}', title: 'Todo ${i + 1}'),
+        (i) => _todoItem(id: '${i + 1}', title: 'Todo ${i + 1}'),
       );
 
       await tester.pumpWidget(buildSubject(initialItems: items));
@@ -376,10 +369,10 @@ void main() {
       final Iterable<ScrollableState> scrollableStates = scrollableFinder
           .evaluate()
           .whereType<StatefulElement>()
-          .map((final element) => element.state)
+          .map((element) => element.state)
           .whereType<ScrollableState>();
       final ScrollableState listScrollable = scrollableStates.firstWhere(
-        (final s) =>
+        (s) =>
             s.position.axis == Axis.vertical && s.position.maxScrollExtent > 0,
       );
       final ScrollPosition position = listScrollable.position;
@@ -749,7 +742,7 @@ void main() {
     );
 
     testWidgets('ViewStatusSwitcher shows loading then ready content', (
-      final tester,
+      tester,
     ) async {
       ownedControllable = _ControllableTodoRepository(
         initialItems: <TodoItem>[_todoItem(id: '1', title: 'Ready item')],
@@ -778,7 +771,7 @@ void main() {
     });
 
     testWidgets('ViewStatusSwitcher shows error with retry and recovers', (
-      final tester,
+      tester,
     ) async {
       ownedControllable = _ControllableTodoRepository(
         initialItems: <TodoItem>[_todoItem(id: '1', title: 'Recovered')],

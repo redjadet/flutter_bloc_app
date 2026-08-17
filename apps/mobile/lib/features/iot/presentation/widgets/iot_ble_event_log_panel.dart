@@ -1,16 +1,16 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_log_entry.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class IotBleEventLogPanel extends StatelessWidget {
   const IotBleEventLogPanel({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final IotBleState state = context.watchState<IotBleCubit, IotBleState>();
     return Card(
@@ -47,7 +47,7 @@ class IotBleEventLogPanel extends StatelessWidget {
               height: 160,
               child: ListView.builder(
                 itemCount: state.logs.length,
-                itemBuilder: (final context, final index) {
+                itemBuilder: (context, index) {
                   final BleLogEntry entry =
                       state.logs[state.logs.length - 1 - index];
                   return ListTile(

@@ -3,9 +3,8 @@ part of 'flow_scenarios.dart';
 void registerProductionReadinessIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Production readiness flow',
-    testName:
-        'opens production readiness, emits simulated notification, toggles consent, refreshes release flag',
-    body: (final tester) async {
+    testName: 'opens production readiness, emits simulated notification, toggles consent, refreshes release flag',
+    body: (tester) async {
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));

@@ -1,6 +1,6 @@
 part of 'bootstrap_coordinator.dart';
 
-void _scheduleBackendInitAfterFirstFrame(final Future<void> Function() work) {
+void _scheduleBackendInitAfterFirstFrame(Future<void> Function() work) {
   // runApp may not have scheduled a frame yet; force one so deferred work runs.
   WidgetsBinding.instance
     ..addPostFrameCallback((_) {

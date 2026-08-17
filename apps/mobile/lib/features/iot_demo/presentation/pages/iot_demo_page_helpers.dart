@@ -1,19 +1,19 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_add_device_dialog.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows the add-device dialog and, on success, adds the device and selects it.
-Future<void> showIotDemoAddDeviceDialog(final BuildContext context) async {
+Future<void> showIotDemoAddDeviceDialog(BuildContext context) async {
   final l10n = context.l10n;
   final result = await showAdaptiveDialog<IotDemoAddDeviceResult>(
     context: context,
-    builder: (final ctx) => IotDemoAddDeviceDialogBody(l10n: l10n),
+    builder: (ctx) => IotDemoAddDeviceDialogBody(l10n: l10n),
   );
   if (result != null && context.mounted) {
     final int suffix = Random().nextInt(0xFFFFFF);
@@ -35,8 +35,8 @@ Future<void> showIotDemoAddDeviceDialog(final BuildContext context) async {
 
 /// Returns the localized label for [state].
 String iotDemoConnectionStateLabel(
-  final IotConnectionState state,
-  final AppLocalizations l10n,
+  IotConnectionState state,
+  AppLocalizations l10n,
 ) => switch (state) {
   IotConnectionState.disconnected => l10n.iotDemoStatusDisconnected,
   IotConnectionState.connecting => l10n.iotDemoStatusConnecting,

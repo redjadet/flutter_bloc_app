@@ -38,14 +38,14 @@ abstract final class LogRedaction {
   );
 
   /// Normalize key for denylist: strip `_`/`-`, lowercase.
-  static String normalizeKey(final String key) =>
+  static String normalizeKey(String key) =>
       key.replaceAll(RegExp(r'[_-]'), '').toLowerCase();
 
-  static bool isSecretKey(final String key) =>
+  static bool isSecretKey(String key) =>
       _secretKeyNormalized.contains(normalizeKey(key));
 
   /// Collapse CR/LF/control chars, scrub secret patterns, truncate.
-  static String sanitizeMessage(final String message) {
+  static String sanitizeMessage(String message) {
     var out = message.replaceAll(_controlChars, ' ');
     out = out.replaceAll(_whitespaceCollapse, ' ').trim();
     out = scrubSecretPatterns(out);
@@ -57,7 +57,7 @@ abstract final class LogRedaction {
   }
 
   /// Preserve scheme/host/port/path; redact query and fragment values.
-  static Uri sanitizeUri(final Uri uri) {
+  static Uri sanitizeUri(Uri uri) {
     final query = <String, String>{};
     for (final entry in uri.queryParameters.entries) {
       query[entry.key] = redacted;
@@ -70,7 +70,7 @@ abstract final class LogRedaction {
   }
 
   /// Log-safe URI string that keeps [redacted] literal (not percent-encoded).
-  static String uriForLog(final Uri uri) {
+  static String uriForLog(Uri uri) {
     final safe = sanitizeUri(uri);
     final buffer = StringBuffer()
       ..write(safe.scheme)
@@ -86,9 +86,7 @@ abstract final class LogRedaction {
     if (safe.queryParameters.isNotEmpty) {
       buffer.write('?');
       buffer.write(
-        safe.queryParameters.entries
-            .map((final e) => '${e.key}=$redacted')
-            .join('&'),
+        safe.queryParameters.entries.map((e) => '${e.key}=$redacted').join('&'),
       );
     }
     if (safe.fragment.isNotEmpty) {
@@ -99,7 +97,7 @@ abstract final class LogRedaction {
   }
 
   /// Parse absolute URI only; never echo invalid input.
-  static String sanitizeUriString(final String raw) {
+  static String sanitizeUriString(String raw) {
     final Uri uri;
     try {
       uri = Uri.parse(raw);
@@ -113,7 +111,7 @@ abstract final class LogRedaction {
   }
 
   /// Convert once, scrub, return null for null.
-  static Object? sanitizeError(final Object? error) {
+  static Object? sanitizeError(Object? error) {
     if (error == null) {
       return null;
     }
@@ -121,7 +119,7 @@ abstract final class LogRedaction {
   }
 
   /// Redact denylisted keys; safe primitives kept; nested maps one level.
-  static Map<String, Object?> safeFields(final Map<String, Object?> fields) {
+  static Map<String, Object?> safeFields(Map<String, Object?> fields) {
     final out = <String, Object?>{};
     for (final entry in fields.entries) {
       out[entry.key] = _safeValue(entry.key, entry.value, depth: 0);
@@ -129,11 +127,7 @@ abstract final class LogRedaction {
     return out;
   }
 
-  static Object? _safeValue(
-    final String key,
-    final Object? value, {
-    required final int depth,
-  }) {
+  static Object? _safeValue(String key, Object? value, {required int depth}) {
     if (isSecretKey(key)) {
       return redacted;
     }
@@ -168,10 +162,10 @@ abstract final class LogRedaction {
   }
 
   /// Best-effort free-text scrub for Bearer / JWT / secret assignments.
-  static String scrubSecretPatterns(final String input) {
+  static String scrubSecretPatterns(String input) {
     var out = input.replaceAllMapped(_bearer, (_) => 'Bearer $redacted');
     out = out.replaceAllMapped(_jwtLike, (_) => redacted);
-    out = out.replaceAllMapped(_secretAssignment, (final match) {
+    out = out.replaceAllMapped(_secretAssignment, (match) {
       final name = match.group(1)!;
       return '$name=$redacted';
     });

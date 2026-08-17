@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/bootstrap/bootstrap_coordinator.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ void main() {
         calls.add('platform');
       };
       BootstrapCoordinator.loadSecrets =
-          ({required final bool allowAssetFallback}) async {
+          ({required bool allowAssetFallback}) async {
             calls.add('secrets:$allowAssetFallback');
           };
       BootstrapCoordinator.loadAppVersion = () async {
@@ -60,7 +60,7 @@ void main() {
       BootstrapCoordinator.runMigration = () async {
         calls.add('migration');
       };
-      BootstrapCoordinator.startApp = (final app) {
+      BootstrapCoordinator.startApp = (app) {
         calls.add('runApp:${app.runtimeType}');
         startedApp = app;
       };
@@ -92,34 +92,32 @@ void main() {
       expect(startedApp, isA<Widget>());
     });
 
-    test(
-      'bootstrapApp paints WebLaunchSplash before MyApp when web splash enabled',
-      () async {
-        final List<String> started = <String>[];
+    test('bootstrapApp paints WebLaunchSplash before MyApp when web splash enabled', () async {
+      final List<String> started = <String>[];
 
-        BootstrapCoordinator.shouldShowWebLaunchSplash = () => true;
-        BootstrapCoordinator.ensureBindingInitialized = () {};
-        BootstrapCoordinator.initializePlatform = () async {};
-        BootstrapCoordinator.loadSecrets =
-            ({required final bool allowAssetFallback}) async {};
-        BootstrapCoordinator.loadAppVersion = () async {};
-        BootstrapCoordinator.initializeFirebase = () async => false;
-        BootstrapCoordinator.configureFirebaseUi = () {};
-        BootstrapCoordinator.registerCrashlyticsHandlers = () {};
-        BootstrapCoordinator.initializeSupabase = () async {};
-        BootstrapCoordinator.setupDependencies = () async {};
-        BootstrapCoordinator.readRuntimeConfig = () =>
-            AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero);
-        BootstrapCoordinator.runMigration = () async {};
-        BootstrapCoordinator.startApp = (final app) {
-          started.add(app.runtimeType.toString());
-        };
+      BootstrapCoordinator.shouldShowWebLaunchSplash = () => true;
+      BootstrapCoordinator.ensureBindingInitialized = () {};
+      BootstrapCoordinator.initializePlatform = () async {};
+      BootstrapCoordinator.loadSecrets = ({
+        required bool allowAssetFallback,
+      }) async {};
+      BootstrapCoordinator.loadAppVersion = () async {};
+      BootstrapCoordinator.initializeFirebase = () async => false;
+      BootstrapCoordinator.configureFirebaseUi = () {};
+      BootstrapCoordinator.registerCrashlyticsHandlers = () {};
+      BootstrapCoordinator.initializeSupabase = () async {};
+      BootstrapCoordinator.setupDependencies = () async {};
+      BootstrapCoordinator.readRuntimeConfig = () =>
+          AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero);
+      BootstrapCoordinator.runMigration = () async {};
+      BootstrapCoordinator.startApp = (app) {
+        started.add(app.runtimeType.toString());
+      };
 
-        await BootstrapCoordinator.bootstrapApp(Flavor.dev);
+      await BootstrapCoordinator.bootstrapApp(Flavor.dev);
 
-        expect(started, <String>['WebLaunchSplash', 'MyApp']);
-      },
-    );
+      expect(started, <String>['WebLaunchSplash', 'MyApp']);
+    });
 
     test(
       'bootstrapApp defers Supabase until after MyApp when deferral enabled',
@@ -128,15 +126,16 @@ void main() {
         Future<void> Function()? deferredStarter;
 
         BootstrapCoordinator.shouldDeferBackendInit = () => true;
-        BootstrapCoordinator.scheduleDeferredWork = (final work) {
+        BootstrapCoordinator.scheduleDeferredWork = (work) {
           deferredStarter = work;
         };
         BootstrapCoordinator.notifyBackendAvailabilityUpdated = () =>
             calls.add('availability-tick');
         BootstrapCoordinator.ensureBindingInitialized = () {};
         BootstrapCoordinator.initializePlatform = () async {};
-        BootstrapCoordinator.loadSecrets =
-            ({required final bool allowAssetFallback}) async {};
+        BootstrapCoordinator.loadSecrets = ({
+          required bool allowAssetFallback,
+        }) async {};
         BootstrapCoordinator.loadAppVersion = () async {};
         BootstrapCoordinator.initializeFirebase = () async {
           calls.add('firebase');
@@ -162,7 +161,7 @@ void main() {
         BootstrapCoordinator.runMigration = () async {
           calls.add('migration');
         };
-        BootstrapCoordinator.startApp = (final app) {
+        BootstrapCoordinator.startApp = (app) {
           calls.add('runApp:${app.runtimeType}');
         };
 
@@ -208,15 +207,16 @@ void main() {
         Future<void> Function()? deferredStarter;
 
         BootstrapCoordinator.shouldDeferBackendInit = () => true;
-        BootstrapCoordinator.scheduleDeferredWork = (final work) {
+        BootstrapCoordinator.scheduleDeferredWork = (work) {
           deferredStarter = work;
         };
         BootstrapCoordinator.notifyBackendAvailabilityUpdated = () =>
             calls.add('availability-tick');
         BootstrapCoordinator.ensureBindingInitialized = () {};
         BootstrapCoordinator.initializePlatform = () async {};
-        BootstrapCoordinator.loadSecrets =
-            ({required final bool allowAssetFallback}) async {};
+        BootstrapCoordinator.loadSecrets = ({
+          required bool allowAssetFallback,
+        }) async {};
         BootstrapCoordinator.loadAppVersion = () async {};
         BootstrapCoordinator.initializeFirebase = () async => false;
         BootstrapCoordinator.configureFirebaseUi = () =>
@@ -229,7 +229,7 @@ void main() {
         BootstrapCoordinator.readRuntimeConfig = () =>
             AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero);
         BootstrapCoordinator.runMigration = () async {};
-        BootstrapCoordinator.startApp = (final _) {};
+        BootstrapCoordinator.startApp = (_) {};
 
         await BootstrapCoordinator.bootstrapApp(Flavor.dev);
         await deferredStarter!();
@@ -246,8 +246,9 @@ void main() {
 
         BootstrapCoordinator.ensureBindingInitialized = () {};
         BootstrapCoordinator.initializePlatform = () async {};
-        BootstrapCoordinator.loadSecrets =
-            ({required final bool allowAssetFallback}) async {};
+        BootstrapCoordinator.loadSecrets = ({
+          required bool allowAssetFallback,
+        }) async {};
         BootstrapCoordinator.loadAppVersion = () async {};
         BootstrapCoordinator.initializeFirebase = () async {
           calls.add('firebase');
@@ -266,7 +267,7 @@ void main() {
           skeletonDelay: Duration.zero,
         );
         BootstrapCoordinator.runMigration = () async {};
-        BootstrapCoordinator.startApp = (final _) {};
+        BootstrapCoordinator.startApp = (_) {};
 
         await BootstrapCoordinator.bootstrapApp(Flavor.staging);
 
@@ -285,7 +286,7 @@ void main() {
         BootstrapCoordinator.ensureBindingInitialized = () {};
         BootstrapCoordinator.initializePlatform = () async {};
         BootstrapCoordinator.loadSecrets =
-            ({required final bool allowAssetFallback}) async {
+            ({required bool allowAssetFallback}) async {
               calls.add('secrets:$allowAssetFallback');
             };
         BootstrapCoordinator.loadAppVersion = () async {};
@@ -297,7 +298,7 @@ void main() {
         BootstrapCoordinator.readRuntimeConfig = () =>
             AppRuntimeConfig(flavor: Flavor.prod, skeletonDelay: Duration.zero);
         BootstrapCoordinator.runMigration = () async {};
-        BootstrapCoordinator.startApp = (final _) {};
+        BootstrapCoordinator.startApp = (_) {};
 
         await BootstrapCoordinator.bootstrapApp(Flavor.prod);
 

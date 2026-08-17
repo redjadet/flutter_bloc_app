@@ -19,7 +19,7 @@ class _TokenSection extends StatelessWidget {
       !kReleaseMode && (FlavorManager.I.isDev || FlavorManager.I.isQa);
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final String? tokenValue = value;
     final bool hasToken = tokenValue != null && tokenValue.isNotEmpty;
@@ -57,11 +57,11 @@ class _TokenSection extends StatelessWidget {
     );
   }
 
-  void _handleCopyPressed(final BuildContext context, final String text) {
+  void _handleCopyPressed(BuildContext context, String text) {
     unawaited(_copyToken(context, text));
   }
 
-  Future<void> _copyToken(final BuildContext context, final String text) async {
+  Future<void> _copyToken(BuildContext context, String text) async {
     try {
       await Clipboard.setData(ClipboardData(text: text));
       if (context.mounted) {
@@ -91,7 +91,7 @@ class _LastMessageSection extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final PushMessage? msg = message;
     final String titleText = msg?.title ?? '';
@@ -136,7 +136,7 @@ class _LastMessageSection extends StatelessWidget {
                     padding: EdgeInsets.only(top: context.responsiveGapS),
                     child: Text(
                       msg.data.entries
-                          .map((final e) => '${e.key}: ${e.value}')
+                          .map((e) => '${e.key}: ${e.value}')
                           .join(', '),
                       style: theme.textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,

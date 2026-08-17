@@ -9,18 +9,18 @@ final class CaseStudyClipBytesMemory {
 
   final Map<String, List<int>> _bytesByPath = <String, List<int>>{};
 
-  bool exists(final String path) => _bytesByPath.containsKey(path);
+  bool exists(String path) => _bytesByPath.containsKey(path);
 
-  void put(final String path, final List<int> bytes) {
+  void put(String path, List<int> bytes) {
     _bytesByPath[path] = List<int>.from(bytes);
   }
 
-  List<int>? tryRead(final String path) {
+  List<int>? tryRead(String path) {
     final List<int>? bytes = _bytesByPath[path];
     return bytes == null ? null : List<int>.from(bytes);
   }
 
-  List<int> read(final String path) {
+  List<int> read(String path) {
     final List<int>? bytes = _bytesByPath[path];
     if (bytes == null) {
       throw StateError('Case study clip missing: $path');
@@ -28,19 +28,19 @@ final class CaseStudyClipBytesMemory {
     return List<int>.from(bytes);
   }
 
-  void deleteIfExists(final String? path) {
+  void deleteIfExists(String? path) {
     if (path == null || path.isEmpty) {
       return;
     }
     _bytesByPath.remove(path);
   }
 
-  void deleteCase(final String caseId) {
+  void deleteCase(String caseId) {
     if (caseId.isEmpty) {
       return;
     }
     _bytesByPath.removeWhere(
-      (final path, final _) => path.contains('/$caseId/'),
+      (path, _) => path.contains('/$caseId/'),
     );
   }
 }

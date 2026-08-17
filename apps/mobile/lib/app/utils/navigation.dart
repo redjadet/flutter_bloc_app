@@ -11,9 +11,9 @@ class NavigationUtils {
   /// Attempts to pop the current route.
   /// Returns true if a route was popped, false otherwise.
   static bool maybePop(
-    final BuildContext context, {
-    final Object? result,
-    final bool useRootNavigator = false,
+    BuildContext context, {
+    Object? result,
+    bool useRootNavigator = false,
   }) {
     final NavigatorState navigator = Navigator.of(
       context,
@@ -27,7 +27,7 @@ class NavigationUtils {
   }
 
   /// Pops the current route when possible, otherwise navigates to the home route.
-  static void popOrGoHome(final BuildContext context) {
+  static void popOrGoHome(BuildContext context) {
     final bool didPop = maybePop(context);
     if (!didPop) {
       context.go(AppRoutes.counterPath);
@@ -39,12 +39,12 @@ class NavigationUtils {
   /// Useful for delayed navigation flows (e.g. deep links) where the caller might
   /// no longer be active by the time navigation occurs.
   static Future<void> safeGo(
-    final BuildContext context, {
-    required final GoRouter router,
-    required final String location,
-    final Duration delay = const Duration(milliseconds: 100),
-    final String logContext = 'NavigationUtils.safeGo',
-    final VoidCallback? onSkipped,
+    BuildContext context, {
+    required GoRouter router,
+    required String location,
+    Duration delay = const Duration(milliseconds: 100),
+    String logContext = 'NavigationUtils.safeGo',
+    VoidCallback? onSkipped,
   }) async {
     if (delay > Duration.zero) {
       await Future<void>.delayed(delay);

@@ -90,8 +90,7 @@ extension PlaylearnStatePatterns on PlaylearnState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PlaylearnState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PlaylearnState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _PlaylearnState() when $default != null:
 return $default(_that);case _:
@@ -112,8 +111,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PlaylearnState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PlaylearnState value)  $default,){final _that = this;
 switch (_that) {
 case _PlaylearnState():
 return $default(_that);case _:
@@ -133,8 +131,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PlaylearnState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PlaylearnState value)?  $default,){final _that = this;
 switch (_that) {
 case _PlaylearnState() when $default != null:
 return $default(_that);case _:
@@ -210,7 +207,7 @@ return $default(_that.topics,_that.selectedTopicId,_that.words,_that.isLoading,_
 
 
 class _PlaylearnState extends PlaylearnState {
-  const _PlaylearnState({final  List<TopicItem> topics = const <TopicItem>[], this.selectedTopicId, final  List<VocabularyItem> words = const <VocabularyItem>[], this.isLoading = false, this.errorMessage}): _topics = topics,_words = words,super._();
+  const _PlaylearnState({ List<TopicItem> topics = const <TopicItem>[], this.selectedTopicId, List<VocabularyItem> words = const <VocabularyItem>[], this.isLoading = false, this.errorMessage}): _topics = topics,_words = words,super._();
   
 
  final  List<TopicItem> _topics;

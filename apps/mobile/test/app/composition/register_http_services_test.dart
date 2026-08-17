@@ -1,12 +1,12 @@
-import 'package:dio/dio.dart';
 import 'package:auth/auth.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_http_services.dart';
-import 'package:flutter_bloc_app/main_bootstrap.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
-import 'package:networking/networking.dart';
+import 'package:flutter_bloc_app/main_bootstrap.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 
 class _TestNetworkStatusService implements NetworkStatusService {
   _TestNetworkStatusService(this._status);
@@ -14,7 +14,7 @@ class _TestNetworkStatusService implements NetworkStatusService {
   NetworkStatus _status;
   int statusChecks = 0;
 
-  set status(final NetworkStatus next) => _status = next;
+  set status(NetworkStatus next) => _status = next;
 
   @override
   Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
@@ -39,7 +39,7 @@ void main() {
   });
 
   group('registerHttpServices', () {
-    void registerHttpTestPrereqs({required final NetworkStatus initialStatus}) {
+    void registerHttpTestPrereqs({required NetworkStatus initialStatus}) {
       getIt.registerSingleton<NetworkStatusService>(
         _TestNetworkStatusService(initialStatus),
       );

@@ -16,7 +16,7 @@ void registerSyncServices() {
   );
   registerLazySingletonIfAbsent<PendingSyncRepository>(
     () => PendingSyncRepository(hiveService: getIt<HiveService>()),
-    dispose: (final repository) => repository.dispose(),
+    dispose: (repository) => repository.dispose(),
   );
   registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(
     () {
@@ -35,11 +35,11 @@ void registerSyncServices() {
           }
           return getIt<FirebaseAuth>().currentUser?.uid;
         },
-        startIotDemoRealtimeSubscription: (final onSyncRequested) =>
+        startIotDemoRealtimeSubscription: (onSyncRequested) =>
             realtime.start(onSyncRequested),
         stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),
       );
     },
-    dispose: (final coordinator) => coordinator.dispose(),
+    dispose: (coordinator) => coordinator.dispose(),
   );
 }

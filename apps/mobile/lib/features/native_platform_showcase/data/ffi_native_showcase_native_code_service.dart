@@ -12,7 +12,7 @@ class FfiNativeShowcaseNativeCodeService
 
   @override
   NativeInteropCallResult invokeCpp({
-    final int left = 21,
-    final int right = 21,
+    int left = 21,
+    int right = 21,
   }) => invokeNativeShowcaseCpp(left: left, right: right);
 }

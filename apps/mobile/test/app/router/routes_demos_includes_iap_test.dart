@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_app/app/router/routes_demos.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/routes_demos.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,7 +8,7 @@ void main() {
     final List<RouteBase> routes = createDemoRoutes();
     expect(
       routes.any(
-        (final RouteBase r) =>
+        (RouteBase r) =>
             r is GoRoute &&
             r.name == AppRoutes.iapDemo &&
             r.path == AppRoutes.iapDemoPath,
@@ -21,7 +21,7 @@ void main() {
     final List<RouteBase> routes = createDemoRoutes();
     expect(
       routes.any(
-        (final RouteBase r) =>
+        (RouteBase r) =>
             r is GoRoute &&
             r.name == AppRoutes.eventBusDemo &&
             r.path == AppRoutes.eventBusDemoPath,
@@ -34,7 +34,7 @@ void main() {
     final List<RouteBase> routes = createDemoRoutes();
     expect(
       routes.any(
-        (final RouteBase r) =>
+        (RouteBase r) =>
             r is GoRoute &&
             r.name == AppRoutes.nativePlatformShowcase &&
             r.path == AppRoutes.nativePlatformShowcasePath,

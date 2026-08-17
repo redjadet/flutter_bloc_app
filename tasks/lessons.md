@@ -21,6 +21,31 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-17 - material_ui localizations vs flutter_localizations in tests
+
+- What went wrong:
+  After `migrate_design_widgets`, tests kept `AppLocalizations.localizationsDelegates`
+  (flutter_localizations Material/Cupertino types) or golden_toolkit
+  `materialAppWrapper` (`package:flutter/material.dart` MaterialApp). App widgets
+  look up `package:material_ui` types. Failures: TR locale warnings, missing
+  Cupertino for `de`, dark FAB goldens ~99% pixel mismatch, leftover
+  `GlobalWidgetsLocalizations` undefined.
+- How it was fixed:
+  Shared `appLocalizationDelegates` (`GlobalMaterialLocalizations.delegates` from
+  material_ui + app ARB). Goldens wrap with `materialUiAppWrapper`. Therapy
+  smoke extra-pumps fake-network timer after `pumpAndSettle`.
+- Pattern:
+  Standalone design libraries split Type identity for Theme and
+  Material/Cupertino localizations. Wrapper package must match widget package.
+- Preventive rule:
+  Do not use generated `AppLocalizations.localizationsDelegates` or golden_toolkit
+  `materialAppWrapper` for `package:material_ui` widgets. Regression:
+  `test/l10n/app_localization_delegates_test.dart`.
+- Evidence or affected files:
+  `apps/mobile/lib/l10n/app_localization_delegates.dart`,
+  `apps/mobile/test/helpers/material_ui_app_wrapper.dart`,
+  `docs/testing/widget_test_playbook.md`.
+
 ### 2026-08-08 - Hive 2.x + Flutter web `--wasm` breaks counter save
 
 - What went wrong:

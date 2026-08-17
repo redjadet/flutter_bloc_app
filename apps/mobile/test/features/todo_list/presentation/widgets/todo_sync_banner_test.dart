@@ -1,15 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sync_banner.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 import '../../../../test_helpers.dart';
 
@@ -24,13 +25,13 @@ class _FakeTodoRepository
   Future<void> clearCompleted() async {}
 
   @override
-  Future<void> delete(final String id) async {}
+  Future<void> delete(String id) async {}
 
   @override
   Future<List<TodoItem>> fetchAll() async => const <TodoItem>[];
 
   @override
-  Future<void> save(final TodoItem item) async {}
+  Future<void> save(TodoItem item) async {}
 
   @override
   Stream<List<TodoItem>> watchAll() => const Stream<List<TodoItem>>.empty();
@@ -93,7 +94,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> stop() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 
@@ -105,10 +106,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('TodoSyncBanner', () {
-    Widget buildWidget({
-      final SyncStatusCubit? syncCubit,
-      final TodoListCubit? todoCubit,
-    }) {
+    Widget buildWidget({SyncStatusCubit? syncCubit, TodoListCubit? todoCubit}) {
       final Widget banner = const TodoSyncBanner();
       final Widget body = syncCubit == null && todoCubit == null
           ? banner
@@ -123,7 +121,7 @@ void main() {
             );
 
       return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(body: body),
       );

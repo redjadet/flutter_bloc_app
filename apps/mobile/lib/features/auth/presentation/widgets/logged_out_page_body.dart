@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_action_buttons.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_background_layer.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_bottom_indicator.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_photo_header.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_user_info.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LoggedOutPageBody extends StatelessWidget {
   const LoggedOutPageBody({super.key});
@@ -14,12 +14,12 @@ class LoggedOutPageBody extends StatelessWidget {
   static const double _baseHeight = 812;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EdgeInsets viewInsets = MediaQuery.viewInsetsOf(context);
     final EdgeInsets safePadding = MediaQuery.paddingOf(context);
     final double textScale = MediaQuery.textScalerOf(context).scale(1);
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final scale = _resolveScale(constraints);
         final double verticalScale = scale * textScale;
         final double contentHeight = math.max(
@@ -141,7 +141,7 @@ class LoggedOutPageBody extends StatelessWidget {
     );
   }
 
-  double _resolveScale(final BoxConstraints constraints) {
+  double _resolveScale(BoxConstraints constraints) {
     final widthScale = constraints.maxWidth / _baseWidth;
     final heightScale = constraints.maxHeight / _baseHeight;
     return widthScale < heightScale ? widthScale : heightScale;

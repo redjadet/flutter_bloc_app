@@ -39,11 +39,10 @@ void main() {
   blocTest<CertificatePinningDemoCubit, CertificatePinningDemoState>(
     'selectScenario updates scenario and resets status',
     build: buildCubit,
-    act: (final cubit) =>
-        cubit.selectScenario(MockCertificateScenario.invalidPin),
+    act: (cubit) => cubit.selectScenario(MockCertificateScenario.invalidPin),
     expect: () => <Matcher>[
       isA<CertificatePinningDemoState>().having(
-        (final s) => s.scenario,
+        (s) => s.scenario,
         'scenario',
         MockCertificateScenario.invalidPin,
       ),
@@ -55,26 +54,26 @@ void main() {
     build: buildCubit,
     setUp: () {
       when(() => repo.probe()).thenAnswer(
-        (final _) async => const SecureProbeSuccess(
+        (_) async => const SecureProbeSuccess(
           matchKind: CertificatePinMatchKind.primary,
         ),
       );
     },
-    act: (final cubit) => cubit.triggerProbe(),
+    act: (cubit) => cubit.triggerProbe(),
     expect: () => <Matcher>[
       isA<CertificatePinningDemoState>().having(
-        (final s) => s.status,
+        (s) => s.status,
         'status',
         CertificatePinningDemoStatus.validating,
       ),
       isA<CertificatePinningDemoState>()
           .having(
-            (final s) => s.status,
+            (s) => s.status,
             'status',
             CertificatePinningDemoStatus.success,
           )
           .having(
-            (final s) => s.matchKind,
+            (s) => s.matchKind,
             'matchKind',
             CertificatePinMatchKind.primary,
           ),
@@ -86,25 +85,25 @@ void main() {
     build: buildCubit,
     setUp: () {
       when(() => repo.probe()).thenAnswer(
-        (final _) async => const SecureProbeFailure(
+        (_) async => const SecureProbeFailure(
           CertificatePinningDemoPinFailure(l10nCode: 'pinMismatch'),
         ),
       );
     },
-    act: (final cubit) => cubit.triggerProbe(),
+    act: (cubit) => cubit.triggerProbe(),
     expect: () => <Matcher>[
       isA<CertificatePinningDemoState>().having(
-        (final s) => s.status,
+        (s) => s.status,
         'status',
         CertificatePinningDemoStatus.validating,
       ),
       isA<CertificatePinningDemoState>()
           .having(
-            (final s) => s.status,
+            (s) => s.status,
             'status',
             CertificatePinningDemoStatus.failure,
           )
-          .having((final s) => s.failure?.l10nCode, 'l10nCode', 'pinMismatch'),
+          .having((s) => s.failure?.l10nCode, 'l10nCode', 'pinMismatch'),
     ],
   );
 
@@ -113,7 +112,7 @@ void main() {
       scenarioController: scenarios,
       validationTimeout: const Duration(milliseconds: 5),
       logger: logger,
-      delay: (final _) async {},
+      delay: (_) async {},
     );
     await mock.validate(
       host: 'demo.local',

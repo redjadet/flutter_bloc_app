@@ -6,6 +6,6 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.
 void registerWebSocketServices() {
   registerLazySingletonIfAbsent<WebsocketRepository>(
     EchoWebsocketRepository.new,
-    dispose: (final repository) => repository.dispose(),
+    dispose: (repository) => repository.dispose(),
   );
 }

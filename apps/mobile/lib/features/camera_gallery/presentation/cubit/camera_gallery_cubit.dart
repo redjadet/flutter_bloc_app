@@ -23,7 +23,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
     await CubitExceptionHandler.executeAsync<CameraGalleryResult?>(
       operation: _repository.retrieveLostImage,
       isAlive: () => !isClosed,
-      onSuccess: (final recovered) {
+      onSuccess: (recovered) {
         if (isClosed || recovered == null) return;
         _applyPickResult(recovered);
       },
@@ -45,10 +45,10 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
     emit(state.copyWith(status: ViewStatus.loading, errorKey: null));
   }
 
-  void _applyPickResult(final CameraGalleryResult result) {
+  void _applyPickResult(CameraGalleryResult result) {
     if (isClosed) return;
     result.when(
-      success: (final path) {
+      success: (path) {
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -62,7 +62,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
       cancelled: () {
         emit(state.copyWith(status: ViewStatus.initial, errorKey: null));
       },
-      failure: (final errorKey, final _) {
+      failure: (errorKey, _) {
         emit(state.copyWith(status: ViewStatus.error, errorKey: errorKey));
       },
     );
@@ -108,7 +108,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
     }
   }
 
-  Future<void> applyFilter(final ImageProcessingFilter filter) async {
+  Future<void> applyFilter(ImageProcessingFilter filter) async {
     final String? sourcePath = state.sourceImagePath;
     if (isClosed || sourcePath == null || sourcePath.isEmpty) return;
     final int requestId = _pickGuard.next();
@@ -120,7 +120,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
       );
       if (isClosed || !_pickGuard.isCurrent(requestId)) return;
       result.when(
-        success: (final processedPath) {
+        success: (processedPath) {
           emit(
             state.copyWith(
               status: ViewStatus.success,
@@ -133,7 +133,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
         // Processing never cancels like a picker; keep selection if it does.
         cancelled: () =>
             emit(state.copyWith(status: ViewStatus.success, errorKey: null)),
-        failure: (final errorKey, final _) =>
+        failure: (errorKey, _) =>
             emit(state.copyWith(status: ViewStatus.error, errorKey: errorKey)),
       );
     } on Object catch (error, stackTrace) {

@@ -16,7 +16,7 @@ class TodoItemDto {
     this.synchronized = false,
   });
 
-  TodoItemDto.fromDomain(final TodoItem item)
+  TodoItemDto.fromDomain(TodoItem item)
     : id = item.id,
       title = item.title,
       description = item.description,
@@ -29,10 +29,9 @@ class TodoItemDto {
       lastSyncedAt = item.lastSyncedAt,
       synchronized = item.synchronized;
 
-  factory TodoItemDto.fromMap(final Map<dynamic, dynamic> raw) {
+  factory TodoItemDto.fromMap(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
-      (final dynamic key, final dynamic value) =>
-          MapEntry(key.toString(), value),
+      (dynamic key, dynamic value) => MapEntry(key.toString(), value),
     );
     final String? id = stringFromDynamic(normalized['id']);
     final String? title = stringFromDynamic(normalized['title']);
@@ -112,7 +111,7 @@ class TodoItemDto {
     'synchronized': synchronized,
   };
 
-  static DateTime? _parseDate(final dynamic value) {
+  static DateTime? _parseDate(dynamic value) {
     if (value is DateTime) {
       return value.toUtc();
     }
@@ -122,13 +121,13 @@ class TodoItemDto {
     return null;
   }
 
-  static TodoPriority _parsePriority(final dynamic value) {
+  static TodoPriority _parsePriority(dynamic value) {
     if (value is TodoPriority) {
       return value;
     }
     if (value is String) {
       return TodoPriority.values.firstWhere(
-        (final p) => p.name == value,
+        (p) => p.name == value,
         orElse: () => TodoPriority.none,
       );
     }

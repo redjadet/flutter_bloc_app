@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class IotBleCharacteristicsExplorer extends StatelessWidget {
   const IotBleCharacteristicsExplorer({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final IotBleState state = context.watchState<IotBleCubit, IotBleState>();
     final String? deviceId = state.selectedDeviceId;
@@ -53,7 +53,7 @@ class IotBleCharacteristicsExplorer extends StatelessWidget {
     );
   }
 
-  String _props(final BleCharacteristic characteristic) {
+  String _props(BleCharacteristic characteristic) {
     final List<String> props = <String>[];
     if (characteristic.canRead) props.add('R');
     if (characteristic.canWrite) props.add('W');

@@ -1,5 +1,4 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -14,12 +13,13 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_video_tile.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CaseStudyReviewPage extends StatelessWidget {
   const CaseStudyReviewPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.caseStudyReviewTitle,
@@ -216,7 +216,7 @@ class _CaseStudyStepRedirectState extends State<_CaseStudyStepRedirect> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return const Center(child: CircularProgressIndicator());
   }
 }

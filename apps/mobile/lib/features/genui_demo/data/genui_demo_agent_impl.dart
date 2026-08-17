@@ -48,14 +48,14 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
     _conversation = genui.GenUiConversation(
       contentGenerator: _contentGenerator,
       a2uiMessageProcessor: _messageProcessor,
-      onSurfaceAdded: (final update) {
+      onSurfaceAdded: (update) {
         if (!_surfaceEventsController.isClosed) {
           _surfaceEventsController.add(
             GenUiSurfaceEvent.added(surfaceId: update.surfaceId),
           );
         }
       },
-      onSurfaceDeleted: (final update) {
+      onSurfaceDeleted: (update) {
         if (!_surfaceEventsController.isClosed) {
           _surfaceEventsController.add(
             GenUiSurfaceEvent.removed(surfaceId: update.surfaceId),
@@ -66,12 +66,12 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
 
     // Forward streams
     _textResponsesSubscription = _contentGenerator.textResponseStream.listen(
-      (final text) {
+      (text) {
         if (!_textResponsesController.isClosed) {
           _textResponsesController.add(text);
         }
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'GenUiDemoAgentImpl textResponseStream listener error',
           error,
@@ -81,12 +81,12 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
     );
 
     _errorsSubscription = _contentGenerator.errorStream.listen(
-      (final error) {
+      (error) {
         if (!_errorsController.isClosed) {
           _errorsController.add(error.error.toString());
         }
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'GenUiDemoAgentImpl errorStream listener error',
           error,
@@ -99,7 +99,7 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
   }
 
   @override
-  Future<void> sendMessage(final String text) async {
+  Future<void> sendMessage(String text) async {
     if (!_isInitialized) {
       throw StateError('GenUiDemoAgentImpl is not initialized');
     }

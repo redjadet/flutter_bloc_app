@@ -9,9 +9,9 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platfo
 
 class NativePlatformInfoRepositoryImpl implements NativePlatformInfoRepository {
   NativePlatformInfoRepositoryImpl({
-    required final NativeShowcaseHostLanguageService hostLanguageService,
-    required final NativeShowcaseNativeCodeService nativeCodeService,
-    final RuntimePlatformProbe? probe,
+    required NativeShowcaseHostLanguageService hostLanguageService,
+    required NativeShowcaseNativeCodeService nativeCodeService,
+    RuntimePlatformProbe? probe,
   }) : this._(
          hostLanguageService: hostLanguageService,
          nativeCodeService: nativeCodeService,
@@ -21,7 +21,7 @@ class NativePlatformInfoRepositoryImpl implements NativePlatformInfoRepository {
   NativePlatformInfoRepositoryImpl._({
     required this._hostLanguageService,
     required this._nativeCodeService,
-    final RuntimePlatformProbe? probe,
+    RuntimePlatformProbe? probe,
   }) : _probe = probe ?? const RuntimePlatformProbe();
 
   final RuntimePlatformProbe _probe;

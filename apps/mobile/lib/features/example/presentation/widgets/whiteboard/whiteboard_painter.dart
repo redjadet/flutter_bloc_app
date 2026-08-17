@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'whiteboard_painter.freezed.dart';
 
@@ -23,7 +23,7 @@ class WhiteboardPainter extends CustomPainter {
   final Color? backgroundColor;
 
   @override
-  void paint(final Canvas canvas, final Size size) {
+  void paint(Canvas canvas, Size size) {
     // Draw background
     if (backgroundColor case final c?) {
       canvas.drawRect(
@@ -74,7 +74,7 @@ class WhiteboardPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(final WhiteboardPainter oldDelegate) =>
+  bool shouldRepaint(WhiteboardPainter oldDelegate) =>
       !listEquals(oldDelegate.strokes, strokes) ||
       oldDelegate.backgroundColor != backgroundColor;
 }
@@ -83,9 +83,9 @@ class WhiteboardPainter extends CustomPainter {
 @freezed
 abstract class WhiteboardStroke with _$WhiteboardStroke {
   factory WhiteboardStroke({
-    required final List<Offset> points,
-    required final Color color,
-    required final double width,
+    required List<Offset> points,
+    required Color color,
+    required double width,
   }) => WhiteboardStroke.raw(
     points: List<Offset>.unmodifiable(points),
     color: color,
@@ -93,8 +93,8 @@ abstract class WhiteboardStroke with _$WhiteboardStroke {
   );
 
   const factory WhiteboardStroke.raw({
-    required final List<Offset> points,
-    required final Color color,
-    required final double width,
+    required List<Offset> points,
+    required Color color,
+    required double width,
   }) = _WhiteboardStroke;
 }

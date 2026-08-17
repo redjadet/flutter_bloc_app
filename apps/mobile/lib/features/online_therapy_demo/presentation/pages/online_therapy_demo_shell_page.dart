@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_dependencies.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'online_therapy_demo_shell_admin.part.dart';
 part 'online_therapy_demo_shell_client_details.part.dart';
@@ -24,15 +24,15 @@ part 'online_therapy_demo_shell_messaging_call.part.dart';
 part 'online_therapy_demo_shell_therapist_admin_part.dart';
 
 /// Sidebar width for wide online-therapy demo split layouts.
-double _onlineTherapySidebarWidth(final double maxWidth) =>
+double _onlineTherapySidebarWidth(double maxWidth) =>
     math.min(320, maxWidth * 0.35).clamp(240, 320).toDouble();
 
 /// Height for embedded messaging/call panels inside scrollable demo shells.
 double _onlineTherapyEmbeddedPanelHeight({
-  required final double referenceHeight,
-  required final double viewportFraction,
-  final double minHeight = 220,
-  final double maxHeight = 420,
+  required double referenceHeight,
+  required double viewportFraction,
+  double minHeight = 220,
+  double maxHeight = 420,
 }) {
   return (referenceHeight * viewportFraction).clamp(minHeight, maxHeight);
 }
@@ -43,7 +43,7 @@ class OnlineTherapyDemoShellPage extends StatelessWidget {
   final OnlineTherapyDemoDependencies deps;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return OnlineTherapyDemoScope(
       deps: deps,
       child: const _OnlineTherapyDemoBody(),
@@ -57,14 +57,14 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
   const _OnlineTherapyDemoBody();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final role = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           TherapyRole
         >(
-          selector: (final state) => state.role,
+          selector: (state) => state.role,
         );
     final user = context
         .selectState<
@@ -72,7 +72,7 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           TherapyUser?
         >(
-          selector: (final state) => state.user,
+          selector: (state) => state.user,
         );
     final errorMessage = context
         .selectState<
@@ -80,7 +80,7 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           String?
         >(
-          selector: (final state) => state.errorMessage,
+          selector: (state) => state.errorMessage,
         );
 
     return CommonPageLayout(

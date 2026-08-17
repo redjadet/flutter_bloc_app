@@ -26,7 +26,7 @@ void main() {
     });
 
     test('bounds samples to maxSamples', () {
-      final List<double> samples = List<double>.generate(150, (final int i) {
+      final List<double> samples = List<double>.generate(150, (int i) {
         return i.toDouble();
       });
 

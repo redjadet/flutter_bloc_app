@@ -176,8 +176,8 @@ void registerStaffAppDemoServices() {
 }
 
 T _withFirestoreOrFallback<T>(
-  final T Function(FirebaseFirestore firestore) builder, {
-  required final T Function() fallback,
+  T Function(FirebaseFirestore firestore) builder, {
+  required T Function() fallback,
 }) {
   try {
     if (Firebase.apps.isEmpty) {
@@ -192,9 +192,8 @@ T _withFirestoreOrFallback<T>(
 }
 
 T _withFirestoreAndStorageOrFallback<T>(
-  final T Function(FirebaseFirestore firestore, FirebaseStorage storage)
-  builder, {
-  required final T Function() fallback,
+  T Function(FirebaseFirestore firestore, FirebaseStorage storage) builder, {
+  required T Function() fallback,
 }) {
   try {
     if (Firebase.apps.isEmpty) {

@@ -1,6 +1,6 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Label position for CommonDropdownField
 enum DropdownLabelPosition {
@@ -47,16 +47,16 @@ class CommonDropdownField<T> extends StatelessWidget {
   // Use customPickerItems if provided, otherwise extract from items
   List<T> _getPickerValues() {
     if (customPickerItems case final list?) return list;
-    return items.map((final item) => item.value).whereType<T>().toList();
+    return items.map((item) => item.value).whereType<T>().toList();
   }
 
   // Extract label text from DropdownMenuItem child widget (for picker items)
-  String _getItemLabel(final T itemValue) {
+  String _getItemLabel(T itemValue) {
     if (customItemLabel case final fn?) return fn(itemValue);
     if (items.isEmpty) return itemValue.toString();
 
     final item = items.firstWhere(
-      (final item) => item.value == itemValue,
+      (item) => item.value == itemValue,
       orElse: () => items.first,
     );
     final child = item.child;
@@ -73,7 +73,7 @@ class CommonDropdownField<T> extends StatelessWidget {
       if (items.isEmpty) return selectedValue.toString();
 
       final item = items.firstWhere(
-        (final item) => item.value == selectedValue,
+        (item) => item.value == selectedValue,
         orElse: () => items.first,
       );
       final child = item.child;
@@ -83,9 +83,7 @@ class CommonDropdownField<T> extends StatelessWidget {
       return selectedValue.toString();
     } else {
       // For null value, try to get label from first item with null value, or use hintText/labelText
-      final nullItem = items
-          .where((final item) => item.value == null)
-          .firstOrNull;
+      final nullItem = items.where((item) => item.value == null).firstOrNull;
       if (nullItem case final item?) {
         final child = item.child;
         if (child is Text) {
@@ -97,7 +95,7 @@ class CommonDropdownField<T> extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isCupertino = PlatformAdaptive.isCupertino(context);
 

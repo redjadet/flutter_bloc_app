@@ -25,7 +25,7 @@ class OfflineFirstRemoteConfigRepository
     required this._cacheRepository,
     required this._networkStatusService,
     required this._registry,
-    final void Function(String event, Map<String, Object?> payload)? telemetry,
+    void Function(String event, Map<String, Object?> payload)? telemetry,
   }) : _telemetry = telemetry ?? _defaultTelemetry {
     if (!shouldSkipBackgroundSyncOnMacOsDebug) {
       _registry.register(this);
@@ -94,25 +94,25 @@ class OfflineFirstRemoteConfigRepository
   }
 
   @override
-  bool getBool(final String key) {
+  bool getBool(String key) {
     final bool? cached = _snapshot.getValue<bool>(key);
     return cached ?? _remoteRepository.getBool(key);
   }
 
   @override
-  double getDouble(final String key) {
+  double getDouble(String key) {
     final double? cached = _snapshot.getValue<double>(key);
     return cached ?? _remoteRepository.getDouble(key);
   }
 
   @override
-  int getInt(final String key) {
+  int getInt(String key) {
     final int? cached = _snapshot.getValue<int>(key);
     return cached ?? _remoteRepository.getInt(key);
   }
 
   @override
-  String getString(final String key) {
+  String getString(String key) {
     final String? cached = _snapshot.getValue<String>(key);
     return cached ?? _remoteRepository.getString(key);
   }
@@ -126,7 +126,7 @@ class OfflineFirstRemoteConfigRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     // Remote Config is read-only today, but this method is required so the
     // repository participates in the sync registry. Reserved for future ops.
     AppLogger.debug(
@@ -138,8 +138,8 @@ class OfflineFirstRemoteConfigRepository
   Future<void> pullRemote() => _refreshFromRemote(reason: 'pullRemote');
 
   static void _defaultTelemetry(
-    final String event,
-    final Map<String, Object?> payload,
+    String event,
+    Map<String, Object?> payload,
   ) {
     AppLogger.debug('RemoteConfigTelemetry[$event] $payload');
   }

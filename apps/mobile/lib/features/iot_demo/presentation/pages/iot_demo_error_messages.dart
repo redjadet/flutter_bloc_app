@@ -2,9 +2,9 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_error_code.da
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 String resolveIotDemoErrorMessage(
-  final AppLocalizations l10n,
-  final IotDemoErrorCode code,
-  final String? detail,
+  AppLocalizations l10n,
+  IotDemoErrorCode code,
+  String? detail,
 ) {
   if (code == IotDemoErrorCode.add &&
       detail != null &&

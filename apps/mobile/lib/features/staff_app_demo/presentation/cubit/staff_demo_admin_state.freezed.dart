@@ -88,8 +88,7 @@ extension StaffDemoAdminStatePatterns on StaffDemoAdminState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoAdminState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoAdminState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _StaffDemoAdminState() when $default != null:
 return $default(_that);case _:
@@ -110,8 +109,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoAdminState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoAdminState value)  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoAdminState():
 return $default(_that);case _:
@@ -131,8 +129,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoAdminState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoAdminState value)?  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoAdminState() when $default != null:
 return $default(_that);case _:
@@ -208,7 +205,7 @@ return $default(_that.status,_that.recentEntries,_that.errorMessage);case _:
 
 
 class _StaffDemoAdminState extends StaffDemoAdminState {
-  const _StaffDemoAdminState({this.status = StaffDemoAdminStatus.initial, final  List<StaffDemoTimeEntrySummary> recentEntries = const <StaffDemoTimeEntrySummary>[], this.errorMessage}): _recentEntries = recentEntries,super._();
+  const _StaffDemoAdminState({this.status = StaffDemoAdminStatus.initial, List<StaffDemoTimeEntrySummary> recentEntries = const <StaffDemoTimeEntrySummary>[], this.errorMessage}): _recentEntries = recentEntries,super._();
   
 
 @override@JsonKey() final  StaffDemoAdminStatus status;

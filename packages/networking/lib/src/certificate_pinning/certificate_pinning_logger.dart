@@ -55,10 +55,10 @@ final class CertificatePinningLogger {
   void clear() => _entries.clear();
 
   void logValidation({
-    required final String host,
-    required final CertificatePinningMode mode,
-    required final CertificatePinResult result,
-    required final Duration elapsed,
+    required String host,
+    required CertificatePinningMode mode,
+    required CertificatePinResult result,
+    required Duration elapsed,
   }) {
     final bool success = result is CertificatePinSuccess;
     final CertificatePinMatchKind? matchKind = switch (result) {

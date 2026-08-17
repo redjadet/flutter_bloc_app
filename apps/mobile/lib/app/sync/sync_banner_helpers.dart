@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Gate for showing pending-sync queue UI (counts, "Changes queued", etc).
 ///
@@ -13,10 +13,10 @@ const bool kShowPendingSyncQueueUi = bool.fromEnvironment(
 ///
 /// Use in sync banner widgets so the hide condition is defined in one place.
 bool shouldShowSyncBanner({
-  required final bool isOffline,
-  required final bool isSyncing,
-  required final int pendingCount,
-  final bool hasMetadata = false,
+  required bool isOffline,
+  required bool isSyncing,
+  required int pendingCount,
+  bool hasMetadata = false,
 }) =>
     isOffline ||
     isSyncing ||
@@ -28,10 +28,10 @@ bool shouldShowSyncBanner({
 /// Use in sync banner widgets to avoid repeating the same if/else for
 /// offline / syncing / pending.
 (String title, String message) syncBannerTitleAndMessage(
-  final AppLocalizations l10n, {
-  required final bool isOffline,
-  required final bool isSyncing,
-  required final int pendingCount,
+  AppLocalizations l10n, {
+  required bool isOffline,
+  required bool isSyncing,
+  required int pendingCount,
 }) {
   if (isOffline) {
     return (
@@ -71,7 +71,7 @@ class SyncBannerContent extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,

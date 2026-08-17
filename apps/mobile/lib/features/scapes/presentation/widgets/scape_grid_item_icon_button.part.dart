@@ -16,7 +16,7 @@ class _ScapeIconButton extends StatelessWidget {
   static const double _minTapTargetLogicalPx = 48;
 
   @override
-  Widget build(final BuildContext context) => Semantics(
+  Widget build(BuildContext context) => Semantics(
     button: true,
     label: tooltip,
     child: Tooltip(

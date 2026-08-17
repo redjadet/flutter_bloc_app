@@ -1,6 +1,5 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/app/widgets/backend_disabled_banner.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'chat_page_actions.part.dart';
 
@@ -44,11 +44,11 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final bool renderDemoStrict = widget.renderTransportDemoStrict;
     final bool hasHistory = context.selectState<ChatCubit, ChatState, bool>(
-      selector: (final state) => state.hasHistory,
+      selector: (state) => state.hasHistory,
     );
     return CommonPageLayout(
       title: l10n.chatPageTitle,
@@ -81,7 +81,7 @@ class _ChatPageState extends State<ChatPage> {
               children: <Widget>[
                 const ChatModelSelector(),
                 TypeSafeBlocSelector<SyncStatusCubit, SyncStatusState, bool>(
-                  selector: (final s) => !s.isOnline,
+                  selector: (s) => !s.isOnline,
                   builder: (context, offline) {
                     if (offline) {
                       return const ChatOfflineBadge();
@@ -91,7 +91,7 @@ class _ChatPageState extends State<ChatPage> {
                       ChatState,
                       ChatRemotePath?
                     >(
-                      selector: (final s) => s.transportForBadge,
+                      selector: (s) => s.transportForBadge,
                       builder: (context, transport) {
                         if (transport == null) {
                           return const SizedBox.shrink();

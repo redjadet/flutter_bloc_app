@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Settings toggle for consent-gated product analytics collection.
 class AnalyticsConsentSection extends StatefulWidget {
@@ -57,13 +57,13 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     final AnalyticsConsentRepository? consent = _consentOrNull;
     if (consent != null) {
       _changesSubscription = consent.changes.listen(
-        (final enabled) {
+        (enabled) {
           if (!mounted) {
             return;
           }
           setState(() => _enabled = enabled);
         },
-        onError: (final Object _, final StackTrace _) {
+        onError: (Object _, StackTrace _) {
           // Keep last loaded toggle value if the consent stream fails.
         },
       );
@@ -98,7 +98,7 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     });
   }
 
-  Future<void> _onChanged(final bool value) async {
+  Future<void> _onChanged(bool value) async {
     final AnalyticsConsentRepository? consent = _consentOrNull;
     final ProductAnalytics? analytics = _analyticsOrNull;
     if (consent == null || analytics == null) {
@@ -117,7 +117,7 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     if (!_available) {
       if (kReleaseMode) {

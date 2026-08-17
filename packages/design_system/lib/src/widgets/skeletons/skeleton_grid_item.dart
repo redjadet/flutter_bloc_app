@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:design_system/responsive.dart';
+import 'package:material_ui/material_ui.dart';
+
 import 'skeleton_base.dart';
 
 /// A reusable skeleton grid item for grid layouts.
@@ -21,7 +21,7 @@ class SkeletonGridItem extends StatelessWidget {
   final bool hasOverlay;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 

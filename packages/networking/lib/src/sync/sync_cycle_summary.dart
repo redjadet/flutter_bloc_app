@@ -6,18 +6,17 @@ part 'sync_cycle_summary.freezed.dart';
 @freezed
 abstract class SyncCycleSummary with _$SyncCycleSummary {
   const factory SyncCycleSummary({
-    required final DateTime recordedAt,
-    required final int durationMs,
-    required final int pullRemoteCount,
-    required final int pullRemoteFailures,
-    required final int pendingAtStart,
-    required final int operationsProcessed,
-    required final int operationsFailed,
-    required final Map<String, int> pendingByEntity,
-    @Default(0) final int prunedCount,
-    @Default(<String, double>{})
-    final Map<String, double> retryAttemptsByEntity,
-    @Default(<String, String>{}) final Map<String, String> lastErrorByEntity,
-    @Default(0.0) final double retrySuccessRate,
+    required DateTime recordedAt,
+    required int durationMs,
+    required int pullRemoteCount,
+    required int pullRemoteFailures,
+    required int pendingAtStart,
+    required int operationsProcessed,
+    required int operationsFailed,
+    required Map<String, int> pendingByEntity,
+    @Default(0) int prunedCount,
+    @Default(<String, double>{}) Map<String, double> retryAttemptsByEntity,
+    @Default(<String, String>{}) Map<String, String> lastErrorByEntity,
+    @Default(0.0) double retrySuccessRate,
   }) = _SyncCycleSummary;
 }

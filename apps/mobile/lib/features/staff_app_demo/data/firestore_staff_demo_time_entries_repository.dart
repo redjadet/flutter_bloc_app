@@ -13,7 +13,7 @@ class FirestoreStaffDemoTimeEntriesRepository
 
   @override
   Future<List<StaffDemoTimeEntrySummary>> fetchRecent({
-    final int limit = 20,
+    int limit = 20,
   }) async {
     final snap = await _firestore
         .collection('staffDemoTimeEntries')

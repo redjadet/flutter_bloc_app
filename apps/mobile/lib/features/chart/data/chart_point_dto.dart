@@ -7,17 +7,16 @@ class ChartPointDto {
     required this.value,
   });
 
-  ChartPointDto.fromDomain(final ChartPoint point)
+  ChartPointDto.fromDomain(ChartPoint point)
     : date = point.date,
       value = point.value;
 
-  factory ChartPointDto.fromJson(final Map<String, dynamic> json) =>
-      ChartPointDto(
-        date: DateTime.parse(json['date'] as String),
-        value: (json['value'] as num).toDouble(),
-      );
+  factory ChartPointDto.fromJson(Map<String, dynamic> json) => ChartPointDto(
+    date: DateTime.parse(json['date'] as String),
+    value: (json['value'] as num).toDouble(),
+  );
 
-  factory ChartPointDto.fromApi(final List<dynamic> entry) {
+  factory ChartPointDto.fromApi(List<dynamic> entry) {
     if (entry.length < 2) {
       throw const FormatException('Chart entry requires timestamp and value');
     }

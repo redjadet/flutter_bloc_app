@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
+import 'package:material_ui/material_ui.dart';
 
-typedef AiDecisionPillBuilder =
-    Widget Function({
-      required BuildContext context,
-      required String label,
-      required Color color,
-    });
+typedef AiDecisionPillBuilder = Widget Function({
+  required BuildContext context,
+  required String label,
+  required Color color,
+});
 
 Widget buildAiDecisionPill({
-  required final BuildContext context,
-  required final String label,
-  required final Color color,
+  required BuildContext context,
+  required String label,
+  required Color color,
 }) => Container(
   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
   decoration: BoxDecoration(
@@ -26,9 +25,9 @@ Widget buildAiDecisionPill({
 );
 
 Widget buildAiDecisionProofPanel({
-  required final BuildContext context,
-  required final AiDecisionProof proof,
-  required final AiDecisionPillBuilder pill,
+  required BuildContext context,
+  required AiDecisionProof proof,
+  required AiDecisionPillBuilder pill,
 }) {
   final List<AiDecisionProofRule> rows = proof.ruleTrace;
   final Map<String, dynamic> inputSnapshot = proof.inputSnapshot;
@@ -61,7 +60,7 @@ Widget buildAiDecisionProofPanel({
       const SizedBox(height: 8),
       if (inputSnapshot.isNotEmpty)
         Text(
-          'Inputs: ${inputSnapshot.entries.map((final e) => '${e.key}=${e.value}').join(', ')}',
+          'Inputs: ${inputSnapshot.entries.map((e) => '${e.key}=${e.value}').join(', ')}',
           style: Theme.of(context).textTheme.bodySmall,
         ),
       if (thresholds != null && !thresholds.isEmpty)
@@ -87,7 +86,7 @@ Widget buildAiDecisionProofPanel({
           ],
           rows: () {
             final limited = rows.take(8).toList(growable: false);
-            return List<DataRow>.generate(limited.length, (final i) {
+            return List<DataRow>.generate(limited.length, (i) {
               final r = limited[i];
               return DataRow.byIndex(
                 index: i,
@@ -108,7 +107,7 @@ Widget buildAiDecisionProofPanel({
         ),
       ),
       const SizedBox(height: 8),
-      ...rows.take(8).map((final r) {
+      ...rows.take(8).map((r) {
         final evidence = r.evidence ?? '';
         return Padding(
           padding: const EdgeInsets.only(bottom: 6),

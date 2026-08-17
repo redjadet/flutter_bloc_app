@@ -8,6 +8,6 @@ class RunNativeSecurityOperationUseCase {
   final NativeSecurityShowcaseService _service;
 
   Future<NativeSecurityOperationResult> call(
-    final NativeSecurityOperation operation,
+    NativeSecurityOperation operation,
   ) => _service.run(operation);
 }

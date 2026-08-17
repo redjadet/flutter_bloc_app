@@ -124,7 +124,7 @@ Future<void> overrideMemoryServicesForTests() async {
   }
 
   getIt.registerLazySingleton<AppMemoryService>(
-    () => AppMemoryService(onImageCacheTrim: (final level) async {}),
+    () => AppMemoryService(onImageCacheTrim: (level) async {}),
   );
 }
 

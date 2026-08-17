@@ -1,17 +1,18 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/pages/realtime_market_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Matches [SimulatedMarketFeed] initial depth (16×16) inside the fixed-height
 /// order book — catches [RenderFlex] overflow regressions on phone layouts.
@@ -65,9 +66,9 @@ MarketFeedSnapshot _denseSimStyleSnapshot() {
 
 void main() {
   Future<void> pumpMarketPage(
-    final WidgetTester tester, {
-    required final Size size,
-    final double textScale = 1,
+    WidgetTester tester, {
+    required Size size,
+    double textScale = 1,
   }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
@@ -76,7 +77,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: MediaQuery(
           data: MediaQueryData(
@@ -96,10 +97,10 @@ void main() {
 
   testWidgets(
     'RealtimeMarketPage has no flex overflow on phone with full sim book',
-    (final tester) async {
+    (tester) async {
       final originalOnError = FlutterError.onError;
       final errors = <FlutterErrorDetails>[];
-      FlutterError.onError = (final FlutterErrorDetails details) {
+      FlutterError.onError = (FlutterErrorDetails details) {
         errors.add(details);
         originalOnError?.call(details);
       };
@@ -114,8 +115,7 @@ void main() {
       await pumpMarketPage(tester, size: const Size(390, 844));
 
       final Iterable<FlutterErrorDetails> overflows = errors.where(
-        (final FlutterErrorDetails e) =>
-            e.exceptionAsString().contains('overflow'),
+        (FlutterErrorDetails e) => e.exceptionAsString().contains('overflow'),
       );
       expect(
         overflows,
@@ -127,11 +127,11 @@ void main() {
   );
 
   testWidgets('RealtimeMarketPage adapts on compact and desktop viewports', (
-    final tester,
+    tester,
   ) async {
     final originalOnError = FlutterError.onError;
     final errors = <FlutterErrorDetails>[];
-    FlutterError.onError = (final FlutterErrorDetails details) {
+    FlutterError.onError = (FlutterErrorDetails details) {
       errors.add(details);
       originalOnError?.call(details);
     };
@@ -148,8 +148,7 @@ void main() {
       errors.clear();
       await pumpMarketPage(tester, size: size, textScale: textScale);
       final Iterable<FlutterErrorDetails> overflows = errors.where(
-        (final FlutterErrorDetails e) =>
-            e.exceptionAsString().contains('overflow'),
+        (FlutterErrorDetails e) => e.exceptionAsString().contains('overflow'),
       );
       expect(
         overflows,
@@ -171,13 +170,13 @@ final class _FakeRepo implements RealtimeMarketRepository {
       StreamController<MarketFeedSnapshot>.broadcast();
 
   @override
-  Future<MarketFeedSnapshot?> loadCached(final String pairId) async => cached;
+  Future<MarketFeedSnapshot?> loadCached(String pairId) async => cached;
 
   @override
-  Stream<MarketFeedSnapshot> watch(final String pairId) => _out.stream;
+  Stream<MarketFeedSnapshot> watch(String pairId) => _out.stream;
 
   @override
-  Future<void> reconnect(final String pairId) async {}
+  Future<void> reconnect(String pairId) async {}
 
   @override
   Future<void> dispose() async {

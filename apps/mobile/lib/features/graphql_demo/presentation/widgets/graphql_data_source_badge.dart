@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 /// Badge widget that displays the data source (Cache, Supabase, or Remote).
@@ -16,7 +16,7 @@ class GraphqlDataSourceBadge extends StatelessWidget {
   final GraphqlDataSource source;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (source == GraphqlDataSource.unknown) {
       return const SizedBox.shrink();
     }

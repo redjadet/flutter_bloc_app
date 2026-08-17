@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dar
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_terminal_sync_failure_text.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'chat_message_list.freezed.dart';
 
@@ -25,12 +25,12 @@ class ChatMessageList extends StatelessWidget {
   final ErrorNotificationService errorNotificationService;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
 
     return TypeSafeBlocConsumer<ChatCubit, ChatState>(
-      listener: (final context, final state) async {
+      listener: (context, state) async {
         if (state.error case final err?) {
           final ChatCubit chatCubit = context.cubit<ChatCubit>();
           final trimmedRemoteCode = state.remoteFailureL10nCode?.trim();
@@ -65,17 +65,17 @@ class ChatMessageList extends StatelessWidget {
           });
         }
       },
-      builder: (final context, final state) =>
+      builder: (context, state) =>
           ViewStatusSwitcher<ChatCubit, ChatState, _ChatListData>(
-            selector: (final state) => _ChatListData(
+            selector: (state) => _ChatListData(
               hasMessages: state.hasMessages,
               isLoading: state.isLoading,
               messages: state.messages,
             ),
-            isLoading: (final data) => data.isLoading && !data.hasMessages,
+            isLoading: (data) => data.isLoading && !data.hasMessages,
             isError: (_) => false,
-            loadingBuilder: (final _) => const CommonLoadingWidget(),
-            builder: (final context, final data) {
+            loadingBuilder: (_) => const CommonLoadingWidget(),
+            builder: (context, data) {
               if (!data.hasMessages) {
                 return CommonStatusView(
                   message: l10n.chatEmptyState,
@@ -88,7 +88,7 @@ class ChatMessageList extends StatelessWidget {
                   controller: controller,
                   padding: context.allGapM,
                   itemCount: data.messages.length,
-                  itemBuilder: (final context, final index) {
+                  itemBuilder: (context, index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
                     final trimmedTerminalCode = message.terminalSyncFailureCode
@@ -144,7 +144,7 @@ class ChatMessageList extends StatelessWidget {
   }
 }
 
-Key _chatMessageKey(final ChatMessage message, final int index) {
+Key _chatMessageKey(ChatMessage message, int index) {
   if (message.clientMessageId case final messageId?) {
     return ValueKey<String>('chat-message-$messageId');
   }
@@ -161,8 +161,8 @@ Key _chatMessageKey(final ChatMessage message, final int index) {
 @freezed
 abstract class _ChatListData with _$ChatListData {
   const factory _ChatListData({
-    required final bool hasMessages,
-    required final bool isLoading,
-    required final List<ChatMessage> messages,
+    required bool hasMessages,
+    required bool isLoading,
+    required List<ChatMessage> messages,
   }) = __ChatListData;
 }

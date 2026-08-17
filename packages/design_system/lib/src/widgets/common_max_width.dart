@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:design_system/responsive.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Constrains content to the shared max width and centers it.
 class CommonMaxWidth extends StatelessWidget {
@@ -18,7 +17,7 @@ class CommonMaxWidth extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final Widget constrained = ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: maxWidth ?? context.contentMaxWidth,

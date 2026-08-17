@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:design_system/responsive.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../common_card.dart';
-import 'package:design_system/responsive.dart';
 import 'skeleton_base.dart';
 
 /// A reusable skeleton card for card-based layouts.
@@ -35,7 +35,7 @@ class SkeletonCard extends StatelessWidget {
   final bool hasSubtitle;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final effectiveHeight = height ?? context.heightFraction(0.2);

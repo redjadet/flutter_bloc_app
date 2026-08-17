@@ -13,13 +13,13 @@ class CompositeProductAnalytics implements ProductAnalytics {
   final ProductAnalytics? delegate;
 
   @override
-  Future<void> setCollectionEnabled({required final bool enabled}) async {
+  Future<void> setCollectionEnabled({required bool enabled}) async {
     await memory.setCollectionEnabled(enabled: enabled);
     await delegate?.setCollectionEnabled(enabled: enabled);
   }
 
   @override
-  Future<void> track(final AppAnalyticsEvent event) async {
+  Future<void> track(AppAnalyticsEvent event) async {
     await memory.track(event);
     await delegate?.track(event);
   }

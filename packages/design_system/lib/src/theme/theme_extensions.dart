@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Theme extension for decorative (non-functional) UI elements such as
 /// confetti particles and sparkles. These are not part of the main
@@ -10,9 +10,9 @@ class ConfettiTheme extends ThemeExtension<ConfettiTheme> {
   final List<Color> particleColors;
 
   @override
-  ConfettiTheme copyWith({final List<Color>? particleColors}) =>
+  ConfettiTheme copyWith({List<Color>? particleColors}) =>
       ConfettiTheme(particleColors: particleColors ?? this.particleColors);
 
   @override
-  ConfettiTheme lerp(final ConfettiTheme? other, final double t) => this;
+  ConfettiTheme lerp(ConfettiTheme? other, double t) => this;
 }

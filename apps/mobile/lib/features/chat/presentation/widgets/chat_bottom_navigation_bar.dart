@@ -1,11 +1,11 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChatBottomNavigationBar extends StatelessWidget {
   const ChatBottomNavigationBar({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
   const _ChatBottomNavigationBarContent();
 
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(BuildContext context) => Padding(
     padding: context.pageHorizontalPaddingWithVertical(context.responsiveGap),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -64,10 +64,10 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
   );
 
   Widget _buildNavItem(
-    final IconData icon, {
-    required final bool isSelected,
-    required final BuildContext context,
-    final bool isPrimary = false,
+    IconData icon, {
+    required bool isSelected,
+    required BuildContext context,
+    bool isPrimary = false,
   }) {
     final iconSize = context.responsiveIconSize;
     final containerSize = context.responsiveButtonHeight;

@@ -1,13 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_state.dart';
-import 'package:design_system/design_system.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 class _StubGraphqlDemoRepository implements GraphqlDemoRepository {
   const _StubGraphqlDemoRepository({this.exception});

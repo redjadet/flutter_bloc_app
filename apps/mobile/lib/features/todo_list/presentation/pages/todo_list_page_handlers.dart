@@ -1,9 +1,9 @@
 part of 'todo_list_page.dart';
 
 Future<void> _handleClearCompleted(
-  final BuildContext context,
-  final List<TodoItem> items,
-  final TodoListCubit cubit,
+  BuildContext context,
+  List<TodoItem> items,
+  TodoListCubit cubit,
 ) async {
   final int completedCount = cubit.state.completedCount;
   final bool? shouldClear = await showTodoClearCompletedConfirmDialog(
@@ -15,7 +15,7 @@ Future<void> _handleClearCompleted(
   }
 }
 
-Future<void> _handleAddTodo(final BuildContext context) async {
+Future<void> _handleAddTodo(BuildContext context) async {
   final TodoEditorResult? result = await showTodoEditorDialog(context: context);
   if (result == null) {
     return;
@@ -33,8 +33,8 @@ Future<void> _handleAddTodo(final BuildContext context) async {
 }
 
 Future<void> _handleEditTodo(
-  final BuildContext context,
-  final TodoItem item,
+  BuildContext context,
+  TodoItem item,
 ) async {
   final TodoEditorResult? result = await showTodoEditorDialog(
     context: context,
@@ -57,8 +57,8 @@ Future<void> _handleEditTodo(
 }
 
 Future<void> _handleDeleteTodo(
-  final BuildContext context,
-  final TodoItem item,
+  BuildContext context,
+  TodoItem item,
 ) async {
   final bool? shouldDelete = await showTodoDeleteConfirmDialog(
     context: context,
@@ -74,9 +74,9 @@ Future<void> _handleDeleteTodo(
 }
 
 Future<void> _handleDeleteWithUndo(
-  final BuildContext context,
-  final TodoItem item,
-  final TodoListCubit cubit,
+  BuildContext context,
+  TodoItem item,
+  TodoListCubit cubit,
 ) async {
   await cubit.deleteTodo(item);
   if (!context.mounted) {

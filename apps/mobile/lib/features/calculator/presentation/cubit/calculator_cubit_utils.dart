@@ -2,9 +2,9 @@ import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.d
     show CalculatorOperation, PaymentCalculator;
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_state.dart';
 
-double clampRate(final double rate) => rate.clamp(0, 1).toDouble();
+double clampRate(double rate) => rate.clamp(0, 1).toDouble();
 
-bool reachedDecimalLimit(final String buffer, final int scale) {
+bool reachedDecimalLimit(String buffer, int scale) {
   if (!buffer.contains('.')) {
     return false;
   }
@@ -18,8 +18,8 @@ bool reachedDecimalLimit(final String buffer, final int scale) {
 }
 
 String formatDisplay(
-  final PaymentCalculator calculator,
-  final double value,
+  PaymentCalculator calculator,
+  double value,
 ) {
   final double rounded = calculator.round(value);
   if (rounded == 0) {
@@ -34,17 +34,16 @@ String formatDisplay(
       .replaceFirst(RegExp(r'\.$'), '');
 }
 
-String operationSymbol(final CalculatorOperation operation) =>
-    switch (operation) {
-      CalculatorOperation.add => '+',
-      CalculatorOperation.subtract => '−',
-      CalculatorOperation.multiply => '×',
-      CalculatorOperation.divide => '÷',
-    };
+String operationSymbol(CalculatorOperation operation) => switch (operation) {
+  CalculatorOperation.add => '+',
+  CalculatorOperation.subtract => '−',
+  CalculatorOperation.multiply => '×',
+  CalculatorOperation.divide => '÷',
+};
 
 CalculatorState toggleSignState(
-  final CalculatorState current,
-  final PaymentCalculator calculator,
+  CalculatorState current,
+  PaymentCalculator calculator,
 ) {
   final double value = calculator.parseCurrency(current.display);
   if (value == 0) {
@@ -62,8 +61,8 @@ CalculatorState toggleSignState(
 }
 
 CalculatorState applyPercentageState(
-  final CalculatorState current,
-  final PaymentCalculator calculator,
+  CalculatorState current,
+  PaymentCalculator calculator,
 ) {
   final double value = calculator.parseCurrency(current.display);
   final double percent = value / 100;
@@ -74,9 +73,9 @@ CalculatorState applyPercentageState(
 }
 
 CalculatorState writeDigitsState(
-  final CalculatorState current,
-  final String digits,
-  final PaymentCalculator calculator,
+  CalculatorState current,
+  String digits,
+  PaymentCalculator calculator,
 ) {
   String buffer = current.replaceInput ? '0' : current.display;
   bool replace = current.replaceInput;

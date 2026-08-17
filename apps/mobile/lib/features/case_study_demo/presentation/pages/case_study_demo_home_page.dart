@@ -1,6 +1,5 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:auth/auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CaseStudyDemoHomePage extends StatelessWidget {
   const CaseStudyDemoHomePage({required this.remoteAuth, super.key});
@@ -16,7 +16,7 @@ class CaseStudyDemoHomePage extends StatelessWidget {
   final RemoteBackendAuthPort remoteAuth;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final CaseStudyDataMode mode = CaseStudyDataModeBadge.fromRemoteBackendAuth(
       remoteAuth,
@@ -24,7 +24,7 @@ class CaseStudyDemoHomePage extends StatelessWidget {
     return CommonPageLayout(
       title: l10n.caseStudyDemoTitle,
       body: Builder(
-        builder: (final context) {
+        builder: (context) {
           final viewState = context
               .selectState<
                 CaseStudySessionCubit,
@@ -35,7 +35,7 @@ class CaseStudyDemoHomePage extends StatelessWidget {
                   bool submitLocalHistoryFailed,
                 })
               >(
-                selector: (final state) => (
+                selector: (state) => (
                   hydration: state.hydration,
                   isSubmitting: state.isSubmitting,
                   submitLocalHistoryFailed: state.submitLocalHistoryFailed,

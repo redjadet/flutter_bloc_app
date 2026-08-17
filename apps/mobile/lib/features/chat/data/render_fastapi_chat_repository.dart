@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -45,12 +46,12 @@ class RenderFastApiChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) => sendMessageImpl(
     pastUserInputs: pastUserInputs,
     generatedResponses: generatedResponses,

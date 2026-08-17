@@ -13,13 +13,13 @@ class RealtimeMarketLoadedBody extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final int bidFlex = sideTab == RealtimeMarketSideTab.bids ? 2 : 1;
     final int askFlex = sideTab == RealtimeMarketSideTab.asks ? 2 : 1;
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final bool wide = constraints.maxWidth >= 760;
         final bool compactBook = constraints.maxWidth < 520;
         final Widget staleBanner =

@@ -63,7 +63,7 @@ void main() {
       expect(data.platform, AppPlatformKind.ios);
       expect(data.capabilities, hasLength(5));
       expect(
-        data.interopResults.map((final r) => r.kind).toList(),
+        data.interopResults.map((r) => r.kind).toList(),
         <NativeInteropBridgeKind>[
           NativeInteropBridgeKind.swift,
           NativeInteropBridgeKind.kotlin,

@@ -3,22 +3,22 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_reco
 
 /// Persist drafts and submitted records per signed-in user.
 abstract class CaseStudyLocalRepository {
-  Future<CaseStudyDraft?> loadDraft(final String userId);
+  Future<CaseStudyDraft?> loadDraft(String userId);
 
-  Future<void> saveDraft(final String userId, final CaseStudyDraft draft);
+  Future<void> saveDraft(String userId, CaseStudyDraft draft);
 
-  Future<void> clearDraft(final String userId);
+  Future<void> clearDraft(String userId);
 
-  Future<List<CaseStudyRecord>> loadRecords(final String userId);
+  Future<List<CaseStudyRecord>> loadRecords(String userId);
 
   Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
+    String userId,
+    String recordId,
   );
 
   Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> records,
+    String userId,
+    List<CaseStudyRecord> records,
   );
 
   /// Ensures storage schema; v1 clears box on mismatch.

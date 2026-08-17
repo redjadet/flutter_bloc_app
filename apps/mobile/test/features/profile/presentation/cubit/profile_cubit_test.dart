@@ -31,7 +31,7 @@ void main() {
       build: () => ProfileCubit(
         repository: _StubProfileRepository(() async => _profileUser),
       ),
-      act: (final cubit) => cubit.loadProfile(),
+      act: (cubit) => cubit.loadProfile(),
       expect: () => <ProfileState>[
         const ProfileState.loading(),
         const ProfileState.ready(_profileUser),
@@ -43,11 +43,11 @@ void main() {
       build: () => ProfileCubit(
         repository: _StubProfileRepository(() => Future.error(Exception())),
       ),
-      act: (final cubit) => cubit.loadProfile(),
+      act: (cubit) => cubit.loadProfile(),
       expect: () => <dynamic>[
         const ProfileState.loading(),
         isA<ProfileState>().having(
-          (final state) => state.hasError,
+          (state) => state.hasError,
           'hasError',
           isTrue,
         ),
@@ -68,14 +68,14 @@ void main() {
           }),
         );
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.loadProfile();
         await cubit.loadProfile();
       },
       expect: () => <dynamic>[
         const ProfileState.loading(),
         isA<ProfileState>().having(
-          (final state) => state.hasError,
+          (state) => state.hasError,
           'hasError',
           isTrue,
         ),
@@ -90,7 +90,7 @@ void main() {
         raceRepository = _RaceProfileRepository();
         return ProfileCubit(repository: raceRepository);
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         unawaited(cubit.loadProfile());
         await Future<void>.delayed(Duration.zero);
 
@@ -119,12 +119,12 @@ void main() {
       },
       expect: () => <Matcher>[
         isA<ProfileState>().having(
-          (final state) => state.isLoading,
+          (state) => state.isLoading,
           'isLoading',
           isTrue,
         ),
         isA<ProfileState>().having(
-          (final state) => state.user?.name,
+          (state) => state.user?.name,
           'user.name',
           'New',
         ),
@@ -151,13 +151,13 @@ class _RaceProfileRepository implements ProfileRepository {
     return _second.future;
   }
 
-  void completeFirst(final ProfileUser user) {
+  void completeFirst(ProfileUser user) {
     if (!_first.isCompleted) {
       _first.complete(user);
     }
   }
 
-  void completeSecond(final ProfileUser user) {
+  void completeSecond(ProfileUser user) {
     if (!_second.isCompleted) {
       _second.complete(user);
     }

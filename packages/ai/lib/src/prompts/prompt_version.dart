@@ -7,7 +7,7 @@ class PromptVersion implements Comparable<PromptVersion> {
   final int patch;
 
   @override
-  int compareTo(final PromptVersion other) {
+  int compareTo(PromptVersion other) {
     if (major != other.major) return major.compareTo(other.major);
     if (minor != other.minor) return minor.compareTo(other.minor);
     return patch.compareTo(other.patch);

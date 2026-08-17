@@ -76,7 +76,7 @@ class AuthAwareChartRemoteRepository implements ChartRemoteRepository {
   }
 
   Future<List<ChartPoint>> _fetchFromActive(
-    final ChartRemoteRepository active,
+    ChartRemoteRepository active,
   ) async {
     try {
       final List<ChartPoint> points = await active.fetchTrendingCounts();

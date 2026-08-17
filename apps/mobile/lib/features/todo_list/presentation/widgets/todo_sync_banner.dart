@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 /// Sync status banner for the todo list feature. Uses shared logic from
@@ -33,7 +33,7 @@ class _TodoSyncBannerState extends State<TodoSyncBanner> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
@@ -41,7 +41,7 @@ class _TodoSyncBannerState extends State<TodoSyncBanner> {
     }
 
     return TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (!CubitHelpers.isCubitAvailable<TodoListCubit, TodoListState>(
           context,
         )) {
@@ -50,7 +50,7 @@ class _TodoSyncBannerState extends State<TodoSyncBanner> {
         // check-ignore: listener callback is event-driven, not a build side effect
         unawaited(context.cubit<TodoListCubit>().refreshPendingSyncCount());
       },
-      builder: (final context, final syncState) {
+      builder: (context, syncState) {
         if (!CubitHelpers.isCubitAvailable<TodoListCubit, TodoListState>(
           context,
         )) {
@@ -58,7 +58,7 @@ class _TodoSyncBannerState extends State<TodoSyncBanner> {
         }
 
         return TypeSafeBlocBuilder<TodoListCubit, TodoListState>(
-          builder: (final context, final todoState) {
+          builder: (context, todoState) {
             final bool isOffline =
                 syncState.networkStatus == NetworkStatus.offline;
             final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;

@@ -4,7 +4,7 @@ class _RepositoryControlsCard extends StatelessWidget {
   const _RepositoryControlsCard();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final cubit = context.cubit<InAppPurchaseDemoCubit>();
     final controls = context
@@ -17,7 +17,7 @@ class _RepositoryControlsCard extends StatelessWidget {
             bool isBusy,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             useFakeRepository: state.useFakeRepository,
             forcedOutcome: state.forcedOutcome,
             isBusy: state.isBusy,
@@ -48,8 +48,7 @@ class _RepositoryControlsCard extends StatelessWidget {
                   value: controls.useFakeRepository,
                   onChanged: controls.isBusy
                       ? null
-                      : (final useFake) =>
-                            cubit.toggleRepository(useFake: useFake),
+                      : (useFake) => cubit.toggleRepository(useFake: useFake),
                 ),
               ],
             ),
@@ -70,7 +69,7 @@ class _EntitlementsCard extends StatelessWidget {
   const _EntitlementsCard();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final cubit = context.cubit<InAppPurchaseDemoCubit>();
     final entitlementsState = context
@@ -79,7 +78,7 @@ class _EntitlementsCard extends StatelessWidget {
           InAppPurchaseDemoState,
           ({IapEntitlements entitlements, bool isBusy})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             entitlements: state.entitlements,
             isBusy: state.isBusy,
           ),
@@ -127,7 +126,7 @@ class _ProductsCard extends StatelessWidget {
   const _ProductsCard();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final cubit = context.cubit<InAppPurchaseDemoCubit>();
     final _IapProductsViewData productsState = context
@@ -217,7 +216,7 @@ class _IapProductsViewData {
     required this.errorMessage,
   });
 
-  factory _IapProductsViewData.fromState(final InAppPurchaseDemoState state) {
+  factory _IapProductsViewData.fromState(InAppPurchaseDemoState state) {
     final List<IapProduct> consumable = <IapProduct>[];
     final List<IapProduct> nonConsumable = <IapProduct>[];
     final List<IapProduct> subscriptions = <IapProduct>[];
@@ -260,7 +259,7 @@ class _IapProductsViewData {
   static const DeepCollectionEquality _listEq = DeepCollectionEquality();
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is _IapProductsViewData &&
           other.status == status &&

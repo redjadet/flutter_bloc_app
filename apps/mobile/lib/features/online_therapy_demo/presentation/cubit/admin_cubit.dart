@@ -73,7 +73,7 @@ class AdminCubit extends Cubit<AdminState> {
     );
   }
 
-  Future<void> approve(final String therapistId) async {
+  Future<void> approve(String therapistId) async {
     emit(state.copyWith(isBusy: true));
     await CubitExceptionHandler.executeAsync(
       operation: () async {

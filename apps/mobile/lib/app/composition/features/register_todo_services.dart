@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart'
 void registerTodoServices() {
   registerLazySingletonIfAbsent<TodoRepository>(
     createTodoRepository, // Use factory instead of direct instantiation
-    dispose: (final repo) async {
+    dispose: (repo) async {
       if (repo is OfflineFirstTodoRepository) {
         await repo.dispose();
       }

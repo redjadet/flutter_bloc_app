@@ -35,7 +35,7 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final invokedMethods = <String>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             invokedMethods.add(call.method);
             return <String, Object?>{
               'schemaVersion': 1,
@@ -65,7 +65,7 @@ void main() {
     test('maps a successful reply to a success result', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             return <String, Object?>{
               'schemaVersion': 1,
               'status': 'success',
@@ -89,7 +89,7 @@ void main() {
     test('rejects a native success reply without required evidence', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             return <String, Object?>{
               'schemaVersion': 1,
               'status': 'success',
@@ -122,7 +122,7 @@ void main() {
     test('maps a slow reply to unavailable/timeout', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             await Future<void>.delayed(const Duration(seconds: 3));
             return <String, Object?>{
               'schemaVersion': 1,
@@ -148,7 +148,7 @@ void main() {
       () async {
         debugDefaultTargetPlatformOverride = TargetPlatform.android;
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (final call) async {
+            .setMockMethodCallHandler(channel, (call) async {
               await Future<void>.delayed(const Duration(seconds: 3));
               return <String, Object?>{
                 'schemaVersion': 1,
@@ -172,38 +172,35 @@ void main() {
       },
     );
 
-    test(
-      'maps a biometric reply past the biometric timeout to unavailable/timeout',
-      () async {
-        debugDefaultTargetPlatformOverride = TargetPlatform.android;
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (final call) async {
-              await Future<void>.delayed(const Duration(milliseconds: 80));
-              return <String, Object?>{
-                'schemaVersion': 1,
-                'status': 'success',
-                'reasonCode': 'ok',
-                'platform': 'android',
-              };
-            });
+    test('maps a biometric reply past the biometric timeout to unavailable/timeout', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+            await Future<void>.delayed(const Duration(milliseconds: 80));
+            return <String, Object?>{
+              'schemaVersion': 1,
+              'status': 'success',
+              'reasonCode': 'ok',
+              'platform': 'android',
+            };
+          });
 
-        const service = MethodChannelNativeSecurityShowcaseService(
-          channel: channel,
-          biometricInvokeTimeout: Duration(milliseconds: 20),
-        );
-        final result = await service.run(
-          NativeSecurityOperation.biometricProtectedOperation,
-        );
+      const service = MethodChannelNativeSecurityShowcaseService(
+        channel: channel,
+        biometricInvokeTimeout: Duration(milliseconds: 20),
+      );
+      final result = await service.run(
+        NativeSecurityOperation.biometricProtectedOperation,
+      );
 
-        expect(result.status, NativeSecurityStatus.unavailable);
-        expect(result.reasonCode, 'timeout');
-      },
-    );
+      expect(result.status, NativeSecurityStatus.unavailable);
+      expect(result.reasonCode, 'timeout');
+    });
 
     test('maps PlatformException(biometric_canceled) to denied', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async {
+          .setMockMethodCallHandler(channel, (call) async {
             throw PlatformException(code: 'biometric_canceled');
           });
 
@@ -223,7 +220,7 @@ void main() {
       () async {
         debugDefaultTargetPlatformOverride = TargetPlatform.android;
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (final call) async {
+            .setMockMethodCallHandler(channel, (call) async {
               throw PlatformException(code: 'biometric_not_enrolled');
             });
 
@@ -244,7 +241,7 @@ void main() {
       () async {
         debugDefaultTargetPlatformOverride = TargetPlatform.android;
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (final call) async {
+            .setMockMethodCallHandler(channel, (call) async {
               throw PlatformException(code: 'unexpected_native_error');
             });
 
@@ -265,7 +262,7 @@ void main() {
       () async {
         debugDefaultTargetPlatformOverride = TargetPlatform.android;
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (final call) async {
+            .setMockMethodCallHandler(channel, (call) async {
               throw PlatformException(code: 'ok');
             });
 
@@ -284,7 +281,7 @@ void main() {
     test('maps a malformed reply to failed/malformed_reply', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (final call) async => 'oops');
+          .setMockMethodCallHandler(channel, (call) async => 'oops');
 
       const service = MethodChannelNativeSecurityShowcaseService(
         channel: channel,

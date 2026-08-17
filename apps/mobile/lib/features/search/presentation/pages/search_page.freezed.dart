@@ -89,8 +89,7 @@ extension _SearchBodyDataPatterns on _SearchBodyData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __SearchBodyData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __SearchBodyData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __SearchBodyData() when $default != null:
 return $default(_that);case _:
@@ -111,8 +110,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __SearchBodyData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __SearchBodyData value)  $default,){final _that = this;
 switch (_that) {
 case __SearchBodyData():
 return $default(_that);case _:
@@ -132,8 +130,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __SearchBodyData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __SearchBodyData value)?  $default,){final _that = this;
 switch (_that) {
 case __SearchBodyData() when $default != null:
 return $default(_that);case _:
@@ -209,7 +206,7 @@ return $default(_that.isLoading,_that.isError,_that.hasResults,_that.results);ca
 
 
 class __SearchBodyData implements _SearchBodyData {
-  const __SearchBodyData({required this.isLoading, required this.isError, required this.hasResults, required final  List<SearchResult> results}): _results = results;
+  const __SearchBodyData({required this.isLoading, required this.isError, required this.hasResults, required  List<SearchResult> results}): _results = results;
   
 
 @override final  bool isLoading;

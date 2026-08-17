@@ -1,7 +1,6 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Reusable scapes grid content that can be embedded in other pages.
 /// Provides its own BlocProvider for the ScapesCubit.
@@ -26,7 +26,7 @@ class ScapesGridContent extends StatelessWidget {
   final TimerService timerService;
 
   @override
-  Widget build(final BuildContext context) => BlocProvider(
+  Widget build(BuildContext context) => BlocProvider(
     create: (_) => ScapesCubit(
       repository: repository,
       timerService: timerService,
@@ -39,16 +39,15 @@ class _ScapesGridContentBody extends StatelessWidget {
   const _ScapesGridContentBody();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return TypeSafeBlocSelector<
       ScapesCubit,
       ScapesState,
       (bool, bool, String?, List<Scape>)
     >(
-      selector: (final s) =>
-          (s.isLoading, s.hasError, s.errorMessage, s.scapes),
-      builder: (final context, final data) {
+      selector: (s) => (s.isLoading, s.hasError, s.errorMessage, s.scapes),
+      builder: (context, data) {
         if (data.$1) {
           return const CommonLoadingWidget();
         }
@@ -68,9 +67,9 @@ class _ScapesGridContentBody extends StatelessWidget {
 
         return ScapesGridView(
           scapes: data.$4,
-          onFavoritePressed: (final id) =>
+          onFavoritePressed: (id) =>
               context.cubit<ScapesCubit>().toggleFavorite(id),
-          onMorePressed: (final id) {
+          onMorePressed: (id) {
             AppLogger.debug('options menu clicked');
           },
         );
@@ -85,16 +84,15 @@ class ScapesGridSliverContent extends StatelessWidget {
   const ScapesGridSliverContent({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return TypeSafeBlocSelector<
       ScapesCubit,
       ScapesState,
       (bool, bool, String?, List<Scape>)
     >(
-      selector: (final s) =>
-          (s.isLoading, s.hasError, s.errorMessage, s.scapes),
-      builder: (final context, final data) {
+      selector: (s) => (s.isLoading, s.hasError, s.errorMessage, s.scapes),
+      builder: (context, data) {
         if (data.$1) {
           return const SliverToBoxAdapter(
             child: CommonLoadingWidget(),
@@ -120,9 +118,9 @@ class ScapesGridSliverContent extends StatelessWidget {
 
         return ScapesGridSliver(
           scapes: data.$4,
-          onFavoritePressed: (final id) =>
+          onFavoritePressed: (id) =>
               context.cubit<ScapesCubit>().toggleFavorite(id),
-          onMorePressed: (final id) {
+          onMorePressed: (id) {
             AppLogger.debug('options menu clicked');
           },
         );

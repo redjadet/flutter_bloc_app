@@ -15,15 +15,14 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
-void _stubFirebaseAuthStreams(final FirebaseAuth firebaseAuth) {
+void _stubFirebaseAuthStreams(FirebaseAuth firebaseAuth) {
   when(() => firebaseAuth.currentUser).thenReturn(null);
-  when(
-    () => firebaseAuth.authStateChanges(),
-  ).thenAnswer((_) => const Stream<User?>.empty());
+  when(() => firebaseAuth.authStateChanges())
+      .thenAnswer((_) => const Stream<User?>.empty());
 }
 
 feature_auth.AuthRepository _unwrapAuthRepository(
-  final feature_auth.AuthRepository repository,
+  feature_auth.AuthRepository repository,
 ) {
   if (repository is SignOutAwareAuthRepository) {
     return repository.delegate;
@@ -190,9 +189,8 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final firebaseAuth = _MockFirebaseAuth();
       when(() => firebaseAuth.currentUser).thenReturn(null);
-      when(
-        () => firebaseAuth.authStateChanges(),
-      ).thenAnswer((_) => const Stream<User?>.empty());
+      when(() => firebaseAuth.authStateChanges())
+          .thenAnswer((_) => const Stream<User?>.empty());
       when(() => firebaseAuth.signInAnonymously()).thenThrow(
         FirebaseAuthException(
           code: 'internal-error',
@@ -224,9 +222,8 @@ void main() {
         FirebaseBootstrapService.isIosSimulatorInDebug = true;
         final firebaseAuth = _MockFirebaseAuth();
         when(() => firebaseAuth.currentUser).thenReturn(null);
-        when(
-          () => firebaseAuth.authStateChanges(),
-        ).thenAnswer((_) => const Stream<User?>.empty());
+        when(() => firebaseAuth.authStateChanges())
+            .thenAnswer((_) => const Stream<User?>.empty());
         when(() => firebaseAuth.signInAnonymously()).thenThrow(
           FirebaseAuthException(
             code: 'keychain-error',
@@ -255,9 +252,8 @@ void main() {
         debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
         final firebaseAuth = _MockFirebaseAuth();
         when(() => firebaseAuth.currentUser).thenReturn(null);
-        when(
-          () => firebaseAuth.authStateChanges(),
-        ).thenAnswer((_) => const Stream<User?>.empty());
+        when(() => firebaseAuth.authStateChanges())
+            .thenAnswer((_) => const Stream<User?>.empty());
         when(() => firebaseAuth.signInAnonymously()).thenThrow(
           FirebaseAuthException(
             code: 'unknown',
@@ -286,9 +282,8 @@ void main() {
         debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
         final firebaseAuth = _MockFirebaseAuth();
         when(() => firebaseAuth.currentUser).thenReturn(null);
-        when(
-          () => firebaseAuth.authStateChanges(),
-        ).thenAnswer((_) => const Stream<User?>.empty());
+        when(() => firebaseAuth.authStateChanges())
+            .thenAnswer((_) => const Stream<User?>.empty());
         when(() => firebaseAuth.signInAnonymously()).thenThrow(
           FirebaseAuthException(
             code: 'unknown',

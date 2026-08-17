@@ -1,8 +1,8 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_filter_icon.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_icon_button.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibrarySearchRow extends StatefulWidget {
   const LibrarySearchRow({required this.l10n, super.key});
@@ -23,7 +23,7 @@ class _LibrarySearchRowState extends State<LibrarySearchRow> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     return Row(
       children: [

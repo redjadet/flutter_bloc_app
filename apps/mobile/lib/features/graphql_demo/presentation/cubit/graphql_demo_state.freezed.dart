@@ -93,8 +93,7 @@ extension GraphqlDemoStatePatterns on GraphqlDemoState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlDemoState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlDemoState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _GraphqlDemoState() when $default != null:
 return $default(_that);case _:
@@ -115,8 +114,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlDemoState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlDemoState value)  $default,){final _that = this;
 switch (_that) {
 case _GraphqlDemoState():
 return $default(_that);case _:
@@ -136,8 +134,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlDemoState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlDemoState value)?  $default,){final _that = this;
 switch (_that) {
 case _GraphqlDemoState() when $default != null:
 return $default(_that);case _:
@@ -213,7 +210,7 @@ return $default(_that.status,_that.countries,_that.continents,_that.activeContin
 
 
 class _GraphqlDemoState extends GraphqlDemoState {
-  const _GraphqlDemoState({this.status = ViewStatus.initial, final  List<GraphqlCountry> countries = const <GraphqlCountry>[], final  List<GraphqlContinent> continents = const <GraphqlContinent>[], this.activeContinentCode, this.errorMessage, this.errorType, this.lastError, this.dataSource = GraphqlDataSource.unknown}): _countries = countries,_continents = continents,super._();
+  const _GraphqlDemoState({this.status = ViewStatus.initial, List<GraphqlCountry> countries = const <GraphqlCountry>[], List<GraphqlContinent> continents = const <GraphqlContinent>[], this.activeContinentCode, this.errorMessage, this.errorType, this.lastError, this.dataSource = GraphqlDataSource.unknown}): _countries = countries,_continents = continents,super._();
   
 
 @override@JsonKey() final  ViewStatus status;

@@ -1,10 +1,10 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_selectable_item.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Optimized list view for todo items.
 /// Uses ListView.builder for 100+ items, ListView.separated for smaller lists.
@@ -33,7 +33,7 @@ class TodoListView extends StatelessWidget {
   final void Function(String itemId, {required bool selected})?
   onItemSelectionChanged;
 
-  Widget _buildListItem(final TodoItem item) {
+  Widget _buildListItem(TodoItem item) {
     final deleteWithoutConfirmation = onDeleteWithoutConfirmation;
     final itemSelectionChanged = onItemSelectionChanged;
     return RepaintBoundary(
@@ -65,7 +65,7 @@ class TodoListView extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (items.length >= 100) {
       // Use ListView.builder for large lists (better performance)
       return ListView.builder(
@@ -73,7 +73,7 @@ class TodoListView extends StatelessWidget {
         controller: scrollController,
         padding: context.responsiveListPadding,
         itemCount: items.length * 2 - 1,
-        itemBuilder: (final context, final index) {
+        itemBuilder: (context, index) {
           if (index.isOdd) {
             return SizedBox(height: context.responsiveGapS);
           }
@@ -88,10 +88,9 @@ class TodoListView extends StatelessWidget {
       controller: scrollController,
       padding: context.responsiveListPadding,
       itemCount: items.length,
-      separatorBuilder: (final separatorContext, final separatorIndex) =>
+      separatorBuilder: (separatorContext, separatorIndex) =>
           SizedBox(height: context.responsiveGapS),
-      itemBuilder: (final itemContext, final index) =>
-          _buildListItem(items[index]),
+      itemBuilder: (itemContext, index) => _buildListItem(items[index]),
     );
   }
 }

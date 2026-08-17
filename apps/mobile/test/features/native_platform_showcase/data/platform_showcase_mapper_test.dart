@@ -11,7 +11,7 @@ void main() {
       expect(data.platform, AppPlatformKind.android);
       expect(data.capabilities, hasLength(5));
       expect(
-        data.capabilities.map((final c) => c.kind).toList(),
+        data.capabilities.map((c) => c.kind).toList(),
         showcaseCapabilityOrder,
       );
       expect(
@@ -27,7 +27,7 @@ void main() {
       expect(data.platform, AppPlatformKind.ios);
       expect(data.capabilities, hasLength(5));
       expect(
-        data.capabilities.map((final c) => c.kind).toList(),
+        data.capabilities.map((c) => c.kind).toList(),
         showcaseCapabilityOrder,
       );
       expect(
@@ -41,7 +41,7 @@ void main() {
 
       expect(data.platform, AppPlatformKind.web);
       final interop = data.capabilities.firstWhere(
-        (final c) => c.kind == NativeCapabilityKind.nativeCodeInterop,
+        (c) => c.kind == NativeCapabilityKind.nativeCodeInterop,
       );
       expect(interop.platformDetail, 'JS interop + Wasm');
     });

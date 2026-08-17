@@ -4,7 +4,7 @@ const String _authUpgradeQueryKey = 'upgrade';
 const String _authUpgradeQueryValue = 'true';
 
 /// Auth route for anonymous users upgrading to a full account.
-String _appRoutesAuthUpgradePath({final String? redirect}) {
+String _appRoutesAuthUpgradePath({String? redirect}) {
   final Map<String, String> queryParameters = <String, String>{
     _authUpgradeQueryKey: _authUpgradeQueryValue,
   };
@@ -20,7 +20,7 @@ String _appRoutesAuthUpgradePath({final String? redirect}) {
 
 /// Returns true if [path] is safe for post-login redirect (local path only).
 /// Rejects null, empty, protocol-relative (//), and external URLs.
-bool _appRoutesIsSafeRedirectPath(final String? path) {
+bool _appRoutesIsSafeRedirectPath(String? path) {
   if (path == null || path.isEmpty) return false;
   if (path.trim() != path) return false;
   if (!path.startsWith('/')) return false;

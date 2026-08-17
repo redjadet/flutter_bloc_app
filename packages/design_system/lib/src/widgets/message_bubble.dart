@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A reusable message bubble widget for chat-like interfaces
 /// Supports markdown rendering for rich text formatting
@@ -30,7 +30,7 @@ class MessageBubble extends StatelessWidget {
   final Color? incomingTextColor;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 

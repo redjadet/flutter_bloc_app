@@ -4,7 +4,7 @@ class _TopControls extends StatelessWidget {
   const _TopControls();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final cubit = context.cubit<OnlineTherapyDemoSessionCubit>();
     final controls = context
         .selectState<
@@ -17,7 +17,7 @@ class _TopControls extends StatelessWidget {
             TherapyUser? user,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             role: state.role,
             networkMode: state.networkMode,
             isBusy: state.isBusy,
@@ -39,7 +39,7 @@ class _TopControls extends StatelessWidget {
               value: controls.role,
               onChanged: controls.isBusy
                   ? null
-                  : (final v) {
+                  : (v) {
                       if (v == null) return;
                       // check-ignore: side_effects_build - user gesture (dropdown).
                       unawaited(cubit.setRole(v));
@@ -64,7 +64,7 @@ class _TopControls extends StatelessWidget {
               value: controls.networkMode,
               onChanged: controls.isBusy
                   ? null
-                  : (final v) => v == null ? null : cubit.setNetworkMode(v),
+                  : (v) => v == null ? null : cubit.setNetworkMode(v),
               items: OnlineTherapyNetworkMode.values
                   .map(
                     (m) => DropdownMenuItem<OnlineTherapyNetworkMode>(
@@ -124,14 +124,14 @@ class _LoginPanelState extends State<_LoginPanel> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final viewState = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           ({String? emailDraft, bool isBusy})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             emailDraft: state.emailDraft,
             isBusy: state.isBusy,
           ),

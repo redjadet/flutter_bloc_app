@@ -16,8 +16,8 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
   String? get _userId => _authRepository.currentUser?.id;
 
   Future<void> submitAvailability({
-    required final DateTime weekStartUtc,
-    required final Map<String, bool> availabilityByIsoDate,
+    required DateTime weekStartUtc,
+    required Map<String, bool> availabilityByIsoDate,
   }) async {
     if (state.status == StaffDemoFormsStatus.submitting) {
       return;
@@ -58,7 +58,7 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -73,8 +73,8 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
   }
 
   Future<void> submitManagerReport({
-    required final String siteId,
-    required final String notes,
+    required String siteId,
+    required String notes,
   }) async {
     if (state.status == StaffDemoFormsStatus.submitting) {
       return;
@@ -125,7 +125,7 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(

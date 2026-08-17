@@ -32,9 +32,9 @@ class InitializationGuard {
   /// );
   /// ```
   static Future<void> executeSafely(
-    final Future<void> Function() operation, {
-    required final String context,
-    required final String failureMessage,
+    Future<void> Function() operation, {
+    required String context,
+    required String failureMessage,
   }) async {
     try {
       await operation();

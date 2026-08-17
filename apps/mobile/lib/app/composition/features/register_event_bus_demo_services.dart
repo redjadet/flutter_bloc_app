@@ -9,6 +9,6 @@ import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 void registerEventBusDemoServices() {
   registerLazySingletonIfAbsent<EventBus>(
     EventBus.new,
-    dispose: (final bus) => bus.destroy(),
+    dispose: (bus) => bus.destroy(),
   );
 }

@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Platform-adaptive button for connecting a wallet.
 class ConnectWalletButton extends StatelessWidget {
@@ -14,7 +14,7 @@ class ConnectWalletButton extends StatelessWidget {
   final bool isLoading;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
 
     return PlatformAdaptive.filledButton(

@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_iot_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 import '../../test_helpers.dart' show FakeTimerService;
 
@@ -31,8 +31,8 @@ class _FakeSupabaseAuthRepository implements SupabaseAuthRepository {
 
   @override
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) async {}
 
   @override
@@ -40,9 +40,9 @@ class _FakeSupabaseAuthRepository implements SupabaseAuthRepository {
 
   @override
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) async {}
 
   Future<void> dispose() async {
@@ -85,24 +85,21 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test(
-    'registers a working local-only IoT repository when Supabase is not configured',
-    () async {
-      registerIotDemoServices();
+  test('registers a working local-only IoT repository when Supabase is not configured', () async {
+    registerIotDemoServices();
 
-      final IotDemoRepository repository = getIt<IotDemoRepository>();
-      const IotDevice device = IotDevice(
-        id: 'local-1',
-        name: 'Local Device',
-        type: IotDeviceType.light,
-      );
+    final IotDemoRepository repository = getIt<IotDemoRepository>();
+    const IotDevice device = IotDevice(
+      id: 'local-1',
+      name: 'Local Device',
+      type: IotDeviceType.light,
+    );
 
-      await repository.addDevice(device);
+    await repository.addDevice(device);
 
-      final List<IotDevice> devices = await repository.watchDevices().first;
-      expect(devices, hasLength(1));
-      expect(devices.first.id, 'local-1');
-      expect(devices.first.name, 'Local Device');
-    },
-  );
+    final List<IotDevice> devices = await repository.watchDevices().first;
+    expect(devices, hasLength(1));
+    expect(devices.first.id, 'local-1');
+    expect(devices.first.name, 'Local Device');
+  });
 }

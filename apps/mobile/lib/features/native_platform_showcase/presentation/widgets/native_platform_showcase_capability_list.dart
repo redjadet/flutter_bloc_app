@@ -1,9 +1,9 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_adaptive.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_showcase_l10n_extensions.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcaseCapabilityList extends StatelessWidget {
   const NativePlatformShowcaseCapabilityList({
@@ -14,7 +14,7 @@ class NativePlatformShowcaseCapabilityList extends StatelessWidget {
   final List<NativeCapability> capabilities;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 

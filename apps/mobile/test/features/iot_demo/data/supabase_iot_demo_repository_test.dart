@@ -23,7 +23,7 @@ void main() {
       () async {
         late IotDemoDeviceFilter requestedFilter;
         final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
-          fetchRows: (final filter) async {
+          fetchRows: (filter) async {
             requestedFilter = filter;
             return <Map<String, Object?>>[
               <String, Object?>{
@@ -68,7 +68,7 @@ void main() {
       () async {
         resetSupabaseTestState();
         final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
-          fetchRows: (final _) async =>
+          fetchRows: (_) async =>
               throw StateError('fetchRows should not be called'),
         );
 
@@ -86,7 +86,7 @@ void main() {
         code: '500',
       );
       final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
-        fetchRows: (final _) async => throw failure,
+        fetchRows: (_) async => throw failure,
       );
 
       await expectLater(repository.fetchDevices(), throwsA(same(failure)));
@@ -129,7 +129,7 @@ void main() {
       Map<String, dynamic>? capturedPayload;
       final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
         readCurrentUserId: () => 'user-1',
-        insertDevice: (final payload) async {
+        insertDevice: (payload) async {
           capturedPayload = payload;
         },
       );
@@ -156,10 +156,10 @@ void main() {
       String? updatedId;
       Map<String, dynamic>? updatedPayload;
       final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
-        fetchToggleState: (final deviceId) async => <Map<String, Object?>>[
+        fetchToggleState: (deviceId) async => <Map<String, Object?>>[
           <String, Object?>{'toggled_on': false},
         ],
-        updateDevice: (final deviceId, final updates) async {
+        updateDevice: (deviceId, updates) async {
           updatedId = deviceId;
           updatedPayload = updates;
         },
@@ -176,7 +176,7 @@ void main() {
     test('sendCommand setValue clamps and rounds numeric values', () async {
       Map<String, dynamic>? updatedPayload;
       final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
-        updateDevice: (final _, final updates) async {
+        updateDevice: (_, updates) async {
           updatedPayload = updates;
         },
       );
@@ -192,7 +192,7 @@ void main() {
     test('watchDevices emits devices when Supabase is configured', () async {
       late IotDemoDeviceFilter requestedFilter;
       final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
-        fetchRows: (final filter) async {
+        fetchRows: (filter) async {
           requestedFilter = filter;
           return <Map<String, Object?>>[
             <String, Object?>{

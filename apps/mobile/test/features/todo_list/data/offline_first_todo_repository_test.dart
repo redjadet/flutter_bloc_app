@@ -47,14 +47,14 @@ class _FakeRemoteRepositoryWithWatchTracking
   }
 
   @override
-  Future<void> save(final TodoItem item) async {
-    _items.removeWhere((final i) => i.id == item.id);
+  Future<void> save(TodoItem item) async {
+    _items.removeWhere((i) => i.id == item.id);
     _items.add(item);
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final i) => i.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((i) => i.id == id);
   }
 
   @override
@@ -99,14 +99,14 @@ class _FakeRemoteRepositoryWithErrorTracking
   }
 
   @override
-  Future<void> save(final TodoItem item) async {
-    _items.removeWhere((final i) => i.id == item.id);
+  Future<void> save(TodoItem item) async {
+    _items.removeWhere((i) => i.id == item.id);
     _items.add(item);
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final i) => i.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((i) => i.id == id);
   }
 
   @override
@@ -116,7 +116,7 @@ class _FakeRemoteRepositoryWithErrorTracking
 class _DeferredFetchRemoteRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
-  _DeferredFetchRemoteRepository({required final List<TodoItem> initial})
+  _DeferredFetchRemoteRepository({required List<TodoItem> initial})
     : _items = List<TodoItem>.from(initial);
 
   final List<TodoItem> _items;
@@ -136,10 +136,10 @@ class _DeferredFetchRemoteRepository
   Stream<List<TodoItem>> watchAll() => const Stream<List<TodoItem>>.empty();
 
   @override
-  Future<void> save(final TodoItem item) async {}
+  Future<void> save(TodoItem item) async {}
 
   @override
-  Future<void> delete(final String id) async {}
+  Future<void> delete(String id) async {}
 
   @override
   Future<void> clearCompleted() async {}
@@ -188,27 +188,27 @@ class _FakeRemoteRepository
   }
 
   @override
-  Future<void> save(final TodoItem item) async {
+  Future<void> save(TodoItem item) async {
     if (shouldThrowOnSave) {
       throw Exception('Simulated remote save failure');
     }
     savedItems.add(item);
-    _items = _items.where((final i) => i.id != item.id).toList()..add(item);
+    _items = _items.where((i) => i.id != item.id).toList()..add(item);
   }
 
   @override
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     if (shouldThrowOnDelete) {
       throw Exception('Simulated remote delete failure');
     }
     deletedIds.add(id);
-    _items = _items.where((final i) => i.id != id).toList();
+    _items = _items.where((i) => i.id != id).toList();
   }
 
   @override
   Future<void> clearCompleted() async {
     final List<TodoItem> completed = _items
-        .where((final item) => item.isCompleted)
+        .where((item) => item.isCompleted)
         .toList(growable: false);
     for (final TodoItem item in completed) {
       await delete(item.id);
@@ -231,10 +231,10 @@ class _StreamRemoteTodoRepository
   Stream<List<TodoItem>> watchAll() => controller.stream;
 
   @override
-  Future<void> save(final TodoItem item) async {}
+  Future<void> save(TodoItem item) async {}
 
   @override
-  Future<void> delete(final String id) async {}
+  Future<void> delete(String id) async {}
 
   @override
   Future<void> clearCompleted() async {}
@@ -275,7 +275,7 @@ class _GatedSaveHiveTodoRepository extends HiveTodoRepository {
   void releaseGatedSave() => _activeSaveGate!.complete();
 
   @override
-  Future<void> save(final TodoItem item) async {
+  Future<void> save(TodoItem item) async {
     final Completer<void>? gate = _saveGate;
     if (gate != null) {
       _saveGate = null;
@@ -820,9 +820,8 @@ void main() {
     test(
       'pullRemote does not delete local items when remote fetch fails',
       () async {
-        final TodoItem localItem = TodoItem.create(
-          title: 'Synced Local',
-        ).copyWith(synchronized: true, lastSyncedAt: DateTime.now().toUtc());
+        final TodoItem localItem = TodoItem.create(title: 'Synced Local')
+            .copyWith(synchronized: true, lastSyncedAt: DateTime.now().toUtc());
         await localRepository.save(localItem);
 
         final _FakeRemoteRepository remote = _FakeRemoteRepository(
@@ -1211,13 +1210,11 @@ void main() {
         timerService: FakeTimerService(),
       );
 
-      final TodoItem item1 = TodoItem.create(
-        title: 'Completed 1',
-      ).copyWith(isCompleted: true);
+      final TodoItem item1 = TodoItem.create(title: 'Completed 1')
+          .copyWith(isCompleted: true);
       final TodoItem item2 = TodoItem.create(title: 'Active');
-      final TodoItem item3 = TodoItem.create(
-        title: 'Completed 2',
-      ).copyWith(isCompleted: true);
+      final TodoItem item3 = TodoItem.create(title: 'Completed 2')
+          .copyWith(isCompleted: true);
 
       await localRepository.save(item1);
       await localRepository.save(item2);

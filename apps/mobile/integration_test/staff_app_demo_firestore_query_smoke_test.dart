@@ -79,11 +79,10 @@ void main() {
     expect(
       sites,
       isNotEmpty,
-      reason:
-          'staffDemoSites must be seeded (run seed:staff-demo); empty list means query worked but parser/seed drift.',
+      reason: 'staffDemoSites must be seeded (run seed:staff-demo); empty list means query worked but parser/seed drift.',
     );
     expect(
-      sites.any((final s) => s.siteId == 'site1'),
+      sites.any((s) => s.siteId == 'site1'),
       isTrue,
       reason: 'Expected seeded site1 to parse and appear in listSites().',
     );

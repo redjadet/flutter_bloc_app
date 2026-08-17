@@ -34,11 +34,10 @@ enum SessionLocalCleanupReason {
 }
 
 /// Clears device-local offline data that must not survive auth transitions.
-typedef SessionLocalDataCleanup =
-    Future<void> Function({
-      required AuthProviderKind provider,
-      required SessionLocalCleanupReason reason,
-    });
+typedef SessionLocalDataCleanup = Future<void> Function({
+  required AuthProviderKind provider,
+  required SessionLocalCleanupReason reason,
+});
 
 /// Central session cleanup and invalidation for Firebase and Supabase stacks.
 abstract interface class SessionLifecycleCoordinator {
@@ -137,42 +136,42 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   );
 
   @override
-  void onSignInCompleted({required final AuthUser user}) =>
+  void onSignInCompleted({required AuthUser user}) =>
       onSignInCompletedBody(user: user);
 
   @override
-  void bindAuthTokenManager(final AuthTokenManager manager) {
+  void bindAuthTokenManager(AuthTokenManager manager) {
     _authTokenManager = manager;
   }
 
   @override
-  void bindTokenRepository(final TokenRepository repository) {
+  void bindTokenRepository(TokenRepository repository) {
     _tokenRepository = repository;
   }
 
   @override
-  void bindHfTokenProvider(final RenderOrchestrationHfTokenProvider? provider) {
+  void bindHfTokenProvider(RenderOrchestrationHfTokenProvider? provider) {
     _hfTokenProvider = provider;
   }
 
   @override
-  void bindLocalSessionDataCleanup(final SessionLocalDataCleanup cleanup) {
+  void bindLocalSessionDataCleanup(SessionLocalDataCleanup cleanup) {
     _localSessionDataCleanup = cleanup;
   }
 
   @override
-  void attachAuthRepository(final AuthRepository repository) =>
+  void attachAuthRepository(AuthRepository repository) =>
       attachAuthRepositoryBody(repository);
 
   @override
   Future<void> onSignOutCompleted({
-    required final AuthProviderKind provider,
+    required AuthProviderKind provider,
   }) => onSignOutCompletedBody(provider: provider);
 
   @override
   Future<void> invalidateSession({
-    required final AuthProviderKind provider,
-    required final SessionInvalidationReason reason,
+    required AuthProviderKind provider,
+    required SessionInvalidationReason reason,
   }) => invalidateSessionBody(provider: provider, reason: reason);
 
   Future<void> dispose() async {

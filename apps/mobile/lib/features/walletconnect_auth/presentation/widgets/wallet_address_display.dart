@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Widget displaying a wallet address in a truncated format.
 /// Uses [CommonCard] for consistent shape and padding with outline border.
@@ -14,7 +14,7 @@ class WalletAddressDisplay extends StatelessWidget {
   final WalletAddress address;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;

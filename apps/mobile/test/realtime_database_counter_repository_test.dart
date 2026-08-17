@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_bloc_app/app/firebase/auth_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/app/firebase/auth_helpers.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -152,9 +152,8 @@ void main() {
       when(() => rootRef.path).thenReturn('counter');
       when(() => rootRef.child('user-123')).thenReturn(userRef);
       when(() => userRef.get()).thenAnswer((_) async => snapshot);
-      when(
-        () => snapshot.value,
-      ).thenReturn(<String, Object?>{'count': 9, 'last_changed': 10});
+      when(() => snapshot.value)
+          .thenReturn(<String, Object?>{'count': 9, 'last_changed': 10});
 
       final RealtimeDatabaseCounterRepository repository =
           RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
@@ -178,9 +177,8 @@ void main() {
 
       when(() => rootRef.path).thenReturn('counter');
       when(() => rootRef.child('user-456')).thenReturn(userRef);
-      when(
-        () => userRef.get(),
-      ).thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
+      when(() => userRef.get())
+          .thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
 
       final RealtimeDatabaseCounterRepository repository =
           RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
@@ -224,34 +222,31 @@ void main() {
       expect(map['last_changed'], timestamp.millisecondsSinceEpoch);
     });
 
-    test(
-      'save falls back gracefully when FlutterFire throws details cast TypeError',
-      () async {
-        final MockFirebaseAuth auth = MockFirebaseAuth(
-          signedIn: true,
-          mockUser: MockUser(uid: 'user-typed'),
-        );
-        final _MockDatabaseReference rootRef = _MockDatabaseReference();
-        final _MockDatabaseReference userRef = _MockDatabaseReference();
+    test('save falls back gracefully when FlutterFire throws details cast TypeError', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-typed'),
+      );
+      final _MockDatabaseReference rootRef = _MockDatabaseReference();
+      final _MockDatabaseReference userRef = _MockDatabaseReference();
 
-        when(() => rootRef.path).thenReturn('counter');
-        when(() => rootRef.child('user-typed')).thenReturn(userRef);
-        when(() => userRef.set(any<dynamic>())).thenAnswer((_) async {
-          final dynamic details = 'permission-denied';
-          details as Map<dynamic, dynamic>;
-          return;
-        });
+      when(() => rootRef.path).thenReturn('counter');
+      when(() => rootRef.child('user-typed')).thenReturn(userRef);
+      when(() => userRef.set(any<dynamic>())).thenAnswer((_) async {
+        final dynamic details = 'permission-denied';
+        details as Map<dynamic, dynamic>;
+        return;
+      });
 
-        final RealtimeDatabaseCounterRepository repository =
-            RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
+      final RealtimeDatabaseCounterRepository repository =
+          RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
 
-        await AppLogger.silenceAsync(() async {
-          await repository.save(const CounterSnapshot(userId: '', count: 2));
-        });
+      await AppLogger.silenceAsync(() async {
+        await repository.save(const CounterSnapshot(userId: '', count: 2));
+      });
 
-        verify(() => userRef.set(any<dynamic>())).called(1);
-      },
-    );
+      verify(() => userRef.set(any<dynamic>())).called(1);
+    });
 
     test('watch emits snapshots from database stream', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(

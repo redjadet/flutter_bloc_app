@@ -25,7 +25,7 @@ class BleSessionCoordinator {
   }
 
   Future<Result<List<BleService>>> connectAndDiscover(
-    final String deviceId,
+    String deviceId,
   ) async {
     await _repository.stopScan();
     final Result<void> connectResult = await _repository.connect(deviceId);
@@ -49,7 +49,7 @@ class BleSessionCoordinator {
       );
     }
     await _repository.disconnect();
-    return connectAndDiscover(deviceId).then((final result) {
+    return connectAndDiscover(deviceId).then((result) {
       if (result case FailureResult<List<BleService>>(:final failure)) {
         return FailureResult<void>(failure);
       }

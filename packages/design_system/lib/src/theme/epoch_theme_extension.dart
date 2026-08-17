@@ -1,5 +1,5 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Theme extension for EPOCH Library design tokens (colors).
 @immutable
@@ -37,13 +37,13 @@ class EpochThemeExtension extends ThemeExtension<EpochThemeExtension> {
 
   @override
   EpochThemeExtension copyWith({
-    final Color? warmGreyLightest,
-    final Color? warmGrey,
-    final Color? ash,
-    final Color? ashDarker,
-    final Color? darkGrey,
-    final Color? pink,
-    final Color? purple,
+    Color? warmGreyLightest,
+    Color? warmGrey,
+    Color? ash,
+    Color? ashDarker,
+    Color? darkGrey,
+    Color? pink,
+    Color? purple,
   }) => EpochThemeExtension(
     warmGreyLightest: warmGreyLightest ?? this.warmGreyLightest,
     warmGrey: warmGrey ?? this.warmGrey,
@@ -56,8 +56,8 @@ class EpochThemeExtension extends ThemeExtension<EpochThemeExtension> {
 
   @override
   EpochThemeExtension lerp(
-    final ThemeExtension<EpochThemeExtension>? other,
-    final double t,
+    ThemeExtension<EpochThemeExtension>? other,
+    double t,
   ) {
     if (other is! EpochThemeExtension) return this;
     return EpochThemeExtension(
@@ -71,7 +71,7 @@ class EpochThemeExtension extends ThemeExtension<EpochThemeExtension> {
     );
   }
 
-  static Color _lerpColor(final Color from, final Color to, final double t) =>
+  static Color _lerpColor(Color from, Color to, double t) =>
       Color.lerp(from, to, t) ?? (t < 0.5 ? from : to);
 }
 
@@ -115,14 +115,14 @@ class EpochColors {
 class EpochTextStyles {
   const EpochTextStyles._();
 
-  static double _scaledWordmarkSize(final BuildContext context) =>
+  static double _scaledWordmarkSize(BuildContext context) =>
       context.responsiveHeadlineSize * 2.5;
 
-  static double _scaledTitleSize(final BuildContext context) =>
+  static double _scaledTitleSize(BuildContext context) =>
       context.responsiveTitleSize * 0.9;
 
   /// Wordmark style (60px, Libre Caslon Text, -1.8px letter spacing)
-  static TextStyle wordmark(final BuildContext context) => TextStyle(
+  static TextStyle wordmark(BuildContext context) => TextStyle(
     fontFamily: 'LibreCaslonText',
     fontSize: _scaledWordmarkSize(context),
     fontWeight: FontWeight.w400,
@@ -132,7 +132,7 @@ class EpochTextStyles {
   );
 
   /// Heading style (24px, Libre Caslon Text, -0.72px letter spacing)
-  static TextStyle heading(final BuildContext context) => TextStyle(
+  static TextStyle heading(BuildContext context) => TextStyle(
     fontFamily: 'LibreCaslonText',
     fontSize: context.responsiveHeadlineSize,
     fontWeight: FontWeight.w400,
@@ -142,7 +142,7 @@ class EpochTextStyles {
   );
 
   /// Asset name style (18px, Libre Caslon Text, -0.36px letter spacing)
-  static TextStyle assetName(final BuildContext context) => TextStyle(
+  static TextStyle assetName(BuildContext context) => TextStyle(
     fontFamily: 'LibreCaslonText',
     fontSize: _scaledTitleSize(context),
     fontWeight: FontWeight.w400,
@@ -152,7 +152,7 @@ class EpochTextStyles {
   );
 
   /// Label style (18px, IBM Plex Mono SemiBold, -0.9px letter spacing, uppercase)
-  static TextStyle label(final BuildContext context) => TextStyle(
+  static TextStyle label(BuildContext context) => TextStyle(
     fontFamily: 'IBMPlexMono',
     fontSize: _scaledTitleSize(context),
     fontWeight: FontWeight.w600,
@@ -162,7 +162,7 @@ class EpochTextStyles {
   );
 
   /// Metadata style (14px, IBM Plex Mono SemiBold, -0.28px letter spacing, uppercase)
-  static TextStyle metadata(final BuildContext context) => TextStyle(
+  static TextStyle metadata(BuildContext context) => TextStyle(
     fontFamily: 'IBMPlexMono',
     fontSize: context.responsiveBodySize,
     fontWeight: FontWeight.w600,
@@ -172,7 +172,7 @@ class EpochTextStyles {
   );
 
   /// Search placeholder style (18px, IBM Plex Mono Light, -0.9px letter spacing, uppercase)
-  static TextStyle searchPlaceholder(final BuildContext context) => TextStyle(
+  static TextStyle searchPlaceholder(BuildContext context) => TextStyle(
     fontFamily: 'IBMPlexMono',
     fontSize: _scaledTitleSize(context),
     fontWeight: FontWeight.w300,
@@ -182,7 +182,7 @@ class EpochTextStyles {
   );
 
   /// Asset type style (14px, IBM Plex Mono SemiBold, -0.28px letter spacing, uppercase)
-  static TextStyle assetType(final BuildContext context) => TextStyle(
+  static TextStyle assetType(BuildContext context) => TextStyle(
     fontFamily: 'IBMPlexMono',
     fontSize: context.responsiveBodySize,
     fontWeight: FontWeight.w600,

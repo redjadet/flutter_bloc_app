@@ -8,7 +8,7 @@ void main() {
   group('FirebaseAppCheckAttestationServiceImpl', () {
     test('maps a non-null cached token to issued/ok', () async {
       final service = FirebaseAppCheckAttestationServiceImpl(
-        tokenReader: ({required final forceRefresh}) async => 'cached-token',
+        tokenReader: ({required forceRefresh}) async => 'cached-token',
       );
 
       final result = await service.probeCachedToken();
@@ -20,7 +20,7 @@ void main() {
     test('never forces a token refresh', () async {
       bool? capturedForceRefresh;
       final service = FirebaseAppCheckAttestationServiceImpl(
-        tokenReader: ({required final forceRefresh}) async {
+        tokenReader: ({required forceRefresh}) async {
           capturedForceRefresh = forceRefresh;
           return 'cached-token';
         },
@@ -35,7 +35,7 @@ void main() {
       'maps a null token to unavailable/not_configured_or_token_null',
       () async {
         final service = FirebaseAppCheckAttestationServiceImpl(
-          tokenReader: ({required final forceRefresh}) async => null,
+          tokenReader: ({required forceRefresh}) async => null,
         );
 
         final result = await service.probeCachedToken();
@@ -50,7 +50,7 @@ void main() {
       'maps an empty token to unavailable/not_configured_or_token_null',
       () async {
         final service = FirebaseAppCheckAttestationServiceImpl(
-          tokenReader: ({required final forceRefresh}) async => '',
+          tokenReader: ({required forceRefresh}) async => '',
         );
 
         final result = await service.probeCachedToken();
@@ -62,8 +62,7 @@ void main() {
 
     test('maps a thrown error to failed/app_check_error', () async {
       final service = FirebaseAppCheckAttestationServiceImpl(
-        tokenReader: ({required final forceRefresh}) async =>
-            throw Exception('boom'),
+        tokenReader: ({required forceRefresh}) async => throw Exception('boom'),
       );
 
       final result = await service.probeCachedToken();
@@ -77,7 +76,7 @@ void main() {
       'maps Firebase not-activated codes to unavailable/not_configured',
       () async {
         final service = FirebaseAppCheckAttestationServiceImpl(
-          tokenReader: ({required final forceRefresh}) async =>
+          tokenReader: ({required forceRefresh}) async =>
               throw FirebaseException(
                 plugin: 'firebase_app_check',
                 code: 'not-activated',
@@ -95,11 +94,10 @@ void main() {
 
     test('maps native App Check wrapper errors to setup-needed', () async {
       final service = FirebaseAppCheckAttestationServiceImpl(
-        tokenReader: ({required final forceRefresh}) async =>
-            throw PlatformException(
-              code: 'firebase_app_check',
-              message: 'should-never-surface',
-            ),
+        tokenReader: ({required forceRefresh}) async => throw PlatformException(
+          code: 'firebase_app_check',
+          message: 'should-never-surface',
+        ),
       );
 
       final result = await service.probeCachedToken();
@@ -111,7 +109,7 @@ void main() {
 
     test('never surfaces the token string itself in the result', () async {
       final service = FirebaseAppCheckAttestationServiceImpl(
-        tokenReader: ({required final forceRefresh}) async =>
+        tokenReader: ({required forceRefresh}) async =>
             'super-secret-token-value',
       );
 

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_config.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/theme/app_theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   test('resolveLocales returns exact match with region', () {
@@ -67,9 +67,10 @@ void main() {
           path: AppRoutes.counterPath,
           builder: (context, state) => Builder(
             builder: (context) {
-              bodyFontFamily = Theme.of(
-                context,
-              ).textTheme.bodyMedium?.fontFamily;
+              bodyFontFamily = Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.fontFamily;
               return const Text('content');
             },
           ),

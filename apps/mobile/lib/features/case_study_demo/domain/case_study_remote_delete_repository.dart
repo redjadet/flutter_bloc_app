@@ -3,5 +3,5 @@
 /// This is separate from local deletion, and must be safe to call multiple times
 /// (idempotent on the backend).
 abstract class CaseStudyRemoteDeleteRepository {
-  Future<void> deleteCaseStudyRemote({required final String caseId});
+  Future<void> deleteCaseStudyRemote({required String caseId});
 }

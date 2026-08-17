@@ -88,8 +88,7 @@ extension PlatformShowcaseDataPatterns on PlatformShowcaseData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PlatformShowcaseData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PlatformShowcaseData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _PlatformShowcaseData() when $default != null:
 return $default(_that);case _:
@@ -110,8 +109,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PlatformShowcaseData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PlatformShowcaseData value)  $default,){final _that = this;
 switch (_that) {
 case _PlatformShowcaseData():
 return $default(_that);case _:
@@ -131,8 +129,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PlatformShowcaseData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PlatformShowcaseData value)?  $default,){final _that = this;
 switch (_that) {
 case _PlatformShowcaseData() when $default != null:
 return $default(_that);case _:
@@ -208,7 +205,7 @@ return $default(_that.platform,_that.capabilities,_that.interopResults);case _:
 
 
 class _PlatformShowcaseData implements PlatformShowcaseData {
-  const _PlatformShowcaseData({required this.platform, required final  List<NativeCapability> capabilities, required final  List<NativeInteropCallResult> interopResults}): _capabilities = capabilities,_interopResults = interopResults;
+  const _PlatformShowcaseData({required this.platform, required  List<NativeCapability> capabilities, required  List<NativeInteropCallResult> interopResults}): _capabilities = capabilities,_interopResults = interopResults;
   
 
 @override final  AppPlatformKind platform;

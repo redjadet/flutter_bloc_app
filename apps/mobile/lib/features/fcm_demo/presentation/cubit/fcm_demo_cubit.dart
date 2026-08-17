@@ -23,7 +23,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
   final BackgroundSyncCoordinator _coordinator;
   bool _streamsSubscribed = false;
 
-  Future<void> _triggerSyncFromMessage(final PushMessage msg) async {
+  Future<void> _triggerSyncFromMessage(PushMessage msg) async {
     final FcmSyncTriggerPayload payload = FcmSyncTriggerPayload.fromData(
       msg.data,
     );
@@ -41,11 +41,11 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
     await CubitExceptionHandler.executeAsync<FcmPermissionState>(
       operation: () => _messaging.requestPermission(),
       isAlive: () => !isClosed,
-      onSuccess: (final permission) {
+      onSuccess: (permission) {
         if (isClosed) return;
         emit(state.copyWith(permissionState: permission));
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         permissionRequestFailed = true;
         emit(
@@ -73,7 +73,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
         );
       },
       isAlive: () => !isClosed,
-      onSuccess: (final data) {
+      onSuccess: (data) {
         if (isClosed) return;
         AppLogger.debug(
           'FCM demo: ready fcmToken=${data.fcmToken != null ? "***" : null} '
@@ -101,7 +101,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
         }
         _subscribeToStreams();
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -122,7 +122,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
     final StreamSubscription<PushMessage> foreground = _messaging
         .foregroundMessages
         .listen(
-          (final msg) {
+          (msg) {
             if (isClosed) return;
             AppLogger.debug(
               'FCM demo: foreground message received id=${msg.messageId}',
@@ -130,7 +130,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
             emit(state.copyWith(lastMessage: msg));
             unawaited(_triggerSyncFromMessage(msg));
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('FCM foreground stream error', error, stackTrace);
             if (isClosed) return;
             emit(
@@ -145,7 +145,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
 
     final StreamSubscription<PushMessage> opened = _messaging.openedMessages
         .listen(
-          (final msg) {
+          (msg) {
             if (isClosed) return;
             AppLogger.debug(
               'FCM demo: opened-from-notification id=${msg.messageId}',
@@ -153,7 +153,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
             emit(state.copyWith(lastMessage: msg));
             unawaited(_triggerSyncFromMessage(msg));
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('FCM opened stream error', error, stackTrace);
             if (isClosed) return;
             emit(
@@ -168,11 +168,11 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
 
     final StreamSubscription<String> tokenRefresh = _messaging.tokenRefreshes
         .listen(
-          (final newToken) {
+          (newToken) {
             if (isClosed) return;
             emit(state.copyWith(fcmToken: newToken));
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error(
               'FCM token refresh stream error',
               error,

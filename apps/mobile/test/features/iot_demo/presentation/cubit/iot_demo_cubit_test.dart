@@ -8,8 +8,8 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:storage/storage.dart';
 
 const List<IotDevice> _fakeDevices = [
   IotDevice(id: 'dev-1', name: 'Test Device', type: IotDeviceType.light),
@@ -49,7 +49,7 @@ class _StubIotDemoRepository implements IotDemoRepository {
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) {
     watchCallCount++;
     watchFilters.add(filter);
@@ -57,25 +57,22 @@ class _StubIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> connect(final String deviceId) async {
+  Future<void> connect(String deviceId) async {
     if (throwOnConnect) throw Exception('connect failed');
   }
 
   @override
-  Future<void> disconnect(final String deviceId) async {
+  Future<void> disconnect(String deviceId) async {
     if (throwOnDisconnect) throw Exception('disconnect failed');
   }
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {
     if (throwOnSendCommand) throw Exception('command failed');
   }
 
   @override
-  Future<void> addDevice(final IotDevice device) async {
+  Future<void> addDevice(IotDevice device) async {
     if (throwArgumentErrorOnAddDevice) {
       throw ArgumentError('device name must not exceed 255 characters');
     }
@@ -90,10 +87,10 @@ class _StreamingIotDemoRepository implements IotDemoRepository {
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) => _controller.stream;
 
-  void emit(final List<IotDevice> devices) {
+  void emit(List<IotDevice> devices) {
     _controller.add(devices);
   }
 
@@ -102,19 +99,16 @@ class _StreamingIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 }
 
 class _DelayedFilterRepository implements IotDemoRepository {
@@ -124,25 +118,22 @@ class _DelayedFilterRepository implements IotDemoRepository {
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) async* {
     yield devices;
   }
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 }
 
 class _PrewarmingSyncableRepository
@@ -159,7 +150,7 @@ class _PrewarmingSyncableRepository
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) {
     return Stream<List<IotDevice>>.value(List<IotDevice>.from(_devices));
   }
@@ -174,22 +165,19 @@ class _PrewarmingSyncableRepository
   String get entityType => 'iot_demo';
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {}
+  Future<void> processOperation(SyncOperation operation) async {}
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 }
 
 void main() {
@@ -204,32 +192,30 @@ void main() {
       ],
     );
 
-    test(
-      'initialize prewarms syncable repositories when the first local snapshot is empty',
-      () async {
-        final _PrewarmingSyncableRepository repository =
-            _PrewarmingSyncableRepository(
-              initialDevices: const <IotDevice>[],
-              remoteDevices: _fakeDevices,
-            );
-        final IotDemoCubit cubit = IotDemoCubit(repository: repository);
-        addTearDown(cubit.close);
+    test('initialize prewarms syncable repositories when the first local snapshot is empty', () async {
+      final _PrewarmingSyncableRepository repository =
+          _PrewarmingSyncableRepository(
+            initialDevices: const <IotDevice>[],
+            remoteDevices: _fakeDevices,
+          );
+      final IotDemoCubit cubit = IotDemoCubit(repository: repository);
+      addTearDown(cubit.close);
 
-        final List<IotDemoState> emittedStates = <IotDemoState>[];
-        final StreamSubscription<IotDemoState> subscription = cubit.stream
-            .listen(emittedStates.add);
-        addTearDown(subscription.cancel);
+      final List<IotDemoState> emittedStates = <IotDemoState>[];
+      final StreamSubscription<IotDemoState> subscription = cubit.stream.listen(
+        emittedStates.add,
+      );
+      addTearDown(subscription.cancel);
 
-        await cubit.initialize();
-        await Future<void>.delayed(Duration.zero);
+      await cubit.initialize();
+      await Future<void>.delayed(Duration.zero);
 
-        expect(repository.pullRemoteCallCount, 1);
-        expect(emittedStates, <IotDemoState>[
-          const IotDemoState.loading(),
-          IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
-        ]);
-      },
-    );
+      expect(repository.pullRemoteCallCount, 1);
+      expect(emittedStates, <IotDemoState>[
+        const IotDemoState.loading(),
+        IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
+      ]);
+    });
 
     blocTest<IotDemoCubit, IotDemoState>(
       'selectDevice updates selectedDeviceId when state is loaded',
@@ -444,7 +430,7 @@ void main() {
     blocTest<IotDemoCubit, IotDemoState>(
       'stream updates keep the selected filter after remote-style refresh',
       build: () => IotDemoCubit(repository: streamingRepository),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         streamingRepository.emit(_devicesWithToggle);
         await Future<void>.delayed(Duration.zero);
@@ -499,7 +485,7 @@ void main() {
     blocTest<IotDemoCubit, IotDemoState>(
       'reinitialize does not duplicate stream emissions',
       build: () => IotDemoCubit(repository: streamingRepository),
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         streamingRepository.emit(_fakeDevices);
         await Future<void>.delayed(Duration.zero);

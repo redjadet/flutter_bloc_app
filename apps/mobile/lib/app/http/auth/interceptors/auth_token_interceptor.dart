@@ -40,12 +40,12 @@ class AuthTokenInterceptor extends QueuedInterceptor {
 
   @override
   void onRequest(
-    final RequestOptions options,
-    final RequestInterceptorHandler handler,
+    RequestOptions options,
+    RequestInterceptorHandler handler,
   ) {
     unawaited(
       _injectToken(options).then((_) => handler.next(options)).catchError(
-        (final Object error, final StackTrace stackTrace) {
+        (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'AuthTokenInterceptor failed to inject token',
             error,
@@ -57,7 +57,7 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     );
   }
 
-  Future<void> _injectToken(final RequestOptions options) async {
+  Future<void> _injectToken(RequestOptions options) async {
     if (options.extra[requestExtraSkipAuthHandling] == true) {
       return;
     }
@@ -77,8 +77,8 @@ class AuthTokenInterceptor extends QueuedInterceptor {
 
   @override
   Future<void> onResponse(
-    final Response<dynamic> response,
-    final ResponseInterceptorHandler handler,
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
   ) async {
     final _RetryUnauthorizedResult result = await _unauthorizedRetrier.retry(
       response,
@@ -96,8 +96,8 @@ class AuthTokenInterceptor extends QueuedInterceptor {
 
   @override
   Future<void> onError(
-    final DioException err,
-    final ErrorInterceptorHandler handler,
+    DioException err,
+    ErrorInterceptorHandler handler,
   ) async {
     final Response<dynamic>? response = err.response;
     if (response == null) {

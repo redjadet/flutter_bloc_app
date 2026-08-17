@@ -13,17 +13,17 @@ class RealtimeMarketLocalDataSource extends HiveRepositoryBase {
   @override
   String get boxName => 'realtime_market_v1';
 
-  static String snapshotKey(final String pairId) => 'snapshot:$pairId';
+  static String snapshotKey(String pairId) => 'snapshot:$pairId';
 
-  Future<MarketFeedSnapshot?> loadCached(final String pairId) async {
+  Future<MarketFeedSnapshot?> loadCached(String pairId) async {
     final Box<dynamic> box = await getBox();
     final Object? raw = box.get(snapshotKey(pairId));
     return MarketSnapshotMapper.fromHiveValue(raw);
   }
 
   Future<void> saveSnapshot(
-    final String pairId,
-    final MarketFeedSnapshot snapshot,
+    String pairId,
+    MarketFeedSnapshot snapshot,
   ) async {
     final Box<dynamic> box = await getBox();
     final MarketFeedSnapshot? existing = await loadCached(pairId);

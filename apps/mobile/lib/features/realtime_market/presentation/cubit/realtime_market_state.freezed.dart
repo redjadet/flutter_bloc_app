@@ -102,8 +102,7 @@ extension RealtimeMarketStatePatterns on RealtimeMarketState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RealtimeMarketState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RealtimeMarketState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _RealtimeMarketState() when $default != null:
 return $default(_that);case _:
@@ -124,8 +123,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RealtimeMarketState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RealtimeMarketState value)  $default,){final _that = this;
 switch (_that) {
 case _RealtimeMarketState():
 return $default(_that);case _:
@@ -145,8 +143,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RealtimeMarketState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RealtimeMarketState value)?  $default,){final _that = this;
 switch (_that) {
 case _RealtimeMarketState() when $default != null:
 return $default(_that);case _:

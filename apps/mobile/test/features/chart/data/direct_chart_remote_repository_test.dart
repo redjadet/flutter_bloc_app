@@ -12,8 +12,8 @@ class _FakeCoingeckoApi implements CoingeckoApi {
 
   @override
   Future<List<int>> getBitcoinMarketChart(
-    final Map<String, String> query,
-    final String accept,
+    Map<String, String> query,
+    String accept,
   ) async {
     expect(query, const <String, String>{
       'vs_currency': 'usd',

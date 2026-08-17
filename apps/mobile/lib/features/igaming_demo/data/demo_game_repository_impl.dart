@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.
 /// Demo implementation: 50% win chance; 2x payout on win, 0 on loss.
 class DemoGameRepositoryImpl implements DemoGameRepository {
   @override
-  Future<GameRoundResult> playRound({required final int betAmount}) async {
+  Future<GameRoundResult> playRound({required int betAmount}) async {
     final Random rng = Random();
     final bool isWin = rng.nextBool();
     final int payoutAmount = isWin ? betAmount * 2 : 0;

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Regression: Row+Icon+Text must use [IconLabelRow] (or Flexible/Expanded)
 /// to avoid RenderFlex overflow on narrow widths. See tool/check_row_text_overflow.sh.

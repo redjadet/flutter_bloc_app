@@ -1,10 +1,10 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_bridge_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_adaptive.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcaseInteropSection extends StatelessWidget {
   const NativePlatformShowcaseInteropSection({
@@ -15,7 +15,7 @@ class NativePlatformShowcaseInteropSection extends StatelessWidget {
   final List<NativeInteropCallResult> results;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     return Column(
@@ -57,7 +57,7 @@ class _InteropTile extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final String bridgeLabel = _bridgeLabel(l10n);
     final String statusLabel = _statusLabel(l10n);
@@ -114,7 +114,7 @@ class _InteropTile extends StatelessWidget {
     );
   }
 
-  String _bridgeLabel(final AppLocalizations l10n) => switch (result.kind) {
+  String _bridgeLabel(AppLocalizations l10n) => switch (result.kind) {
     NativeInteropBridgeKind.swift =>
       l10n.nativePlatformShowcaseInteropSwiftLabel,
     NativeInteropBridgeKind.kotlin =>
@@ -122,7 +122,7 @@ class _InteropTile extends StatelessWidget {
     NativeInteropBridgeKind.cpp => l10n.nativePlatformShowcaseInteropCppLabel,
   };
 
-  String _statusLabel(final AppLocalizations l10n) => switch (result.status) {
+  String _statusLabel(AppLocalizations l10n) => switch (result.status) {
     NativeInteropStatus.success =>
       l10n.nativePlatformShowcaseInteropStatusSuccess,
     NativeInteropStatus.unavailable =>
@@ -131,7 +131,7 @@ class _InteropTile extends StatelessWidget {
       l10n.nativePlatformShowcaseInteropStatusFailed,
   };
 
-  IconData _bridgeIcon(final NativeInteropBridgeKind kind) => switch (kind) {
+  IconData _bridgeIcon(NativeInteropBridgeKind kind) => switch (kind) {
     NativeInteropBridgeKind.swift => Icons.apple,
     NativeInteropBridgeKind.kotlin => Icons.android,
     NativeInteropBridgeKind.cpp => Icons.memory_outlined,

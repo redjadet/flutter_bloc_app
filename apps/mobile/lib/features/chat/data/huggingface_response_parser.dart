@@ -9,7 +9,7 @@ class HuggingFaceResponseParser {
 
   final String _fallbackMessage;
 
-  ChatResult buildInferenceResult(final JsonMap json) {
+  ChatResult buildInferenceResult(JsonMap json) {
     final JsonMap conversation =
         mapFromDynamic(json['conversation']) ?? const <String, dynamic>{};
     final List<String> updatedPastInputs = _stringsFrom(
@@ -30,10 +30,10 @@ class HuggingFaceResponseParser {
   }
 
   ChatResult buildChatCompletionsResult({
-    required final JsonMap json,
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
+    required JsonMap json,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
   }) {
     final String replyText = _extractAssistantContent(json);
 
@@ -44,23 +44,23 @@ class HuggingFaceResponseParser {
     );
   }
 
-  List<String> _stringsFrom(final dynamic value) {
+  List<String> _stringsFrom(dynamic value) {
     if (value is List) {
       return value
-          .map((final dynamic element) => element.toString())
+          .map((dynamic element) => element.toString())
           .toList(growable: false);
     }
     return const <String>[];
   }
 
-  String _lastOrFallback(final List<String> values) {
+  String _lastOrFallback(List<String> values) {
     if (values.isNotEmpty && values.last.trim().isNotEmpty) {
       return values.last;
     }
     return _fallbackMessage;
   }
 
-  String _extractAssistantContent(final JsonMap json) {
+  String _extractAssistantContent(JsonMap json) {
     final List<dynamic>? choices = listFromDynamic(json['choices']);
     if (choices == null || choices.isEmpty) {
       return _fallbackMessage;

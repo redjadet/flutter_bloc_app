@@ -8,13 +8,13 @@ abstract class RemoteConfigRemoteDataSource {
 
   Future<void> forceFetch();
 
-  bool getBool(final String key);
+  bool getBool(String key);
 
-  String getString(final String key);
+  String getString(String key);
 
-  int getInt(final String key);
+  int getInt(String key);
 
-  double getDouble(final String key);
+  double getDouble(String key);
 
   Future<void> clearCache();
 

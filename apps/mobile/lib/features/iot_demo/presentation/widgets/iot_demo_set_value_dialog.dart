@@ -1,9 +1,9 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Stateful dialog content so [TextEditingController] is disposed in
 /// [State.dispose] after the route is torn down, avoiding
@@ -61,7 +61,7 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
     }
   }
 
-  void _submitValue(final BuildContext context) {
+  void _submitValue(BuildContext context) {
     final p = _parsedValue;
     if (p == null) {
       setState(() => _errorMessage = widget.l10n.iotDemoSetValueInvalidNumber);
@@ -85,7 +85,7 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = widget.l10n;
     final cancelLabel = l10n.cancelButtonLabel;
     final okLabel = MaterialLocalizations.of(context).okButtonLabel;
@@ -98,10 +98,10 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
   }
 
   Widget _buildMaterialDialog(
-    final BuildContext context,
-    final AppLocalizations l10n,
-    final String cancelLabel,
-    final String okLabel,
+    BuildContext context,
+    AppLocalizations l10n,
+    String cancelLabel,
+    String okLabel,
   ) => AlertDialog(
     title: Text(l10n.iotDemoSetValue),
     content: Column(
@@ -134,7 +134,7 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
     ],
   );
 
-  List<Widget> _buildErrorSection(final BuildContext context) {
+  List<Widget> _buildErrorSection(BuildContext context) {
     if (_errorMessage case final String errorText) {
       final theme = Theme.of(context);
       return <Widget>[
@@ -151,14 +151,14 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
   }
 
   Widget _buildCupertinoDialog(
-    final BuildContext context,
-    final AppLocalizations l10n,
-    final String cancelLabel,
-    final String okLabel,
+    BuildContext context,
+    AppLocalizations l10n,
+    String cancelLabel,
+    String okLabel,
   ) => CupertinoAlertDialog(
     title: Text(l10n.iotDemoSetValue),
     content: Builder(
-      builder: (final _) => Padding(
+      builder: (_) => Padding(
         padding: EdgeInsets.only(top: context.responsiveGapM),
         child: Column(
           mainAxisSize: MainAxisSize.min,

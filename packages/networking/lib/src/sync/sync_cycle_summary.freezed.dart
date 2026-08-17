@@ -97,8 +97,7 @@ extension SyncCycleSummaryPatterns on SyncCycleSummary {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SyncCycleSummary value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SyncCycleSummary value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _SyncCycleSummary() when $default != null:
 return $default(_that);case _:
@@ -119,8 +118,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SyncCycleSummary value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SyncCycleSummary value)  $default,){final _that = this;
 switch (_that) {
 case _SyncCycleSummary():
 return $default(_that);case _:
@@ -140,8 +138,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SyncCycleSummary value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SyncCycleSummary value)?  $default,){final _that = this;
 switch (_that) {
 case _SyncCycleSummary() when $default != null:
 return $default(_that);case _:
@@ -217,7 +214,7 @@ return $default(_that.recordedAt,_that.durationMs,_that.pullRemoteCount,_that.pu
 
 
 class _SyncCycleSummary implements SyncCycleSummary {
-  const _SyncCycleSummary({required this.recordedAt, required this.durationMs, required this.pullRemoteCount, required this.pullRemoteFailures, required this.pendingAtStart, required this.operationsProcessed, required this.operationsFailed, required final  Map<String, int> pendingByEntity, this.prunedCount = 0, final  Map<String, double> retryAttemptsByEntity = const <String, double>{}, final  Map<String, String> lastErrorByEntity = const <String, String>{}, this.retrySuccessRate = 0.0}): _pendingByEntity = pendingByEntity,_retryAttemptsByEntity = retryAttemptsByEntity,_lastErrorByEntity = lastErrorByEntity;
+  const _SyncCycleSummary({required this.recordedAt, required this.durationMs, required this.pullRemoteCount, required this.pullRemoteFailures, required this.pendingAtStart, required this.operationsProcessed, required this.operationsFailed, required  Map<String, int> pendingByEntity, this.prunedCount = 0, Map<String, double> retryAttemptsByEntity = const <String, double>{}, Map<String, String> lastErrorByEntity = const <String, String>{}, this.retrySuccessRate = 0.0}): _pendingByEntity = pendingByEntity,_retryAttemptsByEntity = retryAttemptsByEntity,_lastErrorByEntity = lastErrorByEntity;
   
 
 @override final  DateTime recordedAt;

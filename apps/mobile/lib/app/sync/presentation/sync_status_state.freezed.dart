@@ -101,8 +101,7 @@ extension SyncStatusStatePatterns on SyncStatusState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SyncStatusState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SyncStatusState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _SyncStatusState() when $default != null:
 return $default(_that);case _:
@@ -123,8 +122,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SyncStatusState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SyncStatusState value)  $default,){final _that = this;
 switch (_that) {
 case _SyncStatusState():
 return $default(_that);case _:
@@ -144,8 +142,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SyncStatusState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SyncStatusState value)?  $default,){final _that = this;
 switch (_that) {
 case _SyncStatusState() when $default != null:
 return $default(_that);case _:
@@ -221,7 +218,7 @@ return $default(_that.networkStatus,_that.syncStatus,_that.lastSummary,_that.his
 
 
 class _SyncStatusState extends SyncStatusState {
-  const _SyncStatusState({required this.networkStatus, required this.syncStatus, this.lastSummary, final  List<SyncCycleSummary> history = const <SyncCycleSummary>[]}): _history = history,super._();
+  const _SyncStatusState({required this.networkStatus, required this.syncStatus, this.lastSummary, List<SyncCycleSummary> history = const <SyncCycleSummary>[]}): _history = history,super._();
   
 
 @override final  NetworkStatus networkStatus;

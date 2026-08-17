@@ -10,9 +10,9 @@ sealed class ProfileState with _$ProfileState {
 
   const factory ProfileState.loading() = ProfileLoading;
 
-  const factory ProfileState.ready(final ProfileUser user) = ProfileReady;
+  const factory ProfileState.ready(ProfileUser user) = ProfileReady;
 
-  const factory ProfileState.error(final ProfileFailure failure) = ProfileError;
+  const factory ProfileState.error(ProfileFailure failure) = ProfileError;
 
   const ProfileState._();
 
@@ -22,11 +22,10 @@ sealed class ProfileState with _$ProfileState {
 
   bool get hasUser => maybeWhen(ready: (_) => true, orElse: () => false);
 
-  ProfileUser? get user =>
-      maybeWhen(ready: (final user) => user, orElse: () => null);
+  ProfileUser? get user => maybeWhen(ready: (user) => user, orElse: () => null);
 
   String? get errorMessage => maybeWhen(
-    error: (final failure) => failure.displayMessage,
+    error: (failure) => failure.displayMessage,
     orElse: () => null,
   );
 }

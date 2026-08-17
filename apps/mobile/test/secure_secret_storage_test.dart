@@ -1,8 +1,8 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

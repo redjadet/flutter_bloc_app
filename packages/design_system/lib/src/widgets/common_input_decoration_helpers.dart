@@ -1,18 +1,17 @@
-import 'package:flutter/material.dart';
-
 import 'package:design_system/responsive.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds a filled input decoration with consistent styling used in registration forms.
 ///
 /// This helper consolidates the filled input decoration pattern used across
 /// registration forms, providing consistent background colors, borders, and padding.
 InputDecoration buildFilledInputDecoration(
-  final BuildContext context, {
-  final String? hintText,
-  final String? errorText,
-  final TextStyle? hintStyle,
-  final double? horizontalPadding,
-  final double? verticalPadding,
+  BuildContext context, {
+  String? hintText,
+  String? errorText,
+  TextStyle? hintStyle,
+  double? horizontalPadding,
+  double? verticalPadding,
 }) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
@@ -53,15 +52,15 @@ InputDecoration buildFilledInputDecoration(
 }
 
 InputDecoration buildCommonInputDecoration({
-  required final BuildContext context,
-  required final ThemeData theme,
-  final String? labelText,
-  final String? hintText,
-  final String? helperText,
-  final String? errorText,
-  final Widget? prefixIcon,
-  final Widget? suffixIcon,
-  final bool includeErrorBorders = true,
+  required BuildContext context,
+  required ThemeData theme,
+  String? labelText,
+  String? hintText,
+  String? helperText,
+  String? errorText,
+  Widget? prefixIcon,
+  Widget? suffixIcon,
+  bool includeErrorBorders = true,
 }) {
   final borderRadius = BorderRadius.circular(context.responsiveCardRadius);
   final baseDecoration = InputDecoration(

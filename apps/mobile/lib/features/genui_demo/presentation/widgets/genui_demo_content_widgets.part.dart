@@ -4,7 +4,7 @@ class _GenUiMainSection extends StatelessWidget {
   const _GenUiMainSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final viewState = context
         .selectState<
           GenUiDemoCubit,
@@ -15,22 +15,22 @@ class _GenUiMainSection extends StatelessWidget {
             genui.A2uiMessageProcessor? hostHandle,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             errorMessage: state.maybeWhen(
-              error: (final message, _, _, _) => message,
+              error: (message, _, _, _) => message,
               orElse: () => null,
             ),
             surfaceIds: state.when(
               initial: () => const <String>[],
-              loading: (final surfaceIds, _, _) => surfaceIds,
-              ready: (final surfaceIds, _, _) => surfaceIds,
-              error: (_, final surfaceIds, _, _) => surfaceIds,
+              loading: (surfaceIds, _, _) => surfaceIds,
+              ready: (surfaceIds, _, _) => surfaceIds,
+              error: (_, surfaceIds, _, _) => surfaceIds,
             ),
             hostHandle: state.when(
               initial: () => null,
-              loading: (_, _, final hostHandle) => hostHandle,
-              ready: (_, final hostHandle, _) => hostHandle,
-              error: (_, _, final hostHandle, _) => hostHandle,
+              loading: (_, _, hostHandle) => hostHandle,
+              ready: (_, hostHandle, _) => hostHandle,
+              error: (_, _, hostHandle, _) => hostHandle,
             ),
           ),
         );
@@ -42,15 +42,14 @@ class _GenUiMainSection extends StatelessWidget {
         children: [
           Expanded(
             child: LayoutBuilder(
-              builder: (final context, final constraints) =>
-                  SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: CommonErrorView(message: message),
-                    ),
+              builder: (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
                   ),
+                  child: CommonErrorView(message: message),
+                ),
+              ),
             ),
           ),
           if (hostHandle != null && viewState.surfaceIds.isNotEmpty)
@@ -90,10 +89,10 @@ class _GenUiSurfacesList extends StatelessWidget {
   final genui.A2uiMessageProcessor hostHandle;
 
   @override
-  Widget build(final BuildContext context) => ListView.builder(
+  Widget build(BuildContext context) => ListView.builder(
     scrollCacheExtent: const ScrollCacheExtent.pixels(500),
     itemCount: surfaceIds.length,
-    itemBuilder: (final context, final index) {
+    itemBuilder: (context, index) {
       final surfaceId = surfaceIds[index];
       return RepaintBoundary(
         key: ValueKey(surfaceId),
@@ -116,15 +115,15 @@ class _GenUiInputRow extends StatelessWidget {
   final Future<void> Function() onSendMessage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = Theme.of(context).colorScheme;
     final isSending = context.selectState<GenUiDemoCubit, GenUiDemoState, bool>(
-      selector: (final state) => state.when(
+      selector: (state) => state.when(
         initial: () => false,
-        loading: (_, final isSending, _) => isSending,
-        ready: (_, _, final isSending) => isSending,
-        error: (_, _, _, final isSending) => isSending,
+        loading: (_, isSending, _) => isSending,
+        ready: (_, _, isSending) => isSending,
+        error: (_, _, _, isSending) => isSending,
       ),
     );
 

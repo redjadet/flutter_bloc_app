@@ -3,24 +3,24 @@ part of 'calculator_cubit.dart';
 mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
   PaymentCalculator get calculator;
 
-  double _parseDisplay([final CalculatorState? value]) =>
+  double _parseDisplay([CalculatorState? value]) =>
       calculator.parseCurrency((value ?? state).display);
 
   double _applyOperation({
-    required final double lhs,
-    required final double rhs,
-    required final CalculatorOperation operation,
+    required double lhs,
+    required double rhs,
+    required CalculatorOperation operation,
   }) => calculator.applyOperation(
     lhs: lhs,
     rhs: rhs,
     operation: operation,
   );
 
-  String _format(final double value) => formatDisplay(calculator, value);
+  String _format(double value) => formatDisplay(calculator, value);
 
   double _resolveAccumulator(
-    final CalculatorState current,
-    final double currentValue,
+    CalculatorState current,
+    double currentValue,
   ) {
     if ((current.accumulator, current.operation) case (final lhs?, final op?)) {
       if (!current.replaceInput) {
@@ -35,16 +35,16 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
   }
 
   String _pendingHistory(
-    final double accumulator,
-    final CalculatorOperation operation,
+    double accumulator,
+    CalculatorOperation operation,
   ) => '${_format(accumulator)}${operationSymbol(operation)}';
 
   String _composeHistory({
-    required final CalculatorState current,
-    required final double lhs,
-    required final double rhs,
-    required final CalculatorOperation operation,
-    final String? historyOverride,
+    required CalculatorState current,
+    required double lhs,
+    required double rhs,
+    required CalculatorOperation operation,
+    String? historyOverride,
   }) {
     final String seed = historyOverride ?? current.history;
     final String prefix = seed.isNotEmpty
@@ -54,13 +54,13 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
   }
 
   CalculatorState _applyEvaluation({
-    required final CalculatorState current,
-    required final double lhs,
-    required final double rhs,
-    required final CalculatorOperation operation,
-    required final String? historyOverride,
-    final bool updateRepeatOperation = false,
-    final bool clearPendingOperation = false,
+    required CalculatorState current,
+    required double lhs,
+    required double rhs,
+    required CalculatorOperation operation,
+    required String? historyOverride,
+    bool updateRepeatOperation = false,
+    bool clearPendingOperation = false,
   }) {
     if (operation == CalculatorOperation.divide && rhs == 0) {
       return _errorState(current, CalculatorError.divisionByZero);
@@ -96,8 +96,8 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
   }
 
   CalculatorState _errorState(
-    final CalculatorState current,
-    final CalculatorError error,
+    CalculatorState current,
+    CalculatorError error,
   ) => current.copyWith(
     display: '0',
     accumulator: null,
@@ -110,20 +110,19 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
     error: error,
   );
 
-  CalculatorState _clearErrorState(final CalculatorState current) =>
-      current.copyWith(
-        display: '0',
-        accumulator: null,
-        operation: null,
-        replaceInput: true,
-        lastOperand: null,
-        lastOperation: null,
-        settledAmount: 0,
-        history: '',
-        error: null,
-      );
+  CalculatorState _clearErrorState(CalculatorState current) => current.copyWith(
+    display: '0',
+    accumulator: null,
+    operation: null,
+    replaceInput: true,
+    lastOperand: null,
+    lastOperation: null,
+    settledAmount: 0,
+    history: '',
+    error: null,
+  );
 
-  bool _ensureEditable({required final bool resetForInput}) {
+  bool _ensureEditable({required bool resetForInput}) {
     if (state.error == null) {
       return true;
     }
@@ -134,5 +133,5 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
     return true;
   }
 
-  bool _isNonPositiveTotal(final double amount) => amount <= 0;
+  bool _isNonPositiveTotal(double amount) => amount <= 0;
 }

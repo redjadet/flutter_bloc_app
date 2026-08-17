@@ -14,11 +14,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class IotDemoRealtimeSubscription {
   IotDemoRealtimeSubscription({
     this._isConfiguredOverride,
-    final RealtimeChannel Function(
+    RealtimeChannel Function(
       void Function(PostgresChangePayload payload) onPayload,
     )?
     createChannel,
-    final Future<void> Function(RealtimeChannel channel)? removeChannel,
+    Future<void> Function(RealtimeChannel channel)? removeChannel,
   }) : _createChannel = createChannel ?? _defaultCreateChannel,
        _removeChannel = removeChannel ?? _defaultRemoveChannel;
 
@@ -34,7 +34,7 @@ class IotDemoRealtimeSubscription {
 
   /// Starts listening to `iot_devices`. The callback is called on any
   /// change. No-op if Supabase is not initialized or already started.
-  void start(final void Function() onTableChange) {
+  void start(void Function() onTableChange) {
     final bool isConfigured =
         _isConfiguredOverride?.call() ??
         SupabaseBootstrapService.isSupabaseInitialized;
@@ -59,7 +59,7 @@ class IotDemoRealtimeSubscription {
     }
   }
 
-  void _onPayload(final PostgresChangePayload payload) {
+  void _onPayload(PostgresChangePayload payload) {
     final void Function()? cb = _onTableChange;
     if (cb != null) {
       try {
@@ -93,7 +93,7 @@ class IotDemoRealtimeSubscription {
   }
 
   static RealtimeChannel _defaultCreateChannel(
-    final void Function(PostgresChangePayload payload) onPayload,
+    void Function(PostgresChangePayload payload) onPayload,
   ) {
     return Supabase.instance.client
         .channel('iot_demo_devices')
@@ -105,6 +105,6 @@ class IotDemoRealtimeSubscription {
         );
   }
 
-  static Future<void> _defaultRemoveChannel(final RealtimeChannel channel) =>
+  static Future<void> _defaultRemoveChannel(RealtimeChannel channel) =>
       Supabase.instance.client.removeChannel(channel);
 }

@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// App-local search field with default l10n hint text.
 class CommonSearchField extends StatelessWidget {
@@ -22,7 +22,7 @@ class CommonSearchField extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonFormField(
       controller: controller,

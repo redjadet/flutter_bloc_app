@@ -16,7 +16,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 class MethodChannelNativeSecurityShowcaseService
     implements NativeSecurityShowcaseService {
   const MethodChannelNativeSecurityShowcaseService({
-    final MethodChannel? channel,
+    MethodChannel? channel,
     this.invokeTimeout = const Duration(seconds: 2),
     this.biometricInvokeTimeout = const Duration(seconds: 60),
   }) : _channel =
@@ -35,7 +35,7 @@ class MethodChannelNativeSecurityShowcaseService
 
   @override
   Future<NativeSecurityOperationResult> run(
-    final NativeSecurityOperation operation,
+    NativeSecurityOperation operation,
   ) async {
     if (!_isMobile) {
       return const NativeSecurityOperationResult(
@@ -90,7 +90,7 @@ class MethodChannelNativeSecurityShowcaseService
     }
   }
 
-  Duration _timeoutFor(final NativeSecurityOperation operation) =>
+  Duration _timeoutFor(NativeSecurityOperation operation) =>
       operation == NativeSecurityOperation.biometricProtectedOperation
       ? biometricInvokeTimeout
       : invokeTimeout;
@@ -100,7 +100,7 @@ class MethodChannelNativeSecurityShowcaseService
       (defaultTargetPlatform == TargetPlatform.android ||
           defaultTargetPlatform == TargetPlatform.iOS);
 
-  static String _methodNameFor(final NativeSecurityOperation operation) =>
+  static String _methodNameFor(NativeSecurityOperation operation) =>
       switch (operation) {
         NativeSecurityOperation.p256SignVerify => 'p256SignVerify',
         NativeSecurityOperation.aesGcmRoundTrip => 'aesGcmRoundTrip',
@@ -111,7 +111,7 @@ class MethodChannelNativeSecurityShowcaseService
       };
 
   static NativeSecurityStatus _statusForPlatformExceptionCode(
-    final String code,
+    String code,
   ) => switch (code) {
     'biometric_canceled' => NativeSecurityStatus.denied,
     'biometric_lockout' => NativeSecurityStatus.denied,

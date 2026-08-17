@@ -8,7 +8,7 @@ abstract interface class GenUiDemoAgent {
   Future<void> initialize();
 
   /// Sends a text message to the agent.
-  Future<void> sendMessage(final String text);
+  Future<void> sendMessage(String text);
 
   /// Stream of surface lifecycle events (add/remove).
   Stream<GenUiSurfaceEvent> get surfaceEvents;

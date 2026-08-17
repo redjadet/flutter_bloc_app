@@ -5,26 +5,26 @@ mixin _TodoListCubitMethods
     on Cubit<TodoListState>, CubitSubscriptionMixin<TodoListState> {
   TodoRepository get repository;
   StreamSubscription<List<TodoItem>>? get subscription;
-  set subscription(final StreamSubscription<List<TodoItem>>? value);
+  set subscription(StreamSubscription<List<TodoItem>>? value);
   bool get isLoading;
-  set isLoading(final bool value);
+  set isLoading(bool value);
   TimerService get timerService;
   Duration get searchDebounceDuration;
   TimerDisposable? get searchDebounceHandle;
-  set searchDebounceHandle(final TimerDisposable? value);
+  set searchDebounceHandle(TimerDisposable? value);
   TodoItem? get lastDeletedItem;
-  set lastDeletedItem(final TodoItem? value);
+  set lastDeletedItem(TodoItem? value);
   bool Function() get stopLoadingIfClosed;
   RequestIdGuard get loadRequestIdGuard;
   int get loadRequestId;
-  set loadRequestId(final int value);
+  set loadRequestId(int value);
   Future<void> refreshPendingSyncCount();
 
-  Set<String> _trimSelection(final List<TodoItem> items) {
+  Set<String> _trimSelection(List<TodoItem> items) {
     if (state.selectedItemIds.isEmpty) {
       return state.selectedItemIds;
     }
-    final Set<String> itemIds = items.map((final item) => item.id).toSet();
+    final Set<String> itemIds = items.map((item) => item.id).toSet();
     final Set<String> trimmed = state.selectedItemIds
         .where(itemIds.contains)
         .toSet();
@@ -34,7 +34,7 @@ mixin _TodoListCubitMethods
     return trimmed;
   }
 
-  Map<String, int> _normalizeManualOrder(final List<TodoItem> items) {
+  Map<String, int> _normalizeManualOrder(List<TodoItem> items) {
     if (items.isEmpty) {
       return const <String, int>{};
     }
@@ -47,7 +47,7 @@ mixin _TodoListCubitMethods
 
     // Sort items according to current manual order to preserve user's ordering
     final List<TodoItem> sortedItems = List<TodoItem>.from(items)
-      ..sort((final a, final b) {
+      ..sort((a, b) {
         final int orderA = state.manualOrder[a.id] ?? maxOrder + 1;
         final int orderB = state.manualOrder[b.id] ?? maxOrder + 1;
         if (orderA != orderB) {
@@ -75,7 +75,7 @@ mixin _TodoListCubitMethods
     return normalized;
   }
 
-  void emitOptimisticUpdate(final List<TodoItem> items) {
+  void emitOptimisticUpdate(List<TodoItem> items) {
     if (isClosed) return;
     final Set<String> updatedSelection = _trimSelection(items);
     final Map<String, int> updatedManualOrder =
@@ -93,7 +93,7 @@ mixin _TodoListCubitMethods
     );
   }
 
-  void onItemsUpdated(final List<TodoItem> items) {
+  void onItemsUpdated(List<TodoItem> items) {
     if (isClosed) return;
     final Set<String> updatedSelection = _trimSelection(items);
     final Map<String, int> updatedManualOrder =
@@ -120,7 +120,7 @@ mixin _TodoListCubitMethods
     subscription = registerSubscription(
       repository.watchAll().listen(
         onItemsUpdated,
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           if (isClosed) return;
           emit(
             state.copyWith(
@@ -143,13 +143,13 @@ mixin _TodoListCubitMethods
     await CubitExceptionHandler.executeAsync<List<TodoItem>>(
       operation: repository.fetchAll,
       isAlive: () => !isClosed,
-      onAppError: (final appError) {
+      onAppError: (appError) {
         if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
           return;
         }
         latestError = appError;
       },
-      onSuccess: (final items) async {
+      onSuccess: (items) async {
         if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
           return;
         }
@@ -167,7 +167,7 @@ mixin _TodoListCubitMethods
           isLoading = false;
         }
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
           return;
         }

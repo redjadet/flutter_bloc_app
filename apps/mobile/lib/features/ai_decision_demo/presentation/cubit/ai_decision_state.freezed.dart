@@ -105,8 +105,7 @@ extension AiDecisionStatePatterns on AiDecisionState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AiDecisionState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AiDecisionState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _AiDecisionState() when $default != null:
 return $default(_that);case _:
@@ -127,8 +126,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AiDecisionState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AiDecisionState value)  $default,){final _that = this;
 switch (_that) {
 case _AiDecisionState():
 return $default(_that);}
@@ -145,8 +143,7 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AiDecisionState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AiDecisionState value)?  $default,){final _that = this;
 switch (_that) {
 case _AiDecisionState() when $default != null:
 return $default(_that);case _:
@@ -219,7 +216,7 @@ return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.case
 
 
 class _AiDecisionState implements AiDecisionState {
-  const _AiDecisionState({this.isLoadingQueue = true, final  List<AiDecisionCaseSummary> queue = const <AiDecisionCaseSummary>[], this.selectedCaseId, this.caseDetail, this.decision, this.failure, this.isRunningDecision = false, this.isSavingAction = false}): _queue = queue;
+  const _AiDecisionState({this.isLoadingQueue = true, List<AiDecisionCaseSummary> queue = const <AiDecisionCaseSummary>[], this.selectedCaseId, this.caseDetail, this.decision, this.failure, this.isRunningDecision = false, this.isSavingAction = false}): _queue = queue;
   
 
 @override@JsonKey() final  bool isLoadingQueue;

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -19,6 +18,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 part 'google_maps_sample_page.freezed.dart';
@@ -27,26 +27,26 @@ part 'google_maps_sample_sections.dart';
 @freezed
 abstract class _MapBodyData with _$MapBodyData {
   const factory _MapBodyData({
-    required final bool showLoading,
-    required final bool hasError,
-    required final String? errorMessage,
-    required final AppError? lastError,
+    required bool showLoading,
+    required bool hasError,
+    required String? errorMessage,
+    required AppError? lastError,
   }) = __MapBodyData;
 }
 
 @freezed
 abstract class _ControlsViewModel with _$ControlsViewModel {
   const factory _ControlsViewModel({
-    required final bool isHybridMapType,
-    required final bool trafficEnabled,
+    required bool isHybridMapType,
+    required bool trafficEnabled,
   }) = __ControlsViewModel;
 }
 
 @freezed
 abstract class _LocationListViewModel with _$LocationListViewModel {
   const factory _LocationListViewModel({
-    required final List<MapLocation> locations,
-    required final String? selectedMarkerId,
+    required List<MapLocation> locations,
+    required String? selectedMarkerId,
   }) = __LocationListViewModel;
 }
 
@@ -87,7 +87,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.googleMapsPageTitle,
@@ -96,7 +96,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
     );
   }
 
-  Widget _buildBody(final BuildContext context, final AppLocalizations l10n) {
+  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
     if (!_isMapsSupported) {
       return GoogleMapsUnsupportedMessage(
         message: l10n.googleMapsPageUnsupportedDescription,
@@ -112,13 +112,13 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
       );
     }
     return TypeSafeBlocSelector<MapSampleCubit, MapSampleState, _MapBodyData>(
-      selector: (final state) => _MapBodyData(
+      selector: (state) => _MapBodyData(
         showLoading: state.isLoading && state.markers.isEmpty,
         hasError: state.hasError,
         errorMessage: state.errorMessage,
         lastError: state.lastError,
       ),
-      builder: (final context, final data) {
+      builder: (context, data) {
         if (data.showLoading) {
           return const CommonLoadingWidget();
         }
@@ -143,7 +143,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
           ),
           locations: _GoogleMapsLocationListSection(
             l10n: l10n,
-            onFocus: (final location) {
+            onFocus: (location) {
               unawaited(_mapViewController.focusOnLocation(location));
             },
           ),

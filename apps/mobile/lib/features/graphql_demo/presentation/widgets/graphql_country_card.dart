@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
-String? _flagImageUrl(final String countryCode) {
+String? _flagImageUrl(String countryCode) {
   // Most Countries API codes are ISO 3166-1 alpha-2 (e.g. "TR").
   // Use a deterministic CDN URL so flags render even when emoji glyphs are missing.
   if (countryCode.length != 2) {
@@ -25,7 +25,7 @@ class GraphqlCountryCard extends StatelessWidget {
   final String currencyLabel;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colors = theme.colorScheme;
@@ -91,7 +91,7 @@ class _CountryFlag extends StatelessWidget {
   final String? emojiFallback;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final String fallbackText = emojiFallback ?? '?';
     // Use an existing responsive token that scales for phone/tablet/desktop.
     // This keeps flags visually prominent in the list.
@@ -121,7 +121,7 @@ class _CountryFlag extends StatelessWidget {
           memCacheWidth: 80,
           memCacheHeight: 80,
           // In widget tests / offline, show emoji fallback instead of a spinner.
-          placeholder: (final context, final url) => ColoredBox(
+          placeholder: (context, url) => ColoredBox(
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Center(
               child: Text(
@@ -130,7 +130,7 @@ class _CountryFlag extends StatelessWidget {
               ),
             ),
           ),
-          errorWidget: (final context, final url, final error) => ColoredBox(
+          errorWidget: (context, url, error) => ColoredBox(
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Center(
               child: Text(
@@ -152,7 +152,7 @@ class _DetailChip extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Box(
       style: AppStyles.chip,

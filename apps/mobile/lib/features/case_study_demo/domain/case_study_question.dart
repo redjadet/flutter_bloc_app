@@ -21,7 +21,7 @@ class CaseStudyQuestions {
   static Set<CaseStudyQuestionId> get idSet => orderedIds.toSet();
 
   static bool isCompleteAnswers(
-    final Map<CaseStudyQuestionId, String> answers,
+    Map<CaseStudyQuestionId, String> answers,
   ) {
     if (answers.length != orderedIds.length) return false;
     for (final CaseStudyQuestionId id in orderedIds) {

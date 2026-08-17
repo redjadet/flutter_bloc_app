@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('TypeSafeBlocSelector', () {
-    testWidgets('builds widget with selected value', (final tester) async {
+    testWidgets('builds widget with selected value', (tester) async {
       final TestCubit cubit = TestCubit();
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocSelector<TestCubit, TestState, int>(
-              selector: (final state) => state.value,
-              builder: (final context, final value) => Text('Value: $value'),
+              selector: (state) => state.value,
+              builder: (context, value) => Text('Value: $value'),
             ),
           ),
         ),
@@ -22,17 +22,15 @@ void main() {
       expect(find.text('Value: 0'), findsOneWidget);
     });
 
-    testWidgets('rebuilds only when selected value changes', (
-      final tester,
-    ) async {
+    testWidgets('rebuilds only when selected value changes', (tester) async {
       final TestCubit cubit = TestCubit();
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocSelector<TestCubit, TestState, int>(
-              selector: (final state) => state.value,
-              builder: (final context, final value) => Text('Value: $value'),
+              selector: (state) => state.value,
+              builder: (context, value) => Text('Value: $value'),
             ),
           ),
         ),
@@ -46,15 +44,15 @@ void main() {
       expect(find.text('Value: 42'), findsOneWidget);
     });
 
-    testWidgets('works with Bloc state sources', (final tester) async {
+    testWidgets('works with Bloc state sources', (tester) async {
       final TestBloc bloc = TestBloc();
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<TestBloc>(
             create: (_) => bloc,
             child: TypeSafeBlocSelector<TestBloc, TestState, int>(
-              selector: (final state) => state.value,
-              builder: (final context, final value) => Text('Value: $value'),
+              selector: (state) => state.value,
+              builder: (context, value) => Text('Value: $value'),
             ),
           ),
         ),
@@ -67,14 +65,14 @@ void main() {
       expect(find.text('Value: 1'), findsOneWidget);
     });
 
-    testWidgets('supports an explicit bloc instance', (final tester) async {
+    testWidgets('supports an explicit bloc instance', (tester) async {
       final TestCubit cubit = TestCubit();
       await tester.pumpWidget(
         MaterialApp(
           home: TypeSafeBlocSelector<TestCubit, TestState, int>(
             bloc: cubit,
-            selector: (final state) => state.value,
-            builder: (final context, final value) => Text('Value: $value'),
+            selector: (state) => state.value,
+            builder: (context, value) => Text('Value: $value'),
           ),
         ),
       );
@@ -88,14 +86,14 @@ void main() {
   });
 
   group('TypeSafeBlocBuilder', () {
-    testWidgets('builds widget with current state', (final tester) async {
+    testWidgets('builds widget with current state', (tester) async {
       final TestCubit cubit = TestCubit();
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocBuilder<TestCubit, TestState>(
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -105,7 +103,7 @@ void main() {
       expect(find.text('0: Initial'), findsOneWidget);
     });
 
-    testWidgets('rebuilds on every state change', (final tester) async {
+    testWidgets('rebuilds on every state change', (tester) async {
       final TestCubit cubit = TestCubit();
       int buildCount = 0;
       await tester.pumpWidget(
@@ -113,7 +111,7 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocBuilder<TestCubit, TestState>(
-              builder: (final context, final state) {
+              builder: (context, state) {
                 buildCount++;
                 return Text('${state.value}: ${state.label}');
               },
@@ -130,16 +128,15 @@ void main() {
       expect(find.text('1: Changed'), findsOneWidget);
     });
 
-    testWidgets('respects buildWhen condition', (final tester) async {
+    testWidgets('respects buildWhen condition', (tester) async {
       final TestCubit cubit = TestCubit();
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocBuilder<TestCubit, TestState>(
-              buildWhen: (final previous, final current) =>
-                  previous.value != current.value,
-              builder: (final context, final state) =>
+              buildWhen: (previous, current) => previous.value != current.value,
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -154,7 +151,7 @@ void main() {
       expect(find.text('42: New'), findsOneWidget);
     });
 
-    testWidgets('works with Bloc state sources', (final tester) async {
+    testWidgets('works with Bloc state sources', (tester) async {
       final TestBloc bloc = TestBloc();
 
       await tester.pumpWidget(
@@ -162,7 +159,7 @@ void main() {
           home: BlocProvider<TestBloc>(
             create: (_) => bloc,
             child: TypeSafeBlocBuilder<TestBloc, TestState>(
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -176,15 +173,14 @@ void main() {
       expect(find.text('1: Bloc'), findsOneWidget);
     });
 
-    testWidgets('supports an explicit bloc instance', (final tester) async {
+    testWidgets('supports an explicit bloc instance', (tester) async {
       final TestCubit cubit = TestCubit();
 
       await tester.pumpWidget(
         MaterialApp(
           home: TypeSafeBlocBuilder<TestCubit, TestState>(
             bloc: cubit,
-            builder: (final context, final state) =>
-                Text('${state.value}: ${state.label}'),
+            builder: (context, state) => Text('${state.value}: ${state.label}'),
           ),
         ),
       );
@@ -198,7 +194,7 @@ void main() {
   });
 
   group('TypeSafeBlocListener', () {
-    testWidgets('calls listener on state change', (final tester) async {
+    testWidgets('calls listener on state change', (tester) async {
       final TestCubit cubit = TestCubit();
       int listenerCount = 0;
 
@@ -207,7 +203,7 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocListener<TestCubit, TestState>(
-              listener: (final context, final state) {
+              listener: (context, state) {
                 listenerCount++;
               },
               child: const Text('Child'),
@@ -224,7 +220,7 @@ void main() {
       expect(listenerCount, 1);
     });
 
-    testWidgets('respects listenWhen condition', (final tester) async {
+    testWidgets('respects listenWhen condition', (tester) async {
       final TestCubit cubit = TestCubit();
       int listenerCount = 0;
 
@@ -233,9 +229,9 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocListener<TestCubit, TestState>(
-              listenWhen: (final previous, final current) =>
+              listenWhen: (previous, current) =>
                   previous.value != current.value,
-              listener: (final context, final state) {
+              listener: (context, state) {
                 listenerCount++;
               },
               child: const Text('Child'),
@@ -255,7 +251,7 @@ void main() {
       expect(listenerCount, 1);
     });
 
-    testWidgets('passes child widget', (final tester) async {
+    testWidgets('passes child widget', (tester) async {
       final TestCubit cubit = TestCubit();
 
       await tester.pumpWidget(
@@ -263,7 +259,7 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocListener<TestCubit, TestState>(
-              listener: (final _, final _) {},
+              listener: (_, _) {},
               child: const Text('Custom Child'),
             ),
           ),
@@ -273,7 +269,7 @@ void main() {
       expect(find.text('Custom Child'), findsOneWidget);
     });
 
-    testWidgets('works inside MultiBlocListener', (final tester) async {
+    testWidgets('works inside MultiBlocListener', (tester) async {
       final TestCubit cubit = TestCubit();
       int listenerCount = 0;
 
@@ -284,7 +280,7 @@ void main() {
             child: MultiBlocListener(
               listeners: [
                 TypeSafeBlocListener<TestCubit, TestState>(
-                  listener: (final context, final state) {
+                  listener: (context, state) {
                     listenerCount++;
                   },
                 ),
@@ -303,7 +299,7 @@ void main() {
       expect(listenerCount, 1);
     });
 
-    testWidgets('works with Bloc state sources', (final tester) async {
+    testWidgets('works with Bloc state sources', (tester) async {
       final TestBloc bloc = TestBloc();
       int listenerCount = 0;
 
@@ -312,7 +308,7 @@ void main() {
           home: BlocProvider<TestBloc>(
             create: (_) => bloc,
             child: TypeSafeBlocListener<TestBloc, TestState>(
-              listener: (final context, final state) {
+              listener: (context, state) {
                 listenerCount++;
               },
               child: const Text('Bloc Child'),
@@ -331,7 +327,7 @@ void main() {
   });
 
   group('TypeSafeBlocConsumer', () {
-    testWidgets('calls listener and builder', (final tester) async {
+    testWidgets('calls listener and builder', (tester) async {
       final TestCubit cubit = TestCubit();
       bool listenerCalled = false;
 
@@ -340,10 +336,10 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocConsumer<TestCubit, TestState>(
-              listener: (final context, final state) {
+              listener: (context, state) {
                 listenerCalled = true;
               },
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -360,7 +356,7 @@ void main() {
       expect(find.text('1: Changed'), findsOneWidget);
     });
 
-    testWidgets('respects listenWhen condition', (final tester) async {
+    testWidgets('respects listenWhen condition', (tester) async {
       final TestCubit cubit = TestCubit();
       int listenerCount = 0;
 
@@ -369,12 +365,12 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocConsumer<TestCubit, TestState>(
-              listenWhen: (final previous, final current) =>
+              listenWhen: (previous, current) =>
                   previous.value != current.value,
-              listener: (final context, final state) {
+              listener: (context, state) {
                 listenerCount++;
               },
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -395,7 +391,7 @@ void main() {
       expect(listenerCount, 1);
     });
 
-    testWidgets('respects buildWhen condition', (final tester) async {
+    testWidgets('respects buildWhen condition', (tester) async {
       final TestCubit cubit = TestCubit();
 
       await tester.pumpWidget(
@@ -403,10 +399,9 @@ void main() {
           home: BlocProvider<TestCubit>(
             create: (_) => cubit,
             child: TypeSafeBlocConsumer<TestCubit, TestState>(
-              listener: (final context, final state) {},
-              buildWhen: (final previous, final current) =>
-                  previous.value != current.value,
-              builder: (final context, final state) =>
+              listener: (context, state) {},
+              buildWhen: (previous, current) => previous.value != current.value,
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -421,7 +416,7 @@ void main() {
       expect(find.text('42: New'), findsOneWidget);
     });
 
-    testWidgets('works with Bloc state sources', (final tester) async {
+    testWidgets('works with Bloc state sources', (tester) async {
       final TestBloc bloc = TestBloc();
       int listenerCount = 0;
 
@@ -430,10 +425,10 @@ void main() {
           home: BlocProvider<TestBloc>(
             create: (_) => bloc,
             child: TypeSafeBlocConsumer<TestBloc, TestState>(
-              listener: (final context, final state) {
+              listener: (context, state) {
                 listenerCount++;
               },
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   Text('${state.value}: ${state.label}'),
             ),
           ),
@@ -449,7 +444,7 @@ void main() {
       expect(listenerCount, 1);
     });
 
-    testWidgets('supports an explicit bloc instance', (final tester) async {
+    testWidgets('supports an explicit bloc instance', (tester) async {
       final TestCubit cubit = TestCubit();
       int listenerCount = 0;
 
@@ -457,11 +452,10 @@ void main() {
         MaterialApp(
           home: TypeSafeBlocConsumer<TestCubit, TestState>(
             bloc: cubit,
-            listener: (final context, final state) {
+            listener: (context, state) {
               listenerCount++;
             },
-            builder: (final context, final state) =>
-                Text('${state.value}: ${state.label}'),
+            builder: (context, state) => Text('${state.value}: ${state.label}'),
           ),
         ),
       );
@@ -491,7 +485,7 @@ class TestIncremented extends TestEvent {
 
 class TestBloc extends Bloc<TestEvent, TestState> {
   TestBloc() : super(const TestState(value: 0, label: 'Initial')) {
-    on<TestIncremented>((final event, final emit) {
+    on<TestIncremented>((event, emit) {
       emit(TestState(value: state.value + 1, label: 'Bloc'));
     });
   }
@@ -504,7 +498,7 @@ class TestState {
   final String label;
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is TestState &&
           runtimeType == other.runtimeType &&

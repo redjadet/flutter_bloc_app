@@ -8,8 +8,8 @@ class OfflineFirstCounterRepositoryHelpers {
   OfflineFirstCounterRepositoryHelpers._();
 
   static CounterSnapshot normalizeSnapshot(
-    final CounterSnapshot snapshot, {
-    required final bool hasRemoteRepository,
+    CounterSnapshot snapshot, {
+    required bool hasRemoteRepository,
   }) {
     final DateTime now = DateTime.now().toUtc();
     final String changeId = snapshot.changeId ?? generateChangeId();
@@ -26,8 +26,8 @@ class OfflineFirstCounterRepositoryHelpers {
   /// Symmetric to [shouldApplyRemote]: never push an older pending write over a
   /// newer remote (multi-device stale queue replay).
   static bool shouldPushPendingToRemote(
-    final CounterSnapshot pendingSnapshot,
-    final CounterSnapshot remoteSnapshot,
+    CounterSnapshot pendingSnapshot,
+    CounterSnapshot remoteSnapshot,
   ) {
     final DateTime? pending = pendingSnapshot.lastChanged;
     final DateTime? remote = remoteSnapshot.lastChanged;
@@ -39,8 +39,8 @@ class OfflineFirstCounterRepositoryHelpers {
   }
 
   static bool shouldApplyRemote(
-    final CounterSnapshot localSnapshot,
-    final CounterSnapshot remoteSnapshot,
+    CounterSnapshot localSnapshot,
+    CounterSnapshot remoteSnapshot,
   ) {
     final DateTime? remote = remoteSnapshot.lastChanged;
     final DateTime? local = localSnapshot.lastChanged;

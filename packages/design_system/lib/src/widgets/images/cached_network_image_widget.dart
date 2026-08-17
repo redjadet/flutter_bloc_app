@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A reusable widget for displaying cached network images with proper error handling.
 ///
@@ -81,7 +81,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
   final BaseCacheManager? cacheManager;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final String scheme = Uri.tryParse(imageUrl)?.scheme ?? '';
     final bool isNonHttpUrl =
         scheme == 'blob' || scheme == 'data' || scheme == 'file';
@@ -92,9 +92,9 @@ class CachedNetworkImageWidget extends StatelessWidget {
         fit: fit,
         width: width,
         height: height,
-        errorBuilder: (final context, final error, final stackTrace) =>
+        errorBuilder: (context, error, stackTrace) =>
             _buildErrorWidget(context, imageUrl, error),
-        loadingBuilder: (final context, final child, final loadingProgress) {
+        loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) {
             return child;
           }
@@ -112,9 +112,9 @@ class CachedNetworkImageWidget extends StatelessWidget {
         fit: fit,
         width: width,
         height: height,
-        errorBuilder: (final context, final error, final stackTrace) =>
+        errorBuilder: (context, error, stackTrace) =>
             _buildErrorWidget(context, imageUrl, error),
-        loadingBuilder: (final context, final child, final loadingProgress) {
+        loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) {
             return child;
           }
@@ -138,7 +138,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholder(final BuildContext context, final String url) =>
+  Widget _buildPlaceholder(BuildContext context, String url) =>
       placeholder?.call(context, url) ??
       ColoredBox(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -150,11 +150,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildErrorWidget(
-    final BuildContext context,
-    final String url,
-    final Object error,
-  ) =>
+  Widget _buildErrorWidget(BuildContext context, String url, Object error) =>
       errorWidget?.call(context, url, error) ??
       ColoredBox(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,

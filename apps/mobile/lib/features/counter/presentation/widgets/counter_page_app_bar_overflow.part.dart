@@ -4,27 +4,27 @@ final List<OverflowItem> _counterPageOverflowItems = <OverflowItem>[
   OverflowItem(
     action: OverflowAction.caseStudyDemo,
     routeName: AppRoutes.caseStudyDemo,
-    labelBuilder: (final l10n) => l10n.openCaseStudyDemoTooltip,
+    labelBuilder: (l10n) => l10n.openCaseStudyDemoTooltip,
   ),
   OverflowItem(
     action: OverflowAction.charts,
     routeName: AppRoutes.charts,
-    labelBuilder: (final l10n) => l10n.openChartsTooltip,
+    labelBuilder: (l10n) => l10n.openChartsTooltip,
   ),
   OverflowItem(
     action: OverflowAction.graphql,
     routeName: AppRoutes.graphql,
-    labelBuilder: (final l10n) => l10n.openGraphqlTooltip,
+    labelBuilder: (l10n) => l10n.openGraphqlTooltip,
   ),
   OverflowItem(
     action: OverflowAction.chat,
     routeName: AppRoutes.chat,
-    labelBuilder: (final l10n) => l10n.openChatTooltip,
+    labelBuilder: (l10n) => l10n.openChatTooltip,
   ),
   OverflowItem(
     action: OverflowAction.genuiDemo,
     routeName: AppRoutes.genuiDemo,
-    labelBuilder: (final l10n) => l10n.openGenuiDemoTooltip,
+    labelBuilder: (l10n) => l10n.openGenuiDemoTooltip,
   ),
   OverflowItem(
     action: OverflowAction.onlineTherapyDemo,
@@ -34,50 +34,50 @@ final List<OverflowItem> _counterPageOverflowItems = <OverflowItem>[
   OverflowItem(
     action: OverflowAction.googleMaps,
     routeName: AppRoutes.googleMaps,
-    labelBuilder: (final l10n) => l10n.openGoogleMapsTooltip,
+    labelBuilder: (l10n) => l10n.openGoogleMapsTooltip,
   ),
   OverflowItem(
     action: OverflowAction.whiteboard,
     routeName: AppRoutes.whiteboard,
-    labelBuilder: (final l10n) => l10n.openWhiteboardTooltip,
+    labelBuilder: (l10n) => l10n.openWhiteboardTooltip,
   ),
   OverflowItem(
     action: OverflowAction.markdownEditor,
     routeName: AppRoutes.markdownEditor,
-    labelBuilder: (final l10n) => l10n.openMarkdownEditorTooltip,
+    labelBuilder: (l10n) => l10n.openMarkdownEditorTooltip,
   ),
   OverflowItem(
     action: OverflowAction.todo,
     routeName: AppRoutes.todoList,
-    labelBuilder: (final l10n) => l10n.openTodoTooltip,
+    labelBuilder: (l10n) => l10n.openTodoTooltip,
   ),
   OverflowItem(
     action: OverflowAction.playlearn,
     routeName: AppRoutes.playlearn,
-    labelBuilder: (final l10n) => l10n.openPlaylearnTooltip,
+    labelBuilder: (l10n) => l10n.openPlaylearnTooltip,
   ),
   OverflowItem(
     action: OverflowAction.igamingDemo,
     routeName: AppRoutes.igamingDemo,
-    labelBuilder: (final l10n) => l10n.openIgamingDemoTooltip,
+    labelBuilder: (l10n) => l10n.openIgamingDemoTooltip,
   ),
   OverflowItem(
     action: OverflowAction.iotDemo,
     routeName: AppRoutes.iotDemo,
-    labelBuilder: (final l10n) => l10n.openIotDemoTooltip,
+    labelBuilder: (l10n) => l10n.openIotDemoTooltip,
   ),
   OverflowItem(
     action: OverflowAction.realtimeMarket,
     routeName: AppRoutes.realtimeMarket,
-    labelBuilder: (final l10n) => l10n.openRealtimeMarketTooltip,
+    labelBuilder: (l10n) => l10n.openRealtimeMarketTooltip,
   ),
 ];
 
 extension _CounterPageAppBarUi on CounterPageAppBar {
   AppBar buildMaterialAppBar(
-    final BuildContext context,
-    final ThemeData theme,
-    final AppLocalizations l10n,
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
   ) => AppBar(
     backgroundColor: theme.colorScheme.inversePrimary,
     title: Text(
@@ -114,10 +114,10 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
       ),
       PopupMenuButton<OverflowAction>(
         tooltip: l10n.moreTooltip,
-        onSelected: (final action) => handleOverflowSelection(context, action),
-        itemBuilder: (final context) => _counterPageOverflowItems
+        onSelected: (action) => handleOverflowSelection(context, action),
+        itemBuilder: (context) => _counterPageOverflowItems
             .map(
-              (final item) => PopupMenuItem<OverflowAction>(
+              (item) => PopupMenuItem<OverflowAction>(
                 value: item.action,
                 child: Text(item.labelBuilder(l10n)),
               ),
@@ -128,9 +128,9 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
   );
 
   CupertinoNavigationBar buildCupertinoAppBar(
-    final BuildContext context,
-    final ThemeData theme,
-    final AppLocalizations l10n,
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
   ) {
     final colorScheme = theme.colorScheme;
     final TextStyle titleStyle =
@@ -187,17 +187,17 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
   }
 
   Future<void> showOverflowSheet(
-    final BuildContext context,
-    final AppLocalizations l10n,
+    BuildContext context,
+    AppLocalizations l10n,
   ) async {
     final BuildContext parentContext = context;
     await showCupertinoModalPopup<void>(
       context: parentContext,
-      builder: (final sheetContext) => CupertinoActionSheet(
+      builder: (sheetContext) => CupertinoActionSheet(
         title: Text(l10n.moreTooltip),
         actions: _counterPageOverflowItems
             .map(
-              (final item) => CupertinoActionSheetAction(
+              (item) => CupertinoActionSheetAction(
                 onPressed: () {
                   NavigationUtils.maybePop(sheetContext);
                   navigateToOverflowItem(parentContext, item);
@@ -216,22 +216,22 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
   }
 
   void handleOverflowSelection(
-    final BuildContext context,
-    final OverflowAction action,
+    BuildContext context,
+    OverflowAction action,
   ) {
     if (_counterPageOverflowItems.isEmpty) {
       return;
     }
     final OverflowItem item = _counterPageOverflowItems.firstWhere(
-      (final entry) => entry.action == action,
+      (entry) => entry.action == action,
       orElse: () => _counterPageOverflowItems.first,
     );
     navigateToOverflowItem(context, item);
   }
 
   void navigateToOverflowItem(
-    final BuildContext context,
-    final OverflowItem item,
+    BuildContext context,
+    OverflowItem item,
   ) {
     if (!context.mounted) {
       ContextUtils.logNotMounted(

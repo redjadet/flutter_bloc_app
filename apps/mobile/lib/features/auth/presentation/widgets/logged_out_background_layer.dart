@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LoggedOutBackgroundLayer extends StatelessWidget {
   const LoggedOutBackgroundLayer({
@@ -9,7 +9,7 @@ class LoggedOutBackgroundLayer extends StatelessWidget {
   final double height;
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
     width: double.infinity,
     height: height,
     child: _BackgroundImage(height: height),
@@ -24,11 +24,11 @@ class _BackgroundImage extends StatelessWidget {
   final double height;
 
   @override
-  Widget build(final BuildContext context) => Image.asset(
+  Widget build(BuildContext context) => Image.asset(
     'assets/figma/Logged_out_0-2/Rectangle_0-42.png',
     height: height,
     fit: BoxFit.fill,
-    errorBuilder: (final context, final error, final stackTrace) => Container(
+    errorBuilder: (context, error, stackTrace) => Container(
       height: height,
       color: Theme.of(context).colorScheme.surface,
     ),

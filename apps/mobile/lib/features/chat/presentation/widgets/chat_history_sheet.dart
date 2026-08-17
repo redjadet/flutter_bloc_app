@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
@@ -9,16 +8,17 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'chat_history_sheet.freezed.dart';
 
 @freezed
 abstract class _HistorySheetData with _$HistorySheetData {
   const factory _HistorySheetData({
-    required final List<ChatConversation> history,
-    required final bool hasHistory,
-    required final String? activeConversationId,
-    required final bool hasActiveMessages,
+    required List<ChatConversation> history,
+    required bool hasHistory,
+    required String? activeConversationId,
+    required bool hasActiveMessages,
   }) = __HistorySheetData;
 }
 
@@ -28,7 +28,7 @@ class ChatHistorySheet extends StatelessWidget {
   final VoidCallback onClose;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ChatCubit cubit = context.cubit<ChatCubit>();
@@ -49,13 +49,13 @@ class ChatHistorySheet extends StatelessWidget {
               child:
                   TypeSafeBlocSelector<ChatCubit, ChatState, _HistorySheetData>(
                     key: const ValueKey('chat-history-sheet-content'),
-                    selector: (final state) => _HistorySheetData(
+                    selector: (state) => _HistorySheetData(
                       history: state.history,
                       hasHistory: state.hasHistory,
                       activeConversationId: state.activeConversationId,
                       hasActiveMessages: state.messages.isNotEmpty,
                     ),
-                    builder: (final context, final data) {
+                    builder: (context, data) {
                       final List<ChatConversation> conversations = data.history;
 
                       return Column(
@@ -109,7 +109,7 @@ class ChatHistorySheet extends StatelessWidget {
                           Expanded(
                             child: data.hasHistory
                                 ? ListView.separated(
-                                    itemBuilder: (final context, final index) {
+                                    itemBuilder: (context, index) {
                                       final ChatConversation conversation =
                                           conversations[index];
                                       final bool isActive =
@@ -126,10 +126,9 @@ class ChatHistorySheet extends StatelessWidget {
                                         onClose: onClose,
                                       );
                                     },
-                                    separatorBuilder: (final context, _) =>
-                                        SizedBox(
-                                          height: context.responsiveGapS,
-                                        ),
+                                    separatorBuilder: (context, _) => SizedBox(
+                                      height: context.responsiveGapS,
+                                    ),
                                     itemCount: conversations.length,
                                   )
                                 : ChatHistoryEmptyState(l10n: l10n),

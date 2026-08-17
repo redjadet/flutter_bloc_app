@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('WhiteboardWidget', () {
-    testWidgets('renders toolbar and canvas', (
-      final WidgetTester tester,
-    ) async {
+    testWidgets('renders toolbar and canvas', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: WhiteboardWidget())),
       );
@@ -23,9 +21,7 @@ void main() {
       expect(find.text('Thick'), findsOneWidget);
     });
 
-    testWidgets('renders canvas for drawing', (
-      final WidgetTester tester,
-    ) async {
+    testWidgets('renders canvas for drawing', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: WhiteboardWidget())),
       );
@@ -38,7 +34,7 @@ void main() {
     });
 
     testWidgets('clear button is present and tappable', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: WhiteboardWidget())),
@@ -57,14 +53,14 @@ void main() {
     });
 
     testWidgets('draws strokes and supports undo/redo', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: WhiteboardWidget())),
       );
 
       final Finder canvas = find.byWidgetPredicate(
-        (final Widget widget) =>
+        (Widget widget) =>
             widget is CustomPaint && widget.painter is WhiteboardPainter,
       );
       expect(canvas, findsOneWidget);

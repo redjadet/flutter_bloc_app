@@ -1,15 +1,15 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Fits a title style to ensure text doesn't overflow the given width.
 ///
 /// Iteratively reduces font size until the text fits within [maxWidth].
 TextStyle fitTitleStyle({
-  required final TextStyle baseStyle,
-  required final String text,
-  required final double maxWidth,
-  required final TextScaler textScaler,
-  required final TextDirection textDirection,
+  required TextStyle baseStyle,
+  required String text,
+  required double maxWidth,
+  required TextScaler textScaler,
+  required TextDirection textDirection,
 }) {
   final double baseSize = baseStyle.fontSize ?? UI.scaleFontMax(18);
   final double minSize = UI.scaleFontMax(13);

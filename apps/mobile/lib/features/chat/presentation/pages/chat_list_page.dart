@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChatListPage extends StatefulWidget {
   const ChatListPage({
@@ -61,7 +61,7 @@ class _ChatListPageState extends State<ChatListPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final Color backgroundColor = theme.scaffoldBackgroundColor;
     final Color foregroundColor = theme.colorScheme.onSurface;
@@ -108,7 +108,7 @@ class _ChatListPageState extends State<ChatListPage> {
     );
   }
 
-  TextStyle _appBarTitleStyle(final BuildContext context, final Color color) {
+  TextStyle _appBarTitleStyle(BuildContext context, Color color) {
     final TextStyle baseStyle =
         (Theme.of(context).textTheme.titleMedium ?? const TextStyle()).copyWith(
           color: color,

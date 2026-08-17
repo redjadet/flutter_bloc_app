@@ -1,11 +1,11 @@
 @TestOn('vm')
 library;
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -29,9 +29,8 @@ void main() {
         runSupabaseEdgeThenTables<int>(
           tryEdge: () async => <int>[1],
           fetchTables: () async => <int>[2],
-          onPostgrestException: (final e) => Exception(e.message),
-          onGenericException: (final message, final cause) =>
-              Exception('$message $cause'),
+          onPostgrestException: (e) => Exception(e.message),
+          onGenericException: (message, cause) => Exception('$message $cause'),
           logContext: 'edgeThenTablesTest',
         ),
         throwsA(isA<StateError>()),
@@ -49,8 +48,8 @@ void main() {
               fetchedTables = true;
               return <int>[4, 5, 6];
             },
-            onPostgrestException: (final e) => Exception(e.message),
-            onGenericException: (final message, final cause) =>
+            onPostgrestException: (e) => Exception(e.message),
+            onGenericException: (message, cause) =>
                 Exception('$message $cause'),
             logContext: 'edgeThenTablesTest',
           );
@@ -67,8 +66,8 @@ void main() {
           await runSupabaseEdgeThenTables<int>(
             tryEdge: () async => const <int>[],
             fetchTables: () async => <int>[4, 5, 6],
-            onPostgrestException: (final e) => Exception(e.message),
-            onGenericException: (final message, final cause) =>
+            onPostgrestException: (e) => Exception(e.message),
+            onGenericException: (message, cause) =>
                 Exception('$message $cause'),
             logContext: 'edgeThenTablesTest',
           );
@@ -90,21 +89,21 @@ void main() {
           runSupabaseEdgeThenTables<int>(
             tryEdge: () async => throw failure,
             fetchTables: () async => <int>[4, 5, 6],
-            onPostgrestException: (final e) =>
+            onPostgrestException: (e) =>
                 ChartDataException(e.message, cause: e),
-            onGenericException: (final message, final cause) =>
+            onGenericException: (message, cause) =>
                 ChartDataException(message, cause: cause),
             logContext: 'edgeThenTablesTest',
           ),
           throwsA(
             isA<ChartDataException>()
                 .having(
-                  (final ChartDataException error) => error.message,
+                  (ChartDataException error) => error.message,
                   'message',
                   'table exploded',
                 )
                 .having(
-                  (final ChartDataException error) => error.cause,
+                  (ChartDataException error) => error.cause,
                   'cause',
                   same(failure),
                 ),
@@ -121,9 +120,8 @@ void main() {
         runSupabaseEdgeThenTables<int>(
           tryEdge: () async => throw failure,
           fetchTables: () async => <int>[4, 5, 6],
-          onPostgrestException: (final e) =>
-              ChartDataException(e.message, cause: e),
-          onGenericException: (final message, final cause) =>
+          onPostgrestException: (e) => ChartDataException(e.message, cause: e),
+          onGenericException: (message, cause) =>
               ChartDataException(message, cause: cause),
           logContext: 'edgeThenTablesTest',
           genericFailureMessage: 'Failed to load chart data from Supabase',
@@ -131,12 +129,12 @@ void main() {
         throwsA(
           isA<ChartDataException>()
               .having(
-                (final ChartDataException error) => error.message,
+                (ChartDataException error) => error.message,
                 'message',
                 'Failed to load chart data from Supabase',
               )
               .having(
-                (final ChartDataException error) => error.cause,
+                (ChartDataException error) => error.cause,
                 'cause',
                 same(failure),
               ),
@@ -151,8 +149,10 @@ Future<void> _initializeSupabaseForTest() async {
     'SUPABASE_URL': 'https://example.supabase.co',
     'SUPABASE_ANON_KEY': 'anon-key',
   };
-  SupabaseBootstrapService.initializeClient =
-      ({required final String url, required final String anonKey}) async {};
+  SupabaseBootstrapService.initializeClient = ({
+    required String url,
+    required String anonKey,
+  }) async {};
   await SecretConfig.load(persistToSecureStorage: false);
   await SupabaseBootstrapService.initializeSupabase();
 }

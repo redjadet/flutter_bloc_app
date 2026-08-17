@@ -5,19 +5,19 @@ part 'graphql_country.freezed.dart';
 @freezed
 abstract class GraphqlContinent with _$GraphqlContinent {
   const factory GraphqlContinent({
-    required final String code,
-    required final String name,
+    required String code,
+    required String name,
   }) = _GraphqlContinent;
 }
 
 @freezed
 abstract class GraphqlCountry with _$GraphqlCountry {
   const factory GraphqlCountry({
-    required final String code,
-    required final String name,
-    required final GraphqlContinent continent,
-    final String? capital,
-    final String? currency,
-    final String? emoji,
+    required String code,
+    required String name,
+    required GraphqlContinent continent,
+    String? capital,
+    String? currency,
+    String? emoji,
   }) = _GraphqlCountry;
 }

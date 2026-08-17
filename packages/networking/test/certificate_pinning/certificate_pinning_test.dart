@@ -74,18 +74,18 @@ void main() {
 
     test('prod release rejects mock modes', () {
       expect(
-        () => CertificatePinningConfig(
-          mode: CertificatePinningMode.mockSuccess,
-        ).validate(isProdRelease: true),
+        () =>
+            CertificatePinningConfig(mode: CertificatePinningMode.mockSuccess)
+                .validate(isProdRelease: true),
         throwsStateError,
       );
     });
 
     test('real requires hosts and pins', () {
       expect(
-        () => CertificatePinningConfig(
-          mode: CertificatePinningMode.real,
-        ).validate(isProdRelease: false),
+        () =>
+            CertificatePinningConfig(mode: CertificatePinningMode.real)
+                .validate(isProdRelease: false),
         throwsStateError,
       );
 
@@ -106,9 +106,8 @@ void main() {
 
     test('defaults pinHashKind to spki', () {
       expect(
-        CertificatePinningConfig(
-          mode: CertificatePinningMode.disabled,
-        ).pinHashKind,
+        CertificatePinningConfig(mode: CertificatePinningMode.disabled)
+            .pinHashKind,
         CertificatePinHashKind.spki,
       );
     });
@@ -176,7 +175,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinSuccess>().having(
-          (final s) => s.matchKind,
+          (s) => s.matchKind,
           'matchKind',
           CertificatePinMatchKind.primary,
         ),
@@ -214,7 +213,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinSuccess>().having(
-          (final s) => s.matchKind,
+          (s) => s.matchKind,
           'matchKind',
           CertificatePinMatchKind.backup,
         ),
@@ -240,7 +239,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinFailureResult>().having(
-          (final r) => r.failure,
+          (r) => r.failure,
           'failure',
           isA<PinMismatchFailure>(),
         ),
@@ -276,7 +275,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinFailureResult>().having(
-          (final r) => r.failure,
+          (r) => r.failure,
           'failure',
           isA<UnsupportedHostFailure>(),
         ),
@@ -292,7 +291,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinFailureResult>().having(
-          (final r) => r.failure,
+          (r) => r.failure,
           'failure',
           isA<CertificateMalformedFailure>(),
         ),
@@ -308,7 +307,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinFailureResult>().having(
-          (final r) => r.failure,
+          (r) => r.failure,
           'failure',
           isA<CertificateMalformedFailure>(),
         ),
@@ -327,7 +326,7 @@ void main() {
       validator = MockCertificatePinValidator(
         scenarioController: controller,
         validationTimeout: const Duration(milliseconds: 10),
-        delay: (final Duration d) async {
+        delay: (Duration d) async {
           delays.add(d);
         },
       );
@@ -364,7 +363,7 @@ void main() {
           expect(
             result,
             isA<CertificatePinFailureResult>().having(
-              (final r) => r.failure.runtimeType,
+              (r) => r.failure.runtimeType,
               'failureType',
               entry.value,
             ),
@@ -385,7 +384,7 @@ void main() {
       expect(
         result,
         isA<CertificatePinFailureResult>().having(
-          (final r) => r.failure,
+          (r) => r.failure,
           'failure',
           isA<CertificateValidationTimeoutFailure>(),
         ),

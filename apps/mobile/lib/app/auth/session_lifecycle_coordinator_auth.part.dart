@@ -1,7 +1,7 @@
 part of 'session_lifecycle_coordinator.dart';
 
 extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
-  void onSignInCompletedBody({required final AuthUser user}) {
+  void onSignInCompletedBody({required AuthUser user}) {
     // Do not let an explicit sign-in bypass a pending sign-out/account-switch
     // cleanup. The raw auth stream will publish once that transition settles.
     if (_localCleanupBarrier != null) {
@@ -15,7 +15,7 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
     _publishSessionReady(user);
   }
 
-  void attachAuthRepositoryBody(final AuthRepository repository) {
+  void attachAuthRepositoryBody(AuthRepository repository) {
     if (_authRepositoryAttached) {
       return;
     }
@@ -25,15 +25,15 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
     // provider emission (e.g. cold-start / local guest auth).
     _publishSessionReady(repository.currentUser);
     _authSubscription = repository.authStateChanges.listen(
-      (final user) {
+      (user) {
         final int generation = ++_authTransitionGeneration;
         _authTransitionChain = _authTransitionChain
-            .catchError((final Object _) {})
+            .catchError((Object _) {})
             .then(
-              (final _) => _handleAuthUserChanged(user, generation: generation),
+              (_) => _handleAuthUserChanged(user, generation: generation),
             );
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'SessionLifecycleCoordinator.authStateChanges',
           error,
@@ -45,8 +45,8 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
   }
 
   Future<void> _handleAuthUserChanged(
-    final AuthUser? user, {
-    required final int generation,
+    AuthUser? user, {
+    required int generation,
   }) async {
     final AuthUser? previous = _previousUser;
     if (previous != null && user == null) {
@@ -73,9 +73,9 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
   }
 
   Future<void> _runLocalCleanupThenPublish({
-    required final AuthUser? user,
-    required final int generation,
-    required final Future<void> Function() cleanup,
+    required AuthUser? user,
+    required int generation,
+    required Future<void> Function() cleanup,
   }) async {
     final Completer<void> barrier = Completer<void>();
     _localCleanupBarrier = barrier;
@@ -112,7 +112,7 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
     }
   }
 
-  void _publishSessionReady(final AuthUser? user) {
+  void _publishSessionReady(AuthUser? user) {
     _sessionReadyUser = user;
     _hasSessionReadyUser = true;
     if (!_sessionReadyFanout.isClosed) {

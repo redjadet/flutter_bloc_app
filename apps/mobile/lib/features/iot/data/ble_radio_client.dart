@@ -10,35 +10,35 @@ abstract class BleRadioClient {
   BleStatus get status;
 
   Stream<DiscoveredDevice> scanForDevices({
-    required final List<Uuid> withServices,
-    final ScanMode scanMode = ScanMode.balanced,
+    required List<Uuid> withServices,
+    ScanMode scanMode = ScanMode.balanced,
   });
 
   Stream<ConnectionStateUpdate> connectToDevice({
-    required final String deviceId,
-    final Duration? connectionTimeout,
+    required String deviceId,
+    Duration? connectionTimeout,
   });
 
   Future<List<BleGattServiceSnapshot>> discoverGattServices(
-    final String deviceId,
+    String deviceId,
   );
 
-  Future<List<int>> readCharacteristic(final BleCharacteristicRef ref);
+  Future<List<int>> readCharacteristic(BleCharacteristicRef ref);
 
   Future<void> writeCharacteristic(
-    final BleCharacteristicRef ref,
-    final List<int> value, {
-    final bool withoutResponse = false,
+    BleCharacteristicRef ref,
+    List<int> value, {
+    bool withoutResponse = false,
   });
 
-  Stream<List<int>> subscribeToCharacteristic(final BleCharacteristicRef ref);
+  Stream<List<int>> subscribeToCharacteristic(BleCharacteristicRef ref);
 
-  void clearDeviceCache(final String deviceId);
+  void clearDeviceCache(String deviceId);
 }
 
 /// Production [BleRadioClient] backed by [FlutterReactiveBle].
 class FlutterReactiveBleRadioClient implements BleRadioClient {
-  FlutterReactiveBleRadioClient({final FlutterReactiveBle? ble})
+  FlutterReactiveBleRadioClient({FlutterReactiveBle? ble})
     : _ble = ble ?? FlutterReactiveBle();
 
   final FlutterReactiveBle _ble;
@@ -53,14 +53,14 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
 
   @override
   Stream<DiscoveredDevice> scanForDevices({
-    required final List<Uuid> withServices,
-    final ScanMode scanMode = ScanMode.balanced,
+    required List<Uuid> withServices,
+    ScanMode scanMode = ScanMode.balanced,
   }) => _ble.scanForDevices(withServices: withServices, scanMode: scanMode);
 
   @override
   Stream<ConnectionStateUpdate> connectToDevice({
-    required final String deviceId,
-    final Duration? connectionTimeout,
+    required String deviceId,
+    Duration? connectionTimeout,
   }) => _ble.connectToDevice(
     id: deviceId,
     connectionTimeout: connectionTimeout,
@@ -68,18 +68,18 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
 
   @override
   Future<List<BleGattServiceSnapshot>> discoverGattServices(
-    final String deviceId,
+    String deviceId,
   ) async {
     await _ble.discoverAllServices(deviceId);
     final List<Service> services = await _ble.getDiscoveredServices(deviceId);
     final Map<String, Characteristic> cache = <String, Characteristic>{};
     final List<BleGattServiceSnapshot> snapshots = services
         .map(
-          (final service) => BleGattServiceSnapshot(
+          (service) => BleGattServiceSnapshot(
             uuid: service.id.toString(),
             characteristics: service.characteristics
                 .map(
-                  (final characteristic) {
+                  (characteristic) {
                     cache[_characteristicKey(
                           service.id,
                           characteristic.id,
@@ -105,16 +105,16 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
   }
 
   @override
-  Future<List<int>> readCharacteristic(final BleCharacteristicRef ref) async {
+  Future<List<int>> readCharacteristic(BleCharacteristicRef ref) async {
     final Characteristic characteristic = _requireCharacteristic(ref);
     return characteristic.read();
   }
 
   @override
   Future<void> writeCharacteristic(
-    final BleCharacteristicRef ref,
-    final List<int> value, {
-    final bool withoutResponse = false,
+    BleCharacteristicRef ref,
+    List<int> value, {
+    bool withoutResponse = false,
   }) async {
     final Characteristic characteristic = _requireCharacteristic(ref);
     await characteristic.write(value, withResponse: !withoutResponse);
@@ -122,18 +122,18 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
 
   @override
   Stream<List<int>> subscribeToCharacteristic(
-    final BleCharacteristicRef ref,
+    BleCharacteristicRef ref,
   ) {
     final Characteristic characteristic = _requireCharacteristic(ref);
     return characteristic.subscribe();
   }
 
   @override
-  void clearDeviceCache(final String deviceId) {
+  void clearDeviceCache(String deviceId) {
     _characteristicCache.remove(deviceId);
   }
 
-  Characteristic _requireCharacteristic(final BleCharacteristicRef ref) {
+  Characteristic _requireCharacteristic(BleCharacteristicRef ref) {
     final Characteristic? characteristic =
         _characteristicCache[ref.deviceId]?[_characteristicKey(
           Uuid.parse(ref.serviceUuid),
@@ -146,7 +146,7 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
   }
 
   String _characteristicKey(
-    final Uuid serviceId,
-    final Uuid characteristicId,
+    Uuid serviceId,
+    Uuid characteristicId,
   ) => '${serviceId.expanded}|${characteristicId.expanded}';
 }

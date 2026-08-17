@@ -110,7 +110,7 @@ void main() {
       refreshStream.dispose();
     });
 
-    leakSafeTestWidgets('dispose is leak-safe', (final tester) async {
+    leakSafeTestWidgets('dispose is leak-safe', (tester) async {
       final StreamController<int> controller =
           StreamController<int>.broadcast();
       final GoRouterRefreshStream refreshStream = GoRouterRefreshStream(

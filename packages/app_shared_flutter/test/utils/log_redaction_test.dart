@@ -57,7 +57,7 @@ void main() {
       expect(out.path, '/x/y');
       expect(out.queryParameters.keys, containsAll(<String>['token', 'q']));
       expect(
-        out.queryParameters.values.every((final v) => v.contains('REDACTED')),
+        out.queryParameters.values.every((v) => v.contains('REDACTED')),
         isTrue,
       );
       expect(out.fragment.contains('REDACTED'), isTrue);

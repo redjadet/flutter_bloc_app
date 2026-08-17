@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/widgets/diagnostics/graphql_cache_controls_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:utilities/utilities.dart';
 
@@ -17,10 +18,10 @@ void main() {
       repository = _MockCacheRepository();
     });
 
-    Future<void> pump(final WidgetTester tester) {
+    Future<void> pump(WidgetTester tester) {
       return tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: GraphqlCacheControlsSection(cacheRepository: repository),
@@ -40,7 +41,7 @@ void main() {
     });
 
     testWidgets('does not throw after dispose while clear is in flight', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final Completer<void> clearCompleter = Completer<void>();
       when(() => repository.clear()).thenAnswer((_) => clearCompleter.future);
@@ -51,7 +52,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: SizedBox.shrink()),
         ),

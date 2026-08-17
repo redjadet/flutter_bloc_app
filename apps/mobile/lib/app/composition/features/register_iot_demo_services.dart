@@ -28,12 +28,11 @@ void registerIotDemoServices() {
         }
         return getIt<SupabaseAuthRepository>().currentUser?.id;
       },
-      getPersistentRepository: (final supabaseUserId) =>
-          PersistentIotDemoRepository(
-            hiveService: getIt<HiveService>(),
-            supabaseUserId: supabaseUserId,
-            timerService: getIt<TimerService>(),
-          ),
+      getPersistentRepository: (supabaseUserId) => PersistentIotDemoRepository(
+        hiveService: getIt<HiveService>(),
+        supabaseUserId: supabaseUserId,
+        timerService: getIt<TimerService>(),
+      ),
       pendingSyncRepository: getIt<PendingSyncRepository>(),
       registry: getIt<SyncableRepositoryRegistry>(),
       timerService: getIt<TimerService>(),
@@ -41,7 +40,7 @@ void registerIotDemoServices() {
           ? getIt<SupabaseIotDemoRepository>()
           : null,
     ),
-    dispose: (final repo) async {
+    dispose: (repo) async {
       if (repo is OfflineFirstIotDemoRepository) {
         await repo.dispose();
       }

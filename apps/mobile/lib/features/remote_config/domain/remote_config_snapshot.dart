@@ -6,11 +6,11 @@ part 'remote_config_snapshot.freezed.dart';
 @freezed
 abstract class RemoteConfigSnapshot with _$RemoteConfigSnapshot {
   factory RemoteConfigSnapshot({
-    required final Map<String, dynamic> values,
-    final DateTime? lastFetchedAt,
-    final String? templateVersion,
-    final String? dataSource,
-    final DateTime? lastSyncedAt,
+    required Map<String, dynamic> values,
+    DateTime? lastFetchedAt,
+    String? templateVersion,
+    String? dataSource,
+    DateTime? lastSyncedAt,
   }) = _RemoteConfigSnapshot;
 
   const RemoteConfigSnapshot._();
@@ -22,7 +22,7 @@ abstract class RemoteConfigSnapshot with _$RemoteConfigSnapshot {
 
   bool get hasValues => values.isNotEmpty;
 
-  T? getValue<T>(final String key) {
+  T? getValue<T>(String key) {
     final dynamic raw = values[key];
     if (raw is T) {
       return raw;

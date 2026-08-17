@@ -1,7 +1,7 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CounterStatusChip extends StatelessWidget {
   const CounterStatusChip({
@@ -20,7 +20,7 @@ class CounterStatusChip extends StatelessWidget {
   final Duration animDuration;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double fontSize = (textTheme.labelMedium?.fontSize ?? 12).spMax;
     return AnimatedContainer(
       duration: animDuration,
@@ -38,7 +38,7 @@ class CounterStatusChip extends StatelessWidget {
         children: [
           AnimatedSwitcher(
             duration: animDuration,
-            transitionBuilder: (final child, final animation) =>
+            transitionBuilder: (child, animation) =>
                 FadeTransition(opacity: animation, child: child),
             child: Icon(
               active ? Icons.timer : Icons.pause_circle_filled,
@@ -51,7 +51,7 @@ class CounterStatusChip extends StatelessWidget {
           Flexible(
             child: AnimatedSwitcher(
               duration: animDuration,
-              transitionBuilder: (final child, final animation) =>
+              transitionBuilder: (child, animation) =>
                   FadeTransition(opacity: animation, child: child),
               child: Text(
                 active ? l10n.autoLabel : l10n.pausedLabel,

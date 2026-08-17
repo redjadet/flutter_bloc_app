@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:networking/networking.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   _FakeNetworkStatusService(this._status);
@@ -22,7 +22,7 @@ class _FakeNetworkStatusService implements NetworkStatusService {
   @override
   Future<NetworkStatus> getCurrentStatus() async => _status;
 
-  void setStatus(final NetworkStatus status) {
+  void setStatus(NetworkStatus status) {
     _status = status;
   }
 
@@ -48,7 +48,7 @@ class _FailingSaveProfileCacheRepository implements ProfileCacheRepository {
   Future<ProfileUser?> loadProfile() async => null;
 
   @override
-  Future<void> saveProfile(final ProfileUser profile) async {
+  Future<void> saveProfile(ProfileUser profile) async {
     throw Exception('cache write failed');
   }
 
@@ -77,7 +77,7 @@ class _CompletingProfileCacheRepository implements ProfileCacheRepository {
   Future<ProfileUser?> loadProfile() => _delegate.loadProfile();
 
   @override
-  Future<void> saveProfile(final ProfileUser profile) async {
+  Future<void> saveProfile(ProfileUser profile) async {
     await _delegate.saveProfile(profile);
     if (!_saveCompleter.isCompleted) {
       _saveCompleter.complete();

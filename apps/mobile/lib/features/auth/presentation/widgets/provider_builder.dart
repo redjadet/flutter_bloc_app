@@ -4,10 +4,9 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
 
 List<firebase_ui.AuthProvider> buildAuthProviders({
-  required final FirebaseAuth auth,
-  required final firebase_ui_google.GoogleProvider? Function()
-  googleProviderFactory,
-  final List<firebase_ui.AuthProvider>? override,
+  required FirebaseAuth auth,
+  required firebase_ui_google.GoogleProvider? Function() googleProviderFactory,
+  List<firebase_ui.AuthProvider>? override,
 }) {
   final List<firebase_ui.AuthProvider> providers =
       List<firebase_ui.AuthProvider>.from(
@@ -15,7 +14,7 @@ List<firebase_ui.AuthProvider> buildAuthProviders({
       );
 
   if (!providers.any(
-    (final provider) => provider is firebase_ui.EmailAuthProvider,
+    (provider) => provider is firebase_ui.EmailAuthProvider,
   )) {
     providers.insert(0, firebase_ui.EmailAuthProvider());
   }
@@ -25,7 +24,7 @@ List<firebase_ui.AuthProvider> buildAuthProviders({
   }
 
   final bool hasGoogleProvider = providers.any(
-    (final provider) => provider is firebase_ui_google.GoogleProvider,
+    (provider) => provider is firebase_ui_google.GoogleProvider,
   );
 
   if (!hasGoogleProvider) {

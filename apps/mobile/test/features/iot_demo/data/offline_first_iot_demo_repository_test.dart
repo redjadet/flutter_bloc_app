@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/offline_first_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
@@ -9,10 +10,9 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 import '../../../test_helpers.dart' show FakeTimerService;
 
@@ -50,7 +50,7 @@ void main() {
       TimerService? timerService,
     }) => OfflineFirstIotDemoRepository(
       getCurrentSupabaseUserId: () => supabaseUserId ?? _testSupabaseUserId,
-      getPersistentRepository: (final String id) => PersistentIotDemoRepository(
+      getPersistentRepository: (String id) => PersistentIotDemoRepository(
         hiveService: hiveService,
         supabaseUserId: id,
         timerService: timerService ?? FakeTimerService(),
@@ -123,7 +123,7 @@ void main() {
 
         final List<IotDevice> after = await repo
             .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
-            .firstWhere((final list) => list.isEmpty)
+            .firstWhere((list) => list.isEmpty)
             .timeout(const Duration(seconds: 5));
         expect(after, isEmpty);
       },
@@ -138,7 +138,7 @@ void main() {
           .getPendingOperations(now: DateTime.now().toUtc());
       expect(
         pending.any(
-          (final op) =>
+          (op) =>
               op.entityType == 'iot_demo' &&
               op.payload['action'] == 'connect' &&
               op.payload['deviceId'] == 'light-1' &&
@@ -157,7 +157,7 @@ void main() {
           .getPendingOperations(now: DateTime.now().toUtc());
       expect(
         pending.any(
-          (final op) =>
+          (op) =>
               op.entityType == 'iot_demo' &&
               op.payload['action'] == 'disconnect' &&
               op.payload['deviceId'] == 'light-1' &&
@@ -228,7 +228,7 @@ void main() {
           .getPendingOperations(now: DateTime.now().toUtc());
       expect(
         pending.any(
-          (final op) =>
+          (op) =>
               op.entityType == 'iot_demo' &&
               op.payload['action'] == 'add' &&
               op.payload['deviceId'] == 'new-light-1' &&
@@ -259,18 +259,17 @@ void main() {
 
       final List<SyncOperation> pending = await pendingRepository
           .getPendingOperations(now: DateTime.now().toUtc());
-      expect(pending.any((final op) => op.payload['action'] == 'add'), isFalse);
+      expect(pending.any((op) => op.payload['action'] == 'add'), isFalse);
     });
 
     test('addDevice does nothing when no user', () async {
       final OfflineFirstIotDemoRepository repo = OfflineFirstIotDemoRepository(
         getCurrentSupabaseUserId: () => null,
-        getPersistentRepository: (final String id) =>
-            PersistentIotDemoRepository(
-              hiveService: hiveService,
-              supabaseUserId: id,
-              timerService: FakeTimerService(),
-            ),
+        getPersistentRepository: (String id) => PersistentIotDemoRepository(
+          hiveService: hiveService,
+          supabaseUserId: id,
+          timerService: FakeTimerService(),
+        ),
         pendingSyncRepository: pendingRepository,
         registry: registry,
         timerService: FakeTimerService(),
@@ -286,7 +285,7 @@ void main() {
       expect(local, isEmpty);
       final List<SyncOperation> pending = await pendingRepository
           .getPendingOperations(now: DateTime.now().toUtc());
-      expect(pending.any((final op) => op.payload['action'] == 'add'), isFalse);
+      expect(pending.any((op) => op.payload['action'] == 'add'), isFalse);
     });
 
     test('processOperation add calls remote addDevice', () async {
@@ -417,87 +416,81 @@ void main() {
       },
     );
 
-    test(
-      'pullRemote seeds remote devices when local is empty despite pending iot_demo ops',
-      () async {
-        remoteRepository.devices = <IotDevice>[
-          const IotDevice(
-            id: 'remote-1',
-            name: 'Remote Device',
-            type: IotDeviceType.light,
-          ),
-        ];
-        final OfflineFirstIotDemoRepository repo = buildRepository(
-          remote: remoteRepository,
-        );
+    test('pullRemote seeds remote devices when local is empty despite pending iot_demo ops', () async {
+      remoteRepository.devices = <IotDevice>[
+        const IotDevice(
+          id: 'remote-1',
+          name: 'Remote Device',
+          type: IotDeviceType.light,
+        ),
+      ];
+      final OfflineFirstIotDemoRepository repo = buildRepository(
+        remote: remoteRepository,
+      );
 
-        await pendingRepository.enqueue(
-          SyncOperation.create(
-            entityType: 'iot_demo',
-            payload: <String, dynamic>{
-              'deviceId': 'ghost-1',
-              'action': 'connect',
-              'supabaseUserId': _testSupabaseUserId,
-            },
-            idempotencyKey: 'pending_connect_1',
-          ),
-        );
+      await pendingRepository.enqueue(
+        SyncOperation.create(
+          entityType: 'iot_demo',
+          payload: <String, dynamic>{
+            'deviceId': 'ghost-1',
+            'action': 'connect',
+            'supabaseUserId': _testSupabaseUserId,
+          },
+          idempotencyKey: 'pending_connect_1',
+        ),
+      );
 
-        await repo.pullRemote();
+      await repo.pullRemote();
 
-        final List<IotDevice> list = await repo.watchDevices().first;
-        expect(list, hasLength(1));
-        expect(list.first.id, 'remote-1');
-        expect(list.first.name, 'Remote Device');
-      },
-    );
+      final List<IotDevice> list = await repo.watchDevices().first;
+      expect(list, hasLength(1));
+      expect(list.first.id, 'remote-1');
+      expect(list.first.name, 'Remote Device');
+    });
 
-    test(
-      'pullRemote does not overwrite local setValue started during remote fetch',
-      () async {
-        final FakeTimerService fakeTimer = FakeTimerService();
-        final Completer<List<IotDevice>> fetchCompleter =
-            Completer<List<IotDevice>>();
-        final _ControllableSupabaseRemote controllableRemote =
-            _ControllableSupabaseRemote(
-              fetchHandler: () => fetchCompleter.future,
-            );
-        remoteRepository.devices = <IotDevice>[
-          IotDevice(
-            id: 'thermostat-1',
-            name: 'Thermostat',
-            type: IotDeviceType.thermostat,
-            value: 0.5,
-          ),
-        ];
-        final OfflineFirstIotDemoRepository seedRepo = buildRepository(
-          remote: remoteRepository,
-        );
-        await seedRepo.pullRemote();
+    test('pullRemote does not overwrite local setValue started during remote fetch', () async {
+      final FakeTimerService fakeTimer = FakeTimerService();
+      final Completer<List<IotDevice>> fetchCompleter =
+          Completer<List<IotDevice>>();
+      final _ControllableSupabaseRemote controllableRemote =
+          _ControllableSupabaseRemote(
+            fetchHandler: () => fetchCompleter.future,
+          );
+      remoteRepository.devices = <IotDevice>[
+        IotDevice(
+          id: 'thermostat-1',
+          name: 'Thermostat',
+          type: IotDeviceType.thermostat,
+          value: 0.5,
+        ),
+      ];
+      final OfflineFirstIotDemoRepository seedRepo = buildRepository(
+        remote: remoteRepository,
+      );
+      await seedRepo.pullRemote();
 
-        final OfflineFirstIotDemoRepository repo = buildRepository(
-          remote: controllableRemote,
-          timerService: fakeTimer,
-        );
-        final Future<void> pullFuture = repo.pullRemote();
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-        await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.8));
+      final OfflineFirstIotDemoRepository repo = buildRepository(
+        remote: controllableRemote,
+        timerService: fakeTimer,
+      );
+      final Future<void> pullFuture = repo.pullRemote();
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.8));
 
-        fetchCompleter.complete(<IotDevice>[
-          IotDevice(
-            id: 'thermostat-1',
-            name: 'Thermostat',
-            type: IotDeviceType.thermostat,
-            value: 0.5,
-          ),
-        ]);
-        await pullFuture;
+      fetchCompleter.complete(<IotDevice>[
+        IotDevice(
+          id: 'thermostat-1',
+          name: 'Thermostat',
+          type: IotDeviceType.thermostat,
+          value: 0.5,
+        ),
+      ]);
+      await pullFuture;
 
-        final List<IotDevice> local = await repo.watchDevices().first;
-        expect(local, hasLength(1));
-        expect(local.first.value, 0.8);
-      },
-    );
+      final List<IotDevice> local = await repo.watchDevices().first;
+      expect(local, hasLength(1));
+      expect(local.first.value, 0.8);
+    });
 
     test(
       'pullRemote does not overwrite local setValue while enqueue is flushing',
@@ -518,7 +511,7 @@ void main() {
         final OfflineFirstIotDemoRepository repo =
             OfflineFirstIotDemoRepository(
               getCurrentSupabaseUserId: () => _testSupabaseUserId,
-              getPersistentRepository: (final String id) =>
+              getPersistentRepository: (String id) =>
                   PersistentIotDemoRepository(
                     hiveService: hiveService,
                     supabaseUserId: id,
@@ -618,7 +611,7 @@ void main() {
             .getPendingOperations(now: DateTime.now().toUtc());
         final int setValueOpsBefore = pending
             .where(
-              (final op) =>
+              (op) =>
                   op.payload['kind'] == 'setValue' &&
                   op.payload['deviceId'] == 'thermostat-1',
             )
@@ -631,7 +624,7 @@ void main() {
         );
         final List<SyncOperation> setValueOps = pending
             .where(
-              (final op) =>
+              (op) =>
                   op.payload['kind'] == 'setValue' &&
                   op.payload['deviceId'] == 'thermostat-1',
             )
@@ -641,50 +634,45 @@ void main() {
       },
     );
 
-    test(
-      'debounced setValue keeps the original user id when auth changes before enqueue',
-      () async {
-        final FakeTimerService fakeTimer = FakeTimerService();
-        String currentUserId = _testSupabaseUserId;
-        remoteRepository.devices = <IotDevice>[
-          const IotDevice(
-            id: 'thermostat-1',
-            name: 'Thermostat',
-            type: IotDeviceType.thermostat,
-            value: 0.5,
-          ),
-        ];
-        final OfflineFirstIotDemoRepository repo =
-            OfflineFirstIotDemoRepository(
-              getCurrentSupabaseUserId: () => currentUserId,
-              getPersistentRepository: (final String id) =>
-                  PersistentIotDemoRepository(
-                    hiveService: hiveService,
-                    supabaseUserId: id,
-                    timerService: fakeTimer,
-                  ),
-              pendingSyncRepository: pendingRepository,
-              registry: registry,
-              timerService: fakeTimer,
-              remoteRepository: remoteRepository,
-            );
-        await repo.pullRemote();
-        await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.7));
+    test('debounced setValue keeps the original user id when auth changes before enqueue', () async {
+      final FakeTimerService fakeTimer = FakeTimerService();
+      String currentUserId = _testSupabaseUserId;
+      remoteRepository.devices = <IotDevice>[
+        const IotDevice(
+          id: 'thermostat-1',
+          name: 'Thermostat',
+          type: IotDeviceType.thermostat,
+          value: 0.5,
+        ),
+      ];
+      final OfflineFirstIotDemoRepository repo = OfflineFirstIotDemoRepository(
+        getCurrentSupabaseUserId: () => currentUserId,
+        getPersistentRepository: (String id) => PersistentIotDemoRepository(
+          hiveService: hiveService,
+          supabaseUserId: id,
+          timerService: fakeTimer,
+        ),
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+        timerService: fakeTimer,
+        remoteRepository: remoteRepository,
+      );
+      await repo.pullRemote();
+      await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.7));
 
-        currentUserId = 'other-user-id';
-        fakeTimer.elapse(OfflineFirstIotDemoRepository.setValueSyncDebounce);
-        await Future<void>.delayed(Duration.zero);
+      currentUserId = 'other-user-id';
+      fakeTimer.elapse(OfflineFirstIotDemoRepository.setValueSyncDebounce);
+      await Future<void>.delayed(Duration.zero);
 
-        final List<SyncOperation> pending = await pendingRepository
-            .getPendingOperations(now: DateTime.now().toUtc());
-        final SyncOperation setValueOp = pending.singleWhere(
-          (final op) =>
-              op.payload['kind'] == 'setValue' &&
-              op.payload['deviceId'] == 'thermostat-1',
-        );
-        expect(setValueOp.payload['supabaseUserId'], _testSupabaseUserId);
-      },
-    );
+      final List<SyncOperation> pending = await pendingRepository
+          .getPendingOperations(now: DateTime.now().toUtc());
+      final SyncOperation setValueOp = pending.singleWhere(
+        (op) =>
+            op.payload['kind'] == 'setValue' &&
+            op.payload['deviceId'] == 'thermostat-1',
+      );
+      expect(setValueOp.payload['supabaseUserId'], _testSupabaseUserId);
+    });
 
     test('pullRemote coalesces per user instead of globally', () async {
       await pendingRepository.clear();
@@ -706,12 +694,11 @@ void main() {
           );
       final OfflineFirstIotDemoRepository repo = OfflineFirstIotDemoRepository(
         getCurrentSupabaseUserId: () => currentUserId,
-        getPersistentRepository: (final String id) =>
-            PersistentIotDemoRepository(
-              hiveService: hiveService,
-              supabaseUserId: id,
-              timerService: FakeTimerService(),
-            ),
+        getPersistentRepository: (String id) => PersistentIotDemoRepository(
+          hiveService: hiveService,
+          supabaseUserId: id,
+          timerService: FakeTimerService(),
+        ),
         pendingSyncRepository: pendingRepository,
         registry: registry,
         timerService: FakeTimerService(),
@@ -778,7 +765,7 @@ class _GatePendingSyncRepository extends PendingSyncRepository {
   Completer<void>? releaseEnqueue;
 
   @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+  Future<SyncOperation> enqueue(SyncOperation operation) async {
     final Completer<void>? gate = releaseEnqueue;
     if (gate != null) {
       await gate.future;
@@ -804,30 +791,27 @@ class _FakeSupabaseRemote extends SupabaseIotDemoRepository {
 
   @override
   Future<List<IotDevice>> fetchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) async {
     fetchCallCount++;
     return List<IotDevice>.unmodifiable(devices);
   }
 
   @override
-  Future<void> connect(final String deviceId) async {
+  Future<void> connect(String deviceId) async {
     connectCalls.add(deviceId);
   }
 
   @override
-  Future<void> disconnect(final String deviceId) async {
+  Future<void> disconnect(String deviceId) async {
     disconnectCalls.add(deviceId);
   }
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 
   @override
-  Future<void> addDevice(final IotDevice device) async {
+  Future<void> addDevice(IotDevice device) async {
     addDeviceCalls.add(device);
     devices = List<IotDevice>.from(devices)..add(device);
   }
@@ -841,24 +825,21 @@ class _ControllableSupabaseRemote extends SupabaseIotDemoRepository {
 
   @override
   Future<List<IotDevice>> fetchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) async {
     fetchCallCount++;
     return fetchHandler();
   }
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 }

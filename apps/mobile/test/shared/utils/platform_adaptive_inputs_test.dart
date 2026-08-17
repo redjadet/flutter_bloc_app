@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('PlatformAdaptiveInputs', () {
     testWidgets('textField creates Material TextField on Material platform', (
-      final tester,
+      tester,
     ) async {
       final controller = TextEditingController();
 
@@ -14,7 +14,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 hintText: 'Enter text',
@@ -29,7 +29,7 @@ void main() {
     });
 
     testWidgets('textField uses placeholder when hintText is null', (
-      final tester,
+      tester,
     ) async {
       final controller = TextEditingController();
 
@@ -37,7 +37,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 placeholder: 'Placeholder',
@@ -50,14 +50,14 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('textField respects enabled parameter', (final tester) async {
+    testWidgets('textField respects enabled parameter', (tester) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 enabled: false,
@@ -71,14 +71,14 @@ void main() {
       expect(field.enabled, isFalse);
     });
 
-    testWidgets('textField respects maxLines parameter', (final tester) async {
+    testWidgets('textField respects maxLines parameter', (tester) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 maxLines: 3,
@@ -93,16 +93,16 @@ void main() {
     });
 
     testWidgets('checkbox creates Material Checkbox on Material platform', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.checkbox(
+              builder: (context) => PlatformAdaptiveInputs.checkbox(
                 context: context,
                 value: true,
-                onChanged: (final value) {},
+                onChanged: (value) {},
               ),
             ),
           ),
@@ -113,15 +113,15 @@ void main() {
       expect(find.byType(CupertinoCheckbox), findsNothing);
     });
 
-    testWidgets('checkbox respects value parameter', (final tester) async {
+    testWidgets('checkbox respects value parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.checkbox(
+              builder: (context) => PlatformAdaptiveInputs.checkbox(
                 context: context,
                 value: false,
-                onChanged: (final value) {},
+                onChanged: (value) {},
               ),
             ),
           ),
@@ -132,15 +132,15 @@ void main() {
       expect(checkbox.value, isFalse);
     });
 
-    testWidgets('checkbox respects null value', (final tester) async {
+    testWidgets('checkbox respects null value', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.checkbox(
+              builder: (context) => PlatformAdaptiveInputs.checkbox(
                 context: context,
                 value: null,
-                onChanged: (final value) {},
+                onChanged: (value) {},
               ),
             ),
           ),
@@ -154,13 +154,13 @@ void main() {
     });
 
     testWidgets('listTile creates Material ListTile on Material platform', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.listTile(
+              builder: (context) => PlatformAdaptiveInputs.listTile(
                 context: context,
                 title: const Text('Title'),
               ),
@@ -173,12 +173,12 @@ void main() {
       expect(find.byType(CupertinoListTile), findsNothing);
     });
 
-    testWidgets('listTile respects selected parameter', (final tester) async {
+    testWidgets('listTile respects selected parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.listTile(
+              builder: (context) => PlatformAdaptiveInputs.listTile(
                 context: context,
                 title: const Text('Title'),
                 selected: true,
@@ -192,14 +192,12 @@ void main() {
       expect(tile.selected, isTrue);
     });
 
-    testWidgets('listTile includes subtitle when provided', (
-      final tester,
-    ) async {
+    testWidgets('listTile includes subtitle when provided', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.listTile(
+              builder: (context) => PlatformAdaptiveInputs.listTile(
                 context: context,
                 title: const Text('Title'),
                 subtitle: const Text('Subtitle'),
@@ -212,14 +210,14 @@ void main() {
       expect(find.text('Subtitle'), findsOneWidget);
     });
 
-    testWidgets('textField respects autofocus parameter', (final tester) async {
+    testWidgets('textField respects autofocus parameter', (tester) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 autofocus: true,
@@ -233,16 +231,14 @@ void main() {
       expect(field.autofocus, isTrue);
     });
 
-    testWidgets('textField respects keyboardType parameter', (
-      final tester,
-    ) async {
+    testWidgets('textField respects keyboardType parameter', (tester) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 keyboardType: TextInputType.emailAddress,
@@ -256,16 +252,14 @@ void main() {
       expect(field.keyboardType, TextInputType.emailAddress);
     });
 
-    testWidgets('textField respects obscureText parameter', (
-      final tester,
-    ) async {
+    testWidgets('textField respects obscureText parameter', (tester) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 obscureText: true,
@@ -280,7 +274,7 @@ void main() {
     });
 
     testWidgets('textField uses custom decoration when provided', (
-      final tester,
+      tester,
     ) async {
       final controller = TextEditingController();
       final decoration = const InputDecoration(labelText: 'Custom Label');
@@ -289,7 +283,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.textField(
+              builder: (context) => PlatformAdaptiveInputs.textField(
                 context: context,
                 controller: controller,
                 decoration: decoration,
@@ -303,17 +297,15 @@ void main() {
       expect(field.decoration?.labelText, 'Custom Label');
     });
 
-    testWidgets('checkbox respects activeColor parameter', (
-      final tester,
-    ) async {
+    testWidgets('checkbox respects activeColor parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.checkbox(
+              builder: (context) => PlatformAdaptiveInputs.checkbox(
                 context: context,
                 value: true,
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 activeColor: Colors.red,
               ),
             ),
@@ -325,15 +317,15 @@ void main() {
       expect(checkbox.activeColor, Colors.red);
     });
 
-    testWidgets('checkbox respects checkColor parameter', (final tester) async {
+    testWidgets('checkbox respects checkColor parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.checkbox(
+              builder: (context) => PlatformAdaptiveInputs.checkbox(
                 context: context,
                 value: true,
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 checkColor: Colors.white,
               ),
             ),
@@ -346,13 +338,13 @@ void main() {
     });
 
     testWidgets('listTile includes leading widget when provided', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.listTile(
+              builder: (context) => PlatformAdaptiveInputs.listTile(
                 context: context,
                 title: const Text('Title'),
                 leading: const Icon(Icons.star),
@@ -366,13 +358,13 @@ void main() {
     });
 
     testWidgets('listTile includes trailing widget when provided', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.listTile(
+              builder: (context) => PlatformAdaptiveInputs.listTile(
                 context: context,
                 title: const Text('Title'),
                 trailing: const Icon(Icons.arrow_forward),
@@ -385,14 +377,14 @@ void main() {
       expect(find.byIcon(Icons.arrow_forward), findsOneWidget);
     });
 
-    testWidgets('listTile calls onTap when provided', (final tester) async {
+    testWidgets('listTile calls onTap when provided', (tester) async {
       bool tapped = false;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveInputs.listTile(
+              builder: (context) => PlatformAdaptiveInputs.listTile(
                 context: context,
                 title: const Text('Title'),
                 onTap: () {

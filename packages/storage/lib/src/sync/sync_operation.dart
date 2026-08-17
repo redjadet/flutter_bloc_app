@@ -8,27 +8,27 @@ part 'sync_operation.g.dart';
 @freezed
 abstract class SyncOperation with _$SyncOperation {
   const factory SyncOperation({
-    required final String id,
-    required final String entityType,
-    required final Map<String, dynamic> payload,
-    required final String idempotencyKey,
-    required final DateTime createdAt,
-    final DateTime? nextRetryAt,
-    @Default(0) final int retryCount,
+    required String id,
+    required String entityType,
+    required Map<String, dynamic> payload,
+    required String idempotencyKey,
+    required DateTime createdAt,
+    DateTime? nextRetryAt,
+    @Default(0) int retryCount,
   }) = _SyncOperation;
 
   const SyncOperation._();
 
-  factory SyncOperation.fromJson(final Map<String, dynamic> json) =>
+  factory SyncOperation.fromJson(Map<String, dynamic> json) =>
       _$SyncOperationFromJson(json);
 
   factory SyncOperation.create({
-    required final String entityType,
-    required final Map<String, dynamic> payload,
-    required final String idempotencyKey,
-    final DateTime? createdAt,
-    final DateTime? nextRetryAt,
-    final int retryCount = 0,
+    required String entityType,
+    required Map<String, dynamic> payload,
+    required String idempotencyKey,
+    DateTime? createdAt,
+    DateTime? nextRetryAt,
+    int retryCount = 0,
   }) => SyncOperation(
     id: _SyncOperationIdGenerator.instance.generate(),
     entityType: entityType,

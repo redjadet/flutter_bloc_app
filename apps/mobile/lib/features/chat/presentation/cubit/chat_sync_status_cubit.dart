@@ -11,10 +11,9 @@ class ChatSyncStatusState {
 
   final int pendingCount;
 
-  ChatSyncStatusState copyWith({final int? pendingCount}) =>
-      ChatSyncStatusState(
-        pendingCount: pendingCount ?? this.pendingCount,
-      );
+  ChatSyncStatusState copyWith({int? pendingCount}) => ChatSyncStatusState(
+    pendingCount: pendingCount ?? this.pendingCount,
+  );
 }
 
 /// Route-scoped cubit exposing pending chat sync queue depth for banner UI.
@@ -25,7 +24,7 @@ class ChatSyncStatusCubit extends Cubit<ChatSyncStatusState> {
       (_) {
         unawaited(refresh());
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'ChatSyncStatusCubit enqueue stream error',
           error,
@@ -52,7 +51,7 @@ class ChatSyncStatusCubit extends Cubit<ChatSyncStatusState> {
               now: DateTime.now().toUtc(),
             );
         final int chatPending = operations
-            .where((final op) => op.entityType == chatSyncEntityType)
+            .where((op) => op.entityType == chatSyncEntityType)
             .length;
         if (isClosed) {
           return;
@@ -60,7 +59,7 @@ class ChatSyncStatusCubit extends Cubit<ChatSyncStatusState> {
         emit(state.copyWith(pendingCount: chatPending));
       },
       isAlive: () => !isClosed,
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         AppLogger.error('ChatSyncStatusCubit.refresh failed: $errorMessage');
       },
       logContext: 'ChatSyncStatusCubit.refresh',

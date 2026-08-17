@@ -1,5 +1,4 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Listens for deep link events and navigates using the provided [GoRouter].
 class DeepLinkListener extends StatelessWidget {
@@ -26,17 +26,16 @@ class DeepLinkListener extends StatelessWidget {
   final DeepLinkParser parser;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       BlocProviderHelpers.withAsyncInit<DeepLinkCubit>(
         create: () => DeepLinkCubit(
           service: service,
           parser: parser,
         ),
-        init: (final cubit) => cubit.initialize(),
+        init: (cubit) => cubit.initialize(),
         child: TypeSafeBlocListener<DeepLinkCubit, DeepLinkState>(
-          listenWhen: (final previous, final current) =>
-              current is DeepLinkNavigate,
-          listener: (final context, final state) async {
+          listenWhen: (previous, current) => current is DeepLinkNavigate,
+          listener: (context, state) async {
             final DeepLinkNavigate navigate = state as DeepLinkNavigate;
             AppLogger.info('Navigating to: ${navigate.target.location}');
 

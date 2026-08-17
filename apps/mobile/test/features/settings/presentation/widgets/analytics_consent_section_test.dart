@@ -1,26 +1,23 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/analytics_consent_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('AnalyticsConsentSection hides when DI not registered', (
-    final tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(body: AnalyticsConsentSection()),
@@ -34,7 +31,7 @@ void main() {
     );
   });
 
-  testWidgets('AnalyticsConsentSection toggles consent', (final tester) async {
+  testWidgets('AnalyticsConsentSection toggles consent', (tester) async {
     final _FakeConsent consent = _FakeConsent();
     addTearDown(consent.dispose);
     final InMemoryProductAnalytics analytics = InMemoryProductAnalytics();
@@ -43,9 +40,7 @@ void main() {
       MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
@@ -72,7 +67,7 @@ void main() {
   });
 
   testWidgets('AnalyticsConsentSection syncs from external save', (
-    final tester,
+    tester,
   ) async {
     final _FakeConsent consent = _FakeConsent();
     addTearDown(consent.dispose);
@@ -82,9 +77,7 @@ void main() {
       MaterialApp(
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
@@ -122,7 +115,7 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Future<bool> load() async => enabled;
 
   @override
-  Future<bool> save({required final bool enabled}) async {
+  Future<bool> save({required bool enabled}) async {
     this.enabled = enabled;
     _changes.add(enabled);
     return true;

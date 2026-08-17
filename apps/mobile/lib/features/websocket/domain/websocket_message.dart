@@ -12,8 +12,8 @@ abstract class WebsocketMessage with _$WebsocketMessage {
     /// Stable identifier for widget keys and diffing.
     /// Assigned by the producer (cubit/repository) and expected to be unique
     /// within a session.
-    required final int sequence,
-    required final WebsocketMessageDirection direction,
-    required final String text,
+    required int sequence,
+    required WebsocketMessageDirection direction,
+    required String text,
   }) = _WebsocketMessage;
 }

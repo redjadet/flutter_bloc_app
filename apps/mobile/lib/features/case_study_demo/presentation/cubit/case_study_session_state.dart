@@ -31,17 +31,17 @@ class CaseStudySessionState extends Equatable {
   final bool submitProgressDeterminate;
 
   CaseStudySessionState copyWith({
-    final CaseStudyHydrationStatus? hydration,
-    final CaseStudyDraft? draft,
-    final String? pickErrorKey,
-    final bool clearPickError = false,
-    final bool? isSubmitting,
-    final bool? submitError,
-    final bool? submitLocalHistoryFailed,
-    final bool clearSubmitLocalHistoryFailed = false,
-    final double? submitProgress,
-    final bool clearSubmitProgress = false,
-    final bool? submitProgressDeterminate,
+    CaseStudyHydrationStatus? hydration,
+    CaseStudyDraft? draft,
+    String? pickErrorKey,
+    bool clearPickError = false,
+    bool? isSubmitting,
+    bool? submitError,
+    bool? submitLocalHistoryFailed,
+    bool clearSubmitLocalHistoryFailed = false,
+    double? submitProgress,
+    bool clearSubmitProgress = false,
+    bool? submitProgressDeterminate,
   }) {
     final bool nextSubmitLocalHistoryFailed;
     if (clearSubmitLocalHistoryFailed) {

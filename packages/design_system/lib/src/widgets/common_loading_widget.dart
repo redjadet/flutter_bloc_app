@@ -1,7 +1,7 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart' show PlatformAdaptive;
 import 'package:design_system/responsive.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A reusable loading widget with consistent styling
 class CommonLoadingWidget extends StatelessWidget {
@@ -17,7 +17,7 @@ class CommonLoadingWidget extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveColor = color ?? theme.colorScheme.secondary;
 
@@ -68,7 +68,7 @@ class CommonLoadingOverlay extends StatelessWidget {
   final String? message;
 
   @override
-  Widget build(final BuildContext context) => Stack(
+  Widget build(BuildContext context) => Stack(
     children: [
       child,
       if (isLoading)
@@ -98,7 +98,7 @@ class CommonLoadingButton extends StatelessWidget {
   final ButtonStyle? style;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final indicatorColor = Theme.of(context).colorScheme.onPrimary;
     final indicatorSize = context.responsiveIconSize * 0.67;
 

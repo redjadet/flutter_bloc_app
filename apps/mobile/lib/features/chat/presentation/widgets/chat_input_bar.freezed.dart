@@ -87,8 +87,7 @@ extension _SendButtonDataPatterns on _SendButtonData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __SendButtonData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __SendButtonData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __SendButtonData() when $default != null:
 return $default(_that);case _:
@@ -109,8 +108,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __SendButtonData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __SendButtonData value)  $default,){final _that = this;
 switch (_that) {
 case __SendButtonData():
 return $default(_that);case _:
@@ -130,8 +128,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __SendButtonData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __SendButtonData value)?  $default,){final _that = this;
 switch (_that) {
 case __SendButtonData() when $default != null:
 return $default(_that);case _:

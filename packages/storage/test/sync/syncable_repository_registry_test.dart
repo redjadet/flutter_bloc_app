@@ -92,5 +92,5 @@ class _TestSyncableRepository implements SyncableRepository {
   Future<void> pullRemote() async {}
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {}
+  Future<void> processOperation(SyncOperation operation) async {}
 }

@@ -2,8 +2,8 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_ques
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 String caseStudyQuestionPrompt(
-  final AppLocalizations l10n,
-  final CaseStudyQuestionId id,
+  AppLocalizations l10n,
+  CaseStudyQuestionId id,
 ) {
   switch (id) {
     case 'q1':

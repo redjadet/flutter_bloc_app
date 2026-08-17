@@ -1,8 +1,8 @@
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 import 'test_helpers.dart' as test_helpers;
 
@@ -99,7 +99,7 @@ void main() {
   test('schema migrate coerces legacy stored primitives', () async {
     await hiveService.openBoxAndRun<void>(
       'counter',
-      action: (final box) async {
+      action: (box) async {
         await box.put('count', '7');
         await box.put('last_changed', '2024-01-01T00:00:00Z');
         await box.put('last_synced_at', '123');
@@ -124,9 +124,9 @@ void main() {
     expect(box.get('user_id'), isNull);
     expect(box.get('change_id'), isNull);
 
-    final Map<dynamic, dynamic>? meta =
-        box.get(HiveSchemaMigratorService.metaKeyFingerprints)
-            as Map<dynamic, dynamic>?;
+    final Map<dynamic, dynamic>? meta = box.get(
+      HiveSchemaMigratorService.metaKeyFingerprints,
+    ) as Map<dynamic, dynamic>?;
     expect(meta?['counter:v1'], isNotNull);
   });
 
@@ -135,7 +135,7 @@ void main() {
     () async {
       await hiveService.openBoxAndRun<void>(
         'counter',
-        action: (final box) async {
+        action: (box) async {
           await box.put('count', ' 8 ');
           await box.put('last_changed', -1);
           await box.put('last_synced_at', double.nan);
@@ -168,9 +168,9 @@ void main() {
     await throwing.load();
 
     final box = await throwing.getBox();
-    final Map<dynamic, dynamic>? meta =
-        box.get(HiveSchemaMigratorService.metaKeyFingerprints)
-            as Map<dynamic, dynamic>?;
+    final Map<dynamic, dynamic>? meta = box.get(
+      HiveSchemaMigratorService.metaKeyFingerprints,
+    ) as Map<dynamic, dynamic>?;
     expect(meta?['counter:v1'], isNull);
   });
 }
@@ -187,8 +187,8 @@ class _ThrowingCounterRepository extends HiveCounterRepository {
   );
 
   static Future<void> _throwingMigrator(
-    final Box<dynamic> box, {
-    required final String? fromFingerprint,
+    Box<dynamic> box, {
+    required String? fromFingerprint,
   }) async {
     throw Exception('boom');
   }

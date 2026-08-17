@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 
 class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   // ignore: avoid_unused_constructor_parameters - keeps DI parity with web.
-  LocalStaffDemoProofFileStore({final HiveService? hiveService});
+  LocalStaffDemoProofFileStore({HiveService? hiveService});
 
   Future<Directory> _baseDir() async {
     final Directory docs = await getApplicationDocumentsDirectory();
@@ -17,7 +17,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
 
   @override
   Future<String> persistPhotoFile({
-    required final String sourcePath,
+    required String sourcePath,
   }) async {
     final Directory base = await _baseDir();
     await base.create(recursive: true);
@@ -42,7 +42,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
 
   @override
   Future<String> persistSignaturePngBytes({
-    required final List<int> bytes,
+    required List<int> bytes,
   }) async {
     final Directory base = await _baseDir();
     await base.create(recursive: true);
@@ -65,18 +65,18 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   }
 
   @override
-  Future<bool> fileExists(final String path) async {
+  Future<bool> fileExists(String path) async {
     // ignore: avoid_slow_async_io — sync-io gate blocks existsSync on UI isolate
     return File(path).exists();
   }
 
   @override
-  Future<List<int>> readFileBytes(final String path) async {
+  Future<List<int>> readFileBytes(String path) async {
     return File(path).readAsBytes();
   }
 
   @override
-  Future<void> deleteFileAtPath(final String path) async {
+  Future<void> deleteFileAtPath(String path) async {
     try {
       await File(path).delete();
     } on FileSystemException {

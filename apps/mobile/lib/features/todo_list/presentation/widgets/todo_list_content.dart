@@ -1,5 +1,4 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_em
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_selectable_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_view.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TodoListContent extends StatelessWidget {
   const TodoListContent({
@@ -37,10 +37,10 @@ class TodoListContent extends StatelessWidget {
   onItemSelectionChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (filteredItems.isEmpty) {
       return LayoutBuilder(
-        builder: (final context, final constraints) => RefreshIndicator(
+        builder: (context, constraints) => RefreshIndicator(
           onRefresh: () => cubit.refresh(),
           child: SingleChildScrollView(
             controller: scrollController,
@@ -63,10 +63,10 @@ class TodoListContent extends StatelessWidget {
             scrollController: scrollController,
             padding: context.responsiveListPadding,
             itemCount: filteredItems.length,
-            onReorderItem: (final oldIndex, final newIndex) {
+            onReorderItem: (oldIndex, newIndex) {
               cubit.reorderItems(oldIndex: oldIndex, newIndex: newIndex);
             },
-            itemBuilder: (final context, final index) {
+            itemBuilder: (context, index) {
               final TodoItem item = filteredItems[index];
               final itemSelectionChanged = onItemSelectionChanged;
               return RepaintBoundary(
@@ -108,11 +108,10 @@ class TodoListContent extends StatelessWidget {
         items: filteredItems,
         sortOrder: sortOrder,
         scrollController: scrollController,
-        onToggle: (final item) => cubit.toggleTodo(item),
-        onEdit: (final item) => onEditTodo(item),
-        onDelete: (final item) => onDeleteTodo(item),
-        onDeleteWithoutConfirmation: (final item) =>
-            onDeleteWithUndo(item, cubit),
+        onToggle: (item) => cubit.toggleTodo(item),
+        onEdit: (item) => onEditTodo(item),
+        onDelete: (item) => onDeleteTodo(item),
+        onDeleteWithoutConfirmation: (item) => onDeleteWithUndo(item, cubit),
         selectedItemIds: selectedItemIds,
         onItemSelectionChanged: onItemSelectionChanged,
       ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/counter/data/api/counter_api.dart';
@@ -28,9 +29,9 @@ part 'rest_counter_repository_watch.dart';
 /// 5. Register in `lib/app/composition/injector.dart` if needed
 class RestCounterRepository implements CounterRepository {
   RestCounterRepository({
-    required final String baseUrl,
+    required String baseUrl,
     required this.client,
-    final Map<String, String>? defaultHeaders,
+    Map<String, String>? defaultHeaders,
     this._requestTimeout = const Duration(seconds: 10),
   }) : _baseUri = _parseBaseUri(baseUrl),
        _defaultHeaders = {...?defaultHeaders} {
@@ -59,7 +60,7 @@ class RestCounterRepository implements CounterRepository {
   Future<CounterSnapshot> load() => _restCounterRepositoryLoad(this);
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) =>
+  Future<void> save(CounterSnapshot snapshot) =>
       _restCounterRepositorySave(this, snapshot);
 
   @override
@@ -71,7 +72,7 @@ class RestCounterRepository implements CounterRepository {
     }
   }
 
-  static Uri _parseBaseUri(final String baseUrl) {
+  static Uri _parseBaseUri(String baseUrl) {
     final Uri? uri = Uri.tryParse(baseUrl);
     if (uri == null ||
         !uri.hasScheme ||

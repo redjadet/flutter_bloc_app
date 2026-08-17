@@ -6,6 +6,6 @@ class ShareNativeShowcaseTextUseCase {
 
   final NativeShowcaseHostLanguageService _hostLanguageService;
 
-  Future<NativeInteropCallResult> call(final String text) =>
+  Future<NativeInteropCallResult> call(String text) =>
       _hostLanguageService.shareText(text);
 }

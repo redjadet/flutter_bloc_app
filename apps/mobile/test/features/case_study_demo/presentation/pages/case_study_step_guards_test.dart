@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
+import 'package:core/core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
@@ -20,10 +20,11 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_metadata_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_record_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _StubAuthRepository implements AuthRepository {
   _StubAuthRepository()
@@ -44,34 +45,29 @@ class _StubAuthRepository implements AuthRepository {
 
 class _StubLocalRepository implements CaseStudyLocalRepository {
   @override
-  Future<void> clearDraft(final String userId) async {}
+  Future<void> clearDraft(String userId) async {}
 
   @override
   Future<void> ensureReady() async {}
 
   @override
-  Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
-  ) async => null;
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId) async =>
+      null;
 
   @override
-  Future<CaseStudyDraft?> loadDraft(final String userId) async => null;
+  Future<CaseStudyDraft?> loadDraft(String userId) async => null;
 
   @override
-  Future<List<CaseStudyRecord>> loadRecords(final String userId) async =>
+  Future<List<CaseStudyRecord>> loadRecords(String userId) async =>
       <CaseStudyRecord>[];
 
   @override
-  Future<void> saveDraft(
-    final String userId,
-    final CaseStudyDraft draft,
-  ) async {}
+  Future<void> saveDraft(String userId, CaseStudyDraft draft) async {}
 
   @override
   Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> records,
+    String userId,
+    List<CaseStudyRecord> records,
   ) async {}
 }
 
@@ -95,7 +91,7 @@ class _StubUploadRepository implements CaseStudyUploadRepository {
 
 class _StubRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {
   @override
-  Future<void> deleteCaseStudyRemote({required final String caseId}) async {}
+  Future<void> deleteCaseStudyRemote({required String caseId}) async {}
 }
 
 class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
@@ -115,28 +111,28 @@ class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
 class _StubRemoteRepository implements CaseStudyRemoteRepository {
   @override
   Future<String> uploadClip({
-    required final String caseId,
-    required final String questionId,
-    required final String localPath,
+    required String caseId,
+    required String questionId,
+    required String localPath,
   }) async => '';
 
   @override
   Future<void> upsertRemoteDraft({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
   }) async {}
 
   @override
   Future<void> finalizeRemoteSubmission({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
-    required final DateTime submittedAtUtc,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
+    required DateTime submittedAtUtc,
   }) async {}
 
   @override
@@ -145,13 +141,13 @@ class _StubRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required final String caseId,
+    required String caseId,
   }) async => null;
 
   @override
   Future<String> createSignedPlaybackUrl({
-    required final String objectKey,
-    required final Duration ttl,
+    required String objectKey,
+    required Duration ttl,
   }) async => '';
 }
 
@@ -168,47 +164,47 @@ class _TestCaseStudySessionCubit extends CaseStudySessionCubit {
         timerService: DefaultTimerService(),
       );
 
-  void emitState(final CaseStudySessionState state) => emit(state);
+  void emitState(CaseStudySessionState state) => emit(state);
 }
 
 class _StubClipStore implements CaseStudyClipFileStore {
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async => sourcePath;
 
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+  String finalClipFilePathFromStaging(String stagingPath) => stagingPath;
 
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) => finalPath;
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async => sourcePath;
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async {}
+  Future<void> deleteFileIfExists(String? path) async {}
 
   @override
-  Future<void> deleteCaseFolder(final String caseId) async {}
+  Future<void> deleteCaseFolder(String caseId) async {}
 
   @override
-  Future<List<int>> readClipBytes(final String path) async => <int>[];
+  Future<List<int>> readClipBytes(String path) async => <int>[];
 }
 
 Widget _buildApp({
-  required final _TestCaseStudySessionCubit cubit,
-  required final String initialLocation,
+  required _TestCaseStudySessionCubit cubit,
+  required String initialLocation,
 }) {
   final GoRouter router = GoRouter(
     initialLocation: initialLocation,
@@ -234,7 +230,7 @@ Widget _buildApp({
   return BlocProvider<CaseStudySessionCubit>.value(
     value: cubit,
     child: MaterialApp.router(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('en'),
       routerConfig: router,
@@ -258,7 +254,7 @@ void main() {
     });
 
     testWidgets('record page redirects back to metadata without metadata', (
-      final tester,
+      tester,
     ) async {
       cubit.emitState(
         CaseStudySessionState(
@@ -279,7 +275,7 @@ void main() {
     });
 
     testWidgets('review page redirects back to record when incomplete', (
-      final tester,
+      tester,
     ) async {
       cubit.emitState(
         CaseStudySessionState(
@@ -314,7 +310,7 @@ void main() {
 
     testWidgets(
       'review page keeps expansion and video tile keys after rebuild',
-      (final tester) async {
+      (tester) async {
         final Map<String, String> completeAnswers = <String, String>{
           for (final CaseStudyQuestionId id in CaseStudyQuestions.orderedIds)
             id: '/tmp/case-study-$id.mp4',

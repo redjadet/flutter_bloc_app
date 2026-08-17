@@ -88,8 +88,7 @@ extension SearchStatePatterns on SearchState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SearchState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SearchState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _SearchState() when $default != null:
 return $default(_that);case _:
@@ -110,8 +109,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SearchState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SearchState value)  $default,){final _that = this;
 switch (_that) {
 case _SearchState():
 return $default(_that);case _:
@@ -131,8 +129,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SearchState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SearchState value)?  $default,){final _that = this;
 switch (_that) {
 case _SearchState() when $default != null:
 return $default(_that);case _:
@@ -208,7 +205,7 @@ return $default(_that.status,_that.query,_that.results,_that.error);case _:
 
 
 class _SearchState extends SearchState {
-  const _SearchState({this.status = ViewStatus.initial, this.query = '', final  List<SearchResult> results = const <SearchResult>[], this.error}): _results = results,super._();
+  const _SearchState({this.status = ViewStatus.initial, this.query = '', List<SearchResult> results = const <SearchResult>[], this.error}): _results = results,super._();
   
 
 @override@JsonKey() final  ViewStatus status;

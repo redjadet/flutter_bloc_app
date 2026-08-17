@@ -24,7 +24,7 @@ class UnsupportedBleRepository implements BleRepository {
       FailureResult<void>(unsupportedPlatformFailure());
 
   @override
-  Future<Result<void>> startScan({final Duration? timeout}) async =>
+  Future<Result<void>> startScan({Duration? timeout}) async =>
       FailureResult<void>(unsupportedPlatformFailure());
 
   @override
@@ -35,7 +35,7 @@ class UnsupportedBleRepository implements BleRepository {
       const Stream<List<BleDiscoveredDevice>>.empty();
 
   @override
-  Stream<BleConnectionPhase> watchConnection(final String deviceId) =>
+  Stream<BleConnectionPhase> watchConnection(String deviceId) =>
       Stream<BleConnectionPhase>.value(
         BleConnectionPhase(
           deviceId: deviceId,
@@ -44,7 +44,7 @@ class UnsupportedBleRepository implements BleRepository {
       );
 
   @override
-  Future<Result<void>> connect(final String deviceId) async =>
+  Future<Result<void>> connect(String deviceId) async =>
       FailureResult<void>(unsupportedPlatformFailure());
 
   @override
@@ -59,17 +59,17 @@ class UnsupportedBleRepository implements BleRepository {
 
   @override
   Future<Result<List<int>>> readCharacteristic(
-    final BleCharacteristicRef ref,
+    BleCharacteristicRef ref,
   ) async => FailureResult<List<int>>(unsupportedPlatformFailure());
 
   @override
   Future<Result<void>> writeCharacteristic(
-    final BleCharacteristicRef ref,
-    final List<int> value, {
-    final bool withoutResponse = false,
+    BleCharacteristicRef ref,
+    List<int> value, {
+    bool withoutResponse = false,
   }) async => FailureResult<void>(unsupportedPlatformFailure());
 
   @override
-  Stream<List<int>> subscribeCharacteristic(final BleCharacteristicRef ref) =>
+  Stream<List<int>> subscribeCharacteristic(BleCharacteristicRef ref) =>
       const Stream<List<int>>.empty();
 }

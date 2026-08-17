@@ -4,27 +4,28 @@ description: Reusable theme extensions and layout widgets (Melos workspace).
 resolution: workspace
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
   flutter: ">=3.38.0"
 
 dependencies:
   app_shared_flutter:
     path: ../app_shared_flutter
+  cached_network_image: ^3.4.1
   core:
     path: ../core
-  cached_network_image: ^3.4.1
+  cupertino_ui: ^1.0.0
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.4.2
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
-  responsive_framework: ^1.5.1
+  markdown: ^7.3.1
+  material_ui: ^1.0.0
   mix: ^2.1.0
+  responsive_framework: ^1.5.1
   skeletonizer: ^2.1.3
   utilities:
     path: ../utilities
-  markdown: ^7.3.1
-
 dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:

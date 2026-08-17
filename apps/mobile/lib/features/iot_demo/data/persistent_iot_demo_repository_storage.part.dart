@@ -2,7 +2,7 @@ part of 'persistent_iot_demo_repository.dart';
 
 extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
   Stream<List<IotDevice>> watchDevicesStream(
-    final IotDemoDeviceFilter filter,
+    IotDemoDeviceFilter filter,
   ) async* {
     final Box<dynamic> box = await getBox();
     List<IotDevice> devices = await _loadDevices(box);
@@ -16,19 +16,19 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
   }
 
   List<IotDevice> _applyFilter(
-    final List<IotDevice> devices,
-    final IotDemoDeviceFilter filter,
+    List<IotDevice> devices,
+    IotDemoDeviceFilter filter,
   ) {
     if (filter == IotDemoDeviceFilter.toggledOnOnly) {
-      return devices.where((final d) => d.toggledOn).toList();
+      return devices.where((d) => d.toggledOn).toList();
     }
     if (filter == IotDemoDeviceFilter.toggledOffOnly) {
-      return devices.where((final d) => !d.toggledOn).toList();
+      return devices.where((d) => !d.toggledOn).toList();
     }
     return devices;
   }
 
-  Future<List<IotDevice>> _loadDevices(final Box<dynamic> box) async =>
+  Future<List<IotDevice>> _loadDevices(Box<dynamic> box) async =>
       StorageGuard.run<List<IotDevice>>(
         logContext: 'PersistentIotDemoRepository._loadDevices',
         action: () async {
@@ -59,20 +59,20 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
       );
 
   Future<void> _saveDevices(
-    final Box<dynamic> box,
-    final List<IotDevice> devices,
+    Box<dynamic> box,
+    List<IotDevice> devices,
   ) async => StorageGuard.run<void>(
     logContext: 'PersistentIotDemoRepository._saveDevices',
     action: () async {
       final List<Map<String, dynamic>> serialized = devices
-          .map((final d) => IotDeviceDto.fromDomain(d).toJson())
+          .map((d) => IotDeviceDto.fromDomain(d).toJson())
           .toList(growable: false);
       await box.put(PersistentIotDemoRepository._keyDevices, serialized);
     },
   );
 
   /// Appends [device] to the stored list and saves.
-  Future<void> addDeviceImpl(final IotDevice device) async {
+  Future<void> addDeviceImpl(IotDevice device) async {
     if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
       throw ArgumentError('device id and name must not be empty');
     }
@@ -86,7 +86,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
       action: () async {
         final Box<dynamic> box = await getBox();
         final List<IotDevice> devices = await _loadDevices(box);
-        if (devices.any((final d) => d.id == device.id)) return;
+        if (devices.any((d) => d.id == device.id)) return;
         final List<IotDevice> updated = List<IotDevice>.from(devices)
           ..add(device);
         await _saveDevices(box, updated);
@@ -96,7 +96,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
 
   /// Replaces the stored device list with [devices].
   /// Used by offline-first pullRemote to write merged data from Supabase.
-  Future<void> replaceDevicesImpl(final List<IotDevice> devices) async {
+  Future<void> replaceDevicesImpl(List<IotDevice> devices) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.replaceDevices',
       action: () async {
@@ -106,10 +106,10 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
     );
   }
 
-  int _indexOf(final List<IotDevice> devices, final String deviceId) =>
-      devices.indexWhere((final d) => d.id == deviceId);
+  int _indexOf(List<IotDevice> devices, String deviceId) =>
+      devices.indexWhere((d) => d.id == deviceId);
 
-  Future<void> connectImpl(final String deviceId) async {
+  Future<void> connectImpl(String deviceId) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.connect',
       action: () async {
@@ -141,7 +141,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
     );
   }
 
-  Future<void> disconnectImpl(final String deviceId) async {
+  Future<void> disconnectImpl(String deviceId) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.disconnect',
       action: () async {
@@ -159,8 +159,8 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
   }
 
   Future<void> sendCommandImpl(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   ) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.sendCommand',

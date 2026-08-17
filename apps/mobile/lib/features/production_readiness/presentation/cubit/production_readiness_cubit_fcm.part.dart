@@ -44,14 +44,14 @@ mixin _ProductionReadinessCubitFcm on _ProductionReadinessCubitBase {
 
     registerSubscription(
       messaging.foregroundMessages.listen(
-        (final message) {
+        (message) {
           if (isClosed) {
             return;
           }
           _applyFcmMessageSummary(message);
           unawaited(_trackNotificationReceived());
         },
-        onError: (final Object _, final StackTrace _) {
+        onError: (Object _, StackTrace _) {
           if (isClosed) {
             return;
           }
@@ -66,14 +66,14 @@ mixin _ProductionReadinessCubitFcm on _ProductionReadinessCubitBase {
 
     registerSubscription(
       messaging.openedMessages.listen(
-        (final message) {
+        (message) {
           if (isClosed) {
             return;
           }
           _applyFcmMessageSummary(message);
           unawaited(_trackNotificationOpened());
         },
-        onError: (final Object _, final StackTrace _) {
+        onError: (Object _, StackTrace _) {
           if (isClosed) {
             return;
           }
@@ -87,7 +87,7 @@ mixin _ProductionReadinessCubitFcm on _ProductionReadinessCubitBase {
     );
   }
 
-  void _applyFcmMessageSummary(final PushMessage message) {
+  void _applyFcmMessageSummary(PushMessage message) {
     emit(
       state.copyWith(
         fcmDataKeyCount: message.data.length,
@@ -135,7 +135,7 @@ mixin _ProductionReadinessCubitFcm on _ProductionReadinessCubitBase {
       return;
     }
     monitor.start(
-      onSummary: (final summary) {
+      onSummary: (summary) {
         if (isClosed) {
           return;
         }

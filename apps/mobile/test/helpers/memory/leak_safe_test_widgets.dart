@@ -33,10 +33,10 @@ const List<String> memoryLeakHarnessLayerClasses = <String>[
 /// Pass [ignoredNotDisposedClasses] only for proven harness noise (e.g. layer
 /// classes during `go` route replacement). Never ignore product owners.
 void leakSafeTestWidgets(
-  final String description,
-  final WidgetTesterCallback callback, {
-  final bool? skip,
-  final List<String> ignoredNotDisposedClasses = const <String>[],
+  String description,
+  WidgetTesterCallback callback, {
+  bool? skip,
+  List<String> ignoredNotDisposedClasses = const <String>[],
 }) {
   LeakTesting settings = LeakTesting.settings.withTrackedAll();
   if (ignoredNotDisposedClasses.isNotEmpty) {

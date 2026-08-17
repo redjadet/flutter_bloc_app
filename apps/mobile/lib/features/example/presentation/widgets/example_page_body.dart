@@ -1,8 +1,8 @@
 import 'package:design_system/design_system.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'example_page_body_content.part.dart';
 
@@ -85,7 +85,7 @@ class ExamplePageBody extends StatelessWidget {
   final Duration? parallelDuration;
 
   @override
-  Widget build(final BuildContext context) => _ExamplePageBodyContent(
+  Widget build(BuildContext context) => _ExamplePageBodyContent(
     l10n: l10n,
     theme: theme,
     colors: colors,

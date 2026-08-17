@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-TextStyle registerTitleStyle(final BuildContext context) =>
+TextStyle registerTitleStyle(BuildContext context) =>
     Theme.of(context).textTheme.displaySmall?.copyWith(
       fontSize: 36,
       fontWeight: FontWeight.w400,
@@ -11,7 +11,7 @@ TextStyle registerTitleStyle(final BuildContext context) =>
     ) ??
     const TextStyle();
 
-TextStyle registerLabelStyle(final BuildContext context) =>
+TextStyle registerLabelStyle(BuildContext context) =>
     Theme.of(context).textTheme.bodyMedium?.copyWith(
       fontSize: 15,
       fontWeight: FontWeight.w500,
@@ -20,7 +20,7 @@ TextStyle registerLabelStyle(final BuildContext context) =>
     ) ??
     const TextStyle();
 
-TextStyle registerFieldTextStyle(final BuildContext context) =>
+TextStyle registerFieldTextStyle(BuildContext context) =>
     Theme.of(context).textTheme.bodyLarge?.copyWith(
       fontSize: 16,
       fontWeight: FontWeight.w500,
@@ -30,9 +30,9 @@ TextStyle registerFieldTextStyle(final BuildContext context) =>
     const TextStyle();
 
 InputDecoration registerInputDecoration(
-  final BuildContext context, {
-  required final String hint,
-  final String? errorText,
+  BuildContext context, {
+  required String hint,
+  String? errorText,
 }) {
   final theme = Theme.of(context);
   return buildFilledInputDecoration(

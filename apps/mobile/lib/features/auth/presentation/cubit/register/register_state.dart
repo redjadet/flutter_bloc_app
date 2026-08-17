@@ -18,30 +18,30 @@ enum RegisterPhoneError { empty, invalid }
 @freezed
 abstract class RegisterFieldState with _$RegisterFieldState {
   const factory RegisterFieldState({
-    @Default('') final String value,
-    @Default(false) final bool isDirty,
+    @Default('') String value,
+    @Default(false) bool isDirty,
   }) = _RegisterFieldState;
 
   const RegisterFieldState._();
 
-  RegisterFieldState update(final String value) =>
+  RegisterFieldState update(String value) =>
       copyWith(value: value, isDirty: true);
 }
 
 @freezed
 abstract class RegisterState with _$RegisterState {
   const factory RegisterState({
-    @Default(RegisterFieldState()) final RegisterFieldState fullName,
-    @Default(RegisterFieldState()) final RegisterFieldState email,
-    @Default(RegisterFieldState()) final RegisterFieldState password,
-    @Default(RegisterFieldState()) final RegisterFieldState confirmPassword,
-    @Default(RegisterFieldState()) final RegisterFieldState phoneNumber,
-    @Default(CountryOption.defaultCountry) final CountryOption selectedCountry,
-    @Default(false) final bool showErrors,
+    @Default(RegisterFieldState()) RegisterFieldState fullName,
+    @Default(RegisterFieldState()) RegisterFieldState email,
+    @Default(RegisterFieldState()) RegisterFieldState password,
+    @Default(RegisterFieldState()) RegisterFieldState confirmPassword,
+    @Default(RegisterFieldState()) RegisterFieldState phoneNumber,
+    @Default(CountryOption.defaultCountry) CountryOption selectedCountry,
+    @Default(false) bool showErrors,
     @Default(RegisterSubmissionStatus.initial)
-    final RegisterSubmissionStatus submissionStatus,
-    @Default(false) final bool hasViewedTerms,
-    @Default(false) final bool acceptedTerms,
+    RegisterSubmissionStatus submissionStatus,
+    @Default(false) bool hasViewedTerms,
+    @Default(false) bool acceptedTerms,
   }) = _RegisterState;
 
   const RegisterState._();
@@ -66,7 +66,7 @@ abstract class RegisterState with _$RegisterState {
       _shouldShowError(phoneNumber) ? _validatePhoneNumber() : null;
   bool get termsAcceptanceError => showErrors && !acceptedTerms;
 
-  bool _shouldShowError(final RegisterFieldState field) =>
+  bool _shouldShowError(RegisterFieldState field) =>
       showErrors || field.isDirty;
 
   RegisterFullNameError? _validateFullName() {

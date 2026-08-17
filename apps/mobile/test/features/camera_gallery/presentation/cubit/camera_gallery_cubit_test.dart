@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubCameraGalleryRepository implements CameraGalleryRepository {
@@ -41,8 +41,8 @@ class _StubCameraGalleryRepository implements CameraGalleryRepository {
 
   @override
   Future<CameraGalleryResult> processImage({
-    required final ImageProcessingFilter filter,
-    required final String sourcePath,
+    required ImageProcessingFilter filter,
+    required String sourcePath,
   }) async => processImageResult ?? const CameraGalleryResult.cancelled();
 }
 
@@ -55,7 +55,7 @@ void main() {
           pickFromCameraResult: CameraGalleryResult.success('/tmp/photo.jpg'),
         ),
       ),
-      act: (final cubit) => cubit.pickFromCamera(),
+      act: (cubit) => cubit.pickFromCamera(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(
@@ -74,7 +74,7 @@ void main() {
           pickFromGalleryResult: CameraGalleryResult.success('/tmp/picked.jpg'),
         ),
       ),
-      act: (final cubit) => cubit.pickFromGallery(),
+      act: (cubit) => cubit.pickFromGallery(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(
@@ -93,7 +93,7 @@ void main() {
           pickFromCameraResult: const CameraGalleryResult.cancelled(),
         ),
       ),
-      act: (final cubit) => cubit.pickFromCamera(),
+      act: (cubit) => cubit.pickFromCamera(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(status: ViewStatus.initial, errorKey: null),
@@ -109,7 +109,7 @@ void main() {
           ),
         ),
       ),
-      act: (final cubit) => cubit.pickFromCamera(),
+      act: (cubit) => cubit.pickFromCamera(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(
@@ -128,7 +128,7 @@ void main() {
           ),
         ),
       ),
-      act: (final cubit) => cubit.pickFromCamera(),
+      act: (cubit) => cubit.pickFromCamera(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(
@@ -150,7 +150,7 @@ void main() {
         sourceImagePath: '/tmp/photo.jpg',
         imagePath: '/tmp/photo.jpg',
       ),
-      act: (final cubit) => cubit.clearSelection(),
+      act: (cubit) => cubit.clearSelection(),
       expect: () => <CameraGalleryState>[const CameraGalleryState()],
     );
 
@@ -163,7 +163,7 @@ void main() {
           ),
         ),
       ),
-      act: (final cubit) => cubit.initialize(),
+      act: (cubit) => cubit.initialize(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.success,
@@ -181,7 +181,7 @@ void main() {
           throwOnRetrieveLostImage: true,
         ),
       ),
-      act: (final cubit) => cubit.initialize(),
+      act: (cubit) => cubit.initialize(),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.error,
@@ -204,7 +204,7 @@ void main() {
         sourceImagePath: '/tmp/original.jpg',
         imagePath: '/tmp/original.jpg',
       ),
-      act: (final cubit) => cubit.applyFilter(ImageProcessingFilter.sepia),
+      act: (cubit) => cubit.applyFilter(ImageProcessingFilter.sepia),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.loading,
@@ -233,7 +233,7 @@ void main() {
         imagePath: '/tmp/original.jpg',
         selectedFilter: ImageProcessingFilter.grayscale,
       ),
-      act: (final cubit) => cubit.applyFilter(ImageProcessingFilter.invert),
+      act: (cubit) => cubit.applyFilter(ImageProcessingFilter.invert),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.loading,
@@ -264,7 +264,7 @@ void main() {
         sourceImagePath: '/tmp/original.jpg',
         imagePath: '/tmp/original.jpg',
       ),
-      act: (final cubit) => cubit.applyFilter(ImageProcessingFilter.sepia),
+      act: (cubit) => cubit.applyFilter(ImageProcessingFilter.sepia),
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.loading,

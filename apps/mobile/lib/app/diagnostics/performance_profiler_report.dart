@@ -8,8 +8,8 @@ import 'package:flutter_bloc_app/app/diagnostics/performance_profiler_stats.dart
 
 /// Prints a performance report to the console.
 void printPerformanceReport({
-  required final Map<String, WidgetRebuildInfoInternal> rebuildCounts,
-  required final FrameStats frameStats,
+  required Map<String, WidgetRebuildInfoInternal> rebuildCounts,
+  required FrameStats frameStats,
 }) {
   AppLogger.info('Performance Report');
 
@@ -18,8 +18,7 @@ void printPerformanceReport({
     AppLogger.info('Widget Rebuild Statistics:');
     final sorted = rebuildCounts.entries.toList()
       ..sort(
-        (final a, final b) =>
-            b.value.rebuildCount.compareTo(a.value.rebuildCount),
+        (a, b) => b.value.rebuildCount.compareTo(a.value.rebuildCount),
       );
 
     for (final entry in sorted) {

@@ -15,9 +15,9 @@ class SupabaseChatRepository implements ChatRepository {
   SupabaseChatRepository({
     required this._payloadBuilder,
     SupabaseSessionManager? sessionManager,
-    final String? Function()? readAccessToken,
-    final String? Function()? readAnonKey,
-    final Future<FunctionResponse> Function({
+    String? Function()? readAccessToken,
+    String? Function()? readAnonKey,
+    Future<FunctionResponse> Function({
       required String accessToken,
       required String anonKey,
       required Map<String, dynamic> body,
@@ -57,12 +57,12 @@ class SupabaseChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       throw const ChatRemoteFailureException(

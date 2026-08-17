@@ -35,7 +35,7 @@ class _GatedStaffProfileRepository implements StaffDemoProfileRepository {
   final Map<String, StaffDemoProfile?> profilesByUserId;
 
   @override
-  Future<StaffDemoProfile?> loadProfile({required final String userId}) async {
+  Future<StaffDemoProfile?> loadProfile({required String userId}) async {
     await gate;
     return profilesByUserId[userId];
   }
@@ -47,7 +47,7 @@ class _GatedStaffProfileRepository implements StaffDemoProfileRepository {
 
 class _NoopStaffPushTokenRepository implements StaffDemoPushTokenRepository {
   @override
-  Future<void> registerTokens({required final String userId}) async {}
+  Future<void> registerTokens({required String userId}) async {}
 }
 
 void main() {
@@ -94,7 +94,7 @@ void main() {
       gate.complete();
 
       await hydrateDone;
-      bool readyB(final StaffDemoSessionState s) =>
+      bool readyB(StaffDemoSessionState s) =>
           s.status == StaffDemoSessionStatus.ready && s.profile == profileB;
       if (!readyB(cubit.state)) {
         await cubit.stream
@@ -131,7 +131,7 @@ void main() {
         gate.complete();
 
         await hydrateDone;
-        bool notSignedIn(final StaffDemoSessionState s) =>
+        bool notSignedIn(StaffDemoSessionState s) =>
             s.status == StaffDemoSessionStatus.error &&
             s.errorMessage == 'Not signed in.';
         if (!notSignedIn(cubit.state)) {
@@ -158,7 +158,7 @@ class _ThrowingAfterGateProfileRepository
   final Future<void> gate;
 
   @override
-  Future<StaffDemoProfile?> loadProfile({required final String userId}) async {
+  Future<StaffDemoProfile?> loadProfile({required String userId}) async {
     await gate;
     throw StateError('network');
   }

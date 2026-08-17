@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibraryWordmark extends StatelessWidget {
   const LibraryWordmark({
@@ -12,14 +12,13 @@ class LibraryWordmark extends StatelessWidget {
   final double? height;
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
     height: height ?? EpochSpacing.wordmarkHeight,
     alignment: Alignment.center,
     child: Semantics(
       label: title,
       child: ResilientSvgAssetImage(
-        assetPath:
-            'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_wordmark.svg',
+        assetPath: 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_wordmark.svg',
         fit: BoxFit.contain,
         fallbackBuilder: () => Text(
           title.toUpperCase(),

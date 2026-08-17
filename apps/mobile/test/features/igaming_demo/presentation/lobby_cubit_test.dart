@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_state.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _StubDemoBalanceRepository implements DemoBalanceRepository {
   _StubDemoBalanceRepository({this.balance, this.throwOnGet});
@@ -19,10 +19,10 @@ class _StubDemoBalanceRepository implements DemoBalanceRepository {
   }
 
   @override
-  Future<void> setBalance(final DemoBalance b) async {}
+  Future<void> setBalance(DemoBalance b) async {}
 
   @override
-  Future<void> updateBalance(final int deltaUnits) async {}
+  Future<void> updateBalance(int deltaUnits) async {}
 }
 
 void main() {

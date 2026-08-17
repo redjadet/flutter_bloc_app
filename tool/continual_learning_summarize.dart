@@ -316,7 +316,7 @@ String _renderMarkdown(List<Finding> findings) {
     b
       ..writeln('## ${_sanitizeId(f.path)}')
       ..writeln();
-    f.items.map((final item) => '- $item').forEach(b.writeln);
+    f.items.map((item) => '- $item').forEach(b.writeln);
     b.writeln();
   }
   return b.toString();

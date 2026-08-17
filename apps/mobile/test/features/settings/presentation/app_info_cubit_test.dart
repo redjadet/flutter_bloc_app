@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/app_info_cubit.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

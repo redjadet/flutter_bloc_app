@@ -25,7 +25,7 @@ class _FakeSyncableRepository extends Fake implements SyncableRepository {
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     onProcess(operation);
   }
 }
@@ -71,7 +71,7 @@ void main() {
         registry: registry,
         pendingRepository: pending,
         emitStatus: emittedStatuses.add,
-        telemetry: (final String event, final Map<String, Object?> payload) {
+        telemetry: (String event, Map<String, Object?> payload) {
           telemetryEvent = event;
           telemetryPayload = payload;
         },
@@ -112,7 +112,7 @@ void main() {
         registry: registry,
         pendingRepository: pending,
         emitStatus: emittedStatuses.add,
-        telemetry: (final String event, final Map<String, Object?> payload) {
+        telemetry: (String event, Map<String, Object?> payload) {
           telemetryEvent = event;
           telemetryPayload = payload;
         },
@@ -160,7 +160,7 @@ void main() {
         registry: registry,
         pendingRepository: pending,
         emitStatus: emittedStatuses.add,
-        telemetry: (final String event, final Map<String, Object?> payload) {
+        telemetry: (String event, Map<String, Object?> payload) {
           telemetryEvent = event;
           telemetryPayload = payload;
         },
@@ -210,7 +210,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final _, final _) {},
+          telemetry: (_, _) {},
         );
 
         verifyInOrder(<void Function()>[
@@ -257,7 +257,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final _, final _) {},
+          telemetry: (_, _) {},
         );
 
         verify(() => repo.processOperation(newerCounterOp)).called(1);
@@ -304,7 +304,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final _, final _) {},
+          telemetry: (_, _) {},
         );
 
         verify(() => repo.processOperation(latestLowerCountOp)).called(1);
@@ -327,9 +327,8 @@ void main() {
         final _MockSyncableRepository repo = _MockSyncableRepository();
         when(() => repo.entityType).thenReturn('test');
         when(() => repo.pullRemote()).thenAnswer((_) async {});
-        when(
-          () => repo.processOperation(any()),
-        ).thenThrow(const SyncOperationDeferredException());
+        when(() => repo.processOperation(any()))
+            .thenThrow(const SyncOperationDeferredException());
         registry.register(repo);
         when(
           () => pending.getPendingOperations(
@@ -343,7 +342,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final _, final _) {},
+          telemetry: (_, _) {},
         );
 
         expect(summary.operationsProcessed, 0);
@@ -397,7 +396,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final _, final _) {},
+          telemetry: (_, _) {},
         );
 
         verify(() => repo.processOperation(secondCounterOp)).called(1);
@@ -428,7 +427,7 @@ void main() {
         registry: registry,
         pendingRepository: pending,
         emitStatus: emittedStatuses.add,
-        telemetry: (final String event, final Map<String, Object?> payload) {
+        telemetry: (String event, Map<String, Object?> payload) {
           telemetryEvent = event;
           telemetryPayload = payload;
         },
@@ -453,7 +452,7 @@ void main() {
         );
         var processed = false;
         registry.register(
-          _FakeSyncableRepository((final SyncOperation operation) {
+          _FakeSyncableRepository((SyncOperation operation) {
             processed = true;
           }),
         );
@@ -470,7 +469,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final String event, final Map<String, Object?> payload) {
+          telemetry: (String event, Map<String, Object?> payload) {
             telemetryEvent = event;
             telemetryPayload = payload;
           },
@@ -499,7 +498,7 @@ void main() {
           idempotencyKey: 'auth-mid-push-key',
         );
         registry.register(
-          _FakeSyncableRepository((final SyncOperation operation) {
+          _FakeSyncableRepository((SyncOperation operation) {
             throw const SyncAuthUserChangedException();
           }),
         );
@@ -515,7 +514,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final String event, final Map<String, Object?> payload) {
+          telemetry: (String event, Map<String, Object?> payload) {
             telemetryEvent = event;
             telemetryPayload = payload;
           },
@@ -552,7 +551,7 @@ void main() {
           registry: registry,
           pendingRepository: pending,
           emitStatus: emittedStatuses.add,
-          telemetry: (final String event, final Map<String, Object?> payload) {
+          telemetry: (String event, Map<String, Object?> payload) {
             telemetryEvent = event;
             telemetryPayload = payload;
           },
@@ -587,7 +586,7 @@ void main() {
         registry: registry,
         pendingRepository: pending,
         emitStatus: emittedStatuses.add,
-        telemetry: (final String event, final Map<String, Object?> payload) {
+        telemetry: (String event, Map<String, Object?> payload) {
           telemetryEvent = event;
           telemetryPayload = payload;
         },

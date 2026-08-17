@@ -23,10 +23,10 @@ class CounterCubit extends _CounterCubitBase
     required super.repository,
     required super.timerService,
     super.syncDiagnostics,
-    final bool startTicker = true,
-    final Duration loadDelay = Duration.zero,
-    final DateTime Function()? now,
-    final Duration? manualThrottle,
+    bool startTicker = true,
+    Duration loadDelay = Duration.zero,
+    DateTime Function()? now,
+    Duration? manualThrottle,
   }) : _manualThrottleDuration = manualThrottle ?? _manualThrottle,
        super(
          now: now ?? DateTime.now,
@@ -122,7 +122,7 @@ class CounterCubit extends _CounterCubitBase
   }
 
   @override
-  Future<void> _persistState(final CounterState snapshotState) async {
+  Future<void> _persistState(CounterState snapshotState) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.save(
         CounterSnapshot(
@@ -133,7 +133,7 @@ class CounterCubit extends _CounterCubitBase
       isAlive: () => !isClosed,
       onError: (_) {},
       logContext: 'CounterCubit._persistState',
-      onErrorWithDetails: (final error, final stackTrace) {
+      onErrorWithDetails: (error, stackTrace) {
         _handleError(
           error,
           stackTrace ?? StackTrace.current,

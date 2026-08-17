@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message_list.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _FakeChatRepository implements ChatRepository {
@@ -17,12 +18,12 @@ class _FakeChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     throw UnimplementedError();
   }
@@ -40,7 +41,7 @@ void main() {
   });
 
   testWidgets('shows terminal sync failure copy under user bubble', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final _MockErrorNotificationService errors =
         _MockErrorNotificationService();
@@ -69,10 +70,10 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
-        builder: (final BuildContext context, final Widget? child) =>
+        builder: (BuildContext context, Widget? child) =>
             buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
         home: Scaffold(
           body: BlocProvider<ChatCubit>.value(

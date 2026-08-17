@@ -1,19 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sort_bar.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   Future<void> pumpSortBar(
-    final WidgetTester tester, {
-    required final TodoSortOrder sortOrder,
-    required final ValueChanged<TodoSortOrder> onSortChanged,
+    WidgetTester tester, {
+    required TodoSortOrder sortOrder,
+    required ValueChanged<TodoSortOrder> onSortChanged,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
         locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: TodoSortBar(sortOrder: sortOrder, onSortChanged: onSortChanged),
@@ -24,9 +25,7 @@ void main() {
   }
 
   group('TodoSortBar', () {
-    testWidgets('shows current sort label for each order', (
-      final tester,
-    ) async {
+    testWidgets('shows current sort label for each order', (tester) async {
       for (final TodoSortOrder order in TodoSortOrder.values) {
         await pumpSortBar(tester, sortOrder: order, onSortChanged: (_) {});
 
@@ -39,13 +38,13 @@ void main() {
     });
 
     testWidgets('invokes onSortChanged when menu item selected', (
-      final tester,
+      tester,
     ) async {
       TodoSortOrder? selected;
       await pumpSortBar(
         tester,
         sortOrder: TodoSortOrder.dateDesc,
-        onSortChanged: (final value) => selected = value,
+        onSortChanged: (value) => selected = value,
       );
 
       await tester.tap(find.byIcon(Icons.sort));

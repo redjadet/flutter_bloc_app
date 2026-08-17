@@ -10,19 +10,19 @@ class UI {
   static bool _screenUtilReady = false;
 
   // Shared adapters so other modules don't duplicate ScreenUtil checks.
-  static double scaleWidth(final double value) => _screenUtilReady
+  static double scaleWidth(double value) => _screenUtilReady
       ? _safeScale(() => ScreenUtil().setWidth(value), value)
       : value;
-  static double scaleHeight(final double value) => _screenUtilReady
+  static double scaleHeight(double value) => _screenUtilReady
       ? _safeScale(() => ScreenUtil().setHeight(value), value)
       : value;
-  static double scaleRadius(final double value) => _screenUtilReady
+  static double scaleRadius(double value) => _screenUtilReady
       ? _safeScale(() => ScreenUtil().radius(value), value)
       : value;
-  static double scaleFont(final double value) => _screenUtilReady
+  static double scaleFont(double value) => _screenUtilReady
       ? _safeScale(() => ScreenUtil().setSp(value), value)
       : value;
-  static double scaleFontMax(final double value) => _screenUtilReady
+  static double scaleFontMax(double value) => _screenUtilReady
       ? _safeScale(() => math.max(value, ScreenUtil().setSp(value)), value)
       : value;
 
@@ -72,10 +72,7 @@ class UI {
     _screenUtilReady = false;
   }
 
-  static double _safeScale(
-    final double Function() scaledValue,
-    final double fallback,
-  ) {
+  static double _safeScale(double Function() scaledValue, double fallback) {
     try {
       final double result = scaledValue();
       if (result.isFinite) {
@@ -92,6 +89,6 @@ class UI {
     return fallback;
   }
 
-  static bool _isLateInitializationError(final Object error) =>
+  static bool _isLateInitializationError(Object error) =>
       '$error'.contains('LateInitializationError');
 }

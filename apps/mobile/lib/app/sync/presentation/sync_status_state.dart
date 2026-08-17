@@ -7,10 +7,10 @@ part 'sync_status_state.freezed.dart';
 @freezed
 abstract class SyncStatusState with _$SyncStatusState {
   const factory SyncStatusState({
-    required final NetworkStatus networkStatus,
-    required final SyncStatus syncStatus,
-    final SyncCycleSummary? lastSummary,
-    @Default(<SyncCycleSummary>[]) final List<SyncCycleSummary> history,
+    required NetworkStatus networkStatus,
+    required SyncStatus syncStatus,
+    SyncCycleSummary? lastSummary,
+    @Default(<SyncCycleSummary>[]) List<SyncCycleSummary> history,
   }) = _SyncStatusState;
 
   const SyncStatusState._();

@@ -9,7 +9,7 @@ enum CaseStudyCaseType {
 extension CaseStudyCaseTypeX on CaseStudyCaseType {
   String get storageName => name;
 
-  static CaseStudyCaseType? tryParse(final String? raw) {
+  static CaseStudyCaseType? tryParse(String? raw) {
     if (raw == null || raw.isEmpty) return null;
     for (final CaseStudyCaseType v in CaseStudyCaseType.values) {
       if (v.name == raw) return v;

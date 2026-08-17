@@ -1,12 +1,12 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_priority_badge.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('TodoPriorityBadge', () {
-    Widget buildTestWidget(final TodoPriority priority) {
+    Widget buildTestWidget(TodoPriority priority) {
       return MaterialApp(
         home: ResponsiveScope(
           child: Scaffold(body: TodoPriorityBadge(priority: priority)),
@@ -14,7 +14,7 @@ void main() {
       );
     }
 
-    testWidgets('renders nothing for none priority', (final tester) async {
+    testWidgets('renders nothing for none priority', (tester) async {
       await tester.pumpWidget(buildTestWidget(TodoPriority.none));
 
       expect(find.byType(TodoPriorityBadge), findsOneWidget);
@@ -22,28 +22,28 @@ void main() {
       expect(find.text(''), findsNothing);
     });
 
-    testWidgets('renders badge for low priority', (final tester) async {
+    testWidgets('renders badge for low priority', (tester) async {
       await tester.pumpWidget(buildTestWidget(TodoPriority.low));
 
       expect(find.byType(CommonCard), findsOneWidget);
       expect(find.byType(Text), findsOneWidget);
     });
 
-    testWidgets('renders badge for medium priority', (final tester) async {
+    testWidgets('renders badge for medium priority', (tester) async {
       await tester.pumpWidget(buildTestWidget(TodoPriority.medium));
 
       expect(find.byType(CommonCard), findsOneWidget);
       expect(find.byType(Text), findsOneWidget);
     });
 
-    testWidgets('renders badge for high priority', (final tester) async {
+    testWidgets('renders badge for high priority', (tester) async {
       await tester.pumpWidget(buildTestWidget(TodoPriority.high));
 
       expect(find.byType(CommonCard), findsOneWidget);
       expect(find.byType(Text), findsOneWidget);
     });
 
-    testWidgets('applies correct styling', (final tester) async {
+    testWidgets('applies correct styling', (tester) async {
       await tester.pumpWidget(buildTestWidget(TodoPriority.high));
 
       final Finder cardFinder = find.byType(Card);

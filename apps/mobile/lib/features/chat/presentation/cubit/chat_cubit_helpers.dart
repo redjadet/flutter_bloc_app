@@ -3,7 +3,7 @@ part of 'chat_cubit.dart';
 mixin _ChatCubitHelpers on _ChatCubitCore {
   ChatState get _state => currentState;
 
-  String _resolveModelForConversation(final ChatConversation conversation) {
+  String _resolveModelForConversation(ChatConversation conversation) {
     final String? model = conversation.model;
     if (model != null && _models.contains(model)) {
       return model;
@@ -43,7 +43,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     return conversation;
   }
 
-  ChatConversation _createEmptyConversation({final String? model}) {
+  ChatConversation _createEmptyConversation({String? model}) {
     final DateTime now = DateTime.now();
     return ChatConversation(
       id: _generateConversationId(now),
@@ -54,21 +54,21 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   }
 
   List<ChatConversation> _replaceConversation(
-    final ChatConversation conversation, {
-    final List<ChatConversation>? history,
+    ChatConversation conversation, {
+    List<ChatConversation>? history,
   }) => replaceChatConversation(
     conversation,
     history: history ?? _state.history,
   );
 
   List<ChatConversation> _sortHistory(
-    final List<ChatConversation> conversations, {
-    final bool clone = true,
+    List<ChatConversation> conversations, {
+    bool clone = true,
   }) => sortChatConversationHistory(conversations, clone: clone);
 
   ChatConversation? _conversationById(
-    final List<ChatConversation> conversations,
-    final String? id,
+    List<ChatConversation> conversations,
+    String? id,
   ) => chatConversationById(conversations, id);
 
   ChatConversation _currentActiveConversation() {
@@ -91,7 +91,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     );
   }
 
-  Future<void> _persistHistory(final List<ChatConversation> history) async {
+  Future<void> _persistHistory(List<ChatConversation> history) async {
     if (isClosed) {
       return;
     }
@@ -119,7 +119,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
           );
         }
       },
-      onError: (final message) {
+      onError: (message) {
         AppLogger.error('Chat history persistence failed', message);
         if (isClosed) {
           return;
@@ -134,22 +134,22 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     );
   }
 
-  String _generateConversationId(final DateTime timestamp) =>
+  String _generateConversationId(DateTime timestamp) =>
       'conversation_${timestamp.microsecondsSinceEpoch}';
 
-  String _generateMessageId(final DateTime timestamp) =>
+  String _generateMessageId(DateTime timestamp) =>
       'message_${timestamp.microsecondsSinceEpoch}';
 
   void _emitConversationSnapshot({
-    required final ChatConversation active,
-    required final List<ChatConversation> history,
-    final bool? isLoading,
-    final bool clearError = false,
-    final String? error,
-    final String? remoteFailureL10nCode,
-    final String? currentModel,
-    final ChatRemotePath? lastCompletionTransport,
-    final bool clearLastCompletionTransport = false,
+    required ChatConversation active,
+    required List<ChatConversation> history,
+    bool? isLoading,
+    bool clearError = false,
+    String? error,
+    String? remoteFailureL10nCode,
+    String? currentModel,
+    ChatRemotePath? lastCompletionTransport,
+    bool clearLastCompletionTransport = false,
   }) {
     // Check if cubit is closed before emitting to prevent errors
     if (isClosed) return;

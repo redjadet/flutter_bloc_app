@@ -13,8 +13,8 @@ import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/rea
 class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
     with CubitSubscriptionMixin<RealtimeMarketState> {
   RealtimeMarketCubit({
-    required final RealtimeMarketRepository repository,
-    required final String pairId,
+    required RealtimeMarketRepository repository,
+    required String pairId,
   }) : _repository = repository,
        _loadCached = LoadCachedMarketSnapshot(repository),
        _watch = WatchRealtimeMarket(repository),
@@ -68,11 +68,11 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
     _registerMarketWatch(pairId);
   }
 
-  void _registerMarketWatch(final String pairId) {
+  void _registerMarketWatch(String pairId) {
     try {
       registerSubscription(
         _watch(pairId).listen(
-          (final snapshot) {
+          (snapshot) {
             if (isClosed) {
               return;
             }
@@ -84,7 +84,7 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
               ),
             );
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error(
               'RealtimeMarketCubit market stream',
               error,
@@ -121,7 +121,7 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
     }
   }
 
-  void setSideTab(final RealtimeMarketSideTab tab) {
+  void setSideTab(RealtimeMarketSideTab tab) {
     if (isClosed || state.sideTab == tab) {
       return;
     }

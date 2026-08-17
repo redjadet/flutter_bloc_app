@@ -1,7 +1,7 @@
 part of 'retry_interceptor.dart';
 
 extension _RetryInterceptorRetry on RetryInterceptor {
-  bool _shouldConsiderRetry(final RequestOptions options) {
+  bool _shouldConsiderRetry(RequestOptions options) {
     if (options.extra[RetryInterceptor.extraSkipRetry] == true) {
       return false;
     }
@@ -14,7 +14,7 @@ extension _RetryInterceptorRetry on RetryInterceptor {
     return options.extra[RetryInterceptor.extraAllowRetryNonIdempotent] == true;
   }
 
-  bool _isIdempotentMethod(final String method) {
+  bool _isIdempotentMethod(String method) {
     switch (method.toUpperCase()) {
       case 'GET':
       case 'HEAD':
@@ -27,7 +27,7 @@ extension _RetryInterceptorRetry on RetryInterceptor {
     return false;
   }
 
-  bool _canRetry(final DioException err) {
+  bool _canRetry(DioException err) {
     final response = err.response;
     if (response != null) {
       return _isTransientStatusCode(response.statusCode ?? 0);
@@ -35,10 +35,10 @@ extension _RetryInterceptorRetry on RetryInterceptor {
     return _isTransientDioException(err);
   }
 
-  bool _isTransientStatusCode(final int statusCode) =>
+  bool _isTransientStatusCode(int statusCode) =>
       statusCode == 408 || statusCode == 429 || statusCode >= 500;
 
-  bool _isTransientDioException(final DioException err) {
+  bool _isTransientDioException(DioException err) {
     switch (err.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -58,11 +58,9 @@ extension _RetryInterceptorRetry on RetryInterceptor {
         message.contains('server error');
   }
 
-  bool _isMultipart(final RequestOptions options) => options.data is FormData;
+  bool _isMultipart(RequestOptions options) => options.data is FormData;
 
-  Future<Response<dynamic>?> _retryResponse(
-    final Response<dynamic> response,
-  ) async {
+  Future<Response<dynamic>?> _retryResponse(Response<dynamic> response) async {
     final RequestOptions requestOptions = response.requestOptions;
     final int attempt = _retryCountFrom(requestOptions);
     if (attempt >= _maxRetries) {
@@ -82,7 +80,7 @@ extension _RetryInterceptorRetry on RetryInterceptor {
     );
   }
 
-  Future<_RetryResult> _retryError(final DioException err) async {
+  Future<_RetryResult> _retryError(DioException err) async {
     final RequestOptions requestOptions = err.requestOptions;
     final int attempt = _retryCountFrom(requestOptions);
     if (attempt >= _maxRetries) {
@@ -110,10 +108,10 @@ extension _RetryInterceptorRetry on RetryInterceptor {
   }
 
   Future<Response<dynamic>> _runRetry({
-    required final RequestOptions requestOptions,
-    required final int attempt,
-    required final Object error,
-    required final String? logMessage,
+    required RequestOptions requestOptions,
+    required int attempt,
+    required Object error,
+    required String? logMessage,
   }) async {
     final Duration delay = RetryPolicy.calculateDelay(
       attempt: attempt,
@@ -141,6 +139,6 @@ extension _RetryInterceptorRetry on RetryInterceptor {
     return _dio.fetch<dynamic>(requestOptions);
   }
 
-  int _retryCountFrom(final RequestOptions requestOptions) =>
+  int _retryCountFrom(RequestOptions requestOptions) =>
       (requestOptions.extra[RetryInterceptor.extraRetryCount] as int?) ?? 0;
 }

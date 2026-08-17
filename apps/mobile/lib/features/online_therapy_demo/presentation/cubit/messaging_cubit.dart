@@ -58,7 +58,7 @@ class MessagingCubit extends Cubit<MessagingState> {
   final TherapyMessagingRepository _messaging;
   final RequestIdGuard _operationGuard = RequestIdGuard();
 
-  bool _isRequestStillActive(final int requestId) =>
+  bool _isRequestStillActive(int requestId) =>
       !isClosed && _operationGuard.isCurrent(requestId);
 
   Future<void> refresh() async {
@@ -96,7 +96,7 @@ class MessagingCubit extends Cubit<MessagingState> {
     }
   }
 
-  Future<void> selectConversation(final String conversationId) async {
+  Future<void> selectConversation(String conversationId) async {
     if (conversationId.trim().isEmpty) {
       _operationGuard.invalidate();
       emit(
@@ -140,7 +140,7 @@ class MessagingCubit extends Cubit<MessagingState> {
     }
   }
 
-  void setDraft(final String value) {
+  void setDraft(String value) {
     emit(state.copyWith(draft: value));
   }
 
@@ -176,7 +176,7 @@ class MessagingCubit extends Cubit<MessagingState> {
     }
   }
 
-  Future<void> retry(final String messageId) async {
+  Future<void> retry(String messageId) async {
     if (messageId.trim().isEmpty) {
       _operationGuard.invalidate();
       emit(state.copyWith(isBusy: false));
@@ -205,9 +205,9 @@ class MessagingCubit extends Cubit<MessagingState> {
   }
 
   void _handleOperationError(
-    final Object error,
-    final StackTrace stackTrace,
-    final String logContext,
+    Object error,
+    StackTrace stackTrace,
+    String logContext,
   ) {
     if (isClosed) return;
     CubitExceptionHandler.handleException(

@@ -1,5 +1,4 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -14,12 +13,13 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_telemetry_section.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_showcase_section.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcasePage extends StatelessWidget {
   const NativePlatformShowcasePage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.nativePlatformShowcaseTitle,
@@ -33,11 +33,11 @@ class NativePlatformShowcasePage extends StatelessWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               loaded:
                   (
-                    final data,
-                    final telemetry,
-                    final lastAction,
-                    final lastActionResult,
-                    final actionInFlight,
+                    data,
+                    telemetry,
+                    lastAction,
+                    lastActionResult,
+                    actionInFlight,
                   ) => ListView(
                     padding: context.pagePadding,
                     children: <Widget>[

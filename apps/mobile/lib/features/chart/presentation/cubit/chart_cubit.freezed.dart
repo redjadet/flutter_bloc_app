@@ -91,8 +91,7 @@ extension ChartStatePatterns on ChartState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChartState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChartState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ChartState() when $default != null:
 return $default(_that);case _:
@@ -113,8 +112,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChartState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChartState value)  $default,){final _that = this;
 switch (_that) {
 case _ChartState():
 return $default(_that);case _:
@@ -134,8 +132,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChartState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChartState value)?  $default,){final _that = this;
 switch (_that) {
 case _ChartState() when $default != null:
 return $default(_that);case _:
@@ -211,7 +208,7 @@ return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled,_
 
 
 class _ChartState extends ChartState {
-  const _ChartState({this.status = ViewStatus.initial, final  List<ChartPoint> points = const <ChartPoint>[], this.errorMessage, this.zoomEnabled = false, this.dataSource = ChartDataSource.unknown, this.lastError}): _points = points,super._();
+  const _ChartState({this.status = ViewStatus.initial, List<ChartPoint> points = const <ChartPoint>[], this.errorMessage, this.zoomEnabled = false, this.dataSource = ChartDataSource.unknown, this.lastError}): _points = points,super._();
   
 
 @override@JsonKey() final  ViewStatus status;

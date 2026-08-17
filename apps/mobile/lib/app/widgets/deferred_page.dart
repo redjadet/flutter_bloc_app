@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Loads deferred libraries before rendering the requested page.
 class DeferredPage extends StatefulWidget {
@@ -39,9 +39,9 @@ class _DeferredPageState extends State<DeferredPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => FutureBuilder<void>(
+  Widget build(BuildContext context) => FutureBuilder<void>(
     future: _loadFuture,
-    builder: (final context, final snapshot) {
+    builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.done) {
         if (snapshot.hasError) {
           final Object? error = snapshot.error;

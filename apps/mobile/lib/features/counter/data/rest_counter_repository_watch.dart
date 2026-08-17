@@ -1,11 +1,11 @@
 part of 'rest_counter_repository.dart';
 
 Stream<CounterSnapshot> _restCounterRepositoryWatch(
-  final RestCounterRepository repository,
+  RestCounterRepository repository,
 ) {
   final Stream<CounterSnapshot> sourceStream =
       repository._watchController.stream;
-  return Stream<CounterSnapshot>.multi((final multi) {
+  return Stream<CounterSnapshot>.multi((multi) {
     if (repository._initialLoadHelper.hasResolvedInitialValue) {
       multi.add(repository._latestSnapshot);
     }
@@ -19,8 +19,8 @@ Stream<CounterSnapshot> _restCounterRepositoryWatch(
 }
 
 void _emitSnapshot(
-  final RestCounterRepository repository,
-  final CounterSnapshot snapshot,
+  RestCounterRepository repository,
+  CounterSnapshot snapshot,
 ) {
   final CounterSnapshot normalized = _storeSnapshot(repository, snapshot);
   if (!repository._watchController.isClosed) {
@@ -28,12 +28,12 @@ void _emitSnapshot(
   }
 }
 
-void _triggerInitialLoadIfNeeded(final RestCounterRepository repository) {
+void _triggerInitialLoadIfNeeded(RestCounterRepository repository) {
   unawaited(
     repository._initialLoadHelper.ensureInitialLoad(
       load: repository.load,
-      onValue: (final snapshot) => _emitSnapshot(repository, snapshot),
-      onError: (final error, final stackTrace) {
+      onValue: (snapshot) => _emitSnapshot(repository, snapshot),
+      onError: (error, stackTrace) {
         AppLogger.error(
           'RestCounterRepository.initialLoad failed',
           error,
@@ -47,7 +47,7 @@ void _triggerInitialLoadIfNeeded(final RestCounterRepository repository) {
   );
 }
 
-Future<void> _handleWatchCancel(final RestCounterRepository repository) async {
+Future<void> _handleWatchCancel(RestCounterRepository repository) async {
   if (repository._watchController.hasListener) {
     return;
   }

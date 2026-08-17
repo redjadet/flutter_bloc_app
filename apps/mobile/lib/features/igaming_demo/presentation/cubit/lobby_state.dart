@@ -8,6 +8,6 @@ part 'lobby_state.freezed.dart';
 abstract class LobbyState with _$LobbyState {
   const factory LobbyState.initial() = _LobbyInitial;
   const factory LobbyState.loading() = _LobbyLoading;
-  const factory LobbyState.ready(final DemoBalance balance) = _LobbyReady;
-  const factory LobbyState.error(final String message) = _LobbyError;
+  const factory LobbyState.ready(DemoBalance balance) = _LobbyReady;
+  const factory LobbyState.error(String message) = _LobbyError;
 }

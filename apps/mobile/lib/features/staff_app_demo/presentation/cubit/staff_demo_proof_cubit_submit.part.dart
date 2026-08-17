@@ -2,8 +2,8 @@ part of 'staff_demo_proof_cubit.dart';
 
 mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
   Future<void> submit({
-    required final String siteId,
-    required final String? shiftId,
+    required String siteId,
+    required String? shiftId,
   }) async {
     if (_submitInFlight || state.status == StaffDemoProofStatus.submitting) {
       return;
@@ -90,7 +90,7 @@ mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
           operation: () => Future<void>.error(error, stackTrace),
           isAlive: () => !isClosed,
           onSuccess: (_) {},
-          onError: (final message) {
+          onError: (message) {
             if (isClosed) return;
             emit(
               state.copyWith(

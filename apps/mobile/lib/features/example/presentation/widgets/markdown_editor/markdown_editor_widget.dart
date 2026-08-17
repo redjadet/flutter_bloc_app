@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_editor_field.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_preview.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_toolbar.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A markdown editor widget using a custom RenderObject for low-level text rendering.
 ///
@@ -35,10 +35,10 @@ class _MarkdownEditorWidgetState extends State<MarkdownEditorWidget> {
 
   void _togglePreview() => setState(() => _showPreview = !_showPreview);
 
-  void _onTextChanged(final String value) => setState(() {});
+  void _onTextChanged(String value) => setState(() {});
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
     children: <Widget>[
       MarkdownToolbar(
         showPreview: _showPreview,

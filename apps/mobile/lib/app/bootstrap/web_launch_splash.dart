@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart' show MyApp;
 import 'package:flutter_bloc_app/app/bootstrap/bootstrap_coordinator.dart'
     show BootstrapCoordinator;
 import 'package:flutter_bloc_app/app/config/app_constants.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Minimal first-paint UI shown on web while [BootstrapCoordinator] finishes.
 ///
@@ -12,7 +12,7 @@ class WebLaunchSplash extends StatelessWidget {
   const WebLaunchSplash({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ColorScheme colors = ColorScheme.fromSeed(
       seedColor: AppConstants.primarySeedColor,
     );

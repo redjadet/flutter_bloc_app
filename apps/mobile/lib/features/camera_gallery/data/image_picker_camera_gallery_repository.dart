@@ -13,9 +13,9 @@ import 'package:image_picker/image_picker.dart';
 
 class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
   ImagePickerCameraGalleryRepository({
-    final ImagePicker? picker,
-    final bool Function()? isAndroid,
-    final ImageProcessingCameraGalleryService? processingService,
+    ImagePicker? picker,
+    bool Function()? isAndroid,
+    ImageProcessingCameraGalleryService? processingService,
   }) : _picker = picker ?? ImagePicker(),
        _isAndroid = isAndroid ?? _defaultIsAndroid,
        _processingService =
@@ -37,8 +37,8 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
       _pickImage(source: ImageSource.gallery, isCamera: false);
 
   Future<CameraGalleryResult> _pickImage({
-    required final ImageSource source,
-    required final bool isCamera,
+    required ImageSource source,
+    required bool isCamera,
   }) async {
     try {
       final XFile? file = await _picker.pickImage(
@@ -79,7 +79,7 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
     }
   }
 
-  static String? _inferImageMimeType(final String filename) {
+  static String? _inferImageMimeType(String filename) {
     final String lower = filename.toLowerCase();
     if (lower.endsWith('.png')) return 'image/png';
     if (lower.endsWith('.gif')) return 'image/gif';
@@ -89,7 +89,7 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
     return null;
   }
 
-  CameraGalleryResult _mapPlatformException(final PlatformException error) {
+  CameraGalleryResult _mapPlatformException(PlatformException error) {
     final String code = error.code.toLowerCase();
     final String message = (error.message ?? '').toLowerCase();
 
@@ -124,8 +124,8 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
   /// Returns true if the error indicates no camera is available (e.g. iOS
   /// Simulator or Android emulator without camera).
   static bool _isCameraUnavailableCodeOrMessage(
-    final String code,
-    final String? message,
+    String code,
+    String? message,
   ) {
     final String lowerCode = code.toLowerCase();
     if (lowerCode == 'no_available_camera' ||
@@ -147,7 +147,7 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
 
   /// Maps non-PlatformException from pickFromCamera to a result so the app
   /// never crashes; treats camera-unavailable wording as cameraUnavailable.
-  CameraGalleryResult _mapCameraException(final Object error) {
+  CameraGalleryResult _mapCameraException(Object error) {
     final String message = error.toString();
     if (_isCameraUnavailableCodeOrMessage('', message)) {
       return const CameraGalleryResult.failure(
@@ -196,11 +196,11 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
 
   @override
   Future<CameraGalleryResult> processImage({
-    required final ImageProcessingFilter filter,
-    required final String sourcePath,
+    required ImageProcessingFilter filter,
+    required String sourcePath,
   }) => _processingService.process(filter: filter, sourcePath: sourcePath);
 
-  static String? _extractLostPath(final LostDataResponse response) {
+  static String? _extractLostPath(LostDataResponse response) {
     final String directPath = response.file?.path ?? '';
     if (directPath.isNotEmpty) {
       return directPath;

@@ -1,9 +1,9 @@
 part of 'offline_first_todo_repository.dart';
 
 bool _shouldMergeRemoteItem({
-  required final TodoItem? localItem,
-  required final TodoItem remoteItem,
-  required final bool Function(TodoItem? localItem, TodoItem remoteItem)
+  required TodoItem? localItem,
+  required TodoItem remoteItem,
+  required bool Function(TodoItem? localItem, TodoItem remoteItem)
   shouldApplyRemote,
 }) {
   if (localItem != null && localItem.updatedAt.isAfter(remoteItem.updatedAt)) {
@@ -20,12 +20,11 @@ bool _shouldMergeRemoteItem({
 }
 
 Future<void> _mergeRemoteIntoLocal(
-  final HiveTodoRepository localRepository,
-  final List<TodoItem> remoteItems,
-  final String Function() generateChangeId,
-  final bool Function(TodoItem? localItem, TodoItem remoteItem)
-  shouldApplyRemote, {
-  final bool Function()? shouldAbortMerge,
+  HiveTodoRepository localRepository,
+  List<TodoItem> remoteItems,
+  String Function() generateChangeId,
+  bool Function(TodoItem? localItem, TodoItem remoteItem) shouldApplyRemote, {
+  bool Function()? shouldAbortMerge,
 }) async {
   try {
     if (shouldAbortMerge?.call() ?? false) {
@@ -115,9 +114,9 @@ Future<void> _mergeRemoteIntoLocal(
 }
 
 TodoItem _normalizeItem(
-  final TodoItem item,
-  final TodoDataSource? remoteRepository,
-  final String Function() generateChangeId,
+  TodoItem item,
+  TodoDataSource? remoteRepository,
+  String Function() generateChangeId,
 ) {
   final DateTime now = DateTime.now().toUtc();
   final String changeId = item.changeId ?? generateChangeId();

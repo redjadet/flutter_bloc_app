@@ -5,7 +5,7 @@ extension on BackgroundSyncCoordinator {
     await _cancelNetworkSubscription();
     _networkSubscription = _networkStatusService.statusStream.listen(
       _handleNetworkStatusChanged,
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         _handleListenerError(
           logContext: 'BackgroundSyncCoordinator.networkSubscription failed',
           error: error,
@@ -23,7 +23,7 @@ extension on BackgroundSyncCoordinator {
     await _cancelEnqueueSubscription();
     _enqueueSubscription = _repository.onOperationEnqueued.listen(
       (_) => unawaited(_triggerSync(immediate: true)),
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         _handleListenerError(
           logContext: 'BackgroundSyncCoordinator.enqueueSubscription failed',
           error: error,
@@ -43,7 +43,7 @@ extension on BackgroundSyncCoordinator {
     await _cancelNetworkSubscription();
   }
 
-  void _handleNetworkStatusChanged(final NetworkStatus status) {
+  void _handleNetworkStatusChanged(NetworkStatus status) {
     if (status == NetworkStatus.online) {
       _requestImmediateSync();
     }
@@ -54,9 +54,9 @@ extension on BackgroundSyncCoordinator {
   }
 
   void _handleListenerError({
-    required final String logContext,
-    required final Object error,
-    required final StackTrace stackTrace,
+    required String logContext,
+    required Object error,
+    required StackTrace stackTrace,
   }) {
     AppLogger.error(logContext, error, stackTrace);
     _emit(SyncStatus.degraded);
@@ -78,7 +78,7 @@ extension on BackgroundSyncCoordinator {
     _enqueueSubscription = null;
   }
 
-  Future<void> _awaitInFlightSync(final Future<void>? inFlight) async {
+  Future<void> _awaitInFlightSync(Future<void>? inFlight) async {
     if (inFlight == null) {
       return;
     }

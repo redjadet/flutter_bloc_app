@@ -24,7 +24,7 @@ class SearchCubit extends Cubit<SearchState>
   TimerDisposable? _debounceHandle;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
 
-  void search(final String query) {
+  void search(String query) {
     _cancelDebounce();
     final int requestId = _requestIdGuard.next();
 
@@ -53,8 +53,8 @@ class SearchCubit extends Cubit<SearchState>
   }
 
   Future<void> _executeSearch(
-    final String query,
-    final int requestId,
+    String query,
+    int requestId,
   ) async {
     if (!_isRequestActive(requestId, query)) return;
     emit(
@@ -68,7 +68,7 @@ class SearchCubit extends Cubit<SearchState>
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.search(query),
       isAlive: () => !isClosed,
-      onSuccess: (final results) {
+      onSuccess: (results) {
         if (!_isRequestActive(requestId, query)) return;
         emit(
           state.copyWith(
@@ -79,7 +79,7 @@ class SearchCubit extends Cubit<SearchState>
           ),
         );
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (!_isRequestActive(requestId, query)) return;
         emit(
           state.copyWith(
@@ -99,7 +99,7 @@ class SearchCubit extends Cubit<SearchState>
     _debounceHandle = null;
   }
 
-  bool _isRequestActive(final int requestId, final String query) =>
+  bool _isRequestActive(int requestId, String query) =>
       !isClosed && _requestIdGuard.isCurrent(requestId) && state.query == query;
 
   @override

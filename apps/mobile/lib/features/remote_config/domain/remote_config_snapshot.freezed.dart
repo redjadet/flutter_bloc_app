@@ -90,8 +90,7 @@ extension RemoteConfigSnapshotPatterns on RemoteConfigSnapshot {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RemoteConfigSnapshot value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RemoteConfigSnapshot value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _RemoteConfigSnapshot() when $default != null:
 return $default(_that);case _:
@@ -112,8 +111,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RemoteConfigSnapshot value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RemoteConfigSnapshot value)  $default,){final _that = this;
 switch (_that) {
 case _RemoteConfigSnapshot():
 return $default(_that);case _:
@@ -133,8 +131,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RemoteConfigSnapshot value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RemoteConfigSnapshot value)?  $default,){final _that = this;
 switch (_that) {
 case _RemoteConfigSnapshot() when $default != null:
 return $default(_that);case _:
@@ -210,7 +207,7 @@ return $default(_that.values,_that.lastFetchedAt,_that.templateVersion,_that.dat
 
 
 class _RemoteConfigSnapshot extends RemoteConfigSnapshot {
-   _RemoteConfigSnapshot({required final  Map<String, dynamic> values, this.lastFetchedAt, this.templateVersion, this.dataSource, this.lastSyncedAt}): _values = values,super._();
+   _RemoteConfigSnapshot({required  Map<String, dynamic> values, this.lastFetchedAt, this.templateVersion, this.dataSource, this.lastSyncedAt}): _values = values,super._();
   
 
  final  Map<String, dynamic> _values;

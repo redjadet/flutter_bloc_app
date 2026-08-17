@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_c
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 part 'fcm_demo_page.part.dart';
@@ -21,8 +21,8 @@ class FcmDemoPage extends StatelessWidget {
   const FcmDemoPage({super.key});
 
   static String _permissionLabel(
-    final FcmPermissionState state,
-    final AppLocalizations l10n,
+    FcmPermissionState state,
+    AppLocalizations l10n,
   ) {
     return switch (state) {
       FcmPermissionState.notDetermined => l10n.fcmDemoPermissionNotDetermined,
@@ -33,7 +33,7 @@ class FcmDemoPage extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.fcmDemoPageTitle,
@@ -49,14 +49,14 @@ class _FcmDemoBody extends StatelessWidget {
   const _FcmDemoBody();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final viewState = context
         .selectState<
           FcmDemoCubit,
           FcmDemoState,
           ({FcmDemoStatus status, String? errorMessage})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             status: state.status,
             errorMessage: state.errorMessage,
           ),
@@ -84,12 +84,12 @@ class _FcmDemoBody extends StatelessWidget {
         SizedBox(height: context.responsiveGapM),
         _TokenSectionContainer(
           label: context.l10n.fcmDemoFcmTokenLabel,
-          selector: (final state) => state.fcmToken,
+          selector: (state) => state.fcmToken,
         ),
         SizedBox(height: context.responsiveGapS),
         _TokenSectionContainer(
           label: context.l10n.fcmDemoApnsTokenLabel,
-          selector: (final state) => state.apnsToken,
+          selector: (state) => state.apnsToken,
         ),
         SizedBox(height: context.responsiveGapM),
         const _LastMessageSectionContainer(),
@@ -116,11 +116,11 @@ class _PermissionSection extends StatelessWidget {
   const _PermissionSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final permissionState = context
         .selectState<FcmDemoCubit, FcmDemoState, FcmPermissionState>(
-          selector: (final state) => state.permissionState,
+          selector: (state) => state.permissionState,
         );
 
     return CommonCard(
@@ -153,7 +153,7 @@ class _TokenSectionContainer extends StatelessWidget {
   final String? Function(FcmDemoState state) selector;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final value = context.selectState<FcmDemoCubit, FcmDemoState, String?>(
       selector: selector,
     );
@@ -165,10 +165,10 @@ class _LastMessageSectionContainer extends StatelessWidget {
   const _LastMessageSectionContainer();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final message = context
         .selectState<FcmDemoCubit, FcmDemoState, PushMessage?>(
-          selector: (final state) => state.lastMessage,
+          selector: (state) => state.lastMessage,
         );
     return _LastMessageSection(message: message, l10n: context.l10n);
   }

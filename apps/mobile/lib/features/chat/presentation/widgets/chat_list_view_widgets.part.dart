@@ -12,7 +12,7 @@ class _ChatLoadedList extends StatelessWidget {
   final void Function(ChatContact contact) onContactLongPress;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (contacts.isEmpty) {
       return CommonEmptyState(
         message: context.l10n.chatHistoryEmpty,
@@ -33,8 +33,8 @@ class _ChatLoadedList extends StatelessWidget {
         scrollCacheExtent: const ScrollCacheExtent.pixels(500),
         padding: safeListPadding,
         itemCount: contacts.length,
-        separatorBuilder: (final context, final index) => const _ChatDivider(),
-        itemBuilder: (final context, final index) {
+        separatorBuilder: (context, index) => const _ChatDivider(),
+        itemBuilder: (context, index) {
           final contact = contacts[index];
           return _ChatContactListItem(
             key: ValueKey<String>('chat-contact-row-${contact.id}'),
@@ -67,7 +67,7 @@ class _ChatContactListItem extends StatelessWidget {
   final void Function(ChatContact contact) onLongPress;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return RepaintBoundary(
       key: ValueKey<String>('chat-contact-${contact.id}'),
       child: Column(
@@ -96,7 +96,7 @@ class _ChatListErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(final BuildContext context) => CommonErrorView(
+  Widget build(BuildContext context) => CommonErrorView(
     message: message,
     onRetry: onRetry,
   );

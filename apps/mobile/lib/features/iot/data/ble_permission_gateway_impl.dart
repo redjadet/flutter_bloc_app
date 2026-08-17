@@ -45,7 +45,7 @@ class BlePermissionGatewayImpl implements BlePermissionGateway {
     final Map<Permission, PermissionStatus> statuses = await permissions
         .request();
     return statuses.values.every(
-      (final status) => status.isGranted || status.isLimited,
+      (status) => status.isGranted || status.isLimited,
     );
   }
 

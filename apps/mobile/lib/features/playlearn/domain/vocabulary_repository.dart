@@ -7,5 +7,5 @@ abstract class VocabularyRepository {
   List<TopicItem> getTopics();
 
   /// Returns vocabulary items for the given topic ID.
-  List<VocabularyItem> getWordsByTopic(final String topicId);
+  List<VocabularyItem> getWordsByTopic(String topicId);
 }

@@ -4,7 +4,6 @@ import 'package:confetti/confetti.dart';
 import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 part 'counter_page_content.dart';
@@ -100,7 +100,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(final AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     if (!mounted) {
       return;
     }
@@ -120,7 +120,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final GoRouter? router = GoRouter.maybeOf(context);
     if (router == null) {
       return MultiBlocListener(
@@ -157,7 +157,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   List<TypeSafeBlocListener<CounterCubit, CounterState>> _buildListeners() =>
       _listenerDelegate.buildListeners();
 
-  Future<void> _handleOpenSettings(final BuildContext context) async {
+  Future<void> _handleOpenSettings(BuildContext context) async {
     final l10n = context.l10n;
     if (kIsWeb) {
       unawaited(

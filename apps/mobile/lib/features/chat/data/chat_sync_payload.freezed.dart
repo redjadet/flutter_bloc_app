@@ -92,8 +92,7 @@ extension ChatSyncPayloadPatterns on ChatSyncPayload {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatSyncPayload value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatSyncPayload value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ChatSyncPayload() when $default != null:
 return $default(_that);case _:
@@ -114,8 +113,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatSyncPayload value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatSyncPayload value)  $default,){final _that = this;
 switch (_that) {
 case _ChatSyncPayload():
 return $default(_that);case _:
@@ -135,8 +133,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatSyncPayload value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatSyncPayload value)?  $default,){final _that = this;
 switch (_that) {
 case _ChatSyncPayload() when $default != null:
 return $default(_that);case _:
@@ -212,7 +209,7 @@ return $default(_that.conversationId,_that.prompt,_that.pastUserInputs,_that.gen
 
 
 class _ChatSyncPayload extends ChatSyncPayload {
-  const _ChatSyncPayload({required this.conversationId, required this.prompt, required final  List<String> pastUserInputs, required final  List<String> generatedResponses, required this.model, required this.clientMessageId, required this.createdAt}): _pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
+  const _ChatSyncPayload({required this.conversationId, required this.prompt, required  List<String> pastUserInputs, required  List<String> generatedResponses, required this.model, required this.clientMessageId, required this.createdAt}): _pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
   
 
 @override final  String conversationId;

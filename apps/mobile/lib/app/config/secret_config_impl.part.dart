@@ -112,7 +112,7 @@ class SecretConfig {
   static String? get supabaseFirebaseProjectId => _supabaseFirebaseProjectId;
 
   static SecretStorage? get storage => _configuredStorage;
-  static set storage(final SecretStorage storage) {
+  static set storage(SecretStorage storage) {
     _configuredStorage = storage;
   }
 
@@ -138,10 +138,10 @@ class SecretConfig {
   /// This intentionally overwrites existing in-memory values when non-empty
   /// values are provided, to support rotation via `version`.
   static void applySupabaseConfig({
-    required final String supabaseUrl,
-    required final String supabaseAnonKey,
-    required final String version,
-    final String? firebaseProjectId,
+    required String supabaseUrl,
+    required String supabaseAnonKey,
+    required String version,
+    String? firebaseProjectId,
   }) {
     final String url = supabaseUrl.trim();
     final String key = supabaseAnonKey.trim();
@@ -163,11 +163,11 @@ class SecretConfig {
   }
 
   static Future<void> persistSupabaseConfig(
-    final SecretStorage storage, {
-    required final String supabaseUrl,
-    required final String supabaseAnonKey,
-    required final String version,
-    final String? firebaseProjectId,
+    SecretStorage storage, {
+    required String supabaseUrl,
+    required String supabaseAnonKey,
+    required String version,
+    String? firebaseProjectId,
   }) async {
     final String url = supabaseUrl.trim();
     final String key = supabaseAnonKey.trim();
@@ -189,7 +189,7 @@ class SecretConfig {
     });
   }
 
-  static Future<void> clearSupabaseConfig(final SecretStorage storage) async {
+  static Future<void> clearSupabaseConfig(SecretStorage storage) async {
     await storage.withoutLogsAsync(() async {
       await storage.delete(_keySupabaseUrl);
       await storage.delete(_keySupabaseAnonKey);
@@ -203,8 +203,8 @@ class SecretConfig {
   );
 
   static Future<void> load({
-    final bool? persistToSecureStorage,
-    final bool allowAssetFallback = false,
+    bool? persistToSecureStorage,
+    bool allowAssetFallback = false,
   }) async {
     if (_loaded) return;
 
@@ -281,7 +281,7 @@ class SecretConfig {
     }
   }
 
-  static void _logHuggingFaceTokenDiagnostics({required final String source}) {
+  static void _logHuggingFaceTokenDiagnostics({required String source}) {
     if (kReleaseMode) {
       // Never log any token material in release builds (even masked).
       return;

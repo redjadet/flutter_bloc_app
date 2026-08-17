@@ -1,9 +1,9 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/config/supabase_config_provider.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -34,16 +34,16 @@ class _FakeRemoteConfigService implements RemoteConfigService {
   Future<void> clearCache() async {}
 
   @override
-  bool getBool(final String key) => (_values[key] as bool?) ?? false;
+  bool getBool(String key) => (_values[key] as bool?) ?? false;
 
   @override
-  String getString(final String key) => (_values[key] as String?) ?? '';
+  String getString(String key) => (_values[key] as String?) ?? '';
 
   @override
-  int getInt(final String key) => (_values[key] as int?) ?? 0;
+  int getInt(String key) => (_values[key] as int?) ?? 0;
 
   @override
-  double getDouble(final String key) => (_values[key] as double?) ?? 0.0;
+  double getDouble(String key) => (_values[key] as double?) ?? 0.0;
 }
 
 void main() {
@@ -52,8 +52,10 @@ void main() {
   setUp(() {
     SecretConfig.resetForTest();
     SupabaseBootstrapService.resetForTest();
-    SupabaseBootstrapService.initializeClient =
-        ({required final url, required final anonKey}) async {};
+    SupabaseBootstrapService.initializeClient = ({
+      required url,
+      required anonKey,
+    }) async {};
   });
 
   test('fetches remote config payload and persists + applies config', () async {

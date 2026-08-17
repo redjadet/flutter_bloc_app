@@ -15,7 +15,7 @@ class _CalculatorButton extends StatelessWidget {
   final _CalculatorPalette palette;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final _CalculatorButtonStyle style = palette.styleFor(config.type);
     final bool triggersEvaluation = config.command is EvaluateCommand;
     final ThemeData theme = Theme.of(context);
@@ -29,7 +29,7 @@ class _CalculatorButton extends StatelessWidget {
     }
 
     final Widget label = LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final double cellSize = math.min(
           constraints.maxWidth,
           constraints.maxHeight,
@@ -128,7 +128,7 @@ class _CalculatorPalette {
     required this.borderColor,
   });
 
-  factory _CalculatorPalette.fromTheme(final ThemeData theme) {
+  factory _CalculatorPalette.fromTheme(ThemeData theme) {
     final ColorScheme colors = theme.colorScheme;
     return _CalculatorPalette(
       number: _CalculatorButtonStyle(
@@ -152,7 +152,7 @@ class _CalculatorPalette {
   final _CalculatorButtonStyle operation;
   final Color borderColor;
 
-  _CalculatorButtonStyle styleFor(final _ButtonType type) => switch (type) {
+  _CalculatorButtonStyle styleFor(_ButtonType type) => switch (type) {
     _ButtonType.number => number,
     _ButtonType.function => function,
     _ButtonType.operation => operation,

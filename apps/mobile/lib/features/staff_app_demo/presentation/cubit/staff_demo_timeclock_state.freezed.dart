@@ -89,8 +89,7 @@ extension StaffDemoTimeclockStatePatterns on StaffDemoTimeclockState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoTimeclockState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoTimeclockState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _StaffDemoTimeclockState() when $default != null:
 return $default(_that);case _:
@@ -111,8 +110,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoTimeclockState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoTimeclockState value)  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoTimeclockState():
 return $default(_that);case _:
@@ -132,8 +130,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoTimeclockState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoTimeclockState value)?  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoTimeclockState() when $default != null:
 return $default(_that);case _:

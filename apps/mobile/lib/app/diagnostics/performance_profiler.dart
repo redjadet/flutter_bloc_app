@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/diagnostics/performance_profiler_internal.dart';
 import 'package:flutter_bloc_app/app/diagnostics/performance_profiler_report.dart';
 import 'package:flutter_bloc_app/app/diagnostics/performance_profiler_stats.dart';
 import 'package:flutter_bloc_app/app/diagnostics/performance_profiler_widget.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Performance profiler for tracking widget rebuilds and frame performance.
 ///
@@ -32,7 +32,7 @@ class PerformanceProfiler {
   static bool get enabled => _enabled;
 
   /// Enable or disable performance profiling.
-  static void setEnabled({required final bool enabled}) {
+  static void setEnabled({required bool enabled}) {
     _enabled = enabled;
     if (!enabled) {
       _rebuildCounts.clear();
@@ -47,8 +47,8 @@ class PerformanceProfiler {
   /// PerformanceProfiler.trackWidget('CounterDisplay', () => CounterDisplay());
   /// ```
   static Widget trackWidget(
-    final String name,
-    final Widget Function() builder,
+    String name,
+    Widget Function() builder,
   ) {
     if (!_enabled) {
       return builder();
@@ -68,7 +68,7 @@ class PerformanceProfiler {
   ///   // Expensive operation
   /// });
   /// ```
-  static T trackFrame<T>(final T Function() operation) {
+  static T trackFrame<T>(T Function() operation) {
     if (!_enabled) {
       return operation();
     }
@@ -91,7 +91,7 @@ class PerformanceProfiler {
   /// });
   /// ```
   static Future<T> trackFrameAsync<T>(
-    final Future<T> Function() operation,
+    Future<T> Function() operation,
   ) async {
     if (!_enabled) {
       return operation();
@@ -107,7 +107,7 @@ class PerformanceProfiler {
   }
 
   /// Get rebuild statistics for a widget.
-  static WidgetRebuildInfo? getRebuildInfo(final String name) {
+  static WidgetRebuildInfo? getRebuildInfo(String name) {
     if (_rebuildCounts[name] case final info?) {
       return WidgetRebuildInfo(
         name: info.name,
@@ -121,7 +121,7 @@ class PerformanceProfiler {
   /// Get all rebuild statistics.
   static Map<String, WidgetRebuildInfo> getAllRebuildStats() =>
       _rebuildCounts.map(
-        (final key, final value) => MapEntry(
+        (key, value) => MapEntry(
           key,
           WidgetRebuildInfo(
             name: value.name,
@@ -142,10 +142,10 @@ class PerformanceProfiler {
       );
     }
 
-    final times = _frameTimes.map((final f) => f.microseconds).toList();
-    final average = times.reduce((final a, final b) => a + b) / times.length;
-    final max = times.reduce((final a, final b) => a > b ? a : b);
-    final min = times.reduce((final a, final b) => a < b ? a : b);
+    final times = _frameTimes.map((f) => f.microseconds).toList();
+    final average = times.reduce((a, b) => a + b) / times.length;
+    final max = times.reduce((a, b) => a > b ? a : b);
+    final min = times.reduce((a, b) => a < b ? a : b);
 
     return FrameStats(
       averageFrameTime: average,
@@ -175,7 +175,7 @@ class PerformanceProfiler {
   }
 
   /// Records a widget rebuild (internal use only).
-  static void recordRebuild(final String name, final Duration duration) {
+  static void recordRebuild(String name, Duration duration) {
     final info = _rebuildCounts.putIfAbsent(
       name,
       () => WidgetRebuildInfoInternal(name: name),
@@ -184,7 +184,7 @@ class PerformanceProfiler {
     info.lastRebuildTime = duration.inMicroseconds / 1000;
   }
 
-  static void _recordFrameTime(final int microseconds) {
+  static void _recordFrameTime(int microseconds) {
     _frameTimes.add(
       _FrameInfo(
         microseconds: microseconds,

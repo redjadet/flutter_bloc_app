@@ -1,6 +1,6 @@
 part of 'network_error_mapper.dart';
 
-AppError _getAppError(final dynamic error) {
+AppError _getAppError(dynamic error) {
   if (error == null) {
     return const UnknownError(message: 'An unknown error occurred');
   }
@@ -23,7 +23,7 @@ AppError _getAppError(final dynamic error) {
   );
 }
 
-AppError _getAppErrorFromDio(final DioException error) {
+AppError _getAppErrorFromDio(DioException error) {
   final int? statusCode = error.response?.statusCode;
   if (statusCode != null) {
     return appErrorFromHttpStatus(
@@ -60,8 +60,8 @@ AppError _getAppErrorFromDio(final DioException error) {
 }
 
 AppError _getAppErrorFromStringHeuristics(
-  final dynamic error,
-  final String errorString,
+  dynamic error,
+  String errorString,
 ) {
   if (_containsNetworkHint(errorString)) {
     return _networkError(
@@ -137,8 +137,8 @@ AppError _getAppErrorFromStringHeuristics(
 }
 
 String _getErrorMessage(
-  final dynamic error, {
-  final AppLocalizations? l10n,
+  dynamic error, {
+  AppLocalizations? l10n,
 }) {
   if (error is HttpRequestFailure) {
     return _getHttpRequestFailureMessage(error, l10n: l10n);
@@ -171,8 +171,8 @@ String _getErrorMessage(
 }
 
 String _getHttpRequestFailureMessage(
-  final HttpRequestFailure error, {
-  final AppLocalizations? l10n,
+  HttpRequestFailure error, {
+  AppLocalizations? l10n,
 }) {
   if (_hasExplicitStatusMessage(error.statusCode)) {
     final String? statusMessage = _getMessageForStatusCode(
@@ -201,9 +201,9 @@ String _getHttpRequestFailureMessage(
 }
 
 NetworkError _networkError({
-  required final NetworkErrorKind kind,
-  required final Object? cause,
-  final String? message,
+  required NetworkErrorKind kind,
+  required Object? cause,
+  String? message,
 }) {
   return NetworkError(
     message: message ?? (_networkMessage(kind) ?? 'Something went wrong.'),
@@ -213,8 +213,8 @@ NetworkError _networkError({
 }
 
 AuthError _authError({
-  required final AuthErrorKind kind,
-  required final Object? cause,
+  required AuthErrorKind kind,
+  required Object? cause,
 }) {
   return AuthError(
     message: _authMessage(kind),

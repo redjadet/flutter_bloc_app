@@ -15,12 +15,12 @@ mixin StateRestorationMixin<S> on Cubit<S> {
   /// optional persistence.
   @protected
   Future<void> applyRestorationOutcome(
-    final StateRestorationOutcome<S> outcome, {
-    final FutureOr<void> Function(S state)? onPersist,
-    final void Function({required bool holdSideEffects})? onHoldChanged,
-    final void Function()? onHoldSideEffects,
-    final void Function(S state)? onAfterEmit,
-    final String logContext = 'StateRestorationMixin.applyRestorationOutcome',
+    StateRestorationOutcome<S> outcome, {
+    FutureOr<void> Function(S state)? onPersist,
+    void Function({required bool holdSideEffects})? onHoldChanged,
+    void Function()? onHoldSideEffects,
+    void Function(S state)? onAfterEmit,
+    String logContext = 'StateRestorationMixin.applyRestorationOutcome',
   }) async {
     onHoldChanged?.call(holdSideEffects: outcome.holdSideEffects);
     if (outcome.holdSideEffects) {

@@ -4,7 +4,7 @@ void registerTodoListFilterIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Todo list flow',
     testName: 'filters completed vs active todos',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Todo List Demo');
@@ -104,7 +104,7 @@ void registerSearchEmptyResultsIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Search flow',
     testName: 'shows empty state when no results match query',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Search Demo');
@@ -113,7 +113,7 @@ void registerSearchEmptyResultsIntegrationFlow() {
       // Enter a query unlikely to have results
       final Finder searchField = find
           .byWidgetPredicate(
-            (final w) => w is TextField || w is CupertinoTextField,
+            (w) => w is TextField || w is CupertinoTextField,
           )
           .first;
       await tester.enterText(searchField, 'zzzz-not-found-query');
@@ -131,7 +131,7 @@ void registerSettingsThemePersistenceIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Settings flow',
     testName: 'persists theme and locale after navigating away and back',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester, ensureSignedIn: true);
 
       await pumpUntilFound(tester, find.byTooltip('Open settings'));
@@ -187,7 +187,7 @@ void registerGraphqlNetworkRetryIntegrationFlow() {
     options: const IntegrationDependencyOptions(
       graphqlFailOnceThenSuccess: true,
     ),
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Explore GraphQL sample');

@@ -56,7 +56,7 @@ class RepositoryWatchHelper<T> {
   T? get cachedValue => _cachedValue;
 
   /// Sets the cached value.
-  set cachedValue(final T value) => _cachedValue = value;
+  set cachedValue(T value) => _cachedValue = value;
 
   /// Gets the stream for watching values.
   ///
@@ -75,8 +75,8 @@ class RepositoryWatchHelper<T> {
   /// If the controller was already created (e.g., by accessing [stream]),
   /// this method will recreate it with the proper callbacks.
   void createWatchController({
-    required final void Function() onListen,
-    required final Future<void> Function() onCancel,
+    required void Function() onListen,
+    required Future<void> Function() onCancel,
   }) {
     // If controller exists but wasn't initialized with callbacks, close and recreate
     final StreamController<T>? existing = _watchController;
@@ -190,7 +190,7 @@ class RepositoryWatchHelper<T> {
   /// Emits a value to all active stream listeners.
   ///
   /// Caches the value and safely adds it to the stream controller.
-  void emitValue(final T value) {
+  void emitValue(T value) {
     _cachedValue = value;
     final StreamController<T>? controller = _watchController;
     if (controller case final activeController?) {

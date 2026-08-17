@@ -31,7 +31,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         return (continents: continents, countries: countries);
       },
       isAlive: () => !isClosed,
-      onSuccess: (final result) {
+      onSuccess: (result) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         _emitSuccess(
           continents: result.continents,
@@ -39,11 +39,11 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
-      onAppError: (final appError) {
+      onAppError: (appError) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         latestError = appError;
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         _emitError(
           message: message,
@@ -53,7 +53,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       },
       logContext: 'GraphqlDemoCubit.loadInitial',
       specificExceptionHandlers: {
-        GraphqlDemoException: (final error, final stackTrace) {
+        GraphqlDemoException: (error, stackTrace) {
           if (isClosed || !_loadGuard.isCurrent(requestId)) return;
           final GraphqlDemoException exception = error as GraphqlDemoException;
           _emitError(
@@ -73,8 +73,8 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   }
 
   Future<void> selectContinent(
-    final String? continentCode, {
-    final bool force = false,
+    String? continentCode, {
+    bool force = false,
   }) async {
     if (isClosed) return;
     if (!force &&
@@ -93,7 +93,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         continentCode: continentCode,
       ),
       isAlive: () => !isClosed,
-      onSuccess: (final countries) {
+      onSuccess: (countries) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         _emitSuccess(
           countries: countries,
@@ -102,11 +102,11 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
-      onAppError: (final appError) {
+      onAppError: (appError) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         latestError = appError;
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         _emitError(
           message: message,
@@ -116,7 +116,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       },
       logContext: 'GraphqlDemoCubit.selectContinent',
       specificExceptionHandlers: {
-        GraphqlDemoException: (final error, final stackTrace) {
+        GraphqlDemoException: (error, stackTrace) {
           if (isClosed || !_loadGuard.isCurrent(requestId)) return;
           final GraphqlDemoException exception = error as GraphqlDemoException;
           _emitError(
@@ -130,8 +130,8 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   }
 
   void _emitLoading({
-    final String? activeContinentCode,
-    final bool shouldUpdateActiveContinent = false,
+    String? activeContinentCode,
+    bool shouldUpdateActiveContinent = false,
   }) {
     if (isClosed) return;
     emit(
@@ -148,11 +148,11 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   }
 
   void _emitSuccess({
-    final List<GraphqlCountry>? countries,
-    final List<GraphqlContinent>? continents,
-    final String? activeContinentCode,
-    final GraphqlDataSource? source,
-    final bool shouldUpdateActiveContinent = false,
+    List<GraphqlCountry>? countries,
+    List<GraphqlContinent>? continents,
+    String? activeContinentCode,
+    GraphqlDataSource? source,
+    bool shouldUpdateActiveContinent = false,
   }) {
     final List<GraphqlCountry> resolvedCountries = countries != null
         ? List<GraphqlCountry>.unmodifiable(countries)
@@ -178,9 +178,9 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   }
 
   void _emitError({
-    required final String? message,
-    required final GraphqlDemoErrorType? type,
-    final AppError? lastError,
+    required String? message,
+    required GraphqlDemoErrorType? type,
+    AppError? lastError,
   }) {
     if (isClosed) return;
     emit(

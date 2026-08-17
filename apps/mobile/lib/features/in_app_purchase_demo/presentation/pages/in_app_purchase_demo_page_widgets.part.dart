@@ -12,12 +12,12 @@ class _DemoControls extends StatelessWidget {
   final IapDemoForcedOutcome selected;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final List<DropdownMenuItem<IapDemoForcedOutcome>> items =
         IapDemoForcedOutcome.values
             .map(
-              (final o) => DropdownMenuItem(
+              (o) => DropdownMenuItem(
                 value: o,
                 child: Text(o.name),
               ),
@@ -31,7 +31,7 @@ class _DemoControls extends StatelessWidget {
           value: selected,
           items: items,
           onChanged: enabled
-              ? (final v) {
+              ? (v) {
                   if (v == null) return;
                   cubit.setForcedOutcome(v);
                 }
@@ -57,7 +57,7 @@ class _ProductSection extends StatelessWidget {
   final bool isBusy;
   final Future<void> Function(IapProduct) onBuy;
 
-  bool _isOwned(final IapProduct p) {
+  bool _isOwned(IapProduct p) {
     switch (p.type) {
       case IapProductType.consumable:
         return false;
@@ -69,7 +69,7 @@ class _ProductSection extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

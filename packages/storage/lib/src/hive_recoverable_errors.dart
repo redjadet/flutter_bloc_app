@@ -1,5 +1,5 @@
 /// Hive encryption / schema mismatch signals that warrant box recovery.
-bool isRecoverableHiveFailure(final Object error) {
+bool isRecoverableHiveFailure(Object error) {
   final String message = error.toString().toLowerCase();
   return message.contains('corrupted pad block') ||
       message.contains('invalid or corrupted pad') ||

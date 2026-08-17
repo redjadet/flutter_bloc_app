@@ -1,5 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
@@ -8,9 +8,9 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_conte
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_line_graph.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   final List<ChartPoint> samplePoints = <ChartPoint>[
@@ -114,7 +114,7 @@ void main() {
   ) async {
     final List<ChartPoint> manyPoints = List<ChartPoint>.generate(
       400,
-      (final i) => ChartPoint(
+      (i) => ChartPoint(
         date: DateTime.utc(2024, 1, 1).add(Duration(days: i)),
         value: i.toDouble(),
       ),

@@ -1,25 +1,25 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/app_constants.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-
-import 'test_helpers.dart' as test_helpers;
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 // Import test helpers directly for convenience
 import 'test_helpers.dart' show FakeTimerService;
+import 'test_helpers.dart' as test_helpers;
 
 class _FakeCounterRepository
     with CounterRepositoryNoPendingSync
@@ -96,7 +96,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 
@@ -114,9 +114,8 @@ class _FakeErrorNotificationService implements ErrorNotificationService {
 
   @override
   Future<void> showSnackBar(BuildContext context, String message) async {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
     await Future<void>.delayed(const Duration(milliseconds: 50));
   }
 }
@@ -143,7 +142,7 @@ Widget _buildApp(GoRouter router) => ScreenUtilInit(
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(useMaterial3: true),
     ),

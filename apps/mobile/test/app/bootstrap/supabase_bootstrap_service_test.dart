@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -28,7 +28,7 @@ void main() {
   test('initializeSupabase skips when secrets are missing', () async {
     var callCount = 0;
     SupabaseBootstrapService.initializeClient =
-        ({required final String url, required final String anonKey}) async {
+        ({required String url, required String anonKey}) async {
           callCount++;
         };
 
@@ -43,7 +43,7 @@ void main() {
     final completer = Completer<void>();
     var callCount = 0;
     SupabaseBootstrapService.initializeClient =
-        ({required final String url, required final String anonKey}) async {
+        ({required String url, required String anonKey}) async {
           callCount++;
           await completer.future;
         };
@@ -71,7 +71,7 @@ void main() {
     var callCount = 0;
     var shouldFail = true;
     SupabaseBootstrapService.initializeClient =
-        ({required final String url, required final String anonKey}) async {
+        ({required String url, required String anonKey}) async {
           callCount++;
           if (shouldFail) {
             throw StateError('boom');
@@ -99,27 +99,27 @@ class _MemorySecretStorage implements SecretStorage {
   final Map<String, String> _values = <String, String>{};
 
   @override
-  Future<void> delete(final String key) async {
+  Future<void> delete(String key) async {
     _values.remove(key);
   }
 
   @override
-  Future<String?> read(final String key) async => _values[key];
+  Future<String?> read(String key) async => _values[key];
 
   @override
-  Future<Result<String?>> readResult(final String key) async =>
+  Future<Result<String?>> readResult(String key) async =>
       Success<String?>(_values[key]);
 
   @override
-  Future<void> write(final String key, final String value) async {
+  Future<void> write(String key, String value) async {
     _values[key] = value;
   }
 
   @override
-  T withoutLogs<T>(final T Function() action) => action();
+  T withoutLogs<T>(T Function() action) => action();
 
   @override
-  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) => action();
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) => action();
 }
 
 class _FakeAssetBundle extends CachingAssetBundle {
@@ -130,7 +130,7 @@ class _FakeAssetBundle extends CachingAssetBundle {
   final String? _response;
 
   @override
-  Future<ByteData> load(final String key) async {
+  Future<ByteData> load(String key) async {
     if (_response == null) {
       throw FlutterError('Asset $key missing');
     }
@@ -139,7 +139,7 @@ class _FakeAssetBundle extends CachingAssetBundle {
   }
 
   @override
-  Future<String> loadString(final String key, {final bool cache = true}) async {
+  Future<String> loadString(String key, {bool cache = true}) async {
     if (_response == null) {
       throw FlutterError('Asset $key missing');
     }

@@ -18,7 +18,7 @@ class LoadCertificatePinPolicySummaryUseCase {
   final CertificatePinPolicySummaryBuilder _build;
 
   CertificatePinPolicySummary call(
-    final CertificatePinningConfig config, {
-    required final bool canOpenMutableDemo,
+    CertificatePinningConfig config, {
+    required bool canOpenMutableDemo,
   }) => _build(config, canOpenMutableDemo: canOpenMutableDemo);
 }

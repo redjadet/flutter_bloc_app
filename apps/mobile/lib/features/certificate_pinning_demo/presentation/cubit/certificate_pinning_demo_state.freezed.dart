@@ -91,8 +91,7 @@ extension CertificatePinningDemoStatePatterns on CertificatePinningDemoState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CertificatePinningDemoState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CertificatePinningDemoState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _CertificatePinningDemoState() when $default != null:
 return $default(_that);case _:
@@ -113,8 +112,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CertificatePinningDemoState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CertificatePinningDemoState value)  $default,){final _that = this;
 switch (_that) {
 case _CertificatePinningDemoState():
 return $default(_that);}
@@ -131,8 +129,7 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CertificatePinningDemoState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CertificatePinningDemoState value)?  $default,){final _that = this;
 switch (_that) {
 case _CertificatePinningDemoState() when $default != null:
 return $default(_that);case _:
@@ -205,7 +202,7 @@ return $default(_that.mode,_that.scenario,_that.status,_that.matchKind,_that.fai
 
 
 class _CertificatePinningDemoState implements CertificatePinningDemoState {
-  const _CertificatePinningDemoState({required this.mode, required this.scenario, this.status = CertificatePinningDemoStatus.initial, this.matchKind, this.failure, final  List<String> logLines = const <String>[]}): _logLines = logLines;
+  const _CertificatePinningDemoState({required this.mode, required this.scenario, this.status = CertificatePinningDemoStatus.initial, this.matchKind, this.failure, List<String> logLines = const <String>[]}): _logLines = logLines;
   
 
 @override final  CertificatePinningMode mode;

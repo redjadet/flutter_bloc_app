@@ -39,19 +39,15 @@ void main() {
       expect(
         repository.currentUser,
         isA<AuthUser>()
-            .having((final AuthUser user) => user.id, 'id', 'user-1')
+            .having((AuthUser user) => user.id, 'id', 'user-1')
+            .having((AuthUser user) => user.email, 'email', 'user@example.com')
             .having(
-              (final AuthUser user) => user.email,
-              'email',
-              'user@example.com',
-            )
-            .having(
-              (final AuthUser user) => user.displayName,
+              (AuthUser user) => user.displayName,
               'displayName',
               'Test User',
             )
             .having(
-              (final AuthUser user) => user.isAnonymous,
+              (AuthUser user) => user.isAnonymous,
               'isAnonymous',
               isFalse,
             ),
@@ -113,7 +109,7 @@ void main() {
         repository.authStateChanges,
         emitsInOrder(<Object?>[
           isA<AuthUser>().having(
-            (final AuthUser user) => user.displayName,
+            (AuthUser user) => user.displayName,
             'displayName',
             'Stream User',
           ),
@@ -127,10 +123,7 @@ void main() {
       final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
         isConfiguredOverride: () => true,
         signInWithPasswordImpl:
-            ({
-              required final String email,
-              required final String password,
-            }) async {
+            ({required String email, required String password}) async {
               expect(email, 'user@example.com');
               expect(password, 'secret');
               throw const AuthException(
@@ -148,12 +141,12 @@ void main() {
         throwsA(
           isA<SupabaseAuthException>()
               .having(
-                (final SupabaseAuthException error) => error.code,
+                (SupabaseAuthException error) => error.code,
                 'code',
                 SupabaseAuthErrorCode.invalidCredentials,
               )
               .having(
-                (final SupabaseAuthException error) => error.message,
+                (SupabaseAuthException error) => error.message,
                 'message',
                 'Invalid login credentials',
               ),
@@ -166,9 +159,9 @@ void main() {
         isConfiguredOverride: () => true,
         signUpImpl:
             ({
-              required final String email,
-              required final String password,
-              final Map<String, dynamic>? data,
+              required String email,
+              required String password,
+              Map<String, dynamic>? data,
             }) async {
               expect(email, 'user@example.com');
               expect(password, 'secret');
@@ -187,7 +180,7 @@ void main() {
         ),
         throwsA(
           isA<SupabaseAuthException>().having(
-            (final SupabaseAuthException error) => error.code,
+            (SupabaseAuthException error) => error.code,
             'code',
             SupabaseAuthErrorCode.network,
           ),
@@ -203,9 +196,9 @@ void main() {
               isConfiguredOverride: () => true,
               signUpImpl:
                   ({
-                    required final String email,
-                    required final String password,
-                    final Map<String, dynamic>? data,
+                    required String email,
+                    required String password,
+                    Map<String, dynamic>? data,
                   }) async {
                     expect(email, 'user@example.com');
                     expect(password, 'secret');
@@ -226,10 +219,7 @@ void main() {
       final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
         isConfiguredOverride: () => true,
         signInWithPasswordImpl:
-            ({
-              required final String email,
-              required final String password,
-            }) async {
+            ({required String email, required String password}) async {
               throw failure;
             },
       );
@@ -242,12 +232,12 @@ void main() {
         throwsA(
           isA<SupabaseAuthException>()
               .having(
-                (final SupabaseAuthException error) => error.message,
+                (SupabaseAuthException error) => error.message,
                 'message',
                 'Authentication request failed.',
               )
               .having(
-                (final SupabaseAuthException error) => error.cause,
+                (SupabaseAuthException error) => error.cause,
                 'cause',
                 same(failure),
               ),
@@ -260,10 +250,7 @@ void main() {
       final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
         isConfiguredOverride: () => true,
         signInWithPasswordImpl:
-            ({
-              required final String email,
-              required final String password,
-            }) async {
+            ({required String email, required String password}) async {
               signInCalls += 1;
             },
       );
@@ -275,7 +262,7 @@ void main() {
         ),
         throwsA(
           isA<SupabaseAuthException>().having(
-            (final SupabaseAuthException error) => error.code,
+            (SupabaseAuthException error) => error.code,
             'code',
             SupabaseAuthErrorCode.invalidEmail,
           ),
@@ -290,9 +277,9 @@ void main() {
         isConfiguredOverride: () => true,
         signUpImpl:
             ({
-              required final String email,
-              required final String password,
-              final Map<String, dynamic>? data,
+              required String email,
+              required String password,
+              Map<String, dynamic>? data,
             }) async {
               signUpCalls += 1;
             },
@@ -302,7 +289,7 @@ void main() {
         repository.signUp(email: 'user@example.com', password: '12345'),
         throwsA(
           isA<SupabaseAuthException>().having(
-            (final SupabaseAuthException error) => error.code,
+            (SupabaseAuthException error) => error.code,
             'code',
             SupabaseAuthErrorCode.weakPassword,
           ),
@@ -345,10 +332,7 @@ void main() {
         tokenRepository: tokenRepository,
         readCurrentAccessToken: () => 'session-token',
         signInWithPasswordImpl:
-            ({
-              required final String email,
-              required final String password,
-            }) async {
+            ({required String email, required String password}) async {
               signInCalls += 1;
             },
       );

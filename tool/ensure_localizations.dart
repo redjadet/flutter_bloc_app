@@ -15,7 +15,7 @@ import 'dart:io';
 ///
 /// Usage:
 ///   dart run tool/ensure_localizations.dart
-void main(final List<String> args) async {
+void main(List<String> args) async {
   final Directory l10nDir = Directory('lib/l10n');
   // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
   if (!await l10nDir.exists()) {
@@ -50,7 +50,7 @@ void main(final List<String> args) async {
   ];
 
   bool allFilesExist = true;
-  for (final String filePath in expectedFiles) {
+  for (String filePath in expectedFiles) {
     final File file = File(filePath);
     // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
     if (!await file.exists()) {

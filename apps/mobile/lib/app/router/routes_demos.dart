@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:feature_flags/feature_flags.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
@@ -62,6 +61,7 @@ import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabular
 import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
@@ -73,7 +73,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.chatPath,
     name: AppRoutes.chat,
-    builder: (final context, final state) {
+    builder: (context, state) {
       // Resolve session-gate policy once; listen only around the page so
       // deferred backend ticks do not recreate Chat cubits.
       final BackendAvailability availability = getIt<BackendAvailability>();
@@ -84,12 +84,12 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
           create: () => ChatSyncStatusCubit(
             pendingRepository: getIt<PendingSyncRepository>(),
           ),
-          init: (final cubit) => cubit.refresh(),
+          init: (cubit) => cubit.refresh(),
           child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
             create: _createChatCubit,
-            init: (final cubit) => cubit.loadHistory(),
+            init: (cubit) => cubit.loadHistory(),
             child: _listenBackendAvailability(
-              (final live) => ChatPage(
+              (live) => ChatPage(
                 errorNotificationService: getIt<ErrorNotificationService>(),
                 showBackendDisabledBanner: live.showChatBackendDisabledBanner,
                 renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
@@ -104,7 +104,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.chatListPath,
     name: AppRoutes.chatList,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final BackendAvailability availability = getIt<BackendAvailability>();
       return _withChatSupabaseSessionGate(
         state: state,
@@ -113,9 +113,9 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
           create: () => ChatSyncStatusCubit(
             pendingRepository: getIt<PendingSyncRepository>(),
           ),
-          init: (final cubit) => cubit.refresh(),
+          init: (cubit) => cubit.refresh(),
           child: _listenBackendAvailability(
-            (final live) => ChatListPage(
+            (live) => ChatListPage(
               repository: getIt<ChatListRepository>(),
               chatRepository: getIt<ChatRepository>(),
               historyRepository: getIt<ChatHistoryRepository>(),
@@ -140,7 +140,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.genuiDemoPath,
     name: AppRoutes.genuiDemo,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final apiKey = SecretConfig.geminiApiKey;
       if (apiKey == null || apiKey.isEmpty) {
         return CommonPageLayout(
@@ -150,7 +150,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
       }
       return BlocProviderHelpers.withAsyncInit<GenUiDemoCubit>(
         create: () => GenUiDemoCubit(agent: getIt<GenUiDemoAgent>()),
-        init: (final cubit) => cubit.initialize(),
+        init: (cubit) => cubit.initialize(),
         child: const GenUiDemoPage(),
       );
     },
@@ -158,7 +158,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.playlearnPath,
     name: AppRoutes.playlearn,
-    builder: (final context, final state) => PlaylearnPage(
+    builder: (context, state) => PlaylearnPage(
       repository: getIt<VocabularyRepository>(),
       audioService: getIt<AudioPlaybackService>(),
     ),
@@ -166,7 +166,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
       GoRoute(
         path: 'vocabulary/:topicId',
         name: AppRoutes.playlearnVocabulary,
-        builder: (final context, final state) {
+        builder: (context, state) {
           final topicId = state.pathParameters['topicId'] ?? '';
           return VocabularyListPage(
             topicId: topicId,
@@ -180,12 +180,12 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.igamingDemoPath,
     name: AppRoutes.igamingDemo,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final l10n = context.l10n;
       return BlocProviderHelpers.withAsyncInit<LobbyCubit>(
         create: () =>
             LobbyCubit(repository: getIt<DemoBalanceRepository>(), l10n: l10n),
-        init: (final cubit) => cubit.loadBalance(),
+        init: (cubit) => cubit.loadBalance(),
         child: const LobbyPage(),
       );
     },
@@ -193,7 +193,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
       GoRoute(
         path: 'game',
         name: AppRoutes.igamingDemoGame,
-        builder: (final context, final state) {
+        builder: (context, state) {
           final l10n = context.l10n;
           return BlocProviderHelpers.withAsyncInit<GameCubit>(
             create: () => GameCubit(
@@ -201,7 +201,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
               timerService: getIt<TimerService>(),
               l10n: l10n,
             ),
-            init: (final cubit) => cubit.loadBalance(),
+            init: (cubit) => cubit.loadBalance(),
             child: const GamePage(),
           );
         },

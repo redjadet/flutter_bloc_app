@@ -1,18 +1,18 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'chat_input_bar.freezed.dart';
 
 @freezed
 abstract class _SendButtonData with _$SendButtonData {
   const factory _SendButtonData({
-    required final bool canSend,
-    required final bool isLoading,
+    required bool canSend,
+    required bool isLoading,
   }) = __SendButtonData;
 }
 
@@ -27,7 +27,7 @@ class ChatInputBar extends StatelessWidget {
   final VoidCallback onSend;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
 
@@ -50,11 +50,11 @@ class ChatInputBar extends StatelessWidget {
         ),
         SizedBox(width: context.responsiveHorizontalGapS),
         TypeSafeBlocSelector<ChatCubit, ChatState, _SendButtonData>(
-          selector: (final state) => _SendButtonData(
+          selector: (state) => _SendButtonData(
             canSend: state.canSend,
             isLoading: state.isLoading,
           ),
-          builder: (final context, final data) => Semantics(
+          builder: (context, data) => Semantics(
             button: true,
             label: l10n.chatSendButton,
             enabled: data.canSend,

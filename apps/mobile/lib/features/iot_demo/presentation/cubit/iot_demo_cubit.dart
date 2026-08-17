@@ -28,8 +28,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
   List<IotDevice> _allDevices = const <IotDevice>[];
 
   void _emitError(
-    final IotDemoErrorCode code, {
-    final String? detail,
+    IotDemoErrorCode code, {
+    String? detail,
   }) {
     if (isClosed) return;
     emit(IotDemoState.error(code: code, detail: detail));
@@ -37,14 +37,14 @@ class IotDemoCubit extends Cubit<IotDemoState>
 
   /// Subscribe to device stream and emit initial/loading then loaded states.
   /// Uses [filterOverride] when provided, else filter from loaded state, else all.
-  Future<void> initialize({final IotDemoDeviceFilter? filterOverride}) async {
+  Future<void> initialize({IotDemoDeviceFilter? filterOverride}) async {
     if (isClosed) return;
     final String? previousSelectedDeviceId = state.mapOrNull(
-      loaded: (final s) => s.selectedDeviceId,
+      loaded: (s) => s.selectedDeviceId,
     );
     final IotDemoDeviceFilter filter =
         filterOverride ??
-        state.mapOrNull(loaded: (final s) => s.filter) ??
+        state.mapOrNull(loaded: (s) => s.filter) ??
         IotDemoDeviceFilter.all;
     await prewarmRemoteDevicesIfNeeded();
     if (isClosed) return;
@@ -55,10 +55,10 @@ class IotDemoCubit extends Cubit<IotDemoState>
     );
   }
 
-  void setFilter(final IotDemoDeviceFilter filter) {
+  void setFilter(IotDemoDeviceFilter filter) {
     if (isClosed) return;
     state.mapOrNull(
-      loaded: (final s) {
+      loaded: (s) {
         if (s.filter == filter) return;
         emit(
           buildLoadedStateImpl(
@@ -71,55 +71,54 @@ class IotDemoCubit extends Cubit<IotDemoState>
     );
   }
 
-  void selectDevice(final String? deviceId) {
+  void selectDevice(String? deviceId) {
     if (isClosed) return;
     state.mapOrNull(
-      loaded: (final s) => emit(s.copyWith(selectedDeviceId: deviceId)),
+      loaded: (s) => emit(s.copyWith(selectedDeviceId: deviceId)),
     );
   }
 
-  Future<void> connect(final String deviceId) async {
+  Future<void> connect(String deviceId) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.connect(deviceId),
       isAlive: () => !isClosed,
-      onError: (final message) =>
+      onError: (message) =>
           _emitError(IotDemoErrorCode.connect, detail: message),
       logContext: 'IotDemoCubit.connect',
     );
   }
 
-  Future<void> disconnect(final String deviceId) async {
+  Future<void> disconnect(String deviceId) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.disconnect(deviceId),
       isAlive: () => !isClosed,
-      onError: (final message) =>
+      onError: (message) =>
           _emitError(IotDemoErrorCode.disconnect, detail: message),
       logContext: 'IotDemoCubit.disconnect',
     );
   }
 
   Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   ) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.sendCommand(deviceId, command),
       isAlive: () => !isClosed,
-      onError: (final message) =>
+      onError: (message) =>
           _emitError(IotDemoErrorCode.command, detail: message),
       logContext: 'IotDemoCubit.sendCommand',
     );
   }
 
-  Future<void> addDevice(final IotDevice device) async {
+  Future<void> addDevice(IotDevice device) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.addDevice(device),
       isAlive: () => !isClosed,
-      onError: (final message) =>
-          _emitError(IotDemoErrorCode.add, detail: message),
+      onError: (message) => _emitError(IotDemoErrorCode.add, detail: message),
       logContext: 'IotDemoCubit.addDevice',
       specificExceptionHandlers: <Type, void Function(Object, StackTrace?)>{
-        ArgumentError: (final error, final _) {
+        ArgumentError: (error, _) {
           if (isClosed) return;
           final String msg =
               ((error as ArgumentError).message as String?) ?? error.toString();
@@ -132,7 +131,7 @@ class IotDemoCubit extends Cubit<IotDemoState>
     );
   }
 
-  void emitIotState(final IotDemoState value) => emit(value);
+  void emitIotState(IotDemoState value) => emit(value);
 
   @override
   Future<void> close() {

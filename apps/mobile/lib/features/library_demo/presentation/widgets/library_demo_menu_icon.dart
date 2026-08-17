@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Custom hamburger menu icon matching EPOCH design
 class LibraryMenuIcon extends StatelessWidget {
   const LibraryMenuIcon({super.key});
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
     width: 24,
     height: 18,
     child: SvgPicture.asset(

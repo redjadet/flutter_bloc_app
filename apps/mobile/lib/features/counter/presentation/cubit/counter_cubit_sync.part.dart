@@ -26,7 +26,7 @@ mixin _CounterCubitSyncMixin on _CounterCubitBase {
     unawaited(cancelRegisteredSubscription(oldSubscription));
     _repositorySubscription = registerSubscription(
       _repository.watch().listen(
-        (final snapshot) {
+        (snapshot) {
           if (isClosed) return;
           if (shouldIgnoreRemoteSnapshot(state, snapshot)) return;
 
@@ -36,14 +36,14 @@ mixin _CounterCubitSyncMixin on _CounterCubitBase {
           unawaited(
             applyRestorationOutcome(
               restoration,
-              onHoldChanged: ({required final holdSideEffects}) =>
+              onHoldChanged: ({required holdSideEffects}) =>
                   _pauseCountdownForOneTick = holdSideEffects,
               onAfterEmit: _syncTickerForState,
               logContext: 'CounterCubit._subscribeToRepository',
             ).then((_) => refreshPendingSyncCount()),
           );
         },
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error('CounterCubit.watch failed', error, stackTrace);
         },
       ),

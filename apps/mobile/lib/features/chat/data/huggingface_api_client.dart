@@ -14,7 +14,7 @@ typedef JsonMap = Map<String, dynamic>;
 class HuggingFaceApiClient {
   HuggingFaceApiClient({
     required this.dio,
-    final String? apiKey,
+    String? apiKey,
     this._requestTimeout = const Duration(seconds: 30),
   }) : _apiKey = _clean(apiKey);
 
@@ -30,9 +30,9 @@ class HuggingFaceApiClient {
   };
 
   Future<JsonMap> postJson({
-    required final Uri uri,
-    required final JsonMap payload,
-    required final String context,
+    required Uri uri,
+    required JsonMap payload,
+    required String context,
   }) async {
     final Response<List<int>>
     response = await NetworkGuard.executeDio<List<int>, ChatException>(
@@ -46,9 +46,9 @@ class HuggingFaceApiClient {
         ),
       ),
       timeout: _requestTimeout,
-      isSuccess: (final statusCode) => statusCode < 400,
+      isSuccess: (statusCode) => statusCode < 400,
       logContext: 'HuggingFaceApiClient.$context',
-      onHttpFailure: (final res) {
+      onHttpFailure: (res) {
         if (res.statusCode == 429) {
           return const ChatException(
             'Hugging Face rate limit hit. Please wait before trying again.',
@@ -57,13 +57,13 @@ class HuggingFaceApiClient {
         final String message = formatError(res);
         return ChatException(message);
       },
-      onException: (final error) {
+      onException: (error) {
         if (_looksLikeTimeout(error)) {
           return const ChatException('Chat service timed out.');
         }
         return const ChatException('Failed to contact chat service.');
       },
-      onFailureLog: (final res) {
+      onFailureLog: (res) {
         AppLogger.error(
           'HuggingFaceApiClient.$context non-success (HTTP ${res.statusCode})',
           'Response body omitted for privacy',
@@ -121,20 +121,20 @@ class HuggingFaceApiClient {
     // Injected Dio lifetime is owned by composition / test harness.
   }
 
-  static String? _clean(final String? value) {
+  static String? _clean(String? value) {
     if (value == null) return null;
     final String trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
   }
 
   /// Formats an error message from a Dio [Response].
-  static String formatError(final Response<dynamic> response) {
+  static String formatError(Response<dynamic> response) {
     final int code = response.statusCode ?? 0;
     final String body = _responseDataAsString(response.data);
     return _formatErrorFromStatusAndBody(code, body);
   }
 
-  static String _responseDataAsString(final Object? data) {
+  static String _responseDataAsString(Object? data) {
     if (data == null) {
       return '';
     }
@@ -152,8 +152,8 @@ class HuggingFaceApiClient {
   }
 
   static String _formatErrorFromStatusAndBody(
-    final int code,
-    final String body,
+    int code,
+    String body,
   ) {
     String? detail;
 
@@ -185,7 +185,7 @@ class HuggingFaceApiClient {
     return 'Chat service error (HTTP $code): $detail';
   }
 
-  static bool _looksLikeTimeout(final Object error) {
+  static bool _looksLikeTimeout(Object error) {
     if (error is TimeoutException) {
       return true;
     }

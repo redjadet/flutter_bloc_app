@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientAppointmentsPage extends StatefulWidget {
   const OnlineTherapyDemoClientAppointmentsPage({super.key});
@@ -30,7 +30,7 @@ class _OnlineTherapyDemoClientAppointmentsPageState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isLoggedIn = context
         .selectState<
@@ -38,15 +38,15 @@ class _OnlineTherapyDemoClientAppointmentsPageState
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final isBusy = context
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
-          selector: (final state) => state.isBusy,
+          selector: (state) => state.isBusy,
         );
     final selectedAppointments = context
         .selectState<ClientBookingCubit, ClientBookingState, List<Appointment>>(
-          selector: (final state) => state.appointments,
+          selector: (state) => state.appointments,
         );
     final cubit = context.cubit<ClientBookingCubit>();
     final appointments = List<Appointment>.unmodifiable(selectedAppointments);
@@ -58,8 +58,7 @@ class _OnlineTherapyDemoClientAppointmentsPageState
         child: ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: !isLoggedIn ? 1 : appointments.length + 1,
-          separatorBuilder: (final context, final index) =>
-              const Divider(height: 1),
+          separatorBuilder: (context, index) => const Divider(height: 1),
           itemBuilder: (context, index) {
             if (index == 0) {
               if (!isLoggedIn) {

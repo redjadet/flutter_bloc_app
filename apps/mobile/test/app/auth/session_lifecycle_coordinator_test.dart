@@ -4,8 +4,8 @@ import 'package:auth/auth.dart' hide AuthRepository;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
@@ -38,9 +38,8 @@ void main() {
       tokenResult = _MockIdTokenResult();
       when(() => user.uid).thenReturn('user-1');
       when(() => tokenResult.token).thenReturn('cached-token');
-      when(
-        () => tokenResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => tokenResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
       when(() => user.getIdTokenResult()).thenAnswer((_) async => tokenResult);
       when(() => firebaseAuth.currentUser).thenReturn(user);
       authTokenManager = AuthTokenManager(firebaseAuth: firebaseAuth);
@@ -89,9 +88,8 @@ void main() {
             StreamController<AuthUser?>.broadcast();
         final _MockAuthRepository repository = _MockAuthRepository();
         when(() => repository.currentUser).thenReturn(null);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         coordinator.attachAuthRepository(repository);
         controller.add(null);
@@ -111,9 +109,8 @@ void main() {
         final _MockAuthRepository repository = _MockAuthRepository();
         const AuthUser signedInUser = AuthUser(id: 'u1', isAnonymous: false);
         when(() => repository.currentUser).thenReturn(signedInUser);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         await warmCache();
         coordinator.attachAuthRepository(repository);
@@ -136,15 +133,14 @@ void main() {
         const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
         const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
         when(() => repository.currentUser).thenReturn(userA);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         SessionLocalCleanupReason? seenReason;
         AuthProviderKind? seenProvider;
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           seenProvider = provider;
           seenReason = reason;
@@ -169,15 +165,14 @@ void main() {
         const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
         const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
         when(() => repository.currentUser).thenReturn(userA);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         final Completer<void> cleanupStarted = Completer<void>();
         final Completer<void> releaseCleanup = Completer<void>();
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           cleanupStarted.complete();
           await releaseCleanup.future;
@@ -216,9 +211,8 @@ void main() {
         const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
         const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
         when(() => repository.currentUser).thenReturn(userA);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         final _RecordingBackgroundSyncCoordinator syncCoordinator =
             _RecordingBackgroundSyncCoordinator();
@@ -227,8 +221,8 @@ void main() {
         final Completer<void> cleanupStarted = Completer<void>();
         final Completer<void> releaseCleanup = Completer<void>();
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           cleanupStarted.complete();
           await releaseCleanup.future;
@@ -255,15 +249,14 @@ void main() {
       const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
       const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
       when(() => repository.currentUser).thenReturn(userA);
-      when(
-        () => repository.authStateChanges,
-      ).thenAnswer((_) => controller.stream);
+      when(() => repository.authStateChanges)
+          .thenAnswer((_) => controller.stream);
 
       final Completer<void> cleanupStarted = Completer<void>();
       final Completer<void> releaseCleanup = Completer<void>();
       coordinator.bindLocalSessionDataCleanup(({
-        required final AuthProviderKind provider,
-        required final SessionLocalCleanupReason reason,
+        required AuthProviderKind provider,
+        required SessionLocalCleanupReason reason,
       }) async {
         if (reason == SessionLocalCleanupReason.accountSwitch) {
           cleanupStarted.complete();
@@ -301,13 +294,12 @@ void main() {
         const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
         const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
         when(() => repository.currentUser).thenReturn(userA);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           throw StateError('cleanup boom');
         });
@@ -339,14 +331,13 @@ void main() {
         const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
         const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
         when(() => repository.currentUser).thenReturn(userA);
-        when(
-          () => repository.authStateChanges,
-        ).thenAnswer((_) => controller.stream);
+        when(() => repository.authStateChanges)
+            .thenAnswer((_) => controller.stream);
 
         final Completer<void> releaseCleanup = Completer<void>();
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           await releaseCleanup.future;
         });
@@ -374,9 +365,8 @@ void main() {
       final _MockAuthRepository repository = _MockAuthRepository();
       const AuthUser user = AuthUser(id: 'user-a', isAnonymous: true);
       when(() => repository.currentUser).thenReturn(null);
-      when(
-        () => repository.authStateChanges,
-      ).thenAnswer((_) => controller.stream);
+      when(() => repository.authStateChanges)
+          .thenAnswer((_) => controller.stream);
 
       coordinator.attachAuthRepository(repository);
       coordinator.onSignInCompleted(user: user);
@@ -390,8 +380,8 @@ void main() {
       () async {
         var cleanupCalls = 0;
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           cleanupCalls += 1;
           expect(provider, AuthProviderKind.firebase);
@@ -460,7 +450,7 @@ void main() {
         verify(() => remoteAuth.signOut()).called(1);
         expect(
           events.where(
-            (final SessionInvalidationEvent e) =>
+            (SessionInvalidationEvent e) =>
                 e.provider == AuthProviderKind.supabase,
           ),
           hasLength(1),
@@ -474,7 +464,7 @@ void main() {
 
         expect(events, hasLength(2));
         expect(
-          events.map((final SessionInvalidationEvent e) => e.provider).toSet(),
+          events.map((SessionInvalidationEvent e) => e.provider).toSet(),
           <AuthProviderKind>{
             AuthProviderKind.firebase,
             AuthProviderKind.supabase,
@@ -496,8 +486,8 @@ void main() {
         final Completer<void> releaseCleanup = Completer<void>();
         var cleanupCalls = 0;
         coordinator.bindLocalSessionDataCleanup(({
-          required final AuthProviderKind provider,
-          required final SessionLocalCleanupReason reason,
+          required AuthProviderKind provider,
+          required SessionLocalCleanupReason reason,
         }) async {
           cleanupCalls += 1;
           cleanupStarted.complete();

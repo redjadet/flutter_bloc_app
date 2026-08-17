@@ -17,7 +17,7 @@ import 'dart:io';
 ///
 /// Notes:
 /// - This is intentionally heuristic; tune over time if false positives show up.
-Future<void> main(final List<String> args) async {
+Future<void> main(List<String> args) async {
   final root = Directory.current;
   final scanFiles = await _resolveScanFiles(root, args);
   if (scanFiles.isEmpty) {
@@ -56,10 +56,10 @@ Future<void> main(final List<String> args) async {
 }
 
 void _scanFile(
-  final String path,
-  final List<String> lines,
-  final Set<String> localStateOwners,
-  final List<_Finding> out,
+  String path,
+  List<String> lines,
+  Set<String> localStateOwners,
+  List<_Finding> out,
 ) {
   for (var i = 0; i < lines.length; i++) {
     final line = lines[i];
@@ -90,8 +90,7 @@ void _scanFile(
           _Finding(
             path: path,
             line: i + 1,
-            message:
-                'Builder returns a prebuilt widget by index; use ListView/GridView children or key each entry before building.',
+            message: 'Builder returns a prebuilt widget by index; use ListView/GridView children or key each entry before building.',
             snippet: line,
           ),
         );
@@ -109,8 +108,7 @@ void _scanFile(
           _Finding(
             path: path,
             line: i + 1,
-            message:
-                'Builder row uses ObjectKey; prefer ValueKey with a stable domain id.',
+            message: 'Builder row uses ObjectKey; prefer ValueKey with a stable domain id.',
             snippet: line,
           ),
         );
@@ -183,15 +181,15 @@ void _scanFile(
 }
 
 Future<List<File>> _resolveScanFiles(
-  final Directory root,
-  final List<String> args,
+  Directory root,
+  List<String> args,
 ) async {
   final scanRoots = args.isEmpty
       ? <FileSystemEntity>[
           Directory('${root.path}${Platform.pathSeparator}lib'),
         ]
       : await Future.wait(
-          args.map((final arg) async {
+          args.map((arg) async {
             // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
             final t = await FileSystemEntity.type(arg);
             return t == FileSystemEntityType.directory
@@ -221,7 +219,7 @@ Future<List<File>> _resolveScanFiles(
 }
 
 Set<String> _findLocalStateOwnerWidgets(
-  final Map<String, List<String>> fileLines,
+  Map<String, List<String>> fileLines,
 ) {
   final owners = <String>{};
 
@@ -254,14 +252,13 @@ Set<String> _findLocalStateOwnerWidgets(
   return owners;
 }
 
-bool _ownsLocalControllerOrFocus(final String classBlock) =>
+bool _ownsLocalControllerOrFocus(String classBlock) =>
     classBlock.contains('TextEditingController(') ||
     classBlock.contains('FocusNode(');
 
-bool _containsAny(final String s, final List<String> needles) =>
-    needles.any(s.contains);
+bool _containsAny(String s, List<String> needles) => needles.any(s.contains);
 
-bool _isSuppressed(final List<String> lines, final int idx) {
+bool _isSuppressed(List<String> lines, int idx) {
   final here = lines[idx];
   final prev = idx > 0 ? lines[idx - 1] : '';
   return here.contains('widget_identity:ignore') ||
@@ -269,7 +266,7 @@ bool _isSuppressed(final List<String> lines, final int idx) {
 }
 
 /// Extracts a parenthesis-balanced block starting at [startLine].
-_TextBlock? _extractParenBlock(final List<String> lines, final int startLine) {
+_TextBlock? _extractParenBlock(List<String> lines, int startLine) {
   final buffer = StringBuffer();
   var open = 0;
   var seenAny = false;
@@ -294,8 +291,8 @@ _TextBlock? _extractParenBlock(final List<String> lines, final int startLine) {
 }
 
 _TextBlock? _extractChildrenListBlock(
-  final List<String> lines,
-  final int startLine,
+  List<String> lines,
+  int startLine,
 ) {
   final buffer = StringBuffer();
   var open = 0;
@@ -323,7 +320,7 @@ _TextBlock? _extractChildrenListBlock(
   return null;
 }
 
-String? _extractBraceBlockText(final String text, final int classStart) {
+String? _extractBraceBlockText(String text, int classStart) {
   final openIdx = text.indexOf('{', classStart);
   if (openIdx < 0) return null;
 
@@ -339,7 +336,7 @@ String? _extractBraceBlockText(final String text, final int classStart) {
   return null;
 }
 
-bool _isRebuildProneChildrenList(final String blockText) =>
+bool _isRebuildProneChildrenList(String blockText) =>
     _topLevelChildrenEntries(blockText).any((entry) {
       final text = entry.text.trimLeft();
       return text.startsWith('...') ||
@@ -350,10 +347,10 @@ bool _isRebuildProneChildrenList(final String blockText) =>
     });
 
 List<_Finding> _findUnkeyedLocalStateOwnerCalls({
-  required final String path,
-  required final List<String> lines,
-  required final _TextBlock block,
-  required final Set<String> ownerNames,
+  required String path,
+  required List<String> lines,
+  required _TextBlock block,
+  required Set<String> ownerNames,
 }) {
   if (ownerNames.isEmpty) return const [];
 
@@ -388,7 +385,7 @@ List<_Finding> _findUnkeyedLocalStateOwnerCalls({
   return findings;
 }
 
-List<_ChildEntry> _topLevelChildrenEntries(final String blockText) {
+List<_ChildEntry> _topLevelChildrenEntries(String blockText) {
   final openIdx = blockText.indexOf('[');
   if (openIdx < 0) return const [];
 
@@ -426,17 +423,17 @@ List<_ChildEntry> _topLevelChildrenEntries(final String blockText) {
 }
 
 void _addChildEntry(
-  final List<_ChildEntry> entries,
-  final String blockText,
-  final int start,
-  final int end,
+  List<_ChildEntry> entries,
+  String blockText,
+  int start,
+  int end,
 ) {
   final text = blockText.substring(start, end);
   if (text.trim().isEmpty) return;
   entries.add(_ChildEntry(text, start));
 }
 
-String? _extractItemBuilderBody(final String blockText) {
+String? _extractItemBuilderBody(String blockText) {
   final idx = blockText.indexOf('itemBuilder:');
   if (idx < 0) return null;
   final after = blockText.substring(idx);
@@ -462,7 +459,7 @@ String? _extractItemBuilderBody(final String blockText) {
   return null;
 }
 
-String? _extractFirstCallbackBody(final String blockText) {
+String? _extractFirstCallbackBody(String blockText) {
   // SliverChildBuilderDelegate takes the builder callback positionally.
   final arrowIdx = blockText.indexOf('=>');
   final openBraceIdx = blockText.indexOf('{');
@@ -485,7 +482,7 @@ String? _extractFirstCallbackBody(final String blockText) {
   return null;
 }
 
-bool _returnsIndexedWidget(final String body) {
+bool _returnsIndexedWidget(String body) {
   var s = body.trimLeft();
   if (s.startsWith('return ')) {
     s = s.substring('return '.length).trimLeft();
@@ -493,7 +490,7 @@ bool _returnsIndexedWidget(final String body) {
   return RegExp(r'^[A-Za-z_]\w*\s*\[\s*index\s*\]').hasMatch(s);
 }
 
-_ReturnCall? _extractReturnedConstructorCall(final String body) {
+_ReturnCall? _extractReturnedConstructorCall(String body) {
   final returnMatches = RegExp(r'\breturn\s+').allMatches(body).toList();
   if (returnMatches.isEmpty) {
     return _extractConstructorCallFromExpression(body);
@@ -510,7 +507,7 @@ _ReturnCall? _extractReturnedConstructorCall(final String body) {
   return null;
 }
 
-_ReturnCall? _extractConstructorCallFromExpression(final String expression) {
+_ReturnCall? _extractConstructorCallFromExpression(String expression) {
   final afterReturn = expression.trimLeft();
 
   final name = _firstConstructorName(afterReturn);
@@ -525,7 +522,7 @@ _ReturnCall? _extractConstructorCallFromExpression(final String expression) {
   );
 }
 
-String? _extractConstructorCallText(final String text) {
+String? _extractConstructorCallText(String text) {
   final openIdx = text.indexOf('(');
   if (openIdx < 0) return null;
 
@@ -541,7 +538,7 @@ String? _extractConstructorCallText(final String text) {
   return null;
 }
 
-String? _firstConstructorName(final String expr) {
+String? _firstConstructorName(String expr) {
   // Handles: const Foo(, Foo(, Foo.bar(.
   final s = expr.trimLeft();
   final noConst = s.startsWith('const ') ? s.substring(6).trimLeft() : s;
@@ -551,8 +548,8 @@ String? _firstConstructorName(final String expr) {
 }
 
 String? _extractNamedArgExpression(
-  final String blockText,
-  final String argName,
+  String blockText,
+  String argName,
 ) {
   final idx = blockText.indexOf('$argName:');
   if (idx < 0) return null;
@@ -562,10 +559,10 @@ String? _extractNamedArgExpression(
   return slice;
 }
 
-bool _usesObjectKey(final String callText) =>
+bool _usesObjectKey(String callText) =>
     RegExp(r'\bObjectKey\s*\(').hasMatch(callText);
 
-bool _isTriviallySafeReturn(final String name) =>
+bool _isTriviallySafeReturn(String name) =>
     name.startsWith('_build') ||
     name.startsWith('SizedBox') ||
     name.startsWith('Spacer') ||

@@ -1,10 +1,10 @@
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as amap;
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_utils.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_state_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:material_ui/material_ui.dart';
 
 /// Apple Maps implementation of the map view.
 class AppleMapsView extends StatefulWidget {
@@ -31,7 +31,7 @@ class _AppleMapsViewState extends State<AppleMapsView> {
   List<MapLocation>? _cachedLocations;
 
   @override
-  Widget build(final BuildContext context) => amap.AppleMap(
+  Widget build(BuildContext context) => amap.AppleMap(
     mapType: resolveAppleMapType(widget.stateManager.mapType),
     initialCameraPosition: appleCameraPositionFromGoogle(
       widget.stateManager.cameraPosition,
@@ -39,7 +39,7 @@ class _AppleMapsViewState extends State<AppleMapsView> {
     annotations: _buildAnnotations(),
     trafficEnabled: widget.stateManager.trafficEnabled,
     onMapCreated: widget.onMapCreated,
-    onCameraMove: (final position) =>
+    onCameraMove: (position) =>
         widget.onCameraMove(googleCameraPositionFromApple(position)),
   );
 
@@ -59,7 +59,7 @@ class _AppleMapsViewState extends State<AppleMapsView> {
     _cachedLocations = locations;
     final annotations = locations
         .map(
-          (final location) => amap.Annotation(
+          (location) => amap.Annotation(
             annotationId: amap.AnnotationId(location.id),
             position: amap.LatLng(
               location.coordinate.latitude,

@@ -20,8 +20,8 @@ part 'flutter_in_app_purchase_repository_purchases.part.dart';
 class FlutterInAppPurchaseRepository
     implements InAppPurchaseRepository, IapDemoControlsPort {
   FlutterInAppPurchaseRepository({
-    final InAppPurchase? store,
-    final IapDemoCreditsStore? creditsStore,
+    InAppPurchase? store,
+    IapDemoCreditsStore? creditsStore,
   }) : _store = store ?? InAppPurchase.instance,
        _creditsStore = creditsStore ?? InMemoryIapDemoCreditsStore();
 
@@ -63,7 +63,7 @@ class FlutterInAppPurchaseRepository
       for (final p in response.productDetails) p.id: p,
     };
 
-    IapProduct build(final String id, final IapProductType type) {
+    IapProduct build(String id, IapProductType type) {
       final details = byId[id];
       if (details == null) {
         return IapProduct(
@@ -100,7 +100,7 @@ class FlutterInAppPurchaseRepository
   }
 
   @override
-  Future<IapPurchaseResult> purchase(final IapProduct product) async {
+  Future<IapPurchaseResult> purchase(IapProduct product) async {
     ensurePurchaseSubscriptionImpl();
     final bool available = await _store.isAvailable();
     if (!available) {
@@ -115,11 +115,10 @@ class FlutterInAppPurchaseRepository
     final Stream<IapPurchaseResult> resultsForProduct = _resultsController
         .stream
         .where(
-          (final r) =>
-              _FlutterInAppPurchaseRepositoryPurchases.matchesProductIdImpl(
-                r,
-                product.id,
-              ),
+          (r) => _FlutterInAppPurchaseRepositoryPurchases.matchesProductIdImpl(
+            r,
+            product.id,
+          ),
         )
         .where(_FlutterInAppPurchaseRepositoryPurchases.isTerminalImpl)
         .take(1);
@@ -133,8 +132,7 @@ class FlutterInAppPurchaseRepository
     if (details == null) {
       return IapPurchaseResult.failure(
         productId: product.id,
-        message:
-            'Product not found. Configure it in App Store Connect / Play Console.',
+        message: 'Product not found. Configure it in App Store Connect / Play Console.',
       );
     }
 

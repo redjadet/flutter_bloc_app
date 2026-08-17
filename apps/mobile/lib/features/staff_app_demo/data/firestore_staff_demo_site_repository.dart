@@ -31,7 +31,7 @@ class FirestoreStaffDemoSiteRepository implements StaffDemoSiteRepository {
   }
 
   @override
-  Future<StaffDemoSite?> loadSite({required final String siteId}) async {
+  Future<StaffDemoSite?> loadSite({required String siteId}) async {
     final snap = await _firestore
         .collection('staffDemoSites')
         .doc(siteId)

@@ -4,7 +4,6 @@ library;
 import 'dart:async';
 
 import 'package:auth/auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
@@ -21,10 +20,12 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 
@@ -35,7 +36,7 @@ class _FakeThemeRepository implements ThemeRepository {
   Future<ThemePreference?> load() async => ThemePreference.system;
 
   @override
-  Future<void> save(final ThemePreference mode) async {}
+  Future<void> save(ThemePreference mode) async {}
 }
 
 class _FakeLocaleRepository implements LocaleRepository {
@@ -43,7 +44,7 @@ class _FakeLocaleRepository implements LocaleRepository {
   Future<AppLocale?> load() async => const AppLocale(languageCode: 'en');
 
   @override
-  Future<void> save(final AppLocale? locale) async {}
+  Future<void> save(AppLocale? locale) async {}
 }
 
 class _StubNetworkStatusService implements NetworkStatusService {
@@ -90,7 +91,7 @@ class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
   @override
   Future<void> quiesceForSessionCleanup() async {}
@@ -121,13 +122,13 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Future<bool> load() async => false;
 
   @override
-  Future<bool> save({required final bool enabled}) async => true;
+  Future<bool> save({required bool enabled}) async => true;
 
   @override
   Future<void> dispose() async {}
 }
 
-GoRouterState _state(final String path) {
+GoRouterState _state(String path) {
   final _MockGoRouterState state = _MockGoRouterState();
   when(() => state.uri).thenReturn(Uri.parse(path));
   when(() => state.matchedLocation).thenReturn(path);
@@ -153,13 +154,13 @@ List<BlocProvider<dynamic>> _coverageBlocProviders() => <BlocProvider<dynamic>>[
   ),
 ];
 
-Widget _coveragePumpTree({required final GoRouter router}) => ScreenUtilInit(
+Widget _coveragePumpTree({required GoRouter router}) => ScreenUtilInit(
   designSize: const Size(390, 844),
   minTextAdapt: true,
-  builder: (final context, final _) => MultiBlocProvider(
+  builder: (context, _) => MultiBlocProvider(
     providers: _coverageBlocProviders(),
     child: MaterialApp.router(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('en'),
       routerConfig: router,
@@ -167,14 +168,13 @@ Widget _coveragePumpTree({required final GoRouter router}) => ScreenUtilInit(
   ),
 );
 
-GoRouter _coverageRouter({required final Widget home}) => GoRouter(
+GoRouter _coverageRouter({required Widget home}) => GoRouter(
   initialLocation: '/',
   routes: <RouteBase>[
-    GoRoute(path: '/', builder: (final context, final state) => home),
+    GoRoute(path: '/', builder: (context, state) => home),
     GoRoute(
       path: AppRoutes.authPath,
-      builder: (final context, final state) =>
-          const Scaffold(body: Text('auth')),
+      builder: (context, state) => const Scaffold(body: Text('auth')),
     ),
   ],
 );
@@ -227,7 +227,7 @@ void main() {
   });
 
   testWidgets('routes_core.part builders and settings QA extras execute', (
-    final tester,
+    tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(900, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -235,7 +235,7 @@ void main() {
     final List<GoRoute> corePartRoutes = createCoreRoutes()
         .whereType<GoRoute>()
         .where(
-          (final GoRoute r) =>
+          (GoRoute r) =>
               r.name == AppRoutes.settings ||
               r.name == AppRoutes.manageAccount ||
               r.name == AppRoutes.profile ||
@@ -254,7 +254,7 @@ void main() {
       StackTrace? builderStack;
       final GoRouter router = _coverageRouter(
         home: Builder(
-          builder: (final context) {
+          builder: (context) {
             try {
               built = route.builder!(context, state);
             } on Object catch (error, stackTrace) {
@@ -286,7 +286,7 @@ void main() {
         if (gateChild is SettingsPage) {
           final GoRouter extrasRouter = _coverageRouter(
             home: Builder(
-              builder: (final context) {
+              builder: (context) {
                 final List<Widget>? extras = gateChild.buildQaExtras?.call(
                   context,
                 );

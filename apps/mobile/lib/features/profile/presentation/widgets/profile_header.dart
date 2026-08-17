@@ -1,7 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({required this.user, super.key});
@@ -9,7 +9,7 @@ class ProfileHeader extends StatelessWidget {
   final ProfileUser user;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     // Responsive avatar size using existing responsive utilities
     final avatarSize = context.isDesktop
         ? 160.0
@@ -63,7 +63,7 @@ class ProfileHeader extends StatelessWidget {
               width: avatarSize,
               height: avatarSize,
               fit: BoxFit.cover,
-              errorBuilder: (final context, final error, final stackTrace) {
+              errorBuilder: (context, error, stackTrace) {
                 final theme = Theme.of(context);
                 final colors = theme.colorScheme;
                 AppLogger.error(

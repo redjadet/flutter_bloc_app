@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 class ImagePickerStaffDemoProofPhotoPicker
     implements StaffDemoProofPhotoPicker {
-  ImagePickerStaffDemoProofPhotoPicker({final ImagePicker? picker})
+  ImagePickerStaffDemoProofPhotoPicker({ImagePicker? picker})
     : _picker = picker ?? ImagePicker();
 
   /// Demo guardrail for web gallery picks with empty `path`.
@@ -23,8 +23,8 @@ class ImagePickerStaffDemoProofPhotoPicker
       _pickImage(source: ImageSource.gallery, isCamera: false);
 
   Future<MediaPickResult> _pickImage({
-    required final ImageSource source,
-    required final bool isCamera,
+    required ImageSource source,
+    required bool isCamera,
   }) async {
     try {
       final XFile? file = await _picker.pickImage(source: source);
@@ -66,7 +66,7 @@ class ImagePickerStaffDemoProofPhotoPicker
     }
   }
 
-  MediaPickResult _mapPlatformException(final PlatformException error) {
+  MediaPickResult _mapPlatformException(PlatformException error) {
     final String code = error.code.toLowerCase();
     final String message = (error.message ?? '').toLowerCase();
 
@@ -99,8 +99,8 @@ class ImagePickerStaffDemoProofPhotoPicker
   }
 
   static bool _isCameraUnavailableCodeOrMessage(
-    final String code,
-    final String? message,
+    String code,
+    String? message,
   ) {
     final String lowerCode = code.toLowerCase();
     if (lowerCode == 'no_available_camera' ||
@@ -120,7 +120,7 @@ class ImagePickerStaffDemoProofPhotoPicker
         lower.contains('no camera found');
   }
 
-  MediaPickResult _mapCameraException(final Object error) {
+  MediaPickResult _mapCameraException(Object error) {
     final String message = error.toString();
     if (_isCameraUnavailableCodeOrMessage('', message)) {
       return const MediaPickResult.failure(

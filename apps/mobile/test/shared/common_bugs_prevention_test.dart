@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Tests to catch common bugs, pitfalls, and defensive patterns outlined in the project's guidelines.
 void main() {
@@ -417,20 +417,17 @@ void main() {
     // InheritedWidget in one-time lifecycle: do not call context.l10n (or
     // Theme.of(context)) inside BlocProvider/Provider create or in initState.
     // Regression tests: test/shared/inherited_widget_lifecycle_regression_test.dart
-    group(
-      'InheritedWidget in one-time lifecycle (see inherited_widget_lifecycle_regression_test)',
-      () {
-        test(
-          'PlaylearnPage and VocabularyListPage pass widget regression tests',
-          () {
-            // Full regression: pumpWidget with MaterialApp + localizations;
-            // if context.l10n is used in BlocProvider create, Flutter throws.
-            // See inherited_widget_lifecycle_regression_test.dart.
-            expect(true, isTrue);
-          },
-        );
-      },
-    );
+    group('InheritedWidget in one-time lifecycle (see inherited_widget_lifecycle_regression_test)', () {
+      test(
+        'PlaylearnPage and VocabularyListPage pass widget regression tests',
+        () {
+          // Full regression: pumpWidget with MaterialApp + localizations;
+          // if context.l10n is used in BlocProvider create, Flutter throws.
+          // See inherited_widget_lifecycle_regression_test.dart.
+          expect(true, isTrue);
+        },
+      );
+    });
 
     // Restart-after-dispose: when a stream subscription's onError/onDone
     // schedules a delayed restart (e.g. re-subscribe after 2s), the component
@@ -440,19 +437,16 @@ void main() {
     // offline_first_todo_repository_test.dart
     // "does not restart remote watch after dispose when stream ends"
     group('Restart-after-dispose (subscription leak)', () {
-      test(
-        'delayed restart must not run after dispose (see offline_first_todo_repository_test)',
-        () async {
-          // This test documents the pattern. The concrete regression test lives
-          // in test/features/todo_list/data/offline_first_todo_repository_test.dart
-          // (test name: "does not restart remote watch after dispose when stream ends").
-          // When adding similar "stream listen + onError/onDone + delayed restart"
-          // code, add a _disposed (or similar) flag, set it in dispose(), and
-          // check it at the start of the restart callback and before creating
-          // a new subscription.
-          expect(true, isTrue);
-        },
-      );
+      test('delayed restart must not run after dispose (see offline_first_todo_repository_test)', () async {
+        // This test documents the pattern. The concrete regression test lives
+        // in test/features/todo_list/data/offline_first_todo_repository_test.dart
+        // (test name: "does not restart remote watch after dispose when stream ends").
+        // When adding similar "stream listen + onError/onDone + delayed restart"
+        // code, add a _disposed (or similar) flag, set it in dispose(), and
+        // check it at the start of the restart callback and before creating
+        // a new subscription.
+        expect(true, isTrue);
+      });
     });
   });
 }

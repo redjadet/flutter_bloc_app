@@ -14,11 +14,11 @@ const MethodChannel _pathProviderChannel = MethodChannel(
   'plugins.flutter.io/path_provider',
 );
 
-Future<void> testExecutable(final FutureOr<void> Function() testMain) async {
+Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   final originalOnError = FlutterError.onError;
-  FlutterError.onError = (final FlutterErrorDetails details) {
+  FlutterError.onError = (FlutterErrorDetails details) {
     final Object exception = details.exception;
     final String message = details.exceptionAsString();
     final bool isRenderFlexOverflow = message.contains(
@@ -53,7 +53,7 @@ Future<void> testExecutable(final FutureOr<void> Function() testMain) async {
   final String tempRoot = await createTestTempRoot();
   registerNativeShowcaseChannelMock();
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(_pathProviderChannel, (final call) async {
+      .setMockMethodCallHandler(_pathProviderChannel, (call) async {
         switch (call.method) {
           case 'getTemporaryDirectory':
           case 'getApplicationSupportDirectory':

@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_action_buttons.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../helpers/layout_overflow_expectations.dart';
 
@@ -17,7 +18,7 @@ void main() {
     Widget buildSubject({double scale = 1.0, double? verticalScale}) {
       final double resolvedVerticalScale = verticalScale ?? scale;
       return MaterialApp.router(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
         routerConfig: GoRouter(
@@ -115,7 +116,7 @@ void main() {
         final Finder heightBox = find.descendant(
           of: dualCta,
           matching: find.byWidgetPredicate(
-            (final Widget widget) =>
+            (Widget widget) =>
                 widget is SizedBox &&
                 widget.height == expectedHeight &&
                 widget.child is Row,
@@ -152,7 +153,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp.router(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           routerConfig: GoRouter(

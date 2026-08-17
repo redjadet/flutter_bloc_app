@@ -1,19 +1,18 @@
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
-
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
 
 import 'test_helpers.dart';
 
@@ -185,36 +184,32 @@ void main() {
       expect(cubit.state.countdownSeconds, 5);
     });
 
-    test(
-      'loadInitial does not overwrite a newer manual increment when load completes late',
-      () async {
-        final Completer<CounterSnapshot> completer =
-            Completer<CounterSnapshot>();
-        final _DelayedLoadCounterRepository repository =
-            _DelayedLoadCounterRepository(
-              completer: completer,
-              initialWatchSnapshot: const CounterSnapshot(count: 0),
-            );
-        final CounterCubit cubit = createCubit(
-          repository: repository,
-          startTicker: false,
-        );
+    test('loadInitial does not overwrite a newer manual increment when load completes late', () async {
+      final Completer<CounterSnapshot> completer = Completer<CounterSnapshot>();
+      final _DelayedLoadCounterRepository repository =
+          _DelayedLoadCounterRepository(
+            completer: completer,
+            initialWatchSnapshot: const CounterSnapshot(count: 0),
+          );
+      final CounterCubit cubit = createCubit(
+        repository: repository,
+        startTicker: false,
+      );
 
-        unawaited(cubit.loadInitial());
-        await pumpEventQueue();
-        expect(cubit.state.isLoading, isTrue);
+      unawaited(cubit.loadInitial());
+      await pumpEventQueue();
+      expect(cubit.state.isLoading, isTrue);
 
-        await cubit.increment();
-        expect(cubit.state.count, 1);
+      await cubit.increment();
+      expect(cubit.state.count, 1);
 
-        completer.complete(const CounterSnapshot(count: 0));
-        await pumpEventQueue();
-        await pumpEventQueue();
+      completer.complete(const CounterSnapshot(count: 0));
+      await pumpEventQueue();
+      await pumpEventQueue();
 
-        expect(cubit.state.count, 1);
-        expect(cubit.state.isReady, isTrue);
-      },
-    );
+      expect(cubit.state.count, 1);
+      expect(cubit.state.isReady, isTrue);
+    });
 
     test(
       'loadInitial clears loading after cannotGoBelowZero during load',
@@ -395,27 +390,24 @@ void main() {
       expect(cubit.state.countdownSeconds, countdownAfterError - 1);
     });
 
-    test(
-      'cannotGoBelowZero error clears automatically and ticker resumes on next increment',
-      () async {
-        final fakeTimer = FakeTimerService();
-        final CounterCubit cubit = createCubit(timerService: fakeTimer);
+    test('cannotGoBelowZero error clears automatically and ticker resumes on next increment', () async {
+      final fakeTimer = FakeTimerService();
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
 
-        await AppLogger.silenceAsync(() => cubit.decrement());
+      await AppLogger.silenceAsync(() => cubit.decrement());
 
-        expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
-        expect(cubit.state.isError, isTrue);
+      expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
+      expect(cubit.state.isError, isTrue);
 
-        await cubit.increment();
+      await cubit.increment();
 
-        expect(cubit.state.error, isNull);
-        expect(cubit.state.isReady, isTrue);
+      expect(cubit.state.error, isNull);
+      expect(cubit.state.isReady, isTrue);
 
-        final int countdown = cubit.state.countdownSeconds;
-        fakeTimer.tick(1);
-        expect(cubit.state.countdownSeconds, countdown - 1);
-      },
-    );
+      final int countdown = cubit.state.countdownSeconds;
+      fakeTimer.tick(1);
+      expect(cubit.state.countdownSeconds, countdown - 1);
+    });
 
     test(
       'countdown timer decreases deterministically (FakeTimerService)',
@@ -620,7 +612,7 @@ class _DelayedLoadCounterRepository
   Future<CounterSnapshot> load() => completer.future;
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     _latest = snapshot;
     _controller.add(snapshot);
   }

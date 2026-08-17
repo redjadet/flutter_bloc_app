@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 typedef MethodCallHandler = Future<dynamic> Function(MethodCall call);
 
@@ -57,14 +57,15 @@ void main() {
 
   group('NativePlatformInfo.fromMap', () {
     test('trims strings and defaults version when blank', () {
-      final NativePlatformInfo info =
-          NativePlatformInfo.fromMap(<String, dynamic>{
-            'platform': '  android  ',
-            'version': '   ',
-            'manufacturer': '  ',
-            'model': 42,
-            'batteryLevel': '88',
-          });
+      final NativePlatformInfo info = NativePlatformInfo.fromMap(
+        <String, dynamic>{
+          'platform': '  android  ',
+          'version': '   ',
+          'manufacturer': '  ',
+          'model': 42,
+          'batteryLevel': '88',
+        },
+      );
 
       expect(info.platform, 'android');
       expect(info.version, 'unknown');

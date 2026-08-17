@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/diagnostics/remote_config_diagnostics_view_data.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 part 'remote_config_diagnostics_section_components.dart';
@@ -42,7 +42,7 @@ class _RemoteConfigDiagnosticsSectionState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<RemoteConfigCubit, RemoteConfigState>(
       context,
     )) {
@@ -61,7 +61,7 @@ class _RemoteConfigDiagnosticsSectionState
               RemoteConfigDiagnosticsViewData
             >(
               selector: mapRemoteConfigStateToDiagnosticsViewData,
-              builder: (final context, final data) => Column(
+              builder: (context, data) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _RemoteConfigStatusBadge(

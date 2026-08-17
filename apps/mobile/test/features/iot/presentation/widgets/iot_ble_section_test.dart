@@ -1,31 +1,27 @@
-import 'package:flutter/material.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/unsupported_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_platform_gateway.dart';
+import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) => _NoopDisposable();
+  TimerDisposable periodic(Duration interval, void Function() onTick) =>
+      _NoopDisposable();
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopDisposable();
   }
@@ -38,7 +34,7 @@ class _NoopDisposable with TimerDisposable {
 
 void main() {
   testWidgets('IotBleSection shows status, empty devices, and log panel', (
-    final tester,
+    tester,
   ) async {
     final MockBleRepository mockRepository = MockBleRepository();
     final MockClassicBluetoothRepository classicRepository =
@@ -62,7 +58,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<IotBleCubit>.value(
           value: cubit,
@@ -80,7 +76,7 @@ void main() {
 
   testWidgets(
     'Try again after unsupported real mode returns to mock showcase',
-    (final tester) async {
+    (tester) async {
       final MockBleRepository mockRepository = MockBleRepository();
       final MockClassicBluetoothRepository classicRepository =
           MockClassicBluetoothRepository();
@@ -105,7 +101,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<IotBleCubit>.value(
             value: cubit,

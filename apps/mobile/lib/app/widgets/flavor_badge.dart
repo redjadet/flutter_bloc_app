@@ -1,12 +1,12 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FlavorBadge extends StatelessWidget {
   const FlavorBadge({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final flavor = FlavorManager.I.flavor;
     if (flavor == Flavor.prod) return const SizedBox.shrink();
     final ColorScheme colors = Theme.of(context).colorScheme;
@@ -50,8 +50,8 @@ class _FlavorBadgeStyle {
 }
 
 _FlavorBadgeStyle _mapFlavorToBadge(
-  final Flavor flavor,
-  final ColorScheme colors,
+  Flavor flavor,
+  ColorScheme colors,
 ) {
   switch (flavor) {
     case Flavor.dev:

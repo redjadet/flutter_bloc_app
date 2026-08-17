@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 /// Sync status banner for the counter feature. Uses shared logic from
@@ -37,7 +37,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   }
 
   @override
-  Widget build(final BuildContext context) => _CounterSyncBannerBody(
+  Widget build(BuildContext context) => _CounterSyncBannerBody(
     l10n: widget.l10n,
   );
 }
@@ -50,7 +50,7 @@ class _CounterSyncBannerBody extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
@@ -58,7 +58,7 @@ class _CounterSyncBannerBody extends StatelessWidget {
     }
 
     return TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (!CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(
           context,
         )) {
@@ -67,7 +67,7 @@ class _CounterSyncBannerBody extends StatelessWidget {
         // check-ignore: listener callback is event-driven, not a build side effect
         unawaited(context.cubit<CounterCubit>().refreshPendingSyncCount());
       },
-      builder: (final context, final syncState) {
+      builder: (context, syncState) {
         if (!CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(
           context,
         )) {
@@ -75,7 +75,7 @@ class _CounterSyncBannerBody extends StatelessWidget {
         }
 
         return TypeSafeBlocBuilder<CounterCubit, CounterState>(
-          builder: (final context, final counterState) {
+          builder: (context, counterState) {
             final bool isOffline =
                 syncState.networkStatus == NetworkStatus.offline;
             final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;
@@ -150,8 +150,8 @@ class _CounterSyncBannerBody extends StatelessWidget {
 }
 
 String _formatLastSynced(
-  final MaterialLocalizations localizations,
-  final DateTime timestamp,
+  MaterialLocalizations localizations,
+  DateTime timestamp,
 ) {
   final DateTime local = timestamp.toLocal();
   final String date = localizations.formatShortDate(local);

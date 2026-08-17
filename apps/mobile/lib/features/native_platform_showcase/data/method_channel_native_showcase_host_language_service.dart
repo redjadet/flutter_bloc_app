@@ -15,7 +15,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 class MethodChannelNativeShowcaseHostLanguageService
     implements NativeShowcaseHostLanguageService {
   const MethodChannelNativeShowcaseHostLanguageService({
-    final MethodChannel? channel,
+    MethodChannel? channel,
   }) : _channel =
            channel ??
            const MethodChannel('com.example.flutter_bloc_app/native_showcase');
@@ -68,7 +68,7 @@ class MethodChannelNativeShowcaseHostLanguageService
   }
 
   @override
-  Future<NativeInteropCallResult> shareText(final String text) async {
+  Future<NativeInteropCallResult> shareText(String text) async {
     final String trimmed = text.trim();
     final NativeInteropBridgeKind kind =
         _mobileBridgeKindOrNull() ?? _unavailableBridgeKind();
@@ -119,9 +119,9 @@ class MethodChannelNativeShowcaseHostLanguageService
   }
 
   Future<NativeInteropCallResult> _invoke({
-    required final String method,
-    required final NativeInteropBridgeKind kind,
-    final Map<String, Object?>? arguments,
+    required String method,
+    required NativeInteropBridgeKind kind,
+    Map<String, Object?>? arguments,
   }) async {
     try {
       final Object? response = await _channel

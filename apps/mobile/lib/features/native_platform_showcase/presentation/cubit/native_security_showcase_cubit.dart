@@ -50,22 +50,22 @@ class NativeSecurityShowcaseCubit extends Cubit<NativeSecurityShowcaseState> {
 
   Future<void> runP256() => _runAndApply(
     NativeSecurityOperation.p256SignVerify,
-    (final s, final r) => s.copyWith(p256Result: r),
+    (s, r) => s.copyWith(p256Result: r),
   );
 
   Future<void> runAesGcm() => _runAndApply(
     NativeSecurityOperation.aesGcmRoundTrip,
-    (final s, final r) => s.copyWith(aesResult: r),
+    (s, r) => s.copyWith(aesResult: r),
   );
 
   Future<void> runSecureStorage() => _runAndApply(
     NativeSecurityOperation.secureStorageLifecycle,
-    (final s, final r) => s.copyWith(storageResult: r),
+    (s, r) => s.copyWith(storageResult: r),
   );
 
   Future<void> runBiometric() => _runAndApply(
     NativeSecurityOperation.biometricProtectedOperation,
-    (final s, final r) => s.copyWith(biometricResult: r),
+    (s, r) => s.copyWith(biometricResult: r),
   );
 
   /// Runs P-256 then AES-GCM sequentially. The UI shows two separate run
@@ -106,8 +106,8 @@ class NativeSecurityShowcaseCubit extends Cubit<NativeSecurityShowcaseState> {
   }
 
   Future<void> _runAndApply(
-    final NativeSecurityOperation operation,
-    final NativeSecurityShowcaseState Function(
+    NativeSecurityOperation operation,
+    NativeSecurityShowcaseState Function(
       NativeSecurityShowcaseState state,
       NativeSecurityOperationResult result,
     )

@@ -2,7 +2,7 @@
 class StaffDemoWeekCalendar {
   const StaffDemoWeekCalendar._();
 
-  static DateTime weekStartUtc([final DateTime? now]) {
+  static DateTime weekStartUtc([DateTime? now]) {
     final DateTime utc = (now ?? DateTime.now()).toUtc();
     final int weekday = utc.weekday; // Mon=1..Sun=7
     return DateTime.utc(utc.year, utc.month, utc.day).subtract(
@@ -10,10 +10,10 @@ class StaffDemoWeekCalendar {
     );
   }
 
-  static List<DateTime> weekDaysUtc(final DateTime weekStartUtc) =>
+  static List<DateTime> weekDaysUtc(DateTime weekStartUtc) =>
       List<DateTime>.generate(
         7,
-        (final index) => weekStartUtc.add(Duration(days: index)),
+        (index) => weekStartUtc.add(Duration(days: index)),
         growable: false,
       );
 }

@@ -55,7 +55,7 @@ class CircuitBreaker {
   /// reopens. Call [recordSuccess] / [recordFailure] from the caller after
   /// the operation if you need to drive the breaker from outside; or use
   /// [execute] which does it automatically.
-  Future<T> execute<T>(final Future<T> Function() action) async {
+  Future<T> execute<T>(Future<T> Function() action) async {
     if (_state == CircuitState.open) {
       if (_openedAt case final DateTime openAt
           when DateTime.now().difference(openAt) >= cooldown) {

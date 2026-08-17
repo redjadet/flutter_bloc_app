@@ -1,14 +1,13 @@
 part of 'ai_decision_demo_page.dart';
 
 Widget _buildBody({
-  required final BuildContext context,
-  required final TextEditingController operatorNote,
-  required final TextEditingController actionNote,
-  required final void Function(BuildContext context, String? value)
-  onCaseChanged,
-  required final void Function(BuildContext context) onRunDecisionSupport,
-  required final Color Function(ColorScheme colors, String band) bandColor,
-  required final Widget Function({
+  required BuildContext context,
+  required TextEditingController operatorNote,
+  required TextEditingController actionNote,
+  required void Function(BuildContext context, String? value) onCaseChanged,
+  required void Function(BuildContext context) onRunDecisionSupport,
+  required Color Function(ColorScheme colors, String band) bandColor,
+  required Widget Function({
     required BuildContext context,
     required String label,
     required Color color,
@@ -25,7 +24,7 @@ Widget _buildBody({
           String? errorMessage,
         })
       >(
-        selector: (final state) => (
+        selector: (state) => (
           isLoadingQueue: state.isLoadingQueue,
           queue: state.queue,
           errorMessage: state.failure?.displayMessage,
@@ -86,10 +85,10 @@ class _AiDecisionWorkbench extends StatelessWidget {
   pillBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final selectedId = context
         .selectState<AiDecisionCubit, AiDecisionState, String?>(
-          selector: (final state) => state.selectedCaseId,
+          selector: (state) => state.selectedCaseId,
         );
 
     return Padding(
@@ -102,7 +101,7 @@ class _AiDecisionWorkbench extends StatelessWidget {
             initialValue: selectedId ?? queue.first.id,
             items: queue
                 .map(
-                  (final c) => DropdownMenuItem<String>(
+                  (c) => DropdownMenuItem<String>(
                     value: c.id,
                     child: Text(
                       '${c.id} • ${c.businessName}',
@@ -111,7 +110,7 @@ class _AiDecisionWorkbench extends StatelessWidget {
                   ),
                 )
                 .toList(growable: false),
-            onChanged: (final value) => onCaseChanged(context, value),
+            onChanged: (value) => onCaseChanged(context, value),
             decoration: const InputDecoration(
               labelText: 'Case',
               border: OutlineInputBorder(),
@@ -159,10 +158,10 @@ class _AiDecisionCaseDetailSection extends StatelessWidget {
   const _AiDecisionCaseDetailSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final detail = context
         .selectState<AiDecisionCubit, AiDecisionState, AiDecisionCaseDetail?>(
-          selector: (final state) => state.caseDetail,
+          selector: (state) => state.caseDetail,
         );
 
     if (detail == null) {
@@ -186,7 +185,7 @@ class _AiDecisionCaseDetailSection extends StatelessWidget {
         ...detail.riskSignals
             .take(6)
             .map(
-              (final signal) => Text(
+              (signal) => Text(
                 // check-ignore: demo copy (not localized yet)
                 '- ${signal.label}: ${signal.value} (${signal.severity})',
               ),
@@ -203,14 +202,14 @@ class _AiDecisionRunButton extends StatelessWidget {
   final void Function(BuildContext context) onRunDecisionSupport;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final runState = context
         .selectState<
           AiDecisionCubit,
           AiDecisionState,
           ({bool isRunningDecision, bool hasCaseDetail})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isRunningDecision: state.isRunningDecision,
             hasCaseDetail: state.caseDetail != null,
           ),
@@ -246,14 +245,14 @@ class _AiDecisionDecisionSection extends StatelessWidget {
   pillBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final decision = context
         .selectState<
           AiDecisionCubit,
           AiDecisionState,
           AiDecisionDecisionResult?
         >(
-          selector: (final state) =>
+          selector: (state) =>
               state.decision ?? state.caseDetail?.latestDecision,
         );
 
@@ -327,14 +326,14 @@ class _AiDecisionActionButtons extends StatelessWidget {
   final TextEditingController actionNote;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final actionState = context
         .selectState<
           AiDecisionCubit,
           AiDecisionState,
           ({bool isSavingAction, bool hasCaseDetail})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isSavingAction: state.isSavingAction,
             hasCaseDetail: state.caseDetail != null,
           ),
@@ -370,10 +369,10 @@ class _AiDecisionActionHistorySection extends StatelessWidget {
   const _AiDecisionActionHistorySection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final detail = context
         .selectState<AiDecisionCubit, AiDecisionState, AiDecisionCaseDetail?>(
-          selector: (final state) => state.caseDetail,
+          selector: (state) => state.caseDetail,
         );
 
     if (detail == null) {
@@ -388,7 +387,7 @@ class _AiDecisionActionHistorySection extends StatelessWidget {
         ...detail.actions
             .take(8)
             .map(
-              (final action) =>
+              (action) =>
                   // check-ignore: demo copy (not localized yet)
                   Text('- ${action.actionType}: ${action.note}'),
             ),

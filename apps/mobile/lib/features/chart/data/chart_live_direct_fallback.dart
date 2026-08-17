@@ -17,10 +17,10 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.d
 /// re-enter provider selection and can stack-overflow if mis-wired as the
 /// “direct” implementation.
 Future<List<ChartPoint>?> tryLiveDirectChartPoints({
-  required final ChartRemoteRepository? fallback,
-  required final String loggerTag,
-  final String? successDebugDetail,
-  final Object? guardAgainstIdenticalTo,
+  required ChartRemoteRepository? fallback,
+  required String loggerTag,
+  String? successDebugDetail,
+  Object? guardAgainstIdenticalTo,
 }) async {
   if (fallback == null) {
     return null;

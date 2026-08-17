@@ -20,7 +20,7 @@ class InMemoryProductAnalytics implements ProductAnalytics {
       List<AppAnalyticsEvent>.unmodifiable(_events);
 
   @override
-  Future<void> setCollectionEnabled({required final bool enabled}) async {
+  Future<void> setCollectionEnabled({required bool enabled}) async {
     _collectionEnabled = enabled;
     if (!enabled) {
       _events.clear();
@@ -28,7 +28,7 @@ class InMemoryProductAnalytics implements ProductAnalytics {
   }
 
   @override
-  Future<void> track(final AppAnalyticsEvent event) async {
+  Future<void> track(AppAnalyticsEvent event) async {
     if (!_collectionEnabled) {
       return;
     }

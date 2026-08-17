@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('NetworkErrorMapper', () {
@@ -169,7 +169,7 @@ void main() {
       expect(
         NetworkErrorMapper.getAppError(error),
         isA<NetworkError>().having(
-          (final NetworkError value) => value.kind,
+          (NetworkError value) => value.kind,
           'kind',
           NetworkErrorKind.offline,
         ),

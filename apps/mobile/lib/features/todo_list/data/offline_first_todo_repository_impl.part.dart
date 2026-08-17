@@ -8,8 +8,8 @@ class OfflineFirstTodoRepository
     required this._registry,
     required this._timerService,
     this._remoteRepository,
-    final TodoMergePolicy? mergePolicy,
-    final TodoPayloadBuilder? payloadBuilder,
+    TodoMergePolicy? mergePolicy,
+    TodoPayloadBuilder? payloadBuilder,
   }) : _mergePolicy = mergePolicy ?? const TodoMergePolicy(),
        _payloadBuilder = payloadBuilder ?? const TodoPayloadBuilder() {
     _registry.register(this);
@@ -43,9 +43,7 @@ class OfflineFirstTodoRepository
   Future<int> pendingSyncOperationCount({DateTime? now}) async {
     final List<SyncOperation> pending = await _pendingSyncRepository
         .getPendingOperations(now: now ?? DateTime.now().toUtc());
-    return pending
-        .where((final op) => op.entityType == todoSyncEntityType)
-        .length;
+    return pending.where((op) => op.entityType == todoSyncEntityType).length;
   }
 
   @override
@@ -75,7 +73,7 @@ class OfflineFirstTodoRepository
     }
 
     _remoteWatchSubscription = remoteRepo.watchAll().listen(
-      (final remoteItems) {
+      (remoteItems) {
         if (_remoteMergePausedForSessionCleanup) {
           return;
         }
@@ -91,7 +89,7 @@ class OfflineFirstTodoRepository
         _trackRemoteWatchMerge(merge);
         unawaited(merge);
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'OfflineFirstTodoRepository._startRemoteWatch failed',
           error,
@@ -141,7 +139,7 @@ class OfflineFirstTodoRepository
   }
 
   @override
-  Future<void> save(final TodoItem item) async {
+  Future<void> save(TodoItem item) async {
     final TodoItem normalized = _normalizeItem(
       item,
       _remoteRepository,
@@ -155,7 +153,7 @@ class OfflineFirstTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
+  Future<void> delete(String id) async {
     final String normalizedId = id.trim();
     if (normalizedId.isEmpty) {
       return;
@@ -171,7 +169,7 @@ class OfflineFirstTodoRepository
   Future<void> clearCompleted() async {
     final List<TodoItem> items = await _localRepository.fetchAll();
     final List<TodoItem> completedItems = items
-        .where((final item) => item.isCompleted)
+        .where((item) => item.isCompleted)
         .toList(growable: false);
     for (final TodoItem item in completedItems) {
       await delete(item.id);
@@ -208,14 +206,14 @@ class OfflineFirstTodoRepository
     _startRemoteWatch();
   }
 
-  void _trackRemoteWatchMerge(final Future<void> merge) {
+  void _trackRemoteWatchMerge(Future<void> merge) {
     _inFlightRemoteWatchMerges.add(merge);
     unawaited(
       merge.then<void>(
         (_) {
           _inFlightRemoteWatchMerges.remove(merge);
         },
-        onError: (final Object _, final StackTrace _) {
+        onError: (Object _, StackTrace _) {
           _inFlightRemoteWatchMerges.remove(merge);
         },
       ),
@@ -231,7 +229,7 @@ class OfflineFirstTodoRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     if (_isDeleteOperation(operation)) {
       await _processDeleteOperation(operation);
       return;
@@ -271,11 +269,11 @@ class OfflineFirstTodoRepository
     }
   }
 
-  bool _isDeleteOperation(final SyncOperation operation) =>
+  bool _isDeleteOperation(SyncOperation operation) =>
       operation.payload.containsKey('deleted') &&
       operation.payload['deleted'] == true;
 
-  Future<void> _syncSaveToRemote(final TodoItem normalized) async {
+  Future<void> _syncSaveToRemote(TodoItem normalized) async {
     final TodoDataSource? remoteRepository = _remoteRepository;
     if (remoteRepository == null) {
       return;
@@ -300,7 +298,7 @@ class OfflineFirstTodoRepository
     }
   }
 
-  Future<void> _syncDeleteToRemote(final String normalizedId) async {
+  Future<void> _syncDeleteToRemote(String normalizedId) async {
     final TodoDataSource? remoteRepository = _remoteRepository;
     if (remoteRepository == null) {
       return;
@@ -324,7 +322,7 @@ class OfflineFirstTodoRepository
     }
   }
 
-  Future<void> _processDeleteOperation(final SyncOperation operation) async {
+  Future<void> _processDeleteOperation(SyncOperation operation) async {
     final String? deleteId = _extractDeleteId(operation);
     if (deleteId == null) {
       return;
@@ -337,11 +335,11 @@ class OfflineFirstTodoRepository
     await _localRepository.delete(deleteId);
   }
 
-  Future<void> _processSaveOperation(final TodoItem item) async {
+  Future<void> _processSaveOperation(TodoItem item) async {
     if (_remoteRepository case final TodoDataSource remoteRepository?) {
       final Iterable<TodoItem> remoteMatches =
           (await remoteRepository.fetchAll()).where(
-            (final candidate) => candidate.id == item.id,
+            (candidate) => candidate.id == item.id,
           );
       final TodoItem? remoteItem = remoteMatches.isEmpty
           ? null
@@ -350,7 +348,7 @@ class OfflineFirstTodoRepository
           !_mergePolicy.shouldPushPendingToRemote(item, remoteItem)) {
         final Iterable<TodoItem> localMatches =
             (await _localRepository.fetchAll()).where(
-              (final candidate) => candidate.id == item.id,
+              (candidate) => candidate.id == item.id,
             );
         final TodoItem? localItem = localMatches.isEmpty
             ? null
@@ -371,7 +369,7 @@ class OfflineFirstTodoRepository
     await _markLocalItemSynchronized(item);
   }
 
-  String? _extractDeleteId(final SyncOperation operation) {
+  String? _extractDeleteId(SyncOperation operation) {
     final dynamic idRaw = operation.payload['id'];
     if (idRaw is! String) {
       return null;
@@ -380,7 +378,7 @@ class OfflineFirstTodoRepository
     return normalizedId.isEmpty ? null : normalizedId;
   }
 
-  TodoItem? _parseOperationItem(final SyncOperation operation) {
+  TodoItem? _parseOperationItem(SyncOperation operation) {
     try {
       return TodoItemDto.fromMap(operation.payload).toDomain();
     } on Object catch (error, stackTrace) {
@@ -394,7 +392,7 @@ class OfflineFirstTodoRepository
     }
   }
 
-  Future<void> _markLocalItemSynchronized(final TodoItem item) {
+  Future<void> _markLocalItemSynchronized(TodoItem item) {
     return _localRepository.save(
       item.copyWith(synchronized: true, lastSyncedAt: DateTime.now().toUtc()),
     );

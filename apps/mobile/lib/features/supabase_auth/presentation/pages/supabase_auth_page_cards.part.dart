@@ -14,7 +14,7 @@ class SupabaseAuthNotConfiguredCard extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return CommonCard(
       color: colors.surfaceContainerHighest,
       elevation: 0,
@@ -48,7 +48,7 @@ class SupabaseAuthErrorSection extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double iconSize = math.min(context.responsiveIconSize, 28);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

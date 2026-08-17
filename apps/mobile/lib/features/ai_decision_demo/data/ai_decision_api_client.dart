@@ -23,7 +23,7 @@ class AiDecisionApiClient {
 
   @visibleForTesting
   static String resolveBaseUrlForPlatform({
-    final String configuredBaseUrl = _configuredBaseUrl,
+    String configuredBaseUrl = _configuredBaseUrl,
   }) {
     final configured = configuredBaseUrl.trim();
     if (configured.isNotEmpty) {
@@ -37,45 +37,44 @@ class AiDecisionApiClient {
       '/cases',
       emptyResponseMessage:
           'AI Decision API returned empty case queue response.',
-      mapper: (final json) {
+      mapper: (json) {
         final List<Map<String, dynamic>> cases = requireAiDecisionMapList(
           json,
           'cases',
         );
         return cases
             .map(AiDecisionCaseSummaryDto.fromJson)
-            .map((final dto) => dto.toDomain())
+            .map((dto) => dto.toDomain())
             .toList(growable: false);
       },
     );
   }
 
-  Future<AiDecisionCaseDetail> getCaseDetail(final String caseId) async {
+  Future<AiDecisionCaseDetail> getCaseDetail(String caseId) async {
     return _getJson<AiDecisionCaseDetail>(
       '/cases/$caseId',
       emptyResponseMessage:
           'AI Decision API returned empty case detail response.',
-      mapper: (final json) => AiDecisionCaseDetailDto.fromJson(json).toDomain(),
+      mapper: (json) => AiDecisionCaseDetailDto.fromJson(json).toDomain(),
     );
   }
 
   Future<AiDecisionDecisionResult> runDecisionSupport({
-    required final String caseId,
-    required final String operatorNote,
+    required String caseId,
+    required String operatorNote,
   }) async {
     return _postJson<AiDecisionDecisionResult>(
       '/cases/$caseId/decision',
       data: <String, dynamic>{'operator_note': operatorNote},
       emptyResponseMessage: 'AI Decision API returned empty decision response.',
-      mapper: (final json) =>
-          AiDecisionDecisionResultDto.fromJson(json).toDomain(),
+      mapper: (json) => AiDecisionDecisionResultDto.fromJson(json).toDomain(),
     );
   }
 
   Future<void> createAction({
-    required final String caseId,
-    required final String actionType,
-    required final String note,
+    required String caseId,
+    required String actionType,
+    required String note,
   }) async {
     await _postJson<void>(
       '/cases/$caseId/actions',
@@ -89,9 +88,9 @@ class AiDecisionApiClient {
   }
 
   Future<T> _getJson<T>(
-    final String path, {
-    required final String emptyResponseMessage,
-    required final _JsonMapper<T> mapper,
+    String path, {
+    required String emptyResponseMessage,
+    required _JsonMapper<T> mapper,
   }) {
     return _sendJson<T>(
       () => _dio.get<_JsonMap>('$_baseUrl$path'),
@@ -101,10 +100,10 @@ class AiDecisionApiClient {
   }
 
   Future<T> _postJson<T>(
-    final String path, {
-    required final Map<String, dynamic> data,
-    required final String emptyResponseMessage,
-    required final _JsonMapper<T> mapper,
+    String path, {
+    required Map<String, dynamic> data,
+    required String emptyResponseMessage,
+    required _JsonMapper<T> mapper,
   }) {
     return _sendJson<T>(
       () => _dio.post<_JsonMap>('$_baseUrl$path', data: data),
@@ -114,9 +113,9 @@ class AiDecisionApiClient {
   }
 
   Future<T> _sendJson<T>(
-    final Future<Response<_JsonMap>> Function() request, {
-    required final String emptyResponseMessage,
-    required final _JsonMapper<T> mapper,
+    Future<Response<_JsonMap>> Function() request, {
+    required String emptyResponseMessage,
+    required _JsonMapper<T> mapper,
   }) async {
     final response = await request();
     _throwIfFailure(response);
@@ -127,7 +126,7 @@ class AiDecisionApiClient {
     return mapper(data);
   }
 
-  static void _throwIfFailure(final Response<dynamic> response) {
+  static void _throwIfFailure(Response<dynamic> response) {
     final statusCode = response.statusCode;
     if (statusCode == null || (statusCode >= 200 && statusCode < 300)) {
       return;
@@ -135,7 +134,7 @@ class AiDecisionApiClient {
     throw HttpRequestFailure(statusCode, _failureMessage(response));
   }
 
-  static String _failureMessage(final Response<dynamic> response) {
+  static String _failureMessage(Response<dynamic> response) {
     final data = response.data;
     if (data is Map<String, dynamic>) {
       final detail = data['detail'];

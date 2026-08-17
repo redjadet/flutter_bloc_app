@@ -1,20 +1,20 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/app_info_cubit.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'app_info_section.freezed.dart';
 
 @freezed
 abstract class _AppInfoViewData with _$AppInfoViewData {
   const factory _AppInfoViewData({
-    required final bool showSuccess,
-    required final bool showError,
-    required final AppInfo? info,
-    required final String? errorMessage,
+    required bool showSuccess,
+    required bool showError,
+    required AppInfo? info,
+    required String? errorMessage,
   }) = __AppInfoViewData;
 }
 
@@ -22,20 +22,20 @@ class AppInfoSection extends StatelessWidget {
   const AppInfoSection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return SettingsSection(
       title: l10n.appInfoSectionTitle,
       child: CommonCard(
         child:
             TypeSafeBlocSelector<AppInfoCubit, AppInfoState, _AppInfoViewData>(
-              selector: (final state) => _AppInfoViewData(
+              selector: (state) => _AppInfoViewData(
                 showSuccess: state.status.isSuccess && state.info != null,
                 showError: state.status.isError,
                 info: state.info,
                 errorMessage: state.errorMessage,
               ),
-              builder: (final context, final data) {
+              builder: (context, data) {
                 if ((data.showSuccess, data.info) case (true, final info?)) {
                   return _InfoDetails(info: info);
                 }
@@ -56,7 +56,7 @@ class _InfoDetails extends StatelessWidget {
   final AppInfo info;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final TextStyle? labelStyle = Theme.of(context).textTheme.bodyMedium;
     final TextStyle? valueStyle = Theme.of(context).textTheme.bodyLarge;
@@ -95,7 +95,7 @@ class _InfoRow extends StatelessWidget {
   final TextStyle? valueStyle;
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Text(label, style: labelStyle),
@@ -111,7 +111,7 @@ class _ErrorContent extends StatelessWidget {
   final String? error;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     return Column(
@@ -147,7 +147,7 @@ class _LoadingContent extends StatelessWidget {
   const _LoadingContent();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Row(
       children: <Widget>[

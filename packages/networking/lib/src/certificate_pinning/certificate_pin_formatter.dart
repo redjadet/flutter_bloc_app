@@ -4,7 +4,7 @@ import 'dart:convert';
 abstract final class CertificatePinFormatter {
   static const String prefix = 'sha256/';
 
-  static bool isValidFormat(final String pin) {
+  static bool isValidFormat(String pin) {
     final String canonical = canonicalize(pin);
     if (!canonical.startsWith(prefix)) {
       return false;
@@ -21,7 +21,7 @@ abstract final class CertificatePinFormatter {
     }
   }
 
-  static String canonicalize(final String pin) {
+  static String canonicalize(String pin) {
     final String trimmed = pin.trim();
     if (trimmed.toLowerCase().startsWith(prefix)) {
       final String body = trimmed.substring(prefix.length).trim();
@@ -30,7 +30,7 @@ abstract final class CertificatePinFormatter {
     return trimmed;
   }
 
-  static String fromSha256Bytes(final List<int> digest) {
+  static String fromSha256Bytes(List<int> digest) {
     if (digest.length != 32) {
       throw ArgumentError.value(digest.length, 'digest.length', 'must be 32');
     }

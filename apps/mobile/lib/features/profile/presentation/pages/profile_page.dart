@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_g
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'profile_page.freezed.dart';
 
@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final l10n = context.l10n;
@@ -36,24 +36,24 @@ class ProfilePage extends StatelessWidget {
       useResponsiveBody: false,
       bottomNavigationBar: const ProfileBottomNav(),
       body: ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
-        selector: (final state) => _ProfileBodyData(
+        selector: (state) => _ProfileBodyData(
           isLoading: state.isLoading,
           hasError: state.hasError,
           hasUser: state.hasUser,
           user: state.user,
           errorMessage: state.errorMessage,
         ),
-        isLoading: (final data) => data.isLoading && !data.hasUser,
-        isError: (final data) => data.hasError && !data.hasUser,
-        loadingBuilder: (final context) {
+        isLoading: (data) => data.isLoading && !data.hasUser,
+        isError: (data) => data.hasError && !data.hasUser,
+        loadingBuilder: (context) {
           final colors = Theme.of(context).colorScheme;
           return CommonLoadingWidget(color: colors.onSurface);
         },
-        errorBuilder: (final context, final data) => CommonErrorView(
+        errorBuilder: (context, data) => CommonErrorView(
           message: data.errorMessage ?? context.l10n.featureLoadError,
           onRetry: () => context.cubit<ProfileCubit>().loadProfile(),
         ),
-        builder: (final context, final bodyData) {
+        builder: (context, bodyData) {
           final colors = Theme.of(context).colorScheme;
           final profile = bodyData.user;
           if (!bodyData.hasUser || profile == null) {
@@ -145,10 +145,10 @@ class ProfilePage extends StatelessWidget {
 @freezed
 abstract class _ProfileBodyData with _$ProfileBodyData {
   const factory _ProfileBodyData({
-    required final bool isLoading,
-    required final bool hasError,
-    required final bool hasUser,
-    required final ProfileUser? user,
-    final String? errorMessage,
+    required bool isLoading,
+    required bool hasError,
+    required bool hasUser,
+    required ProfileUser? user,
+    String? errorMessage,
   }) = __ProfileBodyData;
 }

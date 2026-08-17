@@ -18,7 +18,7 @@ class ChatConversationDto {
     this.changeId,
   });
 
-  ChatConversationDto.fromDomain(final ChatConversation conversation)
+  ChatConversationDto.fromDomain(ChatConversation conversation)
     : id = conversation.id,
       createdAt = conversation.createdAt,
       updatedAt = conversation.updatedAt,
@@ -30,7 +30,7 @@ class ChatConversationDto {
       synchronized = conversation.synchronized,
       changeId = conversation.changeId;
 
-  factory ChatConversationDto.fromJson(final Map<String, dynamic> json) {
+  factory ChatConversationDto.fromJson(Map<String, dynamic> json) {
     final dynamic messagesRaw = json['messages'];
     final List<dynamic>? messagesList = listFromDynamic(messagesRaw);
     if (messagesRaw != null && messagesList == null) {
@@ -90,7 +90,7 @@ class ChatConversationDto {
   Map<String, dynamic> toJson() => <String, dynamic>{
     'id': id,
     'messages': messages
-        .map((final m) => ChatMessageDto.fromDomain(m).toJson())
+        .map((m) => ChatMessageDto.fromDomain(m).toJson())
         .toList(),
     'pastUserInputs': pastUserInputs,
     'generatedResponses': generatedResponses,
@@ -104,22 +104,20 @@ class ChatConversationDto {
   };
 }
 
-List<ChatMessage> _messagesFromJson(final List<dynamic>? raw) {
+List<ChatMessage> _messagesFromJson(List<dynamic>? raw) {
   if (raw == null) return const <ChatMessage>[];
   return raw
       .whereType<Map<String, dynamic>>()
-      .map((final map) => ChatMessageDto.fromJson(map).toDomain())
+      .map((map) => ChatMessageDto.fromJson(map).toDomain())
       .toList(growable: false);
 }
 
-List<String> _stringListFromJson(final List<dynamic>? raw) {
+List<String> _stringListFromJson(List<dynamic>? raw) {
   if (raw == null) return const <String>[];
-  return raw
-      .map((final dynamic value) => value.toString())
-      .toList(growable: false);
+  return raw.map((dynamic value) => value.toString()).toList(growable: false);
 }
 
-DateTime _parseDate(final dynamic value, {final DateTime? fallback}) {
+DateTime _parseDate(dynamic value, {DateTime? fallback}) {
   if (value is String && value.isNotEmpty) {
     final DateTime? parsed = DateTime.tryParse(value);
     if (parsed != null) {
@@ -132,7 +130,7 @@ DateTime _parseDate(final dynamic value, {final DateTime? fallback}) {
   return fallback ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
 }
 
-String? _normalizeModel(final dynamic value) {
+String? _normalizeModel(dynamic value) {
   if (value is! String) {
     return null;
   }
@@ -140,7 +138,7 @@ String? _normalizeModel(final dynamic value) {
   return trimmed.isEmpty ? null : trimmed;
 }
 
-DateTime? _parseOptionalDate(final dynamic value) {
+DateTime? _parseOptionalDate(dynamic value) {
   if (value is String && value.isNotEmpty) {
     return DateTime.tryParse(value);
   }
@@ -150,7 +148,7 @@ DateTime? _parseOptionalDate(final dynamic value) {
   return null;
 }
 
-String? _normalizeChangeId(final dynamic value) {
+String? _normalizeChangeId(dynamic value) {
   if (value is! String) {
     return null;
   }

@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_display_card.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CounterDisplay extends StatefulWidget {
   const CounterDisplay({super.key});
@@ -21,20 +21,20 @@ class _CounterDisplayState extends State<CounterDisplay> {
   static const Duration _animMedium = UI.animMedium;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colors = theme.colorScheme;
     final l10n = context.l10n;
 
     return TypeSafeBlocSelector<CounterCubit, CounterState, _DisplayState>(
-      selector: (final state) => _DisplayState(
+      selector: (state) => _DisplayState(
         count: state.count,
         countdownSeconds: state.countdownSeconds,
         isActive: state.isAutoDecrementActive,
         lastChanged: state.lastChanged,
       ),
-      builder: (final context, final data) {
+      builder: (context, data) {
         _updateCycleTotalSeconds(data);
         final int total =
             _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
@@ -66,7 +66,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
     );
   }
 
-  void _updateCycleTotalSeconds(final _DisplayState data) {
+  void _updateCycleTotalSeconds(_DisplayState data) {
     if (!data.isActive) {
       _cycleTotalSeconds = data.countdownSeconds;
       return;

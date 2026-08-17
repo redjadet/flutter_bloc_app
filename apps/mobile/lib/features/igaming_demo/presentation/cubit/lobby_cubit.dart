@@ -21,11 +21,11 @@ class LobbyCubit extends Cubit<LobbyState> {
     await CubitExceptionHandler.executeAsync<DemoBalance>(
       operation: () => _repository.getBalance(),
       isAlive: () => !isClosed,
-      onSuccess: (final balance) {
+      onSuccess: (balance) {
         if (isClosed) return;
         emit(LobbyState.ready(balance));
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           LobbyState.error(_l10n?.igamingDemoErrorLoadBalance ?? message),

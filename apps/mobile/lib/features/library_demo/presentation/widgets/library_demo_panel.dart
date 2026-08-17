@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_assets_header.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_category_list.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_search_row.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shared dark rounded panel: title, search, categories, assets header, and
 /// optional trailing content (e.g. gap only for grid, or gap + tiles for list).
@@ -32,7 +32,7 @@ class LibraryDemoPanel extends StatelessWidget {
   final List<Widget> trailing;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     return Container(
       decoration: BoxDecoration(

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 
-AiDecisionApplicant mapAiDecisionApplicant(final Map<String, dynamic> json) =>
+AiDecisionApplicant mapAiDecisionApplicant(Map<String, dynamic> json) =>
     AiDecisionApplicant(
       name: _stringOf(json['name']),
       id: _optionalString(json['id']),
@@ -8,7 +8,7 @@ AiDecisionApplicant mapAiDecisionApplicant(final Map<String, dynamic> json) =>
       priorDefaults: _optionalInt(json['prior_defaults']),
     );
 
-AiDecisionBusiness mapAiDecisionBusiness(final Map<String, dynamic> json) =>
+AiDecisionBusiness mapAiDecisionBusiness(Map<String, dynamic> json) =>
     AiDecisionBusiness(
       name: _stringOf(json['name']),
       id: _optionalString(json['id']),
@@ -17,13 +17,12 @@ AiDecisionBusiness mapAiDecisionBusiness(final Map<String, dynamic> json) =>
       ageMonths: _optionalInt(json['age_months']),
     );
 
-AiDecisionLoan mapAiDecisionLoan(final Map<String, dynamic> json) =>
-    AiDecisionLoan(
-      amount: _optionalDouble(json['amount']) ?? 0,
-      purpose: _stringOf(json['purpose']),
-    );
+AiDecisionLoan mapAiDecisionLoan(Map<String, dynamic> json) => AiDecisionLoan(
+  amount: _optionalDouble(json['amount']) ?? 0,
+  purpose: _stringOf(json['purpose']),
+);
 
-AiDecisionRiskSignal mapAiDecisionRiskSignal(final Map<String, dynamic> json) {
+AiDecisionRiskSignal mapAiDecisionRiskSignal(Map<String, dynamic> json) {
   final String label = _stringOf(json['label']).isNotEmpty
       ? _stringOf(json['label'])
       : _stringOf(json['code']);
@@ -36,7 +35,7 @@ AiDecisionRiskSignal mapAiDecisionRiskSignal(final Map<String, dynamic> json) {
 }
 
 AiDecisionActionRecord mapAiDecisionActionRecord(
-  final Map<String, dynamic> json,
+  Map<String, dynamic> json,
 ) {
   final String actionType = _stringOf(json['action_type']).isNotEmpty
       ? _stringOf(json['action_type'])
@@ -47,7 +46,7 @@ AiDecisionActionRecord mapAiDecisionActionRecord(
   );
 }
 
-AiDecisionProof mapAiDecisionProof(final Map<String, dynamic> json) {
+AiDecisionProof mapAiDecisionProof(Map<String, dynamic> json) {
   const knownKeys = <String>{
     'rule_trace',
     'input_snapshot',
@@ -84,7 +83,7 @@ AiDecisionProof mapAiDecisionProof(final Map<String, dynamic> json) {
   );
 }
 
-AiDecisionProofRule mapAiDecisionProofRule(final Map<String, dynamic> json) =>
+AiDecisionProofRule mapAiDecisionProofRule(Map<String, dynamic> json) =>
     AiDecisionProofRule(
       id: _stringOf(json['id']),
       label: _stringOf(json['label']),
@@ -94,7 +93,7 @@ AiDecisionProofRule mapAiDecisionProofRule(final Map<String, dynamic> json) =>
     );
 
 AiDecisionBandThresholds mapAiDecisionBandThresholds(
-  final Map<String, dynamic> json,
+  Map<String, dynamic> json,
 ) => AiDecisionBandThresholds(
   low: json['low'],
   medium: json['medium'],
@@ -103,7 +102,7 @@ AiDecisionBandThresholds mapAiDecisionBandThresholds(
 );
 
 AiDecisionSimilarCase mapAiDecisionSimilarCase(
-  final Map<String, dynamic> json,
+  Map<String, dynamic> json,
 ) => AiDecisionSimilarCase(
   used: json['used'] == true,
   caseId: _optionalString(json['case_id']),
@@ -111,21 +110,21 @@ AiDecisionSimilarCase mapAiDecisionSimilarCase(
   similarity: json['similarity'],
 );
 
-String _stringOf(final Object? value) => value?.toString() ?? '';
+String _stringOf(Object? value) => value?.toString() ?? '';
 
-String? _optionalString(final Object? value) {
+String? _optionalString(Object? value) {
   if (value == null) return null;
   final String text = value.toString();
   return text.isEmpty ? null : text;
 }
 
-int? _optionalInt(final Object? value) {
+int? _optionalInt(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
   return int.tryParse(value?.toString() ?? '');
 }
 
-double? _optionalDouble(final Object? value) {
+double? _optionalDouble(Object? value) {
   if (value is double) return value;
   if (value is num) return value.toDouble();
   return double.tryParse(value?.toString() ?? '');

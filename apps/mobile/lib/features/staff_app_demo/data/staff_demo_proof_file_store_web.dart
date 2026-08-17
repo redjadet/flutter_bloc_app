@@ -35,17 +35,17 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
     return box;
   }
 
-  List<int>? _decodeBytes(final Object? raw) {
+  List<int>? _decodeBytes(Object? raw) {
     if (raw is List<int>) {
       return List<int>.from(raw);
     }
-    if (raw is List && raw.every((final item) => item is int)) {
+    if (raw is List && raw.every((item) => item is int)) {
       return raw.cast<int>().toList(growable: false);
     }
     return null;
   }
 
-  Future<void> _putBytes(final String path, final List<int> bytes) async {
+  Future<void> _putBytes(String path, List<int> bytes) async {
     final int? remaining = debugPutFailuresRemaining;
     if (remaining != null && remaining > 0) {
       debugPutFailuresRemaining = remaining - 1;
@@ -57,7 +57,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
     await box.put(path, copy);
   }
 
-  Future<List<int>> _readSourceBytes(final String sourcePath) async {
+  Future<List<int>> _readSourceBytes(String sourcePath) async {
     final List<int>? staged = StaffDemoProofPickMemory.instance.peek(
       sourcePath,
     );
@@ -78,7 +78,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
 
   @override
   Future<String> persistPhotoFile({
-    required final String sourcePath,
+    required String sourcePath,
   }) async {
     try {
       final List<int> bytes = await _readSourceBytes(sourcePath);
@@ -101,7 +101,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
 
   @override
   Future<String> persistSignaturePngBytes({
-    required final List<int> bytes,
+    required List<int> bytes,
   }) async {
     final String destPath =
         'staff-demo-proof://signature/${DateTime.now().microsecondsSinceEpoch}.png';
@@ -110,7 +110,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   }
 
   @override
-  Future<bool> fileExists(final String path) async {
+  Future<bool> fileExists(String path) async {
     if (_bytesByPath.containsKey(path)) {
       return true;
     }
@@ -119,7 +119,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   }
 
   @override
-  Future<List<int>> readFileBytes(final String path) async {
+  Future<List<int>> readFileBytes(String path) async {
     final List<int>? bytes = _bytesByPath[path];
     if (bytes != null) {
       return List<int>.from(bytes);
@@ -137,7 +137,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   }
 
   @override
-  Future<void> deleteFileAtPath(final String path) async {
+  Future<void> deleteFileAtPath(String path) async {
     _bytesByPath.remove(path);
     final Box<dynamic> box = await _openBox();
     await box.delete(path);

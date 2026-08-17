@@ -5,5 +5,5 @@ export 'package:utilities/utilities.dart' show ProfileCacheMetadata;
 
 abstract class ProfileCacheRepository implements ProfileCacheControlsPort {
   Future<ProfileUser?> loadProfile();
-  Future<void> saveProfile(final ProfileUser user);
+  Future<void> saveProfile(ProfileUser user);
 }

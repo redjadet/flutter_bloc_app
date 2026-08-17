@@ -1,9 +1,9 @@
 part of 'profile_bottom_nav.dart';
 
 Future<void> _handleTap(
-  final BuildContext context,
-  final _NavItem item,
-  final String currentLocation,
+  BuildContext context,
+  _NavItem item,
+  String currentLocation,
 ) async {
   final _NavDestination? destination = item.destination;
   if (destination == null) {
@@ -35,7 +35,7 @@ Future<void> _handleTap(
   );
 }
 
-void _goToExample(final BuildContext context) {
+void _goToExample(BuildContext context) {
   if (!_ensureMounted(context, 'ProfileBottomNav._handleTap.example')) {
     return;
   }
@@ -45,9 +45,9 @@ void _goToExample(final BuildContext context) {
 }
 
 Future<void> _pushRoute(
-  final BuildContext context,
-  final String route, {
-  required final String logContext,
+  BuildContext context,
+  String route, {
+  required String logContext,
 }) async {
   if (!_ensureMounted(context, logContext)) {
     return;
@@ -55,7 +55,7 @@ Future<void> _pushRoute(
   await context.push(route);
 }
 
-bool _ensureMounted(final BuildContext context, final String logContext) {
+bool _ensureMounted(BuildContext context, String logContext) {
   if (context.mounted) {
     return true;
   }

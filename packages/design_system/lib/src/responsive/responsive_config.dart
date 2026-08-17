@@ -1,8 +1,9 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+
 import '../tokens/layout_breakpoints.dart';
 import '../ui/ui_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 /// Centralizes responsive configuration so ScreenUtil/ResponsiveFramework share
 /// the same breakpoints and context helpers.
@@ -27,10 +28,10 @@ class ResponsiveConfig {
     ),
   ];
 
-  static ResponsiveBreakpointsData dataOf(final BuildContext context) =>
+  static ResponsiveBreakpointsData dataOf(BuildContext context) =>
       maybeDataOf(context) ?? const ResponsiveBreakpointsData();
 
-  static ResponsiveBreakpointsData? maybeDataOf(final BuildContext context) {
+  static ResponsiveBreakpointsData? maybeDataOf(BuildContext context) {
     final inheritedElement = context
         .getElementForInheritedWidgetOfExactType<
           InheritedResponsiveBreakpoints
@@ -49,7 +50,7 @@ class ResponsiveConfig {
     return data;
   }
 
-  static double screenWidth(final BuildContext context) {
+  static double screenWidth(BuildContext context) {
     final data = maybeDataOf(context);
     if (data != null && data.screenWidth > 0) {
       return data.screenWidth;
@@ -60,7 +61,7 @@ class ResponsiveConfig {
     return MediaQuery.sizeOf(context).width;
   }
 
-  static double screenHeight(final BuildContext context) {
+  static double screenHeight(BuildContext context) {
     final data = maybeDataOf(context);
     if (data != null && data.screenHeight > 0) {
       return data.screenHeight;
@@ -71,7 +72,7 @@ class ResponsiveConfig {
     return MediaQuery.sizeOf(context).height;
   }
 
-  static Orientation orientation(final BuildContext context) {
+  static Orientation orientation(BuildContext context) {
     if (maybeDataOf(context) case final data?) {
       return data.orientation;
     }

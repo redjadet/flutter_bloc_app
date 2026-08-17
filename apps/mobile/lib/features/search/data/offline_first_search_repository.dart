@@ -37,7 +37,7 @@ class OfflineFirstSearchRepository
   String get entityType => searchEntity;
 
   @override
-  Future<List<SearchResult>> search(final String query) async {
+  Future<List<SearchResult>> search(String query) async {
     if (query.isEmpty) {
       return const <SearchResult>[];
     }
@@ -93,14 +93,14 @@ class OfflineFirstSearchRepository
   }
 
   @override
-  Future<List<SearchResult>> call(final String query) => search(query);
+  Future<List<SearchResult>> call(String query) => search(query);
 
   /// Refreshes cached results for a query in the background.
   /// Concurrent calls for the same query await the same in-flight future.
-  Future<void> _refreshAndCache(final String query) =>
+  Future<void> _refreshAndCache(String query) =>
       _refreshCoalescer.run(query, () => _doRefreshAndCache(query));
 
-  Future<void> _doRefreshAndCache(final String query) async {
+  Future<void> _doRefreshAndCache(String query) async {
     try {
       final List<SearchResult> results = await _remoteRepository.search(query);
       await _cacheRepository.saveCachedResults(query, results);
@@ -114,7 +114,7 @@ class OfflineFirstSearchRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     // Search doesn't queue mutations, but we could use this for future features
     // like "save search" or "favorite result" operations
     AppLogger.info(

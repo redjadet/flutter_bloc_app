@@ -1,6 +1,5 @@
 import 'package:design_system/design_system.dart';
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/widgets/backend_disabled_banner.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_s
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_error_messages.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_body.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Cloud IoT tab content extracted for the IoT demo hub (no BLE imports).
 class IotDemoCloudTab extends StatefulWidget {
@@ -35,7 +35,7 @@ class _IotDemoCloudTabState extends State<IotDemoCloudTab> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,11 +52,11 @@ class _IotDemoFilterSection extends StatelessWidget {
   const _IotDemoFilterSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final filter = context
         .selectState<IotDemoCubit, IotDemoState, IotDemoDeviceFilter?>(
-          selector: (final state) => state.mapOrNull(
-            loaded: (final state) => state.filter,
+          selector: (state) => state.mapOrNull(
+            loaded: (state) => state.filter,
           ),
         );
 
@@ -83,7 +83,7 @@ class _IotDemoFilterSection extends StatelessWidget {
           ),
         ],
         selected: <IotDemoDeviceFilter>{filter},
-        onSelectionChanged: (final selected) {
+        onSelectionChanged: (selected) {
           final IotDemoDeviceFilter? nextFilter = selected.firstOrNull;
           if (nextFilter != null && nextFilter != filter) {
             context.cubit<IotDemoCubit>().setFilter(nextFilter);
@@ -98,7 +98,7 @@ class _IotDemoBodySection extends StatelessWidget {
   const _IotDemoBodySection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final viewState = context
         .selectState<
           IotDemoCubit,
@@ -110,7 +110,7 @@ class _IotDemoBodySection extends StatelessWidget {
             String? errorMessage,
           })
         >(
-          selector: (final state) => state.when(
+          selector: (state) => state.when(
             initial: () => (
               isLoading: true,
               devices: null,
@@ -123,13 +123,13 @@ class _IotDemoBodySection extends StatelessWidget {
               selectedDeviceId: null,
               errorMessage: null,
             ),
-            loaded: (final devices, final selectedDeviceId, final filter) => (
+            loaded: (devices, selectedDeviceId, filter) => (
               isLoading: false,
               devices: devices,
               selectedDeviceId: selectedDeviceId,
               errorMessage: null,
             ),
-            error: (final code, final detail) => (
+            error: (code, detail) => (
               isLoading: false,
               devices: null,
               selectedDeviceId: null,

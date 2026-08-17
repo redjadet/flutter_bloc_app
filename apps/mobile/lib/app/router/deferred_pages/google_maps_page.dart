@@ -19,6 +19,6 @@ Widget buildGoogleMapsPage() =>
       create: () => MapSampleCubit(
         repository: getIt<MapLocationRepository>(),
       ),
-      init: (final cubit) => cubit.loadLocations(),
+      init: (cubit) => cubit.loadLocations(),
       child: const GoogleMapsSamplePage(),
     );

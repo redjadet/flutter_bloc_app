@@ -1,15 +1,15 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ThemeSection extends StatelessWidget {
   const ThemeSection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final List<SettingsOption<ThemeMode>> options = <SettingsOption<ThemeMode>>[
       SettingsOption(label: l10n.themeModeSystem, value: ThemeMode.system),
@@ -20,11 +20,11 @@ class ThemeSection extends StatelessWidget {
     return SettingsSection(
       title: l10n.themeSectionTitle,
       child: TypeSafeBlocSelector<ThemeCubit, ThemeMode, ThemeMode>(
-        selector: (final state) => state,
-        builder: (final context, final currentMode) => SettingsCard<ThemeMode>(
+        selector: (state) => state,
+        builder: (context, currentMode) => SettingsCard<ThemeMode>(
           options: options,
-          isSelected: (final mode) => mode == currentMode,
-          onSelect: (final mode) => context.cubit<ThemeCubit>().setMode(mode),
+          isSelected: (mode) => mode == currentMode,
+          onSelect: (mode) => context.cubit<ThemeCubit>().setMode(mode),
         ),
       ),
     );
