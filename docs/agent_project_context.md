@@ -107,6 +107,11 @@ the answer.
   migrations; don't assume remote state from local files alone.
 - `firebase_ui_auth` has documented long-display-name overflow caveat; see
   [`firebase_ui_auth_overflow_fix.md`](integrations/firebase_ui_auth_overflow_fix.md).
+- Android `android.builtInKotlin` stays **false**. Flip only after
+  `desktop_webview_auth`, `flutter_tts`, `reactive_ble_mobile`, and
+  `wallet_connect_v2` drop or guard `kotlin-android`. Do not patch pub-cache
+  plugin Gradle. Owner:
+  [`changes/2026-08-17_android_builtin_kotlin_app.md`](changes/2026-08-17_android_builtin_kotlin_app.md).
 - Feature-scoped DI via `get_it_modular` is not in use; current `get_it` setup
   is global unless compatibility and lifecycle need justify change.
 - Interview portfolio spine and proof commands: [`interview_showcase.md`](interview_showcase.md),
