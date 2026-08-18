@@ -55,10 +55,15 @@
       "allowedVersions": "<0.20.3"
     },
     {
-      "description": "Hold package:test below 1.31.1; flutter_test on current SDK pins test_api 0.7.11 (test >=1.31.1 needs test_api 0.7.12+)",
+      "description": "Hold package:test below 1.31.2; flutter_test on current SDK pins test_api 0.7.12 (test 1.31.2 needs test_api 0.7.13)",
       "matchManagers": ["pub"],
+      "matchFileNames": [
+        "apps/mobile/pubspec.yaml",
+        "packages/**/pubspec.yaml",
+        "custom_lints/**/pubspec.yaml"
+      ],
       "matchPackageNames": ["test"],
-      "allowedVersions": "<1.31.1"
+      "allowedVersions": "<1.31.2"
     },
     {
       "description": "Hold analyzer_testing below 0.3.4; custom_lints exact-pin 0.3.3 with analyzer 10.0.2 (tool/check_pubspec_codegen_compat.sh)",
