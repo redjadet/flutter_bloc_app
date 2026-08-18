@@ -35,6 +35,19 @@ This project uses automated dependency update monitoring to keep dependencies up
 - `intl` — held below `0.20.3` while `flutter_localizations` from the Flutter SDK pins `intl 0.20.2` (re-check when upgrading Flutter)
 - `json_serializable` — `^6.14.0` with `dependency_overrides: analyzer: 10.0.2`, `dart_style: 3.1.4` (6.14+ needs analyzer ≥10; 10.0.2 aligns native plugin CLI with `analysis_server_plugin`). Path plugins `mix_lint` 2.x and `file_length_lint` use `analysis_server_plugin` via `analysis_options.yaml` `plugins:` + `path:`; `custom_lint` is not in the graph. Renovate caps `json_serializable` at `<7.0.0` and does not auto-bump `analyzer` / `analyzer_plugin`. Verify with `./tool/check_pubspec_codegen_compat.sh`; `upgrade_validate_all.sh` step 2b restores pins after major pub upgrades.
 
+**Unresolvable majors (checked 2026-08-18):** `flutter pub outdated` reports Current == Resolvable for every leftover. Do not force these with `dependency_overrides`; pub solving already has the newest compatible graph.
+
+| Package | Latest | Why it cannot bump yet |
+| --- | --- | --- |
+| `analyzer` / `_fe_analyzer_shared` / `dart_style` | 14.1.0 / 105.0.0 / 3.1.12 | Root override pins analyzer 10.0.2 + dart_style 3.1.4 for path lints + `json_serializable` 6.14 |
+| `app_links` | 7.2.1 | `firebase_ui_auth` 3.1.0 (latest) requires `app_links ^6.4` |
+| `genui` + `google_cloud_*` | genui 0.10.2 | `genui_google_generative_ai` 0.7.1 (latest) requires `genui ^0.7` |
+| `google_sign_in*` / `google_sign_in_mocks` | 7.2.0 / 0.4.1 | `firebase_ui_oauth_google` 2.1.0 (latest) requires `google_sign_in ^6.2.1` |
+| `email_validator` | override ^3.0.0 | genui wants ^3; `firebase_ui_auth` wants ^2.1.17 — override keeps the graph solvable |
+| `melos` / `cli_util` / `pub_updater` | 8.3.0 / 0.5.2 / 0.6.0 | Melos 8 needs `cli_util ^0.5`; `flutter_launcher_icons` 0.14.4 (latest) needs `cli_util ^0.4.1`. Renovate holds melos `<7.8.2` for the same reason. |
+| `path_provider_foundation` | 2.6.0 | 2.6.0 is the iOS 26.x simulator FFI crash; pin stays 2.5.1 ([`workarounds.md`](workarounds.md)) |
+| `test` / `test_api` / `test_core` / `material_color_utilities` / `dbus` / `package_config` | patch-ahead | SDK or rdep pins; not independently resolvable |
+
 ### Backup: Dependabot
 
 [Dependabot](https://docs.github.com/en/code-security/dependabot) is configured as a backup, primarily for security vulnerability monitoring.
