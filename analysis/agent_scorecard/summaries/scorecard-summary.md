@@ -1,29 +1,29 @@
 # Agent Scorecard Summary
 
-- Total events: `1357`
+- Total events: `1346`
 - Parse success: `100.00%`
 - Invalid JSON lines: `0`
 - Delegate usage rate: `0.07%`
-- p50 duration: `59709ms`
-- p95 duration: `497643ms`
-- Source fingerprint: `fb10d89fe531c0d2c3322d3ffe2326811f92ce3e4ff8a81acab80e0d751500bd`
+- p50 duration: `56914ms`
+- p95 duration: `496553ms`
+- Source fingerprint: `6723733db33b73e5a5948d5a98e402a6c04d75fdc0fcb1b29fc14d7062787945`
 
 ## Status Counts
 
 - `cancelled`: `1`
-- `failed`: `471`
-- `ok`: `885`
+- `failed`: `467`
+- `ok`: `878`
 
 ## Risk Counts
 
-- `high`: `250`
-- `medium`: `1103`
+- `high`: `246`
+- `medium`: `1096`
 - `unknown`: `4`
 
 ## Command Breakdown
 
-- `checklist`: count `1102`, success `62.98%`, p50 `25935ms`
+- `checklist`: count `1095`, success `63.11%`, p50 `23715ms`
 - `cursor_to_codex_delegate`: count `1`, success `100.00%`, p50 `1000ms`
 - `deploy_fastapi_cloud`: count `3`, success `33.33%`, p50 `0ms`
-- `integration_tests`: count `250`, success `75.20%`, p50 `284489ms`
+- `integration_tests`: count `246`, success `74.80%`, p50 `284081ms`
 - `smoke`: count `1`, success `100.00%`, p50 `1ms`
