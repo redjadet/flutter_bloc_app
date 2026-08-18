@@ -1,16 +1,28 @@
 PODS:
+  - desktop_webview_auth (0.0.1):
+    - FlutterMacOS
+  - flutter_tts (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
 
 DEPENDENCIES:
+  - desktop_webview_auth (from `Flutter/ephemeral/.symlinks/plugins/desktop_webview_auth/macos`)
+  - flutter_tts (from `Flutter/ephemeral/.symlinks/plugins/flutter_tts/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
 
 EXTERNAL SOURCES:
+  desktop_webview_auth:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_webview_auth/macos
+  flutter_tts:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_tts/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
+  desktop_webview_auth: d7fba72ef3ee2292cf66d464eede3c1a4690da83
+  flutter_tts: ae915565cc6948444b513acc8ee021993281e027
   FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
 
-PODFILE CHECKSUM: 33c5483a461794f6af169033e0a9b8829e739eb6
+PODFILE CHECKSUM: ee7328ab4da0e06f71edbd405516a18839160c1d
 
 COCOAPODS: 1.16.2
