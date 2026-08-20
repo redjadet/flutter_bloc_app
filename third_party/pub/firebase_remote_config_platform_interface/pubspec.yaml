@@ -22,5 +22,5 @@ dev_dependencies:
   firebase_core_platform_interface: ^8.1.0
   flutter_test:
     sdk: flutter
-  mockito: ^5.8.0
-  pigeon: 27.3.0
+  mockito: ^5.8.1
+  pigeon: 27.3.2
