@@ -232,6 +232,47 @@ void registerEventBusDemoIntegrationFlow() {
   );
 }
 
+void registerSocialFeedDemoIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Social feed demo flow',
+    testName: 'opens Social Feed from Example and shows seeded posts',
+    body: (tester) async {
+      await launchTestApp(tester);
+
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      await pumpUntilFound(tester, find.text('Example Page'));
+
+      final Finder feedButton = find.byKey(
+        const ValueKey('example-social-feed-demo-button'),
+      );
+      await tester.scrollUntilVisible(
+        feedButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, feedButton);
+      await pumpUntilFound(tester, find.text('Social feed demo'));
+
+      expect(find.text('Social feed demo'), findsWidgets);
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('social-feed-list')),
+      );
+      expect(find.byKey(const ValueKey('social-feed-list')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('social-feed-post-post-060')),
+        findsWidgets,
+      );
+
+      await tapAndPump(
+        tester,
+        find.byKey(const ValueKey('social-feed-like-post-060')),
+      );
+    },
+  );
+}
+
 void registerNativePlatformShowcaseIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Native platform showcase flow',

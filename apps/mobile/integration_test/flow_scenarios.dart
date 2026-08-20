@@ -37,6 +37,7 @@ void registerSmokeIntegrationFlows() {
   registerTodoListIntegrationFlow();
   registerWebsocketIntegrationFlow();
   registerEventBusDemoIntegrationFlow();
+  registerSocialFeedDemoIntegrationFlow();
   registerNativePlatformShowcaseIntegrationFlow();
   registerWhiteboardIntegrationFlow();
   registerCameraGalleryIntegrationFlow();

@@ -2657,5 +2657,70 @@
   "productionReadinessFrameMissed": ">16,7 ms kaçan",
   "productionReadinessKillSwitchBanner": "Sürüm kill-switch kapalı. Üretimde demo özellikleri kapalı olabilir.",
   "productionReadinessSettingsLink": "Ayarları aç",
-  "productionReadinessNativeShowcaseLink": "Yerel platform vitrini"
+  "productionReadinessNativeShowcaseLink": "Yerel platform vitrini",
+"exampleSocialFeedDemoButton": "Sosyal akış demosu",
+  "@exampleSocialFeedDemoButton": {
+    "description": "Sosyal akış demosu düğmesi"
+  },
+  "socialFeedDemoTitle": "Sosyal akış demosu",
+  "@socialFeedDemoTitle": {
+    "description": "Sosyal akış demosu page title"
+  },
+  "socialFeedDemoEmpty": "Henüz gönderi yok",
+  "socialFeedDemoOffline": "Simüle çevrimdışı — önbellek yok",
+  "socialFeedDemoMalformed": "Bozuk akış verisi",
+  "socialFeedDemoPageError": "Daha fazla gönderi yüklenemedi",
+  "socialFeedDemoRetry": "Yeniden dene",
+  "socialFeedDemoUnknownError": "Bir şeyler ters gitti",
+  "socialFeedDemoLiked": "Beğenildi",
+  "socialFeedDemoNotLiked": "Beğenilmedi",
+  "socialFeedDemoComment": "Yorum",
+  "socialFeedDemoSubmitComment": "Yorum gönder",
+  "socialFeedDemoPending": "Bekliyor",
+  "socialFeedDemoMutationRejected": "İşlem reddedildi",
+  "socialFeedDemoSimulatedOffline": "Simüle çevrimdışı",
+  "socialFeedDemoSimulatedOnline": "Simüle çevrimiçi",
+  "socialFeedDemoStaleCache": "Önbellek verisi ({minutes} dk)",
+  "@socialFeedDemoStaleCache": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "socialFeedDemoPendingCount": "{count, plural, =1{1 bekleyen işlem} other{{count} bekleyen işlem}}",
+  "@socialFeedDemoPendingCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "socialFeedDemoNeedsAttentionCount": "{count, plural, =1{1 dikkat gerektiriyor} other{{count} dikkat gerektiriyor}}",
+  "@socialFeedDemoNeedsAttentionCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "socialFeedDemoReconnecting": "Gerçek zamanlı yeniden bağlanıyor…",
+  "socialFeedDemoNewPosts": "{count, plural, =1{1 yeni gönderi} other{{count} yeni gönderi}}",
+  "@socialFeedDemoNewPosts": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "socialFeedDemoScenarioTitle": "Senaryo kontrolleri (simüle)",
+  "socialFeedDemoEmitNewPosts": "3 yeni gönderi yayınla",
+  "socialFeedDemoReset": "Geçerli izleyici demosunu sıfırla",
+  "socialFeedDemoResetTitle": "İzleyici demosu sıfırlansın mı?",
+  "socialFeedDemoResetBody": "Yalnızca {viewer} için önbellek ve kuyruğu temizler.",
+  "@socialFeedDemoResetBody": {
+    "placeholders": {
+      "viewer": { "type": "String" }
+    }
+  },
+  "socialFeedDemoCancel": "İptal",
+  "socialFeedDemoConfirm": "Sıfırla",
+  "socialFeedDemoSeniorSignalTitle": "Kıdemli sinyal",
+  "socialFeedDemoSignalStep1": "Tasarım öncesi kapsamı netleştir",
+  "socialFeedDemoSignalStep2": "Önce veri modelini sabitle",
+  "socialFeedDemoSignalStep3": "Katmanları adlandır ve uygula",
+  "socialFeedDemoSignalStep4": "Zor problemleri bağımsız çöz",
+  "socialFeedDemoSignalStep5": "Hata durumlarıyla bitir"
 }

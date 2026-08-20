@@ -15,6 +15,7 @@ Feature contracts, demo guides, and feature-specific validation. Start with
 | AI decision workbench | [ai_decision_workbench.md](ai_decision_workbench.md) |
 | IoT demo | [iot_ble.md](iot_ble.md) |
 | Realtime market demo | [realtime_market.md](realtime_market.md) |
+| Social feed demo | [social_feed_demo.md](social_feed_demo.md) |
 
 Keep product-specific documentation in this folder. Keep shared architecture and
 delivery rules in their owning folders.

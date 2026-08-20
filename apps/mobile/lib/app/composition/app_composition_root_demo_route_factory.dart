@@ -49,6 +49,9 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_cal
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_realtime_source.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_repository.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_scenario_controller.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
@@ -128,6 +131,9 @@ DemoRouteFactory resolveDemoRouteFactory({
     shareNativeShowcaseTextUseCase: getIt<ShareNativeShowcaseTextUseCase>(),
     createNativeSecurityShowcaseCubit: createNativeSecurityShowcaseCubit,
     eventBus: getIt<EventBus>(),
+    socialFeedRepository: getIt<SocialFeedRepository>(),
+    socialFeedRealtimeSource: getIt<SocialFeedRealtimeSource>(),
+    socialFeedScenarioController: getIt<SocialFeedScenarioController>(),
     onlineTherapyDemoRouteFactory: OnlineTherapyDemoRouteFactory(
       appAuthRepository: resolvedAuthRepository,
       therapyAuthRepository: getIt<TherapyAuthRepository>(),

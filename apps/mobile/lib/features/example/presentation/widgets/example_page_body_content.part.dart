@@ -26,6 +26,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required this.onOpenIapDemo,
     required this.onOpenAiDecisionDemo,
     required this.onOpenEventBusDemo,
+    required this.onOpenSocialFeedDemo,
     required this.onOpenNativePlatformShowcase,
     required this.onOpenOnlineTherapyDemo,
     required this.onOpenProductionReadiness,
@@ -66,6 +67,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final VoidCallback onOpenIapDemo;
   final VoidCallback onOpenAiDecisionDemo;
   final VoidCallback onOpenEventBusDemo;
+  final VoidCallback onOpenSocialFeedDemo;
   final VoidCallback onOpenNativePlatformShowcase;
   final VoidCallback onOpenOnlineTherapyDemo;
   final VoidCallback onOpenProductionReadiness;
@@ -146,6 +148,14 @@ class _ExamplePageBodyContent extends StatelessWidget {
             icon: Icons.hub_outlined,
             label: l10n.exampleEventBusDemoButton,
             key: const ValueKey('example-event-bus-demo-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenSocialFeedDemo,
+            icon: Icons.dynamic_feed_outlined,
+            label: l10n.exampleSocialFeedDemoButton,
+            key: const ValueKey('example-social-feed-demo-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

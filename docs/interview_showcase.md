@@ -181,6 +181,7 @@ See [plans/future_observability.md](plans/future_observability.md).
 | Case studies | [case_studies/README.md](case_studies/README.md) |
 | Online therapy | [online_therapy_demo/README.md](online_therapy_demo/README.md) |
 | Realtime market | [features/realtime_market.md](features/realtime_market.md) |
+| Social feed demo (simulated senior-signal) | [features/social_feed_demo.md](features/social_feed_demo.md), Example → Social feed demo |
 | Full catalog | [feature_overview.md](feature_overview.md) |
 
 ## 14. Verification snapshot

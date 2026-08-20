@@ -49,6 +49,7 @@ void main() {
                 },
                 onOpenProductionReadiness: () {},
                 onOpenEventBusDemo: () {},
+                onOpenSocialFeedDemo: () {},
                 onOpenNativePlatformShowcase: () {},
                 onRunIsolates: null,
                 isRunningIsolates: false,

@@ -140,10 +140,14 @@ class HiveSchemaMigratorService {
   }) async {
     final HiveSchemaMigrator? migrator = schema.migrate ?? schema.cleanup;
     if (migrator == null) {
-      AppLogger.warning(
-        'Hive schema fingerprint mismatch for ${box.name}:${schema.namespace}. '
-        'from=$fromFingerprint to=${schema.fingerprint}. No migrator provided.',
-      );
+      // First adoption (null → fingerprint) is expected without a migrator;
+      // only warn on real mismatches after a prior fingerprint was recorded.
+      if (fromFingerprint != null) {
+        AppLogger.warning(
+          'Hive schema fingerprint mismatch for ${box.name}:${schema.namespace}. '
+          'from=$fromFingerprint to=${schema.fingerprint}. No migrator provided.',
+        );
+      }
       return false;
     }
 

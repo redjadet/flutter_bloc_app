@@ -245,12 +245,29 @@ List<RouteBase> createDemoRoutesTail(DemoRouteFactory factory) => <RouteBase>[
         ),
   ),
   createEventBusDemoRoute(factory),
+  createSocialFeedDemoRoute(factory),
   createOnlineTherapyDemoRoute(factory.onlineTherapyDemoRouteFactory),
   createStaffAppDemoShellRoute(factory.staffAppDemoRouteFactory),
   createCaseStudyDemoShellRoute(factory.caseStudyDemoRouteFactory),
   createNativePlatformShowcaseRoute(factory),
   createCertificatePinningDemoRoute(factory.certificatePinningDemoRouteFactory),
 ];
+
+RouteBase createSocialFeedDemoRoute(DemoRouteFactory factory) => GoRoute(
+  path: AppRoutes.socialFeedDemoPath,
+  name: AppRoutes.socialFeedDemo,
+  builder: (context, state) =>
+      BlocProviderHelpers.withAsyncInit<SocialFeedCubit>(
+        create: () => SocialFeedCubit(
+          repository: factory.socialFeedRepository,
+          realtimeSource: factory.socialFeedRealtimeSource,
+          scenario: factory.socialFeedScenarioController,
+          clock: () => DateTime.now().toUtc(),
+        ),
+        init: (cubit) => cubit.initialize(),
+        child: const SocialFeedDemoPage(),
+      ),
+);
 
 RouteBase createNativePlatformShowcaseRoute(
   DemoRouteFactory factory,

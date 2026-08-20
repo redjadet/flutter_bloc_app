@@ -52,6 +52,27 @@
         "packages/storage/lib/src/sync/pending_sync_repository_migration.dart",
         "packages/storage/lib/src/sync/sync_operation.dart"
       ]
+    },
+    {
+      "name": "social_feed_cache:v1",
+      "spec": "social_feed_cache:v1{cache:v1:<viewerId>:{schemaVersion:int,fetchedAt:iso8601,nextCursor:string?,posts:list<post_json>}}",
+      "inputs": [
+        "lib/features/social_feed_demo/data/hive_social_feed_local_data_source.dart",
+        "lib/features/social_feed_demo/data/social_feed_post_mapper.dart",
+        "lib/features/social_feed_demo/data/social_feed_post_dto.dart",
+        "lib/features/social_feed_demo/domain/social_feed_post.dart",
+        "lib/features/social_feed_demo/domain/social_feed_page.dart"
+      ]
+    },
+    {
+      "name": "social_feed_mutations:v1",
+      "spec": "social_feed_mutations:v1{queue:<viewerId>:list<mutation_json>,attention:<viewerId>:list<mutation_json>,seq:<viewerId>:int}",
+      "inputs": [
+        "lib/features/social_feed_demo/data/hive_social_feed_mutation_queue.dart",
+        "lib/features/social_feed_demo/data/hive_social_feed_mutation_queue_ops.part.dart",
+        "lib/features/social_feed_demo/data/hive_social_feed_mutation_queue_json.part.dart",
+        "lib/features/social_feed_demo/data/social_feed_mutation_dto.dart"
+      ]
     }
   ]
 }

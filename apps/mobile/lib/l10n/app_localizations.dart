@@ -6480,6 +6480,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Native platform showcase'**
   String get productionReadinessNativeShowcaseLink;
+
+  /// Example hub button for social feed senior-signal demo
+  ///
+  /// In en, this message translates to:
+  /// **'Social feed demo'**
+  String get exampleSocialFeedDemoButton;
+
+  /// Social feed demo page title
+  ///
+  /// In en, this message translates to:
+  /// **'Social feed demo'**
+  String get socialFeedDemoTitle;
+
+  /// No description provided for @socialFeedDemoEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet'**
+  String get socialFeedDemoEmpty;
+
+  /// No description provided for @socialFeedDemoOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated offline — no cache'**
+  String get socialFeedDemoOffline;
+
+  /// No description provided for @socialFeedDemoMalformed.
+  ///
+  /// In en, this message translates to:
+  /// **'Malformed feed payload'**
+  String get socialFeedDemoMalformed;
+
+  /// No description provided for @socialFeedDemoPageError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more posts'**
+  String get socialFeedDemoPageError;
+
+  /// No description provided for @socialFeedDemoRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get socialFeedDemoRetry;
+
+  /// No description provided for @socialFeedDemoUnknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get socialFeedDemoUnknownError;
+
+  /// No description provided for @socialFeedDemoLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked'**
+  String get socialFeedDemoLiked;
+
+  /// No description provided for @socialFeedDemoNotLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not liked'**
+  String get socialFeedDemoNotLiked;
+
+  /// No description provided for @socialFeedDemoComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get socialFeedDemoComment;
+
+  /// No description provided for @socialFeedDemoSubmitComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit comment'**
+  String get socialFeedDemoSubmitComment;
+
+  /// No description provided for @socialFeedDemoPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get socialFeedDemoPending;
+
+  /// No description provided for @socialFeedDemoMutationRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Action rejected'**
+  String get socialFeedDemoMutationRejected;
+
+  /// No description provided for @socialFeedDemoSimulatedOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated offline'**
+  String get socialFeedDemoSimulatedOffline;
+
+  /// No description provided for @socialFeedDemoSimulatedOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated online'**
+  String get socialFeedDemoSimulatedOnline;
+
+  /// No description provided for @socialFeedDemoStaleCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached data ({minutes} min old)'**
+  String socialFeedDemoStaleCache(int minutes);
+
+  /// No description provided for @socialFeedDemoPendingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 pending action} other{{count} pending actions}}'**
+  String socialFeedDemoPendingCount(int count);
+
+  /// No description provided for @socialFeedDemoNeedsAttentionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 needs attention} other{{count} need attention}}'**
+  String socialFeedDemoNeedsAttentionCount(int count);
+
+  /// No description provided for @socialFeedDemoReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting realtime…'**
+  String get socialFeedDemoReconnecting;
+
+  /// No description provided for @socialFeedDemoNewPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new post} other{{count} new posts}}'**
+  String socialFeedDemoNewPosts(int count);
+
+  /// No description provided for @socialFeedDemoScenarioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenario controls (simulated)'**
+  String get socialFeedDemoScenarioTitle;
+
+  /// No description provided for @socialFeedDemoEmitNewPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Emit 3 new posts'**
+  String get socialFeedDemoEmitNewPosts;
+
+  /// No description provided for @socialFeedDemoReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset current viewer demo'**
+  String get socialFeedDemoReset;
+
+  /// No description provided for @socialFeedDemoResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset viewer demo?'**
+  String get socialFeedDemoResetTitle;
+
+  /// No description provided for @socialFeedDemoResetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Clears cache and queue for {viewer} only.'**
+  String socialFeedDemoResetBody(String viewer);
+
+  /// No description provided for @socialFeedDemoCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get socialFeedDemoCancel;
+
+  /// No description provided for @socialFeedDemoConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get socialFeedDemoConfirm;
+
+  /// No description provided for @socialFeedDemoSeniorSignalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Senior signal'**
+  String get socialFeedDemoSeniorSignalTitle;
+
+  /// No description provided for @socialFeedDemoSignalStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Clarify scope before design'**
+  String get socialFeedDemoSignalStep1;
+
+  /// No description provided for @socialFeedDemoSignalStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Nail the data model first'**
+  String get socialFeedDemoSignalStep2;
+
+  /// No description provided for @socialFeedDemoSignalStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Name layers and enforce them'**
+  String get socialFeedDemoSignalStep3;
+
+  /// No description provided for @socialFeedDemoSignalStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Attack hard problems independently'**
+  String get socialFeedDemoSignalStep4;
+
+  /// No description provided for @socialFeedDemoSignalStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'End on failure states'**
+  String get socialFeedDemoSignalStep5;
 }
 
 class _AppLocalizationsDelegate

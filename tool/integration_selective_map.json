@@ -31,6 +31,16 @@
       "target": "integration_test/native_platform_showcase_flow_test.dart"
     },
     {
+      "id": "social_feed_demo",
+      "path_prefixes": [
+        "lib/features/social_feed_demo/",
+        "apps/mobile/lib/features/social_feed_demo/",
+        "lib/app/composition/features/register_social_feed_demo_services.dart",
+        "apps/mobile/lib/app/composition/features/register_social_feed_demo_services.dart"
+      ],
+      "target": "integration_test/social_feed_demo_flow_test.dart"
+    },
+    {
       "id": "camera_gallery",
       "path_prefixes": [
         "lib/features/camera_gallery/",
