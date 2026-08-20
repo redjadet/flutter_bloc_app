@@ -37,7 +37,9 @@ class SocialFeedPostCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(post.body),
             const SizedBox(height: 8),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 4,
               children: <Widget>[
                 IconButton(
                   key: ValueKey('social-feed-like-${post.id}'),
@@ -50,7 +52,6 @@ class SocialFeedPostCard extends StatelessWidget {
                       : l10n.socialFeedDemoNotLiked,
                 ),
                 Text('${post.likeCount}'),
-                const SizedBox(width: 12),
                 IconButton(
                   key: ValueKey('social-feed-comment-${post.id}'),
                   onPressed: onComment,
@@ -58,18 +59,13 @@ class SocialFeedPostCard extends StatelessWidget {
                   tooltip: l10n.socialFeedDemoComment,
                 ),
                 Text('${post.commentCount}'),
-                if (isPending) ...<Widget>[
-                  const SizedBox(width: 12),
-                  Text(l10n.socialFeedDemoPending),
-                ],
-                if (needsAttention && onRetryAttention != null) ...<Widget>[
-                  const SizedBox(width: 12),
+                if (isPending) Text(l10n.socialFeedDemoPending),
+                if (needsAttention && onRetryAttention != null)
                   TextButton(
                     key: ValueKey('social-feed-retry-${post.id}'),
                     onPressed: onRetryAttention,
                     child: Text(l10n.socialFeedDemoRetry),
                   ),
-                ],
               ],
             ),
           ],
