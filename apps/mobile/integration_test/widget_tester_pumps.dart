@@ -123,16 +123,6 @@ Future<void> tapAndPump(
   /// target (e.g. overflow menu nudge). Re-scrolling can undo that placement.
   bool scrollIntoView = true,
 }) async {
-  final bool present;
-  try {
-    present = tester.any(finder);
-  } on StateError {
-    throw TestFailure('tapAndPump: $finder matched no elements');
-  }
-  if (!present) {
-    throw TestFailure('tapAndPump: $finder not found');
-  }
-
   if (scrollIntoView) {
     // On small emulator viewports, ensureVisible alone often leaves controls
     // below the fold; scroll the nearest Scrollable ancestor first when present.
@@ -140,13 +130,7 @@ Future<void> tapAndPump(
       of: finder,
       matching: find.byType(Scrollable),
     );
-    bool hasScrollable = false;
-    try {
-      hasScrollable = tester.any(scrollable);
-    } on StateError {
-      hasScrollable = false;
-    }
-    if (hasScrollable) {
+    if (tester.any(scrollable)) {
       try {
         await tester.scrollUntilVisible(
           finder,

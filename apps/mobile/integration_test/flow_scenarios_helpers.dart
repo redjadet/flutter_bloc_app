@@ -155,7 +155,7 @@ Finder _findAdaptiveButtonByText(
     )
     .first;
 
-/// Todo add control: header text button only when the list is non-empty and
+/// Add-todo control: header text button only when the list is non-empty and
 /// tall enough; otherwise the page exposes a FAB with this tooltip. Desktop
 /// Hive can retain todos across flows, so tooltip is the stable hit target.
 Finder _findTodoAddControl() => find.byTooltip('Add todo');
