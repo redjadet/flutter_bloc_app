@@ -36,7 +36,7 @@ A new or materially changed feature should usually include:
 | Reuse first | Check existing packages, `apps/mobile/lib/app/`, and adjacent features before adding new abstractions. |
 | Place files | Follow [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md); copy live layout from [`architecture/reference_features.md`](architecture/reference_features.md). |
 | Keep boundaries clean | Stay within `Presentation -> Domain <- Data`. |
-| Use cases / DTOs | Apply [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md). |
+| Use cases / DTOs | Apply [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md). Hand-written DTOs/widgets: Dart 3.13 primary constructors ([`CODE_QUALITY.md`](CODE_QUALITY.md)). |
 | Model state | Apply [`bloc_standards.md`](bloc_standards.md) before adding or changing Cubit/BLoC code. |
 | Domain / data | RED unit or cubit tests for contracts; minimal implementation to green. |
 | Register dependencies | Use the feature-specific `register_*_services.dart` files or `injector_registrations.dart`. |

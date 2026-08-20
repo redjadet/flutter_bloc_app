@@ -13,6 +13,7 @@ void main() {
     BootstrapCoordinator.resetForTest();
     // VM tests are not web; keep backends on the blocking path by default.
     BootstrapCoordinator.shouldDeferBackendInit = () => false;
+    BootstrapCoordinator.createApp = () => const _BootstrapProbeApp();
   });
 
   tearDown(() {
@@ -78,7 +79,7 @@ void main() {
         calls,
         containsAllInOrder(<String>['runtime-config', 'migration']),
       );
-      expect(calls.last, 'runApp:MyApp');
+      expect(calls.last, 'runApp:_BootstrapProbeApp');
       expect(
         calls.indexOf('secrets:true'),
         lessThan(calls.indexOf('firebase')),
@@ -116,7 +117,7 @@ void main() {
 
       await BootstrapCoordinator.bootstrapApp(Flavor.dev);
 
-      expect(started, <String>['WebLaunchSplash', 'MyApp']);
+      expect(started, <String>['WebLaunchSplash', '_BootstrapProbeApp']);
     });
 
     test(
@@ -174,7 +175,7 @@ void main() {
           'di',
           'runtime-config',
           'migration',
-          'runApp:MyApp',
+          'runApp:_BootstrapProbeApp',
         ]);
         expect(deferredStarter, isNotNull);
         await deferredStarter!();
@@ -185,16 +186,16 @@ void main() {
           'di',
           'runtime-config',
           'migration',
-          'runApp:MyApp',
+          'runApp:_BootstrapProbeApp',
         ]);
         expect(calls, contains('supabase'));
         expect(calls.last, 'availability-tick');
         expect(
           calls.indexOf('firebase'),
-          lessThan(calls.indexOf('runApp:MyApp')),
+          lessThan(calls.indexOf('runApp:_BootstrapProbeApp')),
         );
         expect(
-          calls.indexOf('runApp:MyApp'),
+          calls.indexOf('runApp:_BootstrapProbeApp'),
           lessThan(calls.indexOf('supabase')),
         );
       },
@@ -307,4 +308,9 @@ void main() {
       },
     );
   });
+}
+
+class const _BootstrapProbeApp({super.key}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

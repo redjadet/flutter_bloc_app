@@ -31,12 +31,9 @@ booleans.
 ```dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class <Feature>Cubit extends Cubit<<Feature>State> {
-  <Feature>Cubit({required <Feature>Repository repository})
-      : _repository = repository,
-        super(const <Feature>State.initial());
-
-  final <Feature>Repository _repository;
+class <Feature>Cubit({required final <Feature>Repository _repository})
+    extends Cubit<<Feature>State> {
+  this : super(const <Feature>State.initial());
 
   Future<void> load() async {
     if (isClosed) return;

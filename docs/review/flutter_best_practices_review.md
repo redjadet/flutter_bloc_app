@@ -26,7 +26,7 @@
 
 ## ✅ Recent Improvements
 
-- **App composition root (2026-08)**: `AppCompositionRoot` wires `GoRouter` + `AppScopeDependencies` + typed route factories; router/deferred pages no longer call `getIt`. See [`changes/2026-08-20_app_composition_root_router_di.md`](../changes/2026-08-20_app_composition_root_router_di.md).
+- **App composition root (2026-08)**: `AppCompositionRoot` wires `GoRouter` + `AppScopeDependencies` + typed route factories; router/deferred pages no longer call `getIt`. Shell deps, factories, and `MyApp`/`AppScope` use Dart 3.13 primary constructors. See [`changes/2026-08-20_app_composition_root_router_di.md`](../changes/2026-08-20_app_composition_root_router_di.md).
 - **Layering optimization (2026-06)**: Removed domain→data re-export shims (ai_decision, IAP, chat diagnostics, online_therapy network mode, staff timeclock local store). Presentation reads sync/pending state via cubits; DI registrars + composition root own data impl wiring. `tool/check_feature_modularity_leaks.sh` now fails on domain re-exports of `data/`.
 - **DI Organization**: Split `injector_registrations.dart` into feature-specific registration files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - **Repository Factory Pattern**: Created generic `createRemoteRepositoryOrNull<T>()` helper to consolidate duplicate error handling in repository factories.

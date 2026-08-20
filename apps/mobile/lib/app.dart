@@ -5,18 +5,12 @@ import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:go_router/go_router.dart' show GoRouter;
 
 /// Main application widget
-class MyApp extends StatefulWidget {
-  const MyApp({
-    required this.router,
-    required this.dependencies,
-    this.authRefresh,
-    super.key,
-  });
-
-  final GoRouter router;
-  final AppScopeDependencies dependencies;
-  final GoRouterRefreshStream? authRefresh;
-
+class const MyApp({
+  required final GoRouter router,
+  required final AppScopeDependencies dependencies,
+  final GoRouterRefreshStream? authRefresh,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }

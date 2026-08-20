@@ -18,7 +18,9 @@ Rules:
 - Default `Cubit`; do not add `Bloc` unless event-queue complexity is documented.
 - New code uses `apps/mobile/lib/features/<feature>/presentation/cubit/` (singular).
 - State uses Freezed; domain models only — no DTOs in state.
-- Cubit depends on domain contracts, not data implementations.
+- Cubit depends on domain contracts, not data implementations. Prefer a Dart
+  3.13 primary constructor in the Cubit class (`docs/bloc/cubit_file_template.md`);
+  keep Freezed for **state**.
 - Register in `apps/mobile/lib/app/composition/` with existing idempotent helpers.
 - Add cubit tests: initial, loading, success, error, stale-async guard.
 

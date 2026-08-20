@@ -140,12 +140,7 @@ class AppCompositionRoot {
   );
 }
 
-class AppCompositionRootGraph {
-  const AppCompositionRootGraph({
-    required this.router,
-    this.authRefresh,
-  });
-
-  final GoRouter router;
-  final GoRouterRefreshStream? authRefresh;
-}
+class const AppCompositionRootGraph({
+  required final GoRouter router,
+  final GoRouterRefreshStream? authRefresh,
+});

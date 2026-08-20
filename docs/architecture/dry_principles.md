@@ -165,6 +165,9 @@ require class state or complex behavior.
   state handling
 - Widgets use `context.allGapL` instead of
   `EdgeInsets.all(context.responsiveGapL)`
+- Hand-written field bags and constructor-driven widgets use Dart 3.13 primary
+  constructors so params and `final` fields are not written twice
+  (`class const Foo({required final String id})`)
 
 ❌ **Bad Practices**:
 
@@ -175,6 +178,8 @@ require class state or complex behavior.
 - Duplicating input decoration styling across form fields; use
   `buildCommonInputDecoration` or `buildFilledInputDecoration` instead
 - Manual status branching when `ViewStatusSwitcher` can be used
+- Classic `Foo({required this.id}); final String id;` on a new DTO, DI bag, or
+  leaf widget when a primary constructor would induce the field
 
 ## Storage DRY Rule (Hive)
 

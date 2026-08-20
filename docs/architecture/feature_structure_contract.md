@@ -113,7 +113,10 @@ Shared widgets must work on **mobile, tablet, web, and desktop (macOS)** — see
 ## Placement Rules
 
 - Domain models expose business language and remain Flutter/SDK-free.
-- Data models/DTOs never escape into presentation state.
+- Data models/DTOs never escape into presentation state. Hand-written DTOs,
+  domain field bags, DI bags, and leaf widgets use Dart 3.13 primary
+  constructors (`class const Foo({required final String id})`) — see
+  [`CODE_QUALITY.md`](../CODE_QUALITY.md).
 - Presentation view data stays in `presentation/`; cross-feature diagnostics
   use a package-owned port only when app composition needs the contract.
 - App-level composition lives in `apps/mobile/lib/app/`, especially

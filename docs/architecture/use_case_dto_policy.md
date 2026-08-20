@@ -58,10 +58,16 @@ domain shape. DTOs are optional for tiny internal-only maps where a mapper would
 add churn without type safety.
 
 Hand-written DTO and plain/Equatable domain field bags use Dart 3.13 primary
-constructors (`class const Foo({required final String id})`), including `const`
-when the bag has no constructor body. Keep `@freezed`
-types generated. See [`CODE_QUALITY.md`](../CODE_QUALITY.md) § Best-Practice
-Expectations.
+constructors so fields are not duplicated:
+
+```dart
+class const Foo({required final String id, final String? note});
+```
+
+Prefer `class const` when there is no constructor body. Keep `@freezed` types
+generated. The same shortening applies to DI bags, route factories, and
+constructor-driven widgets; Cubit/BLoC **state** stays Freezed. See
+[`CODE_QUALITY.md`](../CODE_QUALITY.md) § Best-Practice Expectations.
 
 ## Error Mapping
 

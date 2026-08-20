@@ -15,7 +15,10 @@ presentation and route builders receive injected instances instead of calling
    queries the locator.
 3. **Typed route factories** — `CoreRouteFactory`, `AuxiliaryRouteFactory`,
    `DemoRouteFactory` (plus nested demo factories). Router/deferred pages take
-   repositories and factory callbacks.
+   repositories and factory callbacks. New bags, factories, and widgets in this
+   change use Dart 3.13 primary constructors (`class const AppScopeDependencies({
+   required final BackgroundSyncCoordinator syncCoordinator, ...})`) so fields
+   are not duplicated.
 4. **Resolution split** (file-length):
    - `app_composition_root_route_factories.dart` — core + auxiliary
    - `app_composition_root_demo_route_factory.dart` — demo routes
@@ -34,7 +37,7 @@ presentation and route builders receive injected instances instead of calling
 - `flutter analyze --no-pub` (apps/mobile) — clean
 - `./bin/checklist` — passed
 - `./bin/integration_tests` — 29 passed
-- PR: https://github.com/redjadet/flutter_bloc_app/pull/716
+- PR: [flutter_bloc_app#716](https://github.com/redjadet/flutter_bloc_app/pull/716)
 
 ## Agent map updates
 
@@ -42,3 +45,4 @@ presentation and route builders receive injected instances instead of calling
 - [`docs/clean_architecture.md`](../clean_architecture.md) — shell composition
 - [`docs/new_developer_guide.md`](../new_developer_guide.md) — mental model
 - [`docs/review/flutter_best_practices_review.md`](../review/flutter_best_practices_review.md)
+- [`docs/CODE_QUALITY.md`](../CODE_QUALITY.md) — Dart 3.13 primary constructors

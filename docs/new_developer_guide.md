@@ -110,6 +110,9 @@ dart run build_runner build --delete-conflicting-outputs
 - `get_it` is the service locator / DI container; `AppCompositionRoot` is the
   composition root that resolves registrations into `AppScope` and route
   factories (router code must not call `getIt` directly).
+- Hand-written types that would duplicate constructor params and fields use
+  Dart 3.13 primary constructors (`class const Foo({required final String id})`);
+  see [`CODE_QUALITY.md`](CODE_QUALITY.md).
 - Firebase powers core app integrations; Supabase is used where a feature is
   explicitly configured for it.
 - Offline-first behavior is implemented through cache-first repositories,

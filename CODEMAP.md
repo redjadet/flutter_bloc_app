@@ -18,6 +18,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Validation commands | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), `./bin/checklist` |
 | Feature catalog | [`docs/feature_overview.md`](docs/feature_overview.md) |
 | Architecture | [`docs/architecture_details.md`](docs/architecture_details.md), [`ai/reports/architecture_overview.md`](ai/reports/architecture_overview.md) |
+| Dart 3.13 primary constructors | [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md) § Best-Practice Expectations; DTO policy [`docs/architecture/use_case_dto_policy.md`](docs/architecture/use_case_dto_policy.md) |
 | Modularity / deps | [`docs/modularity.md`](docs/modularity.md), [`ai/reports/dependency_map.md`](ai/reports/dependency_map.md) |
 | AI engineering | [`PLAN.md`](PLAN.md), [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) (runtime; build spec archived) |
 | Discovery evidence | [`ai/reports/README.md`](ai/reports/README.md) |

@@ -21,11 +21,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
-class _StubIotDemoRepository implements IotDemoRepository {
-  _StubIotDemoRepository({this.devices = const <IotDevice>[]});
-
-  final List<IotDevice> devices;
-
+class _StubIotDemoRepository({
+  final List<IotDevice> devices = const <IotDevice>[],
+}) implements IotDemoRepository {
   @override
   Stream<List<IotDevice>> watchDevices([
     IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,

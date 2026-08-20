@@ -24,8 +24,8 @@
 - Full: ./bin/checklist
 - Feature: ./bin/router_feature_validate
 
-## Additional pointers
-
+- Additional pointers
 - docs/agent_knowledge_base.md
 - docs/agent_project_context.md
 - docs/ai_code_review_protocol.md
+- docs/CODE_QUALITY.md (Dart 3.13 primary constructors)

@@ -56,7 +56,10 @@ flowchart TD
 
 Numbered flow:
 
-1. **HTTP/GraphQL/Firestore/sync payload?** → DTO in `data/`, mapper tests; domain stays pure.
+1. **HTTP/GraphQL/Firestore/sync payload?** → DTO in `data/` with a Dart 3.13
+   primary constructor (`class const FooDto({required final String id})`),
+   mapper tests; domain stays pure. Do not duplicate constructor params and
+   fields. Leave `@freezed` Cubit state alone.
 2. **Loading / ready / error visible?** → `@freezed sealed class` state (see `remote_config`, `deeplink`).
 3. **Merge, eligibility, validation rule?** → `domain/` pure function + unit tests (no repository mocks).
 4. **Failure surfaces in UI?** → Feature enum, `AppError`, or sealed failure — never `e.toString()` in state.

@@ -19,9 +19,7 @@ Use `TimerService` (from `packages/core/lib/src/time/timer_service.dart`) for an
 `TimerService` is registered in `apps/mobile/lib/app/composition/injector_registrations.dart` as lazy singleton. Inject it into repositories, coordinators, or services that need delayed work:
 
 ```dart
-class MyRepository {
-  MyRepository({required TimerService timerService}) : _timerService = timerService;
-  final TimerService _timerService;
+class MyRepository({required final TimerService _timerService}) {
   TimerDisposable? _restartHandle;
 
   void scheduleRestart() {

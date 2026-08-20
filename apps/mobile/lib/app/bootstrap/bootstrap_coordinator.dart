@@ -83,6 +83,13 @@ class BootstrapCoordinator {
   @visibleForTesting
   static void Function(Widget app) startApp = runApp;
 
+  /// Builds the root widget after DI is registered.
+  ///
+  /// Tests that stub [setupDependencies] must also stub this so
+  /// [AppCompositionRoot.createApp] does not query an empty locator.
+  @visibleForTesting
+  static Widget Function() createApp = AppCompositionRoot.createApp;
+
   /// Whether to paint [WebLaunchSplash] before async bootstrap finishes.
   /// Defaults to [kIsWeb]; overridable in tests.
   @visibleForTesting
@@ -156,6 +163,7 @@ class BootstrapCoordinator {
       );
     };
     startApp = runApp;
+    createApp = AppCompositionRoot.createApp;
     shouldShowWebLaunchSplash = () => kIsWeb;
     shouldDeferBackendInit = () => kIsWeb;
     scheduleDeferredWork = _scheduleBackendInitAfterFirstFrame;

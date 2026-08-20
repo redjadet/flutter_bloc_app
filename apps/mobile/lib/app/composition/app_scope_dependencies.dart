@@ -13,34 +13,18 @@ import 'package:networking/networking.dart';
 ///
 /// Resolved once at the composition root so presentation widgets do not query
 /// the service locator.
-class AppScopeDependencies {
-  const AppScopeDependencies({
-    required this.syncCoordinator,
-    required this.memoryService,
-    required this.timerService,
-    required this.authRepository,
-    required this.sessionCoordinator,
-    required this.networkStatusService,
-    required this.localeRepository,
-    required this.themeRepository,
-    required this.createRemoteConfigCubit,
-    required this.deepLinkService,
-    required this.deepLinkParser,
-    required this.retryNotificationService,
-    this.supabaseConfigCoordinator,
-  });
-
-  final BackgroundSyncCoordinator syncCoordinator;
-  final AppMemoryService memoryService;
-  final TimerService timerService;
-  final AuthRepository authRepository;
-  final SessionLifecycleCoordinator sessionCoordinator;
-  final NetworkStatusService networkStatusService;
-  final LocaleRepository localeRepository;
-  final ThemeRepository themeRepository;
-  final RemoteConfigCubit Function() createRemoteConfigCubit;
-  final DeepLinkService deepLinkService;
-  final DeepLinkParser deepLinkParser;
-  final RetryNotificationService retryNotificationService;
-  final SupabaseConfigCoordinator? supabaseConfigCoordinator;
-}
+class const AppScopeDependencies({
+  required final BackgroundSyncCoordinator syncCoordinator,
+  required final AppMemoryService memoryService,
+  required final TimerService timerService,
+  required final AuthRepository authRepository,
+  required final SessionLifecycleCoordinator sessionCoordinator,
+  required final NetworkStatusService networkStatusService,
+  required final LocaleRepository localeRepository,
+  required final ThemeRepository themeRepository,
+  required final RemoteConfigCubit Function() createRemoteConfigCubit,
+  required final DeepLinkService deepLinkService,
+  required final DeepLinkParser deepLinkParser,
+  required final RetryNotificationService retryNotificationService,
+  final SupabaseConfigCoordinator? supabaseConfigCoordinator,
+});

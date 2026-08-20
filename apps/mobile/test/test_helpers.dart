@@ -189,10 +189,9 @@ void _registerHuggingFaceDependencies(
   );
 }
 
-class _FakeThemeRepository implements ThemeRepository {
-  _FakeThemeRepository(this.initial) : _stored = _toPreference(initial);
+class _FakeThemeRepository(final ThemeMode initial) implements ThemeRepository {
+  this : _stored = _toPreference(initial);
 
-  final ThemeMode initial;
   ThemePreference? _stored;
 
   ThemePreference? saved;
@@ -290,10 +289,7 @@ class FakeTimerService implements TimerService {
   }
 }
 
-class _PeriodicEntry {
-  _PeriodicEntry(this.interval, this.onTick);
-  final Duration interval;
-  final void Function() onTick;
+class _PeriodicEntry(final Duration interval, final void Function() onTick) {
   bool cancelled = false;
   int _elapsedMicros = 0;
 
@@ -314,26 +310,23 @@ class _PeriodicEntry {
   }
 }
 
-class _OneShotEntry {
-  _OneShotEntry(Duration delay, this.onComplete)
-    : remainingMicros = delay.inMicroseconds;
-  final void Function() onComplete;
+class _OneShotEntry(Duration delay, final void Function() onComplete) {
+  this : remainingMicros = delay.inMicroseconds;
+
   int remainingMicros;
   bool cancelled = false;
 }
 
-class _FakeTimerHandle implements TimerDisposable {
-  _FakeTimerHandle(this._onDispose);
-  final void Function() _onDispose;
+class _FakeTimerHandle(final void Function() _onDispose)
+    implements TimerDisposable {
   @override
   void dispose() => _onDispose();
 }
 
-class _FakeTodoRepository
+class _FakeTodoRepository({List<TodoItem>? initialItems})
     with TodoSyncDiagnosticsNoPendingSync
     implements TodoRepository {
-  _FakeTodoRepository({List<TodoItem>? initialItems})
-    : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
+  this : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(
       onListen: _emitCurrent,
     );

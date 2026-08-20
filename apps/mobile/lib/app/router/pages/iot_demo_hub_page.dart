@@ -10,16 +10,11 @@ import 'package:material_ui/material_ui.dart';
 enum IotDemoHubTab { cloud, ble }
 
 /// App-layer composition: Cloud IoT + local BLE tabs on `/iot-demo`.
-class IotDemoHubPage extends StatefulWidget {
-  const IotDemoHubPage({
-    required this.showBackendDisabledBanner,
-    required this.createIotBleCubit,
-    super.key,
-  });
-
-  final bool showBackendDisabledBanner;
-  final IotBleCubit Function() createIotBleCubit;
-
+class const IotDemoHubPage({
+  required final bool showBackendDisabledBanner,
+  required final IotBleCubit Function() createIotBleCubit,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<IotDemoHubPage> createState() => _IotDemoHubPageState();
 }

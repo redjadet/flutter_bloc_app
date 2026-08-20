@@ -22,16 +22,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 
-class AppScope extends StatefulWidget {
-  const AppScope({
-    required this.router,
-    required this.dependencies,
-    super.key,
-  });
-
-  final GoRouter router;
-  final AppScopeDependencies dependencies;
-
+class const AppScope({
+  required final GoRouter router,
+  required final AppScopeDependencies dependencies,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<AppScope> createState() => _AppScopeState();
 }
@@ -160,15 +155,10 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   );
 }
 
-class _AppAuthSessionListener extends StatelessWidget {
-  const _AppAuthSessionListener({
-    required this.router,
-    required this.child,
-  });
-
-  final GoRouter router;
-  final Widget child;
-
+class const _AppAuthSessionListener({
+  required final GoRouter router,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppAuthCubit, AppAuthState>(

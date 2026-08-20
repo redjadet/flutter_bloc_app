@@ -22,9 +22,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 **Example violation**:
 
 ```dart
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key}); // Could be const but isn't
-  // ...
+class MyWidget({super.key}) extends StatelessWidget {
+  // Missing `class const` — constructor is not const
 }
 ```
 
