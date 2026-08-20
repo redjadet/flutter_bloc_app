@@ -71,6 +71,11 @@ tier expectations.
   interop; via `./bin/integration_preflight`;
   showcase channel mock registered globally in `test/flutter_test_config.dart` —
   not `integration_test` on web).
+- **Primary target (social feed demo):**
+  `integration_test/social_feed_demo_flow_test.dart`
+  (`registerSocialFeedDemoIntegrationFlow`: Example →
+  `example-social-feed-demo-button` → `/social-feed-demo` list + like smoke;
+  selective map id `social_feed_demo`).
 - **Tier:** `smoke`, `standard`, `exhaustive` (device integration); web via
   `./bin/integration_preflight`
 - **Owner:** feature QA owner

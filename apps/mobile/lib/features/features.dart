@@ -29,6 +29,7 @@ export 'remote_config/remote_config.dart';
 export 'scapes/scapes.dart';
 export 'search/search.dart';
 export 'settings/settings.dart';
+export 'social_feed_demo/social_feed_demo.dart';
 export 'staff_app_demo/staff_app_demo.dart';
 export 'supabase_auth/supabase_auth.dart';
 export 'todo_list/todo_list.dart';

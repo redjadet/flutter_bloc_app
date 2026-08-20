@@ -59,6 +59,7 @@ import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
 import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/social_feed_demo.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -116,6 +117,9 @@ class DemoRouteFactory({
   required final NativeSecurityShowcaseCubit Function()
   createNativeSecurityShowcaseCubit,
   required final EventBus eventBus,
+  required final SocialFeedRepository socialFeedRepository,
+  required final SocialFeedRealtimeSource socialFeedRealtimeSource,
+  required final SocialFeedScenarioController socialFeedScenarioController,
   required final OnlineTherapyDemoRouteFactory onlineTherapyDemoRouteFactory,
   required final StaffAppDemoRouteFactory staffAppDemoRouteFactory,
   required final CaseStudyDemoRouteFactory caseStudyDemoRouteFactory,

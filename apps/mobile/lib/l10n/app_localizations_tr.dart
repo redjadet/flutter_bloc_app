@@ -3561,4 +3561,134 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get productionReadinessNativeShowcaseLink => 'Yerel platform vitrini';
+
+  @override
+  String get exampleSocialFeedDemoButton => 'Sosyal akış demosu';
+
+  @override
+  String get socialFeedDemoTitle => 'Sosyal akış demosu';
+
+  @override
+  String get socialFeedDemoEmpty => 'Henüz gönderi yok';
+
+  @override
+  String get socialFeedDemoOffline => 'Simüle çevrimdışı — önbellek yok';
+
+  @override
+  String get socialFeedDemoMalformed => 'Bozuk akış verisi';
+
+  @override
+  String get socialFeedDemoPageError => 'Daha fazla gönderi yüklenemedi';
+
+  @override
+  String get socialFeedDemoRetry => 'Yeniden dene';
+
+  @override
+  String get socialFeedDemoUnknownError => 'Bir şeyler ters gitti';
+
+  @override
+  String get socialFeedDemoLiked => 'Beğenildi';
+
+  @override
+  String get socialFeedDemoNotLiked => 'Beğenilmedi';
+
+  @override
+  String get socialFeedDemoComment => 'Yorum';
+
+  @override
+  String get socialFeedDemoSubmitComment => 'Yorum gönder';
+
+  @override
+  String get socialFeedDemoPending => 'Bekliyor';
+
+  @override
+  String get socialFeedDemoMutationRejected => 'İşlem reddedildi';
+
+  @override
+  String get socialFeedDemoSimulatedOffline => 'Simüle çevrimdışı';
+
+  @override
+  String get socialFeedDemoSimulatedOnline => 'Simüle çevrimiçi';
+
+  @override
+  String socialFeedDemoStaleCache(int minutes) {
+    return 'Önbellek verisi ($minutes dk)';
+  }
+
+  @override
+  String socialFeedDemoPendingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bekleyen işlem',
+      one: '1 bekleyen işlem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String socialFeedDemoNeedsAttentionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dikkat gerektiriyor',
+      one: '1 dikkat gerektiriyor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get socialFeedDemoReconnecting => 'Gerçek zamanlı yeniden bağlanıyor…';
+
+  @override
+  String socialFeedDemoNewPosts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count yeni gönderi',
+      one: '1 yeni gönderi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get socialFeedDemoScenarioTitle => 'Senaryo kontrolleri (simüle)';
+
+  @override
+  String get socialFeedDemoEmitNewPosts => '3 yeni gönderi yayınla';
+
+  @override
+  String get socialFeedDemoReset => 'Geçerli izleyici demosunu sıfırla';
+
+  @override
+  String get socialFeedDemoResetTitle => 'İzleyici demosu sıfırlansın mı?';
+
+  @override
+  String socialFeedDemoResetBody(String viewer) {
+    return 'Yalnızca $viewer için önbellek ve kuyruğu temizler.';
+  }
+
+  @override
+  String get socialFeedDemoCancel => 'İptal';
+
+  @override
+  String get socialFeedDemoConfirm => 'Sıfırla';
+
+  @override
+  String get socialFeedDemoSeniorSignalTitle => 'Kıdemli sinyal';
+
+  @override
+  String get socialFeedDemoSignalStep1 => 'Tasarım öncesi kapsamı netleştir';
+
+  @override
+  String get socialFeedDemoSignalStep2 => 'Önce veri modelini sabitle';
+
+  @override
+  String get socialFeedDemoSignalStep3 => 'Katmanları adlandır ve uygula';
+
+  @override
+  String get socialFeedDemoSignalStep4 => 'Zor problemleri bağımsız çöz';
+
+  @override
+  String get socialFeedDemoSignalStep5 => 'Hata durumlarıyla bitir';
 }

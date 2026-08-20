@@ -2576,5 +2576,70 @@
   "productionReadinessFrameMissed": ">16,7 ms verpasst",
   "productionReadinessKillSwitchBanner": "Release-Kill-Switch ist deaktiviert. Demo-Funktionen können in Produktion aus sein.",
   "productionReadinessSettingsLink": "Einstellungen öffnen",
-  "productionReadinessNativeShowcaseLink": "Native-Plattform-Showcase"
+  "productionReadinessNativeShowcaseLink": "Native-Plattform-Showcase",
+"exampleSocialFeedDemoButton": "Social feed demo",
+  "@exampleSocialFeedDemoButton": {
+    "description": "Example hub button for social feed senior-signal demo"
+  },
+  "socialFeedDemoTitle": "Social feed demo",
+  "@socialFeedDemoTitle": {
+    "description": "Social feed demo page title"
+  },
+  "socialFeedDemoEmpty": "No posts yet",
+  "socialFeedDemoOffline": "Simulated offline — no cache",
+  "socialFeedDemoMalformed": "Malformed feed payload",
+  "socialFeedDemoPageError": "Could not load more posts",
+  "socialFeedDemoRetry": "Retry",
+  "socialFeedDemoUnknownError": "Something went wrong",
+  "socialFeedDemoLiked": "Liked",
+  "socialFeedDemoNotLiked": "Not liked",
+  "socialFeedDemoComment": "Comment",
+  "socialFeedDemoSubmitComment": "Submit comment",
+  "socialFeedDemoPending": "Pending",
+  "socialFeedDemoMutationRejected": "Action rejected",
+  "socialFeedDemoSimulatedOffline": "Simulated offline",
+  "socialFeedDemoSimulatedOnline": "Simulated online",
+  "socialFeedDemoStaleCache": "Cached data ({minutes} min old)",
+  "@socialFeedDemoStaleCache": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "socialFeedDemoPendingCount": "{count, plural, =1{1 pending action} other{{count} pending actions}}",
+  "@socialFeedDemoPendingCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "socialFeedDemoNeedsAttentionCount": "{count, plural, =1{1 needs attention} other{{count} need attention}}",
+  "@socialFeedDemoNeedsAttentionCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "socialFeedDemoReconnecting": "Reconnecting realtime…",
+  "socialFeedDemoNewPosts": "{count, plural, =1{1 new post} other{{count} new posts}}",
+  "@socialFeedDemoNewPosts": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "socialFeedDemoScenarioTitle": "Scenario controls (simulated)",
+  "socialFeedDemoEmitNewPosts": "Emit 3 new posts",
+  "socialFeedDemoReset": "Reset current viewer demo",
+  "socialFeedDemoResetTitle": "Reset viewer demo?",
+  "socialFeedDemoResetBody": "Clears cache and queue for {viewer} only.",
+  "@socialFeedDemoResetBody": {
+    "placeholders": {
+      "viewer": { "type": "String" }
+    }
+  },
+  "socialFeedDemoCancel": "Cancel",
+  "socialFeedDemoConfirm": "Reset",
+  "socialFeedDemoSeniorSignalTitle": "Senior signal",
+  "socialFeedDemoSignalStep1": "Clarify scope before design",
+  "socialFeedDemoSignalStep2": "Nail the data model first",
+  "socialFeedDemoSignalStep3": "Name layers and enforce them",
+  "socialFeedDemoSignalStep4": "Attack hard problems independently",
+  "socialFeedDemoSignalStep5": "End on failure states"
 }

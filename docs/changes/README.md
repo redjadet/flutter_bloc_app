@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-20_social_feed_demo_feature_brief.md`](2026-08-20_social_feed_demo_feature_brief.md): Credential-free `/social-feed-demo` senior-signal feed (cursor paging, offline queue, optimistic mutations, realtime banner).
 - [`2026-08-20_macos_telemetry_event_channel_crash.md`](2026-08-20_macos_telemetry_event_channel_crash.md): macOS native showcase telemetry skips `makeBackgroundTaskQueue` (relay abort on launch).
 - [`2026-08-20_dart_313_primary_ctor_docs.md`](2026-08-20_dart_313_primary_ctor_docs.md): Living docs/samples use Dart 3.13 primary constructors; Freezed Cubit state unchanged.
 - [`2026-08-20_app_composition_root_router_di.md`](2026-08-20_app_composition_root_router_di.md): `AppCompositionRoot` + typed route factories; router free of `getIt`.

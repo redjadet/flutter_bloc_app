@@ -3600,4 +3600,134 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get productionReadinessNativeShowcaseLink =>
       'Native-Plattform-Showcase';
+
+  @override
+  String get exampleSocialFeedDemoButton => 'Social feed demo';
+
+  @override
+  String get socialFeedDemoTitle => 'Social feed demo';
+
+  @override
+  String get socialFeedDemoEmpty => 'No posts yet';
+
+  @override
+  String get socialFeedDemoOffline => 'Simulated offline — no cache';
+
+  @override
+  String get socialFeedDemoMalformed => 'Malformed feed payload';
+
+  @override
+  String get socialFeedDemoPageError => 'Could not load more posts';
+
+  @override
+  String get socialFeedDemoRetry => 'Retry';
+
+  @override
+  String get socialFeedDemoUnknownError => 'Something went wrong';
+
+  @override
+  String get socialFeedDemoLiked => 'Liked';
+
+  @override
+  String get socialFeedDemoNotLiked => 'Not liked';
+
+  @override
+  String get socialFeedDemoComment => 'Comment';
+
+  @override
+  String get socialFeedDemoSubmitComment => 'Submit comment';
+
+  @override
+  String get socialFeedDemoPending => 'Pending';
+
+  @override
+  String get socialFeedDemoMutationRejected => 'Action rejected';
+
+  @override
+  String get socialFeedDemoSimulatedOffline => 'Simulated offline';
+
+  @override
+  String get socialFeedDemoSimulatedOnline => 'Simulated online';
+
+  @override
+  String socialFeedDemoStaleCache(int minutes) {
+    return 'Cached data ($minutes min old)';
+  }
+
+  @override
+  String socialFeedDemoPendingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pending actions',
+      one: '1 pending action',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String socialFeedDemoNeedsAttentionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count need attention',
+      one: '1 needs attention',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get socialFeedDemoReconnecting => 'Reconnecting realtime…';
+
+  @override
+  String socialFeedDemoNewPosts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new posts',
+      one: '1 new post',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get socialFeedDemoScenarioTitle => 'Scenario controls (simulated)';
+
+  @override
+  String get socialFeedDemoEmitNewPosts => 'Emit 3 new posts';
+
+  @override
+  String get socialFeedDemoReset => 'Reset current viewer demo';
+
+  @override
+  String get socialFeedDemoResetTitle => 'Reset viewer demo?';
+
+  @override
+  String socialFeedDemoResetBody(String viewer) {
+    return 'Clears cache and queue for $viewer only.';
+  }
+
+  @override
+  String get socialFeedDemoCancel => 'Cancel';
+
+  @override
+  String get socialFeedDemoConfirm => 'Reset';
+
+  @override
+  String get socialFeedDemoSeniorSignalTitle => 'Senior signal';
+
+  @override
+  String get socialFeedDemoSignalStep1 => 'Clarify scope before design';
+
+  @override
+  String get socialFeedDemoSignalStep2 => 'Nail the data model first';
+
+  @override
+  String get socialFeedDemoSignalStep3 => 'Name layers and enforce them';
+
+  @override
+  String get socialFeedDemoSignalStep4 => 'Attack hard problems independently';
+
+  @override
+  String get socialFeedDemoSignalStep5 => 'End on failure states';
 }

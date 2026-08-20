@@ -69,4 +69,19 @@ void main() {
       isTrue,
     );
   });
+
+  test('createDemoRoutes includes Social Feed demo route', () {
+    final List<RouteBase> routes = createDemoRoutes(
+      AppCompositionRoot.resolveDemoRouteFactory(),
+    );
+    expect(
+      routes.any(
+        (RouteBase r) =>
+            r is GoRoute &&
+            r.name == AppRoutes.socialFeedDemo &&
+            r.path == AppRoutes.socialFeedDemoPath,
+      ),
+      isTrue,
+    );
+  });
 }
