@@ -123,7 +123,7 @@ root when an existing category applies.
   networking / pagination / Bloc / contract-test questions
 - [`ai_code_review_protocol.md`](ai_code_review_protocol.md) — AI-specific risk
   matrix and Flutter review special cases
-- [`CODE_QUALITY.md`](CODE_QUALITY.md)
+- [`CODE_QUALITY.md`](CODE_QUALITY.md) — quality gates; Dart 3.13 primary constructors
 - [`review/architecture_checklist.md`](review/architecture_checklist.md)
 - [`review/bloc_checklist.md`](review/bloc_checklist.md)
 - [`review/security_checklist.md`](review/security_checklist.md)

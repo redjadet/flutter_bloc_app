@@ -1,8 +1,8 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
@@ -41,31 +41,19 @@ part 'test_harness_log_filters.dart';
 bool _hiveInitialized = false;
 final List<AppLogEntry> _unexpectedIntegrationLogs = <AppLogEntry>[];
 
-class IntegrationDependencyOptions {
-  const IntegrationDependencyOptions({
-    this.overrideCounterRepository = true,
-    this.overrideChartRepository = true,
-    this.overrideGraphqlRepository = true,
-    this.overrideCameraGalleryRepository = false,
-    this.graphqlFailOnceThenSuccess = false,
-    this.setFlavorToProd = true,
-    this.biometricSuccess = true,
-    this.locale = const AppLocale(languageCode: 'en'),
-    this.authMode = IntegrationAuthMode.mockFirebaseAuth,
-  });
-
-  final bool overrideCounterRepository;
-  final bool overrideChartRepository;
-  final bool overrideGraphqlRepository;
-  final bool overrideCameraGalleryRepository;
+class const IntegrationDependencyOptions({
+  final bool overrideCounterRepository = true,
+  final bool overrideChartRepository = true,
+  final bool overrideGraphqlRepository = true,
+  final bool overrideCameraGalleryRepository = false,
 
   /// See [GraphqlFailOnceNetworkRepository].
-  final bool graphqlFailOnceThenSuccess;
-  final bool setFlavorToProd;
-  final bool biometricSuccess;
-  final AppLocale? locale;
-  final IntegrationAuthMode authMode;
-}
+  final bool graphqlFailOnceThenSuccess = false,
+  final bool setFlavorToProd = true,
+  final bool biometricSuccess = true,
+  final AppLocale? locale = const AppLocale(languageCode: 'en'),
+  final IntegrationAuthMode authMode = IntegrationAuthMode.mockFirebaseAuth,
+});
 
 enum IntegrationAuthMode {
   /// Uses `firebase_auth_mocks` (default for most tests).
@@ -246,7 +234,9 @@ Future<void> launchTestApp(
       }
     }
   }
-  await tester.pumpWidget(MyApp(requireAuth: requireAuth));
+  await tester.pumpWidget(
+    AppCompositionRoot.createApp(requireAuth: requireAuth),
+  );
   await tester.pump();
   await waitForCounterCubitsToLoad(tester);
   await tester.pump(const Duration(milliseconds: 50));

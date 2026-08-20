@@ -74,7 +74,7 @@ without rewiring whole pages.
 
 | Rule | Why |
 | --- | --- |
-| **Constructor-driven UI** — all visible variation via constructor params (data, flags, callbacks) | Same widget in page, test, and `@Preview` without DI |
+| **Constructor-driven UI** — all visible variation via constructor params (data, flags, callbacks). Use Dart 3.13 primary constructors so those params are not duplicated as fields (`class const Leaf({required final String title, super.key}) extends StatelessWidget`) | Same widget in page, test, and `@Preview` without DI |
 | **No hidden deps in leaf widgets** — no `context.read`, `get_it`, or cubit lookup inside reusable widgets | Isolated pump/preview; page wires cubit → props |
 | **Callbacks out** — `VoidCallback` / typed handlers instead of navigation or repo calls inside the widget | Tests assert taps; pages own side effects |
 | **Design tokens** — `AppStyles`, `UI`, `Theme.of(context)`, responsive helpers; no magic numbers | Hot reload + iteration stay on-brand |

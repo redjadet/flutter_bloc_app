@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/app/bootstrap/initialization_guard.dart';
 import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/web_launch_splash.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
@@ -81,6 +82,13 @@ class BootstrapCoordinator {
 
   @visibleForTesting
   static void Function(Widget app) startApp = runApp;
+
+  /// Builds the root widget after DI is registered.
+  ///
+  /// Tests that stub [setupDependencies] must also stub this so
+  /// [AppCompositionRoot.createApp] does not query an empty locator.
+  @visibleForTesting
+  static Widget Function() createApp = AppCompositionRoot.createApp;
 
   /// Whether to paint [WebLaunchSplash] before async bootstrap finishes.
   /// Defaults to [kIsWeb]; overridable in tests.
@@ -155,6 +163,7 @@ class BootstrapCoordinator {
       );
     };
     startApp = runApp;
+    createApp = AppCompositionRoot.createApp;
     shouldShowWebLaunchSplash = () => kIsWeb;
     shouldDeferBackendInit = () => kIsWeb;
     scheduleDeferredWork = _scheduleBackendInitAfterFirstFrame;

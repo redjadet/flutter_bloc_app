@@ -20,5 +20,8 @@ Slice of **`agents-canonical-rules`**. Detail: `docs/clean_architecture.md`, `do
 - Repositories implement domain interfaces; domain/use cases own business rules;
   Cubit/BLoC owns presentation state and flow orchestration.
 - DI in `apps/mobile/lib/app/composition/**`.
-- Prefer Freezed for new state/domain models; `build_runner` after `@freezed`.
+- Prefer Freezed for new Cubit/BLoC **state**. Hand-written DTOs, domain field
+  bags, DI bags, and constructor-driven widgets use Dart 3.13 primary
+  constructors (`class const Foo({required final String id})`) so fields are not
+  duplicated — `docs/CODE_QUALITY.md`, `docs/architecture/use_case_dto_policy.md`.
 - For Cubit/Bloc decisions, invoke `agents-bloc-standards`.

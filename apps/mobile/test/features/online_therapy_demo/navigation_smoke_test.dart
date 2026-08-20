@@ -1,3 +1,4 @@
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
@@ -8,6 +9,28 @@ import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+
+class _GuestAppAuthRepository implements AuthRepository {
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
+}
+
+OnlineTherapyDemoRouteFactory _onlineTherapyRouteFactory(
+  OnlineTherapyFakeApi api,
+) => OnlineTherapyDemoRouteFactory(
+  appAuthRepository: _GuestAppAuthRepository(),
+  therapyAuthRepository: getIt<TherapyAuthRepository>(),
+  networkModeController: api,
+  therapists: getIt<TherapistRepository>(),
+  appointments: getIt<AppointmentRepository>(),
+  admin: getIt<TherapyAdminRepository>(),
+  audit: getIt<AuditRepository>(),
+  messaging: getIt<TherapyMessagingRepository>(),
+  calls: getIt<TherapyCallRepository>(),
+);
 
 void main() {
   testWidgets('landing → client hub → therapists list works', (tester) async {
@@ -42,7 +65,9 @@ void main() {
         localizationsDelegates: appLocalizationDelegates,
         routerConfig: GoRouter(
           initialLocation: AppRoutes.onlineTherapyDemoPath,
-          routes: <RouteBase>[createOnlineTherapyDemoRoute()],
+          routes: <RouteBase>[
+            createOnlineTherapyDemoRoute(_onlineTherapyRouteFactory(api)),
+          ],
         ),
       ),
     );

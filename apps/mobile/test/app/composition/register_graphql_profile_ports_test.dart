@@ -34,19 +34,15 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test(
-    'GraphqlCacheClearPort adapter and ProfileCacheControlsPort alias repositories',
-    () {
-      final GraphqlCacheRepository fullCache = getIt<GraphqlCacheRepository>();
-      final GraphqlCacheClearPort clearPort = getIt<GraphqlCacheClearPort>();
-      expect(clearPort, isA<GraphqlCacheClearPortAdapter>());
-      expect(identical(fullCache, clearPort), isFalse);
+  test('GraphqlCacheClearPort adapter and ProfileCacheControlsPort alias repositories', () {
+    final GraphqlCacheRepository fullCache = getIt<GraphqlCacheRepository>();
+    final GraphqlCacheClearPort clearPort = getIt<GraphqlCacheClearPort>();
+    expect(clearPort, isA<GraphqlCacheClearPortAdapter>());
+    expect(identical(fullCache, clearPort), isFalse);
 
-      final ProfileCacheRepository fullProfile =
-          getIt<ProfileCacheRepository>();
-      final ProfileCacheControlsPort controlsPort =
-          getIt<ProfileCacheControlsPort>();
-      expect(identical(fullProfile, controlsPort), isTrue);
-    },
-  );
+    final ProfileCacheRepository fullProfile = getIt<ProfileCacheRepository>();
+    final ProfileCacheControlsPort controlsPort =
+        getIt<ProfileCacheControlsPort>();
+    expect(identical(fullProfile, controlsPort), isTrue);
+  });
 }

@@ -1,4 +1,5 @@
 import 'package:auth/auth.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_certificate_pinning_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_http_services.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -15,6 +16,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 
+import '../../test_helpers.dart';
+
 class _MockGoRouterState extends Mock implements GoRouterState {}
 
 class _TestNetworkStatusService implements NetworkStatusService {
@@ -29,17 +32,29 @@ class _TestNetworkStatusService implements NetworkStatusService {
 }
 
 void main() {
+  setUpAll(() async {
+    await setupHiveForTesting();
+  });
+
   setUp(() async {
-    await getIt.reset(dispose: true);
+    await setupTestDependencies(
+      const TestSetupOptions(
+        useMockFirebaseAuth: true,
+        useMockFirebasePlatform: true,
+      ),
+    );
+    overrideTodoRepositoryForTests();
     FlavorManager.current = Flavor.dev;
   });
 
   tearDown(() async {
-    await getIt.reset(dispose: true);
+    await tearDownTestDependencies();
   });
 
   test('createDemoRoutes includes certificate pinning demo route', () {
-    final List<RouteBase> routes = createDemoRoutes();
+    final List<RouteBase> routes = createDemoRoutes(
+      AppCompositionRoot.resolveDemoRouteFactory(),
+    );
     expect(
       routes.any(
         (RouteBase r) =>
@@ -60,7 +75,10 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
     final BuildContext context = tester.element(find.byType(SizedBox));
 
-    final GoRoute goRoute = createCertificatePinningDemoRoute() as GoRoute;
+    final GoRoute goRoute = createCertificatePinningDemoRoute(
+      AppCompositionRoot.resolveDemoRouteFactory()
+          .certificatePinningDemoRouteFactory,
+    ) as GoRoute;
     final Object? redirect = goRoute.redirect!(context, _MockGoRouterState());
     expect(redirect, AppRoutes.counterPath);
   });
@@ -73,7 +91,10 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
     final BuildContext context = tester.element(find.byType(SizedBox));
 
-    final GoRoute goRoute = createCertificatePinningDemoRoute() as GoRoute;
+    final GoRoute goRoute = createCertificatePinningDemoRoute(
+      AppCompositionRoot.resolveDemoRouteFactory()
+          .certificatePinningDemoRouteFactory,
+    ) as GoRoute;
     final Object? redirect = goRoute.redirect!(context, _MockGoRouterState());
     expect(redirect, isNull);
   });
@@ -81,15 +102,26 @@ void main() {
   testWidgets('createCertificatePinningDemoRoute builds demo page', (
     WidgetTester tester,
   ) async {
-    getIt.registerSingleton<NetworkStatusService>(_TestNetworkStatusService());
-    getIt.registerSingleton<TokenRepository>(InMemoryTokenRepository());
-    registerHttpServices();
-    registerCertificatePinningDemoServices();
+    if (!getIt.isRegistered<NetworkStatusService>()) {
+      getIt.registerSingleton<NetworkStatusService>(
+        _TestNetworkStatusService(),
+      );
+    }
+    if (!getIt.isRegistered<TokenRepository>()) {
+      getIt.registerSingleton<TokenRepository>(InMemoryTokenRepository());
+    }
+    if (!getIt.isRegistered<CertificatePinningConfig>()) {
+      registerHttpServices();
+      registerCertificatePinningDemoServices();
+    }
 
     final GoRouter router = GoRouter(
       initialLocation: AppRoutes.certificatePinningDemoPath,
       routes: <RouteBase>[
-        createCertificatePinningDemoRoute(),
+        createCertificatePinningDemoRoute(
+          AppCompositionRoot.resolveDemoRouteFactory()
+              .certificatePinningDemoRouteFactory,
+        ),
         GoRoute(
           path: AppRoutes.counterPath,
           builder: (context, state) => const SizedBox.shrink(),

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/app.dart' show MyApp;
-import 'package:flutter_bloc_app/app/app_scope.dart' show AppScope;
 import 'package:flutter_bloc_app/app/bootstrap/bootstrap_coordinator.dart'
     show BootstrapCoordinator;
 import 'package:flutter_bloc_app/app/bootstrap/initialization_guard.dart';
@@ -79,8 +78,8 @@ Future<void> configureDependencies() async {
   }
 }
 
-/// Ensures DI is configured (fire-and-forget). Use when pumping [AppScope] or
-/// [MyApp] in tests without running [BootstrapCoordinator] bootstrap.
+/// Ensures DI is configured (fire-and-forget). Use when pumping [MyApp] in
+/// tests without running [BootstrapCoordinator] bootstrap.
 /// Note: [getIt] may be used immediately after; in production, bootstrap
 /// awaits [configureDependencies] before runApp, so there is no race.
 void ensureConfigured() {

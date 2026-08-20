@@ -7,8 +7,9 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Agent compact context | [`llms.txt`](llms.txt) (with [`CODEMAP.md`](CODEMAP.md), [`docs/ai/repo_map.md`](docs/ai/repo_map.md)) |
 | Onboard / loop | [`AGENTS.md`](AGENTS.md), [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) |
 | Add or change feature | [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md), `apps/mobile/lib/features/<feature>/` |
-| Routes / deep links | [`apps/mobile/lib/app/router/app_routes.dart`](apps/mobile/lib/app/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) |
-| DI registration | [`apps/mobile/lib/app/composition/`](apps/mobile/lib/app/composition/) (`injector.dart`, `groups/`), feature registrars in [`apps/mobile/lib/app/composition/features/`](apps/mobile/lib/app/composition/features/) |
+| Routes / deep links | [`apps/mobile/lib/app/router/app_routes.dart`](apps/mobile/lib/app/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) (no `getIt` in router; factories from composition root) |
+| App composition root | [`apps/mobile/lib/app/composition/app_composition_root.dart`](apps/mobile/lib/app/composition/app_composition_root.dart) — wires `GoRouter` + `AppScopeDependencies` + route factories; see [`docs/changes/2026-08-20_app_composition_root_router_di.md`](docs/changes/2026-08-20_app_composition_root_router_di.md) |
+| DI registration | [`apps/mobile/lib/app/composition/`](apps/mobile/lib/app/composition/) (`injector.dart`, `injector_registrations.dart`, `groups/`), feature registrars in [`apps/mobile/lib/app/composition/features/`](apps/mobile/lib/app/composition/features/) — register only; resolve via composition root |
 | UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`packages/design_system/`](packages/design_system/), [`apps/mobile/lib/app/`](apps/mobile/lib/app/) |
 | Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`apps/mobile/lib/app/sync/`](apps/mobile/lib/app/sync/), [`packages/storage/`](packages/storage/) |
 | HTTP / retries | [`apps/mobile/lib/app/http/`](apps/mobile/lib/app/http/), [`packages/networking/`](packages/networking/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
@@ -17,6 +18,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Validation commands | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), `./bin/checklist` |
 | Feature catalog | [`docs/feature_overview.md`](docs/feature_overview.md) |
 | Architecture | [`docs/architecture_details.md`](docs/architecture_details.md), [`ai/reports/architecture_overview.md`](ai/reports/architecture_overview.md) |
+| Dart 3.13 primary constructors | [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md) § Best-Practice Expectations; DTO policy [`docs/architecture/use_case_dto_policy.md`](docs/architecture/use_case_dto_policy.md) |
 | Modularity / deps | [`docs/modularity.md`](docs/modularity.md), [`ai/reports/dependency_map.md`](ai/reports/dependency_map.md) |
 | AI engineering | [`PLAN.md`](PLAN.md), [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) (runtime; build spec archived) |
 | Discovery evidence | [`ai/reports/README.md`](ai/reports/README.md) |

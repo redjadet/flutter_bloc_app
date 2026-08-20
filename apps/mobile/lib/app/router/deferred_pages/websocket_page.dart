@@ -7,7 +7,6 @@ library;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/pages/websocket_demo_page.dart';
@@ -16,7 +15,8 @@ import 'package:flutter_bloc_app/features/websocket/presentation/pages/websocket
 ///
 /// This function is called after the deferred library is loaded.
 /// It creates a [WebsocketCubit] and wraps the page in a BlocProvider.
-Widget buildWebsocketPage() => BlocProvider(
-  create: (_) => WebsocketCubit(repository: getIt<WebsocketRepository>()),
-  child: const WebsocketDemoPage(),
-);
+Widget buildWebsocketPage({required WebsocketRepository repository}) =>
+    BlocProvider(
+      create: (_) => WebsocketCubit(repository: repository),
+      child: const WebsocketDemoPage(),
+    );

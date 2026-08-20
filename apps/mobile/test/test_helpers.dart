@@ -24,10 +24,11 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -188,10 +189,9 @@ void _registerHuggingFaceDependencies(
   );
 }
 
-class _FakeThemeRepository implements ThemeRepository {
-  _FakeThemeRepository(this.initial) : _stored = _toPreference(initial);
+class _FakeThemeRepository(final ThemeMode initial) implements ThemeRepository {
+  this : _stored = _toPreference(initial);
 
-  final ThemeMode initial;
   ThemePreference? _stored;
 
   ThemePreference? saved;
@@ -289,10 +289,7 @@ class FakeTimerService implements TimerService {
   }
 }
 
-class _PeriodicEntry {
-  _PeriodicEntry(this.interval, this.onTick);
-  final Duration interval;
-  final void Function() onTick;
+class _PeriodicEntry(final Duration interval, final void Function() onTick) {
   bool cancelled = false;
   int _elapsedMicros = 0;
 
@@ -313,19 +310,73 @@ class _PeriodicEntry {
   }
 }
 
-class _OneShotEntry {
-  _OneShotEntry(Duration delay, this.onComplete)
-    : remainingMicros = delay.inMicroseconds;
-  final void Function() onComplete;
+class _OneShotEntry(Duration delay, final void Function() onComplete) {
+  this : remainingMicros = delay.inMicroseconds;
+
   int remainingMicros;
   bool cancelled = false;
 }
 
-class _FakeTimerHandle implements TimerDisposable {
-  _FakeTimerHandle(this._onDispose);
-  final void Function() _onDispose;
+class _FakeTimerHandle(final void Function() _onDispose)
+    implements TimerDisposable {
   @override
   void dispose() => _onDispose();
+}
+
+class _FakeTodoRepository({List<TodoItem>? initialItems})
+    with TodoSyncDiagnosticsNoPendingSync
+    implements TodoRepository {
+  this : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
+    _controller = StreamController<List<TodoItem>>.broadcast(
+      onListen: _emitCurrent,
+    );
+  }
+
+  final List<TodoItem> _items;
+  late final StreamController<List<TodoItem>> _controller;
+
+  @override
+  Stream<List<TodoItem>> watchAll() => _controller.stream;
+
+  @override
+  Future<List<TodoItem>> fetchAll() async =>
+      List<TodoItem>.unmodifiable(_items);
+
+  @override
+  Future<void> save(TodoItem item) async {
+    final int index = _items.indexWhere((current) => current.id == item.id);
+    if (index == -1) {
+      _items.add(item);
+    } else {
+      _items[index] = item;
+    }
+    _emitCurrent();
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    _items.removeWhere((item) => item.id == id);
+    _emitCurrent();
+  }
+
+  @override
+  Future<void> clearCompleted() async {
+    _items.removeWhere((item) => item.isCompleted);
+    _emitCurrent();
+  }
+
+  void _emitCurrent() {
+    scheduleMicrotask(() {
+      if (_controller.isClosed) {
+        return;
+      }
+      _controller.add(List<TodoItem>.unmodifiable(_items));
+    });
+  }
+
+  Future<void> dispose() async {
+    await _controller.close();
+  }
 }
 
 /// Overrides the CounterRepository in GetIt with a MockCounterRepository.
@@ -448,6 +499,19 @@ Future<void> overrideNetworkAndSync() async {
   );
   getIt.registerLazySingleton<PendingSyncRepository>(
     FakePendingSyncRepository.new,
+  );
+}
+
+void overrideTodoRepositoryForTests({List<TodoItem>? initialItems}) {
+  if (getIt.isRegistered<TodoRepository>()) {
+    getIt.unregister<TodoRepository>();
+  }
+
+  getIt.registerSingleton<TodoRepository>(
+    _FakeTodoRepository(initialItems: initialItems),
+    dispose: (repository) async {
+      await (repository as _FakeTodoRepository).dispose();
+    },
   );
 }
 

@@ -158,24 +158,24 @@ Audio visualization with vertical lines clipped to thumbnail size.
 ### LibraryAsset
 
 ```dart
-class LibraryAsset {
-  final String name;
-  final String type;  // OBJECT, IMAGE, SOUND, FOOTAGE
-  final String durationLabel;
-  final String formatLabel;
-  final String? thumbnailAssetPath;
-  final Color? backgroundColor;  // For audio assets
-
-  bool get isAudio;  // Helper to check if type is SOUND
+class const LibraryAsset({
+  required final String name,
+  required final String type, // OBJECT, IMAGE, SOUND, FOOTAGE
+  required final String durationLabel,
+  required final String formatLabel,
+  final String? thumbnailAssetPath,
+  final Color? backgroundColor, // For audio assets
+}) {
+  bool get isAudio; // Helper to check if type is SOUND
 }
 ```
 
 ### LibraryCategory
 
 ```dart
-class LibraryCategory {
-  final String label;  // SCAPES, PACKS
-}
+class const LibraryCategory({
+  required final String label, // SCAPES, PACKS
+});
 ```
 
 ## Usage

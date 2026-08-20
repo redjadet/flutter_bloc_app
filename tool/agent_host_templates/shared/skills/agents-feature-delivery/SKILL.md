@@ -29,6 +29,8 @@ Do:
   Domain = entity + repository interface (+ use cases when policy requires).
   Data = repository impl + datasource + DTO.
 - Place DTO/mappers in data; view-data mappers in presentation/core diagnostics.
+  Hand-written DTOs use Dart 3.13 primary constructors
+  (`class const FooDto({required final String id})`) — `docs/CODE_QUALITY.md`.
 - Extract **reusable leaf widgets** for preview, widget test, and design iteration —
   [`docs/design_system.md`](../../../../../docs/design_system.md) § Reusable widgets;
   mirror tests under `test/features/<feature>/presentation/widgets/`.

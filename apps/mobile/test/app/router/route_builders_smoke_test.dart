@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
@@ -81,6 +82,7 @@ void main() {
           useMockFirebasePlatform: true,
         ),
       );
+      overrideTodoRepositoryForTests();
     });
 
     tearDown(() async {
@@ -95,7 +97,10 @@ void main() {
           locale: const Locale('en'),
           home: Builder(
             builder: (context) {
-              _invokeRoutes(context, createAppRoutes());
+              _invokeRoutes(
+                context,
+                createAppRoutes(AppCompositionRoot.resolveRouteFactories()),
+              );
               return const SizedBox.shrink();
             },
           ),

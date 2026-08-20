@@ -1,3 +1,4 @@
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
@@ -7,6 +8,28 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositorie
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+
+class _GuestAppAuthRepository implements AuthRepository {
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
+}
+
+OnlineTherapyDemoRouteFactory _onlineTherapyRouteFactory(
+  OnlineTherapyFakeApi api,
+) => OnlineTherapyDemoRouteFactory(
+  appAuthRepository: _GuestAppAuthRepository(),
+  therapyAuthRepository: getIt<TherapyAuthRepository>(),
+  networkModeController: api,
+  therapists: getIt<TherapistRepository>(),
+  appointments: getIt<AppointmentRepository>(),
+  admin: getIt<TherapyAdminRepository>(),
+  audit: getIt<AuditRepository>(),
+  messaging: getIt<TherapyMessagingRepository>(),
+  calls: getIt<TherapyCallRepository>(),
+);
 
 void main() {
   testWidgets('online therapy demo has no overflow on small iPhone screens', (
@@ -59,7 +82,9 @@ void main() {
       MaterialApp.router(
         routerConfig: GoRouter(
           initialLocation: AppRoutes.onlineTherapyDemoPath,
-          routes: <RouteBase>[createOnlineTherapyDemoRoute()],
+          routes: <RouteBase>[
+            createOnlineTherapyDemoRoute(_onlineTherapyRouteFactory(api)),
+          ],
         ),
       ),
     );

@@ -107,7 +107,12 @@ dart run build_runner build --delete-conflicting-outputs
 - App-wide composition lives in `apps/mobile/lib/app/`; reusable shared code
   lives in focused `packages/*` packages.
 - `flutter_bloc` drives state transitions.
-- `get_it` is the composition root and dependency container.
+- `get_it` is the service locator / DI container; `AppCompositionRoot` is the
+  composition root that resolves registrations into `AppScope` and route
+  factories (router code must not call `getIt` directly).
+- Hand-written types that would duplicate constructor params and fields use
+  Dart 3.13 primary constructors (`class const Foo({required final String id})`);
+  see [`CODE_QUALITY.md`](CODE_QUALITY.md).
 - Firebase powers core app integrations; Supabase is used where a feature is
   explicitly configured for it.
 - Offline-first behavior is implemented through cache-first repositories,
@@ -124,10 +129,11 @@ For deeper rationale, see:
 
 | Path | Purpose |
 | --- | --- |
-| `apps/mobile/lib/app.dart` | Top-level app widget and router creation. |
+| `apps/mobile/lib/app.dart` | Top-level `MyApp` widget (router + `AppScopeDependencies` injected). |
 | `apps/mobile/lib/main_*.dart` | Flavor-specific entrypoints. |
 | `apps/mobile/lib/main_bootstrap.dart` | Shared flavor bootstrap path. |
-| `apps/mobile/lib/app/` | App shell, DI composition, bootstrap, config, theme, routing, app widgets, and app-owned adapters. |
+| `apps/mobile/lib/app/composition/app_composition_root.dart` | Composition root: `GoRouter`, `AppScopeDependencies`, route factories. |
+| `apps/mobile/lib/app/` | App shell, DI registration, bootstrap, config, theme, routing, app widgets, and app-owned adapters. |
 | `apps/mobile/lib/features/<feature>/` | Feature modules with domain, data, and presentation layers. |
 | `packages/*/` | Reusable utilities, storage, networking, auth, feature flags, design-system UI, and app shared Flutter infra. |
 | `apps/mobile/lib/l10n/` | Localization ARB files and generated localizations. |

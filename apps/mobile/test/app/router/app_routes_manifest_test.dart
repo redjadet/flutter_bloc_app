@@ -1,19 +1,44 @@
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:flutter_bloc_app/app/router/routes_core.dart';
 import 'package:flutter_bloc_app/app/router/routes_demos.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../test_helpers.dart';
+
 void main() {
+  setUpAll(() async {
+    await setupHiveForTesting();
+  });
+
+  setUp(() async {
+    await setupTestDependencies(
+      const TestSetupOptions(
+        useMockFirebaseAuth: true,
+        useMockFirebasePlatform: true,
+      ),
+    );
+    overrideTodoRepositoryForTests();
+  });
+
+  tearDown(() async {
+    await tearDownTestDependencies();
+  });
+
   group('app router manifests', () {
     test('createCoreRoutes returns non-empty GoRoute list', () {
-      final routes = createCoreRoutes();
+      final routes = createCoreRoutes(
+        AppCompositionRoot.resolveCoreRouteFactory(),
+      );
       expect(routes, isNotEmpty);
       expect(routes.every((r) => r is GoRoute), isTrue);
     });
 
     test('createDemoRoutes returns non-empty route list', () {
-      final routes = createDemoRoutes();
+      final routes = createDemoRoutes(
+        AppCompositionRoot.resolveDemoRouteFactory(),
+      );
       expect(routes, isNotEmpty);
       expect(
         routes.every((RouteBase r) => r is GoRoute || r is ShellRoute),
@@ -22,8 +47,12 @@ void main() {
     });
 
     test('createAppRoutes composes core and demo routes', () {
-      final routes = createAppRoutes();
-      expect(routes.length, greaterThan(createCoreRoutes().length));
+      final factories = AppCompositionRoot.resolveRouteFactories();
+      final routes = createAppRoutes(factories);
+      expect(
+        routes.length,
+        greaterThan(createCoreRoutes(factories.core).length),
+      );
     });
   });
 }

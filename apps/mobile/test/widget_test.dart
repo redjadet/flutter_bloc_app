@@ -5,7 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter_bloc_app/app.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:material_ui/material_ui.dart';
@@ -36,7 +36,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await initializeDateFormatting('en');
-    await tester.pumpWidget(const MyApp(requireAuth: false));
+    await tester.pumpWidget(AppCompositionRoot.createApp(requireAuth: false));
     // Wait for initial build
     await tester.pump();
     await waitForCounterCubitsToLoad(tester);

@@ -23,8 +23,10 @@ new feature state.
 
 ## State Shape
 
-- New state/domain models use Freezed unless an owning doc explicitly allows
-  otherwise.
+- New Cubit/BLoC **state** uses Freezed unless an owning doc explicitly allows
+  otherwise. Hand-written DTO and plain domain **field bags** (no union) use
+  Dart 3.13 primary constructors so fields are not duplicated
+  ([`CODE_QUALITY.md`](CODE_QUALITY.md)).
 - Prefer one immutable state object with `status`, data, and error fields for
   simple flows.
 - Use Freezed unions for workflows with materially different states, such as

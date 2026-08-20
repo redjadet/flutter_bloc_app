@@ -9,7 +9,7 @@ Thin map for structure, layering, and modularity. For day-to-day implementation,
 - [clean_architecture.md](clean_architecture.md) — layer rules, dependency flow, Cubit placement
 - [architecture_details.md](architecture_details.md) — app shell, routing, DI, bootstrap
 - [architecture/feature_structure_contract.md](architecture/feature_structure_contract.md) — feature folder contract
-- [architecture/use_case_dto_policy.md](architecture/use_case_dto_policy.md) — use cases, DTOs, mappers
+- [architecture/use_case_dto_policy.md](architecture/use_case_dto_policy.md) — use cases, DTOs, mappers; Dart 3.13 primary constructors
 - [architecture/MOBILE_BACKEND_BOUNDARIES.md](architecture/MOBILE_BACKEND_BOUNDARIES.md) — six mobile/backend failure modes
 - [backend/API_CONTRACT_GUIDE.md](backend/API_CONTRACT_GUIDE.md) — mobile/backend contract + future pagination
 - [backend/MOBILE_BACKEND_DEFERRED_WORK.md](backend/MOBILE_BACKEND_DEFERRED_WORK.md) — pagination / analytics / other not-done items

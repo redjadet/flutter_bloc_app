@@ -12,5 +12,6 @@ Thin pointer for agents starting under `docs/ai/`. Prefer [`CODEMAP.md`](../../C
 | Tests | `apps/mobile/test/` |
 | Tooling | `tool/`, `bin/checklist` |
 | Canon docs | `docs/` |
+| Dart 3.13 primary constructors | [`CODE_QUALITY.md`](../CODE_QUALITY.md) § Best-Practice Expectations |
 | Evidence | `ai/reports/` |
 | Plans | `docs/plans/` (local-only; gitignored) |

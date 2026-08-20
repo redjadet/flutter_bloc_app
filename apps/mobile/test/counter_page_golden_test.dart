@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
@@ -75,7 +75,9 @@ void main() {
     });
 
     testGoldens('renders loading state without settling', (tester) async {
-      await tester.pumpWidgetBuilder(const MyApp(requireAuth: false));
+      await tester.pumpWidgetBuilder(
+        AppCompositionRoot.createApp(requireAuth: false),
+      );
       // Wait a bit for initial render but don't wait for full settle
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
