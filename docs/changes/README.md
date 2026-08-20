@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-20_macos_telemetry_event_channel_crash.md`](2026-08-20_macos_telemetry_event_channel_crash.md): macOS native showcase telemetry skips `makeBackgroundTaskQueue` (relay abort on launch).
 - [`2026-08-20_dart_313_primary_ctor_docs.md`](2026-08-20_dart_313_primary_ctor_docs.md): Living docs/samples use Dart 3.13 primary constructors; Freezed Cubit state unchanged.
 - [`2026-08-20_app_composition_root_router_di.md`](2026-08-20_app_composition_root_router_di.md): `AppCompositionRoot` + typed route factories; router free of `getIt`.
 - [`2026-08-17_one_member_abstracts_deprecated.md`](2026-08-17_one_member_abstracts_deprecated.md): Drop deprecated `one_member_abstracts` from `linter.rules`; ignore VGA leftover via `analyzer.errors`.

@@ -23,21 +23,15 @@ class MainFlutterWindow: NSWindow {
       }
     }
 
-    let messenger = flutterViewController.engine.binaryMessenger
-    let telemetryChannel: FlutterEventChannel
-    if let makeQueue = messenger.makeBackgroundTaskQueue {
-      telemetryChannel = FlutterEventChannel(
-        name: "com.example.flutter_bloc_app/native_showcase/telemetry",
-        binaryMessenger: messenger,
-        codec: FlutterStandardMethodCodec.sharedInstance(),
-        taskQueue: makeQueue()
-      )
-    } else {
-      telemetryChannel = FlutterEventChannel(
-        name: "com.example.flutter_bloc_app/native_showcase/telemetry",
-        binaryMessenger: messenger
-      )
-    }
+    // macOS FlutterMacOS does not implement makeBackgroundTaskQueue on the
+    // engine messenger. FlutterBinaryMessengerRelay still exposes the selector
+    // and forwards to parent, so `if let messenger.makeBackgroundTaskQueue`
+    // then calling it aborts with doesNotRecognizeSelector (SIGABRT before
+    // Dart VM connects). Use the main-queue EventChannel path instead.
+    let telemetryChannel = FlutterEventChannel(
+      name: "com.example.flutter_bloc_app/native_showcase/telemetry",
+      binaryMessenger: flutterViewController.engine.binaryMessenger
+    )
     telemetryChannel.setStreamHandler(NativeShowcaseTelemetryStreamHandler())
 
     super.awakeFromNib()

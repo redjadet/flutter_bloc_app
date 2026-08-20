@@ -39,8 +39,19 @@ void registerNavigationIntegrationFlow() {
         i < 6 && !tester.any(find.byType(ScapesGridSliverContent));
         i++
       ) {
-        await tester.fling(scrollView, const Offset(0, -800), 1200);
-        await pumpAfterScrollFling(tester, scrollView);
+        // macOS rubber-band / trackpad inertia keeps isScrollingNotifier true
+        // longer than mobile flings; drag + short pump is stable there.
+        if (defaultTargetPlatform == TargetPlatform.macOS) {
+          await tester.drag(scrollView, const Offset(0, -600));
+          await tester.pump(const Duration(milliseconds: 400));
+        } else {
+          await tester.fling(scrollView, const Offset(0, -800), 1200);
+          await pumpAfterScrollFling(
+            tester,
+            scrollView,
+            timeout: const Duration(seconds: 12),
+          );
+        }
       }
       await pumpUntilFound(
         tester,
@@ -162,7 +173,7 @@ void registerTodoListIntegrationFlow() {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Todo List Demo');
-      final Finder addTodoButton = _findAdaptiveButtonByText('Add todo');
+      final Finder addTodoButton = _findTodoAddControl();
       await pumpUntilFound(tester, addTodoButton);
 
       expect(find.text('Todo List'), findsWidgets);
