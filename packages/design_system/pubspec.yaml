@@ -20,7 +20,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
   markdown: ^7.3.1
-  material_ui: ^1.0.0
+  material_ui: ^1.0.1
   mix: ^2.1.0
   responsive_framework: ^1.5.1
   skeletonizer: ^2.1.3
