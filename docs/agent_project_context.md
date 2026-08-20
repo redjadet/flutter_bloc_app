@@ -63,9 +63,12 @@ the answer.
   four — not only the host under debug (`flutter-cross-platform-modern`).
 - **Melos app shell (Phase 5):** `apps/mobile/lib/` is a thin shell
   (`app/**`, `features/**`, `l10n/**`, `main*.dart`) — no `core/` or `shared/`
-  trees. DI/router/bootstrap live under `apps/mobile/lib/app/composition/**`,
-  `app/router/**`, `app/bootstrap/**`. Detail:
-  [`changes/2026-07-08_extract_core_shared_plan_note.md`](changes/2026-07-08_extract_core_shared_plan_note.md).
+  trees. DI registration + composition root live under
+  `apps/mobile/lib/app/composition/**` (`AppCompositionRoot` resolves
+  `AppScopeDependencies` and route factories); router under `app/router/**`
+  must not call `getIt`; bootstrap under `app/bootstrap/**`. Detail:
+  [`changes/2026-07-08_extract_core_shared_plan_note.md`](changes/2026-07-08_extract_core_shared_plan_note.md),
+  [`changes/2026-08-20_app_composition_root_router_di.md`](changes/2026-08-20_app_composition_root_router_di.md).
 - **Non-mobile platform folders:** canonical trees live under
   `apps/other_platforms/{web,macos,linux,windows}/`. `apps/mobile/` keeps
   symlinks with those names so `flutter run` / `flutter devices` discover

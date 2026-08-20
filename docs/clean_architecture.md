@@ -86,7 +86,12 @@ the current DAG.
 - **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `apps/mobile/lib/features/supabase_auth/data/supabase_auth_repository_impl.dart` (Supabase Auth SDK → domain `AuthUser`), `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
 - **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`, `counter/presentation/cubit/counter_cubit.dart`). Remaining legacy root-level cubits are listed in [`architecture/reference_features.md`](architecture/reference_features.md).
 - **Shared cross-cutting** — Reusable infrastructure lives in packages (`packages/storage`, `packages/networking`, `packages/design_system`, `packages/utilities`, `packages/app_shared_flutter`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md) for detailed documentation of shared utilities.
-- **Dependency injection** — The app shell bootstraps DI via `apps/mobile/lib/app/composition/injector_registrations.dart` and feature registrars under `apps/mobile/lib/app/composition/features/`.
+- **Dependency injection** — The app shell **registers** services via
+  `apps/mobile/lib/app/composition/injector_registrations.dart` and feature
+  registrars under `apps/mobile/lib/app/composition/features/`. The
+  **composition root** (`AppCompositionRoot`) resolves those registrations into
+  `AppScopeDependencies` and typed route factories so router/pages do not call
+  `getIt` directly.
 
 ## How Dependencies Flow
 
@@ -119,10 +124,14 @@ before accepting a feature or boundary-sensitive change.
 
 At runtime, the **app shell** composes everything from above:
 
-- `BootstrapCoordinator` initializes platform/services before `runApp`
-- `MyApp` creates the router and top-level app object
-- `AppScope` provides app-scope cubits and listeners
-- feature routes build route-scoped cubits/blocs and pages
+- `BootstrapCoordinator` initializes platform/services and registers DI before
+  `runApp`
+- `AppCompositionRoot.createApp` builds `GoRouter`, resolves
+  `AppScopeDependencies`, and constructs `MyApp`
+- `AppScope` provides app-scope cubits and listeners from injected dependencies
+- Feature routes receive typed factories (`CoreRouteFactory`,
+  `AuxiliaryRouteFactory`, `DemoRouteFactory`) and build route-scoped
+  cubits/blocs and pages without service-locator lookups
 
 ## What Sits Outside the Feature Layers
 

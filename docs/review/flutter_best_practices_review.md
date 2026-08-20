@@ -20,13 +20,14 @@
 
 ## ⚠️ Risks and Follow-Ups
 
-- `AppScope.build` triggers DI configuration and sync startup. Side effects in `build()` can repeat during rebuilds or hot reload. Consider moving to `initState` or making the calls explicitly idempotent. See `apps/mobile/lib/app/app_scope.dart`.
+- ~~`AppScope.build` triggers DI configuration and sync startup.~~ **RESOLVED (2026-08)**: `AppScope` receives `AppScopeDependencies` from `AppCompositionRoot`; no locator queries in the widget tree.
 - ~~Typography customization appears in a few widgets. If the theme is the single source of truth, consider moving ad-hoc font usage into `apps/mobile/lib/app/app_config.dart` to avoid drift.~~ **RESOLVED**: Created `AppTypography` helper class in `packages/design_system/lib/src/ui/typography.dart` that uses theme as single source of truth.
 - A small number of presentation widgets call into concrete repos for diagnostics. This is acceptable for tooling, but keep it contained to avoid architecture drift.
 
 ## ✅ Recent Improvements
 
-- **Layering optimization (2026-06)**: Removed domain→data re-export shims (ai_decision, IAP, chat diagnostics, online_therapy network mode, staff timeclock local store). Presentation reads sync/pending state via cubits; composition roots (`routes_*.dart`, DI) own `getIt` and data impl wiring. `tool/check_feature_modularity_leaks.sh` now fails on domain re-exports of `data/`.
+- **App composition root (2026-08)**: `AppCompositionRoot` wires `GoRouter` + `AppScopeDependencies` + typed route factories; router/deferred pages no longer call `getIt`. See [`changes/2026-08-20_app_composition_root_router_di.md`](../changes/2026-08-20_app_composition_root_router_di.md).
+- **Layering optimization (2026-06)**: Removed domain→data re-export shims (ai_decision, IAP, chat diagnostics, online_therapy network mode, staff timeclock local store). Presentation reads sync/pending state via cubits; DI registrars + composition root own data impl wiring. `tool/check_feature_modularity_leaks.sh` now fails on domain re-exports of `data/`.
 - **DI Organization**: Split `injector_registrations.dart` into feature-specific registration files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - **Repository Factory Pattern**: Created generic `createRemoteRepositoryOrNull<T>()` helper to consolidate duplicate error handling in repository factories.
 - **Typography Consolidation**: Created `AppTypography` helper class for consistent typography using theme as single source of truth.
