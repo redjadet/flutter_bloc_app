@@ -310,7 +310,7 @@ void main() {
   });
 }
 
-class const _BootstrapProbeApp({super.key}) extends StatelessWidget {
+class const _BootstrapProbeApp() extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const SizedBox.shrink();
 }
