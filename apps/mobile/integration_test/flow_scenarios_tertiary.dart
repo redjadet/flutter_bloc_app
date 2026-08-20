@@ -9,20 +9,21 @@ void registerTodoListFilterIntegrationFlow() {
 
       await _openExampleDestination(tester, 'Todo List Demo');
       await pumpUntilFound(tester, find.text('Todo List'));
-      final Finder addTodoButton = _findAdaptiveButtonByText('Add todo');
+      final Finder addTodoButton = _findTodoAddControl();
+      await pumpUntilFound(tester, addTodoButton);
 
       // Add first todo
       await tapAndPump(tester, addTodoButton);
       final Finder saveButton = _findDialogButtonByText('Save');
       await pumpUntilFound(tester, saveButton);
       final Finder titleField = _findDialogTextField();
-      await tester.enterText(titleField, 'Active todo');
+      await tester.enterText(titleField, 'Filter active todo');
       await tester.pump(const Duration(milliseconds: 100));
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, saveButton);
       await pumpUntilAbsent(tester, _findDialog());
-      await pumpUntilFound(tester, find.text('Active todo'));
+      await pumpUntilFound(tester, find.text('Filter active todo'));
 
       // Add second todo
       await pumpUntilFound(tester, addTodoButton);
@@ -30,16 +31,16 @@ void registerTodoListFilterIntegrationFlow() {
       final Finder secondSaveButton = _findDialogButtonByText('Save');
       await pumpUntilFound(tester, secondSaveButton);
       final Finder secondTitleField = _findDialogTextField();
-      await tester.enterText(secondTitleField, 'Completed todo');
+      await tester.enterText(secondTitleField, 'Filter completed todo');
       await tester.pump(const Duration(milliseconds: 100));
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, secondSaveButton);
       await pumpUntilAbsent(tester, _findDialog());
-      await pumpUntilFound(tester, find.text('Completed todo'));
+      await pumpUntilFound(tester, find.text('Filter completed todo'));
 
       final Finder completedTodoCard = find.ancestor(
-        of: find.text('Completed todo'),
+        of: find.text('Filter completed todo'),
         matching: find.byType(CommonCard),
       );
       final Finder completedTodoCheckbox =
@@ -62,12 +63,8 @@ void registerTodoListFilterIntegrationFlow() {
                 )
                 .first;
       await tapAndPump(tester, completedTodoCheckbox);
-      final Finder completeSelectedButton = _findAdaptiveButtonByText(
-        'Complete selected',
-      );
-      await pumpUntilFound(tester, completeSelectedButton);
-      await tapAndPump(tester, completeSelectedButton);
-      await pumpSettleWithin(tester);
+      await pumpUntilFound(tester, find.byIcon(Icons.more_vert));
+      await _completeSelectedTodos(tester);
 
       // Filter: show only active
       final Finder activeFilterButton = _findAdaptiveButtonByText('Active');
@@ -79,8 +76,8 @@ void registerTodoListFilterIntegrationFlow() {
       );
       await tapAndPump(tester, activeFilterButton);
       await pumpSettleWithin(tester);
-      expect(find.text('Active todo'), findsWidgets);
-      expect(find.text('Completed todo'), findsNothing);
+      expect(find.text('Filter active todo'), findsWidgets);
+      expect(find.text('Filter completed todo'), findsNothing);
 
       // Filter: show only completed
       final Finder completedFilterButton = _findAdaptiveButtonByText(
@@ -94,8 +91,8 @@ void registerTodoListFilterIntegrationFlow() {
       );
       await tapAndPump(tester, completedFilterButton);
       await pumpSettleWithin(tester);
-      expect(find.text('Completed todo'), findsWidgets);
-      expect(find.text('Active todo'), findsNothing);
+      expect(find.text('Filter completed todo'), findsWidgets);
+      expect(find.text('Filter active todo'), findsNothing);
     },
   );
 }

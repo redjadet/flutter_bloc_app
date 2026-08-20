@@ -6,6 +6,8 @@ import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';

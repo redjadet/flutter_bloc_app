@@ -149,10 +149,28 @@ Finder _findAdaptiveButtonByText(
             widget is FloatingActionButton ||
             widget is IconButton ||
             widget is OutlinedButton ||
-            widget is TextButton,
+            widget is TextButton ||
+            widget is PopupMenuItem,
       ),
     )
     .first;
+
+/// Todo add control: header text button only when the list is non-empty and
+/// tall enough; otherwise the page exposes a FAB with this tooltip. Desktop
+/// Hive can retain todos across flows, so tooltip is the stable hit target.
+Finder _findTodoAddControl() => find.byTooltip('Add todo');
+
+/// Completes the current selection via the app-bar overflow menu. Prefer the
+/// menu over the in-body batch bar: the bar is height-gated on desktop and
+/// can be missing even when selection is active.
+Future<void> _completeSelectedTodos(WidgetTester tester) async {
+  await pumpUntilFound(tester, find.byIcon(Icons.more_vert));
+  await tapAndPump(tester, find.byIcon(Icons.more_vert));
+  final Finder completeLabel = find.text('Complete selected');
+  await pumpUntilFound(tester, completeLabel);
+  await tapAndPump(tester, completeLabel, scrollIntoView: false);
+  await pumpSettleWithin(tester);
+}
 
 Finder _findDialog() => find.byWidgetPredicate(
   (widget) => widget is AlertDialog || widget is CupertinoAlertDialog,

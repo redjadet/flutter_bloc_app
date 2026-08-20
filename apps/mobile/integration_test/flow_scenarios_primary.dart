@@ -165,6 +165,10 @@ void registerCounterPersistenceIntegrationFlow() {
       overrideCounterRepository: false,
     ),
     body: (tester) async {
+      // Desktop Hive (`hive_macos_debug`) persists across suite runs; reset so
+      // the baseline "0" assertion is deterministic.
+      await getIt<CounterRepository>().save(const CounterSnapshot(count: 0));
+
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.text('0'));
