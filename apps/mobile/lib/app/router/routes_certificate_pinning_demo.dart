@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
@@ -12,26 +11,39 @@ import 'package:go_router/go_router.dart';
 import 'package:networking/networking.dart';
 
 /// Developer-only certificate pinning demo (blocked in prod / release).
-RouteBase createCertificatePinningDemoRoute() => GoRoute(
-  path: AppRoutes.certificatePinningDemoPath,
-  name: AppRoutes.certificatePinningDemo,
-  redirect: (context, state) {
-    if (kReleaseMode || FlavorManager.I.isProd) {
-      return AppRoutes.counterPath;
-    }
-    return null;
-  },
-  builder: (context, state) =>
-      BlocProviderHelpers.withAsyncInit<CertificatePinningDemoCubit>(
-        create: () => CertificatePinningDemoCubit(
-          config: getIt<CertificatePinningConfig>(),
-          scenarioController: getIt<MockCertificateScenarioController>(),
-          logger: getIt<CertificatePinningLogger>(),
-          triggerSecureProbe: getIt<TriggerSecureProbe>(),
-          selectMockScenario: getIt<SelectMockScenario>(),
-          resetMockScenario: getIt<ResetMockScenario>(),
+RouteBase createCertificatePinningDemoRoute(
+  CertificatePinningDemoRouteFactory factory,
+) => factory.createRoute();
+
+class CertificatePinningDemoRouteFactory({
+  required final CertificatePinningConfig config,
+  required final MockCertificateScenarioController scenarioController,
+  required final CertificatePinningLogger logger,
+  required final TriggerSecureProbe triggerSecureProbe,
+  required final SelectMockScenario selectMockScenario,
+  required final ResetMockScenario resetMockScenario,
+}) {
+  RouteBase createRoute() => GoRoute(
+    path: AppRoutes.certificatePinningDemoPath,
+    name: AppRoutes.certificatePinningDemo,
+    redirect: (context, state) {
+      if (kReleaseMode || FlavorManager.I.isProd) {
+        return AppRoutes.counterPath;
+      }
+      return null;
+    },
+    builder: (context, state) =>
+        BlocProviderHelpers.withAsyncInit<CertificatePinningDemoCubit>(
+          create: () => CertificatePinningDemoCubit(
+            config: config,
+            scenarioController: scenarioController,
+            logger: logger,
+            triggerSecureProbe: triggerSecureProbe,
+            selectMockScenario: selectMockScenario,
+            resetMockScenario: resetMockScenario,
+          ),
+          init: (cubit) async => cubit.refreshSnapshot(),
+          child: const CertificatePinningDemoPage(),
         ),
-        init: (cubit) async => cubit.refreshSnapshot(),
-        child: const CertificatePinningDemoPage(),
-      ),
-);
+  );
+}

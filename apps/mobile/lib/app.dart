@@ -1,85 +1,36 @@
-import 'package:auth/auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
-import 'package:flutter_bloc_app/app/router/app_navigator_keys.dart';
-import 'package:flutter_bloc_app/app/router/app_routes.dart';
-import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
+import 'package:flutter_bloc_app/app/composition/app_scope_dependencies.dart';
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
-import 'package:flutter_bloc_app/app/router/routes.dart';
-import 'package:go_router/go_router.dart' show GoRouter, RouteBase;
-import 'package:material_ui/material_ui.dart';
+import 'package:go_router/go_router.dart' show GoRouter;
 
 /// Main application widget
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, this.requireAuth = true});
+  const MyApp({
+    required this.router,
+    required this.dependencies,
+    this.authRefresh,
+    super.key,
+  });
 
-  final bool requireAuth;
+  final GoRouter router;
+  final AppScopeDependencies dependencies;
+  final GoRouterRefreshStream? authRefresh;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  GoRouterRefreshStream? _authRefresh;
-  late final GoRouter _router;
-
   @override
-  void initState() {
-    super.initState();
-    _router = _createRouter();
-  }
-
-  /// Creates and configures the GoRouter instance with all application routes.
-  ///
-  /// **Route Structure:**
-  /// - Public routes (accessible without authentication): All routes except `/auth`
-  /// - Protected routes: Require authentication (handled by redirect logic)
-  /// - Deep link support: Deep links are allowed even when not authenticated
-  ///
-  /// See [createAppRoutes] for route definitions and [createAuthRedirect] for
-  /// authentication redirect logic documentation.
-  GoRouter _createRouter() {
-    final List<RouteBase> routes = createAppRoutes();
-
-    // When auth is not required, or neither Firebase nor debug local-guest auth
-    // is available, run without auth redirect.
-    final bool useAuth =
-        widget.requireAuth &&
-        (Firebase.apps.isNotEmpty ||
-            FirebaseBootstrapService.supportsDebugLocalGuestAuth);
-
-    if (!useAuth) {
-      return GoRouter(
-        initialLocation: AppRoutes.counterPath,
-        navigatorKey: rootNavigatorKey,
-        routes: routes,
-      );
-    }
-
-    final authRepository = getIt<AuthRepository>();
-    // Listen to auth state changes and refresh router when auth state changes
-    // This ensures navigation updates when user logs in/out
-    final authRefresh = GoRouterRefreshStream(authRepository.authStateChanges);
-    _authRefresh = authRefresh;
-
-    return GoRouter(
-      initialLocation: AppRoutes.counterPath,
-      navigatorKey: rootNavigatorKey,
-      // Refresh router when auth state changes (login/logout)
-      refreshListenable: authRefresh,
-      redirect: createAuthRedirect(authRepository),
-      routes: routes,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) => AppScope(router: _router);
+  Widget build(BuildContext context) => AppScope(
+    router: widget.router,
+    dependencies: widget.dependencies,
+  );
 
   @override
   void dispose() {
-    _authRefresh?.dispose();
+    widget.authRefresh?.dispose();
     super.dispose();
   }
 }

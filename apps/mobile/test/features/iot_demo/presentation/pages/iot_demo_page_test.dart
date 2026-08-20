@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector_factories.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
@@ -140,6 +143,7 @@ Future<void> _pumpPage(
               value: cubit,
               child: IotDemoPage(
                 showBackendDisabledBanner: _testShowBackendDisabledBanner,
+                createIotBleCubit: createIotBleCubit,
               ),
             ),
           ),
@@ -180,6 +184,7 @@ Future<void> _pumpInteractivePage(
               value: cubit,
               child: IotDemoPage(
                 showBackendDisabledBanner: _testShowBackendDisabledBanner,
+                createIotBleCubit: createIotBleCubit,
               ),
             ),
           ),
@@ -193,6 +198,12 @@ Future<void> _pumpInteractivePage(
 }
 
 void main() {
+  setUp(registerIotServices);
+
+  tearDown(() async {
+    await getIt.reset(dispose: true);
+  });
+
   group('IotDemoPage', () {
     final l10n = AppLocalizationsEn();
 

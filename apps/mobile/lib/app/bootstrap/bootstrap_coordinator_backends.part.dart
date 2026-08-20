@@ -44,7 +44,7 @@ Future<void> _finishCoreAndStartApp() async {
   BootstrapCoordinator.readRuntimeConfig();
   BootstrapCoordinator.readBackendAvailability();
   await BootstrapCoordinator.runMigration();
-  BootstrapCoordinator.startApp(const MyApp());
+  BootstrapCoordinator.startApp(AppCompositionRoot.createApp());
 }
 
 Future<void> _loadSecrets() async {

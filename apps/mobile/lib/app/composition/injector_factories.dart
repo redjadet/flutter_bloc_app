@@ -9,6 +9,13 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.d
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
+import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
+import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';
+import 'package:flutter_bloc_app/features/iot/data/unsupported_ble_repository.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_platform_gateway.dart';
+import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
+import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
@@ -109,3 +116,15 @@ RealtimeMarketRepository createScopedRealtimeMarketRepository() =>
       localDataSource: getIt<RealtimeMarketLocalDataSource>(),
       feed: getIt<SimulatedMarketFeed>(),
     );
+
+/// Route-scoped BLE cubit factory; resolved at composition root only.
+IotBleCubit createIotBleCubit() => IotBleCubit(
+  mockRepository: getIt<MockBleRepository>(),
+  reactiveRepository: getIt.isRegistered<ReactiveBleRepository>()
+      ? getIt<ReactiveBleRepository>()
+      : getIt<UnsupportedBleRepository>(),
+  classicRepository: getIt<MockClassicBluetoothRepository>(),
+  platformGateway: getIt<BlePlatformGateway>(),
+  runtimeConfig: getIt<IotBleRuntimeConfig>(),
+  timerService: getIt<TimerService>(),
+);

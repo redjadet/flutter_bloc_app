@@ -4,8 +4,7 @@ import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/app_config.dart';
-import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/composition/app_scope_dependencies.dart';
 import 'package:flutter_bloc_app/app/config/supabase_config_coordinator.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_cubit.dart';
@@ -15,9 +14,7 @@ import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/app/widgets/retry_snackbar_listener.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
-import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
@@ -26,9 +23,14 @@ import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 
 class AppScope extends StatefulWidget {
-  const AppScope({required this.router, super.key});
+  const AppScope({
+    required this.router,
+    required this.dependencies,
+    super.key,
+  });
 
   final GoRouter router;
+  final AppScopeDependencies dependencies;
 
   @override
   State<AppScope> createState() => _AppScopeState();
@@ -43,20 +45,18 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   TimerDisposable? _resumeDebounceHandle;
   TimerDisposable? _backgroundTrimHandle;
 
+  AppScopeDependencies get _deps => widget.dependencies;
+
   @override
   void initState() {
     super.initState();
-    // Ensure DI is configured when running tests that directly pump MyApp.
-    ensureConfigured();
-    _syncCoordinator = getIt<BackgroundSyncCoordinator>();
-    if (getIt.isRegistered<SupabaseConfigCoordinator>()) {
-      _supabaseConfigCoordinator = getIt<SupabaseConfigCoordinator>();
-    }
-    _memoryService = getIt<AppMemoryService>();
-    _timerService = getIt<TimerService>();
+    _syncCoordinator = _deps.syncCoordinator;
+    _supabaseConfigCoordinator = _deps.supabaseConfigCoordinator;
+    _memoryService = _deps.memoryService;
+    _timerService = _deps.timerService;
     _appAuthCubit = AppAuthCubit(
-      authRepository: getIt<AuthRepository>(),
-      sessionCoordinator: getIt<SessionLifecycleCoordinator>(),
+      authRepository: _deps.authRepository,
+      sessionCoordinator: _deps.sessionCoordinator,
     );
     WidgetsBinding.instance.addObserver(this);
     unawaited(_appAuthCubit.start());
@@ -114,20 +114,20 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     providers: [
       BlocProvider(
         create: (_) => SyncStatusCubit(
-          networkStatusService: getIt<NetworkStatusService>(),
+          networkStatusService: _deps.networkStatusService,
           coordinator: _syncCoordinator,
         ),
       ),
       BlocProviderHelpers.providerWithAsyncInit<LocaleCubit>(
-        create: () => LocaleCubit(repository: getIt<LocaleRepository>()),
+        create: () => LocaleCubit(repository: _deps.localeRepository),
         init: (cubit) => cubit.loadInitial(),
       ),
       BlocProviderHelpers.providerWithAsyncInit<ThemeCubit>(
-        create: () => ThemeCubit(repository: getIt<ThemeRepository>()),
+        create: () => ThemeCubit(repository: _deps.themeRepository),
         init: (cubit) => cubit.loadInitial(),
       ),
       BlocProvider(
-        create: (_) => getIt<RemoteConfigCubit>(),
+        create: (_) => _deps.createRemoteConfigCubit(),
       ),
       BlocProvider.value(value: _appAuthCubit),
     ],
@@ -135,8 +135,8 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
       router: widget.router,
       child: DeepLinkListener(
         router: widget.router,
-        service: getIt<DeepLinkService>(),
-        parser: getIt<DeepLinkParser>(),
+        service: _deps.deepLinkService,
+        parser: _deps.deepLinkParser,
         child: ResponsiveScope(
           child: TypeSafeBlocBuilder<LocaleCubit, Locale?>(
             builder: (context, locale) =>
@@ -148,7 +148,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
                     appOverlayBuilder: (context, child) =>
                         RetrySnackBarListener(
                           notifications:
-                              getIt<RetryNotificationService>().notifications,
+                              _deps.retryNotificationService.notifications,
                           child: child ?? const SizedBox.shrink(),
                         ),
                   ),

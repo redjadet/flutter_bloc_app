@@ -1,8 +1,8 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
@@ -246,7 +246,9 @@ Future<void> launchTestApp(
       }
     }
   }
-  await tester.pumpWidget(MyApp(requireAuth: requireAuth));
+  await tester.pumpWidget(
+    AppCompositionRoot.createApp(requireAuth: requireAuth),
+  );
   await tester.pump();
   await waitForCounterCubitsToLoad(tester);
   await tester.pump(const Duration(milliseconds: 50));

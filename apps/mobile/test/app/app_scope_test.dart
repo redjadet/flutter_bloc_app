@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
 import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
@@ -123,7 +124,10 @@ void main() {
       StatefulBuilder(
         builder: (context, setState) {
           triggerRebuild = setState;
-          return AppScope(router: router);
+          return AppScope(
+            router: router,
+            dependencies: AppCompositionRoot.resolveAppScopeDependencies(),
+          );
         },
       ),
     );
@@ -168,7 +172,12 @@ void main() {
     );
     addTearDown(router.dispose);
 
-    await tester.pumpWidget(AppScope(router: router));
+    await tester.pumpWidget(
+      AppScope(
+        router: router,
+        dependencies: AppCompositionRoot.resolveAppScopeDependencies(),
+      ),
+    );
     await tester.pump();
 
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
@@ -217,7 +226,12 @@ void main() {
     );
     addTearDown(router.dispose);
 
-    await tester.pumpWidget(AppScope(router: router));
+    await tester.pumpWidget(
+      AppScope(
+        router: router,
+        dependencies: AppCompositionRoot.resolveAppScopeDependencies(),
+      ),
+    );
     await tester.pump();
 
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
@@ -262,7 +276,12 @@ void main() {
     );
     addTearDown(router.dispose);
 
-    await tester.pumpWidget(AppScope(router: router));
+    await tester.pumpWidget(
+      AppScope(
+        router: router,
+        dependencies: AppCompositionRoot.resolveAppScopeDependencies(),
+      ),
+    );
     await tester.pump();
 
     tester.binding.handleMemoryPressure();
@@ -304,7 +323,12 @@ void main() {
       );
       addTearDown(router.dispose);
 
-      await tester.pumpWidget(AppScope(router: router));
+      await tester.pumpWidget(
+        AppScope(
+          router: router,
+          dependencies: AppCompositionRoot.resolveAppScopeDependencies(),
+        ),
+      );
       await tester.pump();
 
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);

@@ -1,14 +1,6 @@
-import 'package:core/core.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
-import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/data/unsupported_ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/domain/ble_platform_gateway.dart';
-import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_section.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_helpers.dart';
@@ -19,9 +11,14 @@ enum IotDemoHubTab { cloud, ble }
 
 /// App-layer composition: Cloud IoT + local BLE tabs on `/iot-demo`.
 class IotDemoHubPage extends StatefulWidget {
-  const IotDemoHubPage({required this.showBackendDisabledBanner, super.key});
+  const IotDemoHubPage({
+    required this.showBackendDisabledBanner,
+    required this.createIotBleCubit,
+    super.key,
+  });
 
   final bool showBackendDisabledBanner;
+  final IotBleCubit Function() createIotBleCubit;
 
   @override
   State<IotDemoHubPage> createState() => _IotDemoHubPageState();
@@ -79,17 +76,7 @@ class _IotDemoHubPageState extends State<IotDemoHubPage> {
               ),
               IotDemoHubTab.ble =>
                 BlocProviderHelpers.withAsyncInit<IotBleCubit>(
-                  create: () => IotBleCubit(
-                    mockRepository: getIt<MockBleRepository>(),
-                    reactiveRepository:
-                        getIt.isRegistered<ReactiveBleRepository>()
-                        ? getIt<ReactiveBleRepository>()
-                        : getIt<UnsupportedBleRepository>(),
-                    classicRepository: getIt<MockClassicBluetoothRepository>(),
-                    platformGateway: getIt<BlePlatformGateway>(),
-                    runtimeConfig: getIt<IotBleRuntimeConfig>(),
-                    timerService: getIt<TimerService>(),
-                  ),
+                  create: widget.createIotBleCubit,
                   init: (cubit) => cubit.initialize(),
                   child: const IotBleSection(),
                 ),

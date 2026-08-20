@@ -6,7 +6,6 @@
 library;
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/pages/chart_page.dart';
 
@@ -14,6 +13,6 @@ import 'package:flutter_bloc_app/features/chart/presentation/pages/chart_page.da
 ///
 /// This function is called after the deferred library is loaded.
 /// It creates a [ChartPage] with the chart repository from DI.
-Widget buildChartPage() => ChartPage(
-  repository: getIt<ChartRepository>(),
+Widget buildChartPage({required ChartRepository repository}) => ChartPage(
+  repository: repository,
 );

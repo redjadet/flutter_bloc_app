@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/app/app_scope.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -33,7 +34,12 @@ void main() {
       ],
     );
 
-    await tester.pumpWidget(AppScope(router: router));
+    await tester.pumpWidget(
+      AppScope(
+        router: router,
+        dependencies: AppCompositionRoot.resolveAppScopeDependencies(),
+      ),
+    );
     await tester.pump();
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/composition/injector_factories.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/pages/iot_demo_hub_page.dart';
@@ -164,6 +165,7 @@ void main() {
                 value: demoCubit,
                 child: IotDemoHubPage(
                   showBackendDisabledBanner: _testShowBackendDisabledBanner,
+                  createIotBleCubit: createIotBleCubit,
                 ),
               ),
             ),
@@ -224,6 +226,7 @@ void main() {
                   value: demoCubit,
                   child: IotDemoHubPage(
                     showBackendDisabledBanner: _testShowBackendDisabledBanner,
+                    createIotBleCubit: createIotBleCubit,
                   ),
                 ),
               ),

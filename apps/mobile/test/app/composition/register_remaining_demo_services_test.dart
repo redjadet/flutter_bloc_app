@@ -267,9 +267,8 @@ void main() {
       final _MockAuthRepository auth = _MockAuthRepository();
       getIt.unregister<AuthRepository>();
       getIt.registerSingleton<AuthRepository>(auth);
-      when(
-        () => auth.currentUser,
-      ).thenReturn(const AuthUser(id: 'u1', isAnonymous: true));
+      when(() => auth.currentUser)
+          .thenReturn(const AuthUser(id: 'u1', isAnonymous: true));
       when(() => auth.authStateChanges).thenAnswer(
         (_) => Stream<AuthUser?>.value(
           const AuthUser(id: 'u1', isAnonymous: true),
@@ -354,45 +353,41 @@ void main() {
     },
   );
 
-  test(
-    'registerStaffAppDemoServices covers already-clocked-in and clock-out errors',
-    () async {
-      registerCoreDeps();
-      final _MockAuthRepository auth = _MockAuthRepository();
-      getIt.unregister<AuthRepository>();
-      getIt.registerSingleton<AuthRepository>(auth);
-      when(
-        () => auth.currentUser,
-      ).thenReturn(const AuthUser(id: 'u1', isAnonymous: true));
-      when(
-        () => getIt<StaffDemoTimeclockLocalStore>().loadOpenEntry(
-          userId: any(named: 'userId'),
-        ),
-      ).thenAnswer(
-        (_) async => StaffDemoOpenEntrySnapshot(
-          entryId: 'open-1',
-          clockInAtUtc: DateTime.utc(2026, 1, 1),
-          shiftId: null,
-          siteId: null,
-        ),
-      );
+  test('registerStaffAppDemoServices covers already-clocked-in and clock-out errors', () async {
+    registerCoreDeps();
+    final _MockAuthRepository auth = _MockAuthRepository();
+    getIt.unregister<AuthRepository>();
+    getIt.registerSingleton<AuthRepository>(auth);
+    when(() => auth.currentUser)
+        .thenReturn(const AuthUser(id: 'u1', isAnonymous: true));
+    when(
+      () => getIt<StaffDemoTimeclockLocalStore>().loadOpenEntry(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer(
+      (_) async => StaffDemoOpenEntrySnapshot(
+        entryId: 'open-1',
+        clockInAtUtc: DateTime.utc(2026, 1, 1),
+        shiftId: null,
+        siteId: null,
+      ),
+    );
 
-      registerStaffAppDemoServices();
+    registerStaffAppDemoServices();
 
-      await expectLater(
-        getIt<StaffDemoTimeclockRepository>().clockIn(),
-        throwsA(isA<StateError>()),
-      );
+    await expectLater(
+      getIt<StaffDemoTimeclockRepository>().clockIn(),
+      throwsA(isA<StateError>()),
+    );
 
-      when(
-        () => getIt<StaffDemoTimeclockLocalStore>().loadOpenEntry(
-          userId: any(named: 'userId'),
-        ),
-      ).thenAnswer((_) async => null);
-      await expectLater(
-        getIt<StaffDemoTimeclockRepository>().clockOut(),
-        throwsA(isA<StateError>()),
-      );
-    },
-  );
+    when(
+      () => getIt<StaffDemoTimeclockLocalStore>().loadOpenEntry(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) async => null);
+    await expectLater(
+      getIt<StaffDemoTimeclockRepository>().clockOut(),
+      throwsA(isA<StateError>()),
+    );
+  });
 }

@@ -1,9 +1,9 @@
 import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
@@ -27,6 +27,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/camera_gallery.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/example_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/firebase_functions_test_page.dart';
@@ -55,139 +56,156 @@ import 'package:utilities/utilities.dart';
 part 'routes_core.part.dart';
 
 /// Core app routes: auth, counter, calculator, example, settings, profile, etc.
-List<RouteBase> createCoreRoutes() => <RouteBase>[
-  GoRoute(
-    path: AppRoutes.authPath,
-    name: AppRoutes.auth,
-    builder: (context, state) => SignInPage(
-      authRepository: getIt<AuthRepository>(),
-      redirectAfterLogin: state.uri.queryParameters['redirect'],
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.calculatorPath,
-    name: AppRoutes.calculator,
-    builder: (context, state) => BlocProvider(
-      create: (_) => CalculatorCubit(
-        calculator: getIt<PaymentCalculator>(),
-      ),
-      child: const CalculatorPage(),
-    ),
-    routes: [
-      GoRoute(
-        path: 'payment',
-        name: AppRoutes.calculatorPayment,
-        builder: (context, state) {
-          final Object? extra = state.extra;
-          if (extra is CalculatorCubit) {
-            return BlocProvider.value(
-              value: extra,
-              child: const CalculatorPaymentPage(),
-            );
-          }
-          return BlocProvider(
-            create: (_) => CalculatorCubit(
-              calculator: getIt<PaymentCalculator>(),
-            ),
-            child: const CalculatorPaymentPage(),
-          );
-        },
-      ),
-    ],
-  ),
-  GoRoute(
-    path: AppRoutes.examplePath,
-    name: AppRoutes.example,
-    builder: (context, state) => ExamplePage(
-      isFirebaseInitialized: FirebaseBootstrapService.isFirebaseInitialized,
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.firebaseFunctionsTestPath,
-    name: AppRoutes.firebaseFunctionsTest,
-    builder: (context, state) {
-      final bool isAuthenticated =
-          getIt.isRegistered<FirebaseAuth>() &&
-          getIt<FirebaseAuth>().currentUser != null;
-      return FirebaseFunctionsTestPage(
-        isFirebaseReady: FirebaseBootstrapService.isFirebaseInitialized,
-        isAuthenticated: isAuthenticated,
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRoutes.whiteboardPath,
-    name: AppRoutes.whiteboard,
-    builder: (context, state) => const WhiteboardPage(),
-  ),
-  GoRoute(
-    path: AppRoutes.cameraGalleryPath,
-    name: AppRoutes.cameraGallery,
-    builder: (context, state) => BlocProvider<CameraGalleryCubit>(
-      create: (_) => CameraGalleryCubit(
-        repository: getIt<CameraGalleryRepository>(),
-      ),
-      child: const CameraGalleryPage(),
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.scapesPath,
-    name: AppRoutes.scapes,
-    builder: (context, state) => ScapesPage(
-      repository: getIt<ScapesRepository>(),
-      timerService: getIt<TimerService>(),
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.markdownEditorPath,
-    name: AppRoutes.markdownEditor,
-    builder: (context, state) => DeferredPage(
-      loadLibrary: markdown_editor_page.loadLibrary,
-      builder: (context) => markdown_editor_page.buildMarkdownEditorPage(),
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.graphqlPath,
-    name: AppRoutes.graphql,
-    builder: (context, state) =>
-        BlocProviderHelpers.withAsyncInit<GraphqlDemoCubit>(
-          create: () => GraphqlDemoCubit(
-            repository: getIt<GraphqlDemoRepository>(),
-          ),
-          init: (cubit) => cubit.loadInitial(),
-          child: const GraphqlDemoPage(),
-        ),
-  ),
-  GoRoute(
-    path: AppRoutes.chartsPath,
-    name: AppRoutes.charts,
-    builder: (context, state) => DeferredPage(
-      loadLibrary: chart_page.loadLibrary,
-      builder: (context) => chart_page.buildChartPage(),
-    ),
-  ),
-  ..._coreRoutesSettingsAndProfile(),
-];
+List<RouteBase> createCoreRoutes(CoreRouteFactory factory) =>
+    factory.createRoutes();
 
 /// Home route (counter demo). Kept last in `createAppRoutes` so more specific
 /// demo routes can win match precedence on web.
-RouteBase createCounterRoute() => GoRoute(
-  path: AppRoutes.counterPath,
-  name: AppRoutes.counter,
-  builder: (context, state) => BlocProviderHelpers.withAsyncInit<CounterCubit>(
-    create: () => CounterCubit(
-      repository: getIt<CounterRepository>(),
-      timerService: getIt<TimerService>(),
-      loadDelay: getIt<AppRuntimeConfig>().skeletonDelay,
+RouteBase createCounterRoute(CoreRouteFactory factory) =>
+    factory.createCounterRoute();
+
+class CoreRouteFactory({
+  required final AuthRepository authRepository,
+  required final PaymentCalculator paymentCalculator,
+  required final FirebaseAuth? firebaseAuth,
+  required final CameraGalleryRepository cameraGalleryRepository,
+  required final ScapesRepository scapesRepository,
+  required final GraphqlDemoRepository graphqlDemoRepository,
+  required final CounterRepository counterRepository,
+  required final TimerService timerService,
+  required final AppRuntimeConfig runtimeConfig,
+  required final ErrorNotificationService errorNotificationService,
+  required final BiometricAuthenticator biometricAuthenticator,
+  required final AppInfoRepository appInfoRepository,
+  required final GraphqlCacheClearPort graphqlCacheClearPort,
+  required final ProfileCacheControlsPort profileCacheControlsPort,
+  required final CounterSyncDiagnosticsPort counterSyncDiagnosticsPort,
+  required final PendingSyncRepository pendingSyncRepository,
+  required final ProfileRepository profileRepository,
+  required final ChartRepository chartRepository,
+}) {
+  List<RouteBase> createRoutes() => <RouteBase>[
+    GoRoute(
+      path: AppRoutes.authPath,
+      name: AppRoutes.auth,
+      builder: (context, state) => SignInPage(
+        authRepository: authRepository,
+        redirectAfterLogin: state.uri.queryParameters['redirect'],
+      ),
     ),
-    init: (cubit) => cubit.loadInitial(),
-    child: CounterPage(
-      title: context.l10n.homeTitle,
-      errorNotificationService: getIt<ErrorNotificationService>(),
-      biometricAuthenticator: getIt<BiometricAuthenticator>(),
-      timerService: getIt<TimerService>(),
-      showFlavorBadge: FlavorManager.I.flavor != Flavor.prod,
-      optionalBanner: const AwesomeFeatureWidget(),
+    GoRoute(
+      path: AppRoutes.calculatorPath,
+      name: AppRoutes.calculator,
+      builder: (context, state) => BlocProvider(
+        create: (_) => CalculatorCubit(calculator: paymentCalculator),
+        child: const CalculatorPage(),
+      ),
+      routes: [
+        GoRoute(
+          path: 'payment',
+          name: AppRoutes.calculatorPayment,
+          builder: (context, state) {
+            final Object? extra = state.extra;
+            if (extra is CalculatorCubit) {
+              return BlocProvider.value(
+                value: extra,
+                child: const CalculatorPaymentPage(),
+              );
+            }
+            return BlocProvider(
+              create: (_) => CalculatorCubit(calculator: paymentCalculator),
+              child: const CalculatorPaymentPage(),
+            );
+          },
+        ),
+      ],
     ),
-  ),
-);
+    GoRoute(
+      path: AppRoutes.examplePath,
+      name: AppRoutes.example,
+      builder: (context, state) => ExamplePage(
+        isFirebaseInitialized: FirebaseBootstrapService.isFirebaseInitialized,
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.firebaseFunctionsTestPath,
+      name: AppRoutes.firebaseFunctionsTest,
+      builder: (context, state) => FirebaseFunctionsTestPage(
+        isFirebaseReady: FirebaseBootstrapService.isFirebaseInitialized,
+        isAuthenticated: firebaseAuth?.currentUser != null,
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.whiteboardPath,
+      name: AppRoutes.whiteboard,
+      builder: (context, state) => const WhiteboardPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.cameraGalleryPath,
+      name: AppRoutes.cameraGallery,
+      builder: (context, state) => BlocProvider<CameraGalleryCubit>(
+        create: (_) => CameraGalleryCubit(repository: cameraGalleryRepository),
+        child: const CameraGalleryPage(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.scapesPath,
+      name: AppRoutes.scapes,
+      builder: (context, state) => ScapesPage(
+        repository: scapesRepository,
+        timerService: timerService,
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.markdownEditorPath,
+      name: AppRoutes.markdownEditor,
+      builder: (context, state) => DeferredPage(
+        loadLibrary: markdown_editor_page.loadLibrary,
+        builder: (context) => markdown_editor_page.buildMarkdownEditorPage(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.graphqlPath,
+      name: AppRoutes.graphql,
+      builder: (context, state) =>
+          BlocProviderHelpers.withAsyncInit<GraphqlDemoCubit>(
+            create: () => GraphqlDemoCubit(repository: graphqlDemoRepository),
+            init: (cubit) => cubit.loadInitial(),
+            child: const GraphqlDemoPage(),
+          ),
+    ),
+    GoRoute(
+      path: AppRoutes.chartsPath,
+      name: AppRoutes.charts,
+      builder: (context, state) => DeferredPage(
+        loadLibrary: chart_page.loadLibrary,
+        builder: (context) => chart_page.buildChartPage(
+          repository: chartRepository,
+        ),
+      ),
+    ),
+    ..._coreRoutesSettingsAndProfile(this),
+  ];
+
+  RouteBase createCounterRoute() => GoRoute(
+    path: AppRoutes.counterPath,
+    name: AppRoutes.counter,
+    builder: (context, state) =>
+        BlocProviderHelpers.withAsyncInit<CounterCubit>(
+          create: () => CounterCubit(
+            repository: counterRepository,
+            timerService: timerService,
+            loadDelay: runtimeConfig.skeletonDelay,
+          ),
+          init: (cubit) => cubit.loadInitial(),
+          child: CounterPage(
+            title: context.l10n.homeTitle,
+            errorNotificationService: errorNotificationService,
+            biometricAuthenticator: biometricAuthenticator,
+            timerService: timerService,
+            showFlavorBadge: FlavorManager.I.flavor != Flavor.prod,
+            optionalBanner: const AwesomeFeatureWidget(),
+          ),
+        ),
+  );
+}

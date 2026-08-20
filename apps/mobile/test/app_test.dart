@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_bloc_app/app.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -31,7 +31,7 @@ void main() {
     testWidgets('creates router without auth when requireAuth is false', (
       tester,
     ) async {
-      await tester.pumpWidget(const MyApp(requireAuth: false));
+      await tester.pumpWidget(AppCompositionRoot.createApp(requireAuth: false));
 
       expect(tester.takeException(), isNull);
 
@@ -42,7 +42,7 @@ void main() {
     testWidgets('disposes auth refresh when requireAuth is true', (
       tester,
     ) async {
-      await tester.pumpWidget(const MyApp(requireAuth: true));
+      await tester.pumpWidget(AppCompositionRoot.createApp(requireAuth: true));
 
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
@@ -51,7 +51,7 @@ void main() {
     });
 
     testWidgets('disposes correctly when requireAuth is false', (tester) async {
-      await tester.pumpWidget(const MyApp(requireAuth: false));
+      await tester.pumpWidget(AppCompositionRoot.createApp(requireAuth: false));
 
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
@@ -60,7 +60,7 @@ void main() {
     });
 
     testWidgets('build returns AppScope with router', (tester) async {
-      await tester.pumpWidget(const MyApp(requireAuth: false));
+      await tester.pumpWidget(AppCompositionRoot.createApp(requireAuth: false));
 
       expect(tester.takeException(), isNull);
 

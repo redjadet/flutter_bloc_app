@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -232,18 +233,19 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(900, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final List<GoRoute> corePartRoutes = createCoreRoutes()
-        .whereType<GoRoute>()
-        .where(
-          (GoRoute r) =>
-              r.name == AppRoutes.settings ||
-              r.name == AppRoutes.manageAccount ||
-              r.name == AppRoutes.profile ||
-              r.name == AppRoutes.register ||
-              r.name == AppRoutes.loggedOut ||
-              r.name == AppRoutes.libraryDemo,
-        )
-        .toList();
+    final List<GoRoute> corePartRoutes =
+        createCoreRoutes(AppCompositionRoot.resolveCoreRouteFactory())
+            .whereType<GoRoute>()
+            .where(
+              (GoRoute r) =>
+                  r.name == AppRoutes.settings ||
+                  r.name == AppRoutes.manageAccount ||
+                  r.name == AppRoutes.profile ||
+                  r.name == AppRoutes.register ||
+                  r.name == AppRoutes.loggedOut ||
+                  r.name == AppRoutes.libraryDemo,
+            )
+            .toList();
 
     expect(corePartRoutes, isNotEmpty);
 
