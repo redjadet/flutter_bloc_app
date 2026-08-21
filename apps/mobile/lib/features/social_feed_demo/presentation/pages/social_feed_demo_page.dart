@@ -53,6 +53,7 @@ class _SocialFeedDemoPageState extends State<SocialFeedDemoPage> {
             key: const ValueKey('social-feed-refresh-button'),
             tooltip: l10n.socialFeedDemoRetry,
             onPressed: () {
+              // check-ignore: side_effects_build - user gesture callback.
               unawaited(context.read<SocialFeedCubit>().refresh());
             },
             icon: const Icon(Icons.refresh),
@@ -64,6 +65,7 @@ class _SocialFeedDemoPageState extends State<SocialFeedDemoPage> {
             key: const ValueKey('social-feed-scenario-button'),
             tooltip: l10n.socialFeedDemoScenarioTitle,
             onPressed: () {
+              // check-ignore: side_effects_build - user gesture callback.
               unawaited(
                 showModalBottomSheet<void>(
                   context: context,

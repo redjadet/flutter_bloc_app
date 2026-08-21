@@ -45,6 +45,10 @@ void main() {
     await tester.pump();
 
     expect(find.byKey(const ValueKey('social-feed-list')), findsOneWidget);
+    final ListView feed = tester.widget<ListView>(
+      find.byKey(const ValueKey('social-feed-list')),
+    );
+    expect(feed.childrenDelegate, isA<SliverChildBuilderDelegate>());
     expect(find.byKey(const ValueKey('social-feed-post-p1')), findsOneWidget);
   });
 }

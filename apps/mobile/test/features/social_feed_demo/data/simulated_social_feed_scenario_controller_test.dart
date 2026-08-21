@@ -46,4 +46,52 @@ void main() {
     expect(scenario.consumePendingNewPosts(viewer: SocialFeedViewer.alex), 3);
     expect(scenario.consumePendingNewPosts(viewer: SocialFeedViewer.sam), 0);
   });
+
+  test('fault commands are viewer-scoped and deterministic', () {
+    scenario.disconnectRealtimeAndFailNextReconnect(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(
+      scenario.consumeForceRealtimeDisconnect(viewer: SocialFeedViewer.alex),
+      isTrue,
+    );
+    expect(
+      scenario.consumeFailNextRealtimeReconnect(viewer: SocialFeedViewer.alex),
+      isTrue,
+    );
+
+    scenario.failNextFiveQueuedDispatchesRetryably(
+      viewer: SocialFeedViewer.alex,
+    );
+    for (var i = 0; i < 5; i++) {
+      expect(
+        scenario.consumeRetryableDispatchFailure(viewer: SocialFeedViewer.alex),
+        isTrue,
+      );
+    }
+    expect(
+      scenario.consumeRetryableDispatchFailure(viewer: SocialFeedViewer.alex),
+      isFalse,
+    );
+
+    scenario.rejectNextLikePermanently(viewer: SocialFeedViewer.alex);
+    scenario.rejectNextCommentPermanently(viewer: SocialFeedViewer.alex);
+    scenario.returnMalformedNextPayload(viewer: SocialFeedViewer.alex);
+    expect(
+      scenario.consumeRejectNextLike(viewer: SocialFeedViewer.alex),
+      isTrue,
+    );
+    expect(
+      scenario.consumeRejectNextComment(viewer: SocialFeedViewer.alex),
+      isTrue,
+    );
+    expect(
+      scenario.consumeMalformedNextPayload(viewer: SocialFeedViewer.alex),
+      isTrue,
+    );
+    expect(
+      scenario.consumeRejectNextLike(viewer: SocialFeedViewer.sam),
+      isFalse,
+    );
+  });
 }

@@ -40,7 +40,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
     }
 
     try {
-      await _acquireLeases(current);
+      await _acquireLeases(current, generation: gen);
       if (!_scenario.isSimulatedOnline && cached == null) {
         if (gen != _generation || isClosed) {
           return;

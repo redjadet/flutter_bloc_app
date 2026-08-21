@@ -55,7 +55,10 @@ class SocialFeedPostItem extends StatelessWidget {
           ),
           onRetryAttention: attentionMutationId == null
               ? null
-              : () => unawaited(cubit.retryNeedsAttention(attentionMutationId)),
+              : () {
+                  // check-ignore: side_effects_build - user gesture callback.
+                  unawaited(cubit.retryNeedsAttention(attentionMutationId));
+                },
         );
       },
     );

@@ -108,61 +108,79 @@ class _FeedColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final SocialFeedCubit cubit = context.read<SocialFeedCubit>();
+    final bool hasBufferedPosts = data.bufferedRealtimePosts.isNotEmpty;
+    final bool hasFooter =
+        data.pageStatus is SocialFeedPageLoading ||
+        data.pageStatus is SocialFeedPageFailureStatus;
+    final int itemCount =
+        1 +
+        (hasBufferedPosts ? 1 : 0) +
+        (data.posts.isEmpty ? 1 : data.posts.length) +
+        (hasFooter ? 1 : 0);
     return RefreshIndicator(
       onRefresh: cubit.refresh,
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           if (notification.metrics.extentAfter <= 400) {
-            // side_effects_build - scroll notification is event-driven.
+            // check-ignore: side_effects_build - scroll notification is event-driven.
             unawaited(cubit.loadMore());
           }
           return false;
         },
-        child: CustomScrollView(
+        child: ListView.builder(
           key: const ValueKey('social-feed-list'),
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: SocialFeedStatusBanner(data: data),
-            ),
-            if (data.bufferedRealtimePosts.isNotEmpty)
-              SliverToBoxAdapter(
-                child: SocialFeedNewPostsBanner(
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return SocialFeedStatusBanner(
+                key: const ValueKey('social-feed-status-banner'),
+                data: data,
+              );
+            }
+            var feedIndex = index - 1;
+            if (hasBufferedPosts) {
+              if (feedIndex == 0) {
+                return SocialFeedNewPostsBanner(
+                  key: const ValueKey('social-feed-new-posts-banner'),
                   count: data.bufferedRealtimePosts.length,
                   onActivate: cubit.activateBufferedPosts,
-                ),
+                );
+              }
+              feedIndex -= 1;
+            }
+            if (data.posts.isEmpty) {
+              if (feedIndex == 0) {
+                return Center(
+                  key: const ValueKey('social-feed-empty'),
+                  child: Text(l10n.socialFeedDemoEmpty),
+                );
+              }
+              feedIndex -= 1;
+            } else if (feedIndex < data.posts.length) {
+              final post = data.posts[feedIndex];
+              return SocialFeedPostItem(
+                key: ValueKey('social-feed-post-${post.id}'),
+                postId: post.id,
+              );
+            } else {
+              feedIndex -= data.posts.length;
+            }
+            return switch (data.pageStatus) {
+              SocialFeedPageLoading() => const Padding(
+                key: ValueKey('social-feed-page-loading'),
+                padding: EdgeInsets.all(16),
+                child: Center(child: CircularProgressIndicator()),
               ),
-            if (data.posts.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: Text(l10n.socialFeedDemoEmpty)),
-              )
-            else
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final post = data.posts[index];
-                    return SocialFeedPostItem(
-                      key: ValueKey('social-feed-post-${post.id}'),
-                      postId: post.id,
-                    );
-                  },
-                  childCount: data.posts.length,
-                ),
+              SocialFeedPageFailureStatus(:final failure) => TextButton(
+                key: const ValueKey('social-feed-page-retry'),
+                onPressed: cubit.loadMore,
+                child: Text(_failureLabel(l10n, failure)),
               ),
-            SliverToBoxAdapter(
-              child: switch (data.pageStatus) {
-                SocialFeedPageLoading() => const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-                SocialFeedPageFailureStatus(:final failure) => TextButton(
-                  onPressed: cubit.loadMore,
-                  child: Text(_failureLabel(l10n, failure)),
-                ),
-                _ => const SizedBox.shrink(),
-              },
-            ),
-          ],
+              _ => const SizedBox.shrink(
+                key: ValueKey('social-feed-page-idle'),
+              ),
+            };
+          },
         ),
       ),
     );

@@ -31,6 +31,19 @@ executable proof (`SF-ARCH-01`, `SF-SCALE-01`, `SF-TEST-01`, `SF-SEC-01`,
 - State: Freezed sealed `SocialFeedState` (`initial|loading|failure|ready`)
 - DTO / mapper: hand-written primary constructors; typed malformed failures
 
+## 2026-08-21 review hardening
+
+- Feed rows use `ListView.builder`; post controls expose liked/toggled and
+  needs-attention semantics.
+- Lease callbacks verify their captured viewer generation before emitting, so a
+  late prior-viewer stream cannot patch current state.
+- Scenario fault commands now have deterministic, viewer-isolation proof.
+- Freezed output has no trailing whitespace; features.dart keeps the required
+  `social_feed_demo` barrel export.
+- Regression capture: semantic labels use an explicit container so nested
+  `IconButton` semantics cannot absorb the liked/toggled state; the page test
+  asserts the keyed feed delegate, not the independent wide-layout rail list.
+
 ## Tests (executable contract — RED first)
 
 ### Behaviour (widget and/or cubit)
@@ -76,6 +89,9 @@ executable proof (`SF-ARCH-01`, `SF-SCALE-01`, `SF-TEST-01`, `SF-SEC-01`,
 
 - Lease/timer leaks on lifecycle; Freezed-only-state policy drift; disk pressure
   during full checklist / platform builds
+- 2026-08-21: focused suite completed, but dependency resolution reduced free
+  disk to ~3.7 GiB; do not start Wave 6 builds, device integration, perf trace,
+  or full checklist below the plan's 15 GiB threshold.
 
 ## depends_on
 

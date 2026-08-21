@@ -197,7 +197,6 @@ class _FakeScenario implements SocialFeedScenarioController {
   }) {}
 
   @override
-  @override
   void failNextFiveQueuedDispatchesRetryably({
     required SocialFeedViewer viewer,
   }) {}

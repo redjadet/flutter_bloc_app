@@ -41,15 +41,23 @@ class SocialFeedPostCard extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 4,
               children: <Widget>[
-                IconButton(
-                  key: ValueKey('social-feed-like-${post.id}'),
-                  onPressed: onLike,
-                  icon: Icon(
-                    post.isLikedByMe ? Icons.favorite : Icons.favorite_border,
-                  ),
-                  tooltip: post.isLikedByMe
+                Semantics(
+                  container: true,
+                  button: true,
+                  toggled: post.isLikedByMe,
+                  label: post.isLikedByMe
                       ? l10n.socialFeedDemoLiked
                       : l10n.socialFeedDemoNotLiked,
+                  child: IconButton(
+                    key: ValueKey('social-feed-like-${post.id}'),
+                    onPressed: onLike,
+                    icon: Icon(
+                      post.isLikedByMe ? Icons.favorite : Icons.favorite_border,
+                    ),
+                    tooltip: post.isLikedByMe
+                        ? l10n.socialFeedDemoLiked
+                        : l10n.socialFeedDemoNotLiked,
+                  ),
                 ),
                 Text('${post.likeCount}'),
                 IconButton(
@@ -61,10 +69,13 @@ class SocialFeedPostCard extends StatelessWidget {
                 Text('${post.commentCount}'),
                 if (isPending) Text(l10n.socialFeedDemoPending),
                 if (needsAttention && onRetryAttention != null)
-                  TextButton(
-                    key: ValueKey('social-feed-retry-${post.id}'),
-                    onPressed: onRetryAttention,
-                    child: Text(l10n.socialFeedDemoRetry),
+                  Semantics(
+                    liveRegion: true,
+                    child: TextButton(
+                      key: ValueKey('social-feed-retry-${post.id}'),
+                      onPressed: onRetryAttention,
+                      child: Text(l10n.socialFeedDemoRetry),
+                    ),
                   ),
               ],
             ),
