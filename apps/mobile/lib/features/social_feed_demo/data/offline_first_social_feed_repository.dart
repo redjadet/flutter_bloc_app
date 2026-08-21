@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_po
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_repository.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 
+part 'offline_first_social_feed_repository_comments.part.dart';
 part 'offline_first_social_feed_repository_mutations.part.dart';
 part 'offline_first_social_feed_repository_replay.part.dart';
 part 'offline_first_social_feed_repository_sync.part.dart';
@@ -39,40 +40,9 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   bool _commentsHydrated = false;
   Future<void>? _commentsHydrateInFlight;
 
-  Future<void> _ensureCommentsHydrated() async {
-    if (_commentsHydrated) {
-      return;
-    }
-    final Future<void>? inFlight = _commentsHydrateInFlight;
-    if (inFlight != null) {
-      await inFlight;
-      return;
-    }
-    final Future<void> pending = () async {
-      try {
-        final Map<String, List<SocialFeedComment>>? stored = await _local
-            .readCommentThreads();
-        if (stored != null && stored.isNotEmpty) {
-          _remote.replaceCommentThreads(stored);
-        }
-      } on Object {
-        // Degraded: keep in-memory seed threads.
-      } finally {
-        _commentsHydrated = true;
-        _commentsHydrateInFlight = null;
-      }
-    }();
-    _commentsHydrateInFlight = pending;
-    await pending;
-  }
+  Future<void> _ensureCommentsHydrated() => _ensureCommentsHydratedImpl(this);
 
-  Future<void> _persistCommentThreads() async {
-    try {
-      await _local.saveCommentThreads(_remote.exportCommentThreads());
-    } on Object {
-      // Persistence degraded; in-memory threads remain for this session.
-    }
-  }
+  Future<void> _persistCommentThreads() => _persistCommentThreadsImpl(this);
 
   @override
   Future<SocialFeedPage?> readCachedPage({
@@ -87,44 +57,8 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   }
 
   @override
-  Future<SocialFeedPage> refresh({required SocialFeedViewer viewer}) async {
-    await _ensureCommentsHydrated();
-    final SocialFeedPage remotePage = await _remote.fetchPage(
-      viewer: viewer,
-      isRefresh: true,
-    );
-    // TOCTOU: final local re-read before persistence.
-    final SocialFeedPage? existing = await _local.readPage(viewer);
-    // Current remote page is source of truth for shared seed content. Keep only
-    // cached posts that are not on this page (older pages) so seed edits and
-    // thread projections apply after hot restart.
-    final Set<String> remoteIds = <String>{
-      for (final SocialFeedPost post in remotePage.posts) post.id,
-    };
-    final List<SocialFeedPost> merged = _mergePolicy.dedupeById(
-      <SocialFeedPost>[
-        ...remotePage.posts,
-        if (existing != null)
-          ...existing.posts.where(
-            (post) => !remoteIds.contains(post.id),
-          ),
-      ],
-    );
-    final SocialFeedPage page = SocialFeedPage(
-      posts: merged.take(_local.maxCachedPosts).toList(),
-      nextCursor:
-          remotePage.nextCursor ?? (merged.isNotEmpty ? merged.last.id : null),
-      hasMore: true,
-      source: SocialFeedDataSource.remote,
-      fetchedAt: remotePage.fetchedAt,
-    );
-    try {
-      await _local.savePage(viewer, page);
-    } on Object {
-      // Keep in-memory result; persistence degraded is surfaced by Cubit.
-    }
-    return _overlayPending(viewer, page);
-  }
+  Future<SocialFeedPage> refresh({required SocialFeedViewer viewer}) =>
+      _refreshImpl(this, viewer: viewer);
 
   @override
   Future<SocialFeedPage> loadMore({
