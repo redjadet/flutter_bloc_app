@@ -13,6 +13,41 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets('like control exposes selected state semantically', (
+    WidgetTester tester,
+  ) async {
+    final _HarnessCubit cubit = _HarnessCubit();
+    cubit.showPost(
+      SocialFeedPost(
+        id: 'p1',
+        authorId: 'a1',
+        authorDisplayName: 'Author',
+        body: 'Hello',
+        createdAt: DateTime.utc(2026, 8, 1),
+        isLikedByMe: false,
+        likeCount: 0,
+        commentCount: 0,
+        serverRevision: 1,
+      ),
+    );
+    addTearDown(cubit.close);
+
+    final SemanticsHandle semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider<SocialFeedCubit>.value(
+          value: cubit,
+          child: const Scaffold(body: SocialFeedPostItem(postId: 'p1')),
+        ),
+      ),
+    );
+
+    expect(find.bySemanticsLabel('Not liked'), findsOneWidget);
+    semantics.dispose();
+  });
+
   testWidgets('like button calls toggleLike', (WidgetTester tester) async {
     final _HarnessCubit cubit = _HarnessCubit();
     cubit.showPost(

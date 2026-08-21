@@ -182,7 +182,7 @@ return failure(_that.failure);case _:
 
 class SocialFeedRefreshIdle implements SocialFeedRefreshStatus {
   const SocialFeedRefreshIdle();
-  
+
 
 
 
@@ -214,7 +214,7 @@ String toString() {
 
 class SocialFeedRefreshLoading implements SocialFeedRefreshStatus {
   const SocialFeedRefreshLoading();
-  
+
 
 
 
@@ -246,7 +246,7 @@ String toString() {
 
 class SocialFeedRefreshFailure implements SocialFeedRefreshStatus {
   const SocialFeedRefreshFailure(this.failure);
-  
+
 
  final  SocialFeedFailure failure;
 
@@ -484,7 +484,7 @@ return exhausted();case _:
 
 class SocialFeedPageIdle implements SocialFeedPageStatus {
   const SocialFeedPageIdle();
-  
+
 
 
 
@@ -516,7 +516,7 @@ String toString() {
 
 class SocialFeedPageLoading implements SocialFeedPageStatus {
   const SocialFeedPageLoading();
-  
+
 
 
 
@@ -548,7 +548,7 @@ String toString() {
 
 class SocialFeedPageFailureStatus implements SocialFeedPageStatus {
   const SocialFeedPageFailureStatus(this.failure);
-  
+
 
  final  SocialFeedFailure failure;
 
@@ -614,7 +614,7 @@ as SocialFeedFailure,
 
 class SocialFeedPageExhausted implements SocialFeedPageStatus {
   const SocialFeedPageExhausted();
-  
+
 
 
 
@@ -806,7 +806,7 @@ return announcement(_that.code);case _:
 
 class SocialFeedMutationRejectedEffect implements SocialFeedEffect {
   const SocialFeedMutationRejectedEffect();
-  
+
 
 
 
@@ -838,7 +838,7 @@ String toString() {
 
 class SocialFeedAnnouncementEffect implements SocialFeedEffect {
   const SocialFeedAnnouncementEffect(this.code);
-  
+
 
  final  String code;
 
@@ -978,7 +978,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
-  
+
   return $SocialFeedRefreshStatusCopyWith<$Res>(_self.refreshStatus, (value) {
     return _then(_self.copyWith(refreshStatus: value));
   });
@@ -987,7 +987,7 @@ $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedPageStatusCopyWith<$Res> get pageStatus {
-  
+
   return $SocialFeedPageStatusCopyWith<$Res>(_self.pageStatus, (value) {
     return _then(_self.copyWith(pageStatus: value));
   });
@@ -1142,7 +1142,7 @@ return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_t
 
 class _SocialFeedReadyData extends SocialFeedReadyData {
   const _SocialFeedReadyData({required this.viewer, required List<SocialFeedPost> posts, required this.nextCursor, required this.refreshStatus, required this.pageStatus, required this.isShowingCachedData, required this.cacheAge, required this.connectionStatus, required this.isSimulatedOffline, required List<SocialFeedPost> bufferedRealtimePosts, required this.pendingMutationCount, required this.needsAttentionCount, required Set<String> pendingPostIds, required Map<String, String> needsAttentionByPostId, required Map<String, List<SocialFeedComment>> pendingCommentsByPostId, this.effect, this.effectId = 0}): _posts = posts,_bufferedRealtimePosts = bufferedRealtimePosts,_pendingPostIds = pendingPostIds,_needsAttentionByPostId = needsAttentionByPostId,_pendingCommentsByPostId = pendingCommentsByPostId,super._();
-  
+
 
 @override final  SocialFeedViewer viewer;
  final  List<SocialFeedPost> _posts;
@@ -1269,7 +1269,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
-  
+
   return $SocialFeedRefreshStatusCopyWith<$Res>(_self.refreshStatus, (value) {
     return _then(_self.copyWith(refreshStatus: value));
   });
@@ -1278,7 +1278,7 @@ $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedPageStatusCopyWith<$Res> get pageStatus {
-  
+
   return $SocialFeedPageStatusCopyWith<$Res>(_self.pageStatus, (value) {
     return _then(_self.copyWith(pageStatus: value));
   });
@@ -1474,7 +1474,7 @@ return ready(_that.data);case _:
 
 class SocialFeedInitial implements SocialFeedState {
   const SocialFeedInitial(this.viewer);
-  
+
 
  final  SocialFeedViewer viewer;
 
@@ -1540,7 +1540,7 @@ as SocialFeedViewer,
 
 class SocialFeedLoading implements SocialFeedState {
   const SocialFeedLoading(this.viewer);
-  
+
 
  final  SocialFeedViewer viewer;
 
@@ -1606,7 +1606,7 @@ as SocialFeedViewer,
 
 class SocialFeedFailureState implements SocialFeedState {
   const SocialFeedFailureState({required this.viewer, required this.failure});
-  
+
 
  final  SocialFeedViewer viewer;
  final  SocialFeedFailure failure;
@@ -1674,7 +1674,7 @@ as SocialFeedFailure,
 
 class SocialFeedReady implements SocialFeedState {
   const SocialFeedReady(this.data);
-  
+
 
  final  SocialFeedReadyData data;
 
@@ -1737,7 +1737,7 @@ as SocialFeedReadyData,
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedReadyDataCopyWith<$Res> get data {
-  
+
   return $SocialFeedReadyDataCopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });

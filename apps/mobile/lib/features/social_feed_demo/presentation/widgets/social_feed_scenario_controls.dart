@@ -30,6 +30,7 @@ class SocialFeedScenarioControls extends StatelessWidget {
               onChanged: (value) {
                 // side_effects_build - user gesture (switch).
                 scenario.setSimulatedOnline(online: value);
+                // check-ignore: side_effects_build - user gesture callback.
                 unawaited(cubit.refresh());
               },
             ),

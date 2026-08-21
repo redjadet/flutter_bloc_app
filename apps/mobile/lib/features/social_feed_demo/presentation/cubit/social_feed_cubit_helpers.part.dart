@@ -80,16 +80,27 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     emit(SocialFeedState.ready(fn(current.data)));
   }
 
-  Future<void> _acquireLeases(SocialFeedViewer current) async {
+  bool _isCurrentLease(int generation, SocialFeedViewer current) =>
+      !isClosed && generation == _generation && current.id == viewer.id;
+
+  Future<void> _acquireLeases(
+    SocialFeedViewer current, {
+    int? generation,
+  }) async {
+    final int leaseGeneration = generation ?? _generation;
     await _closeLeases();
     final SocialFeedSyncLease syncLease = await _repository.acquireSync(
       viewer: current,
     );
+    if (!_isCurrentLease(leaseGeneration, current)) {
+      await syncLease.close();
+      return;
+    }
     _syncLease = syncLease;
     _syncSub = registerSubscription(
       syncLease.summaries.listen(
         (summary) {
-          if (isClosed) {
+          if (!_isCurrentLease(leaseGeneration, current)) {
             return;
           }
           _emitReadyPatch((d) {
@@ -149,11 +160,18 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     final SocialFeedRealtimeLease realtimeLease = await _realtimeSource.acquire(
       current,
     );
+    if (!_isCurrentLease(leaseGeneration, current)) {
+      await realtimeLease.close();
+      if (identical(_syncLease, syncLease)) {
+        await _closeLeases();
+      }
+      return;
+    }
     _realtimeLease = realtimeLease;
     _realtimeStatusSub = registerSubscription(
       realtimeLease.connectionStatus.listen(
         (status) {
-          if (isClosed) {
+          if (!_isCurrentLease(leaseGeneration, current)) {
             return;
           }
           _emitReadyPatch(
@@ -166,7 +184,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     _realtimePostsSub = registerSubscription(
       realtimeLease.posts.listen(
         (post) {
-          if (isClosed) {
+          if (!_isCurrentLease(leaseGeneration, current)) {
             return;
           }
           _emitReadyPatch((d) {
