@@ -166,10 +166,11 @@ janks. Proof: [performance review checklist](review/performance_checklist.md) an
 
 ### Pattern underneath every answer
 
-Interviewers are testing judgment: make a decision, expose its costs, name the
-revisit trigger, and show how evidence can falsify it. Generated code makes this
-more important, because producing a working screen is cheap while preserving a
-design through a year of change remains engineering work.
+Coworkers and anyone trying to understand this project are looking for
+judgment: make a decision, expose its costs, name the revisit trigger, and show
+how evidence can falsify it. Generated code makes this more important, because
+producing a working screen is cheap while preserving a design through a year of
+change remains engineering work.
 
 ## 5. Proof commands
 

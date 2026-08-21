@@ -9,10 +9,10 @@ Governing ADR: [`docs/adr/0006-production-readiness-demo.md`](../adr/0006-produc
 
 ## Problem
 
-Interviewers need one runnable production-ownership walkthrough: consent-gated
-analytics, Remote Config kill-switch, safe FCM, Crashlytics status, live frame
-metrics, and links to sync/native proof — on a fresh clone without Firebase or
-store secrets.
+Coworkers and anyone trying to understand this project need one runnable
+production-ownership walkthrough: consent-gated analytics, Remote Config
+kill-switch, safe FCM, Crashlytics status, live frame metrics, and links to
+sync/native proof — on a fresh clone without Firebase or store secrets.
 
 ## Scope
 
