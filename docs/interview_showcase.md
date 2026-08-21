@@ -95,6 +95,12 @@ six months later. Proof: [Clean Architecture](clean_architecture.md),
 [feature structure contract](architecture/feature_structure_contract.md), and
 [state-management choice](architecture/state_management_choice.md).
 
+Let folders grow with complexity. Keep layer boundaries, but do not pre-create
+empty trees or a nested folder for one file. Make a folder when two or more
+related, distinct things need separation from their siblings; split or rename
+later when that boundary earns its cost. IDE refactors and Git history make that
+routine maintenance, not a reason to preserve speculative structure.
+
 ### What changes when it must serve millions?
 
 Bound every growing surface. Add cursor or offset pagination only when a product
