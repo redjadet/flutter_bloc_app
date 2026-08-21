@@ -21,8 +21,9 @@ Future<void> _ensureCommentsHydratedImpl(
     } on Object {
       // Degraded: keep in-memory seed threads.
     } finally {
-      repo._commentsHydrated = true;
-      repo._commentsHydrateInFlight = null;
+      repo
+        .._commentsHydrated = true
+        .._commentsHydrateInFlight = null;
     }
   }();
   repo._commentsHydrateInFlight = pending;

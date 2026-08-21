@@ -31,7 +31,7 @@ class SocialFeedSeedData {
     'Hive cache survived a process kill. Mutation order stayed intact.',
     'Design review note: less chrome, more content hierarchy.',
     'Rejected mutations should restore canonical counts without losing the draft.',
-    'GoRouter deep links into demos make walkthroughs so much smoother.',
+    'Declarative deep links into demos make walkthroughs so much smoother.',
     'Thinking about empty states that teach instead of apologize.',
     'Latency knob in the scenario panel is underrated for teaching races.',
     'Prefer pure Dart domain for merge policy — easier to unit test.',
