@@ -16,8 +16,9 @@ wiring, but product analytics were deferred (ADR 0005), FCM falls back to a
 no-op when Firebase is absent, and release proof is Fastlane-local rather than a
 credential-free workflow.
 
-Interviewers need one runnable `/production-readiness` route on a fresh clone
-(including web / missing Firebase) without secrets or store credentials.
+Coworkers and anyone trying to understand this project need one runnable
+`/production-readiness` route on a fresh clone (including web / missing Firebase)
+without secrets or store credentials.
 
 ## Decision drivers
 

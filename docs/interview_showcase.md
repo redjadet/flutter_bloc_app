@@ -73,10 +73,110 @@ modules in [feature_overview.md](feature_overview.md).
 | Firebase Functions (deep) | Auth-gated callable diagnostic; `hf_read_token` never rendered (presence + length only) | [`firebase_functions_test_page.dart`](../apps/mobile/lib/features/example/presentation/pages/firebase_functions_test_page.dart) | Example → Firebase Functions; signed-out disables token action |
 | Firestore mapper seam | Inbox recipient/message map isolated + unit-tested; feature-level P3 still deferred | [`staff_demo_inbox_firestore_map.dart`](../apps/mobile/lib/features/staff_app_demo/data/staff_demo_inbox_firestore_map.dart); [senior_patterns_review_2026-06.md](audits/senior_patterns_review_2026-06.md) | `flutter test …/staff_demo_inbox_firestore_map_test.dart` |
 | RTL / i18n | Six locales including Arabic; ownership spine RTL widget proof | [localization.md](engineering/localization.md); production_readiness + Counter RTL tests | `flutter test` Counter/PR RTL suites |
-| Mixpanel / Sentry (nice) | **Not shipped** — documented seams; Firebase Analytics only via consent-gated port | [plans/future_observability.md](plans/future_observability.md), [observability.md](observability.md) | Interview appendix script §12 |
+| Mixpanel / Sentry (nice) | **Not shipped** — documented seams; Firebase Analytics only via consent-gated port | [observability.md](observability.md) | Interview appendix script §12 |
 | Patrol (nice) | **Plan only** | [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md) | — |
 | Platform channels / FFI (nice) | Live Swift/Kotlin/C interop, EventChannel telemetry, mobile PlatformView banner, haptic + system share behind clean-arch ports; web/desktop unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
 | Store release (nice) | Release scripts + deployment doc; **dry-run workflow is not publishing** | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference); Actions → Mobile release dry-run |
+
+## 4a. Flutter judgment guidance
+
+Use this structure for design questions: **choose → name constraints → state the
+trade-off → point to proof**. “It depends” is incomplete until the answer names
+the deciding conditions and selects an approach for the stated scenario.
+
+### How do you structure a large app?
+
+Use feature-first modules with the repo dependency rule
+`Presentation -> Domain <- Data`. Keep UI rendering and interaction in widgets,
+workflow state in one consistent Cubit/BLoC approach, pure policy in domain, and
+I/O/mapping in data. Prefer explicit names and constructor-injected contracts
+over clever indirection: the target reader is the developer changing the code
+six months later. Proof: [Clean Architecture](clean_architecture.md),
+[feature structure contract](architecture/feature_structure_contract.md), and
+[state-management choice](architecture/state_management_choice.md).
+
+Let folders grow with complexity. Keep layer boundaries, but do not pre-create
+empty trees or a nested folder for one file. Make a folder when two or more
+related, distinct things need separation from their siblings; split or rename
+later when that boundary earns its cost. IDE refactors and Git history make that
+routine maintenance, not a reason to preserve speculative structure.
+
+### What changes when it must serve millions?
+
+Bound every growing surface. Add cursor or offset pagination only when a product
+list becomes unbounded; define refresh, load-more, dedupe, and termination
+semantics before building helpers. Give each cache an owner plus freshness,
+invalidation, eviction, and failure behavior. Move measured CPU-heavy parsing or
+transforms off the UI isolate, but keep short work and Flutter APIs on it. Profile
+first; otherwise optimization guesses consume time without proving a bottleneck.
+This repo currently has a pagination contract, not a shipped generic pagination
+framework. Proof: [API contract guide](backend/API_CONTRACT_GUIDE.md),
+[deferred backend work](backend/MOBILE_BACKEND_DEFERRED_WORK.md), and
+[performance guidance](reliability_error_handling_performance.md).
+
+### How do you keep it testable?
+
+Depend on narrow domain abstractions, inject implementations at composition
+boundaries, and keep pure logic outside Flutter. Then domain, data, and Cubit
+behavior stay cheap to unit-test; widget tests cover rendering contracts; a
+small integration set guards critical journeys such as auth, payments, core
+navigation, and persistence. Proof: [testing overview](testing_overview.md) and
+[integration journey map](engineering/integration_journey_map.md).
+
+### How do you stop the app getting owned?
+
+Treat the client as untrusted. Keep provider/backend secrets server-side, store
+session material through Keychain/Keystore abstractions rather than
+`SharedPreferences`, and enforce authorization and input validation on the
+server. Use certificate pinning only with an explicit threat model, rotation,
+and recovery plan; this repo defaults pinning to disabled. Release obfuscation
+may raise reverse-engineering cost, but it never makes an embedded secret safe.
+Request permissions at point of need, explain the benefit before the platform
+prompt, and exclude personal data, tokens, and payloads from logs and telemetry.
+Proof: [security and secrets](security_and_secrets.md),
+[certificate pinning](security/certificate_pinning.md), and
+[logging](engineering/logging.md).
+
+### Third-party package or roll your own?
+
+Use a trusted maintained package for hard, solved infrastructure such as HTTP
+or serialization after checking release activity, issue health, null safety,
+license, transitive cost, and real support for every target platform. Keep a
+two-line helper local when a dependency would create more ownership than value.
+Own code when behavior is core product differentiation or available packages
+are materially bloated, unsafe, or mismatched. Record the decision and verify
+the pinned API rather than assuming “latest” means compatible. Proof:
+[dependency update guidance](engineering/DEPENDENCY_UPDATES.md) and
+[package API verification](agent_kb/package_docs_mcp.md).
+
+### Does it work when the app is closed?
+
+Only promise what each OS can schedule. Android WorkManager and iOS background
+task APIs are candidates for short, idempotent, resumable jobs, not permanent
+processes or exact-time execution. Design for cancellation, retry, expiry, and
+duplicate delivery; test on physical devices and state OS restrictions. This
+repo does not currently claim general terminated-app background work. FCM has a
+separate documented delivery scope. Proof:
+[reliability guidance](reliability_error_handling_performance.md) and
+[FCM integration](integrations/fcm_demo_integration.md).
+
+### How do you keep battery use low and frames smooth?
+
+Batch and coalesce calls, avoid tight polling, and stop timers, streams, and
+route-owned work when the surface is not visible. Use const widgets, narrow
+state selection, builder lists, bounded image caching, and lifecycle cleanup.
+Profile CPU, memory, network, and frame timelines in profile mode before and
+after a change. A stable frame budget wins over an animation that repeatedly
+janks. Proof: [performance review checklist](review/performance_checklist.md) and
+[performance notes](performance/performance_bottlenecks.md).
+
+### Pattern underneath every answer
+
+Coworkers and anyone trying to understand this project are looking for
+judgment: make a decision, expose its costs, name the revisit trigger, and show
+how evidence can falsify it. Generated code makes this more important, because
+producing a working screen is cheap while preserving a design through a year of
+change remains engineering work.
 
 ## 5. Proof commands
 
@@ -115,8 +215,8 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 
 ## 6. Testing story
 
-- **Unit / widget:** See current counts and filtered rollup in
-  [`coverage/coverage_summary.md`](../coverage/coverage_summary.md) (generated artifact).
+- **Unit / widget:** See current counts and filtered rollup in the generated
+  coverage summary artifact.
   CI coverage floor is **75%** filtered rollup; team target is **85%**
   (source of truth: [`CODE_QUALITY.md`](CODE_QUALITY.md)).
 - **Integration tiers:** `smoke` / `standard` / `exhaustive` via `integration_test/*_flows_test.dart` and env `INTEGRATION_TESTS_TIER`
@@ -169,9 +269,9 @@ Details: [observability.md](observability.md)
 
 If asked about Mixpanel/Sentry:
 
-> “We structured errors and sync telemetry today; Crashlytics is on when Firebase is enabled. Product analytics would plug in at logging/sync seams — see [`plans/future_observability.md`](plans/future_observability.md) — not claimed as shipped.”
+> “We structured errors and sync telemetry today; Crashlytics is on when Firebase is enabled. Product analytics would plug in at logging/sync seams — see [observability.md](observability.md) — not claimed as shipped.”
 
-See [plans/future_observability.md](plans/future_observability.md).
+See [observability.md](observability.md) § Sentry + Crashlytics and § Product analytics.
 
 ## 13. Depth branches
 
@@ -181,13 +281,13 @@ See [plans/future_observability.md](plans/future_observability.md).
 | Case studies | [case_studies/README.md](case_studies/README.md) |
 | Online therapy | [online_therapy_demo/README.md](online_therapy_demo/README.md) |
 | Realtime market | [features/realtime_market.md](features/realtime_market.md) |
-| Social feed demo (simulated senior-signal) | [features/social_feed_demo.md](features/social_feed_demo.md), Example → Social feed demo |
+| Social feed demo (simulated judgment guidance) | [features/social_feed_demo.md](features/social_feed_demo.md), Example → Social feed demo |
 | Full catalog | [feature_overview.md](feature_overview.md) |
 
 ## 14. Verification snapshot
 
 - **Current proof:** run `./bin/checklist` and read live counts from the run
-  output plus [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
+  output plus its generated coverage summary artifact.
   Do not hardcode test counts here.
 - **Engineering claim:** [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
   (badge + `tool/check_engineering_quality_scorecard_gate.sh`).

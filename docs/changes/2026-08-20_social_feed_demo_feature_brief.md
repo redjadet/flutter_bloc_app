@@ -2,7 +2,7 @@
 
 ## Problem
 
-Credential-free `/social-feed-demo` that proves senior feed engineering:
+Credential-free `/social-feed-demo` that proves Flutter judgment guidance for feed engineering:
 cursor paging, cache-first UX, optimistic like/comment, offline ordered
 queue, realtime buffer banner, viewer isolation — with durable docs and
 executable proof (`SF-ARCH-01`, `SF-SCALE-01`, `SF-TEST-01`, `SF-SEC-01`,
@@ -98,7 +98,7 @@ executable proof (`SF-ARCH-01`, `SF-SCALE-01`, `SF-TEST-01`, `SF-SEC-01`,
 
 ## depends_on
 
-- [ ] [`plans/2026-08-20_social_feed_senior_signal_demo.md`](../plans/2026-08-20_social_feed_senior_signal_demo.md)
+- [ ] [Flutter judgment guidance plan](../plans/2026-08-20_social_feed_senior_signal_demo.md)
 
 ## blocks
 

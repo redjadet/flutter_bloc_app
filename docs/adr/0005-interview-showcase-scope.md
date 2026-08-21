@@ -10,13 +10,17 @@
 
 ## Context
 
-The repo contains many demo routes. Interviewers need a **short, repeatable walk** without implying every module is production-critical. Separately, job descriptions often mention Mixpanel, Sentry, or Patrol — adding SDKs solely for portfolio optics increases maintenance and privacy review cost without a second product consumer.
+The repo contains many demo routes. Coworkers and anyone trying to understand
+this project need a **short, repeatable walk** without implying every module is
+production-critical. Separately, job descriptions often mention Mixpanel,
+Sentry, or Patrol — adding SDKs solely for portfolio optics increases
+maintenance and privacy review cost without a second product consumer.
 
 Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, frame budgets, release dry-run) more than the Counter → Todo → Chat narrative. That path needs a registered alternate without freezing a second “everything is critical” story.
 
 ## Decision drivers
 
-- Time-boxed interviewer experience (~30 minutes general, ~12 minutes job-focused)
+- Time-boxed project-understanding walkthrough (~30 minutes general, ~12 minutes job-focused)
 - Honest claims vs. shipped code
 - Keep hero polish bounded (counter, todo, chat presentation only)
 - PR smoke must cover spine automation where flows already exist
@@ -44,7 +48,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 
 ### Benefits
 
-- Clear interviewer scripts (general + job-focused) with proof commands
+- Clear project-understanding scripts (general + job-focused) with proof commands
 - Smaller, reviewable diffs for hero a11y
 - Truth-aligned observability docs (Mixpanel/Sentry deferred; Firebase Analytics consent-gated)
 - Credential-free clone can still demo ownership via simulation mode

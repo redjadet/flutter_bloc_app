@@ -1,6 +1,6 @@
 # Social Feed Demo
 
-Credential-free senior-signal feed simulator (cursor paging, offline queue,
+Credential-free Flutter judgment guidance feed simulator (cursor paging, offline queue,
 optimistic mutations, realtime banner, viewer isolation).
 
 ## Entry

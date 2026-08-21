@@ -8,7 +8,7 @@ that.
 ## Index
 
 - [`2026-08-21_modal_bloc_provider_guard.md`](2026-08-21_modal_bloc_provider_guard.md): Modal sheet missing `BlocProvider.value` → static guard + social-feed regression.
-- [`2026-08-20_social_feed_demo_feature_brief.md`](2026-08-20_social_feed_demo_feature_brief.md): Credential-free `/social-feed-demo` senior-signal feed (cursor paging, offline queue, optimistic mutations, realtime banner).
+- [`2026-08-20_social_feed_demo_feature_brief.md`](2026-08-20_social_feed_demo_feature_brief.md): Credential-free `/social-feed-demo` Flutter judgment guidance feed (cursor paging, offline queue, optimistic mutations, realtime banner).
 - [`2026-08-20_macos_telemetry_event_channel_crash.md`](2026-08-20_macos_telemetry_event_channel_crash.md): macOS native showcase telemetry skips `makeBackgroundTaskQueue` (relay abort on launch).
 - [`2026-08-20_dart_313_primary_ctor_docs.md`](2026-08-20_dart_313_primary_ctor_docs.md): Living docs/samples use Dart 3.13 primary constructors; Freezed Cubit state unchanged.
 - [`2026-08-20_app_composition_root_router_di.md`](2026-08-20_app_composition_root_router_di.md): `AppCompositionRoot` + typed route factories; router free of `getIt`.
@@ -31,7 +31,7 @@ that.
 - [`2026-08-06_solid_dry_remediation.md`](2026-08-06_solid_dry_remediation.md): Staff demo domain Map removal, Todo `ViewStatusSwitcher`, warn-only AP-18 Map-bag gate.
 - [`2026-08-06_restore_permission_handler_compile_sdk_37.md`](2026-08-06_restore_permission_handler_compile_sdk_37.md): Restore `permission_handler` ^13 + compileSdk 37 after local SDK 37 install.
 - [`2026-08-05_functions_object_catch_android_pin.md`](2026-08-05_functions_object_catch_android_pin.md): Functions diagnostic `Object` catch + pin `permission_handler` 12.0.3 for compileSdk 36.
-- [`2026-08-05_senior_flutter_jd_alignment.md`](2026-08-05_senior_flutter_jd_alignment.md): Crashlytics non-fatal ownership, auth-gated Functions diagnostic, inbox map isolation, RTL proof.
+- [Flutter judgment guidance alignment](2026-08-05_senior_flutter_jd_alignment.md): Crashlytics non-fatal ownership, auth-gated Functions diagnostic, inbox map isolation, RTL proof.
 - [`2026-08-05_fcm_shared_contract_extraction.md`](2026-08-05_fcm_shared_contract_extraction.md): Move shared FCM contracts into `package:utilities`; zero cross-feature FCM edges.
 - [`2026-08-04_bloc_rebuild_scoping_qg-d03.md`](2026-08-04_bloc_rebuild_scoping_qg-d03.md): QG-D03 report-only BlocBuilder inventory (warn; not checklist-wired).
 - [`2026-08-04_memory_quality_wave_b2.md`](2026-08-04_memory_quality_wave_b2.md): Memory B2 tagged dispose journeys for TEC/ScrollController/confetti path.

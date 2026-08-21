@@ -2579,7 +2579,7 @@
   "productionReadinessNativeShowcaseLink": "Vitrine plateforme native",
 "exampleSocialFeedDemoButton": "Social feed demo",
   "@exampleSocialFeedDemoButton": {
-    "description": "Example hub button for social feed senior-signal demo"
+    "description": "Example hub button for social feed Flutter judgment guidance demo"
   },
   "socialFeedDemoTitle": "Social feed demo",
   "@socialFeedDemoTitle": {

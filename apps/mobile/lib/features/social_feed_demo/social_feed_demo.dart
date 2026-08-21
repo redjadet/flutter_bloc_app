@@ -1,4 +1,4 @@
-/// Social feed senior-signal demo public surface.
+/// Social feed Flutter judgment guidance demo public surface.
 library;
 
 export 'data/hive_social_feed_local_data_source.dart';

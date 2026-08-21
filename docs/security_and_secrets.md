@@ -24,6 +24,33 @@ secret injection**, not vulnerability triage.
 - **Fail safe**: when a key is missing, the owning feature should be disabled
   or fall back to a safe local-only mode.
 
+## Client trust and privacy by design
+
+- **Treat the client as untrusted.** Never embed backend/provider secrets in a
+  Flutter artifact. The server validates identity, authorization, ownership,
+  input shape, quotas, and replay/idempotency where applicable; UI checks only
+  improve experience.
+- **Protect session material.** Store tokens and encryption keys through the
+  repo Keychain/Keystore-backed secure-storage abstractions, never
+  `SharedPreferences` or plain local files. Keep sensitive values in memory only
+  as long as their owning session requires.
+- **Use transport hardening deliberately.** TLS is mandatory. Certificate
+  pinning adds defense for selected threats only when pin rotation, backup pins,
+  expiry, observability, and recovery are owned; current repo default is
+  `disabled`. Release obfuscation can raise reverse-engineering cost but cannot
+  protect a secret compiled into the client.
+- **Request minimum permissions at point of need.** Explain the user benefit
+  before the platform prompt, support denial/restricted states, and do not ask
+  at startup merely because a later feature might use the capability.
+- **Minimize personal data.** Do not log or attach PII, tokens, full payloads, or
+  raw request/response bodies. Define collection purpose, retention, deletion,
+  and third-party processing before adding telemetry. Privacy is an architecture
+  input, not a release checklist item.
+
+Review changes with [`review/security_checklist.md`](review/security_checklist.md),
+[`engineering/logging.md`](engineering/logging.md), and
+[`security/privacy_policy.md`](security/privacy_policy.md).
+
 ## Sources (in order)
 
 The app supports layered secret loading:
@@ -214,7 +241,7 @@ can still flag keys in **old commits**. If keys were ever pushed:
 
 | Key | Used by | Notes |
 | --- | --- | --- |
-| `HUGGINGFACE_API_KEY` | Chat backends; development-only direct client path | Render/FastAPI and Supabase Edge own this credential server-side. A local debug build may use the legacy direct `HuggingfaceChatRepository` path, but store/release builds must omit the key and must not use client fallback that requires it. See [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md). |
+| `HUGGINGFACE_API_KEY` | Chat backends; development-only direct client path | Render/FastAPI and Supabase Edge own this credential server-side. A local debug build may use the legacy direct `HuggingfaceChatRepository` path, but store/release builds must omit the key and must not use client fallback that requires it. See [`integrations/ai_integration.md`](integrations/ai_integration.md). |
 | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | GenUI demo | Development-only when used directly by the client. Production mobile releases must proxy provider calls through a trusted backend or disable the feature. Key creation: [Google AI Studio](https://makersuite.google.com/app/apikey). |
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Supabase-backed demos | Enables Supabase client bootstrap; some demos fall back to local-only mode when missing. See [Supabase README](../supabase/README.md). |
 | Google Maps keys | Maps demos | Platform-specific; keep in each platform’s secure configuration. |

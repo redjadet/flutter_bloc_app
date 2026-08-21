@@ -61,6 +61,19 @@ Small features may omit unused folders. Do not create alternative top-level
 layer names such as `application/`, `infrastructure/`, `viewmodels/`, or
 `providers/` without an accepted ADR.
 
+## Folder Growth Rule
+
+Architecture responds to complexity; it does not predict it with empty trees.
+Keep the `domain/`, `data/`, and `presentation/` layer boundaries, but do not
+pre-create nested folders or add a folder that will contain only one file. Add
+a nested folder when two or more related, distinct things need a home separate
+from their siblings. Until then, keep the file at the nearest established layer
+and split it later when the boundary becomes useful.
+
+Renaming and splitting are routine maintenance: modern IDE refactors and Git
+history make a later, evidence-based move safer than carrying speculative
+structure from day one.
+
 ## Naming
 
 | Concern | Preferred name |
