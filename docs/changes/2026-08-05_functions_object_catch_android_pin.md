@@ -2,7 +2,7 @@
 
 ## Summary
 
-Follow-up after Senior Flutter JD alignment (#675):
+Follow-up after Flutter judgment guidance alignment (#675):
 
 - Functions diagnostic maps non-`Exception` failures (`Object` catch) to the
   safe localized error; regression tests cover generic errors, double-tap while

@@ -1,8 +1,8 @@
-# Senior Flutter JD alignment — 2026-08-05
+# Flutter judgment guidance alignment — 2026-08-05
 
 ## Summary
 
-Credential-safe ownership proof for the target Senior Flutter JD:
+Credential-safe ownership proof for Flutter judgment guidance:
 
 - Crashlytics allowlisted custom keys (`flavor`, `app_version`, `firebase_ready`)
   plus production-readiness **Emit test non-fatal** (simulated = local only)

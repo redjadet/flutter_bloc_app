@@ -80,7 +80,41 @@ For crash reporting, structured error codes, and the **doc-only** product analyt
 
 ---
 
-## 4. Validation and quality
+## 4. Scale, background, and battery decision rules
+
+- **Pagination:** Bound unbounded datasets at the API and UI. Choose offset only
+  when ordering is stable enough; prefer opaque cursors for frequently changing
+  feeds. Specify refresh replacement, load-more append, dedupe, empty-page stop,
+  and error/retry behavior before adding shared helpers. Current repo status:
+  contract only, no generic shipped pagination layer.
+- **Caching:** Every cache needs an owner, key, freshness rule, invalidation
+  event, size/eviction bound, offline behavior, and safe response to corrupt or
+  unavailable storage. “Cache it” without invalidation is deferred inconsistency.
+- **Main isolate:** Offload only measured CPU-heavy parsing, crypto, or transforms.
+  Short work and Flutter APIs stay on the UI isolate; isolate transfer and setup
+  cost must be included in the comparison.
+- **Measurement:** Capture a baseline and define a budget before optimizing.
+  Compare profile-mode CPU, memory, network, and frame evidence after the change;
+  do not treat intuition or debug-mode smoothness as proof.
+- **Closed-app work:** Android WorkManager and iOS background task APIs can run
+  short, idempotent, resumable jobs when the OS grants time. They do not provide
+  exact scheduling, continuous execution, or guaranteed terminated-app delivery.
+  Model duplicate delivery, cancellation, expiry, retry limits, and platform
+  denial. This repo does not currently ship a general background-job scheduler.
+- **Battery and lifecycle:** Batch/coalesce network calls, remove tight polling,
+  use push or lifecycle-triggered refresh where appropriate, and cancel
+  route-owned timers/subscriptions when hidden or disposed. Bound image caches
+  and request sizes. Prefer a simpler stable frame over optional animation that
+  exceeds the frame budget.
+
+Review with [`review/performance_checklist.md`](review/performance_checklist.md),
+profile with [`performance/performance_bottlenecks.md`](performance/performance_bottlenecks.md),
+and keep isolate thresholds in
+[`performance/compute_isolate_review.md`](performance/compute_isolate_review.md).
+
+---
+
+## 5. Validation and quality
 
 - **Checklist:** [./bin/checklist](../bin/checklist) – format, analyze, tests, and project guards.
 - **Lifecycle scripts:** e.g. `tool/check_cubit_isclosed.sh`, `tool/check_context_mounted.sh`, `tool/check_lifecycle_error_handling.sh` (see [validation_scripts.md](validation_scripts.md)).
@@ -88,7 +122,7 @@ For crash reporting, structured error codes, and the **doc-only** product analyt
 
 ---
 
-## 5. Quick reference – key files
+## 6. Quick reference – key files
 
 | Area | Files |
 | ------ | -------- |

@@ -1,6 +1,6 @@
 # Crashlytics triage runbook
 
-Operational loop for post-ship crash ownership (target Senior Flutter JD proof).
+Operational loop for post-ship crash ownership (Flutter judgment guidance proof).
 
 ## Flow
 

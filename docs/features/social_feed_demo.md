@@ -1,12 +1,12 @@
 # Social Feed Demo — deep feature guide
 
 Canonical design/change guide for `social_feed_demo`. Plan source:
-[`docs/plans/2026-08-20_social_feed_senior_signal_demo.md`](../plans/2026-08-20_social_feed_senior_signal_demo.md).
+[Flutter judgment guidance plan](../plans/2026-08-20_social_feed_senior_signal_demo.md).
 
 ## Purpose
 
-Credential-free `/social-feed-demo` proving senior Flutter feed judgment with
-observable behavior and executable proof. Simulator only — no live backend,
+Credential-free `/social-feed-demo` proving Flutter judgment guidance through
+feed engineering with observable behavior and executable proof. Simulator only — no live backend,
 auth, secrets, or network images.
 
 Cold start: co-located

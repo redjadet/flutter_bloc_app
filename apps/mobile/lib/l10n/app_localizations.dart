@@ -6481,7 +6481,7 @@ abstract class AppLocalizations {
   /// **'Native platform showcase'**
   String get productionReadinessNativeShowcaseLink;
 
-  /// Example hub button for social feed senior-signal demo
+  /// Example hub button for social feed Flutter judgment guidance demo
   ///
   /// In en, this message translates to:
   /// **'Social feed demo'**

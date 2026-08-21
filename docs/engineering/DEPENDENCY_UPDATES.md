@@ -77,6 +77,23 @@ See `.github/workflows/dependency-updates.yml` for details.
 
 **Renovate `renovate/artifacts` check:** Often fails on this Flutter workspace when the bot runs `dart pub` instead of `flutter pub`. Treat artifacts as **non-blocking** for merge triage when required `build` / dependency-updates checks are green. Prefer `bash tool/commit_push_pr_watch_merge_cleanup.sh` over ad-hoc check polling; see [`validation_scripts/upgrade_pr_triage_validate.md`](../validation_scripts/upgrade_pr_triage_validate.md) and [`agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md) § Durable Prefs.
 
+## Adopt a package or implement locally
+
+Choose by ownership cost, not line count alone:
+
+| Situation | Default | Required checks |
+| --- | --- | --- |
+| Hard, solved infrastructure such as HTTP, serialization, crypto primitives, or platform integration | Prefer a trusted package | Recent releases/commits, issue and security posture, null safety, license, transitive dependencies, binary size, migration policy, and verified iOS/Android/Web/macOS support |
+| Small stable helper with no platform or security complexity | Implement locally | Clear tests; confirm existing SDK/repo utilities do not already solve it |
+| Product-defining domain behavior | Own the code behind domain contracts | Explicit invariants, focused tests, and an ADR when the choice is cross-cutting or costly to reverse |
+| Available packages are bloated, abandoned, unsafe, or miss required platforms | Implement a narrow adapter/local solution | Record rejected options and the trigger for reevaluating the ecosystem |
+
+Before adoption, check the pinned resolver constraints and read the actual API
+through [`package_docs_mcp.md`](../agent_kb/package_docs_mcp.md). “Latest” is not
+proof of compatibility. Wrap external APIs behind the narrowest honest boundary
+when replacement, testing, or platform fallbacks are plausible; do not add an
+abstraction only to hide a two-line helper.
+
 ## Manual Dependency Updates
 
 To manually check for outdated dependencies:
