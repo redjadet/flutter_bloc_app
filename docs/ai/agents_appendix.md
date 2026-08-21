@@ -49,8 +49,9 @@ User prefs:
 - No `Isolate.run(` under app/package `presentation/**`; use `compute` or
   top-level/static worker. Enforced by
   `tool/check_no_isolate_run_in_presentation.sh`.
-- Dialog overlay has separate subtree. Capture shell cubit before `showDialog`
-  and wrap `BlocProvider.value`, or pass deps explicitly.
+- Dialog/sheet overlay has separate subtree. Capture shell cubit before
+  `showDialog` / `showModalBottomSheet` and wrap `BlocProvider.value`, or pass
+  deps explicitly. Guard: `tool/check_modal_bloc_provider.sh`.
 - Checklist flags unguarded `!`; prefer nullable trim + branch.
 - Cursor Plan mode edits only plan/markdown-style files.
 - Run integration tests one at time; concurrent runs conflict over Xcode/sims.

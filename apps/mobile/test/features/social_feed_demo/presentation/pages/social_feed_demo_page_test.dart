@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_vi
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_cubit.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_state.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_demo_body.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_scenario_controls.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -51,6 +52,97 @@ void main() {
     expect(feed.childrenDelegate, isA<SliverChildBuilderDelegate>());
     expect(find.byKey(const ValueKey('social-feed-post-p1')), findsOneWidget);
   });
+
+  testWidgets(
+    'scenario sheet without BlocProvider.value throws ProviderNotFound',
+    (WidgetTester tester) async {
+      final _PageCubit cubit = _PageCubit();
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<SocialFeedCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (BuildContext context) {
+                return Scaffold(
+                  body: TextButton(
+                    onPressed: () {
+                      // Deliberate anti-pattern: overlay drops page providers.
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (sheetContext) =>
+                            const SocialFeedScenarioControls(),
+                      );
+                    },
+                    child: const Text('open-bad'),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('open-bad'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(tester.takeException(), isA<ProviderNotFoundException>());
+    },
+  );
+
+  testWidgets(
+    'scenario sheet reuses page SocialFeedCubit via BlocProvider.value',
+    (WidgetTester tester) async {
+      final _PageCubit cubit = _PageCubit();
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<SocialFeedCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (BuildContext context) {
+                return Scaffold(
+                  body: TextButton(
+                    onPressed: () {
+                      // Mirrors social_feed_demo_page scenario sheet wiring.
+                      final SocialFeedCubit pageCubit = context
+                          .read<SocialFeedCubit>();
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (sheetContext) =>
+                            BlocProvider<SocialFeedCubit>.value(
+                              value: pageCubit,
+                              child: const SocialFeedScenarioControls(),
+                            ),
+                      );
+                    },
+                    child: const Text('open-good'),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('open-good'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(
+        find.byKey(const ValueKey('social-feed-scenario-controls')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
 
 class _PageCubit extends SocialFeedCubit {

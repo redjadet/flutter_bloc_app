@@ -64,6 +64,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_unguarded_null_assertion.sh`
 - `check_row_text_overflow.sh`
 - `check_row_action_overflow.sh`
+- `check_modal_bloc_provider.sh`
 - `check_lifecycle_error_handling.sh`
 - `check_mutation_success_after_guard.sh`
 - `check_feature_brief_linked.sh`

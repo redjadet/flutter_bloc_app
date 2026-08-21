@@ -41,6 +41,8 @@ Use with [BLoC Standards](../bloc_standards.md) for Cursor/Codex reviews.
 - Type-safe BLoC helpers are used where available.
 - Selectors are used for narrow rebuilds and expensive widgets.
 - Builders stay pure; no side effects in `build()`.
+- Modal sheets/dialogs that need a Cubit wrap `BlocProvider.value` (overlay
+  routes drop page providers). Guard: `tool/check_modal_bloc_provider.sh`.
 - Widget tests do not rely on unbounded `pumpAndSettle()` for heavy async UI.
 
 ## Tests

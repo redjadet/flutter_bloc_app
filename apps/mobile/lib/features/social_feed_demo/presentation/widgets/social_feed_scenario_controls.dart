@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_cubit.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 class SocialFeedScenarioControls extends StatelessWidget {
@@ -12,7 +13,6 @@ class SocialFeedScenarioControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final SocialFeedCubit cubit = context.read<SocialFeedCubit>();
-    final scenario = cubit.scenarioController;
     return Card(
       key: const ValueKey('social-feed-scenario-controls'),
       child: Padding(
@@ -24,15 +24,19 @@ class SocialFeedScenarioControls extends StatelessWidget {
               l10n.socialFeedDemoScenarioTitle,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SwitchListTile(
-              title: Text(l10n.socialFeedDemoSimulatedOnline),
-              value: scenario.isSimulatedOnline,
-              onChanged: (value) {
-                // side_effects_build - user gesture (switch).
-                scenario.setSimulatedOnline(online: value);
-                // check-ignore: side_effects_build - user gesture callback.
-                unawaited(cubit.refresh());
+            BlocSelector<SocialFeedCubit, SocialFeedState, bool>(
+              selector: (state) => switch (state) {
+                SocialFeedReady(:final data) => !data.isSimulatedOffline,
+                _ => cubit.scenarioController.isSimulatedOnline,
               },
+              builder: (context, isOnline) => SwitchListTile(
+                title: Text(l10n.socialFeedDemoSimulatedOnline),
+                value: isOnline,
+                onChanged: (value) {
+                  // check-ignore: side_effects_build - user gesture callback.
+                  unawaited(cubit.setSimulatedOnline(online: value));
+                },
+              ),
             ),
             FilledButton(
               onPressed: cubit.emitThreeNewPosts,

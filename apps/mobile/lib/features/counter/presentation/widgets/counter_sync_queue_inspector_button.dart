@@ -197,6 +197,7 @@ class _CounterSyncQueueInspectorButtonState
     if (!context.mounted) {
       return;
     }
+    // modal_bloc_provider:ignore sheet is data-only; queue entries passed in.
     await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
       builder: (sheetContext) => CounterSyncQueueInspectorSheet(

@@ -75,10 +75,12 @@ ALL_TESTS=(
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
   "test/features/realtime_market/data/simulated_market_feed_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
+  "test/features/social_feed_demo/presentation/widgets/social_feed_responsive_layout_test.dart"
   "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
   "test/features/online_therapy_demo/presentation/cubit/call_cubit_test.dart"
   "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
   "test/chat_cubit_test.dart"
+  "test/features/social_feed_demo/presentation/pages/social_feed_demo_page_test.dart"
 )
 
 collect_changed_files() {
@@ -168,6 +170,16 @@ select_regression_guard_tests() {
       test/chat_cubit_test.dart)
         add_test_once out_ref "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
         add_test_once out_ref "test/chat_cubit_test.dart"
+        ;;
+      lib/features/social_feed_demo/presentation/widgets/*|\
+      test/features/social_feed_demo/presentation/widgets/*)
+        add_test_once out_ref "test/features/social_feed_demo/presentation/widgets/social_feed_responsive_layout_test.dart"
+        ;;
+      lib/features/social_feed_demo/*|\
+      test/features/social_feed_demo/*|\
+      tool/check_modal_bloc_provider.sh|\
+      tool/fixtures/modal_bloc_provider/*)
+        add_test_once out_ref "test/features/social_feed_demo/presentation/pages/social_feed_demo_page_test.dart"
         ;;
       lib/app/presentation/cubit/app_auth_cubit.dart|\
       lib/app/presentation/cubit/app_auth_state.dart|\

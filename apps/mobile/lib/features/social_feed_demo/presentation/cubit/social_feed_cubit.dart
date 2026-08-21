@@ -43,6 +43,16 @@ class SocialFeedCubit extends _SocialFeedCubitBase
 
   Future<void> initialize() => load();
 
+  Future<void> setSimulatedOnline({required bool online}) async {
+    _scenario.setSimulatedOnline(online: online);
+    _emitReadyPatch(
+      (data) => data.copyWith(isSimulatedOffline: !online),
+    );
+    if (online) {
+      await refresh();
+    }
+  }
+
   @override
   Future<void> close() async {
     ++_generation;

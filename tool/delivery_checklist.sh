@@ -1065,6 +1065,8 @@ should_run_regression_guards_before_coverage() {
       test/features/chat/*|\
       lib/features/online_therapy_demo/*|\
       test/features/online_therapy_demo/*|\
+      lib/features/social_feed_demo/*|\
+      test/features/social_feed_demo/*|\
       tool/check_mutation_success_after_guard.sh|\
       tool/check_regression_guards.sh)
         return 0
@@ -1677,6 +1679,7 @@ CHECK_SCRIPTS=(
   "tool/check_unguarded_null_assertion.sh"
   "tool/check_row_text_overflow.sh"
   "tool/check_row_action_overflow.sh"
+  "tool/check_modal_bloc_provider.sh"
   "tool/check_lifecycle_error_handling.sh"
   "tool/check_mutation_success_after_guard.sh"
   "tool/check_feature_brief_linked.sh"
@@ -1759,6 +1762,7 @@ CHECK_SCRIPT_THEMES=(
   "async"
   "ui"
   "ui"
+  "state-mgmt"
   "async"
   "async"
   "architecture"

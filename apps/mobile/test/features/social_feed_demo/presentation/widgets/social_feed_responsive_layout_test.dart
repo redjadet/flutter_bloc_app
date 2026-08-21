@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_sc
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_cubit.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_demo_body.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_scenario_controls.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -79,6 +80,56 @@ void main() {
       find.byKey(const ValueKey('social-feed-scenario-controls')),
       findsOneWidget,
     );
+  });
+
+  testWidgets('scenario-sheet switch updates without reopening the sheet', (
+    WidgetTester tester,
+  ) async {
+    final SocialFeedCubit cubit = await readyCubit();
+    addTearDown(cubit.close);
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider<SocialFeedCubit>.value(
+          value: cubit,
+          child: Builder(
+            builder: (context) => Scaffold(
+              body: FilledButton(
+                onPressed: () {
+                  unawaited(
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (_) => BlocProvider<SocialFeedCubit>.value(
+                        value: cubit,
+                        child: const SocialFeedScenarioControls(),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Open scenario controls'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Open scenario controls'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
+      isTrue,
+    );
+
+    await tester.tap(find.byType(Switch));
+    await tester.pump();
+
+    expect(
+      tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
+      isFalse,
+    );
+    expect(find.byType(SocialFeedScenarioControls), findsOneWidget);
   });
 }
 

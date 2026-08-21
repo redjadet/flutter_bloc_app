@@ -21,6 +21,27 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-21 - Modal sheet drops page Cubit (ProviderNotFound)
+
+- What went wrong:
+  Social feed scenario bottom sheet (and comment composer submit) threw
+  `ProviderNotFoundException` for `SocialFeedCubit`. Overlay route sits above
+  the page `BlocProvider`, so sheet `context.read` cannot see the cubit.
+- How it was fixed:
+  Capture cubit from page context; wrap sheet child with
+  `BlocProvider.value`. Same pattern as chat sheets.
+- Pattern:
+  `showModalBottomSheet` / adaptive sheets do not inherit page-scoped
+  InheritedWidgets from under the navigator.
+- Preventive rule:
+  Before opening a sheet/dialog that needs a feature Cubit, re-provide with
+  `BlocProvider.value`. Guard: `tool/check_modal_bloc_provider.sh`. Widget test
+  must open the real sheet and assert no exception.
+- Evidence or affected files:
+  `social_feed_demo_page.dart`, `social_feed_comment_composer.dart`,
+  `tool/check_modal_bloc_provider.sh`,
+  `docs/changes/2026-08-21_modal_bloc_provider_guard.md`
+
 ### 2026-08-17 - material_ui localizations vs flutter_localizations in tests
 
 - What went wrong:

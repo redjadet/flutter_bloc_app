@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **109** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **80** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **111** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **81** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -292,7 +292,7 @@ Long-form examples: [`guides_context_async.md`](guides_context_async.md).
 
 ### State, layout, memory (checklist; detail in guide shards)
 
-- **`check_freezed_preferred.sh`**, **`check_cubit_isclosed.sh`**, **`check_unguarded_null_assertion.sh`**, **`check_row_text_overflow.sh`**, **`check_row_action_overflow.sh`**: State/layout guards — [`guides_state_layout.md`](guides_state_layout.md)
+- **`check_freezed_preferred.sh`**, **`check_cubit_isclosed.sh`**, **`check_unguarded_null_assertion.sh`**, **`check_row_text_overflow.sh`**, **`check_row_action_overflow.sh`**, **`check_modal_bloc_provider.sh`**: State/layout guards — [`guides_state_layout.md`](guides_state_layout.md)
 - **`check_memory_unclosed_streams.sh`**, **`check_memory_missing_dispose.sh`**: Stream/subscription and dispose heuristics — [`guides_memory_typography.md`](guides_memory_typography.md)
 
 ### Supplemental and adjacent scripts
@@ -301,7 +301,7 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 
 | Script | Typical invocation | Purpose |
 | --- | --- | --- |
-| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs; RequestIdGuard/chat/call supersession, stream/cache hardening, IoT offline-first pull/setValue windows, and realtime trade-id paths run before coverage when selected); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race and data-integrity bugs |
+| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs; RequestIdGuard/chat/call supersession, stream/cache hardening, IoT offline-first pull/setValue windows, realtime trade-id paths, and Social Feed state-driven scenario controls run before coverage when selected); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race, data-integrity, and state-to-UI synchronization bugs |
 | `check_action_bar_layout.sh` | `./bin/checklist` when `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS` is `auto` or `1` | Widget tests for action-bar / icon-label row layout regressions |
 | `check_docs_gardening.sh` | `./bin/checklist-fast`, docs/tooling lanes | Doc link rot + `validate_validation_docs.sh` |
 | `check_design_md.sh` | Design/agent lane | Google DesignMD lint on root [`DESIGN.md`](../../DESIGN.md) |
@@ -320,6 +320,7 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 | `skill_vendor_plugin_inventory.dart` | Manual | Dart entry for vendor plugin audit — [`operations_host_skills.md`](operations_host_skills.md) |
 | `check_todo_keyboard_layout.sh` | Manual | Todo keyboard layout regression lane |
 | `check_row_action_overflow_fixtures.sh` | Self-test for `check_row_action_overflow.sh` | Fixture proof only (not a product guard) |
+| `check_modal_bloc_provider_fixtures.sh` | Self-test for `check_modal_bloc_provider.sh` | Fixture proof only (not a product guard) |
 | `check_domain_wire_leaks.sh` | Manual / DTO boundary PRs | Warn-only domain `fromJson`/`toJson` scan (AP-11) |
 
 Report-only / optional (also in Architecture section above): `check_feature_barrel_exports.sh`, `check_transcript_budgets.sh`, `check_domain_wire_leaks.sh`.

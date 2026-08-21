@@ -66,13 +66,18 @@ class _SocialFeedDemoPageState extends State<SocialFeedDemoPage> {
             tooltip: l10n.socialFeedDemoScenarioTitle,
             onPressed: () {
               // check-ignore: side_effects_build - user gesture callback.
+              final SocialFeedCubit cubit = context.read<SocialFeedCubit>();
               unawaited(
                 showModalBottomSheet<void>(
                   context: context,
-                  builder: (sheetContext) => const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: SocialFeedScenarioControls(),
-                  ),
+                  builder: (sheetContext) =>
+                      BlocProvider<SocialFeedCubit>.value(
+                        value: cubit,
+                        child: const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SocialFeedScenarioControls(),
+                        ),
+                      ),
                 ),
               );
             },

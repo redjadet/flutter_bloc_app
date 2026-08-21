@@ -267,6 +267,21 @@ void registerSocialFeedDemoIntegrationFlow() {
 
       await tapAndPump(
         tester,
+        find.byKey(const ValueKey('social-feed-scenario-button')),
+      );
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('social-feed-scenario-controls')),
+      );
+      expect(
+        find.byKey(const ValueKey('social-feed-scenario-controls')),
+        findsOneWidget,
+      );
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      await tapAndPump(
+        tester,
         find.byKey(const ValueKey('social-feed-like-post-060')),
       );
     },

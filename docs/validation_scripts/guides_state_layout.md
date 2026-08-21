@@ -120,6 +120,39 @@ stream.listen((data) {
 
 ---
 
+### `check_modal_bloc_provider.sh`
+
+**Purpose**: Catches modal / adaptive bottom sheets that read a Cubit/Bloc from
+overlay context without `BlocProvider.value` (classic `ProviderNotFoundException`
+when the page provider sits under the navigator).
+
+**What it checks**:
+
+- `showModalBottomSheet` / `showAdaptiveModalBottomSheet` /
+  `PlatformAdaptive.showAdaptiveModalBottomSheet` in `lib` / `apps/mobile/lib`
+- Files that import `flutter_bloc`, `ilkersevim_type_safe_bloc`, or `cubit_helpers`
+- Fails when the show* call has a `builder` and either reads/watches a Cubit or
+  mounts a non-layout custom root widget, without `BlocProvider.value` in the
+  same call
+- Self-test: `tool/check_modal_bloc_provider_fixtures.sh` via
+  `tool/fixtures/modal_bloc_provider/`
+
+**Why it matters**:
+
+- Overlay routes do not inherit page-scoped providers; scenario sheets and comment
+  composers that `context.read` without re-provide crash at open/submit
+
+**Regression tests**:
+`test/features/social_feed_demo/presentation/pages/social_feed_demo_page_test.dart`
+(via `tool/check_regression_guards.sh`).
+
+**Env**: `CHECK_MODAL_BLOC_PROVIDER_MODE=fail|warn` (default `fail`).
+
+**Suppression**: `// modal_bloc_provider:ignore <reason>` on the show* line or
+the line above (e.g. data-only sheets that pass models via constructor).
+
+---
+
 ### `check_action_bar_layout.sh`
 
 **Purpose**: Runs focused widget tests for `OverflowBar` and staff proof signature action layout at 320–360dp widths.

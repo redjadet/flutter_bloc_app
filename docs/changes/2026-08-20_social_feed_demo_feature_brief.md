@@ -43,6 +43,9 @@ executable proof (`SF-ARCH-01`, `SF-SCALE-01`, `SF-TEST-01`, `SF-SEC-01`,
 - Regression capture: semantic labels use an explicit container so nested
   `IconButton` semantics cannot absorb the liked/toggled state; the page test
   asserts the keyed feed delegate, not the independent wide-layout rail list.
+- The scenario-sheet switch derives its value from Cubit state and emits the
+  offline value before reconnect work. The widget test keeps this no-reopen
+  state-to-UI contract executable.
 
 ## Tests (executable contract — RED first)
 
