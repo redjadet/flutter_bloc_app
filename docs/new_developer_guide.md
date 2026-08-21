@@ -187,6 +187,7 @@ Use these docs while implementing:
 - [Validation Scripts](validation_scripts.md)
 - [Testing Overview](testing_overview.md)
 - [Code Generation Guide](engineering/code_generation_guide.md)
+- [AGENTS.md](../AGENTS.md) + [Skill routing](ai/skill_routing.md) + [Agent quick reference](agents_quick_reference.md) when an AI agent (or you) is driving the change — cold-start map and validation chooser
 
 ## 5. Development workflow
 
@@ -237,6 +238,7 @@ Testing detail lives in:
 
 ## What to read next
 
+- [AGENTS.md](../AGENTS.md) — thin agent/human map (skills + validation pointers)
 - [Case studies](case_studies/README.md)
 - [Feature Overview](feature_overview.md)
 - [Architecture Details](architecture_details.md)

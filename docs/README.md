@@ -33,6 +33,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](features/staff_app_demo_walkthrough.md),
   [`online_therapy_demo/README.md`](online_therapy_demo/README.md),
+  [`features/social_feed_demo.md`](features/social_feed_demo.md),
   [`features/realtime_market.md`](features/realtime_market.md),
   [`features/iot_ble.md`](features/iot_ble.md),
   [`features/counter_outcome_brief.md`](features/counter_outcome_brief.md)
@@ -183,8 +184,10 @@ root when an existing category applies.
 - [`ai_decision_workbench.md`](features/ai_decision_workbench.md)
 - [`staff_app_demo_walkthrough.md`](features/staff_app_demo_walkthrough.md)
 - [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
+- [`features/social_feed_demo.md`](features/social_feed_demo.md)
 - [`features/in_app_purchase_demo.md`](features/in_app_purchase_demo.md)
 - [`features/iot_ble.md`](features/iot_ble.md)
+- [`features/realtime_market.md`](features/realtime_market.md)
 - [`fcm_demo_integration.md`](integrations/fcm_demo_integration.md)
 - [`case_studies/README.md`](case_studies/README.md)
 - [`genui_demo_user_guide.md`](features/genui_demo_user_guide.md)

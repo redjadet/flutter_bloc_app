@@ -31,4 +31,4 @@ cd apps/mobile && flutter test test/features/social_feed_demo
 
 ## Deep guide
 
-See [`docs/features/social_feed_demo.md`](../../../../../../docs/features/social_feed_demo.md).
+See [`docs/features/social_feed_demo.md`](../../../../../docs/features/social_feed_demo.md).

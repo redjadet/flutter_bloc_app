@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-21_docs_skill_consistency_indexes.md`](2026-08-21_docs_skill_consistency_indexes.md): Doc/skill index + host-availability consistency (AI/features indexes, skill routing, CODEMAP, onboarding pointers).
 - [`2026-08-21_modal_bloc_provider_guard.md`](2026-08-21_modal_bloc_provider_guard.md): Modal sheet missing `BlocProvider.value` → static guard + social-feed regression.
 - [`2026-08-20_social_feed_demo_feature_brief.md`](2026-08-20_social_feed_demo_feature_brief.md): Credential-free `/social-feed-demo` Flutter judgment guidance feed (cursor paging, offline queue, optimistic mutations, realtime banner).
 - [`2026-08-20_macos_telemetry_event_channel_crash.md`](2026-08-20_macos_telemetry_event_channel_crash.md): macOS native showcase telemetry skips `makeBackgroundTaskQueue` (relay abort on launch).

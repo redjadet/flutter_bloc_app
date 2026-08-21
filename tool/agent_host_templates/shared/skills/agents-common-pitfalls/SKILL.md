@@ -18,7 +18,7 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | Flutter/UI imports in `domain/` | `RISK-ARCH-LAYER` | `agents-feature-delivery`; `check_clean_architecture_imports.sh` |
 | Copy legacy cubit layout (`cubits/`, root cubits) | `RISK-ARCH-LAYER` | [`reference_features.md`](../../../../../docs/architecture/reference_features.md); `presentation/cubit/` |
 | MVVM outside presentation (`viewmodels/`, repo in ViewModel folder) | `RISK-ARCH-LAYER` | [`clean_architecture.md`](../../../../../docs/clean_architecture.md) § Architecture skeleton; [`feature_structure_contract.md`](../../../../../docs/architecture/feature_structure_contract.md) |
-| `context.read` / `BlocProvider.of` | `RISK-BLOC-DIVERGENCE` | `type-safe-bloc-access`; `context.cubit<T>()` |
+| `context.read` / `BlocProvider.of` | `RISK-BLOC-DIVERGENCE` | Global skill `type-safe-bloc-access` if installed; else [`bloc_standards.md`](../../../../../docs/bloc_standards.md) + `context.cubit<T>()` |
 | Emit after `close()` or leaked subscriptions | `RISK-ASYNC-LIFECYCLE` | `agents-canonical-rules-async`; cancel in `close()` |
 | `context` after `await` without `mounted` | `RISK-ASYNC-LIFECYCLE` | Guard `mounted`; keep side effects in Cubit |
 | Remote fetch overwrites offline-pending local | `RISK-OFFLINE-OVERWRITE` | `agents-shared-patterns`; offline adoption guide |

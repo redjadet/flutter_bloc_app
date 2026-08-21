@@ -19,8 +19,16 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
   `agents-validation-testing`, `agents-principles-baseline`,
   `agents-canonical-rules*`, `agents-common-pitfalls`, `agents-modularity`,
   `agents-shared-patterns`, `agents-figma`, `figma-this-repo`,
-  `agents-supabase`, small workflow routers, and
+  `agents-supabase`, small workflow routers, `gh-watch-merge-pr`, and
   `flutter-cross-platform-modern`.
+- Cursor-only templates (not in shared): `agents-meta-behavior`,
+  `agents-global-skills-setup`, `agents-cursor-integration`. Codex uses the
+  same owner docs; see [`docs/ai/skill_routing.md`](../ai/skill_routing.md)
+  § Host availability.
+- Global/vendor skills (`type-safe-bloc-access`, `gh-fix-ci`, process skills)
+  live under host skill homes — install via `./bin/agent-maintain find/install`
+  when missing; never treat absence as a blocker if the owner doc or `gh`
+  CLI covers the job.
 - Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
 - After host-template changes: `./bin/agent-maintain after-host-edit` (or inspect `./tool/sync_agent_assets.sh --dry-run`, then `./bin/agent-maintain sync --apply` + strict drift). Reload Cursor after `--apply`.
 - Before claiming host/docs/tooling work done: `./bin/agent-maintain closeout` (scope-based; see [`host_maintenance_automation.md`](host_maintenance_automation.md)).

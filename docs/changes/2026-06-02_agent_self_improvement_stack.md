@@ -10,10 +10,11 @@ shard and keeps mechanical anchors only.
 
 ## Why
 
-The external note at
-[`/Users/ilkersevim/Documents/self_improving_coding_agents.md`](../../../../../../Documents/self_improving_coding_agents.md) matched existing
-repo rules around verifier-first improvement, but added useful boundaries for
-which self-improvement levels are safe in normal production codebases.
+The external host note
+`self_improving_coding_agents` under `~/Documents/` (not in this repo)
+matched existing repo rules around verifier-first improvement, but added
+useful boundaries for which self-improvement levels are safe in normal
+production codebases.
 
 ## Verification
 
