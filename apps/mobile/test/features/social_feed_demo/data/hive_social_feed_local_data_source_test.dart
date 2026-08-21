@@ -1,4 +1,6 @@
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_local_data_source.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
@@ -120,5 +122,37 @@ void main() {
       ],
     });
     expect(await local.readPage(SocialFeedViewer.alex), isNull);
+  });
+
+  test('shared comment threads survive hive round-trip', () async {
+    await local.saveCommentThreads(<String, List<SocialFeedComment>>{
+      'post-060': <SocialFeedComment>[
+        SocialFeedComment(
+          id: 'c-alex',
+          postId: 'post-060',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'From Alex',
+          createdAt: now,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+        SocialFeedComment(
+          id: 'c-sam',
+          postId: 'post-060',
+          viewerId: SocialFeedViewer.sam.id,
+          body: 'From Sam',
+          createdAt: now.add(const Duration(minutes: 1)),
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+      ],
+    });
+
+    final Map<String, List<SocialFeedComment>>? threads = await local
+        .readCommentThreads();
+    expect(threads, isNotNull);
+    expect(threads!['post-060'], hasLength(2));
+    expect(threads['post-060']!.map((c) => c.body), <String>[
+      'From Alex',
+      'From Sam',
+    ]);
   });
 }

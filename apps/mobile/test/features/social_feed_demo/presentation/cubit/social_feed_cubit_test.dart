@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_realtime_source.dart';
@@ -117,6 +119,41 @@ void main() {
     final SocialFeedReady ready = cubit.state as SocialFeedReady;
     expect(ready.data.posts.first.isLikedByMe, isFalse);
     expect(ready.data.effect, isA<SocialFeedMutationRejectedEffect>());
+    await cubit.close();
+  });
+
+  test('submitComment bumps commentCount and keeps it after sync', () async {
+    final SocialFeedPost base = post(id: 'p1', comments: 2);
+    final _FakeRepo repo = _FakeRepo(
+      remote: SocialFeedPage(
+        posts: <SocialFeedPost>[base],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.remote,
+        fetchedAt: DateTime.utc(2026, 8, 20),
+      ),
+      commentResult: SocialFeedCommentSynced(
+        // Simulate a stale remote projection that forgot the bump.
+        post: base.copyWith(serverRevision: 2),
+        mutationId: 'will-be-ignored',
+      ),
+    );
+    final SocialFeedCubit cubit = SocialFeedCubit(
+      repository: repo,
+      realtimeSource: _FakeRealtime(),
+      scenario: _FakeScenario(),
+      clock: () => DateTime.utc(2026, 8, 20, 12),
+    );
+    await cubit.load();
+    final bool accepted = await cubit.submitComment(
+      postId: 'p1',
+      body: 'Hello thread',
+    );
+    expect(accepted, isTrue);
+    final SocialFeedReady ready = cubit.state as SocialFeedReady;
+    expect(ready.data.posts.first.commentCount, 3);
+    expect(ready.data.commentsByPostId['p1'], hasLength(3));
+    expect(ready.data.pendingCommentsByPostId['p1'], isNull);
     await cubit.close();
   });
 
@@ -266,11 +303,17 @@ class _FakeRealtime implements SocialFeedRealtimeSource {
 }
 
 class _FakeRepo implements SocialFeedRepository {
-  _FakeRepo({this.cached, required this.remote, this.likeResult});
+  _FakeRepo({
+    this.cached,
+    required this.remote,
+    this.likeResult,
+    this.commentResult,
+  });
 
   SocialFeedPage? cached;
   SocialFeedPage remote;
   SocialFeedLikeResult? likeResult;
+  SocialFeedCommentResult? commentResult;
   int commentCalls = 0;
   final _FakeLease lease = _FakeLease();
 
@@ -313,12 +356,42 @@ class _FakeRepo implements SocialFeedRepository {
     required String mutationId,
   }) async {
     commentCalls += 1;
-    return SocialFeedCommentSynced(
-      post: remote.posts.first.copyWith(
-        commentCount: remote.posts.first.commentCount + 1,
-      ),
-      mutationId: mutationId,
-    );
+    return commentResult ??
+        SocialFeedCommentSynced(
+          post: remote.posts.first.copyWith(
+            commentCount: remote.posts.first.commentCount + 1,
+          ),
+          mutationId: mutationId,
+        );
+  }
+
+  @override
+  Future<Map<String, List<SocialFeedComment>>> commentsForPostIds({
+    required Iterable<String> postIds,
+  }) async {
+    return <String, List<SocialFeedComment>>{
+      for (final String postId in postIds)
+        postId: <SocialFeedComment>[
+          for (int i = 0; i < _seedCommentCountFor(postId); i++)
+            SocialFeedComment(
+              id: '$postId-seed-$i',
+              postId: postId,
+              viewerId: 'author-a',
+              body: 'Seed $i',
+              createdAt: DateTime.utc(2026, 8, 1, 0, i + 1),
+              syncStatus: SocialFeedMutationStatus.synced,
+            ),
+        ],
+    };
+  }
+
+  int _seedCommentCountFor(String postId) {
+    for (final SocialFeedPost post in remote.posts) {
+      if (post.id == postId) {
+        return post.commentCount;
+      }
+    }
+    return 0;
   }
 
   @override

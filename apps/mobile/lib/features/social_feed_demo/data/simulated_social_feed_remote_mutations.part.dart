@@ -74,14 +74,27 @@ extension SimulatedSocialFeedRemoteMutations
     if (_scenario.consumeRetryableDispatchFailure(viewer: viewer)) {
       throw const SocialFeedUnknownFailure();
     }
-    // body intentionally unused after validation — never log it.
-    _commentExtras[postId] = (_commentExtras[postId] ?? 0) + 1;
     final SocialFeedPost? base = _find(postId);
     if (base == null) {
       throw const SocialFeedUnknownFailure();
     }
+    final List<SocialFeedComment> thread =
+        _commentsByPostId.putIfAbsent(
+          postId,
+          () => <SocialFeedComment>[],
+        )..add(
+          SocialFeedComment(
+            id: mutationId,
+            postId: postId,
+            viewerId: viewer.id,
+            body: body,
+            createdAt: _clock().toUtc(),
+            syncStatus: SocialFeedMutationStatus.synced,
+          ),
+        );
     final SocialFeedPost bumped = base.copyWith(
       serverRevision: base.serverRevision + 1,
+      commentCount: thread.length,
     );
     _replace(bumped);
     final SocialFeedPost projected = _project(viewer, bumped);
@@ -95,8 +108,7 @@ extension SimulatedSocialFeedRemoteMutations
   void resetViewerPersonalization(SocialFeedViewer viewer) {
     _likedByViewer.remove(viewer.id);
     _mutationAckCache.remove(viewer.id);
-    // Comment extras are shared content counts from demo mutations; leave seed
-    // extras tied to posts but clear viewer-only like state.
+    // Shared comment threads stay; only viewer-scoped likes clear.
   }
 
   SocialFeedPost? _find(String postId) {

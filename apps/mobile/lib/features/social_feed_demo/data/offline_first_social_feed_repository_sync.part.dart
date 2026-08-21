@@ -73,6 +73,7 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   OfflineFirstSocialFeedRepository repo,
   SocialFeedViewer viewer,
 ) async {
+  await repo._ensureCommentsHydrated();
   if (!repo._scenario.isSimulatedOnline) {
     final List<SocialFeedMutationDto> q = await repo._queue.readQueue(viewer);
     final List<SocialFeedMutationDto> a = await repo._queue.readNeedsAttention(
@@ -118,6 +119,7 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
           body: head.commentBody ?? '',
           mutationId: head.idempotencyKey,
         );
+        await repo._persistCommentThreads();
       }
       await repo._queue.removeFromQueue(
         viewer: viewer,

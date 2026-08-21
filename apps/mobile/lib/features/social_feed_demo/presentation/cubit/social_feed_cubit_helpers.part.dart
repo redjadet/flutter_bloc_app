@@ -21,11 +21,62 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
       if (clearPending) {
         pending.remove(post.id);
       }
+      // Keep badge in sync with known thread rows (stored + still-pending).
+      final int knownCount = _knownCommentCount(d, post.id);
+      final SocialFeedPost resolved = post.commentCount < knownCount
+          ? post.copyWith(commentCount: knownCount)
+          : post;
       return d.copyWith(
-        posts: d.posts.map((p) => p.id == post.id ? post : p).toList(),
+        posts: d.posts.map((p) => p.id == post.id ? resolved : p).toList(),
         pendingPostIds: pending,
       );
     });
+  }
+
+  int _knownCommentCount(SocialFeedReadyData data, String postId) {
+    final Set<String> ids = <String>{
+      for (final SocialFeedComment c
+          in data.commentsByPostId[postId] ?? const <SocialFeedComment>[])
+        c.id,
+      for (final SocialFeedComment c
+          in data.pendingCommentsByPostId[postId] ??
+              const <SocialFeedComment>[])
+        c.id,
+    };
+    return ids.length;
+  }
+
+  /// Badge/thread share one source of truth: stored (+ pending) comment rows.
+  List<SocialFeedPost> _postsAlignedToComments({
+    required List<SocialFeedPost> posts,
+    required Map<String, List<SocialFeedComment>> commentsByPostId,
+    Map<String, List<SocialFeedComment>> pendingCommentsByPostId =
+        const <String, List<SocialFeedComment>>{},
+  }) {
+    return <SocialFeedPost>[
+      for (final SocialFeedPost post in posts)
+        _postAlignedToComments(
+          post: post,
+          stored: commentsByPostId[post.id] ?? const <SocialFeedComment>[],
+          pending:
+              pendingCommentsByPostId[post.id] ?? const <SocialFeedComment>[],
+        ),
+    ];
+  }
+
+  SocialFeedPost _postAlignedToComments({
+    required SocialFeedPost post,
+    required List<SocialFeedComment> stored,
+    required List<SocialFeedComment> pending,
+  }) {
+    final Set<String> ids = <String>{
+      for (final SocialFeedComment c in stored) c.id,
+      for (final SocialFeedComment c in pending) c.id,
+    };
+    if (ids.length == post.commentCount) {
+      return post;
+    }
+    return post.copyWith(commentCount: ids.length);
   }
 
   void _clearPendingComment(
@@ -63,6 +114,63 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     });
   }
 
+  void _promotePendingComment(String postId, String mutationId) {
+    _emitReadyPatch((d) {
+      final Map<String, List<SocialFeedComment>> pendingMap =
+          Map<String, List<SocialFeedComment>>.from(d.pendingCommentsByPostId);
+      final List<SocialFeedComment> pendingList = List<SocialFeedComment>.from(
+        pendingMap[postId] ?? const <SocialFeedComment>[],
+      );
+      SocialFeedComment? promoted;
+      final int idx = pendingList.indexWhere((c) => c.id == mutationId);
+      if (idx >= 0) {
+        promoted = pendingList
+            .removeAt(idx)
+            .copyWith(
+              syncStatus: SocialFeedMutationStatus.synced,
+            );
+      }
+      if (pendingList.isEmpty) {
+        pendingMap.remove(postId);
+      } else {
+        pendingMap[postId] = pendingList;
+      }
+      final Map<String, List<SocialFeedComment>> storedMap =
+          Map<String, List<SocialFeedComment>>.from(d.commentsByPostId);
+      if (promoted != null) {
+        final List<SocialFeedComment> stored = List<SocialFeedComment>.from(
+          storedMap[postId] ?? const <SocialFeedComment>[],
+        );
+        if (!stored.any((c) => c.id == mutationId)) {
+          stored.add(promoted);
+        }
+        storedMap[postId] = stored;
+      }
+      final int knownCount = () {
+        final Set<String> ids = <String>{
+          for (final SocialFeedComment c
+              in storedMap[postId] ?? const <SocialFeedComment>[])
+            c.id,
+          for (final SocialFeedComment c
+              in pendingMap[postId] ?? const <SocialFeedComment>[])
+            c.id,
+        };
+        return ids.length;
+      }();
+      return d.copyWith(
+        pendingCommentsByPostId: pendingMap,
+        commentsByPostId: storedMap,
+        posts: d.posts
+            .map(
+              (p) => p.id == postId && p.commentCount != knownCount
+                  ? p.copyWith(commentCount: knownCount)
+                  : p,
+            )
+            .toList(),
+      );
+    });
+  }
+
   void _emitEffect(SocialFeedEffect effect) {
     _emitReadyPatch(
       (d) => d.copyWith(effect: effect, effectId: d.effectId + 1),
@@ -82,6 +190,24 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
 
   bool _isCurrentLease(int generation, SocialFeedViewer current) =>
       !isClosed && generation == _generation && current.id == viewer.id;
+
+  Future<Map<String, List<SocialFeedComment>>> _commentsForPosts(
+    Iterable<SocialFeedPost> posts,
+  ) {
+    return _repository.commentsForPostIds(
+      postIds: posts.map((post) => post.id),
+    );
+  }
+
+  Map<String, List<SocialFeedComment>> _mergeCommentMaps(
+    Map<String, List<SocialFeedComment>> existing,
+    Map<String, List<SocialFeedComment>> incoming,
+  ) {
+    if (incoming.isEmpty) {
+      return existing;
+    }
+    return <String, List<SocialFeedComment>>{...existing, ...incoming};
+  }
 
   Future<void> _acquireLeases(
     SocialFeedViewer current, {

@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed
 import 'package:flutter_bloc_app/features/social_feed_demo/data/simulated_social_feed_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/simulated_social_feed_scenario_controller.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_mutation_dto.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_failure.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_merge_policy.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
@@ -13,9 +14,10 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_po
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_repository.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 
+part 'offline_first_social_feed_repository_comments.part.dart';
 part 'offline_first_social_feed_repository_mutations.part.dart';
-part 'offline_first_social_feed_repository_sync.part.dart';
 part 'offline_first_social_feed_repository_replay.part.dart';
+part 'offline_first_social_feed_repository_sync.part.dart';
 
 class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   OfflineFirstSocialFeedRepository({
@@ -35,11 +37,18 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   final SocialFeedMergePolicy _mergePolicy;
 
   final Map<String, _ViewerReplay> _replays = <String, _ViewerReplay>{};
+  bool _commentsHydrated = false;
+  Future<void>? _commentsHydrateInFlight;
+
+  Future<void> _ensureCommentsHydrated() => _ensureCommentsHydratedImpl(this);
+
+  Future<void> _persistCommentThreads() => _persistCommentThreadsImpl(this);
 
   @override
   Future<SocialFeedPage?> readCachedPage({
     required SocialFeedViewer viewer,
   }) async {
+    await _ensureCommentsHydrated();
     final SocialFeedPage? cached = await _local.readPage(viewer);
     if (cached == null) {
       return null;
@@ -48,40 +57,15 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   }
 
   @override
-  Future<SocialFeedPage> refresh({required SocialFeedViewer viewer}) async {
-    final SocialFeedPage remotePage = await _remote.fetchPage(
-      viewer: viewer,
-      isRefresh: true,
-    );
-    // TOCTOU: final local re-read before persistence.
-    final SocialFeedPage? existing = await _local.readPage(viewer);
-    final List<SocialFeedPost> merged = _mergePolicy.dedupeById(
-      <SocialFeedPost>[
-        ...remotePage.posts,
-        if (existing != null) ...existing.posts,
-      ],
-    );
-    final SocialFeedPage page = SocialFeedPage(
-      posts: merged.take(_local.maxCachedPosts).toList(),
-      nextCursor:
-          remotePage.nextCursor ?? (merged.isNotEmpty ? merged.last.id : null),
-      hasMore: true,
-      source: SocialFeedDataSource.remote,
-      fetchedAt: remotePage.fetchedAt,
-    );
-    try {
-      await _local.savePage(viewer, page);
-    } on Object {
-      // Keep in-memory result; persistence degraded is surfaced by Cubit.
-    }
-    return _overlayPending(viewer, page);
-  }
+  Future<SocialFeedPage> refresh({required SocialFeedViewer viewer}) =>
+      _refreshImpl(this, viewer: viewer);
 
   @override
   Future<SocialFeedPage> loadMore({
     required SocialFeedViewer viewer,
     required String cursor,
   }) async {
+    await _ensureCommentsHydrated();
     final SocialFeedPage remotePage = await _remote.fetchPage(
       viewer: viewer,
       cursor: cursor,
@@ -117,6 +101,14 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
     body: body,
     mutationId: mutationId,
   );
+
+  @override
+  Future<Map<String, List<SocialFeedComment>>> commentsForPostIds({
+    required Iterable<String> postIds,
+  }) async {
+    await _ensureCommentsHydrated();
+    return _remote.commentsForPostIds(postIds);
+  }
 
   @override
   Future<SocialFeedSyncLease> acquireSync({

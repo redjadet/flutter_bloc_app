@@ -1,6 +1,8 @@
 import 'package:flutter_bloc_app/features/social_feed_demo/data/simulated_social_feed_scenario_controller.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_seed_data.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_failure.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
@@ -18,6 +20,7 @@ class SimulatedSocialFeedRemoteDataSource {
     this._seedData = const SocialFeedSeedData(),
   }) {
     _posts = _seedData.build(clock: _clock);
+    _seedComments();
   }
 
   final SimulatedSocialFeedScenarioController _scenario;
@@ -30,10 +33,34 @@ class SimulatedSocialFeedRemoteDataSource {
   final Map<String, Set<String>> _likedByViewer = <String, Set<String>>{};
   final Map<String, Map<String, SocialFeedPost>> _mutationAckCache =
       <String, Map<String, SocialFeedPost>>{};
-  final Map<String, int> _commentExtras = <String, int>{};
+
+  /// Shared demo comment threads (visible to every viewer).
+  final Map<String, List<SocialFeedComment>> _commentsByPostId =
+      <String, List<SocialFeedComment>>{};
 
   List<SocialFeedPost> get serverPosts =>
       List<SocialFeedPost>.unmodifiable(_posts);
+
+  void _seedComments() {
+    for (final SocialFeedPost post in _posts) {
+      final List<SocialFeedSeedComment> seeded = _seedData.commentsFor(
+        postId: post.id,
+        count: post.commentCount,
+        baseCreatedAt: post.createdAt,
+      );
+      _commentsByPostId[post.id] = <SocialFeedComment>[
+        for (final SocialFeedSeedComment comment in seeded)
+          SocialFeedComment(
+            id: comment.id,
+            postId: comment.postId,
+            viewerId: comment.authorId,
+            body: comment.body,
+            createdAt: comment.createdAt,
+            syncStatus: SocialFeedMutationStatus.synced,
+          ),
+      ];
+    }
+  }
 
   Future<void> _delay() async {
     if (latency > Duration.zero) {
@@ -44,7 +71,7 @@ class SimulatedSocialFeedRemoteDataSource {
 
   SocialFeedPost _project(SocialFeedViewer viewer, SocialFeedPost post) {
     final bool liked = _likedByViewer[viewer.id]?.contains(post.id) ?? false;
-    final int commentExtra = _commentExtras[post.id] ?? 0;
+    final int commentCount = _commentsByPostId[post.id]?.length ?? 0;
     var likeCount = post.likeCount;
     if (liked && !post.isLikedByMe) {
       likeCount += 1;
@@ -54,13 +81,59 @@ class SimulatedSocialFeedRemoteDataSource {
     return post.copyWith(
       isLikedByMe: liked,
       likeCount: likeCount,
-      commentCount: post.commentCount + commentExtra,
+      commentCount: commentCount,
     );
   }
 
   List<SocialFeedPost> _projected(SocialFeedViewer viewer) {
     return <SocialFeedPost>[
       for (final SocialFeedPost post in _posts) _project(viewer, post),
+    ];
+  }
+
+  List<SocialFeedComment> commentsForPost(String postId) {
+    return List<SocialFeedComment>.unmodifiable(
+      _commentsByPostId[postId] ?? const <SocialFeedComment>[],
+    );
+  }
+
+  Map<String, List<SocialFeedComment>> commentsForPostIds(
+    Iterable<String> postIds,
+  ) {
+    return <String, List<SocialFeedComment>>{
+      for (final String postId in postIds)
+        postId: List<SocialFeedComment>.from(
+          _commentsByPostId[postId] ?? const <SocialFeedComment>[],
+        ),
+    };
+  }
+
+  /// Full thread snapshot for Hive persistence (shared across viewers).
+  Map<String, List<SocialFeedComment>> exportCommentThreads() {
+    return <String, List<SocialFeedComment>>{
+      for (final MapEntry<String, List<SocialFeedComment>> entry
+          in _commentsByPostId.entries)
+        entry.key: List<SocialFeedComment>.from(entry.value),
+    };
+  }
+
+  /// Restore threads after process restart; aligns stored post commentCounts.
+  void replaceCommentThreads(Map<String, List<SocialFeedComment>> threads) {
+    _commentsByPostId
+      ..clear()
+      ..addAll(<String, List<SocialFeedComment>>{
+        for (final MapEntry<String, List<SocialFeedComment>> entry
+            in threads.entries)
+          entry.key: List<SocialFeedComment>.from(entry.value),
+      });
+    for (final SocialFeedPost post in _posts) {
+      _commentsByPostId.putIfAbsent(post.id, () => <SocialFeedComment>[]);
+    }
+    _posts = <SocialFeedPost>[
+      for (final SocialFeedPost post in _posts)
+        post.copyWith(
+          commentCount: _commentsByPostId[post.id]?.length ?? 0,
+        ),
     ];
   }
 
@@ -111,6 +184,9 @@ class SimulatedSocialFeedRemoteDataSource {
   /// (cursor remains last id of a prior page; later pages still continue).
   void insertTopPosts(List<SocialFeedPost> posts) {
     _posts = <SocialFeedPost>[...posts, ..._posts];
+    for (final SocialFeedPost post in posts) {
+      _commentsByPostId.putIfAbsent(post.id, () => <SocialFeedComment>[]);
+    }
   }
 
   List<SocialFeedPost> createRealtimePosts({

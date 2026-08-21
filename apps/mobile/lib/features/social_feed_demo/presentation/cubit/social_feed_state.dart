@@ -52,6 +52,10 @@ abstract class SocialFeedReadyData with _$SocialFeedReadyData {
     /// postId → mutationId for manual retry of dead-lettered ops.
     required Map<String, String> needsAttentionByPostId,
     required Map<String, List<SocialFeedComment>> pendingCommentsByPostId,
+
+    /// Shared seed + synced comment threads (survives viewer switch).
+    @Default(<String, List<SocialFeedComment>>{})
+    Map<String, List<SocialFeedComment>> commentsByPostId,
     SocialFeedEffect? effect,
     @Default(0) int effectId,
   }) = _SocialFeedReadyData;

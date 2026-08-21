@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed
 import 'package:flutter_bloc_app/features/social_feed_demo/data/offline_first_social_feed_repository.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/simulated_social_feed_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/simulated_social_feed_scenario_controller.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_repository.dart';
@@ -141,6 +142,37 @@ void main() {
     );
   });
 
+  test(
+    'refresh reconciles stale local commentCount to remote threads',
+    () async {
+      final SocialFeedPage first = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final SocialFeedPost head = first.posts.first;
+      final int remoteCount = head.commentCount;
+
+      await local.savePage(
+        SocialFeedViewer.alex,
+        SocialFeedPage(
+          posts: <SocialFeedPost>[
+            head.copyWith(commentCount: remoteCount + 5, serverRevision: 99),
+            ...first.posts.skip(1),
+          ],
+          nextCursor: first.nextCursor,
+          hasMore: first.hasMore,
+          source: SocialFeedDataSource.cache,
+          fetchedAt: first.fetchedAt,
+        ),
+      );
+
+      final SocialFeedPage refreshed = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      expect(refreshed.posts.first.id, head.id);
+      expect(refreshed.posts.first.commentCount, remoteCount);
+    },
+  );
+
   test('offline comment overlays once (no double increment)', () async {
     final SocialFeedPage page = await repository.refresh(
       viewer: SocialFeedViewer.alex,
@@ -185,5 +217,46 @@ void main() {
       await repository.pendingMutationCount(viewer: SocialFeedViewer.sam),
       0,
     );
+  });
+
+  test('submitted comments survive remote recreation (hot restart)', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+
+    await repository.addComment(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      body: 'Alex keeps this',
+      mutationId: 'persist-alex',
+    );
+    await repository.addComment(
+      viewer: SocialFeedViewer.sam,
+      postId: postId,
+      body: 'Sam keeps this',
+      mutationId: 'persist-sam',
+    );
+
+    await repository.dispose();
+    remote = SimulatedSocialFeedRemoteDataSource(
+      scenario: scenario,
+      clock: () => now,
+    );
+    repository = OfflineFirstSocialFeedRepository(
+      local: local,
+      queue: queue,
+      remote: remote,
+      scenario: scenario,
+      timerService: timer,
+    );
+
+    final Map<String, List<SocialFeedComment>> threads = await repository
+        .commentsForPostIds(postIds: <String>[postId]);
+    final List<String> bodies = threads[postId]!
+        .map((SocialFeedComment c) => c.body)
+        .toList();
+    expect(bodies, contains('Alex keeps this'));
+    expect(bodies, contains('Sam keeps this'));
   });
 }

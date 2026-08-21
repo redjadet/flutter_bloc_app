@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
@@ -113,6 +114,11 @@ abstract class SocialFeedRepository {
     required String postId,
     required String body,
     required String mutationId,
+  });
+
+  /// Shared comment threads for [postIds] (seed + submitted bodies).
+  Future<Map<String, List<SocialFeedComment>>> commentsForPostIds({
+    required Iterable<String> postIds,
   });
 
   Future<SocialFeedSyncLease> acquireSync({required SocialFeedViewer viewer});

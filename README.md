@@ -222,8 +222,8 @@ This file is the repo entrypoint only. Behavior, commands, and deep dives live i
 | --- | --- | --- |
 | <img src="apps/mobile/assets/screenshots/learn.png" alt="Learn" width="240" /> | <img src="apps/mobile/assets/screenshots/chat_list.png" alt="Chat list screen" width="240" /> | <img src="apps/mobile/assets/screenshots/igaming.png" alt="iGaming" width="240" /> |
 
-| Scapes |
-| --- |
-| <img src="apps/mobile/assets/screenshots/scapes.png" alt="Scapes screen" width="240" /> |
+| Scapes | Social feed |
+| --- | --- |
+| <img src="apps/mobile/assets/screenshots/scapes.png" alt="Scapes screen" width="240" /> | <img src="apps/mobile/assets/screenshots/social_feed.png" alt="Social feed demo" width="240" /> |
 
 <!-- markdownlint-enable MD033 -->

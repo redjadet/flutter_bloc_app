@@ -63,6 +63,7 @@ Future<SocialFeedCommentResult> _addCommentImpl(
   required String body,
   required String mutationId,
 }) async {
+  await repo._ensureCommentsHydrated();
   if (!repo._scenario.isSimulatedOnline) {
     try {
       await repo._queue.enqueueComment(
@@ -89,6 +90,7 @@ Future<SocialFeedCommentResult> _addCommentImpl(
       mutationId: mutationId,
     );
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
+    await repo._persistCommentThreads();
     return SocialFeedCommentSynced(post: post, mutationId: mutationId);
   } on SocialFeedRemoteRejection catch (e) {
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);

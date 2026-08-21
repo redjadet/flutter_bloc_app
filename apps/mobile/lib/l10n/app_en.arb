@@ -4420,6 +4420,8 @@
   "socialFeedDemoNotLiked": "Not liked",
   "socialFeedDemoComment": "Comment",
   "socialFeedDemoSubmitComment": "Submit comment",
+  "socialFeedDemoCommentsHeading": "Comments",
+  "socialFeedDemoNoComments": "No comments yet",
   "socialFeedDemoPending": "Pending",
   "socialFeedDemoMutationRejected": "Action rejected",
   "socialFeedDemoSimulatedOffline": "Simulated offline",

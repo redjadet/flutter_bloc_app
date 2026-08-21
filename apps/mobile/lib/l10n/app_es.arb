@@ -2595,6 +2595,8 @@
   "socialFeedDemoNotLiked": "Not liked",
   "socialFeedDemoComment": "Comment",
   "socialFeedDemoSubmitComment": "Submit comment",
+  "socialFeedDemoCommentsHeading": "Comentarios",
+  "socialFeedDemoNoComments": "Aún no hay comentarios",
   "socialFeedDemoPending": "Pending",
   "socialFeedDemoMutationRejected": "Action rejected",
   "socialFeedDemoSimulatedOffline": "Simulated offline",

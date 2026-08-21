@@ -14,11 +14,21 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
       return;
     }
     if (cached != null && cached.posts.isNotEmpty) {
+      final Map<String, List<SocialFeedComment>> cachedComments =
+          await _commentsForPosts(
+            cached.posts,
+          );
+      if (gen != _generation || isClosed) {
+        return;
+      }
       emit(
         SocialFeedState.ready(
           SocialFeedReadyData(
             viewer: current,
-            posts: cached.posts,
+            posts: _postsAlignedToComments(
+              posts: cached.posts,
+              commentsByPostId: cachedComments,
+            ),
             nextCursor: cached.nextCursor,
             refreshStatus: const SocialFeedRefreshStatus.loading(),
             pageStatus: const SocialFeedPageStatus.idle(),
@@ -34,6 +44,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
             pendingPostIds: const <String>{},
             needsAttentionByPostId: const <String, String>{},
             pendingCommentsByPostId: const <String, List<SocialFeedComment>>{},
+            commentsByPostId: cachedComments,
           ),
         ),
       );
@@ -60,11 +71,19 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
         if (gen != _generation || isClosed) {
           return;
         }
+        final Map<String, List<SocialFeedComment>> pageComments =
+            await _commentsForPosts(page.posts);
+        if (gen != _generation || isClosed) {
+          return;
+        }
         emit(
           SocialFeedState.ready(
             SocialFeedReadyData(
               viewer: current,
-              posts: page.posts,
+              posts: _postsAlignedToComments(
+                posts: page.posts,
+                commentsByPostId: pageComments,
+              ),
               nextCursor: page.nextCursor,
               refreshStatus: const SocialFeedRefreshStatus.idle(),
               pageStatus: page.hasMore
@@ -85,6 +104,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
               needsAttentionByPostId: const <String, String>{},
               pendingCommentsByPostId:
                   const <String, List<SocialFeedComment>>{},
+              commentsByPostId: pageComments,
             ),
           ),
         );
@@ -138,9 +158,18 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
       if (gen != _generation || isClosed) {
         return;
       }
+      final Map<String, List<SocialFeedComment>> pageComments =
+          await _commentsForPosts(page.posts);
+      if (gen != _generation || isClosed) {
+        return;
+      }
       _emitReadyPatch(
         (d) => d.copyWith(
-          posts: page.posts,
+          posts: _postsAlignedToComments(
+            posts: page.posts,
+            commentsByPostId: pageComments,
+            pendingCommentsByPostId: d.pendingCommentsByPostId,
+          ),
           nextCursor: page.nextCursor,
           refreshStatus: const SocialFeedRefreshStatus.idle(),
           isShowingCachedData: false,
@@ -149,6 +178,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
           pageStatus: page.hasMore
               ? const SocialFeedPageStatus.idle()
               : const SocialFeedPageStatus.exhausted(),
+          commentsByPostId: pageComments,
         ),
       );
     } on SocialFeedFailure catch (failure) {

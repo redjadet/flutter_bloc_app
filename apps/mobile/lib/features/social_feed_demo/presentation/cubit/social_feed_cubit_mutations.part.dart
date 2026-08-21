@@ -112,7 +112,7 @@ mixin _SocialFeedCubitMutations
       switch (result) {
         case SocialFeedCommentSynced(:final post):
           _replacePost(post, clearPending: true);
-          _clearPendingComment(postId, mutationId, synced: true);
+          _promotePendingComment(postId, mutationId);
           return true;
         case SocialFeedCommentQueued(:final post):
           _replacePost(post, clearPending: false);

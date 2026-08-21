@@ -1596,6 +1596,7 @@ CHECK_MESSAGES=(
   "Checking for unguarded null assertion (!) usage..."
   "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
   "Checking for Row+multi-button action overflow risk (OverflowBar, Wrap, or Expanded)..."
+  "Checking modal routes wrap BlocProvider.value when sheets need cubit access..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
   "Checking mutation success after request-id guard supersession (no false failure after write)..."
   "Checking feature brief/change note is linked for feature Dart changes..."

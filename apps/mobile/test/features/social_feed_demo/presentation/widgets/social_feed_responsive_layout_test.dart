@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_realtime_source.dart';
@@ -271,6 +272,11 @@ class _Repo implements SocialFeedRepository {
     post: (await refresh(viewer: viewer)).posts.first,
     mutationId: mutationId,
   );
+
+  @override
+  Future<Map<String, List<SocialFeedComment>>> commentsForPostIds({
+    required Iterable<String> postIds,
+  }) async => <String, List<SocialFeedComment>>{};
 
   @override
   Future<SocialFeedSyncLease> acquireSync({

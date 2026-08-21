@@ -3699,6 +3699,8 @@
   "socialFeedDemoNotLiked": "Not liked",
   "socialFeedDemoComment": "Comment",
   "socialFeedDemoSubmitComment": "Submit comment",
+  "socialFeedDemoCommentsHeading": "التعليقات",
+  "socialFeedDemoNoComments": "لا تعليقات بعد",
   "socialFeedDemoPending": "Pending",
   "socialFeedDemoMutationRejected": "Action rejected",
   "socialFeedDemoSimulatedOffline": "Simulated offline",

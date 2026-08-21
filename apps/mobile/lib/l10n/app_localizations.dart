@@ -6553,6 +6553,18 @@ abstract class AppLocalizations {
   /// **'Submit comment'**
   String get socialFeedDemoSubmitComment;
 
+  /// No description provided for @socialFeedDemoCommentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get socialFeedDemoCommentsHeading;
+
+  /// No description provided for @socialFeedDemoNoComments.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet'**
+  String get socialFeedDemoNoComments;
+
   /// No description provided for @socialFeedDemoPending.
   ///
   /// In en, this message translates to:

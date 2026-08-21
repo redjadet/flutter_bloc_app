@@ -2676,6 +2676,8 @@
   "socialFeedDemoNotLiked": "Beğenilmedi",
   "socialFeedDemoComment": "Yorum",
   "socialFeedDemoSubmitComment": "Yorum gönder",
+  "socialFeedDemoCommentsHeading": "Yorumlar",
+  "socialFeedDemoNoComments": "Henüz yorum yok",
   "socialFeedDemoPending": "Bekliyor",
   "socialFeedDemoMutationRejected": "İşlem reddedildi",
   "socialFeedDemoSimulatedOffline": "Simüle çevrimdışı",
