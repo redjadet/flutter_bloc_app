@@ -28,6 +28,15 @@ mixin _SocialFeedCubitPaging on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
             if (byId[p.id] case final SocialFeedPost latest) latest,
         ],
         bufferedRealtimePosts: const <SocialFeedPost>[],
+        commentsByPostId: _mergeCommentMaps(
+          d.commentsByPostId,
+          // Realtime posts start with empty threads; keep any prior entries.
+          <String, List<SocialFeedComment>>{
+            for (final SocialFeedPost post in buffered)
+              post.id:
+                  d.commentsByPostId[post.id] ?? const <SocialFeedComment>[],
+          },
+        ),
       ),
     );
   }
@@ -73,13 +82,28 @@ mixin _SocialFeedCubitPaging on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
           (p) => !data.posts.any((e) => e.id == p.id),
         ),
       ];
+      final Map<String, List<SocialFeedComment>> pageComments =
+          await _commentsForPosts(page.posts);
+      if (gen != _generation || isClosed) {
+        return;
+      }
+      final Map<String, List<SocialFeedComment>> mergedComments =
+          _mergeCommentMaps(
+            data.commentsByPostId,
+            pageComments,
+          );
       _emitReadyPatch(
         (d) => d.copyWith(
-          posts: merged,
+          posts: _postsAlignedToComments(
+            posts: merged,
+            commentsByPostId: mergedComments,
+            pendingCommentsByPostId: d.pendingCommentsByPostId,
+          ),
           nextCursor: page.nextCursor,
           pageStatus: page.hasMore
               ? const SocialFeedPageStatus.idle()
               : const SocialFeedPageStatus.exhausted(),
+          commentsByPostId: mergedComments,
         ),
       );
     } on SocialFeedFailure catch (failure) {

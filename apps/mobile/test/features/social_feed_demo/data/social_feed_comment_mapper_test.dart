@@ -19,6 +19,14 @@ void main() {
     );
     expect(comment.id, 'c1');
     expect(comment.syncStatus, SocialFeedMutationStatus.pending);
+    expect(mapper.toJson(comment), <String, Object?>{
+      'id': 'c1',
+      'postId': 'p1',
+      'viewerId': 'demo-alex',
+      'body': 'hello',
+      'createdAt': '2026-08-20T10:00:00.000Z',
+      'syncStatus': 'pending',
+    });
   });
 
   test('rejects unknown syncStatus in toDomain', () {

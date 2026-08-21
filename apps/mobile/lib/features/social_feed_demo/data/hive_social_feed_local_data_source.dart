@@ -1,11 +1,13 @@
+import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_comment_mapper.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_post_mapper.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 import 'package:storage/storage.dart';
 
-/// Viewer-scoped first-page cache. Schema mismatch invalidates only this
-/// feature/viewer snapshot — never shared Hive.
+/// Viewer-scoped first-page cache + shared comment threads. Schema mismatch
+/// invalidates only this feature snapshot — never shared Hive.
 class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
   HiveSocialFeedLocalDataSource({
     required super.hiveService,
@@ -13,14 +15,17 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
     this.schemaVersion = 1,
     this.maxCachedPosts = 50,
     this.staleAfter = const Duration(minutes: 15),
-    this._mapper = const SocialFeedPostMapper(),
+    this._postMapper = const SocialFeedPostMapper(),
+    this._commentMapper = const SocialFeedCommentMapper(),
   });
 
   static const String boxNameValue = 'social_feed_demo_v1';
   static const String _schemaNamespace = 'social_feed_cache:v1';
+  static const String _commentsKey = 'comments:v1';
 
   final DateTime Function() _clock;
-  final SocialFeedPostMapper _mapper;
+  final SocialFeedPostMapper _postMapper;
+  final SocialFeedCommentMapper _commentMapper;
   final int schemaVersion;
   final int maxCachedPosts;
   final Duration staleAfter;
@@ -69,7 +74,7 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
             final Map<String, Object?> json = item.map(
               (k, v) => MapEntry(k.toString(), v),
             );
-            posts.add(_mapper.toDomain(_mapper.fromJson(json)));
+            posts.add(_postMapper.toDomain(_postMapper.fromJson(json)));
           } on Object {
             // Ignore only the corrupt record.
           }
@@ -115,7 +120,7 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
         'fetchedAt': page.fetchedAt.toUtc().toIso8601String(),
         'nextCursor': continuation,
         'posts': <Map<String, Object?>>[
-          for (final SocialFeedPost post in trimmed) _mapper.toJson(post),
+          for (final SocialFeedPost post in trimmed) _postMapper.toJson(post),
         ],
       });
     });
@@ -124,6 +129,66 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
   Future<void> clearViewer(SocialFeedViewer viewer) async {
     await runWithBox((box) async {
       await safeDeleteKey(box, _key(viewer));
+    });
+  }
+
+  /// Shared across viewers (Alex/Sam see the same threads).
+  Future<Map<String, List<SocialFeedComment>>?> readCommentThreads() async {
+    try {
+      return await runWithBox((box) async {
+        final Object? raw = box.get(_commentsKey);
+        if (raw is! Map) {
+          return null;
+        }
+        final Map<String, List<SocialFeedComment>> threads =
+            <String, List<SocialFeedComment>>{};
+        raw.forEach((postId, value) {
+          if (postId == null || value is! List) {
+            return;
+          }
+          final List<SocialFeedComment> comments = <SocialFeedComment>[];
+          for (final Object? item in value) {
+            if (item is! Map) {
+              continue;
+            }
+            try {
+              final Map<String, Object?> json = item.map(
+                (k, v) => MapEntry(k.toString(), v),
+              );
+              comments.add(
+                _commentMapper.toDomain(_commentMapper.fromJson(json)),
+              );
+            } on Object {
+              // Ignore only the corrupt record.
+            }
+          }
+          threads[postId.toString()] = comments;
+        });
+        return threads;
+      });
+    } on Object {
+      return null;
+    }
+  }
+
+  Future<void> saveCommentThreads(
+    Map<String, List<SocialFeedComment>> threads,
+  ) async {
+    await runWithBox((box) async {
+      await box.put(_commentsKey, <String, Object?>{
+        for (final MapEntry<String, List<SocialFeedComment>> entry
+            in threads.entries)
+          entry.key: <Map<String, Object?>>[
+            for (final SocialFeedComment comment in entry.value)
+              _commentMapper.toJson(comment),
+          ],
+      });
+    });
+  }
+
+  Future<void> clearCommentThreads() async {
+    await runWithBox((box) async {
+      await safeDeleteKey(box, _commentsKey);
     });
   }
 }

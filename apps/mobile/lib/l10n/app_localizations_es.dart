@@ -3623,6 +3623,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get socialFeedDemoSubmitComment => 'Submit comment';
 
   @override
+  String get socialFeedDemoCommentsHeading => 'Comentarios';
+
+  @override
+  String get socialFeedDemoNoComments => 'Aún no hay comentarios';
+
+  @override
   String get socialFeedDemoPending => 'Pending';
 
   @override

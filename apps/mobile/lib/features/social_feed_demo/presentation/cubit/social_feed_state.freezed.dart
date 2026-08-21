@@ -182,7 +182,7 @@ return failure(_that.failure);case _:
 
 class SocialFeedRefreshIdle implements SocialFeedRefreshStatus {
   const SocialFeedRefreshIdle();
-
+  
 
 
 
@@ -214,7 +214,7 @@ String toString() {
 
 class SocialFeedRefreshLoading implements SocialFeedRefreshStatus {
   const SocialFeedRefreshLoading();
-
+  
 
 
 
@@ -246,7 +246,7 @@ String toString() {
 
 class SocialFeedRefreshFailure implements SocialFeedRefreshStatus {
   const SocialFeedRefreshFailure(this.failure);
-
+  
 
  final  SocialFeedFailure failure;
 
@@ -484,7 +484,7 @@ return exhausted();case _:
 
 class SocialFeedPageIdle implements SocialFeedPageStatus {
   const SocialFeedPageIdle();
-
+  
 
 
 
@@ -516,7 +516,7 @@ String toString() {
 
 class SocialFeedPageLoading implements SocialFeedPageStatus {
   const SocialFeedPageLoading();
-
+  
 
 
 
@@ -548,7 +548,7 @@ String toString() {
 
 class SocialFeedPageFailureStatus implements SocialFeedPageStatus {
   const SocialFeedPageFailureStatus(this.failure);
-
+  
 
  final  SocialFeedFailure failure;
 
@@ -614,7 +614,7 @@ as SocialFeedFailure,
 
 class SocialFeedPageExhausted implements SocialFeedPageStatus {
   const SocialFeedPageExhausted();
-
+  
 
 
 
@@ -806,7 +806,7 @@ return announcement(_that.code);case _:
 
 class SocialFeedMutationRejectedEffect implements SocialFeedEffect {
   const SocialFeedMutationRejectedEffect();
-
+  
 
 
 
@@ -838,7 +838,7 @@ String toString() {
 
 class SocialFeedAnnouncementEffect implements SocialFeedEffect {
   const SocialFeedAnnouncementEffect(this.code);
-
+  
 
  final  String code;
 
@@ -903,7 +903,8 @@ as String,
 mixin _$SocialFeedReadyData {
 
  SocialFeedViewer get viewer; List<SocialFeedPost> get posts; String? get nextCursor; SocialFeedRefreshStatus get refreshStatus; SocialFeedPageStatus get pageStatus; bool get isShowingCachedData; Duration get cacheAge; SocialFeedConnectionStatus get connectionStatus; bool get isSimulatedOffline; List<SocialFeedPost> get bufferedRealtimePosts; int get pendingMutationCount; int get needsAttentionCount; Set<String> get pendingPostIds;/// postId → mutationId for manual retry of dead-lettered ops.
- Map<String, String> get needsAttentionByPostId; Map<String, List<SocialFeedComment>> get pendingCommentsByPostId; SocialFeedEffect? get effect; int get effectId;
+ Map<String, String> get needsAttentionByPostId; Map<String, List<SocialFeedComment>> get pendingCommentsByPostId;/// Shared seed + synced comment threads (survives viewer switch).
+ Map<String, List<SocialFeedComment>> get commentsByPostId; SocialFeedEffect? get effect; int get effectId;
 /// Create a copy of SocialFeedReadyData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -914,16 +915,16 @@ $SocialFeedReadyDataCopyWith<SocialFeedReadyData> get copyWith => _$SocialFeedRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SocialFeedReadyData&&(identical(other.viewer, viewer) || other.viewer == viewer)&&const DeepCollectionEquality().equals(other.posts, posts)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor)&&(identical(other.refreshStatus, refreshStatus) || other.refreshStatus == refreshStatus)&&(identical(other.pageStatus, pageStatus) || other.pageStatus == pageStatus)&&(identical(other.isShowingCachedData, isShowingCachedData) || other.isShowingCachedData == isShowingCachedData)&&(identical(other.cacheAge, cacheAge) || other.cacheAge == cacheAge)&&(identical(other.connectionStatus, connectionStatus) || other.connectionStatus == connectionStatus)&&(identical(other.isSimulatedOffline, isSimulatedOffline) || other.isSimulatedOffline == isSimulatedOffline)&&const DeepCollectionEquality().equals(other.bufferedRealtimePosts, bufferedRealtimePosts)&&(identical(other.pendingMutationCount, pendingMutationCount) || other.pendingMutationCount == pendingMutationCount)&&(identical(other.needsAttentionCount, needsAttentionCount) || other.needsAttentionCount == needsAttentionCount)&&const DeepCollectionEquality().equals(other.pendingPostIds, pendingPostIds)&&const DeepCollectionEquality().equals(other.needsAttentionByPostId, needsAttentionByPostId)&&const DeepCollectionEquality().equals(other.pendingCommentsByPostId, pendingCommentsByPostId)&&(identical(other.effect, effect) || other.effect == effect)&&(identical(other.effectId, effectId) || other.effectId == effectId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SocialFeedReadyData&&(identical(other.viewer, viewer) || other.viewer == viewer)&&const DeepCollectionEquality().equals(other.posts, posts)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor)&&(identical(other.refreshStatus, refreshStatus) || other.refreshStatus == refreshStatus)&&(identical(other.pageStatus, pageStatus) || other.pageStatus == pageStatus)&&(identical(other.isShowingCachedData, isShowingCachedData) || other.isShowingCachedData == isShowingCachedData)&&(identical(other.cacheAge, cacheAge) || other.cacheAge == cacheAge)&&(identical(other.connectionStatus, connectionStatus) || other.connectionStatus == connectionStatus)&&(identical(other.isSimulatedOffline, isSimulatedOffline) || other.isSimulatedOffline == isSimulatedOffline)&&const DeepCollectionEquality().equals(other.bufferedRealtimePosts, bufferedRealtimePosts)&&(identical(other.pendingMutationCount, pendingMutationCount) || other.pendingMutationCount == pendingMutationCount)&&(identical(other.needsAttentionCount, needsAttentionCount) || other.needsAttentionCount == needsAttentionCount)&&const DeepCollectionEquality().equals(other.pendingPostIds, pendingPostIds)&&const DeepCollectionEquality().equals(other.needsAttentionByPostId, needsAttentionByPostId)&&const DeepCollectionEquality().equals(other.pendingCommentsByPostId, pendingCommentsByPostId)&&const DeepCollectionEquality().equals(other.commentsByPostId, commentsByPostId)&&(identical(other.effect, effect) || other.effect == effect)&&(identical(other.effectId, effectId) || other.effectId == effectId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,viewer,const DeepCollectionEquality().hash(posts),nextCursor,refreshStatus,pageStatus,isShowingCachedData,cacheAge,connectionStatus,isSimulatedOffline,const DeepCollectionEquality().hash(bufferedRealtimePosts),pendingMutationCount,needsAttentionCount,const DeepCollectionEquality().hash(pendingPostIds),const DeepCollectionEquality().hash(needsAttentionByPostId),const DeepCollectionEquality().hash(pendingCommentsByPostId),effect,effectId);
+int get hashCode => Object.hash(runtimeType,viewer,const DeepCollectionEquality().hash(posts),nextCursor,refreshStatus,pageStatus,isShowingCachedData,cacheAge,connectionStatus,isSimulatedOffline,const DeepCollectionEquality().hash(bufferedRealtimePosts),pendingMutationCount,needsAttentionCount,const DeepCollectionEquality().hash(pendingPostIds),const DeepCollectionEquality().hash(needsAttentionByPostId),const DeepCollectionEquality().hash(pendingCommentsByPostId),const DeepCollectionEquality().hash(commentsByPostId),effect,effectId);
 
 @override
 String toString() {
-  return 'SocialFeedReadyData(viewer: $viewer, posts: $posts, nextCursor: $nextCursor, refreshStatus: $refreshStatus, pageStatus: $pageStatus, isShowingCachedData: $isShowingCachedData, cacheAge: $cacheAge, connectionStatus: $connectionStatus, isSimulatedOffline: $isSimulatedOffline, bufferedRealtimePosts: $bufferedRealtimePosts, pendingMutationCount: $pendingMutationCount, needsAttentionCount: $needsAttentionCount, pendingPostIds: $pendingPostIds, needsAttentionByPostId: $needsAttentionByPostId, pendingCommentsByPostId: $pendingCommentsByPostId, effect: $effect, effectId: $effectId)';
+  return 'SocialFeedReadyData(viewer: $viewer, posts: $posts, nextCursor: $nextCursor, refreshStatus: $refreshStatus, pageStatus: $pageStatus, isShowingCachedData: $isShowingCachedData, cacheAge: $cacheAge, connectionStatus: $connectionStatus, isSimulatedOffline: $isSimulatedOffline, bufferedRealtimePosts: $bufferedRealtimePosts, pendingMutationCount: $pendingMutationCount, needsAttentionCount: $needsAttentionCount, pendingPostIds: $pendingPostIds, needsAttentionByPostId: $needsAttentionByPostId, pendingCommentsByPostId: $pendingCommentsByPostId, commentsByPostId: $commentsByPostId, effect: $effect, effectId: $effectId)';
 }
 
 
@@ -934,7 +935,7 @@ abstract mixin class $SocialFeedReadyDataCopyWith<$Res>  {
   factory $SocialFeedReadyDataCopyWith(SocialFeedReadyData value, $Res Function(SocialFeedReadyData) _then) = _$SocialFeedReadyDataCopyWithImpl;
 @useResult
 $Res call({
- SocialFeedViewer viewer, List<SocialFeedPost> posts, String? nextCursor, SocialFeedRefreshStatus refreshStatus, SocialFeedPageStatus pageStatus, bool isShowingCachedData, Duration cacheAge, SocialFeedConnectionStatus connectionStatus, bool isSimulatedOffline, List<SocialFeedPost> bufferedRealtimePosts, int pendingMutationCount, int needsAttentionCount, Set<String> pendingPostIds, Map<String, String> needsAttentionByPostId, Map<String, List<SocialFeedComment>> pendingCommentsByPostId, SocialFeedEffect? effect, int effectId
+ SocialFeedViewer viewer, List<SocialFeedPost> posts, String? nextCursor, SocialFeedRefreshStatus refreshStatus, SocialFeedPageStatus pageStatus, bool isShowingCachedData, Duration cacheAge, SocialFeedConnectionStatus connectionStatus, bool isSimulatedOffline, List<SocialFeedPost> bufferedRealtimePosts, int pendingMutationCount, int needsAttentionCount, Set<String> pendingPostIds, Map<String, String> needsAttentionByPostId, Map<String, List<SocialFeedComment>> pendingCommentsByPostId, Map<String, List<SocialFeedComment>> commentsByPostId, SocialFeedEffect? effect, int effectId
 });
 
 
@@ -951,7 +952,7 @@ class _$SocialFeedReadyDataCopyWithImpl<$Res>
 
 /// Create a copy of SocialFeedReadyData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? viewer = null,Object? posts = null,Object? nextCursor = freezed,Object? refreshStatus = null,Object? pageStatus = null,Object? isShowingCachedData = null,Object? cacheAge = null,Object? connectionStatus = null,Object? isSimulatedOffline = null,Object? bufferedRealtimePosts = null,Object? pendingMutationCount = null,Object? needsAttentionCount = null,Object? pendingPostIds = null,Object? needsAttentionByPostId = null,Object? pendingCommentsByPostId = null,Object? effect = freezed,Object? effectId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? viewer = null,Object? posts = null,Object? nextCursor = freezed,Object? refreshStatus = null,Object? pageStatus = null,Object? isShowingCachedData = null,Object? cacheAge = null,Object? connectionStatus = null,Object? isSimulatedOffline = null,Object? bufferedRealtimePosts = null,Object? pendingMutationCount = null,Object? needsAttentionCount = null,Object? pendingPostIds = null,Object? needsAttentionByPostId = null,Object? pendingCommentsByPostId = null,Object? commentsByPostId = null,Object? effect = freezed,Object? effectId = null,}) {
   return _then(_self.copyWith(
 viewer: null == viewer ? _self.viewer : viewer // ignore: cast_nullable_to_non_nullable
 as SocialFeedViewer,posts: null == posts ? _self.posts : posts // ignore: cast_nullable_to_non_nullable
@@ -968,6 +969,7 @@ as int,needsAttentionCount: null == needsAttentionCount ? _self.needsAttentionCo
 as int,pendingPostIds: null == pendingPostIds ? _self.pendingPostIds : pendingPostIds // ignore: cast_nullable_to_non_nullable
 as Set<String>,needsAttentionByPostId: null == needsAttentionByPostId ? _self.needsAttentionByPostId : needsAttentionByPostId // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,pendingCommentsByPostId: null == pendingCommentsByPostId ? _self.pendingCommentsByPostId : pendingCommentsByPostId // ignore: cast_nullable_to_non_nullable
+as Map<String, List<SocialFeedComment>>,commentsByPostId: null == commentsByPostId ? _self.commentsByPostId : commentsByPostId // ignore: cast_nullable_to_non_nullable
 as Map<String, List<SocialFeedComment>>,effect: freezed == effect ? _self.effect : effect // ignore: cast_nullable_to_non_nullable
 as SocialFeedEffect?,effectId: null == effectId ? _self.effectId : effectId // ignore: cast_nullable_to_non_nullable
 as int,
@@ -978,7 +980,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
-
+  
   return $SocialFeedRefreshStatusCopyWith<$Res>(_self.refreshStatus, (value) {
     return _then(_self.copyWith(refreshStatus: value));
   });
@@ -987,7 +989,7 @@ $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedPageStatusCopyWith<$Res> get pageStatus {
-
+  
   return $SocialFeedPageStatusCopyWith<$Res>(_self.pageStatus, (value) {
     return _then(_self.copyWith(pageStatus: value));
   });
@@ -1085,10 +1087,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SocialFeedViewer viewer,  List<SocialFeedPost> posts,  String? nextCursor,  SocialFeedRefreshStatus refreshStatus,  SocialFeedPageStatus pageStatus,  bool isShowingCachedData,  Duration cacheAge,  SocialFeedConnectionStatus connectionStatus,  bool isSimulatedOffline,  List<SocialFeedPost> bufferedRealtimePosts,  int pendingMutationCount,  int needsAttentionCount,  Set<String> pendingPostIds,  Map<String, String> needsAttentionByPostId,  Map<String, List<SocialFeedComment>> pendingCommentsByPostId,  SocialFeedEffect? effect,  int effectId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SocialFeedViewer viewer,  List<SocialFeedPost> posts,  String? nextCursor,  SocialFeedRefreshStatus refreshStatus,  SocialFeedPageStatus pageStatus,  bool isShowingCachedData,  Duration cacheAge,  SocialFeedConnectionStatus connectionStatus,  bool isSimulatedOffline,  List<SocialFeedPost> bufferedRealtimePosts,  int pendingMutationCount,  int needsAttentionCount,  Set<String> pendingPostIds,  Map<String, String> needsAttentionByPostId,  Map<String, List<SocialFeedComment>> pendingCommentsByPostId,  Map<String, List<SocialFeedComment>> commentsByPostId,  SocialFeedEffect? effect,  int effectId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SocialFeedReadyData() when $default != null:
-return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_that.pageStatus,_that.isShowingCachedData,_that.cacheAge,_that.connectionStatus,_that.isSimulatedOffline,_that.bufferedRealtimePosts,_that.pendingMutationCount,_that.needsAttentionCount,_that.pendingPostIds,_that.needsAttentionByPostId,_that.pendingCommentsByPostId,_that.effect,_that.effectId);case _:
+return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_that.pageStatus,_that.isShowingCachedData,_that.cacheAge,_that.connectionStatus,_that.isSimulatedOffline,_that.bufferedRealtimePosts,_that.pendingMutationCount,_that.needsAttentionCount,_that.pendingPostIds,_that.needsAttentionByPostId,_that.pendingCommentsByPostId,_that.commentsByPostId,_that.effect,_that.effectId);case _:
   return orElse();
 
 }
@@ -1106,10 +1108,10 @@ return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SocialFeedViewer viewer,  List<SocialFeedPost> posts,  String? nextCursor,  SocialFeedRefreshStatus refreshStatus,  SocialFeedPageStatus pageStatus,  bool isShowingCachedData,  Duration cacheAge,  SocialFeedConnectionStatus connectionStatus,  bool isSimulatedOffline,  List<SocialFeedPost> bufferedRealtimePosts,  int pendingMutationCount,  int needsAttentionCount,  Set<String> pendingPostIds,  Map<String, String> needsAttentionByPostId,  Map<String, List<SocialFeedComment>> pendingCommentsByPostId,  SocialFeedEffect? effect,  int effectId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SocialFeedViewer viewer,  List<SocialFeedPost> posts,  String? nextCursor,  SocialFeedRefreshStatus refreshStatus,  SocialFeedPageStatus pageStatus,  bool isShowingCachedData,  Duration cacheAge,  SocialFeedConnectionStatus connectionStatus,  bool isSimulatedOffline,  List<SocialFeedPost> bufferedRealtimePosts,  int pendingMutationCount,  int needsAttentionCount,  Set<String> pendingPostIds,  Map<String, String> needsAttentionByPostId,  Map<String, List<SocialFeedComment>> pendingCommentsByPostId,  Map<String, List<SocialFeedComment>> commentsByPostId,  SocialFeedEffect? effect,  int effectId)  $default,) {final _that = this;
 switch (_that) {
 case _SocialFeedReadyData():
-return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_that.pageStatus,_that.isShowingCachedData,_that.cacheAge,_that.connectionStatus,_that.isSimulatedOffline,_that.bufferedRealtimePosts,_that.pendingMutationCount,_that.needsAttentionCount,_that.pendingPostIds,_that.needsAttentionByPostId,_that.pendingCommentsByPostId,_that.effect,_that.effectId);case _:
+return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_that.pageStatus,_that.isShowingCachedData,_that.cacheAge,_that.connectionStatus,_that.isSimulatedOffline,_that.bufferedRealtimePosts,_that.pendingMutationCount,_that.needsAttentionCount,_that.pendingPostIds,_that.needsAttentionByPostId,_that.pendingCommentsByPostId,_that.commentsByPostId,_that.effect,_that.effectId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1126,10 +1128,10 @@ return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SocialFeedViewer viewer,  List<SocialFeedPost> posts,  String? nextCursor,  SocialFeedRefreshStatus refreshStatus,  SocialFeedPageStatus pageStatus,  bool isShowingCachedData,  Duration cacheAge,  SocialFeedConnectionStatus connectionStatus,  bool isSimulatedOffline,  List<SocialFeedPost> bufferedRealtimePosts,  int pendingMutationCount,  int needsAttentionCount,  Set<String> pendingPostIds,  Map<String, String> needsAttentionByPostId,  Map<String, List<SocialFeedComment>> pendingCommentsByPostId,  SocialFeedEffect? effect,  int effectId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SocialFeedViewer viewer,  List<SocialFeedPost> posts,  String? nextCursor,  SocialFeedRefreshStatus refreshStatus,  SocialFeedPageStatus pageStatus,  bool isShowingCachedData,  Duration cacheAge,  SocialFeedConnectionStatus connectionStatus,  bool isSimulatedOffline,  List<SocialFeedPost> bufferedRealtimePosts,  int pendingMutationCount,  int needsAttentionCount,  Set<String> pendingPostIds,  Map<String, String> needsAttentionByPostId,  Map<String, List<SocialFeedComment>> pendingCommentsByPostId,  Map<String, List<SocialFeedComment>> commentsByPostId,  SocialFeedEffect? effect,  int effectId)?  $default,) {final _that = this;
 switch (_that) {
 case _SocialFeedReadyData() when $default != null:
-return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_that.pageStatus,_that.isShowingCachedData,_that.cacheAge,_that.connectionStatus,_that.isSimulatedOffline,_that.bufferedRealtimePosts,_that.pendingMutationCount,_that.needsAttentionCount,_that.pendingPostIds,_that.needsAttentionByPostId,_that.pendingCommentsByPostId,_that.effect,_that.effectId);case _:
+return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_that.pageStatus,_that.isShowingCachedData,_that.cacheAge,_that.connectionStatus,_that.isSimulatedOffline,_that.bufferedRealtimePosts,_that.pendingMutationCount,_that.needsAttentionCount,_that.pendingPostIds,_that.needsAttentionByPostId,_that.pendingCommentsByPostId,_that.commentsByPostId,_that.effect,_that.effectId);case _:
   return null;
 
 }
@@ -1141,8 +1143,8 @@ return $default(_that.viewer,_that.posts,_that.nextCursor,_that.refreshStatus,_t
 
 
 class _SocialFeedReadyData extends SocialFeedReadyData {
-  const _SocialFeedReadyData({required this.viewer, required List<SocialFeedPost> posts, required this.nextCursor, required this.refreshStatus, required this.pageStatus, required this.isShowingCachedData, required this.cacheAge, required this.connectionStatus, required this.isSimulatedOffline, required List<SocialFeedPost> bufferedRealtimePosts, required this.pendingMutationCount, required this.needsAttentionCount, required Set<String> pendingPostIds, required Map<String, String> needsAttentionByPostId, required Map<String, List<SocialFeedComment>> pendingCommentsByPostId, this.effect, this.effectId = 0}): _posts = posts,_bufferedRealtimePosts = bufferedRealtimePosts,_pendingPostIds = pendingPostIds,_needsAttentionByPostId = needsAttentionByPostId,_pendingCommentsByPostId = pendingCommentsByPostId,super._();
-
+  const _SocialFeedReadyData({required this.viewer, required List<SocialFeedPost> posts, required this.nextCursor, required this.refreshStatus, required this.pageStatus, required this.isShowingCachedData, required this.cacheAge, required this.connectionStatus, required this.isSimulatedOffline, required List<SocialFeedPost> bufferedRealtimePosts, required this.pendingMutationCount, required this.needsAttentionCount, required Set<String> pendingPostIds, required Map<String, String> needsAttentionByPostId, required Map<String, List<SocialFeedComment>> pendingCommentsByPostId, Map<String, List<SocialFeedComment>> commentsByPostId = const <String, List<SocialFeedComment>>{}, this.effect, this.effectId = 0}): _posts = posts,_bufferedRealtimePosts = bufferedRealtimePosts,_pendingPostIds = pendingPostIds,_needsAttentionByPostId = needsAttentionByPostId,_pendingCommentsByPostId = pendingCommentsByPostId,_commentsByPostId = commentsByPostId,super._();
+  
 
 @override final  SocialFeedViewer viewer;
  final  List<SocialFeedPost> _posts;
@@ -1191,6 +1193,15 @@ class _SocialFeedReadyData extends SocialFeedReadyData {
   return EqualUnmodifiableMapView(_pendingCommentsByPostId);
 }
 
+/// Shared seed + synced comment threads (survives viewer switch).
+ final  Map<String, List<SocialFeedComment>> _commentsByPostId;
+/// Shared seed + synced comment threads (survives viewer switch).
+@override@JsonKey() Map<String, List<SocialFeedComment>> get commentsByPostId {
+  if (_commentsByPostId is EqualUnmodifiableMapView) return _commentsByPostId;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_commentsByPostId);
+}
+
 @override final  SocialFeedEffect? effect;
 @override@JsonKey() final  int effectId;
 
@@ -1204,16 +1215,16 @@ _$SocialFeedReadyDataCopyWith<_SocialFeedReadyData> get copyWith => __$SocialFee
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SocialFeedReadyData&&(identical(other.viewer, viewer) || other.viewer == viewer)&&const DeepCollectionEquality().equals(other._posts, _posts)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor)&&(identical(other.refreshStatus, refreshStatus) || other.refreshStatus == refreshStatus)&&(identical(other.pageStatus, pageStatus) || other.pageStatus == pageStatus)&&(identical(other.isShowingCachedData, isShowingCachedData) || other.isShowingCachedData == isShowingCachedData)&&(identical(other.cacheAge, cacheAge) || other.cacheAge == cacheAge)&&(identical(other.connectionStatus, connectionStatus) || other.connectionStatus == connectionStatus)&&(identical(other.isSimulatedOffline, isSimulatedOffline) || other.isSimulatedOffline == isSimulatedOffline)&&const DeepCollectionEquality().equals(other._bufferedRealtimePosts, _bufferedRealtimePosts)&&(identical(other.pendingMutationCount, pendingMutationCount) || other.pendingMutationCount == pendingMutationCount)&&(identical(other.needsAttentionCount, needsAttentionCount) || other.needsAttentionCount == needsAttentionCount)&&const DeepCollectionEquality().equals(other._pendingPostIds, _pendingPostIds)&&const DeepCollectionEquality().equals(other._needsAttentionByPostId, _needsAttentionByPostId)&&const DeepCollectionEquality().equals(other._pendingCommentsByPostId, _pendingCommentsByPostId)&&(identical(other.effect, effect) || other.effect == effect)&&(identical(other.effectId, effectId) || other.effectId == effectId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SocialFeedReadyData&&(identical(other.viewer, viewer) || other.viewer == viewer)&&const DeepCollectionEquality().equals(other._posts, _posts)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor)&&(identical(other.refreshStatus, refreshStatus) || other.refreshStatus == refreshStatus)&&(identical(other.pageStatus, pageStatus) || other.pageStatus == pageStatus)&&(identical(other.isShowingCachedData, isShowingCachedData) || other.isShowingCachedData == isShowingCachedData)&&(identical(other.cacheAge, cacheAge) || other.cacheAge == cacheAge)&&(identical(other.connectionStatus, connectionStatus) || other.connectionStatus == connectionStatus)&&(identical(other.isSimulatedOffline, isSimulatedOffline) || other.isSimulatedOffline == isSimulatedOffline)&&const DeepCollectionEquality().equals(other._bufferedRealtimePosts, _bufferedRealtimePosts)&&(identical(other.pendingMutationCount, pendingMutationCount) || other.pendingMutationCount == pendingMutationCount)&&(identical(other.needsAttentionCount, needsAttentionCount) || other.needsAttentionCount == needsAttentionCount)&&const DeepCollectionEquality().equals(other._pendingPostIds, _pendingPostIds)&&const DeepCollectionEquality().equals(other._needsAttentionByPostId, _needsAttentionByPostId)&&const DeepCollectionEquality().equals(other._pendingCommentsByPostId, _pendingCommentsByPostId)&&const DeepCollectionEquality().equals(other._commentsByPostId, _commentsByPostId)&&(identical(other.effect, effect) || other.effect == effect)&&(identical(other.effectId, effectId) || other.effectId == effectId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,viewer,const DeepCollectionEquality().hash(_posts),nextCursor,refreshStatus,pageStatus,isShowingCachedData,cacheAge,connectionStatus,isSimulatedOffline,const DeepCollectionEquality().hash(_bufferedRealtimePosts),pendingMutationCount,needsAttentionCount,const DeepCollectionEquality().hash(_pendingPostIds),const DeepCollectionEquality().hash(_needsAttentionByPostId),const DeepCollectionEquality().hash(_pendingCommentsByPostId),effect,effectId);
+int get hashCode => Object.hash(runtimeType,viewer,const DeepCollectionEquality().hash(_posts),nextCursor,refreshStatus,pageStatus,isShowingCachedData,cacheAge,connectionStatus,isSimulatedOffline,const DeepCollectionEquality().hash(_bufferedRealtimePosts),pendingMutationCount,needsAttentionCount,const DeepCollectionEquality().hash(_pendingPostIds),const DeepCollectionEquality().hash(_needsAttentionByPostId),const DeepCollectionEquality().hash(_pendingCommentsByPostId),const DeepCollectionEquality().hash(_commentsByPostId),effect,effectId);
 
 @override
 String toString() {
-  return 'SocialFeedReadyData(viewer: $viewer, posts: $posts, nextCursor: $nextCursor, refreshStatus: $refreshStatus, pageStatus: $pageStatus, isShowingCachedData: $isShowingCachedData, cacheAge: $cacheAge, connectionStatus: $connectionStatus, isSimulatedOffline: $isSimulatedOffline, bufferedRealtimePosts: $bufferedRealtimePosts, pendingMutationCount: $pendingMutationCount, needsAttentionCount: $needsAttentionCount, pendingPostIds: $pendingPostIds, needsAttentionByPostId: $needsAttentionByPostId, pendingCommentsByPostId: $pendingCommentsByPostId, effect: $effect, effectId: $effectId)';
+  return 'SocialFeedReadyData(viewer: $viewer, posts: $posts, nextCursor: $nextCursor, refreshStatus: $refreshStatus, pageStatus: $pageStatus, isShowingCachedData: $isShowingCachedData, cacheAge: $cacheAge, connectionStatus: $connectionStatus, isSimulatedOffline: $isSimulatedOffline, bufferedRealtimePosts: $bufferedRealtimePosts, pendingMutationCount: $pendingMutationCount, needsAttentionCount: $needsAttentionCount, pendingPostIds: $pendingPostIds, needsAttentionByPostId: $needsAttentionByPostId, pendingCommentsByPostId: $pendingCommentsByPostId, commentsByPostId: $commentsByPostId, effect: $effect, effectId: $effectId)';
 }
 
 
@@ -1224,7 +1235,7 @@ abstract mixin class _$SocialFeedReadyDataCopyWith<$Res> implements $SocialFeedR
   factory _$SocialFeedReadyDataCopyWith(_SocialFeedReadyData value, $Res Function(_SocialFeedReadyData) _then) = __$SocialFeedReadyDataCopyWithImpl;
 @override @useResult
 $Res call({
- SocialFeedViewer viewer, List<SocialFeedPost> posts, String? nextCursor, SocialFeedRefreshStatus refreshStatus, SocialFeedPageStatus pageStatus, bool isShowingCachedData, Duration cacheAge, SocialFeedConnectionStatus connectionStatus, bool isSimulatedOffline, List<SocialFeedPost> bufferedRealtimePosts, int pendingMutationCount, int needsAttentionCount, Set<String> pendingPostIds, Map<String, String> needsAttentionByPostId, Map<String, List<SocialFeedComment>> pendingCommentsByPostId, SocialFeedEffect? effect, int effectId
+ SocialFeedViewer viewer, List<SocialFeedPost> posts, String? nextCursor, SocialFeedRefreshStatus refreshStatus, SocialFeedPageStatus pageStatus, bool isShowingCachedData, Duration cacheAge, SocialFeedConnectionStatus connectionStatus, bool isSimulatedOffline, List<SocialFeedPost> bufferedRealtimePosts, int pendingMutationCount, int needsAttentionCount, Set<String> pendingPostIds, Map<String, String> needsAttentionByPostId, Map<String, List<SocialFeedComment>> pendingCommentsByPostId, Map<String, List<SocialFeedComment>> commentsByPostId, SocialFeedEffect? effect, int effectId
 });
 
 
@@ -1241,7 +1252,7 @@ class __$SocialFeedReadyDataCopyWithImpl<$Res>
 
 /// Create a copy of SocialFeedReadyData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? viewer = null,Object? posts = null,Object? nextCursor = freezed,Object? refreshStatus = null,Object? pageStatus = null,Object? isShowingCachedData = null,Object? cacheAge = null,Object? connectionStatus = null,Object? isSimulatedOffline = null,Object? bufferedRealtimePosts = null,Object? pendingMutationCount = null,Object? needsAttentionCount = null,Object? pendingPostIds = null,Object? needsAttentionByPostId = null,Object? pendingCommentsByPostId = null,Object? effect = freezed,Object? effectId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? viewer = null,Object? posts = null,Object? nextCursor = freezed,Object? refreshStatus = null,Object? pageStatus = null,Object? isShowingCachedData = null,Object? cacheAge = null,Object? connectionStatus = null,Object? isSimulatedOffline = null,Object? bufferedRealtimePosts = null,Object? pendingMutationCount = null,Object? needsAttentionCount = null,Object? pendingPostIds = null,Object? needsAttentionByPostId = null,Object? pendingCommentsByPostId = null,Object? commentsByPostId = null,Object? effect = freezed,Object? effectId = null,}) {
   return _then(_SocialFeedReadyData(
 viewer: null == viewer ? _self.viewer : viewer // ignore: cast_nullable_to_non_nullable
 as SocialFeedViewer,posts: null == posts ? _self._posts : posts // ignore: cast_nullable_to_non_nullable
@@ -1258,6 +1269,7 @@ as int,needsAttentionCount: null == needsAttentionCount ? _self.needsAttentionCo
 as int,pendingPostIds: null == pendingPostIds ? _self._pendingPostIds : pendingPostIds // ignore: cast_nullable_to_non_nullable
 as Set<String>,needsAttentionByPostId: null == needsAttentionByPostId ? _self._needsAttentionByPostId : needsAttentionByPostId // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,pendingCommentsByPostId: null == pendingCommentsByPostId ? _self._pendingCommentsByPostId : pendingCommentsByPostId // ignore: cast_nullable_to_non_nullable
+as Map<String, List<SocialFeedComment>>,commentsByPostId: null == commentsByPostId ? _self._commentsByPostId : commentsByPostId // ignore: cast_nullable_to_non_nullable
 as Map<String, List<SocialFeedComment>>,effect: freezed == effect ? _self.effect : effect // ignore: cast_nullable_to_non_nullable
 as SocialFeedEffect?,effectId: null == effectId ? _self.effectId : effectId // ignore: cast_nullable_to_non_nullable
 as int,
@@ -1269,7 +1281,7 @@ as int,
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
-
+  
   return $SocialFeedRefreshStatusCopyWith<$Res>(_self.refreshStatus, (value) {
     return _then(_self.copyWith(refreshStatus: value));
   });
@@ -1278,7 +1290,7 @@ $SocialFeedRefreshStatusCopyWith<$Res> get refreshStatus {
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedPageStatusCopyWith<$Res> get pageStatus {
-
+  
   return $SocialFeedPageStatusCopyWith<$Res>(_self.pageStatus, (value) {
     return _then(_self.copyWith(pageStatus: value));
   });
@@ -1474,7 +1486,7 @@ return ready(_that.data);case _:
 
 class SocialFeedInitial implements SocialFeedState {
   const SocialFeedInitial(this.viewer);
-
+  
 
  final  SocialFeedViewer viewer;
 
@@ -1540,7 +1552,7 @@ as SocialFeedViewer,
 
 class SocialFeedLoading implements SocialFeedState {
   const SocialFeedLoading(this.viewer);
-
+  
 
  final  SocialFeedViewer viewer;
 
@@ -1606,7 +1618,7 @@ as SocialFeedViewer,
 
 class SocialFeedFailureState implements SocialFeedState {
   const SocialFeedFailureState({required this.viewer, required this.failure});
-
+  
 
  final  SocialFeedViewer viewer;
  final  SocialFeedFailure failure;
@@ -1674,7 +1686,7 @@ as SocialFeedFailure,
 
 class SocialFeedReady implements SocialFeedState {
   const SocialFeedReady(this.data);
-
+  
 
  final  SocialFeedReadyData data;
 
@@ -1737,7 +1749,7 @@ as SocialFeedReadyData,
 @override
 @pragma('vm:prefer-inline')
 $SocialFeedReadyDataCopyWith<$Res> get data {
-
+  
   return $SocialFeedReadyDataCopyWith<$Res>(_self.data, (value) {
     return _then(_self.copyWith(data: value));
   });

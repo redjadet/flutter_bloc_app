@@ -11,46 +11,59 @@ import 'package:mocktail/mocktail.dart';
 class _MockCubit extends Mock implements SocialFeedCubit {}
 
 void main() {
-  testWidgets('comment sheet opens with re-provided SocialFeedCubit (no ProviderNotFound)', (
-    WidgetTester tester,
-  ) async {
-    final _MockCubit cubit = _MockCubit();
-    when(() => cubit.stream).thenAnswer(
-      (_) => Stream<SocialFeedState>.value(SocialFeedState.initial(SocialFeedViewer.alex)),
-    );
-    when(() => cubit.state).thenReturn(SocialFeedState.initial(SocialFeedViewer.alex));
+  testWidgets(
+    'comment sheet opens with re-provided SocialFeedCubit (no ProviderNotFound)',
+    (WidgetTester tester) async {
+      final _MockCubit cubit = _MockCubit();
+      when(() => cubit.stream).thenAnswer(
+        (_) => Stream<SocialFeedState>.value(
+          SocialFeedState.initial(SocialFeedViewer.alex),
+        ),
+      );
+      when(() => cubit.state)
+          .thenReturn(SocialFeedState.initial(SocialFeedViewer.alex));
 
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: BlocProvider<SocialFeedCubit>.value(
-          value: cubit,
-          child: Builder(
-            builder: (BuildContext context) {
-              return Scaffold(
-                body: TextButton(
-                  onPressed: () => SocialFeedCommentComposer.show(context, postId: 'p1'),
-                  child: const Text('open'),
-                ),
-              );
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<SocialFeedCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (BuildContext context) {
+                return Scaffold(
+                  body: TextButton(
+                    onPressed: () =>
+                        SocialFeedCommentComposer.show(context, postId: 'p1'),
+                    child: const Text('open'),
+                  ),
+                );
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    await tester.tap(find.text('open'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+      await tester.tap(find.text('open'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.byKey(const ValueKey('social-feed-comment-field')), findsOneWidget);
-    final Finder submit = find.byKey(const ValueKey('social-feed-comment-submit'));
-    expect(tester.widget<FilledButton>(submit).onPressed, isNull);
+      expect(
+        find.byKey(const ValueKey('social-feed-comment-field')),
+        findsOneWidget,
+      );
+      final Finder submit = find.byKey(
+        const ValueKey('social-feed-comment-submit'),
+      );
+      expect(tester.widget<FilledButton>(submit).onPressed, isNull);
 
-    await tester.enterText(find.byKey(const ValueKey('social-feed-comment-field')), 'Nice post');
-    await tester.pump();
-    expect(tester.widget<FilledButton>(submit).onPressed, isNotNull);
-    expect(tester.takeException(), isNull);
-  });
+      await tester.enterText(
+        find.byKey(const ValueKey('social-feed-comment-field')),
+        'Nice post',
+      );
+      await tester.pump();
+      expect(tester.widget<FilledButton>(submit).onPressed, isNotNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

@@ -74,7 +74,7 @@ generation may finish work, but it cannot mutate the active viewer state.
 | Step | Locked decision | Why / accepted tradeoff | Proof / revisit trigger |
 | --- | --- | --- | --- |
 | 1. Clarify | iOS, Android, web, macOS; 60 seeded posts; two fictional viewers; simulator only; offline read + queued likes/comments in scope | One adaptive tree and deterministic faults keep every supported target reviewable. No auth, backend, history, replies, or closed-app work is implied. | Route/DI/widget tests. Re-plan before adding identity, live data, or a target-specific fork. |
-| 2. Model | Post carries `isLikedByMe`, bounded counts, revision, and opaque cursor; comment uses mutation/idempotency ID | Avoids unbounded arrays and offset drift. Viewer projection duplicates a small amount of personal state. | Mapper/cursor/merge tests. Re-plan before comment history or server pagination contracts. |
+| 2. Model | Post carries `isLikedByMe`, bounded counts, revision, and opaque cursor; comment uses mutation/idempotency ID; expand-on-tap thread merges deterministic seed bodies with pending/submitted comments | Avoids unbounded arrays and offset drift. Viewer projection duplicates a small amount of personal state. | Mapper/cursor/merge + visible-comment tests. Re-plan before remote comment pagination or replies. |
 | 3. Offline | Viewer-scoped Hive first-page cache + ordered mutation queue; pending local intent overlays remote until ack/reject | Cache-first reading and durable intent survive offline/recreation. Storage/reconciliation complexity is accepted. | Hive/queue/repository tests. Re-plan before shared-account cache or production retention rules. |
 | 4. Realtime | Cubit owns viewer-scoped sync/realtime leases only while route is visible/resumed; new posts buffer behind a banner | No scroll jump, global owner, polling, push, or terminated-app promise. Reconnect uses bounded simulated backoff. | Lease/lifecycle/realtime tests. Re-plan before background delivery. |
 | 5. Failure ownership | Typed failures retain usable content; page errors stay local; permanent rejection restores canonical post and retains rejected comment draft | A background failure cannot become an outage or a false durability claim. | Cubit/widget/repository tests. Re-plan before server error taxonomy changes. |
@@ -118,10 +118,11 @@ tests, so no production-like control leaks outside this feature.
 
 ## Privacy and security boundary
 
-Fictional seed data only. No network, credentials, auth, telemetry, or client
-trust claim. Entered comments remain in viewer-scoped demo storage and must
-never be logged. A production adapter needs server authorization/validation,
-secure tokens, logout deletion, abuse controls, and PII-redaction policy.
+Fictional seed data only (natural demo copy, sparse threads). No network,
+credentials, auth, telemetry, or client trust claim. Entered comments remain
+in viewer-scoped demo storage and must never be logged. A production adapter
+needs server authorization/validation, secure tokens, logout deletion, abuse
+controls, and PII-redaction policy.
 
 ## Ownership
 
@@ -133,12 +134,14 @@ secure tokens, logout deletion, abuse controls, and PII-redaction policy.
 ## Limits
 
 **Shipped:** like + comment submit, offline queue, realtime banner, two
-viewers, responsive phone/tablet/wide layouts, six locales, and deterministic
-fault contracts.
+viewers, responsive phone/tablet/wide layouts, six locales, expand-on-tap
+inline comment thread (shared stored bodies + pending overlay; survives
+viewer switch and process restart via Hive-backed shared threads), and
+deterministic fault contracts.
 
-**Deferred:** comment history/replies/edit/delete, real backend/auth, push,
-terminated-app work, network images, and gold registration until architecture
-gates and full checklist/platform builds pass.
+**Deferred:** remote comment pagination/replies/edit/delete, real
+backend/auth, push, terminated-app work, network images, and gold registration
+until architecture gates and full checklist/platform builds pass.
 
 **Performance proof:** blocked — 2026-08-21 verification left ~3.7 GiB free;
 four-platform builds, profile capture, integration device lane, and full

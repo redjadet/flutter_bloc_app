@@ -52,4 +52,31 @@ class SocialFeedCommentMapper {
       },
     );
   }
+
+  SocialFeedCommentDto toDto(SocialFeedComment comment) {
+    return SocialFeedCommentDto(
+      id: comment.id,
+      postId: comment.postId,
+      viewerId: comment.viewerId,
+      body: comment.body,
+      createdAt: comment.createdAt.toUtc().toIso8601String(),
+      syncStatus: switch (comment.syncStatus) {
+        SocialFeedMutationStatus.pending => 'pending',
+        SocialFeedMutationStatus.synced => 'synced',
+        SocialFeedMutationStatus.needsAttention => 'needsAttention',
+      },
+    );
+  }
+
+  Map<String, Object?> toJson(SocialFeedComment comment) {
+    final SocialFeedCommentDto dto = toDto(comment);
+    return <String, Object?>{
+      'id': dto.id,
+      'postId': dto.postId,
+      'viewerId': dto.viewerId,
+      'body': dto.body,
+      'createdAt': dto.createdAt,
+      'syncStatus': dto.syncStatus,
+    };
+  }
 }

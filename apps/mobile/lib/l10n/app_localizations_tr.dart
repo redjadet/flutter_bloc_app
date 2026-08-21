@@ -3599,6 +3599,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get socialFeedDemoSubmitComment => 'Yorum gönder';
 
   @override
+  String get socialFeedDemoCommentsHeading => 'Yorumlar';
+
+  @override
+  String get socialFeedDemoNoComments => 'Henüz yorum yok';
+
+  @override
   String get socialFeedDemoPending => 'Bekliyor';
 
   @override

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_realtime_source.dart';
@@ -80,6 +82,132 @@ void main() {
     expect(cubit.likeCalls, 1);
     await cubit.close();
   });
+
+  testWidgets('tapping post expands seed comments under the card', (
+    WidgetTester tester,
+  ) async {
+    final _HarnessCubit cubit = _HarnessCubit();
+    cubit.showPost(
+      SocialFeedPost(
+        id: 'p1',
+        authorId: 'a1',
+        authorDisplayName: 'Author',
+        body: 'Hello',
+        createdAt: DateTime.utc(2026, 8, 1),
+        isLikedByMe: false,
+        likeCount: 0,
+        commentCount: 2,
+        serverRevision: 1,
+      ),
+      commentsByPostId: <String, List<SocialFeedComment>>{
+        'p1': <SocialFeedComment>[
+          SocialFeedComment(
+            id: 'p1-cmt-1',
+            postId: 'p1',
+            viewerId: 'author-a',
+            body: 'Nice catch on the reconnect path.',
+            createdAt: DateTime.utc(2026, 8, 1, 0, 1),
+            syncStatus: SocialFeedMutationStatus.synced,
+          ),
+          SocialFeedComment(
+            id: 'p1-cmt-2',
+            postId: 'p1',
+            viewerId: 'author-b',
+            body: 'This matches what we saw in review.',
+            createdAt: DateTime.utc(2026, 8, 1, 0, 2),
+            syncStatus: SocialFeedMutationStatus.synced,
+          ),
+        ],
+      },
+    );
+    addTearDown(cubit.close);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider<SocialFeedCubit>.value(
+          value: cubit,
+          child: const Scaffold(body: SocialFeedPostItem(postId: 'p1')),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(
+      find.byKey(const ValueKey('social-feed-comments-thread')),
+      findsNothing,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('social-feed-post-tap-p1')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('social-feed-comments-thread')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('social-feed-comment-row-p1-cmt-1')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('social-feed-comment-row-p1-cmt-2')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('comment badge follows visible thread not stale post count', (
+    WidgetTester tester,
+  ) async {
+    final _HarnessCubit cubit = _HarnessCubit();
+    cubit.showPost(
+      SocialFeedPost(
+        id: 'p1',
+        authorId: 'a1',
+        authorDisplayName: 'Author',
+        body: 'Hello',
+        createdAt: DateTime.utc(2026, 8, 1),
+        isLikedByMe: false,
+        likeCount: 0,
+        commentCount: 3,
+        serverRevision: 5,
+      ),
+      commentsByPostId: const <String, List<SocialFeedComment>>{},
+    );
+    addTearDown(cubit.close);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider<SocialFeedCubit>.value(
+          value: cubit,
+          child: const Scaffold(body: SocialFeedPostItem(postId: 'p1')),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(
+      find.byKey(const ValueKey('social-feed-comment-count-p1')),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<Text>(
+            find.byKey(const ValueKey('social-feed-comment-count-p1')),
+          )
+          .data,
+      '0',
+    );
+
+    await tester.tap(find.byKey(const ValueKey('social-feed-post-tap-p1')));
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('social-feed-comments-empty')),
+      findsOneWidget,
+    );
+  });
 }
 
 class _HarnessCubit extends SocialFeedCubit {
@@ -93,7 +221,11 @@ class _HarnessCubit extends SocialFeedCubit {
 
   int likeCalls = 0;
 
-  void showPost(SocialFeedPost post) {
+  void showPost(
+    SocialFeedPost post, {
+    Map<String, List<SocialFeedComment>> commentsByPostId =
+        const <String, List<SocialFeedComment>>{},
+  }) {
     emit(
       SocialFeedState.ready(
         SocialFeedReadyData(
@@ -112,6 +244,7 @@ class _HarnessCubit extends SocialFeedCubit {
           pendingPostIds: const <String>{},
           needsAttentionByPostId: const <String, String>{},
           pendingCommentsByPostId: const {},
+          commentsByPostId: commentsByPostId,
         ),
       ),
     );
@@ -202,6 +335,11 @@ class _UnusedRepo implements SocialFeedRepository {
     required String body,
     required String mutationId,
   }) async => throw UnimplementedError();
+
+  @override
+  Future<Map<String, List<SocialFeedComment>>> commentsForPostIds({
+    required Iterable<String> postIds,
+  }) async => <String, List<SocialFeedComment>>{};
 
   @override
   Future<SocialFeedSyncLease> acquireSync({

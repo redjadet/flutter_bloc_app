@@ -3637,6 +3637,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get socialFeedDemoSubmitComment => 'Submit comment';
 
   @override
+  String get socialFeedDemoCommentsHeading => 'Commentaires';
+
+  @override
+  String get socialFeedDemoNoComments => 'Pas encore de commentaires';
+
+  @override
   String get socialFeedDemoPending => 'Pending';
 
   @override
