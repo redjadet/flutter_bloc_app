@@ -3,42 +3,74 @@
     "checklist": {
       "aborted": 0,
       "cancelled": 0,
-      "count": 4,
-      "failed": 4,
-      "ok": 0,
+      "count": 1119,
+      "failed": 419,
+      "ok": 700,
       "other": 0,
-      "p50_duration_ms": 63536.5,
-      "success_rate": 0.0
+      "p50_duration_ms": 28584,
+      "success_rate": 0.6255585344057194
     },
-    "integration_tests": {
+    "cursor_to_codex_delegate": {
       "aborted": 0,
       "cancelled": 0,
       "count": 1,
       "failed": 0,
       "ok": 1,
       "other": 0,
-      "p50_duration_ms": 569406,
+      "p50_duration_ms": 1000,
+      "success_rate": 1.0
+    },
+    "deploy_fastapi_cloud": {
+      "aborted": 0,
+      "cancelled": 0,
+      "count": 3,
+      "failed": 2,
+      "ok": 1,
+      "other": 0,
+      "p50_duration_ms": 0,
+      "success_rate": 0.3333333333333333
+    },
+    "integration_tests": {
+      "aborted": 0,
+      "cancelled": 1,
+      "count": 261,
+      "failed": 69,
+      "ok": 191,
+      "other": 0,
+      "p50_duration_ms": 282532,
+      "success_rate": 0.7318007662835249
+    },
+    "smoke": {
+      "aborted": 0,
+      "cancelled": 0,
+      "count": 1,
+      "failed": 0,
+      "ok": 1,
+      "other": 0,
+      "p50_duration_ms": 1,
       "success_rate": 1.0
     }
   },
-  "delegate_usage_rate": 0.0,
+  "delegate_usage_rate": 0.0007220216606498195,
   "line_stats": {
     "invalid_json_lines": 0,
-    "parsed_json_lines": 5,
-    "total_non_empty_lines": 5
+    "parsed_json_lines": 1391,
+    "total_non_empty_lines": 1391
   },
-  "p50_duration_ms": 63993,
-  "p95_duration_ms": 569406,
+  "p50_duration_ms": 61705,
+  "p95_duration_ms": 496584.9,
   "risk_counts": {
-    "high": 1,
-    "medium": 4
+    "high": 261,
+    "medium": 1120,
+    "unknown": 4
   },
   "scorecard_parse_success": 1.0,
-  "source_file_count": 1,
-  "source_fingerprint": "32cf0c8ab60c4e0376e4b49d4ec253792393ac4f2e51cc250c270c4816dccf63",
+  "source_file_count": 90,
+  "source_fingerprint": "3614e8b1478c0387f55d456c922dcec8787f251fb7ef00d598bf412e7a2de222",
   "status_counts": {
-    "failed": 4,
-    "ok": 1
+    "cancelled": 1,
+    "failed": 490,
+    "ok": 894
   },
-  "total_events": 5
+  "total_events": 1385
 }

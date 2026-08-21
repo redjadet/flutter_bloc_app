@@ -37,7 +37,7 @@ singleton holding context, closure capture.
 
 ## Examples
 
-**Bad**
+### Bad
 
 ```dart
 class Bad extends State<MyWidget> {
@@ -46,7 +46,7 @@ class Bad extends State<MyWidget> {
 }
 ```
 
-**Good**
+### Good
 
 ```dart
 class Good extends State<MyWidget> {

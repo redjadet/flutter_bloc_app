@@ -67,8 +67,8 @@ Entry: Example hub `example-social-feed-demo-button` → route
 responsive phone/tablet/wide, six locales.
 
 **Deferred:** comment history/replies/edit/delete, real backend/auth, push,
-terminated-app work, network images, gold registration until architecture gates
-+ full checklist/platform builds pass.
+terminated-app work, network images, and gold registration until architecture
+gates and full checklist/platform builds pass.
 
 **Performance proof:** blocked — host disk ~5–6 Gi free; four-platform builds /
 profile-mode capture / full checklist not run this lane. No smoothness or
