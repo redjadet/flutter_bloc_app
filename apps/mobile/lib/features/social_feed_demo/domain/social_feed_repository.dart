@@ -73,18 +73,42 @@ class SocialFeedRejectedSync {
   final String? mutationId;
 }
 
+class SocialFeedDispatchedMutation {
+  const SocialFeedDispatchedMutation({
+    required this.mutationId,
+    required this.postId,
+    required this.wasComment,
+  });
+
+  final String mutationId;
+  final String postId;
+  final bool wasComment;
+}
+
+class SocialFeedPendingSnapshot {
+  const SocialFeedPendingSnapshot({
+    required this.pendingCommentsByPostId,
+    required this.pendingPostIds,
+  });
+
+  final Map<String, List<SocialFeedComment>> pendingCommentsByPostId;
+  final Set<String> pendingPostIds;
+}
+
 class SocialFeedSyncSummary {
   const SocialFeedSyncSummary({
     required this.pendingCount,
     required this.needsAttentionCount,
     this.attentionMutations = const <SocialFeedAttentionMutation>[],
     this.rejections = const <SocialFeedRejectedSync>[],
+    this.dispatchedMutations = const <SocialFeedDispatchedMutation>[],
   });
 
   final int pendingCount;
   final int needsAttentionCount;
   final List<SocialFeedAttentionMutation> attentionMutations;
   final List<SocialFeedRejectedSync> rejections;
+  final List<SocialFeedDispatchedMutation> dispatchedMutations;
 }
 
 abstract class SocialFeedSyncLease {
@@ -129,6 +153,10 @@ abstract class SocialFeedRepository {
   });
 
   Future<int> pendingMutationCount({required SocialFeedViewer viewer});
+
+  Future<SocialFeedPendingSnapshot> readPendingSnapshot({
+    required SocialFeedViewer viewer,
+  });
 
   Future<void> resetViewerData({required SocialFeedViewer viewer});
 }

@@ -18,6 +18,8 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
           await _commentsForPosts(
             cached.posts,
           );
+      final SocialFeedPendingSnapshot pendingSnapshot =
+          await _readPendingSnapshot(current);
       if (gen != _generation || isClosed) {
         return;
       }
@@ -28,6 +30,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
             posts: _postsAlignedToComments(
               posts: cached.posts,
               commentsByPostId: cachedComments,
+              pendingCommentsByPostId: pendingSnapshot.pendingCommentsByPostId,
             ),
             nextCursor: cached.nextCursor,
             refreshStatus: const SocialFeedRefreshStatus.loading(),
@@ -41,9 +44,9 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
               viewer: current,
             ),
             needsAttentionCount: 0,
-            pendingPostIds: const <String>{},
+            pendingPostIds: pendingSnapshot.pendingPostIds,
             needsAttentionByPostId: const <String, String>{},
-            pendingCommentsByPostId: const <String, List<SocialFeedComment>>{},
+            pendingCommentsByPostId: pendingSnapshot.pendingCommentsByPostId,
             commentsByPostId: cachedComments,
           ),
         ),
@@ -73,6 +76,8 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
         }
         final Map<String, List<SocialFeedComment>> pageComments =
             await _commentsForPosts(page.posts);
+        final SocialFeedPendingSnapshot pendingSnapshot =
+            await _readPendingSnapshot(current);
         if (gen != _generation || isClosed) {
           return;
         }
@@ -83,6 +88,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
               posts: _postsAlignedToComments(
                 posts: page.posts,
                 commentsByPostId: pageComments,
+                pendingCommentsByPostId: pendingSnapshot.pendingCommentsByPostId,
               ),
               nextCursor: page.nextCursor,
               refreshStatus: const SocialFeedRefreshStatus.idle(),
@@ -100,10 +106,9 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
                 viewer: current,
               ),
               needsAttentionCount: 0,
-              pendingPostIds: const <String>{},
+              pendingPostIds: pendingSnapshot.pendingPostIds,
               needsAttentionByPostId: const <String, String>{},
-              pendingCommentsByPostId:
-                  const <String, List<SocialFeedComment>>{},
+              pendingCommentsByPostId: pendingSnapshot.pendingCommentsByPostId,
               commentsByPostId: pageComments,
             ),
           ),
