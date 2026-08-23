@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_muta
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_failure.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_merge_policy.dart';
+import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_repository.dart';
@@ -137,6 +138,11 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
     final List<SocialFeedMutationDto> queue = await _queue.readQueue(viewer);
     return queue.length;
   }
+
+  @override
+  Future<SocialFeedPendingSnapshot> readPendingSnapshot({
+    required SocialFeedViewer viewer,
+  }) => _readPendingSnapshotImpl(this, viewer);
 
   @override
   Future<void> resetViewerData({required SocialFeedViewer viewer}) async {

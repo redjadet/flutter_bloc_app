@@ -357,5 +357,13 @@ class _UnusedRepo implements SocialFeedRepository {
       0;
 
   @override
+  Future<SocialFeedPendingSnapshot> readPendingSnapshot({
+    required SocialFeedViewer viewer,
+  }) async => const SocialFeedPendingSnapshot(
+    pendingCommentsByPostId: <String, List<SocialFeedComment>>{},
+    pendingPostIds: <String>{},
+  );
+
+  @override
   Future<void> resetViewerData({required SocialFeedViewer viewer}) async {}
 }

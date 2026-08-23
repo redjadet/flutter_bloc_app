@@ -179,6 +179,120 @@ void main() {
     await cubit.close();
   });
 
+  test('load hydrates queued comments from pending snapshot', () async {
+    final SocialFeedPost base = post(id: 'p1', comments: 1);
+    final SocialFeedComment queued = SocialFeedComment(
+      id: 'comment-p1-1',
+      postId: 'p1',
+      viewerId: SocialFeedViewer.alex.id,
+      body: 'Queued offline',
+      createdAt: DateTime.utc(2026, 8, 20, 12),
+      syncStatus: SocialFeedMutationStatus.pending,
+    );
+    final _FakeRepo repo = _FakeRepo(
+      cached: SocialFeedPage(
+        posts: <SocialFeedPost>[base],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.cache,
+        fetchedAt: DateTime.utc(2026, 8, 20),
+      ),
+      remote: SocialFeedPage(
+        posts: <SocialFeedPost>[base],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.remote,
+        fetchedAt: DateTime.utc(2026, 8, 20),
+      ),
+      pendingSnapshot: SocialFeedPendingSnapshot(
+        pendingCommentsByPostId: <String, List<SocialFeedComment>>{
+          'p1': <SocialFeedComment>[queued],
+        },
+        pendingPostIds: <String>{'p1'},
+      ),
+    );
+    final _FakeScenario scenario = _FakeScenario()..online = false;
+    final SocialFeedCubit cubit = SocialFeedCubit(
+      repository: repo,
+      realtimeSource: _FakeRealtime(),
+      scenario: scenario,
+      clock: () => DateTime.utc(2026, 8, 20, 12),
+    );
+    await cubit.load();
+    final SocialFeedReady ready = cubit.state as SocialFeedReady;
+    expect(ready.data.pendingCommentsByPostId['p1'], hasLength(1));
+    expect(
+      ready.data.pendingCommentsByPostId['p1']!.first.body,
+      'Queued offline',
+    );
+    expect(ready.data.pendingPostIds, contains('p1'));
+    await cubit.close();
+  });
+
+  test('background sync promotes queued comment without manual refresh', () async {
+    final SocialFeedPost base = post(id: 'p1', comments: 1);
+    final _FakeScenario scenario = _FakeScenario();
+    final DateTime fixedNow = DateTime.utc(2026, 8, 20, 12);
+    final _FakeRepo repo = _FakeRepo(
+      remote: SocialFeedPage(
+        posts: <SocialFeedPost>[base],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.remote,
+        fetchedAt: DateTime.utc(2026, 8, 20),
+      ),
+      commentResult: SocialFeedCommentQueued(
+        post: base.copyWith(commentCount: 2),
+        mutationId: 'comment-p1-${fixedNow.microsecondsSinceEpoch}',
+      ),
+    );
+    final SocialFeedCubit cubit = SocialFeedCubit(
+      repository: repo,
+      realtimeSource: _FakeRealtime(),
+      scenario: scenario,
+      clock: () => fixedNow,
+    );
+    await cubit.load();
+    scenario.setSimulatedOnline(online: false);
+    await cubit.submitComment(postId: 'p1', body: 'Queued offline');
+    final SocialFeedReady queued = cubit.state as SocialFeedReady;
+    final String mutationId =
+        queued.data.pendingCommentsByPostId['p1']!.first.id;
+    expect(queued.data.pendingPostIds, contains('p1'));
+
+    repo.commentsByPostId['p1'] = <SocialFeedComment>[
+      ...?repo.commentsByPostId['p1'],
+      SocialFeedComment(
+        id: mutationId,
+        postId: 'p1',
+        viewerId: SocialFeedViewer.alex.id,
+        body: 'Queued offline',
+        createdAt: fixedNow,
+        syncStatus: SocialFeedMutationStatus.synced,
+      ),
+    ];
+    repo.lease.emitSummary(
+      SocialFeedSyncSummary(
+        pendingCount: 0,
+        needsAttentionCount: 0,
+        dispatchedMutations: <SocialFeedDispatchedMutation>[
+          SocialFeedDispatchedMutation(
+            mutationId: mutationId,
+            postId: 'p1',
+            wasComment: true,
+          ),
+        ],
+      ),
+    );
+    await Future<void>.delayed(Duration.zero);
+
+    final SocialFeedReady synced = cubit.state as SocialFeedReady;
+    expect(synced.data.pendingCommentsByPostId['p1'], isNull);
+    expect(synced.data.pendingPostIds, isEmpty);
+    expect(synced.data.commentsByPostId['p1'], hasLength(2));
+    await cubit.close();
+  });
+
   test('switchViewer reloads new viewer', () async {
     final _FakeRepo repo = _FakeRepo(
       remote: SocialFeedPage(
@@ -259,6 +373,10 @@ class _FakeLease implements SocialFeedSyncLease {
   @override
   Stream<SocialFeedSyncSummary> get summaries => _controller.stream;
 
+  void emitSummary(SocialFeedSyncSummary summary) {
+    _controller.add(summary);
+  }
+
   @override
   Future<void> close() async {
     if (closed) {
@@ -308,13 +426,20 @@ class _FakeRepo implements SocialFeedRepository {
     required this.remote,
     this.likeResult,
     this.commentResult,
+    this.pendingSnapshot = const SocialFeedPendingSnapshot(
+      pendingCommentsByPostId: <String, List<SocialFeedComment>>{},
+      pendingPostIds: <String>{},
+    ),
   });
 
   SocialFeedPage? cached;
   SocialFeedPage remote;
   SocialFeedLikeResult? likeResult;
   SocialFeedCommentResult? commentResult;
+  SocialFeedPendingSnapshot pendingSnapshot;
   int commentCalls = 0;
+  final Map<String, List<SocialFeedComment>> commentsByPostId =
+      <String, List<SocialFeedComment>>{};
   final _FakeLease lease = _FakeLease();
 
   @override
@@ -371,17 +496,19 @@ class _FakeRepo implements SocialFeedRepository {
   }) async {
     return <String, List<SocialFeedComment>>{
       for (final String postId in postIds)
-        postId: <SocialFeedComment>[
-          for (int i = 0; i < _seedCommentCountFor(postId); i++)
-            SocialFeedComment(
-              id: '$postId-seed-$i',
-              postId: postId,
-              viewerId: 'author-a',
-              body: 'Seed $i',
-              createdAt: DateTime.utc(2026, 8, 1, 0, i + 1),
-              syncStatus: SocialFeedMutationStatus.synced,
-            ),
-        ],
+        postId:
+            commentsByPostId[postId] ??
+            <SocialFeedComment>[
+              for (int i = 0; i < _seedCommentCountFor(postId); i++)
+                SocialFeedComment(
+                  id: '$postId-seed-$i',
+                  postId: postId,
+                  viewerId: 'author-a',
+                  body: 'Seed $i',
+                  createdAt: DateTime.utc(2026, 8, 1, 0, i + 1),
+                  syncStatus: SocialFeedMutationStatus.synced,
+                ),
+            ],
     };
   }
 
@@ -408,6 +535,11 @@ class _FakeRepo implements SocialFeedRepository {
   @override
   Future<int> pendingMutationCount({required SocialFeedViewer viewer}) async =>
       0;
+
+  @override
+  Future<SocialFeedPendingSnapshot> readPendingSnapshot({
+    required SocialFeedViewer viewer,
+  }) async => pendingSnapshot;
 
   @override
   Future<void> resetViewerData({required SocialFeedViewer viewer}) async {}

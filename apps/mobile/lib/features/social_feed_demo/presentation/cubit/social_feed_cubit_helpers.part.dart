@@ -199,6 +199,12 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     );
   }
 
+  Future<SocialFeedPendingSnapshot> _readPendingSnapshot(
+    SocialFeedViewer viewer,
+  ) {
+    return _repository.readPendingSnapshot(viewer: viewer);
+  }
+
   Map<String, List<SocialFeedComment>> _mergeCommentMaps(
     Map<String, List<SocialFeedComment>> existing,
     Map<String, List<SocialFeedComment>> incoming,
@@ -279,6 +285,14 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
             }
             return next;
           });
+          if (summary.dispatchedMutations.isNotEmpty) {
+            unawaited(
+              _reconcileDispatchedComments(
+                current,
+                summary.dispatchedMutations,
+              ),
+            );
+          }
         },
         onError: (Object error, StackTrace stackTrace) {},
       ),
@@ -329,6 +343,92 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
         onError: (Object error, StackTrace stackTrace) {},
       ),
     );
+  }
+
+  Future<void> _reconcileDispatchedComments(
+    SocialFeedViewer current,
+    List<SocialFeedDispatchedMutation> dispatched,
+  ) async {
+    final List<SocialFeedDispatchedMutation> commentDispatches =
+        dispatched.where((item) => item.wasComment).toList();
+    if (commentDispatches.isEmpty) {
+      for (final SocialFeedDispatchedMutation item in dispatched) {
+        if (!_isCurrentLease(_generation, current)) {
+          return;
+        }
+        _emitReadyPatch((d) {
+          final Set<String> pending = Set<String>.from(d.pendingPostIds)
+            ..remove(item.postId);
+          return d.copyWith(pendingPostIds: pending);
+        });
+      }
+      return;
+    }
+    final Set<String> postIds = <String>{
+      for (final SocialFeedDispatchedMutation item in commentDispatches)
+        item.postId,
+    };
+    final Map<String, List<SocialFeedComment>> stored =
+        await _repository.commentsForPostIds(postIds: postIds);
+    if (!_isCurrentLease(_generation, current)) {
+      return;
+    }
+    _emitReadyPatch((d) {
+      final Set<String> pendingPostIds = Set<String>.from(d.pendingPostIds);
+      final Map<String, List<SocialFeedComment>> pendingComments =
+          Map<String, List<SocialFeedComment>>.from(d.pendingCommentsByPostId);
+      final Map<String, List<SocialFeedComment>> commentsByPostId =
+          Map<String, List<SocialFeedComment>>.from(d.commentsByPostId);
+      for (final SocialFeedDispatchedMutation item in dispatched) {
+        pendingPostIds.remove(item.postId);
+        if (!item.wasComment) {
+          continue;
+        }
+        final List<SocialFeedComment> pendingList = List<SocialFeedComment>.from(
+          pendingComments[item.postId] ?? const <SocialFeedComment>[],
+        );
+        final int idx = pendingList.indexWhere((c) => c.id == item.mutationId);
+        SocialFeedComment? promoted;
+        if (idx >= 0) {
+          promoted = pendingList
+              .removeAt(idx)
+              .copyWith(syncStatus: SocialFeedMutationStatus.synced);
+        }
+        if (pendingList.isEmpty) {
+          pendingComments.remove(item.postId);
+        } else {
+          pendingComments[item.postId] = pendingList;
+        }
+        final List<SocialFeedComment> storedList = List<SocialFeedComment>.from(
+          commentsByPostId[item.postId] ??
+              stored[item.postId] ??
+              const <SocialFeedComment>[],
+        );
+        if (promoted != null &&
+            !storedList.any((c) => c.id == item.mutationId)) {
+          storedList.add(promoted);
+        } else if (promoted == null) {
+          for (final SocialFeedComment comment in stored[item.postId] ??
+              const <SocialFeedComment>[]) {
+            if (comment.id == item.mutationId &&
+                !storedList.any((c) => c.id == item.mutationId)) {
+              storedList.add(comment);
+            }
+          }
+        }
+        commentsByPostId[item.postId] = storedList;
+      }
+      return d.copyWith(
+        pendingPostIds: pendingPostIds,
+        pendingCommentsByPostId: pendingComments,
+        commentsByPostId: commentsByPostId,
+        posts: _postsAlignedToComments(
+          posts: d.posts,
+          commentsByPostId: commentsByPostId,
+          pendingCommentsByPostId: pendingComments,
+        ),
+      );
+    });
   }
 
   Future<void> _closeLeases() async {

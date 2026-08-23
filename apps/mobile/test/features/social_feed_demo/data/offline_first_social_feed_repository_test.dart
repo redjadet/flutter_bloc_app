@@ -221,6 +221,30 @@ void main() {
     );
   });
 
+  test('readPendingSnapshot hydrates queued comment bodies', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.addComment(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      body: 'survives restart',
+      mutationId: 'restart-comment',
+    );
+
+    final SocialFeedPendingSnapshot pending = await repository.readPendingSnapshot(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(pending.pendingPostIds, contains(postId));
+    expect(pending.pendingCommentsByPostId[postId], hasLength(1));
+    expect(
+      pending.pendingCommentsByPostId[postId]!.first.body,
+      'survives restart',
+    );
+  });
+
   test('submitted comments survive remote recreation (hot restart)', () async {
     final SocialFeedPage page = await repository.refresh(
       viewer: SocialFeedViewer.alex,
