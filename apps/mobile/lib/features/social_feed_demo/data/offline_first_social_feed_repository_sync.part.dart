@@ -144,27 +144,13 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         await repo._queue.moveToNeedsAttention(viewer, head);
       } else {
         final Duration backoff = repo._queue.backoffForAttempt(attempts);
-        queue = await repo._queue.readQueue(viewer);
-        final int idx = queue.indexWhere(
-          (e) => e.mutationId == head.mutationId,
+        await repo._queue.updateMutationAfterFailure(
+          viewer: viewer,
+          mutationId: head.mutationId,
+          head: head,
+          attemptCount: attempts,
+          nextAttemptAt: now.add(backoff),
         );
-        if (idx >= 0) {
-          queue[idx] = SocialFeedMutationDto(
-            mutationId: head.mutationId,
-            viewerId: head.viewerId,
-            type: head.type,
-            postId: head.postId,
-            sequence: head.sequence,
-            idempotencyKey: head.idempotencyKey,
-            attemptCount: attempts,
-            nextAttemptAt: now.add(backoff).toIso8601String(),
-            desiredLiked: head.desiredLiked,
-            commentBody: head.commentBody,
-            status: 'pending',
-            dispatched: false,
-          );
-          await repo._queue.replaceQueue(viewer, queue);
-        }
         break;
       }
     }

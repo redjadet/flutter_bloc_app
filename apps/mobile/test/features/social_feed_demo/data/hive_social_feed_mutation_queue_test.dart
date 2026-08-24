@@ -91,4 +91,43 @@ void main() {
     expect(await queue.readQueue(SocialFeedViewer.alex), isEmpty);
     expect(await queue.readQueue(SocialFeedViewer.sam), hasLength(1));
   });
+
+  test(
+    'updateMutationAfterFailure preserves mutations enqueued concurrently',
+    () async {
+      await queue.enqueueLike(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+        desiredLiked: true,
+        mutationId: 'm1',
+      );
+      await queue.enqueueLike(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p2',
+        desiredLiked: true,
+        mutationId: 'm2',
+      );
+      final SocialFeedMutationDto head = (await queue.readQueue(
+        SocialFeedViewer.alex,
+      )).first;
+      final Future<void> failureUpdate = queue.updateMutationAfterFailure(
+        viewer: SocialFeedViewer.alex,
+        mutationId: head.mutationId,
+        head: head,
+        attemptCount: 1,
+        nextAttemptAt: now.add(const Duration(seconds: 1)),
+      );
+      final Future<void> enqueueLate = queue.enqueueComment(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p3',
+        body: 'late',
+        mutationId: 'm3',
+      );
+      await Future.wait(<Future<void>>[failureUpdate, enqueueLate]);
+      final List<String> ids = (await queue.readQueue(SocialFeedViewer.alex))
+          .map((SocialFeedMutationDto e) => e.mutationId)
+          .toList();
+      expect(ids, containsAll(<String>['m1', 'm2', 'm3']));
+    },
+  );
 }
