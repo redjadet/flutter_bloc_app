@@ -265,20 +265,25 @@ void registerSocialFeedDemoIntegrationFlow() {
         findsWidgets,
       );
 
-      await tapAndPump(
-        tester,
-        find.byKey(const ValueKey('social-feed-scenario-button')),
+      // Wide/desktop already embeds scenario controls in the side panel.
+      // Opening the tune sheet there duplicates the same key — only open
+      // the sheet when controls are not already on screen.
+      final Finder scenarioControls = find.byKey(
+        const ValueKey('social-feed-scenario-controls'),
       );
-      await pumpUntilFound(
-        tester,
-        find.byKey(const ValueKey('social-feed-scenario-controls')),
-      );
-      expect(
-        find.byKey(const ValueKey('social-feed-scenario-controls')),
-        findsOneWidget,
-      );
-      await _pageBack(tester);
-      await tester.pumpAndSettle();
+      final bool controlsAlreadyVisible = tester.any(scenarioControls);
+      if (!controlsAlreadyVisible) {
+        await tapAndPump(
+          tester,
+          find.byKey(const ValueKey('social-feed-scenario-button')),
+        );
+        await pumpUntilFound(tester, scenarioControls);
+      }
+      expect(scenarioControls, findsWidgets);
+      if (!controlsAlreadyVisible) {
+        await _pageBack(tester);
+        await tester.pumpAndSettle();
+      }
 
       await tapAndPump(
         tester,

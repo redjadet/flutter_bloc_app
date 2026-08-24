@@ -508,12 +508,21 @@ raise SystemExit(1)
 
 is_adb_visible_device() {
   local device_id="$1"
+  local adb_timeout_seconds="${ADB_DEVICES_TIMEOUT_SECONDS:-10}"
 
   command -v adb >/dev/null 2>&1 || return 1
-  adb devices 2>/dev/null | awk -v id="$device_id" '
-    NR > 1 && $1 == id && $2 == "device" { found = 1 }
-    END { exit(found ? 0 : 1) }
-  '
+  # Hung adb (USB/device negotiation) must not block desktop/iOS pins forever.
+  if command -v timeout >/dev/null 2>&1; then
+    timeout "$adb_timeout_seconds" adb devices 2>/dev/null | awk -v id="$device_id" '
+      NR > 1 && $1 == id && $2 == "device" { found = 1 }
+      END { exit(found ? 0 : 1) }
+    '
+  else
+    adb devices 2>/dev/null | awk -v id="$device_id" '
+      NR > 1 && $1 == id && $2 == "device" { found = 1 }
+      END { exit(found ? 0 : 1) }
+    '
+  fi
 }
 
 # When CHECKLIST_INTEGRATION_DEVICE is pinned, avoid slow `flutter devices` when
@@ -521,8 +530,20 @@ is_adb_visible_device() {
 try_fast_path_requested_device() {
   local requested_device="$1"
   local boot_timeout_seconds="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
+  local host_desktop=""
 
   [ -n "$requested_device" ] || return 1
+
+  host_desktop="$(host_desktop_device_id)"
+  if [ -n "$host_desktop" ] && [ "$requested_device" = "$host_desktop" ]; then
+    if [ "${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}" = "1" ]; then
+      log "Using CHECKLIST_INTEGRATION_DEVICE='$requested_device' (host desktop; skipped flutter/adb discovery)."
+      printf '%s\n' "$requested_device"
+      return 0
+    fi
+    log "Requested host desktop '$requested_device' but ALLOW_DESKTOP_INTEGRATION_DEVICE!=1; falling back to discovery."
+    return 1
+  fi
 
   if [ "$(uname -s)" = "Darwin" ] && is_booted_ios_simulator_device "$requested_device"; then
     log "Using CHECKLIST_INTEGRATION_DEVICE='$requested_device' (booted iOS simulator; skipped flutter devices discovery)."
