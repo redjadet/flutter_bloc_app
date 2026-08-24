@@ -35,9 +35,8 @@ void main() {
 
     test('delegates to direct remote when neither is signed in', () async {
       when(() => direct.lastSource).thenReturn(ChartDataSource.remote);
-      when(
-        () => direct.fetchTrendingCounts(),
-      ).thenAnswer((_) async => const <ChartPoint>[]);
+      when(() => direct.fetchTrendingCounts())
+          .thenAnswer((_) async => const <ChartPoint>[]);
 
       expect(repo.lastSource, ChartDataSource.unknown);
       await repo.fetchTrendingCounts();
@@ -50,12 +49,10 @@ void main() {
 
     test('delegates to supabase remote when signed in', () async {
       supabaseSignedIn = true;
-      when(
-        () => supabase.lastSource,
-      ).thenReturn(ChartDataSource.supabaseTables);
-      when(
-        () => supabase.fetchTrendingCounts(),
-      ).thenAnswer((_) async => const <ChartPoint>[]);
+      when(() => supabase.lastSource)
+          .thenReturn(ChartDataSource.supabaseTables);
+      when(() => supabase.fetchTrendingCounts())
+          .thenAnswer((_) async => const <ChartPoint>[]);
 
       expect(repo.lastSource, ChartDataSource.unknown);
       await repo.fetchTrendingCounts();
@@ -70,12 +67,10 @@ void main() {
       'delegates to firebase remote when firebase signed in (supabase not)',
       () async {
         firebaseSignedIn = true;
-        when(
-          () => firebase.lastSource,
-        ).thenReturn(ChartDataSource.firebaseCloud);
-        when(
-          () => firebase.fetchTrendingCounts(),
-        ).thenAnswer((_) async => const <ChartPoint>[]);
+        when(() => firebase.lastSource)
+            .thenReturn(ChartDataSource.firebaseCloud);
+        when(() => firebase.fetchTrendingCounts())
+            .thenAnswer((_) async => const <ChartPoint>[]);
 
         expect(repo.lastSource, ChartDataSource.unknown);
         await repo.fetchTrendingCounts();
@@ -91,9 +86,8 @@ void main() {
       supabaseSignedIn = true;
       firebaseSignedIn = true;
       when(() => supabase.lastSource).thenReturn(ChartDataSource.supabaseEdge);
-      when(
-        () => supabase.fetchTrendingCounts(),
-      ).thenAnswer((_) async => const <ChartPoint>[]);
+      when(() => supabase.fetchTrendingCounts())
+          .thenAnswer((_) async => const <ChartPoint>[]);
 
       await repo.fetchTrendingCounts();
       expect(repo.lastSource, ChartDataSource.supabaseEdge);
@@ -106,18 +100,14 @@ void main() {
     test('switches delegate dynamically across calls', () async {
       when(() => direct.lastSource).thenReturn(ChartDataSource.remote);
       when(() => supabase.lastSource).thenReturn(ChartDataSource.supabaseEdge);
-      when(
-        () => firebase.lastSource,
-      ).thenReturn(ChartDataSource.firebaseFirestore);
-      when(
-        () => direct.fetchTrendingCounts(),
-      ).thenAnswer((_) async => const <ChartPoint>[]);
-      when(
-        () => supabase.fetchTrendingCounts(),
-      ).thenAnswer((_) async => const <ChartPoint>[]);
-      when(
-        () => firebase.fetchTrendingCounts(),
-      ).thenAnswer((_) async => const <ChartPoint>[]);
+      when(() => firebase.lastSource)
+          .thenReturn(ChartDataSource.firebaseFirestore);
+      when(() => direct.fetchTrendingCounts())
+          .thenAnswer((_) async => const <ChartPoint>[]);
+      when(() => supabase.fetchTrendingCounts())
+          .thenAnswer((_) async => const <ChartPoint>[]);
+      when(() => firebase.fetchTrendingCounts())
+          .thenAnswer((_) async => const <ChartPoint>[]);
 
       supabaseSignedIn = false;
       firebaseSignedIn = false;
@@ -147,9 +137,8 @@ void main() {
         var delegateCalls = 0;
         final Completer<List<ChartPoint>> completer =
             Completer<List<ChartPoint>>();
-        when(
-          () => supabase.lastSource,
-        ).thenReturn(ChartDataSource.supabaseEdge);
+        when(() => supabase.lastSource)
+            .thenReturn(ChartDataSource.supabaseEdge);
         when(() => supabase.fetchTrendingCounts()).thenAnswer((_) async {
           delegateCalls += 1;
           return completer.future;
@@ -183,9 +172,8 @@ void main() {
             Completer<List<ChartPoint>>();
 
         when(() => direct.lastSource).thenReturn(ChartDataSource.remote);
-        when(
-          () => supabase.lastSource,
-        ).thenReturn(ChartDataSource.supabaseEdge);
+        when(() => supabase.lastSource)
+            .thenReturn(ChartDataSource.supabaseEdge);
         when(() => direct.fetchTrendingCounts()).thenAnswer((_) {
           return directWait.future;
         });

@@ -51,9 +51,8 @@ void main() {
       blocTest<ChatListCubit, ChatListState>(
         'emits [loading, loaded] when repository returns contacts',
         build: () {
-          when(
-            () => mockRepository.getChatContacts(),
-          ).thenAnswer((_) async => mockContacts);
+          when(() => mockRepository.getChatContacts())
+              .thenAnswer((_) async => mockContacts);
           return chatListCubit;
         },
         act: (cubit) => cubit.loadChatContacts(),
@@ -69,9 +68,8 @@ void main() {
       blocTest<ChatListCubit, ChatListState>(
         'emits [loading, error] when repository throws exception',
         build: () {
-          when(
-            () => mockRepository.getChatContacts(),
-          ).thenThrow(Exception('Network error'));
+          when(() => mockRepository.getChatContacts())
+              .thenThrow(Exception('Network error'));
           return chatListCubit;
         },
         act: (cubit) => cubit.loadChatContacts(),
@@ -119,9 +117,8 @@ void main() {
       blocTest<ChatListCubit, ChatListState>(
         'emits updated state with contact removed when successful',
         build: () {
-          when(
-            () => mockRepository.deleteChatContact('1'),
-          ).thenAnswer((_) async {});
+          when(() => mockRepository.deleteChatContact('1'))
+              .thenAnswer((_) async {});
           return chatListCubit;
         },
         seed: () => ChatListState.loaded(contacts: mockContacts),
@@ -149,9 +146,8 @@ void main() {
       blocTest<ChatListCubit, ChatListState>(
         'emits error state when repository throws exception',
         build: () {
-          when(
-            () => mockRepository.deleteChatContact('1'),
-          ).thenThrow(Exception('Delete failed'));
+          when(() => mockRepository.deleteChatContact('1'))
+              .thenThrow(Exception('Delete failed'));
           return chatListCubit;
         },
         seed: () => ChatListState.loaded(contacts: mockContacts),
@@ -218,9 +214,8 @@ void main() {
       blocTest<ChatListCubit, ChatListState>(
         'emits error state when repository throws exception',
         build: () {
-          when(
-            () => mockRepository.markAsRead('1'),
-          ).thenThrow(Exception('Mark as read failed'));
+          when(() => mockRepository.markAsRead('1'))
+              .thenThrow(Exception('Mark as read failed'));
           return chatListCubit;
         },
         seed: () => ChatListState.loaded(contacts: mockContacts),

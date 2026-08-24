@@ -234,9 +234,8 @@ void main() {
       mutationId: 'restart-comment',
     );
 
-    final SocialFeedPendingSnapshot pending = await repository.readPendingSnapshot(
-      viewer: SocialFeedViewer.alex,
-    );
+    final SocialFeedPendingSnapshot pending = await repository
+        .readPendingSnapshot(viewer: SocialFeedViewer.alex);
     expect(pending.pendingPostIds, contains(postId));
     expect(pending.pendingCommentsByPostId[postId], hasLength(1));
     expect(

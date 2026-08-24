@@ -117,24 +117,21 @@ void main() {
     expect(requestCount, 2);
   });
 
-  test(
-    'fetchTrendingCounts falls back to defaults when request fails without cache',
-    () async {
-      final dio = createMockDio(() => 'server error', 500);
-      final api = CoingeckoApi(dio);
-      final repository = HttpChartRepository(
-        api: api,
-        now: () => DateTime(2024, 1, 1, 12),
-      );
+  test('fetchTrendingCounts falls back to defaults when request fails without cache', () async {
+    final dio = createMockDio(() => 'server error', 500);
+    final api = CoingeckoApi(dio);
+    final repository = HttpChartRepository(
+      api: api,
+      now: () => DateTime(2024, 1, 1, 12),
+    );
 
-      final result = await AppLogger.silenceAsync(
-        () => repository.fetchTrendingCounts(),
-      );
+    final result = await AppLogger.silenceAsync(
+      () => repository.fetchTrendingCounts(),
+    );
 
-      expect(result, isNotEmpty);
-      expect(result.length, 7);
-    },
-  );
+    expect(result, isNotEmpty);
+    expect(result.length, 7);
+  });
 
   test(
     'fetchTrendingCounts falls back to defaults when payload is invalid',

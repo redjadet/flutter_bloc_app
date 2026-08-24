@@ -32,9 +32,8 @@ void main() {
   });
 
   test('draft round-trip and clear', () async {
-    final CaseStudyDraft draft = CaseStudyDraft.fresh(
-      caseId: 'case-1',
-    ).copyWith(doctorName: 'Dr X');
+    final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1')
+        .copyWith(doctorName: 'Dr X');
 
     expect(await repository.loadDraft('u1'), isNull);
     await repository.saveDraft('u1', draft);

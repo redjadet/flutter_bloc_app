@@ -11,8 +11,7 @@ class MixAvoidDefiningTokensWithinStyle extends AnalysisRule {
   static const LintCode code = LintCode(
     'mix_avoid_defining_tokens_within_style',
     'MixToken instances should not be created directly inside Styler method calls.',
-    correctionMessage:
-        'Define the token outside the style as a top-level or local constant, then pass it in.',
+    correctionMessage: 'Define the token outside the style as a top-level or local constant, then pass it in.',
   );
 
   MixAvoidDefiningTokensWithinStyle()

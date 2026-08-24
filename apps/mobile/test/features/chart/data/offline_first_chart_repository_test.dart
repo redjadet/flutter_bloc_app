@@ -35,12 +35,10 @@ void main() {
       final List<ChartPoint> remotePoints = <ChartPoint>[
         ChartPoint(date: DateTime.utc(2025, 3, 10), value: 50000.0),
       ];
-      when(
-        () => cache.readTrendingCounts(maxAge: any(named: 'maxAge')),
-      ).thenAnswer((_) async => <ChartPoint>[]);
-      when(
-        () => remote.fetchTrendingCounts(),
-      ).thenAnswer((_) async => remotePoints);
+      when(() => cache.readTrendingCounts(maxAge: any(named: 'maxAge')))
+          .thenAnswer((_) async => <ChartPoint>[]);
+      when(() => remote.fetchTrendingCounts())
+          .thenAnswer((_) async => remotePoints);
       when(() => remote.lastSource).thenReturn(ChartDataSource.remote);
       when(() => cache.writeTrendingCounts(any())).thenAnswer((_) async {});
 
@@ -55,9 +53,8 @@ void main() {
       final List<ChartPoint> cachedPoints = <ChartPoint>[
         ChartPoint(date: DateTime.utc(2025, 3, 9), value: 49000.0),
       ];
-      when(
-        () => cache.readTrendingCounts(maxAge: any(named: 'maxAge')),
-      ).thenAnswer((_) async => cachedPoints);
+      when(() => cache.readTrendingCounts(maxAge: any(named: 'maxAge')))
+          .thenAnswer((_) async => cachedPoints);
 
       final List<ChartPoint> result = await repository.fetchTrendingCounts();
 
@@ -73,12 +70,10 @@ void main() {
         final List<ChartPoint> cachedPoints = <ChartPoint>[
           ChartPoint(date: DateTime.utc(2025, 3, 9), value: 49000.0),
         ];
-        when(
-          () => cache.readTrendingCounts(maxAge: any(named: 'maxAge')),
-        ).thenAnswer((_) async => cachedPoints);
-        when(
-          () => remote.fetchTrendingCounts(),
-        ).thenThrow(Exception('network'));
+        when(() => cache.readTrendingCounts(maxAge: any(named: 'maxAge')))
+            .thenAnswer((_) async => cachedPoints);
+        when(() => remote.fetchTrendingCounts())
+            .thenThrow(Exception('network'));
         when(() => remote.lastSource).thenReturn(ChartDataSource.remote);
 
         final List<ChartPoint> result = await repository
@@ -91,9 +86,8 @@ void main() {
     );
 
     test('rethrows when remote fails and cache is empty', () async {
-      when(
-        () => cache.readTrendingCounts(maxAge: any(named: 'maxAge')),
-      ).thenAnswer((_) async => <ChartPoint>[]);
+      when(() => cache.readTrendingCounts(maxAge: any(named: 'maxAge')))
+          .thenAnswer((_) async => <ChartPoint>[]);
       when(() => remote.fetchTrendingCounts()).thenThrow(Exception('network'));
       when(() => remote.lastSource).thenReturn(ChartDataSource.remote);
 
@@ -114,16 +108,13 @@ void main() {
       final List<ChartPoint> remotePoints = <ChartPoint>[
         ChartPoint(date: DateTime.utc(2025, 3, 10), value: 50000.0),
       ];
-      when(
-        () => cache.readTrendingCounts(maxAge: any(named: 'maxAge')),
-      ).thenAnswer((_) async => <ChartPoint>[]);
-      when(
-        () => remote.fetchTrendingCounts(),
-      ).thenAnswer((_) async => remotePoints);
+      when(() => cache.readTrendingCounts(maxAge: any(named: 'maxAge')))
+          .thenAnswer((_) async => <ChartPoint>[]);
+      when(() => remote.fetchTrendingCounts())
+          .thenAnswer((_) async => remotePoints);
       when(() => remote.lastSource).thenReturn(ChartDataSource.remote);
-      when(
-        () => cache.writeTrendingCounts(any()),
-      ).thenThrow(Exception('storage'));
+      when(() => cache.writeTrendingCounts(any()))
+          .thenThrow(Exception('storage'));
 
       final List<ChartPoint> result = await repository.fetchTrendingCounts();
 
@@ -138,12 +129,10 @@ void main() {
       final List<ChartPoint> remotePoints = <ChartPoint>[
         ChartPoint(date: DateTime.utc(2025, 3, 10), value: 50000.0),
       ];
-      when(
-        () => cache.readTrendingCounts(maxAge: any(named: 'maxAge')),
-      ).thenAnswer((_) async => cachedPoints);
-      when(
-        () => remote.fetchTrendingCounts(),
-      ).thenAnswer((_) async => remotePoints);
+      when(() => cache.readTrendingCounts(maxAge: any(named: 'maxAge')))
+          .thenAnswer((_) async => cachedPoints);
+      when(() => remote.fetchTrendingCounts())
+          .thenAnswer((_) async => remotePoints);
       when(() => remote.lastSource).thenReturn(ChartDataSource.remote);
       when(() => cache.writeTrendingCounts(any())).thenAnswer((_) async {});
 

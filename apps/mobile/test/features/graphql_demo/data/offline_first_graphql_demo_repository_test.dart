@@ -40,9 +40,8 @@ void main() {
       final List<GraphqlContinent> cached = <GraphqlContinent>[
         const GraphqlContinent(code: 'EU', name: 'Europe'),
       ];
-      when(
-        () => cache.readContinents(maxAge: any(named: 'maxAge')),
-      ).thenAnswer((_) async => cached);
+      when(() => cache.readContinents(maxAge: any(named: 'maxAge')))
+          .thenAnswer((_) async => cached);
       when(() => remote.fetchContinents()).thenThrow(
         GraphqlDemoException('network', type: GraphqlDemoErrorType.network),
       );

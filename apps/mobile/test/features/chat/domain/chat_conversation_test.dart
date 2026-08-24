@@ -5,13 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ChatConversationDto.fromJson', () {
     test('coerces synchronized bool-like values safely', () {
-      final ChatConversation conversation =
-          ChatConversationDto.fromJson(<String, dynamic>{
-            'id': 'c1',
-            'createdAt': '2025-01-01T00:00:00.000Z',
-            'updatedAt': '2025-01-01T00:00:00.000Z',
-            'synchronized': '0',
-          }).toDomain();
+      final ChatConversation conversation = ChatConversationDto.fromJson(
+        <String, dynamic>{
+          'id': 'c1',
+          'createdAt': '2025-01-01T00:00:00.000Z',
+          'updatedAt': '2025-01-01T00:00:00.000Z',
+          'synchronized': '0',
+        },
+      ).toDomain();
 
       expect(conversation.synchronized, isFalse);
     });

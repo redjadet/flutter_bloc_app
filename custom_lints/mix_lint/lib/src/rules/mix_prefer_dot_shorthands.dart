@@ -13,8 +13,7 @@ class MixPreferDotShorthands extends AnalysisRule {
   static const LintCode code = LintCode(
     'mix_prefer_dot_shorthands',
     'Prefer dot shorthands when the type is inferred from context.',
-    correctionMessage:
-        "Use the dot shorthand (e.g. .all(10), .w600, .color(...)) instead of the full type name.",
+    correctionMessage: "Use the dot shorthand (e.g. .all(10), .w600, .color(...)) instead of the full type name.",
   );
 
   MixPreferDotShorthands()

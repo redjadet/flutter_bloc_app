@@ -67,28 +67,25 @@ void main() {
     },
   );
 
-  test(
-    'linkStream closes controller when MissingPluginException is thrown during listen setup',
-    () async {
-      final FakeAppLinksApi api = FakeAppLinksApi(
-        throwsOnListen: MissingPluginException(),
-      );
-      final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
+  test('linkStream closes controller when MissingPluginException is thrown during listen setup', () async {
+    final FakeAppLinksApi api = FakeAppLinksApi(
+      throwsOnListen: MissingPluginException(),
+    );
+    final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
 
-      bool isDone = false;
-      service.linkStream().listen(
-        (_) {},
-        onDone: () {
-          isDone = true;
-        },
-      );
+    bool isDone = false;
+    service.linkStream().listen(
+      (_) {},
+      onDone: () {
+        isDone = true;
+      },
+    );
 
-      await pumpEventQueue();
+    await pumpEventQueue();
 
-      expect(isDone, isTrue);
-      expect(await service.linkStream().isEmpty, isTrue);
-    },
-  );
+    expect(isDone, isTrue);
+    expect(await service.linkStream().isEmpty, isTrue);
+  });
 }
 
 class FakeAppLinksApi implements AppLinksApi {

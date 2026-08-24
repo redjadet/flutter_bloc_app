@@ -9,7 +9,8 @@ import 'package:utilities/utilities.dart';
 FcmPermissionState _mapPermissionState(AuthorizationStatus status) {
   return switch (status) {
     AuthorizationStatus.authorized => FcmPermissionState.authorized,
-    AuthorizationStatus.denied => FcmPermissionState.denied,
+    AuthorizationStatus.denied ||
+    AuthorizationStatus.deniedPermanently => FcmPermissionState.denied,
     AuthorizationStatus.notDetermined => FcmPermissionState.notDetermined,
     AuthorizationStatus.provisional => FcmPermissionState.provisional,
   };
@@ -70,8 +71,10 @@ class FirebaseMessagingRepository implements FcmMessagingService {
     final AuthorizationStatus status = current.authorizationStatus;
     if (status == AuthorizationStatus.authorized ||
         status == AuthorizationStatus.provisional ||
-        status == AuthorizationStatus.denied) {
+        status == AuthorizationStatus.denied ||
+        status == AuthorizationStatus.deniedPermanently) {
       // Do not re-prompt after the OS has a determined answer.
+      // deniedPermanently (Android 13+): OS will not show another prompt.
       return _mapPermissionState(status);
     }
     final NotificationSettings settings = await _messaging.requestPermission();

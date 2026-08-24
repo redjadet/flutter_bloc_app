@@ -27,9 +27,8 @@ void main() {
 
     test('delegates to direct remote when not signed in', () async {
       when(() => direct.lastSource).thenReturn(GraphqlDataSource.remote);
-      when(
-        () => direct.fetchContinents(),
-      ).thenAnswer((_) async => const <GraphqlContinent>[]);
+      when(() => direct.fetchContinents())
+          .thenAnswer((_) async => const <GraphqlContinent>[]);
 
       expect(repo.lastSource, GraphqlDataSource.unknown);
       await repo.fetchContinents();
@@ -41,9 +40,8 @@ void main() {
 
     test('delegates to supabase remote when signed in', () async {
       signedIn = true;
-      when(
-        () => supabase.lastSource,
-      ).thenReturn(GraphqlDataSource.supabaseTables);
+      when(() => supabase.lastSource)
+          .thenReturn(GraphqlDataSource.supabaseTables);
       when(
         () =>
             supabase.fetchCountries(continentCode: any(named: 'continentCode')),
@@ -61,15 +59,12 @@ void main() {
 
     test('switches delegate dynamically across calls', () async {
       when(() => direct.lastSource).thenReturn(GraphqlDataSource.remote);
-      when(
-        () => supabase.lastSource,
-      ).thenReturn(GraphqlDataSource.supabaseTables);
-      when(
-        () => direct.fetchContinents(),
-      ).thenAnswer((_) async => const <GraphqlContinent>[]);
-      when(
-        () => supabase.fetchContinents(),
-      ).thenAnswer((_) async => const <GraphqlContinent>[]);
+      when(() => supabase.lastSource)
+          .thenReturn(GraphqlDataSource.supabaseTables);
+      when(() => direct.fetchContinents())
+          .thenAnswer((_) async => const <GraphqlContinent>[]);
+      when(() => supabase.fetchContinents())
+          .thenAnswer((_) async => const <GraphqlContinent>[]);
 
       signedIn = false;
       await repo.fetchContinents();
@@ -84,9 +79,8 @@ void main() {
       'lastSource reflects the delegate that served the last request',
       () async {
         when(() => direct.lastSource).thenReturn(GraphqlDataSource.remote);
-        when(
-          () => supabase.lastSource,
-        ).thenReturn(GraphqlDataSource.supabaseTables);
+        when(() => supabase.lastSource)
+            .thenReturn(GraphqlDataSource.supabaseTables);
         when(() => direct.fetchContinents()).thenAnswer((_) async {
           signedIn = true;
           return const <GraphqlContinent>[];

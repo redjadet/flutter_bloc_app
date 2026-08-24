@@ -26,9 +26,8 @@ void main() {
     test('uses cache inside five-minute pre-expiry buffer', () async {
       final _MockIdTokenResult tokenResult = _MockIdTokenResult();
       when(() => tokenResult.token).thenReturn('token-a');
-      when(
-        () => tokenResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(minutes: 10)));
+      when(() => tokenResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(minutes: 10)));
       when(() => user.getIdTokenResult()).thenAnswer((_) async => tokenResult);
 
       expect(await manager.getValidAuthToken(user), 'token-a');
@@ -41,13 +40,11 @@ void main() {
       final _MockIdTokenResult staleResult = _MockIdTokenResult();
       final _MockIdTokenResult freshResult = _MockIdTokenResult();
       when(() => staleResult.token).thenReturn('token-stale');
-      when(
-        () => staleResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(minutes: 2)));
+      when(() => staleResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(minutes: 2)));
       when(() => freshResult.token).thenReturn('token-fresh');
-      when(
-        () => freshResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => freshResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
       var calls = 0;
       when(() => user.getIdTokenResult()).thenAnswer((_) async {
         calls += 1;

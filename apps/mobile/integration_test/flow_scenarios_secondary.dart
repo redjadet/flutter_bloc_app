@@ -277,7 +277,7 @@ void registerSocialFeedDemoIntegrationFlow() {
         find.byKey(const ValueKey('social-feed-scenario-controls')),
         findsOneWidget,
       );
-      await tester.pageBack();
+      await _pageBack(tester);
       await tester.pumpAndSettle();
 
       await tapAndPump(

@@ -164,11 +164,20 @@ Finder _findTodoAddControl() => find.byTooltip('Add todo');
 /// menu over the in-body batch bar: the bar is height-gated on desktop and
 /// can be missing even when selection is active.
 Future<void> _completeSelectedTodos(WidgetTester tester) async {
-  await pumpUntilFound(tester, find.byIcon(Icons.more_vert));
-  await tapAndPump(tester, find.byIcon(Icons.more_vert));
   final Finder completeLabel = find.text('Complete selected');
-  await pumpUntilFound(tester, completeLabel);
-  await tapAndPump(tester, completeLabel, scrollIntoView: false);
+  // Prefer in-body batch bar when visible (height-gated on some devices).
+  // Opening the app-bar menu while the bar is also up duplicates the label.
+  if (!tester.any(completeLabel)) {
+    final Finder batchOverflow = find.byTooltip(RegExp(r'\d+ selected'));
+    await pumpUntilFound(tester, batchOverflow);
+    await tapAndPump(tester, batchOverflow.first);
+    await pumpUntilFound(tester, completeLabel);
+  }
+  await tapAndPump(
+    tester,
+    completeLabel.hitTestable().first,
+    scrollIntoView: false,
+  );
   await pumpSettleWithin(tester);
 }
 
