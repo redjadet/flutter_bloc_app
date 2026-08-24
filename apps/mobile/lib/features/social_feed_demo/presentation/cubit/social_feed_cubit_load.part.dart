@@ -88,7 +88,8 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
               posts: _postsAlignedToComments(
                 posts: page.posts,
                 commentsByPostId: pageComments,
-                pendingCommentsByPostId: pendingSnapshot.pendingCommentsByPostId,
+                pendingCommentsByPostId:
+                    pendingSnapshot.pendingCommentsByPostId,
               ),
               nextCursor: page.nextCursor,
               refreshStatus: const SocialFeedRefreshStatus.idle(),

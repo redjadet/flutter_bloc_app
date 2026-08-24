@@ -49,8 +49,11 @@ void registerGuestSignInIntegrationFlow() {
             'simulator/emulator local guest user.',
       );
 
-      await pumpUntilFound(tester, find.text('0'));
-      expect(find.text('0'), findsWidgets);
+      // Desktop IT may not expose Text.semanticsLabel to finders; assert the
+      // counter widget itself (Hive/mock may retain a non-zero value).
+      final Finder countFinder = find.byType(CounterValueText);
+      await pumpUntilFound(tester, countFinder);
+      expect(countFinder, findsWidgets);
     },
   );
 }
@@ -64,22 +67,43 @@ void registerAppLaunchIntegrationFlow() {
 
       expect(find.text('Home Page'), findsOneWidget);
       expect(find.byType(MaterialApp), findsOneWidget);
-      await pumpUntilFound(tester, find.text('0'));
-      expect(find.text('0'), findsWidgets);
+      // Desktop Hive can retain a non-zero count across flows; drive relative
+      // to CounterValueText (semantics finders are unreliable on macOS IT).
+      final Finder countFinder = find.byType(CounterValueText);
+      await pumpUntilFound(tester, countFinder);
+      final int startCount = tester.widget<CounterValueText>(countFinder.first).count;
 
       final Finder incrementButton = find
           .widgetWithIcon(FloatingActionButton, Icons.add)
           .first;
       await tapAndPump(tester, incrementButton);
-      await pumpUntilFound(tester, find.text('1'));
-      expect(find.text('1'), findsWidgets);
+      await pumpUntilFound(
+        tester,
+        find.descendant(
+          of: countFinder,
+          matching: find.byKey(ValueKey<int>(startCount + 1)),
+        ),
+      );
+      expect(
+        tester.widget<CounterValueText>(countFinder.first).count,
+        startCount + 1,
+      );
 
       final Finder decrementButton = find
           .widgetWithIcon(FloatingActionButton, Icons.remove)
           .first;
       await tapAndPump(tester, decrementButton);
-      await pumpUntilFound(tester, find.text('0'));
-      expect(find.text('0'), findsWidgets);
+      await pumpUntilFound(
+        tester,
+        find.descendant(
+          of: countFinder,
+          matching: find.byKey(ValueKey<int>(startCount)),
+        ),
+      );
+      expect(
+        tester.widget<CounterValueText>(countFinder.first).count,
+        startCount,
+      );
     },
   );
 }
