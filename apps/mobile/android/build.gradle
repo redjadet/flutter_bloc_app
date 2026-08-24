@@ -62,3 +62,16 @@ subprojects { subproject ->
         }
     }
 }
+
+// firebase_auth 6.6+ Kotlin references Checker Framework init qualifiers; without
+// checker-qual on the compile classpath, KGP 2.4 + AGP built-in Kotlin fails
+// compileDebugKotlin locally (CI build lane does not assemble Android APK).
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.name == "firebase_auth") {
+            subproject.dependencies {
+                compileOnly "org.checkerframework:checker-qual:3.49.3"
+            }
+        }
+    }
+}

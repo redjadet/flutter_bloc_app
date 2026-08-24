@@ -525,6 +525,49 @@ is_adb_visible_device() {
   fi
 }
 
+wait_for_adb_device_boot() {
+  local device_id="$1"
+  local timeout_seconds="${2:-180}"
+
+  command -v adb >/dev/null 2>&1 || return 1
+
+  /usr/bin/python3 - "$device_id" "$timeout_seconds" <<'PY'
+import subprocess
+import sys
+import time
+
+device_id = sys.argv[1]
+timeout_seconds = int(sys.argv[2])
+deadline = time.time() + timeout_seconds
+
+while time.time() < deadline:
+    result = subprocess.run(
+        ["adb", "devices"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    state = None
+    for line in result.stdout.splitlines()[1:]:
+        parts = line.split()
+        if len(parts) >= 2 and parts[0] == device_id:
+            state = parts[1]
+            break
+    if state == "device":
+        boot = subprocess.run(
+            ["adb", "-s", device_id, "shell", "getprop", "sys.boot_completed"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if boot.stdout.strip() == "1":
+            raise SystemExit(0)
+    time.sleep(5)
+
+raise SystemExit(1)
+PY
+}
+
 # When CHECKLIST_INTEGRATION_DEVICE is pinned, avoid slow `flutter devices` when
 # simctl/adb already prove the target is usable.
 try_fast_path_requested_device() {
@@ -563,6 +606,18 @@ try_fast_path_requested_device() {
     log "Requested simulator '$requested_device' failed to boot; falling back to flutter devices discovery."
     return 1
   fi
+
+  case "$requested_device" in
+    emulator-*)
+      log "Waiting for adb emulator '$requested_device' to finish booting..."
+      if wait_for_adb_device_boot "$requested_device" "${ADB_EMULATOR_BOOT_TIMEOUT_SECONDS:-180}"; then
+        log "Using CHECKLIST_INTEGRATION_DEVICE='$requested_device' (adb booted; skipped flutter devices discovery)."
+        printf '%s\n' "$requested_device"
+        return 0
+      fi
+      log "Requested adb emulator '$requested_device' did not become ready; trying adb-visible fast path."
+      ;;
+  esac
 
   if is_adb_visible_device "$requested_device"; then
     log "Using CHECKLIST_INTEGRATION_DEVICE='$requested_device' (adb-visible; skipped flutter devices discovery)."
