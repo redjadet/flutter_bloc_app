@@ -11,8 +11,7 @@ class MixAvoidDefiningTokensWithinScope extends AnalysisRule {
   static const LintCode code = LintCode(
     'mix_avoid_defining_tokens_within_scope',
     'MixToken instances should not be created directly inside MixScope constructors.',
-    correctionMessage:
-        'Define the token as a top-level or local constant and use it as a key in the scope map.',
+    correctionMessage: 'Define the token as a top-level or local constant and use it as a key in the scope map.',
   );
 
   MixAvoidDefiningTokensWithinScope()

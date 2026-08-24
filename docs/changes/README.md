@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-24_upgrade_validate_go_router_freezed_fcm.md`](2026-08-24_upgrade_validate_go_router_freezed_fcm.md): Major pub upgrade (`freezed` 4, Firebase); FCM `deniedPermanently`; defer `go_router` 18.
 - [`2026-08-24_social_feed_offline_queue_reconciliation.md`](2026-08-24_social_feed_offline_queue_reconciliation.md): Rehydrate and promote queued comments; serialize queue writes; preserve same-post pending state during replay.
 - [`2026-08-21_docs_skill_consistency_indexes.md`](2026-08-21_docs_skill_consistency_indexes.md): Doc/skill index + host-availability consistency (AI/features indexes, skill routing, CODEMAP, onboarding pointers).
 - [`2026-08-21_modal_bloc_provider_guard.md`](2026-08-21_modal_bloc_provider_guard.md): Modal sheet missing `BlocProvider.value` → static guard + social-feed regression.

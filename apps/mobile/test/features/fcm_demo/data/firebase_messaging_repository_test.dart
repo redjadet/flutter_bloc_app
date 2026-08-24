@@ -105,6 +105,17 @@ void main() {
       verifyNever(() => messaging.requestPermission());
     });
 
+    test('requestPermission skips OS prompt when denied permanently', () async {
+      when(() => messaging.getNotificationSettings()).thenAnswer(
+        (_) async => _settings(AuthorizationStatus.deniedPermanently),
+      );
+
+      final state = await repository.requestPermission();
+
+      expect(state, FcmPermissionState.denied);
+      verifyNever(() => messaging.requestPermission());
+    });
+
     test('getToken returns null when firebase throws', () async {
       when(() => messaging.getToken()).thenThrow(Exception('token failure'));
 

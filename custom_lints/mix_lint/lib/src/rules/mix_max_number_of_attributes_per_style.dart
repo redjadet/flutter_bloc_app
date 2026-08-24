@@ -13,8 +13,7 @@ class MixMaxNumberOfAttributesPerStyle extends AnalysisRule {
   static const LintCode code = LintCode(
     'mix_max_number_of_attributes_per_style',
     'Styler chain has too many attributes.',
-    correctionMessage:
-        'Extract some attributes into separate Styler variables and compose them with merge().',
+    correctionMessage: 'Extract some attributes into separate Styler variables and compose them with merge().',
   );
 
   final int maxNumber;

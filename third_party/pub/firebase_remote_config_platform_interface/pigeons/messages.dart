@@ -8,13 +8,11 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     dartPackageName: 'firebase_remote_config_platform_interface',
-    kotlinOut:
-        '../firebase_remote_config/android/src/main/kotlin/io/flutter/plugins/firebase/firebaseremoteconfig/GeneratedAndroidFirebaseRemoteConfig.g.kt',
+    kotlinOut: '../firebase_remote_config/android/src/main/kotlin/io/flutter/plugins/firebase/firebaseremoteconfig/GeneratedAndroidFirebaseRemoteConfig.g.kt',
     kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.firebaseremoteconfig',
     ),
-    swiftOut:
-        '../firebase_remote_config/ios/firebase_remote_config/Sources/firebase_remote_config/FirebaseRemoteConfigMessages.g.swift',
+    swiftOut: '../firebase_remote_config/ios/firebase_remote_config/Sources/firebase_remote_config/FirebaseRemoteConfigMessages.g.swift',
     cppHeaderOut: '../firebase_remote_config/windows/messages.g.h',
     cppSourceOut: '../firebase_remote_config/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_remote_config_windows'),

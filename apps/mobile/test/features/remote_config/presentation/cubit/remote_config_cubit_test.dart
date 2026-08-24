@@ -19,15 +19,12 @@ void main() {
         () =>
             remoteConfigService.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(false);
-      when(
-        () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-      ).thenReturn('initial');
-      when(
-        () => remoteConfigService.getString(RemoteConfigKeys.lastDataSource),
-      ).thenReturn('');
-      when(
-        () => remoteConfigService.getString(RemoteConfigKeys.lastSyncedAt),
-      ).thenReturn('');
+      when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+          .thenReturn('initial');
+      when(() => remoteConfigService.getString(RemoteConfigKeys.lastDataSource))
+          .thenReturn('');
+      when(() => remoteConfigService.getString(RemoteConfigKeys.lastSyncedAt))
+          .thenReturn('');
       when(() => remoteConfigService.clearCache()).thenAnswer((_) async {});
     });
 
@@ -41,9 +38,8 @@ void main() {
             RemoteConfigKeys.awesomeFeatureEnabled,
           ),
         ).thenReturn(true);
-        when(
-          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('awesome');
+        when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('awesome');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) => cubit.initialize(),
@@ -64,9 +60,8 @@ void main() {
       'emits loading then error when forceFetch throws',
       build: () {
         when(() => remoteConfigService.initialize()).thenAnswer((_) async {});
-        when(
-          () => remoteConfigService.forceFetch(),
-        ).thenThrow(Exception('forceFetch failed'));
+        when(() => remoteConfigService.forceFetch())
+            .thenThrow(Exception('forceFetch failed'));
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) => cubit.initialize(),
@@ -90,9 +85,8 @@ void main() {
             RemoteConfigKeys.awesomeFeatureEnabled,
           ),
         ).thenReturn(true);
-        when(
-          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('initial');
+        when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('initial');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {
@@ -102,9 +96,8 @@ void main() {
             RemoteConfigKeys.awesomeFeatureEnabled,
           ),
         ).thenReturn(false);
-        when(
-          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('updated');
+        when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('updated');
         await cubit.fetchValues();
       },
       expect: () => const <RemoteConfigState>[
@@ -134,9 +127,8 @@ void main() {
             RemoteConfigKeys.awesomeFeatureEnabled,
           ),
         ).thenReturn(true);
-        when(
-          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('cached');
+        when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('cached');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) => cubit.clearCache(),
@@ -163,16 +155,14 @@ void main() {
             RemoteConfigKeys.awesomeFeatureEnabled,
           ),
         ).thenReturn(true);
-        when(
-          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('initial');
+        when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('initial');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {
         await cubit.initialize();
-        when(
-          () => remoteConfigService.forceFetch(),
-        ).thenThrow(Exception('forceFetch after init failed'));
+        when(() => remoteConfigService.forceFetch())
+            .thenThrow(Exception('forceFetch after init failed'));
         await cubit.fetchValues();
       },
       expect: () => const <RemoteConfigState>[
@@ -197,17 +187,15 @@ void main() {
       build: () {
         overlappingCompleter = Completer<void>();
         when(() => remoteConfigService.initialize()).thenAnswer((_) async {});
-        when(
-          () => remoteConfigService.forceFetch(),
-        ).thenAnswer((_) => overlappingCompleter.future);
+        when(() => remoteConfigService.forceFetch())
+            .thenAnswer((_) => overlappingCompleter.future);
         when(
           () => remoteConfigService.getBool(
             RemoteConfigKeys.awesomeFeatureEnabled,
           ),
         ).thenReturn(true);
-        when(
-          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('overlap');
+        when(() => remoteConfigService.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('overlap');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {

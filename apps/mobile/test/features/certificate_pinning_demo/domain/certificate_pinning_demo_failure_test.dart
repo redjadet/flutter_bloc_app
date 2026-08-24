@@ -5,15 +5,13 @@ import 'package:networking/networking.dart';
 void main() {
   test('fromDomain maps every CertificatePinningFailure variant', () {
     expect(
-      CertificatePinningDemoPinFailure.fromDomain(
-        const PinMismatchFailure(),
-      ).l10nCode,
+      CertificatePinningDemoPinFailure.fromDomain(const PinMismatchFailure())
+          .l10nCode,
       'pinMismatch',
     );
     expect(
-      CertificatePinningDemoPinFailure.fromDomain(
-        const MissingPinFailure(),
-      ).l10nCode,
+      CertificatePinningDemoPinFailure.fromDomain(const MissingPinFailure())
+          .l10nCode,
       'missingPin',
     );
     expect(

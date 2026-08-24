@@ -16,12 +16,10 @@ void main() {
 
       when(() => user.uid).thenReturn('firebase-user');
       when(() => tokenResult.token).thenReturn('firebase-token');
-      when(
-        () => tokenResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
-      when(
-        () => user.getIdTokenResult(false),
-      ).thenAnswer((_) async => tokenResult);
+      when(() => tokenResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => user.getIdTokenResult(false))
+          .thenAnswer((_) async => tokenResult);
 
       final InMemoryTokenRepository repository = InMemoryTokenRepository();
 
@@ -38,12 +36,10 @@ void main() {
 
       when(() => user.uid).thenReturn('firebase-user');
       when(() => tokenResult.token).thenReturn('fresh-firebase-token');
-      when(
-        () => tokenResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
-      when(
-        () => user.getIdTokenResult(true),
-      ).thenAnswer((_) async => tokenResult);
+      when(() => tokenResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => user.getIdTokenResult(true))
+          .thenAnswer((_) async => tokenResult);
 
       final InMemoryTokenRepository repository = InMemoryTokenRepository();
 
@@ -91,12 +87,10 @@ void main() {
 
       when(() => user.uid).thenReturn('firebase-user');
       when(() => tokenResult.token).thenReturn('firebase-token');
-      when(
-        () => tokenResult.expirationTime,
-      ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
-      when(
-        () => user.getIdTokenResult(false),
-      ).thenAnswer((_) async => tokenResult);
+      when(() => tokenResult.expirationTime)
+          .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+      when(() => user.getIdTokenResult(false))
+          .thenAnswer((_) async => tokenResult);
 
       final InMemoryTokenRepository repository = InMemoryTokenRepository();
       await repository.hydrateFirebaseSession(user);

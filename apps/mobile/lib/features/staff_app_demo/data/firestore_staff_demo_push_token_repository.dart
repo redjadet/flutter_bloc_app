@@ -17,7 +17,9 @@ class FirestoreStaffDemoPushTokenRepository
   Future<void> registerTokens({required String userId}) async {
     try {
       final settings = await _messaging.requestPermission();
-      if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      if (settings.authorizationStatus == AuthorizationStatus.denied ||
+          settings.authorizationStatus ==
+              AuthorizationStatus.deniedPermanently) {
         return;
       }
       String? token;

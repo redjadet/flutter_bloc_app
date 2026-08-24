@@ -28,19 +28,15 @@ void main() {
       remoteConfig = _MockFirebaseRemoteConfig();
       debugMessages = <String>[];
 
-      when(
-        () => remoteConfig.setConfigSettings(any()),
-      ).thenAnswer((_) async {});
+      when(() => remoteConfig.setConfigSettings(any()))
+          .thenAnswer((_) async {});
       when(() => remoteConfig.setDefaults(any())).thenAnswer((_) async {});
-      when(
-        () => remoteConfig.onConfigUpdated,
-      ).thenAnswer((_) => const Stream<RemoteConfigUpdate>.empty());
-      when(
-        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
-      ).thenReturn(false);
-      when(
-        () => remoteConfig.getString(RemoteConfigKeys.testValue1),
-      ).thenReturn('');
+      when(() => remoteConfig.onConfigUpdated)
+          .thenAnswer((_) => const Stream<RemoteConfigUpdate>.empty());
+      when(() => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled))
+          .thenReturn(false);
+      when(() => remoteConfig.getString(RemoteConfigKeys.testValue1))
+          .thenReturn('');
     });
 
     tearDown(() {
@@ -48,12 +44,10 @@ void main() {
     });
 
     test('getString and getBool do not log on every read', () {
-      when(
-        () => remoteConfig.getString(RemoteConfigKeys.testValue1),
-      ).thenReturn('expected-value');
-      when(
-        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
-      ).thenReturn(true);
+      when(() => remoteConfig.getString(RemoteConfigKeys.testValue1))
+          .thenReturn('expected-value');
+      when(() => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled))
+          .thenReturn(true);
 
       final repository = FirebaseRemoteConfigDataSource(
         remoteConfig,
@@ -79,15 +73,12 @@ void main() {
 
         addTearDown(controller.close);
 
-        when(
-          () => remoteConfig.onConfigUpdated,
-        ).thenAnswer((_) => controller.stream);
-        when(
-          () => remoteConfig.fetchAndActivate(),
-        ).thenAnswer((_) async => true);
-        when(
-          () => remoteConfig.getString(RemoteConfigKeys.testValue1),
-        ).thenReturn('latest-value');
+        when(() => remoteConfig.onConfigUpdated)
+            .thenAnswer((_) => controller.stream);
+        when(() => remoteConfig.fetchAndActivate())
+            .thenAnswer((_) async => true);
+        when(() => remoteConfig.getString(RemoteConfigKeys.testValue1))
+            .thenReturn('latest-value');
 
         final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
@@ -116,15 +107,12 @@ void main() {
 
         addTearDown(controller.close);
 
-        when(
-          () => remoteConfig.onConfigUpdated,
-        ).thenAnswer((_) => controller.stream);
-        when(
-          () => remoteConfig.fetchAndActivate(),
-        ).thenAnswer((_) async => true);
-        when(
-          () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
-        ).thenReturn(true);
+        when(() => remoteConfig.onConfigUpdated)
+            .thenAnswer((_) => controller.stream);
+        when(() => remoteConfig.fetchAndActivate())
+            .thenAnswer((_) async => true);
+        when(() => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled))
+            .thenReturn(true);
 
         final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
@@ -149,12 +137,10 @@ void main() {
 
     test('forceFetch logs tracked values', () async {
       when(() => remoteConfig.fetchAndActivate()).thenAnswer((_) async => true);
-      when(
-        () => remoteConfig.getString(RemoteConfigKeys.testValue1),
-      ).thenReturn('fetched-value');
-      when(
-        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
-      ).thenReturn(true);
+      when(() => remoteConfig.getString(RemoteConfigKeys.testValue1))
+          .thenReturn('fetched-value');
+      when(() => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled))
+          .thenReturn(true);
 
       final repository = FirebaseRemoteConfigDataSource(
         remoteConfig,
@@ -184,9 +170,8 @@ void main() {
     test(
       'forceFetch disables retries after Keychain entitlement error',
       () async {
-        when(
-          () => remoteConfig.fetchAndActivate(),
-        ).thenThrow(Exception('SecItemAdd failed with -34018'));
+        when(() => remoteConfig.fetchAndActivate())
+            .thenThrow(Exception('SecItemAdd failed with -34018'));
 
         final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
@@ -232,9 +217,8 @@ void main() {
 
         addTearDown(controller.close);
 
-        when(
-          () => remoteConfig.onConfigUpdated,
-        ).thenAnswer((_) => controller.stream);
+        when(() => remoteConfig.onConfigUpdated)
+            .thenAnswer((_) => controller.stream);
 
         final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,

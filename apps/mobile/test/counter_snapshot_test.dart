@@ -10,16 +10,14 @@ void main() {
       lastChanged: DateTime.utc(2024, 1, 1, 12),
     );
 
-    final Map<String, dynamic> json = CounterSnapshotDto.fromDomain(
-      snapshot,
-    ).toJson();
+    final Map<String, dynamic> json = CounterSnapshotDto.fromDomain(snapshot)
+        .toJson();
     expect(json['userId'], 'user-42');
     expect(json['count'], 7);
     expect(json['lastChanged'], '2024-01-01T12:00:00.000Z');
 
-    final CounterSnapshot roundTrip = CounterSnapshotDto.fromJson(
-      json,
-    ).toDomain();
+    final CounterSnapshot roundTrip = CounterSnapshotDto.fromJson(json)
+        .toDomain();
     expect(roundTrip, snapshot);
   });
 }

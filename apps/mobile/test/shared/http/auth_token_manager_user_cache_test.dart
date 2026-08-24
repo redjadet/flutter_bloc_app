@@ -30,16 +30,14 @@ void main() {
 
       // Mock token result
       when(() => mockTokenResult.token).thenReturn('mock-token');
-      when(
-        () => mockTokenResult.expirationTime,
-      ).thenReturn(DateTime.now().add(const Duration(hours: 1)));
+      when(() => mockTokenResult.expirationTime)
+          .thenReturn(DateTime.now().add(const Duration(hours: 1)));
     });
 
     test('caches token per user correctly', () async {
       // Mock getIdTokenResult for user1
-      when(
-        () => user1.getIdTokenResult(),
-      ).thenAnswer((_) async => mockTokenResult);
+      when(() => user1.getIdTokenResult())
+          .thenAnswer((_) async => mockTokenResult);
 
       // First call for user1 should fetch and cache token
       final token1 = await tokenManager.getValidAuthToken(user1);
@@ -55,12 +53,10 @@ void main() {
 
     test('does not reuse cached token for different user', () async {
       // Mock getIdTokenResult for both users
-      when(
-        () => user1.getIdTokenResult(),
-      ).thenAnswer((_) async => mockTokenResult);
-      when(
-        () => user2.getIdTokenResult(),
-      ).thenAnswer((_) async => mockTokenResult);
+      when(() => user1.getIdTokenResult())
+          .thenAnswer((_) async => mockTokenResult);
+      when(() => user2.getIdTokenResult())
+          .thenAnswer((_) async => mockTokenResult);
 
       // Get token for user1
       final token1 = await tokenManager.getValidAuthToken(user1);
@@ -77,12 +73,10 @@ void main() {
 
     test('clears cache when switching users', () async {
       // Mock getIdTokenResult for both users
-      when(
-        () => user1.getIdTokenResult(),
-      ).thenAnswer((_) async => mockTokenResult);
-      when(
-        () => user2.getIdTokenResult(),
-      ).thenAnswer((_) async => mockTokenResult);
+      when(() => user1.getIdTokenResult())
+          .thenAnswer((_) async => mockTokenResult);
+      when(() => user2.getIdTokenResult())
+          .thenAnswer((_) async => mockTokenResult);
 
       // Get token for user1
       await tokenManager.getValidAuthToken(user1);
@@ -99,12 +93,10 @@ void main() {
     });
 
     test('refreshTokenAndGet clears user-specific cache', () async {
-      when(
-        () => user1.getIdTokenResult(false),
-      ).thenAnswer((_) async => mockTokenResult);
-      when(
-        () => user1.getIdTokenResult(true),
-      ).thenAnswer((_) async => mockTokenResult);
+      when(() => user1.getIdTokenResult(false))
+          .thenAnswer((_) async => mockTokenResult);
+      when(() => user1.getIdTokenResult(true))
+          .thenAnswer((_) async => mockTokenResult);
 
       // Get initial token
       await tokenManager.getValidAuthToken(user1);

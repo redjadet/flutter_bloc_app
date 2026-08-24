@@ -9,9 +9,8 @@ class MixMixableStylerHasCreateTest extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = MixMixableStylerHasCreate();
-    newPackage(
-      'mix_annotations',
-    ).addFile('lib/mix_annotations.dart', mixAnnotationsStubLibContent);
+    newPackage('mix_annotations')
+        .addFile('lib/mix_annotations.dart', mixAnnotationsStubLibContent);
     super.setUp();
   }
 

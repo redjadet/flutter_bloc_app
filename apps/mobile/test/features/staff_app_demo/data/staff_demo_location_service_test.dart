@@ -162,37 +162,31 @@ void main() {
     },
   );
 
-  test(
-    'requests permission when status is unableToDetermine then captures location',
-    () async {
-      fake.checkPermissionResult = LocationPermission.unableToDetermine;
-      fake.requestPermissionResult = LocationPermission.whileInUse;
-      final service = StaffDemoLocationService(
-        currentPositionFetcher: () async => _samplePosition(),
-      );
+  test('requests permission when status is unableToDetermine then captures location', () async {
+    fake.checkPermissionResult = LocationPermission.unableToDetermine;
+    fake.requestPermissionResult = LocationPermission.whileInUse;
+    final service = StaffDemoLocationService(
+      currentPositionFetcher: () async => _samplePosition(),
+    );
 
-      final result = await service.captureCurrentLocation();
+    final result = await service.captureCurrentLocation();
 
-      expect(fake.requestPermissionCalled, isTrue);
-      expect(result, isA<Success<StaffDemoCapturedLocation>>());
-    },
-  );
+    expect(fake.requestPermissionCalled, isTrue);
+    expect(result, isA<Success<StaffDemoCapturedLocation>>());
+  });
 
-  test(
-    'returns PermissionFailure when permission stays unableToDetermine after request',
-    () async {
-      fake.checkPermissionResult = LocationPermission.unableToDetermine;
-      fake.requestPermissionResult = LocationPermission.unableToDetermine;
-      final service = StaffDemoLocationService();
+  test('returns PermissionFailure when permission stays unableToDetermine after request', () async {
+    fake.checkPermissionResult = LocationPermission.unableToDetermine;
+    fake.requestPermissionResult = LocationPermission.unableToDetermine;
+    final service = StaffDemoLocationService();
 
-      final result = await service.captureCurrentLocation();
+    final result = await service.captureCurrentLocation();
 
-      expect(fake.requestPermissionCalled, isTrue);
-      expect(result.failureOrNull, isA<PermissionFailure>());
-      final failure = result.failureOrNull! as PermissionFailure;
-      expect(failure.reason, PermissionFailureReason.denied);
-    },
-  );
+    expect(fake.requestPermissionCalled, isTrue);
+    expect(result.failureOrNull, isA<PermissionFailure>());
+    final failure = result.failureOrNull! as PermissionFailure;
+    expect(failure.reason, PermissionFailureReason.denied);
+  });
 
   test('returns TimeoutFailure when Geolocator times out', () async {
     const timeout = Duration(milliseconds: 20);

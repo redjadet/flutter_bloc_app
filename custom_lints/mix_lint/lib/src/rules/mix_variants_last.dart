@@ -11,8 +11,7 @@ class MixVariantsLast extends AnalysisRule {
   static const LintCode code = LintCode(
     'mix_variants_last',
     'Variant methods must come after all base styling methods in a Styler chain.',
-    correctionMessage:
-        "Move variant calls (e.g. onHovered, onDark) to the end of the Styler chain.",
+    correctionMessage: "Move variant calls (e.g. onHovered, onDark) to the end of the Styler chain.",
   );
 
   MixVariantsLast()

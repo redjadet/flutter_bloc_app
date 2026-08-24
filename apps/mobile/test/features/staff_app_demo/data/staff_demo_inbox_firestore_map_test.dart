@@ -6,13 +6,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('StaffDemoInboxFirestoreMap', () {
     test('recipientFromData maps Timestamp confirmedAt', () {
-      final mapped =
-          StaffDemoInboxFirestoreMap.recipientFromData(<String, dynamic>{
-            'messageId': 'msg-1',
-            'confirmedAt': Timestamp.fromMillisecondsSinceEpoch(
-              1_700_000_000_000,
-            ),
-          });
+      final mapped = StaffDemoInboxFirestoreMap.recipientFromData(
+        <String, dynamic>{
+          'messageId': 'msg-1',
+          'confirmedAt': Timestamp.fromMillisecondsSinceEpoch(
+            1_700_000_000_000,
+          ),
+        },
+      );
       expect(mapped, isNotNull);
       expect(mapped!.messageId, 'msg-1');
       expect(mapped.confirmedAtMs, 1_700_000_000_000);

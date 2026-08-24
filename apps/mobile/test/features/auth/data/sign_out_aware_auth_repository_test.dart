@@ -24,9 +24,8 @@ void main() {
       );
       when(() => delegate.currentUser).thenReturn(null);
       when(() => coordinator.sessionReadyCurrentUser).thenReturn(null);
-      when(
-        () => coordinator.sessionReadyAuthStateChanges,
-      ).thenAnswer((_) => const Stream<AuthUser?>.empty());
+      when(() => coordinator.sessionReadyAuthStateChanges)
+          .thenAnswer((_) => const Stream<AuthUser?>.empty());
       when(() => delegate.signOut()).thenAnswer((_) async {});
       when(
         () =>

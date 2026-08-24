@@ -60,9 +60,8 @@ void main() {
       rationale: 'ok',
       proof: const AiDecisionProof(),
     );
-    when(
-      () => api.runDecisionSupport(caseId: '1', operatorNote: 'n'),
-    ).thenAnswer((_) async => result);
+    when(() => api.runDecisionSupport(caseId: '1', operatorNote: 'n'))
+        .thenAnswer((_) async => result);
 
     expect(
       await repository.runDecisionSupport(caseId: '1', operatorNote: 'n'),
@@ -71,13 +70,11 @@ void main() {
   });
 
   test('delegates createAction', () async {
-    when(
-      () => api.createAction(caseId: '1', actionType: 'note', note: 'hi'),
-    ).thenAnswer((_) async {});
+    when(() => api.createAction(caseId: '1', actionType: 'note', note: 'hi'))
+        .thenAnswer((_) async {});
 
     await repository.createAction(caseId: '1', actionType: 'note', note: 'hi');
-    verify(
-      () => api.createAction(caseId: '1', actionType: 'note', note: 'hi'),
-    ).called(1);
+    verify(() => api.createAction(caseId: '1', actionType: 'note', note: 'hi'))
+        .called(1);
   });
 }
