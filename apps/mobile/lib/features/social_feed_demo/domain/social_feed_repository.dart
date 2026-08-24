@@ -27,19 +27,13 @@ sealed class SocialFeedCommentResult {
 }
 
 final class SocialFeedCommentSynced extends SocialFeedCommentResult {
-  const SocialFeedCommentSynced({
-    required this.post,
-    required this.mutationId,
-  });
+  const SocialFeedCommentSynced({required this.post, required this.mutationId});
   final SocialFeedPost post;
   final String mutationId;
 }
 
 final class SocialFeedCommentQueued extends SocialFeedCommentResult {
-  const SocialFeedCommentQueued({
-    required this.post,
-    required this.mutationId,
-  });
+  const SocialFeedCommentQueued({required this.post, required this.mutationId});
   final SocialFeedPost post;
   final String mutationId;
 }
@@ -102,6 +96,7 @@ class SocialFeedSyncSummary {
     this.attentionMutations = const <SocialFeedAttentionMutation>[],
     this.rejections = const <SocialFeedRejectedSync>[],
     this.dispatchedMutations = const <SocialFeedDispatchedMutation>[],
+    this.pendingPostIds = const <String>{},
   });
 
   final int pendingCount;
@@ -109,6 +104,7 @@ class SocialFeedSyncSummary {
   final List<SocialFeedAttentionMutation> attentionMutations;
   final List<SocialFeedRejectedSync> rejections;
   final List<SocialFeedDispatchedMutation> dispatchedMutations;
+  final Set<String> pendingPostIds;
 }
 
 abstract class SocialFeedSyncLease {

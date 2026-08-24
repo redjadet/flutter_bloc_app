@@ -23,16 +23,18 @@ Future<SocialFeedPendingSnapshot> _readPendingSnapshotImpl(
     if (body == null) {
       continue;
     }
-    pendingComments.putIfAbsent(item.postId, () => <SocialFeedComment>[]).add(
-      SocialFeedComment(
-        id: item.mutationId,
-        postId: item.postId,
-        viewerId: item.viewerId,
-        body: body,
-        createdAt: now,
-        syncStatus: SocialFeedMutationStatus.pending,
-      ),
-    );
+    pendingComments
+        .putIfAbsent(item.postId, () => <SocialFeedComment>[])
+        .add(
+          SocialFeedComment(
+            id: item.mutationId,
+            postId: item.postId,
+            viewerId: item.viewerId,
+            body: body,
+            createdAt: now,
+            syncStatus: SocialFeedMutationStatus.pending,
+          ),
+        );
   }
   return SocialFeedPendingSnapshot(
     pendingCommentsByPostId: pendingComments,
@@ -122,6 +124,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     return SocialFeedSyncSummary(
       pendingCount: q.length,
       needsAttentionCount: a.length,
+      pendingPostIds: <String>{
+        for (final SocialFeedMutationDto item in q) item.postId,
+      },
       attentionMutations: <SocialFeedAttentionMutation>[
         for (final SocialFeedMutationDto item in a)
           SocialFeedAttentionMutation(
@@ -214,6 +219,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   return SocialFeedSyncSummary(
     pendingCount: pending.length,
     needsAttentionCount: attention.length,
+    pendingPostIds: <String>{
+      for (final SocialFeedMutationDto item in pending) item.postId,
+    },
     attentionMutations: <SocialFeedAttentionMutation>[
       for (final SocialFeedMutationDto item in attention)
         SocialFeedAttentionMutation(

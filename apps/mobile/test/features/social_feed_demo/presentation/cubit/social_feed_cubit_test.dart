@@ -229,69 +229,139 @@ void main() {
     await cubit.close();
   });
 
-  test('background sync promotes queued comment without manual refresh', () async {
-    final SocialFeedPost base = post(id: 'p1', comments: 1);
-    final _FakeScenario scenario = _FakeScenario();
-    final DateTime fixedNow = DateTime.utc(2026, 8, 20, 12);
-    final _FakeRepo repo = _FakeRepo(
-      remote: SocialFeedPage(
-        posts: <SocialFeedPost>[base],
-        nextCursor: null,
-        hasMore: false,
-        source: SocialFeedDataSource.remote,
-        fetchedAt: DateTime.utc(2026, 8, 20),
-      ),
-      commentResult: SocialFeedCommentQueued(
-        post: base.copyWith(commentCount: 2),
-        mutationId: 'comment-p1-${fixedNow.microsecondsSinceEpoch}',
-      ),
-    );
-    final SocialFeedCubit cubit = SocialFeedCubit(
-      repository: repo,
-      realtimeSource: _FakeRealtime(),
-      scenario: scenario,
-      clock: () => fixedNow,
-    );
-    await cubit.load();
-    scenario.setSimulatedOnline(online: false);
-    await cubit.submitComment(postId: 'p1', body: 'Queued offline');
-    final SocialFeedReady queued = cubit.state as SocialFeedReady;
-    final String mutationId =
-        queued.data.pendingCommentsByPostId['p1']!.first.id;
-    expect(queued.data.pendingPostIds, contains('p1'));
+  test(
+    'background sync promotes queued comment without manual refresh',
+    () async {
+      final SocialFeedPost base = post(id: 'p1', comments: 1);
+      final _FakeScenario scenario = _FakeScenario();
+      final DateTime fixedNow = DateTime.utc(2026, 8, 20, 12);
+      final _FakeRepo repo = _FakeRepo(
+        remote: SocialFeedPage(
+          posts: <SocialFeedPost>[base],
+          nextCursor: null,
+          hasMore: false,
+          source: SocialFeedDataSource.remote,
+          fetchedAt: DateTime.utc(2026, 8, 20),
+        ),
+        commentResult: SocialFeedCommentQueued(
+          post: base.copyWith(commentCount: 2),
+          mutationId: 'comment-p1-${fixedNow.microsecondsSinceEpoch}',
+        ),
+      );
+      final SocialFeedCubit cubit = SocialFeedCubit(
+        repository: repo,
+        realtimeSource: _FakeRealtime(),
+        scenario: scenario,
+        clock: () => fixedNow,
+      );
+      await cubit.load();
+      scenario.setSimulatedOnline(online: false);
+      await cubit.submitComment(postId: 'p1', body: 'Queued offline');
+      final SocialFeedReady queued = cubit.state as SocialFeedReady;
+      final String mutationId =
+          queued.data.pendingCommentsByPostId['p1']!.first.id;
+      expect(queued.data.pendingPostIds, contains('p1'));
 
-    repo.commentsByPostId['p1'] = <SocialFeedComment>[
-      ...?repo.commentsByPostId['p1'],
-      SocialFeedComment(
-        id: mutationId,
-        postId: 'p1',
-        viewerId: SocialFeedViewer.alex.id,
-        body: 'Queued offline',
-        createdAt: fixedNow,
-        syncStatus: SocialFeedMutationStatus.synced,
-      ),
-    ];
-    repo.lease.emitSummary(
-      SocialFeedSyncSummary(
-        pendingCount: 0,
-        needsAttentionCount: 0,
-        dispatchedMutations: <SocialFeedDispatchedMutation>[
-          SocialFeedDispatchedMutation(
-            mutationId: mutationId,
-            postId: 'p1',
-            wasComment: true,
-          ),
-        ],
-      ),
-    );
-    await Future<void>.delayed(Duration.zero);
+      repo.commentsByPostId['p1'] = <SocialFeedComment>[
+        ...?repo.commentsByPostId['p1'],
+        SocialFeedComment(
+          id: mutationId,
+          postId: 'p1',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'Queued offline',
+          createdAt: fixedNow,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+      ];
+      repo.lease.emitSummary(
+        SocialFeedSyncSummary(
+          pendingCount: 0,
+          needsAttentionCount: 0,
+          pendingPostIds: const <String>{},
+          dispatchedMutations: <SocialFeedDispatchedMutation>[
+            SocialFeedDispatchedMutation(
+              mutationId: mutationId,
+              postId: 'p1',
+              wasComment: true,
+            ),
+          ],
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
 
-    final SocialFeedReady synced = cubit.state as SocialFeedReady;
-    expect(synced.data.pendingCommentsByPostId['p1'], isNull);
-    expect(synced.data.pendingPostIds, isEmpty);
-    expect(synced.data.commentsByPostId['p1'], hasLength(2));
-    await cubit.close();
-  });
+      final SocialFeedReady synced = cubit.state as SocialFeedReady;
+      expect(synced.data.pendingCommentsByPostId['p1'], isNull);
+      expect(synced.data.pendingPostIds, isEmpty);
+      expect(synced.data.commentsByPostId['p1'], hasLength(2));
+      await cubit.close();
+    },
+  );
+
+  test(
+    'sync summary retains a later same-post mutation after comment dispatch',
+    () async {
+      final SocialFeedPost base = post(id: 'p1', comments: 1);
+      final _FakeScenario scenario = _FakeScenario();
+      final DateTime fixedNow = DateTime.utc(2026, 8, 20, 12);
+      final _FakeRepo repo = _FakeRepo(
+        remote: SocialFeedPage(
+          posts: <SocialFeedPost>[base],
+          nextCursor: null,
+          hasMore: false,
+          source: SocialFeedDataSource.remote,
+          fetchedAt: DateTime.utc(2026, 8, 20),
+        ),
+        commentResult: SocialFeedCommentQueued(
+          post: base.copyWith(commentCount: 2),
+          mutationId: 'comment-p1-${fixedNow.microsecondsSinceEpoch}',
+        ),
+      );
+      final SocialFeedCubit cubit = SocialFeedCubit(
+        repository: repo,
+        realtimeSource: _FakeRealtime(),
+        scenario: scenario,
+        clock: () => fixedNow,
+      );
+      await cubit.load();
+      scenario.setSimulatedOnline(online: false);
+      await cubit.submitComment(postId: 'p1', body: 'Queued offline');
+      final String mutationId = (cubit.state as SocialFeedReady)
+          .data
+          .pendingCommentsByPostId['p1']!
+          .first
+          .id;
+      repo.commentsByPostId['p1'] = <SocialFeedComment>[
+        SocialFeedComment(
+          id: mutationId,
+          postId: 'p1',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'Queued offline',
+          createdAt: fixedNow,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+      ];
+      repo.lease.emitSummary(
+        SocialFeedSyncSummary(
+          pendingCount: 1,
+          needsAttentionCount: 0,
+          pendingPostIds: const <String>{'p1'},
+          dispatchedMutations: <SocialFeedDispatchedMutation>[
+            SocialFeedDispatchedMutation(
+              mutationId: mutationId,
+              postId: 'p1',
+              wasComment: true,
+            ),
+          ],
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      final SocialFeedReady ready = cubit.state as SocialFeedReady;
+      expect(ready.data.pendingCommentsByPostId['p1'], isNull);
+      expect(ready.data.pendingPostIds, contains('p1'));
+      await cubit.close();
+    },
+  );
 
   test('switchViewer reloads new viewer', () async {
     final _FakeRepo repo = _FakeRepo(

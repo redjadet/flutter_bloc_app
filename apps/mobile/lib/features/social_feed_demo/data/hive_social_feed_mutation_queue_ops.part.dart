@@ -89,18 +89,12 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
   Future<void> replaceQueue(
     SocialFeedViewer viewer,
     List<SocialFeedMutationDto> queue,
-  ) => _withViewerLock(
-    viewer,
-    () => _writeList(_queueKey(viewer), queue),
-  );
+  ) => _withViewerLock(viewer, () => _writeList(_queueKey(viewer), queue));
 
   Future<void> replaceNeedsAttention(
     SocialFeedViewer viewer,
     List<SocialFeedMutationDto> items,
-  ) => _withViewerLock(
-    viewer,
-    () => _writeList(_attentionKey(viewer), items),
-  );
+  ) => _withViewerLock(viewer, () => _writeList(_attentionKey(viewer), items));
 
   /// Atomically bumps backoff for one queued mutation (read-modify-write under lock).
   Future<void> updateMutationAfterFailure({
@@ -112,9 +106,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
   }) {
     return _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer);
-      final int idx = queue.indexWhere(
-        (SocialFeedMutationDto e) => e.mutationId == mutationId,
-      );
+      final int idx = queue.indexWhere((e) => e.mutationId == mutationId);
       if (idx < 0) {
         return;
       }
@@ -143,7 +135,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
     await _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer)
         ..removeWhere(
-          (SocialFeedMutationDto e) => e.mutationId == item.mutationId,
+          (e) => e.mutationId == item.mutationId,
         );
       await _writeList(_queueKey(viewer), queue);
       final List<SocialFeedMutationDto> attention = await readNeedsAttention(
@@ -177,9 +169,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
       final List<SocialFeedMutationDto> attention = await readNeedsAttention(
         viewer,
       );
-      final int index = attention.indexWhere(
-        (SocialFeedMutationDto e) => e.mutationId == mutationId,
-      );
+      final int index = attention.indexWhere((e) => e.mutationId == mutationId);
       if (index < 0) {
         return;
       }
@@ -212,9 +202,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
   }) async {
     await _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer)
-        ..removeWhere(
-          (SocialFeedMutationDto e) => e.mutationId == mutationId,
-        );
+        ..removeWhere((e) => e.mutationId == mutationId);
       await _writeList(_queueKey(viewer), queue);
     });
   }
