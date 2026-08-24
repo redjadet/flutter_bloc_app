@@ -46,8 +46,8 @@ dependencies:
   auth:
     path: ../../packages/auth
   cached_network_image: ^3.4.1
-  cloud_firestore: ^6.8.0
-  cloud_functions: ^6.3.6
+  cloud_firestore: ^6.9.0
+  cloud_functions: ^6.4.0
   collection: ^1.19.1
   confetti: ^0.8.0
   connectivity_plus: ^7.3.1
@@ -55,7 +55,7 @@ dependencies:
     path: ../../packages/core
   cross_file: ^0.3.5+2
   cupertino_icons: ^1.0.9
-  cupertino_ui: ^1.0.0
+  cupertino_ui: ^1.0.1
   design_system:
     path: ../../packages/design_system
   device_info_plus: ^13.2.0
@@ -66,15 +66,15 @@ dependencies:
   feature_flags:
     path: ../../packages/feature_flags
   ffi: ^2.2.0
-  firebase_analytics: ^12.4.6
-  firebase_app_check: ^0.4.6
-  firebase_auth: ^6.5.7
-  firebase_core: ^4.13.0
-  firebase_crashlytics: ^5.2.7
-  firebase_database: ^12.4.7
-  firebase_messaging: ^16.5.0
-  firebase_remote_config: ^6.5.6
-  firebase_storage: ^13.4.6
+  firebase_analytics: ^12.5.0
+  firebase_app_check: ^0.4.7
+  firebase_auth: ^6.6.0
+  firebase_core: ^4.14.0
+  firebase_crashlytics: ^5.3.0
+  firebase_database: ^12.5.0
+  firebase_messaging: ^16.6.0
+  firebase_remote_config: ^6.6.0
+  firebase_storage: ^13.5.0
   firebase_ui_auth: ^3.1.0
   firebase_ui_localizations: ^2.1.0
   firebase_ui_oauth_google: ^2.1.0
@@ -122,7 +122,7 @@ dependencies:
   local_auth: ^3.0.2
   logger: ^2.7.0
   markdown: ^7.3.1
-  material_ui: ^1.0.1
+  material_ui: ^1.1.0
   meta: ^1.16.0
   mix: ^2.1.0
   networking:
@@ -157,13 +157,13 @@ dev_dependencies:
   file_length_lint:
     path: ../../custom_lints/file_length_lint
   firebase_auth_mocks: ^0.15.2
-  firebase_core_platform_interface: ^8.1.0
+  firebase_core_platform_interface: ^8.1.1
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   freezed: ^4.0.0
-  geolocator_platform_interface: ^4.2.8
+  geolocator_platform_interface: ^4.3.0
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.16.1
   google_sign_in_mocks: ^0.3.0
