@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_local_data_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_mutation_queue.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/offline_first_social_feed_repository.dart';
@@ -219,6 +221,30 @@ void main() {
     );
   });
 
+  test('readPendingSnapshot hydrates queued comment bodies', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.addComment(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      body: 'survives restart',
+      mutationId: 'restart-comment',
+    );
+
+    final SocialFeedPendingSnapshot pending = await repository.readPendingSnapshot(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(pending.pendingPostIds, contains(postId));
+    expect(pending.pendingCommentsByPostId[postId], hasLength(1));
+    expect(
+      pending.pendingCommentsByPostId[postId]!.first.body,
+      'survives restart',
+    );
+  });
+
   test('submitted comments survive remote recreation (hot restart)', () async {
     final SocialFeedPage page = await repository.refresh(
       viewer: SocialFeedViewer.alex,
@@ -258,5 +284,22 @@ void main() {
         .toList();
     expect(bodies, contains('Alex keeps this'));
     expect(bodies, contains('Sam keeps this'));
+  });
+
+  test('sync lease can be re-acquired after close', () async {
+    final SocialFeedSyncLease first = await repository.acquireSync(
+      viewer: SocialFeedViewer.alex,
+    );
+    await first.close();
+    final SocialFeedSyncLease second = await repository.acquireSync(
+      viewer: SocialFeedViewer.alex,
+    );
+    final List<SocialFeedSyncSummary> summaries = <SocialFeedSyncSummary>[];
+    final StreamSubscription<SocialFeedSyncSummary> sub = second.summaries
+        .listen(summaries.add);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await second.close();
+    await sub.cancel();
+    expect(summaries, isNotEmpty);
   });
 }

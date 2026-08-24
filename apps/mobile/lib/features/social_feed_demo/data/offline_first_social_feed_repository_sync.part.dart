@@ -1,5 +1,47 @@
 part of 'offline_first_social_feed_repository.dart';
 
+Future<SocialFeedPendingSnapshot> _readPendingSnapshotImpl(
+  OfflineFirstSocialFeedRepository repo,
+  SocialFeedViewer viewer,
+) async {
+  List<SocialFeedMutationDto> queue;
+  try {
+    queue = await repo._queue.readQueue(viewer);
+  } on Object {
+    queue = const <SocialFeedMutationDto>[];
+  }
+  final Map<String, List<SocialFeedComment>> pendingComments =
+      <String, List<SocialFeedComment>>{};
+  final Set<String> pendingPostIds = <String>{};
+  final DateTime now = repo._queue.now();
+  for (final SocialFeedMutationDto item in queue) {
+    pendingPostIds.add(item.postId);
+    if (item.type != 'comment') {
+      continue;
+    }
+    final String? body = item.commentBody;
+    if (body == null) {
+      continue;
+    }
+    pendingComments
+        .putIfAbsent(item.postId, () => <SocialFeedComment>[])
+        .add(
+          SocialFeedComment(
+            id: item.mutationId,
+            postId: item.postId,
+            viewerId: item.viewerId,
+            body: body,
+            createdAt: now,
+            syncStatus: SocialFeedMutationStatus.pending,
+          ),
+        );
+  }
+  return SocialFeedPendingSnapshot(
+    pendingCommentsByPostId: pendingComments,
+    pendingPostIds: pendingPostIds,
+  );
+}
+
 Future<SocialFeedPage> _overlayPendingImpl(
   OfflineFirstSocialFeedRepository repo,
   SocialFeedViewer viewer,
@@ -82,6 +124,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     return SocialFeedSyncSummary(
       pendingCount: q.length,
       needsAttentionCount: a.length,
+      pendingPostIds: <String>{
+        for (final SocialFeedMutationDto item in q) item.postId,
+      },
       attentionMutations: <SocialFeedAttentionMutation>[
         for (final SocialFeedMutationDto item in a)
           SocialFeedAttentionMutation(
@@ -95,6 +140,8 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   List<SocialFeedMutationDto> queue = await repo._queue.readQueue(viewer);
   final DateTime now = repo._queue.now();
   final List<SocialFeedRejectedSync> rejections = <SocialFeedRejectedSync>[];
+  final List<SocialFeedDispatchedMutation> dispatched =
+      <SocialFeedDispatchedMutation>[];
   while (queue.isNotEmpty) {
     final SocialFeedMutationDto head = queue.first;
     final String? nextAttemptAt = head.nextAttemptAt;
@@ -125,6 +172,13 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         viewer: viewer,
         mutationId: head.mutationId,
       );
+      dispatched.add(
+        SocialFeedDispatchedMutation(
+          mutationId: head.mutationId,
+          postId: head.postId,
+          wasComment: head.type == 'comment',
+        ),
+      );
     } on SocialFeedRemoteRejection catch (e) {
       await repo._queue.removeFromQueue(
         viewer: viewer,
@@ -144,27 +198,13 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         await repo._queue.moveToNeedsAttention(viewer, head);
       } else {
         final Duration backoff = repo._queue.backoffForAttempt(attempts);
-        queue = await repo._queue.readQueue(viewer);
-        final int idx = queue.indexWhere(
-          (e) => e.mutationId == head.mutationId,
+        await repo._queue.updateMutationAfterFailure(
+          viewer: viewer,
+          mutationId: head.mutationId,
+          head: head,
+          attemptCount: attempts,
+          nextAttemptAt: now.add(backoff),
         );
-        if (idx >= 0) {
-          queue[idx] = SocialFeedMutationDto(
-            mutationId: head.mutationId,
-            viewerId: head.viewerId,
-            type: head.type,
-            postId: head.postId,
-            sequence: head.sequence,
-            idempotencyKey: head.idempotencyKey,
-            attemptCount: attempts,
-            nextAttemptAt: now.add(backoff).toIso8601String(),
-            desiredLiked: head.desiredLiked,
-            commentBody: head.commentBody,
-            status: 'pending',
-            dispatched: false,
-          );
-          await repo._queue.replaceQueue(viewer, queue);
-        }
         break;
       }
     }
@@ -179,6 +219,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   return SocialFeedSyncSummary(
     pendingCount: pending.length,
     needsAttentionCount: attention.length,
+    pendingPostIds: <String>{
+      for (final SocialFeedMutationDto item in pending) item.postId,
+    },
     attentionMutations: <SocialFeedAttentionMutation>[
       for (final SocialFeedMutationDto item in attention)
         SocialFeedAttentionMutation(
@@ -187,5 +230,6 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         ),
     ],
     rejections: rejections,
+    dispatchedMutations: dispatched,
   );
 }

@@ -94,9 +94,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
       if (remove) {
         list.removeWhere((c) => c.id == mutationId);
       } else {
-        final int idx = list.indexWhere(
-          (c) => c.id == mutationId,
-        );
+        final int idx = list.indexWhere((c) => c.id == mutationId);
         if (idx >= 0) {
           list[idx] = list[idx].copyWith(
             syncStatus: synced
@@ -126,9 +124,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
       if (idx >= 0) {
         promoted = pendingList
             .removeAt(idx)
-            .copyWith(
-              syncStatus: SocialFeedMutationStatus.synced,
-            );
+            .copyWith(syncStatus: SocialFeedMutationStatus.synced);
       }
       if (pendingList.isEmpty) {
         pendingMap.remove(postId);
@@ -199,6 +195,12 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     );
   }
 
+  Future<SocialFeedPendingSnapshot> _readPendingSnapshot(
+    SocialFeedViewer viewer,
+  ) {
+    return _repository.readPendingSnapshot(viewer: viewer);
+  }
+
   Map<String, List<SocialFeedComment>> _mergeCommentMaps(
     Map<String, List<SocialFeedComment>> existing,
     Map<String, List<SocialFeedComment>> incoming,
@@ -224,64 +226,64 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     }
     _syncLease = syncLease;
     _syncSub = registerSubscription(
-      syncLease.summaries.listen(
-        (summary) {
-          if (!_isCurrentLease(leaseGeneration, current)) {
-            return;
-          }
-          _emitReadyPatch((d) {
-            final Map<String, String> attentionByPost = <String, String>{
-              for (final SocialFeedAttentionMutation item
-                  in summary.attentionMutations)
-                item.postId: item.mutationId,
-            };
-            final Set<String> pending = Set<String>.from(d.pendingPostIds)
-              ..removeAll(attentionByPost.keys);
-            SocialFeedReadyData next = d.copyWith(
-              pendingMutationCount: summary.pendingCount,
-              needsAttentionCount: summary.needsAttentionCount,
-              needsAttentionByPostId: attentionByPost,
+      syncLease.summaries.listen((summary) {
+        if (!_isCurrentLease(leaseGeneration, current)) {
+          return;
+        }
+        _emitReadyPatch((d) {
+          final Map<String, String> attentionByPost = <String, String>{
+            for (final SocialFeedAttentionMutation item
+                in summary.attentionMutations)
+              item.postId: item.mutationId,
+          };
+          final Set<String> pending = Set<String>.from(summary.pendingPostIds)
+            ..removeAll(attentionByPost.keys);
+          SocialFeedReadyData next = d.copyWith(
+            pendingMutationCount: summary.pendingCount,
+            needsAttentionCount: summary.needsAttentionCount,
+            needsAttentionByPostId: attentionByPost,
+            pendingPostIds: pending,
+          );
+          for (final SocialFeedRejectedSync rejection in summary.rejections) {
+            pending.remove(rejection.postId);
+            next = next.copyWith(
+              posts: next.posts
+                  .map(
+                    (p) =>
+                        p.id == rejection.postId ? rejection.canonicalPost : p,
+                  )
+                  .toList(),
               pendingPostIds: pending,
+              effect: const SocialFeedEffect.mutationRejected(),
+              effectId: next.effectId + 1,
             );
-            for (final SocialFeedRejectedSync rejection in summary.rejections) {
-              pending.remove(rejection.postId);
-              next = next.copyWith(
-                posts: next.posts
-                    .map(
-                      (p) => p.id == rejection.postId
-                          ? rejection.canonicalPost
-                          : p,
-                    )
-                    .toList(),
-                pendingPostIds: pending,
-                effect: const SocialFeedEffect.mutationRejected(),
-                effectId: next.effectId + 1,
-              );
-              if (rejection.wasComment && rejection.mutationId != null) {
-                final Map<String, List<SocialFeedComment>> comments =
-                    Map<String, List<SocialFeedComment>>.from(
-                      next.pendingCommentsByPostId,
-                    );
-                final List<SocialFeedComment>? list =
-                    comments[rejection.postId];
-                if (list != null) {
-                  final List<SocialFeedComment> remaining = list
-                      .where((c) => c.id != rejection.mutationId)
-                      .toList();
-                  if (remaining.isEmpty) {
-                    comments.remove(rejection.postId);
-                  } else {
-                    comments[rejection.postId] = remaining;
-                  }
+            if (rejection.wasComment && rejection.mutationId != null) {
+              final Map<String, List<SocialFeedComment>> comments =
+                  Map<String, List<SocialFeedComment>>.from(
+                    next.pendingCommentsByPostId,
+                  );
+              final List<SocialFeedComment>? list = comments[rejection.postId];
+              if (list != null) {
+                final List<SocialFeedComment> remaining = list
+                    .where((c) => c.id != rejection.mutationId)
+                    .toList();
+                if (remaining.isEmpty) {
+                  comments.remove(rejection.postId);
+                } else {
+                  comments[rejection.postId] = remaining;
                 }
-                next = next.copyWith(pendingCommentsByPostId: comments);
               }
+              next = next.copyWith(pendingCommentsByPostId: comments);
             }
-            return next;
-          });
-        },
-        onError: (Object error, StackTrace stackTrace) {},
-      ),
+          }
+          return next;
+        });
+        if (summary.dispatchedMutations.isNotEmpty) {
+          unawaited(
+            _reconcileDispatchedComments(current, summary.dispatchedMutations),
+          );
+        }
+      }, onError: (Object error, StackTrace stackTrace) {}),
     );
     final SocialFeedRealtimeLease realtimeLease = await _realtimeSource.acquire(
       current,
@@ -295,40 +297,107 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     }
     _realtimeLease = realtimeLease;
     _realtimeStatusSub = registerSubscription(
-      realtimeLease.connectionStatus.listen(
-        (status) {
-          if (!_isCurrentLease(leaseGeneration, current)) {
-            return;
-          }
-          _emitReadyPatch(
-            (d) => d.copyWith(connectionStatus: status),
-          );
-        },
-        onError: (Object error, StackTrace stackTrace) {},
-      ),
+      realtimeLease.connectionStatus.listen((status) {
+        if (!_isCurrentLease(leaseGeneration, current)) {
+          return;
+        }
+        _emitReadyPatch((d) => d.copyWith(connectionStatus: status));
+      }, onError: (Object error, StackTrace stackTrace) {}),
     );
     _realtimePostsSub = registerSubscription(
-      realtimeLease.posts.listen(
-        (post) {
-          if (!_isCurrentLease(leaseGeneration, current)) {
-            return;
+      realtimeLease.posts.listen((post) {
+        if (!_isCurrentLease(leaseGeneration, current)) {
+          return;
+        }
+        _emitReadyPatch((d) {
+          if (d.posts.any((p) => p.id == post.id) ||
+              d.bufferedRealtimePosts.any((p) => p.id == post.id)) {
+            return d;
           }
-          _emitReadyPatch((d) {
-            if (d.posts.any((p) => p.id == post.id) ||
-                d.bufferedRealtimePosts.any((p) => p.id == post.id)) {
-              return d;
-            }
-            return d.copyWith(
-              bufferedRealtimePosts: <SocialFeedPost>[
-                ...d.bufferedRealtimePosts,
-                post,
-              ],
-            );
-          });
-        },
-        onError: (Object error, StackTrace stackTrace) {},
-      ),
+          return d.copyWith(
+            bufferedRealtimePosts: <SocialFeedPost>[
+              ...d.bufferedRealtimePosts,
+              post,
+            ],
+          );
+        });
+      }, onError: (Object error, StackTrace stackTrace) {}),
     );
+  }
+
+  Future<void> _reconcileDispatchedComments(
+    SocialFeedViewer current,
+    List<SocialFeedDispatchedMutation> dispatched,
+  ) async {
+    final List<SocialFeedDispatchedMutation> commentDispatches = dispatched
+        .where((item) => item.wasComment)
+        .toList();
+    if (commentDispatches.isEmpty) {
+      return;
+    }
+    final Set<String> postIds = <String>{
+      for (final SocialFeedDispatchedMutation item in commentDispatches)
+        item.postId,
+    };
+    final Map<String, List<SocialFeedComment>> stored = await _repository
+        .commentsForPostIds(postIds: postIds);
+    if (!_isCurrentLease(_generation, current)) {
+      return;
+    }
+    _emitReadyPatch((d) {
+      final Map<String, List<SocialFeedComment>> pendingComments =
+          Map<String, List<SocialFeedComment>>.from(d.pendingCommentsByPostId);
+      final Map<String, List<SocialFeedComment>> commentsByPostId =
+          Map<String, List<SocialFeedComment>>.from(d.commentsByPostId);
+      for (final SocialFeedDispatchedMutation item in dispatched) {
+        if (!item.wasComment) {
+          continue;
+        }
+        final List<SocialFeedComment> pendingList =
+            List<SocialFeedComment>.from(
+              pendingComments[item.postId] ?? const <SocialFeedComment>[],
+            );
+        final int idx = pendingList.indexWhere((c) => c.id == item.mutationId);
+        SocialFeedComment? promoted;
+        if (idx >= 0) {
+          promoted = pendingList
+              .removeAt(idx)
+              .copyWith(syncStatus: SocialFeedMutationStatus.synced);
+        }
+        if (pendingList.isEmpty) {
+          pendingComments.remove(item.postId);
+        } else {
+          pendingComments[item.postId] = pendingList;
+        }
+        final List<SocialFeedComment> storedList = List<SocialFeedComment>.from(
+          commentsByPostId[item.postId] ??
+              stored[item.postId] ??
+              const <SocialFeedComment>[],
+        );
+        if (promoted != null &&
+            !storedList.any((c) => c.id == item.mutationId)) {
+          storedList.add(promoted);
+        } else if (promoted == null) {
+          for (final SocialFeedComment comment
+              in stored[item.postId] ?? const <SocialFeedComment>[]) {
+            if (comment.id == item.mutationId &&
+                !storedList.any((c) => c.id == item.mutationId)) {
+              storedList.add(comment);
+            }
+          }
+        }
+        commentsByPostId[item.postId] = storedList;
+      }
+      return d.copyWith(
+        pendingCommentsByPostId: pendingComments,
+        commentsByPostId: commentsByPostId,
+        posts: _postsAlignedToComments(
+          posts: d.posts,
+          commentsByPostId: commentsByPostId,
+          pendingCommentsByPostId: pendingComments,
+        ),
+      );
+    });
   }
 
   Future<void> _closeLeases() async {

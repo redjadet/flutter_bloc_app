@@ -40,8 +40,10 @@ class _ViewerReplay {
     if (_leases == 0) {
       _timer?.dispose();
       _timer = null;
-      await _controller.close();
+      // Drop from the registry before awaiting close so a new acquire cannot
+      // resurrect a replay whose stream controller is shutting down.
       onZero();
+      await _controller.close();
     }
   }
 

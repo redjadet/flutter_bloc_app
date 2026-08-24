@@ -89,95 +89,131 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
   Future<void> replaceQueue(
     SocialFeedViewer viewer,
     List<SocialFeedMutationDto> queue,
-  ) => _writeList(_queueKey(viewer), queue);
+  ) => _withViewerLock(viewer, () => _writeList(_queueKey(viewer), queue));
 
   Future<void> replaceNeedsAttention(
     SocialFeedViewer viewer,
     List<SocialFeedMutationDto> items,
-  ) => _writeList(_attentionKey(viewer), items);
+  ) => _withViewerLock(viewer, () => _writeList(_attentionKey(viewer), items));
+
+  /// Atomically bumps backoff for one queued mutation (read-modify-write under lock).
+  Future<void> updateMutationAfterFailure({
+    required SocialFeedViewer viewer,
+    required String mutationId,
+    required SocialFeedMutationDto head,
+    required int attemptCount,
+    required DateTime nextAttemptAt,
+  }) {
+    return _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer);
+      final int idx = queue.indexWhere((e) => e.mutationId == mutationId);
+      if (idx < 0) {
+        return;
+      }
+      queue[idx] = SocialFeedMutationDto(
+        mutationId: head.mutationId,
+        viewerId: head.viewerId,
+        type: head.type,
+        postId: head.postId,
+        sequence: head.sequence,
+        idempotencyKey: head.idempotencyKey,
+        attemptCount: attemptCount,
+        nextAttemptAt: nextAttemptAt.toIso8601String(),
+        desiredLiked: head.desiredLiked,
+        commentBody: head.commentBody,
+        status: 'pending',
+        dispatched: false,
+      );
+      await _writeList(_queueKey(viewer), queue);
+    });
+  }
 
   Future<void> moveToNeedsAttention(
     SocialFeedViewer viewer,
     SocialFeedMutationDto item,
   ) async {
-    final List<SocialFeedMutationDto> queue = await readQueue(viewer)
-      ..removeWhere(
-        (e) => e.mutationId == item.mutationId,
+    await _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer)
+        ..removeWhere(
+          (e) => e.mutationId == item.mutationId,
+        );
+      await _writeList(_queueKey(viewer), queue);
+      final List<SocialFeedMutationDto> attention = await readNeedsAttention(
+        viewer,
       );
-    await replaceQueue(viewer, queue);
-    final List<SocialFeedMutationDto> attention = await readNeedsAttention(
-      viewer,
-    );
-    attention.add(
-      SocialFeedMutationDto(
-        mutationId: item.mutationId,
-        viewerId: item.viewerId,
-        type: item.type,
-        postId: item.postId,
-        sequence: item.sequence,
-        idempotencyKey: item.idempotencyKey,
-        attemptCount: item.attemptCount,
-        nextAttemptAt: null,
-        desiredLiked: item.desiredLiked,
-        commentBody: item.commentBody,
-        status: 'needsAttention',
-        dispatched: item.dispatched,
-      ),
-    );
-    await replaceNeedsAttention(viewer, attention);
+      attention.add(
+        SocialFeedMutationDto(
+          mutationId: item.mutationId,
+          viewerId: item.viewerId,
+          type: item.type,
+          postId: item.postId,
+          sequence: item.sequence,
+          idempotencyKey: item.idempotencyKey,
+          attemptCount: item.attemptCount,
+          nextAttemptAt: null,
+          desiredLiked: item.desiredLiked,
+          commentBody: item.commentBody,
+          status: 'needsAttention',
+          dispatched: item.dispatched,
+        ),
+      );
+      await _writeList(_attentionKey(viewer), attention);
+    });
   }
 
   Future<void> manualRetry({
     required SocialFeedViewer viewer,
     required String mutationId,
   }) async {
-    final List<SocialFeedMutationDto> attention = await readNeedsAttention(
-      viewer,
-    );
-    final int index = attention.indexWhere(
-      (e) => e.mutationId == mutationId,
-    );
-    if (index < 0) {
-      return;
-    }
-    final SocialFeedMutationDto item = attention.removeAt(index);
-    await replaceNeedsAttention(viewer, attention);
-    final List<SocialFeedMutationDto> queue = await readQueue(viewer);
-    queue.add(
-      SocialFeedMutationDto(
-        mutationId: item.mutationId,
-        viewerId: item.viewerId,
-        type: item.type,
-        postId: item.postId,
-        sequence: item.sequence,
-        idempotencyKey: item.idempotencyKey,
-        attemptCount: 0,
-        nextAttemptAt: null,
-        desiredLiked: item.desiredLiked,
-        commentBody: item.commentBody,
-        status: 'pending',
-        dispatched: false,
-      ),
-    );
-    await replaceQueue(viewer, queue);
+    await _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> attention = await readNeedsAttention(
+        viewer,
+      );
+      final int index = attention.indexWhere((e) => e.mutationId == mutationId);
+      if (index < 0) {
+        return;
+      }
+      final SocialFeedMutationDto item = attention.removeAt(index);
+      await _writeList(_attentionKey(viewer), attention);
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer);
+      queue.add(
+        SocialFeedMutationDto(
+          mutationId: item.mutationId,
+          viewerId: item.viewerId,
+          type: item.type,
+          postId: item.postId,
+          sequence: item.sequence,
+          idempotencyKey: item.idempotencyKey,
+          attemptCount: 0,
+          nextAttemptAt: null,
+          desiredLiked: item.desiredLiked,
+          commentBody: item.commentBody,
+          status: 'pending',
+          dispatched: false,
+        ),
+      );
+      await _writeList(_queueKey(viewer), queue);
+    });
   }
 
   Future<void> removeFromQueue({
     required SocialFeedViewer viewer,
     required String mutationId,
   }) async {
-    final List<SocialFeedMutationDto> queue = await readQueue(viewer)
-      ..removeWhere(
-        (e) => e.mutationId == mutationId,
-      );
-    await replaceQueue(viewer, queue);
+    await _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer)
+        ..removeWhere((e) => e.mutationId == mutationId);
+      await _writeList(_queueKey(viewer), queue);
+    });
   }
 
   Future<void> clearViewer(SocialFeedViewer viewer) async {
-    await runWithBox((box) async {
-      await safeDeleteKey(box, _queueKey(viewer));
-      await safeDeleteKey(box, _attentionKey(viewer));
-      await safeDeleteKey(box, _seqKey(viewer));
+    await _withViewerLock(viewer, () async {
+      await runWithBox((box) async {
+        await safeDeleteKey(box, _queueKey(viewer));
+        await safeDeleteKey(box, _attentionKey(viewer));
+        await safeDeleteKey(box, _seqKey(viewer));
+      });
     });
   }
 }
