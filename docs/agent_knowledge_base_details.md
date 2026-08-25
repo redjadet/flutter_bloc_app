@@ -5,22 +5,18 @@ Most day-to-day section bodies live under [`agent_kb/`](agent_kb/).
 
 ## System Of Record Layout
 
+Primary need→source routing:
+[`agent_project_context.md`](agent_project_context.md) § High-Value Sources.
+
+Harness / history rows that stay here:
+
 | Area | Source | Use when |
 | --- | --- | --- |
 | Docs index | [`README.md`](README.md) | Find source of truth. |
-| Tech stack / entrypoints | [`toolchain_versions.env`](toolchain_versions.env) (machine pins), [`tech_stack.md`](tech_stack.md) (display), [`architecture_details.md`](architecture_details.md) | Flutter/Dart versions and app entrypoints under `apps/mobile/lib/`: `main_dev.dart`, `main_staging.dart`, `main_prod.dart`. |
 | Agent harness | [`agent_knowledge_base.md`](agent_knowledge_base.md) | Agent behavior, host templates, trackers, validation. |
-| Project-specific AI context | [`agent_project_context.md`](agent_project_context.md) | Pinned versions, package caveats, migration contracts, performance seams, forbidden patterns. |
 | Review gate | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) | Accepting AI-written code / final report. |
 | Commands | [`agents_quick_reference.md`](agents_quick_reference.md) | Choosing repo entrypoints. |
-| Design system | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md) | UI/theme/typography/spacing/component/Mix/visual-state change. |
-| Validation routing | [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Fast vs full validation. |
-| Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), `adr/` | Structure, routing, DI, layers, feature seams. |
-| Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Risk, tests, guardrails. |
-| Runtime evidence | [`logging.md`](engineering/logging.md), [`observability.md`](observability.md), [`performance/startup_time_profiling.md`](performance/startup_time_profiling.md) | Logs, metrics, traces, startup/runtime measurements, and agent-queryable proof. |
-| Lifecycle | [`REPOSITORY_LIFECYCLE.md`](engineering/REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Async, subscriptions, timers, retry, sync, background work. |
 | Code graph | [`code_review_graph.md`](ai/code_review_graph.md) | Narrow non-trivial exploration. |
-| Hive migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Stored Hive shape, manifest/spec, fingerprints, migrators/tests. Runtime `getBox()` runs `ensureSchema` when schema set. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | End-to-end flow changes. |
 | Plans/history | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Active contracts, rationale, historical snapshots. |
 | Active trackers | `../tasks/codex/todo.md`, `../tasks/cursor/todo.md` | Current plan/proof. |
@@ -108,46 +104,5 @@ shape decisions testable without widget pumps.
 
 ## Multi-Agent Hub
 
-Cursor uses hub-and-spoke `Task`s only when team improves quality/speed/risk. Main chat = **Coordinator**; bounded `Task`s = **Specialists**.
-
-### Benefit gate
-
-Use team when >=2 indicators: blast radius, cross-layer read, high-risk logic (auth/sync/migrations/routing gates), separate implement/review bars, or user asked plan+implement+verify. Use single for small/local/mechanical. Tie-break: **single**.
-
-Record one branch in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md):
-
-```text
-Benefit: team - short reason
-Benefit: single - short reason
-```
-
-Trivial may use `trivial - gate skipped`. Non-trivial = multi-step delivery, runtime behavior, DI/sync/routes/codegen, unknown blast radius, plan+implement+verify, or anything gate could reasonably send to team.
-
-### Coordinator
-
-- Owns phase, artifacts, validation, tracker.
-- `single`: Plan -> Execute -> Verify -> Report; no `tasks/cursor/team/<run-id>/`.
-- `team`: create `tasks/cursor/team/<run-id>/` with goal, findings, plan, diff-summary/diff, and review markdown artifacts.
-- Spawn with inline context; never path-only when upstream content required.
-- Serialize dependent phases; invalidate downstream artifacts after replan.
-- Max two Implementer fix loops unless user extends.
-
-### Specialists
-
-- **Researcher** (`explore`, read-only): facts, sources, confidence, stale-risk.
-- **Analyst** (`explore`, read-only): write set, risks, validation plan, exact codegen commands/paths.
-- **Implementer** (`generalPurpose`): plan-scoped edits only.
-- **Reviewer** (`code-reviewer`, optional `ce-*`): findings only; coordinator validates.
-
-Every spawn: paste goal + canon excerpts + upstream artifacts inline; return summary + final result + verified artifacts only (no transcript dumps). Redact tokens/cookies/secrets. No specialist-to-specialist comms.
-
-### Repo-sensitive role matrix
-
-Analyst lists, Implementer respects, Reviewer checks when touched:
-
-- DI/`get_it`: registration, scope, disposal, wiring.
-- Dio/HTTP/auth: interceptors, replay, error mapping, token/header flow, storage boundary.
-- Routes/l10n/codegen: exact commands + generated paths.
-- Offline-first/sync: dedupe, debounced resume, no overlapping flush, idempotency, user scope.
-- Hive migrations: manifest-driven, not semantic diff detection. Runtime `getBox()` runs `ensureSchema` when schema set; shape changes still require manifest spec bump, fingerprints, migrator/tests.
-- Render/FastAPI/deploy: env contract, timeout, auth assumptions; never leak secrets.
+Owner: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md)
+(benefit gate, Coordinator/Specialists, role matrix).

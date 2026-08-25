@@ -1,6 +1,8 @@
-# Agent instruction dedup matrix (2026-05-22; pass 2026-06-04)
+# Agent instruction dedup matrix (2026-05-22; pass 2026-06-04; pass 2026-08-25)
 
 Classify before edit. **Canonical** = single owner; others → pointer. **Echo** = minimal repeat for cold-start/CI anchors.
+
+**2026-08-25 pass:** Feature skeleton → [`feature_structure_contract.md`](../architecture/feature_structure_contract.md); SoR routing → [`agent_project_context.md`](../agent_project_context.md); multi-agent mechanics → [`multi_agent_hub.md`](../agent_kb/multi_agent_hub.md) (AKM anchors kept); thinned `docs/README` Start here, `CODE_QUALITY` SOLID/CA summaries, coverage/logging/SoC/feature-guide duplicates. Change note: [`../changes/2026-08-25_docs_dedupe_redundancy.md`](../changes/2026-08-25_docs_dedupe_redundancy.md).
 
 **2026-06-04 pass:** Compressed [`agent_knowledge_base.md`](../agent_knowledge_base.md) (traps table, merged ladder pointer, dropped duplicate § Context Navigation Ladder), [`agents_quick_reference.md`](../agents_quick_reference.md) harness intro, [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md), host `agents-global.mdc` — mechanical anchors unchanged; `check_agent_knowledge_base.sh` green.
 
@@ -23,7 +25,13 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | Loop / report proof | [`AGENTS.md`](../../AGENTS.md) § Loop | Canonical (short) | Keep |
 | Loop / report proof | [`agents_quick_reference.md`](../agents_quick_reference.md) | Echo | Mechanical anchors only; canon in AGENTS § Loop |
 | Loop / report proof | [`agent_knowledge_base.md`](../agent_knowledge_base.md) | Echo | Anchors only |
-| Multi-agent hub | [`agent_kb/multi_agent_hub.md`](../agent_kb/multi_agent_hub.md) + AKM § Hub | Canonical | Keep anchors in AKM |
+| Multi-agent hub | [`agent_kb/multi_agent_hub.md`](../agent_kb/multi_agent_hub.md) | Canonical | Full benefit gate, Coordinator/Specialists, role matrix (2026-08-25) |
+| Multi-agent hub | [`agent_knowledge_base.md`](../agent_knowledge_base.md) § Hub | Echo | Gate anchors only (`Benefit: team`, roles, untrusted) |
+| Multi-agent hub | [`agent_knowledge_base_details.md`](../agent_knowledge_base_details.md) | Echo | Pointer to [`multi_agent_hub.md`](../agent_kb/multi_agent_hub.md) |
+| Need→source routing | [`agent_project_context.md`](../agent_project_context.md) § High-Value Sources | Canonical | Primary routing table (2026-08-25) |
+| Need→source routing | [`agent_knowledge_base_details.md`](../agent_knowledge_base_details.md) § SoR | Echo | Harness/history rows + pointer |
+| Feature skeleton | [`architecture/feature_structure_contract.md`](../architecture/feature_structure_contract.md) | Canonical | Folder tree + MVVM-presentation-only |
+| Feature skeleton | [`clean_architecture.md`](../clean_architecture.md) § Architecture skeleton | Echo | Dependency rule + pointer (2026-08-25) |
 | Multi-agent hub | [`agents_quick_reference.md`](../agents_quick_reference.md) § Harness | Echo | Link `#multi-agent-hub` + Benefit rows (gate-required) |
 | Key file paths | agents-references SKILL (host template) | Stale | Collapse to categories + CODEMAP / rg |
 | Key file paths | [`agent_project_context.md`](../agent_project_context.md) | Canonical | Topic table stays |

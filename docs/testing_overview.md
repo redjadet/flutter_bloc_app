@@ -44,11 +44,10 @@ workflow dispatch and supports the
 
 ## Coverage
 
-- Coverage is tracked in the generated coverage summary artifact.
-- CI enforces a **75%** filtered line-coverage threshold (see
-  `tool/update_coverage_summary.dart`) using `coverage/lcov.info`.
-- Generated files, localization output, simple data classes, and other
-  low-signal artifacts are excluded from totals.
+Thresholds and rollup exclusions:
+[`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
+and `tool/update_coverage_summary.dart` (artifact: generated coverage summary;
+input `coverage/lcov.info`).
 
 ## Test layers
 
@@ -87,42 +86,28 @@ for integration flows.
 
 ## Common commands
 
-```bash
-# Run the standard local gate (canonical script; ./bin/checklist is equivalent when present)
-./tool/delivery_checklist.sh
+Chooser and lanes: [`agents_quick_reference.md`](agents_quick_reference.md)
+§ Validation Chooser;
+[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+Integration env/device: [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md).
 
-# Run all non-integration tests with coverage
+```bash
+# Single test file / goldens / approval review
+flutter test test/counter_cubit_test.dart
+flutter test --update-goldens
+# from apps/mobile:
+dart run approval_tests:review
+
+# Coverage-producing unit/bloc/widget lane
 tool/test_coverage.sh
 
-# Run the full integration suite
+# Integration (full suite or one entrypoint)
 ./bin/integration_tests
-
-# Run a specific integration entrypoint
 ./bin/integration_tests integration_test/pr_smoke_flows_test.dart
-
-# Run a single test file
-flutter test test/counter_cubit_test.dart
-
-# Regenerate golden files (pixels)
-flutter test --update-goldens
-
-# Review approval mismatches (text/JSON; from apps/mobile)
-dart run approval_tests:review
 ```
 
-If multiple devices are attached, set:
-
-```bash
-CHECKLIST_INTEGRATION_DEVICE=<deviceId>
-```
-
-Android local lane: size AVD to ≥1080×2400@420 first
-(`tool/ensure_android_integration_avd.sh`), then pin
-`CHECKLIST_INTEGRATION_DEVICE=emulator-5554`. Details:
-[`integration_runner_contract.md`](engineering/integration_runner_contract.md)
-§ Android AVD.
-
-If you want integration flow validation without refreshing coverage output:
+Pre-ship / docs-tooling gates: `./tool/delivery_checklist.sh` or `./bin/checklist`
+(and `./bin/checklist-fast` for docs/tooling sanity). Coverage-free integration:
 
 ```bash
 INTEGRATION_TESTS_RUN_COVERAGE=false ./bin/integration_tests
@@ -131,7 +116,8 @@ INTEGRATION_TESTS_RUN_COVERAGE=false ./bin/integration_tests
 The integration runner is single-run by default: if another integration run is
 already active in this repo, the second invocation exits early instead of
 competing for the same device/simulator state. Stale lock directories are
-auto-cleared when the recorded owner PID is gone.
+auto-cleared when the recorded owner PID is gone. Multi-device and Android AVD
+sizing: [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md).
 
 ## Testable by construction
 

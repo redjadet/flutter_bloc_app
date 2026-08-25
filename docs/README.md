@@ -4,54 +4,20 @@ Source-of-truth docs for Flutter BLoC app.
 
 ## Start here
 
-- **Thin entry hubs** (link-only; do not duplicate): [`architecture.md`](architecture.md),
-  [`testing.md`](testing.md), [`engineering-decisions.md`](engineering-decisions.md),
-  [`ai-workflow.md`](ai-workflow.md)
-- **Interview showcase** (30-minute portfolio walk + §3b 12-minute production ownership): [`interview_showcase.md`](interview_showcase.md)
-- **Toolchain pins** (Flutter/Dart): [`toolchain_versions.env`](toolchain_versions.env) (machine),
-  [`tech_stack.md`](tech_stack.md) (human display + synced CI/README sinks)
-- **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)
-- **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md),
-  integration policy [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md),
-  runner contract [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md)
-- **Logging**: [`logging.md`](engineering/logging.md), [`observability.md`](observability.md)
-- **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
-  [`architecture_details.md`](architecture_details.md), [`bloc_standards.md`](bloc_standards.md),
-  [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md),
-  [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md),
-  [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](architecture/MOBILE_BACKEND_BOUNDARIES.md),
-  [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md),
-  [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](backend/MOBILE_BACKEND_DEFERRED_WORK.md)
-- **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
-  [`design_system.md`](design_system.md)
-- **AI / chat**: [`ai_integration.md`](integrations/ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
-- **AI decision workbench**:
-  [`ai_decision_workbench.md`](features/ai_decision_workbench.md) - FastAPI-backed
-  decision demo: risk score, rationale, proof trail, action history.
-- **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md), [`security/certificate_pinning.md`](security/certificate_pinning.md)
-- **Deployment**: [`deployment.md`](deployment.md)
-- **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
-- **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](features/staff_app_demo_walkthrough.md),
-  [`online_therapy_demo/README.md`](online_therapy_demo/README.md),
-  [`features/social_feed_demo.md`](features/social_feed_demo.md),
-  [`features/realtime_market.md`](features/realtime_market.md),
-  [`features/iot_ble.md`](features/iot_ble.md),
-  [`features/counter_outcome_brief.md`](features/counter_outcome_brief.md)
-- **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
-  [`agent_project_context.md`](agent_project_context.md),
-  [`ai/skill_routing.md`](ai/skill_routing.md),
-  [`ai/agent_operating_manual.md`](ai/agent_operating_manual.md),
-  [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md),
-  [`ai/harness_scorecard.md`](ai/harness_scorecard.md),
-  [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
-  [`agents_quick_reference.md`](agents_quick_reference.md),
-  [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md),
-  [`agent_environment_setup.md`](agent_environment_setup.md),
-  [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md),
-  [`agent_host_notes.md`](agent_host_notes.md),
-  [`code_review_graph.md`](ai/code_review_graph.md)
-  - Cold-start map printer: `bash ../tool/agent_session_bootstrap.sh`
-  - Tracker contract: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)
+Onboarding path only — full catalogs live under **Core docs** and **Browse by
+folder** below. Thin hubs (link-only; edit targets, not hubs):
+[`architecture.md`](architecture.md), [`testing.md`](testing.md),
+[`engineering-decisions.md`](engineering-decisions.md),
+[`ai-workflow.md`](ai-workflow.md).
+
+| Goal | Open |
+| --- | --- |
+| First run / onboarding | [`new_developer_guide.md`](new_developer_guide.md) |
+| Toolchain pins | [`toolchain_versions.env`](toolchain_versions.env), [`tech_stack.md`](tech_stack.md) |
+| Architecture map | [`architecture.md`](architecture.md) → [`clean_architecture.md`](clean_architecture.md) |
+| Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
+| Agent harness | [`ai-workflow.md`](ai-workflow.md), [`AGENTS.md`](../AGENTS.md); bootstrap `bash ../tool/agent_session_bootstrap.sh` |
+| Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
 
 ## Browse by folder
 
@@ -131,7 +97,6 @@ root when an existing category applies.
 - [`review/performance_checklist.md`](review/performance_checklist.md)
 - [`bloc/cubit_file_template.md`](bloc/cubit_file_template.md)
 - [`architecture/feature_brief_scaffold_example.md`](architecture/feature_brief_scaffold_example.md)
-- [`architecture/reference_features.md`](architecture/reference_features.md)
 - [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md) — checklist quality-theme gates (MVP, May 2026)
 - [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
@@ -149,7 +114,6 @@ root when an existing category applies.
 
 #### Engineering (`docs/engineering/`)
 
-- [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) — fast vs full validation lanes
 - [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md) — where to add tests; failure ownership
 - [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) — journeys → integration targets and tiers
 - [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md) — `./bin/integration_tests` env, tiers, artifacts

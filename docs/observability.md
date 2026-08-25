@@ -26,9 +26,8 @@ and the mobile/backend contract guide [backend/API_CONTRACT_GUIDE.md](backend/AP
 
 ## Logging
 
-- Use `AppLogger.error(message, error, stackTrace)` for structured error logging.
-- For stream subscriptions (widgets, adapters), provide `onError` when calling `stream.listen(...)` so errors are logged and do not become unhandled zone errors.
-- Full conventions live in [logging.md](engineering/logging.md).
+API, redaction, field contract, and stream `onError` expectations:
+[logging.md](engineering/logging.md). Use `AppLogger` (not raw `print`).
 
 ## Crash reporting (Firebase Crashlytics)
 

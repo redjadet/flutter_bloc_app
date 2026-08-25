@@ -17,46 +17,16 @@ Package boundaries: [Modularity](modularity.md) and
 
 ## Architecture skeleton
 
-**Clean Architecture is the main skeleton** for every feature. Dependency rule:
+**Clean Architecture** is the feature skeleton. Dependency rule:
 `Presentation -> Domain <- Data`. Domain never depends on presentation or data.
 
-**MVVM applies only inside the presentation layer** — it is not a parallel
-app-wide architecture and must not introduce extra top-level layers such as
-`application/`, `infrastructure/`, or `viewmodels/`.
-
-**Cubit/BLoC is presentation-layer state management only** — live under
-`presentation/cubit/` (or app-scope presentation in `AppScope`). Never in
-`domain/` or `data/`. Domain rules and invariants belong in domain models and
-use cases; data owns I/O and mapping.
-
-```text
-presentation/                 ← MVVM boundary (UI + ViewModel only)
-  pages/, widgets/            ← View
-  cubit/                      ← ViewModel (Cubit / BLoC)
-
-domain/
-  <entity>.dart               ← Entity / domain model (pure Dart)
-  use_cases/                  ← Use case (when policy requires; see use_case_dto_policy)
-  <feature>_repository.dart   ← Repository interface
-
-data/
-  <feature>_repository_impl   ← Repository implementation (facade; OfflineFirst*)
-  *_remote_*, *_local_*, *_data_source.dart  ← Leaf DataSource (HTTP, Hive, SDK)
-  *_dto.dart                  ← DTO
-  *_mapper.dart               ← DTO ↔ domain mapping
-```
-
-| MVVM role | This repo |
-| --- | --- |
-| View | `presentation/pages/`, `presentation/widgets/` — render state; no business rules |
-| ViewModel | `presentation/cubit/` — Cubit/BLoC: **presentation state management**; orchestrates user flow and calls domain |
-| Model (read) | Domain entities + repository contracts; data implements behind the interface |
+**Folder tree, MVVM-presentation-only, Cubit placement, and forbidden parallel
+layers** (`application/`, `infrastructure/`, `viewmodels/`): canonical in
+[`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md)
+§ Skeleton. Multi-port orchestration: [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md).
 
 Presentation ViewModels call **domain** (repository or use case), never concrete
-data classes, DTOs, or SDK types. Orchestration that spans multiple domain
-ports belongs in `domain/use_cases/` per
-[`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md),
-not in widgets.
+data classes, DTOs, or SDK types.
 
 ## Mental Model
 
@@ -173,31 +143,21 @@ Exact gold and legacy status: [`architecture/reference_features.md`](architectur
 
 ## AI-Friendly Architecture Rules
 
-Use these as review questions before accepting generated feature/refactor code:
+Review questions before accepting generated feature/refactor code:
 
-- Model a **system**, not a screen: feature entrypoint, domain contract, data
-  adapter, cubit/bloc, route wiring, and tests should be discoverable without
-  reading unrelated modules.
-- Pass **capabilities**, not concrete feature classes, across reusable UI or
-  shared boundaries. Prefer narrow domain/core contracts, callbacks, or typed
-  ports over passing a full cubit/repository/view model when only one behavior
-  is needed.
-- Put shared behavior in the lowest honest owner: feature-local helper first,
-  then domain/core/shared service or mixin only after repeated behavior is
-  proven. Avoid global `Utils`, `Helper`, `Manager`, and `Base*` buckets.
-- Keep widgets dumb: render state, expose callbacks, delegate actions. Do not
-  add networking, sync decisions, navigation policy, filtering, aggregation,
-  or unrelated state mutation inside `build()`.
-- Put **derived view data** (counts, filtered lists, grouped products, lookup
-  by id) on `presentation/cubit` state getters or cubit methods — not in pages
-  or reusable widgets. Pure domain helpers (date windows, schedule defaults)
-  belong in `domain/` and are called from cubits.
-- Centralize navigation ownership: map domain targets to GoRouter locations in
-  presentation/app routing code; do not scatter raw route strings or
-  `context.go` calls through reusable widgets.
-- Optimize for future refactors: explicit constructor injection, minimal
-  public APIs, stable names that explain intent, immutable state, and tests that
-  assert behavior contracts rather than implementation shape.
+- Model a **system**, not a screen (entrypoint, domain contract, data adapter,
+  cubit, routes, tests discoverable without unrelated modules).
+- Pass **capabilities** (narrow ports/callbacks), not full cubits/repos, across
+  reusable UI. Lowest honest owner for shared behavior; avoid `Utils`/`Base*`
+  buckets.
+- **Widgets stay dumb** / derived view data in cubit getters: full agent rule in
+  [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md)
+  § Business logic must be separated from UI; widget placement in
+  [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md)
+  § Reusable presentation widgets.
+- Centralize GoRouter ownership in presentation/app routing; no raw
+  `context.go` / route strings in reusable widgets.
+- Prefer explicit DI, small public APIs, immutable state, behavior-contract tests.
 
 ## Review and validation
 

@@ -65,14 +65,9 @@ A new or materially changed feature should usually include:
 
 ## Adding a new feature
 
-1. Create `apps/mobile/lib/features/<feature>/domain/` for contracts and models.
-2. Implement the repositories or services in `data/`.
-3. Add cubits and UI in `presentation/`.
-4. Register dependencies in `apps/mobile/lib/app/composition/`.
-5. Add or update route constants in `apps/mobile/lib/app/router/app_routes.dart`.
-6. Wire the page in the correct route group under `apps/mobile/lib/app/router/`.
-7. Add or extend tests per the brief **Tests** section (same change series as implementation).
-8. Update the feature catalog if the feature is user-visible.
+Follow **Definition of done** and **Delivery workflow** above (same steps).
+After wire-up, update [Feature Overview](feature_overview.md) when the feature
+is user-visible.
 
 ## Documentation ownership
 

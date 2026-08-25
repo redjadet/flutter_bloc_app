@@ -2,7 +2,8 @@
 
 **Policy:** Agent-facing docs in this tree stay **≤200 lines** per file. Shards live under [`validation_scripts/`](validation_scripts/).
 
-This document describes all validation scripts in the `tool/` directory, their purposes, and when to use them.
+TOC for `tool/` validation scripts. Running checks, counts, CI, and
+false-positive policy: [`validation_scripts/overview.md`](validation_scripts/overview.md).
 
 ## Agent-oriented checks
 
@@ -13,11 +14,11 @@ Catalog entries (including **memory-compounding** and **closed-loop invariants**
 
 ## Quick Reference
 
-- **Run all checks**: `./bin/checklist` (or `./tool/run_validation.sh`)
+- **Run all checks**: `./bin/checklist` (detail in overview)
 - **Run specific check**: `./tool/check_<name>.sh`
-- **Fix auto-fixable issues**: `./tool/fix_validation_docs.sh` (updates checklist index + catalog/overview counts)
+- **Fix auto-fixable issues**: `./tool/fix_validation_docs.sh`
 - **Validate docs**: `./tool/validate_validation_docs.sh`
-- **Agent host/docs closeout** (agents run before finish): `./bin/agent-maintain closeout` — policy [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md); presets in [`validation_scripts/operations_host_skills.md`](validation_scripts/operations_host_skills.md)
+- **Agent host/docs closeout**: `./bin/agent-maintain closeout` — [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md)
 
 ## Contents
 

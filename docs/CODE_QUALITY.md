@@ -16,7 +16,11 @@ Measured claim gate (portfolio-honest): [`engineering/engineering_quality_scorec
 Baseline audit: [code_quality_baseline_2026-06-03.md](audits/code_quality_baseline_2026-06-03.md).
 Top gaps tracked there (cadence 3+):
 
-1. **Coverage** — CI minimum **75%** filtered rollup; Engineering scorecard target **85%** filtered + app-shell (bootstrap/DI/router) **≥75%** ([coverage summary](../coverage/coverage_summary.md), [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)). Measured filtered rollup: **85.09%**.
+1. **Coverage** — thresholds and rollup exclusions owned by
+   [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
+   and `tool/update_coverage_summary.dart` (CI **75%** filtered; team target
+   **85%** + app-shell ≥75%). Measured filtered rollup: see
+   [coverage summary](../coverage/coverage_summary.md).
 2. **App shell** — bootstrap/composition/router aggregate tracked by `tool/check_engineering_core_coverage.sh` (not legacy `lib/core/`).
 3. **Next arch slice** — ~~Todo list `AppError`~~ **Done (June 2026)** — [`senior_patterns_review_2026-06.md`](audits/senior_patterns_review_2026-06.md) PR-3; `TodoListState.lastError` uses `AppError`.
 
@@ -40,16 +44,15 @@ Source of truth for gates and guardrails:
 
 ## Architecture Alignment
 
-- Clean Architecture boundaries: Presentation depends on Domain, Domain depends on nothing, Data implements Domain contracts.
-- Domain layer stays Flutter-agnostic (no `package:flutter` imports).
-- Dependency injection is centralized in `apps/mobile/lib/app/composition/` with interface registrations and lazy singletons.
-- Business logic is handled by cubits; widgets focus on layout, navigation, and theming.
+Layer rules, DI, and widget vs cubit boundaries: [`clean_architecture.md`](clean_architecture.md),
+[`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md).
+Do not restate SOLID/DRY here — see next section.
 
 ## SOLID and DRY Summary
 
-- SRP: Services and cubits are scoped to a single responsibility.
-- OCP/LSP/ISP/DIP: Interface-first design and DI allow swapping implementations and fakes.
-- DRY: Shared widgets/utilities and base repositories avoid duplication. See [`dry_principles.md`](architecture/dry_principles.md) for the current consolidation list.
+Full principles and examples: [`solid_principles.md`](architecture/solid_principles.md),
+[`dry_principles.md`](architecture/dry_principles.md). Review:
+[`review/architecture_checklist.md`](review/architecture_checklist.md).
 
 ## Resolved Quality Issues (Historical)
 
@@ -72,7 +75,9 @@ Source of truth for gates and guardrails:
 ## Quality Metrics and Gates
 
 - File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
-- Coverage minimum: **75%** filtered rollup (CI gate). Team target: **85%** — see the generated coverage summary artifact.
+- Coverage thresholds: [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
+  (CI filtered rollup + team target); artifact refreshed by
+  `tool/update_coverage_summary.dart`.
 - Static analysis and formatting: run `./bin/checklist`.
 - Guardrails: see [`validation_scripts.md`](validation_scripts.md) for the full automated checks list.
 
