@@ -46,7 +46,9 @@ you are finishing an explicit host-environment task. Prefer `preflight` + scoped
    only)
 6. **Scorecard freshness** — `check_agent_scorecard_freshness.sh` rejects a
    summary that no longer matches active or archived event inputs; regenerate
-   with `./tool/build_agent_scorecard_summary.sh`.
+   with `./tool/build_agent_scorecard_summary.sh`. If that regen is the **only**
+   git change (`scorecard-summary.json` / `.md`), commit and push directly to
+   `main` (no PR) — [`../validation_scripts/agent_scorecard_freshness.md`](../validation_scripts/agent_scorecard_freshness.md).
 
 For docs/tooling scopes, `docs-sync` also runs
 `tool/update_harness_score_badge.sh --check` through

@@ -25,6 +25,19 @@ bash tool/check_agent_scorecard_freshness.sh
 
 `./bin/agent-maintain closeout` enforces this check before task completion.
 
+## Land on `main` (no PR when summary-only)
+
+When the **only** dirty/committed paths are:
+
+- `analysis/agent_scorecard/summaries/scorecard-summary.json`
+- `analysis/agent_scorecard/summaries/scorecard-summary.md`
+
+commit and **push directly to `main`**. Do **not** open a PR for regenerable
+summary refresh. If any other path is included, use the normal PR flow.
+
+Operator preference: [`../agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md)
+§ Durable Prefs. Git note: [`../git_and_branching_strategy.md`](../git_and_branching_strategy.md).
+
 ## Related
 
 - [`agent_output_scorecard_v1.md`](../engineering/agent_output_scorecard_v1.md)

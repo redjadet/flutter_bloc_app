@@ -8,6 +8,11 @@ files in this repository.
 
 - `main` is the shared integration branch. Start work from current
   `origin/main`; merge completed work back through a pull request (PR).
+- **Exception — agent scorecard summary only:** when the change set is solely
+  `analysis/agent_scorecard/summaries/scorecard-summary.{json,md}` (freshness
+  regen after `./tool/build_agent_scorecard_summary.sh`), commit and push
+  directly to `main` — no PR. See
+  [`validation_scripts/agent_scorecard_freshness.md`](validation_scripts/agent_scorecard_freshness.md).
 - One branch owns one coherent outcome. Do not mix feature work, unrelated
   cleanup, generated churn, or dependency upgrades in the same PR.
 - Keep each working tree assigned to one branch. Use a separate Git worktree
