@@ -235,8 +235,7 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
       }
       final Map<String, Object?> updated = raw.map(
         (k, v) => MapEntry(k.toString(), v),
-      );
-      updated.remove(viewer.id);
+      )..remove(viewer.id);
       if (updated.isEmpty) {
         await safeDeleteKey(box, _likesKey);
       } else {

@@ -21,7 +21,7 @@ Future<void> _patchCachedPostImpl(
       return;
     }
     final int index = existing.posts.indexWhere(
-      (SocialFeedPost post) => post.id == updated.id,
+      (post) => post.id == updated.id,
     );
     if (index < 0) {
       return;
