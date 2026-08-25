@@ -153,12 +153,14 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     }
     try {
       if (head.type == 'like') {
-        await repo._remote.applyLike(
+        final SocialFeedPost updated = await repo._remote.applyLike(
           viewer: viewer,
           postId: head.postId,
           desiredLiked: head.desiredLiked ?? false,
           mutationId: head.idempotencyKey,
         );
+        await repo._persistViewerLikes();
+        await repo._patchCachedPost(viewer, updated);
       } else if (head.type == 'comment') {
         await repo._remote.applyComment(
           viewer: viewer,

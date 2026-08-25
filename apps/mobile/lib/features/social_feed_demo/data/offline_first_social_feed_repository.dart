@@ -16,6 +16,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_re
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 
 part 'offline_first_social_feed_repository_comments.part.dart';
+part 'offline_first_social_feed_repository_likes.part.dart';
 part 'offline_first_social_feed_repository_mutations.part.dart';
 part 'offline_first_social_feed_repository_replay.part.dart';
 part 'offline_first_social_feed_repository_sync.part.dart';
@@ -44,6 +45,13 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   Future<void> _ensureCommentsHydrated() => _ensureCommentsHydratedImpl(this);
 
   Future<void> _persistCommentThreads() => _persistCommentThreadsImpl(this);
+
+  Future<void> _persistViewerLikes() => _persistViewerLikesImpl(this);
+
+  Future<void> _patchCachedPost(
+    SocialFeedViewer viewer,
+    SocialFeedPost updated,
+  ) => _patchCachedPostImpl(this, viewer, updated);
 
   @override
   Future<SocialFeedPage?> readCachedPage({
@@ -147,6 +155,7 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   @override
   Future<void> resetViewerData({required SocialFeedViewer viewer}) async {
     await _local.clearViewer(viewer);
+    await _local.removeViewerLikes(viewer);
     await _queue.clearViewer(viewer);
     _remote.resetViewerPersonalization(viewer);
     _scenario.resetViewerSimulatorFaults(viewer: viewer);

@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_vi
 
 part 'simulated_social_feed_remote_mutations.part.dart';
 part 'simulated_social_feed_remote_rejection.part.dart';
+part 'simulated_social_feed_remote_persist.part.dart';
 
 /// Deterministic in-memory remote with opaque cursor = last post id.
 class SimulatedSocialFeedRemoteDataSource {
@@ -106,35 +107,6 @@ class SimulatedSocialFeedRemoteDataSource {
           _commentsByPostId[postId] ?? const <SocialFeedComment>[],
         ),
     };
-  }
-
-  /// Full thread snapshot for Hive persistence (shared across viewers).
-  Map<String, List<SocialFeedComment>> exportCommentThreads() {
-    return <String, List<SocialFeedComment>>{
-      for (final MapEntry<String, List<SocialFeedComment>> entry
-          in _commentsByPostId.entries)
-        entry.key: List<SocialFeedComment>.from(entry.value),
-    };
-  }
-
-  /// Restore threads after process restart; aligns stored post commentCounts.
-  void replaceCommentThreads(Map<String, List<SocialFeedComment>> threads) {
-    _commentsByPostId
-      ..clear()
-      ..addAll(<String, List<SocialFeedComment>>{
-        for (final MapEntry<String, List<SocialFeedComment>> entry
-            in threads.entries)
-          entry.key: List<SocialFeedComment>.from(entry.value),
-      });
-    for (final SocialFeedPost post in _posts) {
-      _commentsByPostId.putIfAbsent(post.id, () => <SocialFeedComment>[]);
-    }
-    _posts = <SocialFeedPost>[
-      for (final SocialFeedPost post in _posts)
-        post.copyWith(
-          commentCount: _commentsByPostId[post.id]?.length ?? 0,
-        ),
-    ];
   }
 
   Future<SocialFeedPage> fetchPage({

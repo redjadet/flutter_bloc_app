@@ -65,8 +65,8 @@ class _SocialFeedDemoPageState extends State<SocialFeedDemoPage> {
             key: const ValueKey('social-feed-scenario-button'),
             tooltip: l10n.socialFeedDemoScenarioTitle,
             onPressed: () {
-              // check-ignore: side_effects_build - user gesture callback.
               final SocialFeedCubit cubit = context.read<SocialFeedCubit>();
+              // check-ignore: side_effects_build - user gesture callback.
               unawaited(
                 showModalBottomSheet<void>(
                   context: context,

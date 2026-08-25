@@ -6,6 +6,8 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_po
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 import 'package:storage/storage.dart';
 
+part 'hive_social_feed_local_data_source_likes.part.dart';
+
 /// Viewer-scoped first-page cache + shared comment threads. Schema mismatch
 /// invalidates only this feature snapshot — never shared Hive.
 class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
@@ -22,6 +24,7 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
   static const String boxNameValue = 'social_feed_demo_v1';
   static const String _schemaNamespace = 'social_feed_cache:v1';
   static const String _commentsKey = 'comments:v1';
+  static const String _likesKey = 'likes:v1';
 
   final DateTime Function() _clock;
   final SocialFeedPostMapper _postMapper;
