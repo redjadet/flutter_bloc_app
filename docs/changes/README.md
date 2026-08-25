@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-25_social_feed_like_persistence.md`](2026-08-25_social_feed_like_persistence.md): Persist synced likes to Hive; hydrate on restart; file_length parts + sync-test drain wait.
 - [`2026-08-24_android_firebase_auth_checker_qual.md`](2026-08-24_android_firebase_auth_checker_qual.md): checker-qual compile classpath for firebase_auth 6.6 Android builds.
 - [`2026-08-24_integration_macos_harness_desktop_fastpath.md`](2026-08-24_integration_macos_harness_desktop_fastpath.md): macOS IT counter/social-feed harness + desktop discovery fast-path.
 - [`2026-08-24_upgrade_validate_go_router_freezed_fcm.md`](2026-08-24_upgrade_validate_go_router_freezed_fcm.md): Major pub upgrade (`freezed` 4, Firebase); FCM `deniedPermanently`; defer `go_router` 18.
