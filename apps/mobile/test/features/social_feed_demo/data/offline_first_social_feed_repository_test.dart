@@ -285,6 +285,99 @@ void main() {
     expect(bodies, contains('Sam keeps this'));
   });
 
+  test('synced likes survive remote recreation (hot restart)', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+
+    await repository.setLiked(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      desiredLiked: true,
+      mutationId: 'persist-like',
+    );
+
+    await repository.dispose();
+    remote = SimulatedSocialFeedRemoteDataSource(
+      scenario: scenario,
+      clock: () => now,
+    );
+    repository = OfflineFirstSocialFeedRepository(
+      local: local,
+      queue: queue,
+      remote: remote,
+      scenario: scenario,
+      timerService: timer,
+    );
+
+    final SocialFeedPage? cached = await repository.readCachedPage(
+      viewer: SocialFeedViewer.alex,
+    );
+    final SocialFeedPost cachedPost = cached!.posts.firstWhere(
+      (SocialFeedPost p) => p.id == postId,
+    );
+    expect(cachedPost.isLikedByMe, isTrue);
+
+    final SocialFeedPage refreshed = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final SocialFeedPost remotePost = refreshed.posts.firstWhere(
+      (SocialFeedPost p) => p.id == postId,
+    );
+    expect(remotePost.isLikedByMe, isTrue);
+  });
+
+  test(
+    'dispatched offline likes survive remote recreation (hot restart)',
+    () async {
+      final SocialFeedPage page = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final String postId = page.posts.first.id;
+      scenario.setSimulatedOnline(online: false);
+      await repository.setLiked(
+        viewer: SocialFeedViewer.alex,
+        postId: postId,
+        desiredLiked: true,
+        mutationId: 'offline-like',
+      );
+
+      scenario.setSimulatedOnline(online: true);
+      final SocialFeedSyncLease lease = await repository.acquireSync(
+        viewer: SocialFeedViewer.alex,
+      );
+      timer.tick();
+      await Future<void>.delayed(Duration.zero);
+      await lease.close();
+      expect(
+        await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+        0,
+      );
+
+      await repository.dispose();
+      remote = SimulatedSocialFeedRemoteDataSource(
+        scenario: scenario,
+        clock: () => now,
+      );
+      repository = OfflineFirstSocialFeedRepository(
+        local: local,
+        queue: queue,
+        remote: remote,
+        scenario: scenario,
+        timerService: timer,
+      );
+
+      final SocialFeedPage refreshed = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final SocialFeedPost remotePost = refreshed.posts.firstWhere(
+        (SocialFeedPost p) => p.id == postId,
+      );
+      expect(remotePost.isLikedByMe, isTrue);
+    },
+  );
+
   test('sync lease can be re-acquired after close', () async {
     final SocialFeedSyncLease first = await repository.acquireSync(
       viewer: SocialFeedViewer.alex,

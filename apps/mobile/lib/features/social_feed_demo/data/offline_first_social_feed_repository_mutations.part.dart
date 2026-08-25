@@ -32,6 +32,8 @@ Future<SocialFeedLikeResult> _setLikedImpl(
       desiredLiked: desiredLiked,
       mutationId: mutationId,
     );
+    await repo._persistViewerLikes();
+    await repo._patchCachedPost(viewer, post);
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
     return SocialFeedLikeSynced(post);
   } on SocialFeedRemoteRejection catch (e) {

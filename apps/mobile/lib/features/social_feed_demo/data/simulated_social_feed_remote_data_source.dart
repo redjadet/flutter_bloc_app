@@ -117,6 +117,24 @@ class SimulatedSocialFeedRemoteDataSource {
     };
   }
 
+  /// Viewer-scoped liked post ids for Hive persistence.
+  Map<String, Set<String>> exportViewerLikes() {
+    return <String, Set<String>>{
+      for (final MapEntry<String, Set<String>> entry in _likedByViewer.entries)
+        entry.key: Set<String>.from(entry.value),
+    };
+  }
+
+  /// Restore viewer likes after process restart.
+  void replaceViewerLikes(Map<String, Set<String>> likes) {
+    _likedByViewer
+      ..clear()
+      ..addAll(<String, Set<String>>{
+        for (final MapEntry<String, Set<String>> entry in likes.entries)
+          entry.key: Set<String>.from(entry.value),
+      });
+  }
+
   /// Restore threads after process restart; aligns stored post commentCounts.
   void replaceCommentThreads(Map<String, List<SocialFeedComment>> threads) {
     _commentsByPostId

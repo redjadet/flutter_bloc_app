@@ -18,6 +18,11 @@ Future<void> _ensureCommentsHydratedImpl(
       if (stored != null && stored.isNotEmpty) {
         repo._remote.replaceCommentThreads(stored);
       }
+      final Map<String, Set<String>>? storedLikes = await repo._local
+          .readViewerLikes();
+      if (storedLikes != null && storedLikes.isNotEmpty) {
+        repo._remote.replaceViewerLikes(storedLikes);
+      }
     } on Object {
       // Degraded: keep in-memory seed threads.
     } finally {
