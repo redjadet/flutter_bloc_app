@@ -3,4 +3,4 @@ uvicorn[standard]>=0.52.4,<1
 pydantic>=2.13.4,<3
 pydantic-settings>=2.15.0,<3
 requests>=2.34.2,<3
-google-auth>=2.56.3,<3
+google-auth>=2.57.0,<3
