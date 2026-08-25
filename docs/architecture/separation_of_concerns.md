@@ -1,18 +1,16 @@
 # Separation of Concerns in flutter_bloc_app
 
-This codebase applies **Separation of Concerns (SoC)** as a practical rule, not
-just an architectural slogan. Features are split so domain logic, data access,
-state orchestration, UI composition, and platform integration can evolve
-independently.
+SoC here means applying Clean Architecture layers and modularity at
+composition boundaries — not a parallel architecture.
 
-> **Related Documentation:**
+> **Owners (do not duplicate layer prose):**
 >
-> - [Clean Architecture](../clean_architecture.md) - Layer responsibilities and dependency flow
-> - [Architecture Details](../architecture_details.md) - High-level architecture and shared infrastructure
-> - [SOLID Principles](solid_principles.md) - Interface-first design and dependency inversion
-> - [Modularity](../modularity.md) - Dependency direction and core/shared contracts
-> - [Compile-Time Safety](compile_time_safety.md) - Type-safe BLoC/Cubit access patterns
-> - [Code Quality](../CODE_QUALITY.md) - Validation expectations and quality gates
+> - [Clean Architecture](../clean_architecture.md) — layer responsibilities and dependency flow
+> - [Feature Structure Contract](feature_structure_contract.md) — folder skeleton
+> - [Modularity](../modularity.md) — dependency direction and package contracts
+> - [Architecture Details](../architecture_details.md) — app shell / DI / routing
+> - [SOLID Principles](solid_principles.md) — interface-first design
+> - [Code Quality](../CODE_QUALITY.md) — gates overview
 
 ## Overview
 
@@ -25,35 +23,13 @@ In this repository, Separation of Concerns means:
 - Cross-cutting infrastructure is extracted into shared services
 - Composition happens at explicit boundaries through DI and routing
 
-The result is a codebase that is easier to test, safer to refactor, and less
-likely to accumulate hidden coupling.
+Layer and shell rules: [`clean_architecture.md`](../clean_architecture.md) § Mental
+Model / § Layer Responsibilities. Unique SoC examples below show how those
+rules show up in concrete collaborators.
 
-## Where SoC Shows Up
+## Where SoC Shows Up (examples)
 
-### 1. Layer Boundaries
-
-- **Domain** defines contracts and models only. Example: feature repositories
-  under `apps/mobile/lib/features/*/domain/` expose the API that cubits depend on, without
-  importing Flutter or concrete SDKs.
-- **Data** implements those contracts and hides storage, HTTP, Firebase,
-  Supabase, Hive, and sync details behind repository abstractions.
-- **Presentation** manages Cubits, pages, and widgets. It consumes abstractions
-  rather than building repositories or talking directly to SDKs.
-
-This is enforced both by convention and by validation scripts such as
-`tool/check_flutter_domain_imports.sh`.
-
-### 2. App Shell vs Feature Modules
-
-- `BootstrapCoordinator`, `MyApp`, `AppScope`, and the router compose the app
-  from above. They decide which providers, listeners, and feature pages are in
-  play, but they should not absorb feature business rules.
-- Feature modules own their own contracts, repositories, cubits, and widgets
-  under `apps/mobile/lib/features/<feature>/`.
-- This distinction matters because app-shell code is allowed to know about many
-  features at once, while feature code should remain scoped and replaceable.
-
-### 3. Orchestration vs Infrastructure
+### Orchestration vs Infrastructure
 
 - `BackgroundSyncCoordinator` in `packages/networking/lib/src/sync/background_sync_coordinator.dart`
   coordinates sync cycles, but delegates timing to `TimerService`,
@@ -63,7 +39,7 @@ This is enforced both by convention and by validation scripts such as
 - This keeps the coordinator focused on sync flow rather than absorbing
   storage, scheduling, and transport responsibilities into one class.
 
-### 4. Repository Delegation
+### Repository Delegation
 
 - `OfflineFirstChatRepository` in
   `apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart` handles
@@ -74,7 +50,7 @@ This is enforced both by convention and by validation scripts such as
   accidental "god objects" unless sync payload mapping, local writes, and
   remote execution are separated deliberately.
 
-### 5. DI as a Composition Boundary
+### DI as a Composition Boundary
 
 - Feature registrations are split into focused files such as
   `apps/mobile/lib/app/composition/features/register_chat_services.dart` instead of one monolithic
@@ -84,7 +60,7 @@ This is enforced both by convention and by validation scripts such as
 - This keeps feature code explicit about dependencies while avoiding container
   lookups throughout lower-level logic.
 
-### 6. UI Access Patterns
+### UI Access Patterns
 
 - `package:ilkersevim_type_safe_bloc` centralizes typed cubit and
   state access, keeping widget code focused on rendering instead of provider
@@ -95,11 +71,9 @@ This is enforced both by convention and by validation scripts such as
 
 ## Guardrails
 
-Separation of Concerns is reinforced by automated checks:
-
 - `tool/check_flutter_domain_imports.sh` blocks Flutter imports in domain code
 - `tool/delivery_checklist.sh` checks for data-layer imports in presentation
-- `tool/delivery_checklist.sh` checks for presentation imports in data
+  and presentation imports in data
 - DI and repository tests rely on fakes and interfaces, which exposes coupling
   early when boundaries start to blur
 
@@ -109,7 +83,7 @@ Separation of Concerns is reinforced by automated checks:
 - Put routing/bootstrap/app-scope composition in the app shell, not inside
   feature repositories or widgets
 - Put SDK, storage, and transport code in repositories/services, not cubits
-- Keep shared services narrow and focused; do not turn `shared/` into a dump
+- Keep shared services narrow and focused; do not turn packages into dump bins
 - Use DI registration files as composition points, not as hidden service
   locators inside feature logic
 - Extract collaborators when a repository or cubit starts handling multiple
@@ -117,11 +91,8 @@ Separation of Concerns is reinforced by automated checks:
 
 ## Review Checklist
 
-- Domain files remain free of Flutter imports
-- App shell code remains composition-focused rather than feature-rule-heavy
-- Presentation depends on interfaces or cubits, not data-layer implementations
-- Data layer does not import presentation code
-- Large orchestration classes delegate mapping, persistence, or transport work
-- DI files stay feature-scoped and readable
-- Shared helpers remove repeated infrastructure setup without taking over
-  feature logic
+Use [`review/architecture_checklist.md`](../review/architecture_checklist.md).
+Quick SoC checks: domain free of Flutter; shell stays composition-focused;
+presentation depends on interfaces/cubits; data does not import presentation;
+orchestration classes delegate mapping/persistence/transport; DI stays
+feature-scoped.
