@@ -347,8 +347,18 @@ void main() {
       final SocialFeedSyncLease lease = await repository.acquireSync(
         viewer: SocialFeedViewer.alex,
       );
-      timer.tick();
-      await Future<void>.delayed(Duration.zero);
+      // Drain queue: initial unawaited tick + periodic may need event-queue
+      // flushes before Hive persist / remove completes.
+      for (int i = 0; i < 20; i++) {
+        if (await repository.pendingMutationCount(
+              viewer: SocialFeedViewer.alex,
+            ) ==
+            0) {
+          break;
+        }
+        timer.tick();
+        await pumpEventQueue();
+      }
       await lease.close();
       expect(
         await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
