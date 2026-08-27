@@ -98,6 +98,23 @@ Future<SocialFeedPost> _optimisticPostImpl(
       }
     }
   }
+  final SocialFeedPost? remote = repo._remote.projectPost(
+    viewer: viewer,
+    postId: postId,
+  );
+  if (remote != null) {
+    final SocialFeedPage overlaid = await repo._overlayPending(
+      viewer,
+      SocialFeedPage(
+        posts: <SocialFeedPost>[remote],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.remote,
+        fetchedAt: repo._queue.now(),
+      ),
+    );
+    return overlaid.posts.first;
+  }
   return SocialFeedPost(
     id: postId,
     authorId: 'unknown',
@@ -161,6 +178,10 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         );
         await repo._persistViewerLikes();
         await repo._patchCachedPost(viewer, updated);
+        await repo._queue.removeQueuedLikesForPost(
+          viewer: viewer,
+          postId: head.postId,
+        );
       } else if (head.type == 'comment') {
         await repo._remote.applyComment(
           viewer: viewer,
@@ -170,10 +191,12 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         );
         await repo._persistCommentThreads();
       }
-      await repo._queue.removeFromQueue(
-        viewer: viewer,
-        mutationId: head.mutationId,
-      );
+      if (head.type == 'comment') {
+        await repo._queue.removeFromQueue(
+          viewer: viewer,
+          mutationId: head.mutationId,
+        );
+      }
       dispatched.add(
         SocialFeedDispatchedMutation(
           mutationId: head.mutationId,
@@ -182,10 +205,17 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         ),
       );
     } on SocialFeedRemoteRejection catch (e) {
-      await repo._queue.removeFromQueue(
-        viewer: viewer,
-        mutationId: head.mutationId,
-      );
+      if (head.type == 'like') {
+        await repo._queue.removeQueuedLikesForPost(
+          viewer: viewer,
+          postId: head.postId,
+        );
+      } else {
+        await repo._queue.removeFromQueue(
+          viewer: viewer,
+          mutationId: head.mutationId,
+        );
+      }
       rejections.add(
         SocialFeedRejectedSync(
           postId: head.postId,

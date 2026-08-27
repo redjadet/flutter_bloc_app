@@ -92,6 +92,19 @@ class SimulatedSocialFeedRemoteDataSource {
     ];
   }
 
+  /// Viewer-scoped projection for a single post (used when cache misses).
+  SocialFeedPost? projectPost({
+    required SocialFeedViewer viewer,
+    required String postId,
+  }) {
+    for (final SocialFeedPost post in _posts) {
+      if (post.id == postId) {
+        return _project(viewer, post);
+      }
+    }
+    return null;
+  }
+
   List<SocialFeedComment> commentsForPost(String postId) {
     return List<SocialFeedComment>.unmodifiable(
       _commentsByPostId[postId] ?? const <SocialFeedComment>[],
