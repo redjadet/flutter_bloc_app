@@ -225,66 +225,23 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
       return;
     }
     _syncLease = syncLease;
+    void onSyncSummary(SocialFeedSyncSummary summary) {
+      if (!_isCurrentLease(leaseGeneration, current)) {
+        return;
+      }
+      _applySyncSummary(summary, current);
+    }
+
     _syncSub = registerSubscription(
-      syncLease.summaries.listen((summary) {
-        if (!_isCurrentLease(leaseGeneration, current)) {
-          return;
-        }
-        _emitReadyPatch((d) {
-          final Map<String, String> attentionByPost = <String, String>{
-            for (final SocialFeedAttentionMutation item
-                in summary.attentionMutations)
-              item.postId: item.mutationId,
-          };
-          final Set<String> pending = Set<String>.from(summary.pendingPostIds)
-            ..removeAll(attentionByPost.keys);
-          SocialFeedReadyData next = d.copyWith(
-            pendingMutationCount: summary.pendingCount,
-            needsAttentionCount: summary.needsAttentionCount,
-            needsAttentionByPostId: attentionByPost,
-            pendingPostIds: pending,
-          );
-          for (final SocialFeedRejectedSync rejection in summary.rejections) {
-            pending.remove(rejection.postId);
-            next = next.copyWith(
-              posts: next.posts
-                  .map(
-                    (p) =>
-                        p.id == rejection.postId ? rejection.canonicalPost : p,
-                  )
-                  .toList(),
-              pendingPostIds: pending,
-              effect: const SocialFeedEffect.mutationRejected(),
-              effectId: next.effectId + 1,
-            );
-            if (rejection.wasComment && rejection.mutationId != null) {
-              final Map<String, List<SocialFeedComment>> comments =
-                  Map<String, List<SocialFeedComment>>.from(
-                    next.pendingCommentsByPostId,
-                  );
-              final List<SocialFeedComment>? list = comments[rejection.postId];
-              if (list != null) {
-                final List<SocialFeedComment> remaining = list
-                    .where((c) => c.id != rejection.mutationId)
-                    .toList();
-                if (remaining.isEmpty) {
-                  comments.remove(rejection.postId);
-                } else {
-                  comments[rejection.postId] = remaining;
-                }
-              }
-              next = next.copyWith(pendingCommentsByPostId: comments);
-            }
-          }
-          return next;
-        });
-        if (summary.dispatchedMutations.isNotEmpty) {
-          unawaited(
-            _reconcileDispatchedComments(current, summary.dispatchedMutations),
-          );
-        }
-      }, onError: (Object error, StackTrace stackTrace) {}),
+      syncLease.summaries.listen(
+        onSyncSummary,
+        onError: (Object error, StackTrace stackTrace) {},
+      ),
     );
+    final SocialFeedSyncSummary? seed = syncLease.seedSummary;
+    if (seed != null) {
+      onSyncSummary(seed);
+    }
     final SocialFeedRealtimeLease realtimeLease = await _realtimeSource.acquire(
       current,
     );
@@ -323,6 +280,64 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
         });
       }, onError: (Object error, StackTrace stackTrace) {}),
     );
+  }
+
+  void _applySyncSummary(
+    SocialFeedSyncSummary summary,
+    SocialFeedViewer current,
+  ) {
+    _emitReadyPatch((d) {
+      final Map<String, String> attentionByPost = <String, String>{
+        for (final SocialFeedAttentionMutation item
+            in summary.attentionMutations)
+          item.postId: item.mutationId,
+      };
+      final Set<String> pending = Set<String>.from(summary.pendingPostIds)
+        ..removeAll(attentionByPost.keys);
+      SocialFeedReadyData next = d.copyWith(
+        pendingMutationCount: summary.pendingCount,
+        needsAttentionCount: summary.needsAttentionCount,
+        needsAttentionByPostId: attentionByPost,
+        pendingPostIds: pending,
+      );
+      for (final SocialFeedRejectedSync rejection in summary.rejections) {
+        pending.remove(rejection.postId);
+        next = next.copyWith(
+          posts: next.posts
+              .map(
+                (p) => p.id == rejection.postId ? rejection.canonicalPost : p,
+              )
+              .toList(),
+          pendingPostIds: pending,
+          effect: const SocialFeedEffect.mutationRejected(),
+          effectId: next.effectId + 1,
+        );
+        if (rejection.wasComment && rejection.mutationId != null) {
+          final Map<String, List<SocialFeedComment>> comments =
+              Map<String, List<SocialFeedComment>>.from(
+                next.pendingCommentsByPostId,
+              );
+          final List<SocialFeedComment>? list = comments[rejection.postId];
+          if (list != null) {
+            final List<SocialFeedComment> remaining = list
+                .where((c) => c.id != rejection.mutationId)
+                .toList();
+            if (remaining.isEmpty) {
+              comments.remove(rejection.postId);
+            } else {
+              comments[rejection.postId] = remaining;
+            }
+          }
+          next = next.copyWith(pendingCommentsByPostId: comments);
+        }
+      }
+      return next;
+    });
+    if (summary.dispatchedMutations.isNotEmpty) {
+      unawaited(
+        _reconcileDispatchedComments(current, summary.dispatchedMutations),
+      );
+    }
   }
 
   Future<void> _reconcileDispatchedComments(
