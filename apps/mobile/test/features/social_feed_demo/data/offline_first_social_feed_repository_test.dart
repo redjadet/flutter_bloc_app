@@ -449,18 +449,12 @@ void main() {
       final SocialFeedSyncLease lease = await repository.acquireSync(
         viewer: SocialFeedViewer.alex,
       );
-      // Drain queue: initial unawaited tick + periodic may need event-queue
-      // flushes before Hive persist / remove completes.
-      for (int i = 0; i < 20; i++) {
-        if (await repository.pendingMutationCount(
-              viewer: SocialFeedViewer.alex,
-            ) ==
-            0) {
-          break;
-        }
-        timer.tick();
-        await pumpEventQueue();
-      }
+      expect(lease.seedSummary, isNotNull);
+      expect(lease.seedSummary!.dispatchedMutations, isNotEmpty);
+      expect(
+        await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+        0,
+      );
       await lease.close();
       expect(
         await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
@@ -489,6 +483,37 @@ void main() {
       expect(remotePost.isLikedByMe, isTrue);
     },
   );
+
+  test('acquireSync seedSummary captures queued comment dispatch', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.addComment(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      body: 'Queued for seed',
+      mutationId: 'seed-comment',
+    );
+    scenario.setSimulatedOnline(online: true);
+
+    final SocialFeedSyncLease lease = await repository.acquireSync(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(lease.seedSummary, isNotNull);
+    expect(
+      lease.seedSummary!.dispatchedMutations,
+      contains(
+        isA<SocialFeedDispatchedMutation>().having(
+          (SocialFeedDispatchedMutation m) => m.mutationId,
+          'mutationId',
+          'seed-comment',
+        ),
+      ),
+    );
+    await lease.close();
+  });
 
   test('sync lease can be re-acquired after close', () async {
     final SocialFeedSyncLease first = await repository.acquireSync(

@@ -230,6 +230,83 @@ void main() {
   });
 
   test(
+    'seedSummary promotes comment dispatched during lease acquire',
+    () async {
+      final SocialFeedPost base = post(id: 'p1', comments: 1);
+      final _FakeScenario scenario = _FakeScenario();
+      final DateTime fixedNow = DateTime.utc(2026, 8, 20, 12);
+      const String mutationId = 'queued-comment';
+      final SocialFeedComment pending = SocialFeedComment(
+        id: mutationId,
+        postId: 'p1',
+        viewerId: SocialFeedViewer.alex.id,
+        body: 'Queued offline',
+        createdAt: fixedNow,
+        syncStatus: SocialFeedMutationStatus.pending,
+      );
+      final _FakeRepo repo = _FakeRepo(
+        remote: SocialFeedPage(
+          posts: <SocialFeedPost>[base],
+          nextCursor: null,
+          hasMore: false,
+          source: SocialFeedDataSource.remote,
+          fetchedAt: DateTime.utc(2026, 8, 20),
+        ),
+        pendingSnapshot: SocialFeedPendingSnapshot(
+          pendingCommentsByPostId: <String, List<SocialFeedComment>>{
+            'p1': <SocialFeedComment>[pending],
+          },
+          pendingPostIds: <String>{'p1'},
+        ),
+        seedSummary: const SocialFeedSyncSummary(
+          pendingCount: 0,
+          needsAttentionCount: 0,
+          pendingPostIds: <String>{},
+          dispatchedMutations: <SocialFeedDispatchedMutation>[
+            SocialFeedDispatchedMutation(
+              mutationId: mutationId,
+              postId: 'p1',
+              wasComment: true,
+            ),
+          ],
+        ),
+      );
+      repo.commentsByPostId['p1'] = <SocialFeedComment>[
+        SocialFeedComment(
+          id: 'seed',
+          postId: 'p1',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'Seed',
+          createdAt: fixedNow,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+        SocialFeedComment(
+          id: mutationId,
+          postId: 'p1',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'Queued offline',
+          createdAt: fixedNow,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+      ];
+      final SocialFeedCubit cubit = SocialFeedCubit(
+        repository: repo,
+        realtimeSource: _FakeRealtime(),
+        scenario: scenario,
+        clock: () => fixedNow,
+      );
+      await cubit.load();
+      await Future<void>.delayed(Duration.zero);
+
+      final SocialFeedReady ready = cubit.state as SocialFeedReady;
+      expect(ready.data.pendingCommentsByPostId['p1'], isNull);
+      expect(ready.data.pendingPostIds, isEmpty);
+      expect(ready.data.commentsByPostId['p1'], hasLength(2));
+      await cubit.close();
+    },
+  );
+
+  test(
     'background sync promotes queued comment without manual refresh',
     () async {
       final SocialFeedPost base = post(id: 'p1', comments: 1);
@@ -436,9 +513,14 @@ class _FakeScenario implements SocialFeedScenarioController {
 }
 
 class _FakeLease implements SocialFeedSyncLease {
+  _FakeLease({this.seedSummary});
+
   final StreamController<SocialFeedSyncSummary> _controller =
       StreamController<SocialFeedSyncSummary>.broadcast();
   bool closed = false;
+
+  @override
+  final SocialFeedSyncSummary? seedSummary;
 
   @override
   Stream<SocialFeedSyncSummary> get summaries => _controller.stream;
@@ -500,7 +582,8 @@ class _FakeRepo implements SocialFeedRepository {
       pendingCommentsByPostId: <String, List<SocialFeedComment>>{},
       pendingPostIds: <String>{},
     ),
-  });
+    SocialFeedSyncSummary? seedSummary,
+  }) : lease = _FakeLease(seedSummary: seedSummary);
 
   SocialFeedPage? cached;
   SocialFeedPage remote;
@@ -510,7 +593,7 @@ class _FakeRepo implements SocialFeedRepository {
   int commentCalls = 0;
   final Map<String, List<SocialFeedComment>> commentsByPostId =
       <String, List<SocialFeedComment>>{};
-  final _FakeLease lease = _FakeLease();
+  final _FakeLease lease;
 
   @override
   Future<SocialFeedPage?> readCachedPage({
