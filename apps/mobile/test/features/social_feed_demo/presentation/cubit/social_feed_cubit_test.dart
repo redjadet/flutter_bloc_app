@@ -440,6 +440,49 @@ void main() {
     },
   );
 
+  test('toggleLike after switchViewer ignores stale mutation result', () async {
+    final Completer<SocialFeedLikeResult> likeCompleter =
+        Completer<SocialFeedLikeResult>();
+    final SocialFeedPost shared = post(id: 'shared', likes: 0);
+    final _FakeRepo repo = _FakeRepo(
+      remote: SocialFeedPage(
+        posts: <SocialFeedPost>[shared],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.remote,
+        fetchedAt: DateTime.utc(2026, 8, 20),
+      ),
+      likeCompleter: likeCompleter,
+    );
+    final SocialFeedCubit cubit = SocialFeedCubit(
+      repository: repo,
+      realtimeSource: _FakeRealtime(),
+      scenario: _FakeScenario(),
+      clock: () => DateTime.utc(2026, 8, 20, 12),
+    );
+    await cubit.load();
+    final Future<void> likeFuture = cubit.toggleLike('shared');
+    repo.remote = SocialFeedPage(
+      posts: <SocialFeedPost>[post(id: 'shared', likes: 5, liked: true)],
+      nextCursor: null,
+      hasMore: false,
+      source: SocialFeedDataSource.remote,
+      fetchedAt: DateTime.utc(2026, 8, 20),
+    );
+    await cubit.switchViewer(SocialFeedViewer.sam);
+    likeCompleter.complete(
+      SocialFeedLikeSynced(
+        shared.copyWith(isLikedByMe: true, likeCount: 1, serverRevision: 2),
+      ),
+    );
+    await likeFuture;
+    final SocialFeedReady ready = cubit.state as SocialFeedReady;
+    expect(ready.data.viewer, SocialFeedViewer.sam);
+    expect(ready.data.posts.first.isLikedByMe, isTrue);
+    expect(ready.data.posts.first.likeCount, 5);
+    await cubit.close();
+  });
+
   test('switchViewer reloads new viewer', () async {
     final _FakeRepo repo = _FakeRepo(
       remote: SocialFeedPage(
@@ -578,6 +621,7 @@ class _FakeRepo implements SocialFeedRepository {
     required this.remote,
     this.likeResult,
     this.commentResult,
+    this.likeCompleter,
     this.pendingSnapshot = const SocialFeedPendingSnapshot(
       pendingCommentsByPostId: <String, List<SocialFeedComment>>{},
       pendingPostIds: <String>{},
@@ -589,6 +633,7 @@ class _FakeRepo implements SocialFeedRepository {
   SocialFeedPage remote;
   SocialFeedLikeResult? likeResult;
   SocialFeedCommentResult? commentResult;
+  Completer<SocialFeedLikeResult>? likeCompleter;
   SocialFeedPendingSnapshot pendingSnapshot;
   int commentCalls = 0;
   final Map<String, List<SocialFeedComment>> commentsByPostId =
@@ -617,6 +662,9 @@ class _FakeRepo implements SocialFeedRepository {
     required bool desiredLiked,
     required String mutationId,
   }) async {
+    if (likeCompleter != null) {
+      return likeCompleter!.future;
+    }
     return likeResult ??
         SocialFeedLikeSynced(
           remote.posts.first.copyWith(
