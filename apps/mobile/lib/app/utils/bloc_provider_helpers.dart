@@ -20,7 +20,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 /// ```
 ///
 /// For go_router route-owned cubits (go_router 18+), prefer
-/// [routeScopedWithAsyncInit] with `pageBuilder` and `state.pageKey`.
+/// `routeScopedWithAsyncInit` with `pageBuilder` and `state.pageKey`.
 ///
 /// **Why use `unawaited()`:** The initialization is intentionally fire-and-forget
 /// because we want the widget tree to build immediately while data loads in the background.
@@ -144,8 +144,8 @@ class BlocProviderHelpers {
 
   /// Route-scoped cubit ownership for go_router pages that may rebuild mid-transition.
   ///
-  /// Pair with [GoRoute.pageBuilder] and a page keyed by [GoRouteState.pageKey]
-  /// (for example [NoTransitionPage]) so navigator transitions do not dispose
+  /// Pair with `GoRoute.pageBuilder` and a page keyed by `GoRouteState.pageKey`
+  /// (for example `NoTransitionPage`) so navigator transitions do not dispose
   /// route-scoped cubits early under go_router 18+.
   static Widget routeScopedWithAsyncInit<T extends BlocBase<Object?>>({
     required T Function() create,
