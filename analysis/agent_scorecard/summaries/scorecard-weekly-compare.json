@@ -1,15 +1,15 @@
 {
   "current_window": {
     "delegate_rate": 0.0,
-    "p50_duration_ms": 367293,
-    "success_rate": 0.8,
-    "total": 5
+    "p50_duration_ms": 351270,
+    "success_rate": 0.38461538461538464,
+    "total": 13
   },
   "delta": {
     "delegate_rate": 0.0,
-    "p50_duration_ms": 367293,
-    "success_rate": 0.8,
-    "total": 5
+    "p50_duration_ms": 351270,
+    "success_rate": 0.38461538461538464,
+    "total": 13
   },
   "previous_window": {
     "delegate_rate": 0.0,
