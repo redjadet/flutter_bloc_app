@@ -5,15 +5,10 @@ enum RouteAuthRequirement {
   authenticated,
 }
 
-class AppRoutePolicy {
-  const AppRoutePolicy({
-    required this.path,
-    required this.requirement,
-  });
-
-  final String path;
-  final RouteAuthRequirement requirement;
-
+class const AppRoutePolicy({
+  required final String path,
+  required final RouteAuthRequirement requirement,
+}) {
   bool get requiresAuthentication =>
       requirement == RouteAuthRequirement.authenticated;
 }
