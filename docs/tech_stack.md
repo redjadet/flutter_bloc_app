@@ -55,7 +55,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | --- | --- |
 | State management | `flutter_bloc` `^9.1.1`, `equatable` `^2.0.5`, `freezed` `^3.2.3`, `freezed_annotation` `^3.1.0` |
 | Dependency injection | `get_it` `^9.0.5` |
-| Routing | `go_router` `^17.0.0` |
+| Routing | `go_router` `^17.5.0` (defer 18 — integration route/shell dispose regressions; [change note](changes/2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md)) |
 | Localization | `intl` `^0.20.2`, `flutter_localizations` |
 | Architecture style | Clean Architecture with `Presentation -> Domain <- Data` layering |
 
@@ -94,7 +94,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Media and device features | `image_picker` `^1.2.1`, `local_auth` `^3.0.0`, `device_info_plus` `^12.3.0`, `package_info_plus` `^9.0.0` |
 | Maps | `google_maps_flutter` `^2.17.1`, `google_maps_flutter_ios_sdk10` `^2.18.4`, `apple_maps_flutter` `^1.4.0` |
 | AI demos | `genui` `^0.7.0`, `genui_google_generative_ai` `^0.7.0` |
-| Other feature packages | `in_app_purchase` `^3.2.3`, `wallet_connect_v2` `^1.0.0`, `flutter_tts` `^4.2.0`, `markdown` `^7.3.0`, `flex_color_picker` `^3.3.0` |
+| Other feature packages | `in_app_purchase` `^3.2.3`, `wallet_connect_v2` `^1.0.0`, `flutter_tts` `^4.2.0`, `markdown` `^7.3.0`, `flex_color_picker` `^4.0.0` |
 
 ## Testing and developer tooling
 

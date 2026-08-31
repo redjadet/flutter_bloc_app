@@ -71,7 +71,9 @@ void registerAppLaunchIntegrationFlow() {
       // to CounterValueText (semantics finders are unreliable on macOS IT).
       final Finder countFinder = find.byType(CounterValueText);
       await pumpUntilFound(tester, countFinder);
-      final int startCount = tester.widget<CounterValueText>(countFinder.first).count;
+      final int startCount = tester
+          .widget<CounterValueText>(countFinder.first)
+          .count;
 
       final Finder incrementButton = find
           .widgetWithIcon(FloatingActionButton, Icons.add)
