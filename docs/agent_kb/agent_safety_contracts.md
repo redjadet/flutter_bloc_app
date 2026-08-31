@@ -138,13 +138,15 @@ commands and cleanup of agent-created task-specific temporary files are not
 
 Coding-task closeout must include:
 
-1. **Files Changed** — each changed file plus one-line modification summary
-2. **Verification** — exact command(s) run and pass/fail/skipped/N/A result
-3. **Known limitations** — residual risk, skipped lanes, or manual blockers; or
+1. **What We Learned** — required teach-back; response shape:
+   [`legibility_and_finish_gate.md`](legibility_and_finish_gate.md)
+2. **Files Changed** — each changed file plus one-line modification summary
+3. **Verification** — exact command(s) run and pass/fail/skipped/N/A result
+4. **Known limitations** — residual risk, skipped lanes, or manual blockers; or
    `None`
-4. **Follow-up Actions** — required next steps or `None`
-5. **Destructive/external actions** — state
+5. **Follow-up Actions** — required next steps or `None`
+6. **Destructive/external actions** — state
    `No destructive or external actions were performed` unless a same-turn
    approved action is named with its approval
 
-Never fabricate verification results.
+Never fabricate lessons or verification results.

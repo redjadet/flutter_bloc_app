@@ -65,13 +65,19 @@ Owner: [`agent_safety_contracts.md`](agent_safety_contracts.md) § SAFETY-REPORT
 
 For coding tasks after implementation, include:
 
+- **What We Learned** — complete the operating manual
+  [understanding loop](../ai/agent_operating_manual.md#understanding-loop). For
+  non-trivial work, answer `Yes — I know more than I did before it started`
+  with 1–3 concept bullets; an unresolved understanding gap blocks successful
+  closeout. For mechanical work: `No new reusable concept — mechanical task`.
 - **Files Changed** — each changed file plus one-line modification summary
 - **Verification** — command + pass/fail/skipped/N/A per lane (format, analyze, tests)
 - **Known limitations** — residual risk, skipped lanes, or manual blockers; or `None`
 - **Follow-up Actions** — required next steps, manual actions, or `None`
 - **Destructive/external actions** — `No destructive or external actions were performed` unless a same-turn approved action is named with its approval
 
-Keep unrelated observations separate from the change summary. Never fabricate verification results.
+Keep teach-back, change summary, and unrelated observations separate. Never
+fabricate lessons or verification results.
 
 ## Definition of done
 

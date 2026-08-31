@@ -50,12 +50,24 @@ the implementation, preserve dead code, add author/tool commentary, or leave an
 ownerless `TODO`. If removing a comment makes behavior unclear, either improve
 the code or retain the smallest comment that preserves the missing context.
 
-## Maintainer understanding checkpoint
+## Understanding loop
 
-For medium- and high-risk work, add at most five bullets to the PR or task
-evidence covering changed data flow, important invariants, failure behavior,
-and the rejected simpler option. This is an inspectable understanding check,
-not a generated-code summary. Low-risk work does not require it.
+For every non-trivial session, AI agent and human operator use this loop:
+
+1. **Baseline** — state the current mental model, important unknowns, and what
+   evidence would confirm or change it.
+2. **Test** — connect inspection, implementation, and verification results to
+   that model. Do not treat forward task motion as understanding.
+3. **Teach back** — explain the solution shape, key invariant, trade-off, and
+   failure/debugging model without relying on the session transcript.
+4. **Gate** — ask: **“After this session, do I know more than I did before it
+   started, or am I just further along?”** A successful non-trivial closeout
+   must answer **“Yes — I know more than I did before it started”** and support
+   that answer with specific concepts. If it cannot, continue investigation or
+   report the unresolved understanding gap; working code alone is not done.
+
+Closeout format: [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md).
+For medium- and high-risk work, retain the teach-back in PR or task evidence.
 
 ## Topic routing
 
