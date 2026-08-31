@@ -245,11 +245,54 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'AnalyticsConsentSection disables toggle while replacement repository loads',
+    (tester) async {
+      final _FakeConsent consentA = _FakeConsent();
+      final Completer<bool> replacementLoad = Completer<bool>();
+      final _FakeConsent consentB = _FakeConsent()
+        ..enabled = true
+        ..pendingLoad = replacementLoad;
+      addTearDown(consentA.dispose);
+      addTearDown(consentB.dispose);
+      final InMemoryProductAnalytics analytics = InMemoryProductAnalytics();
+      const Key sectionKey = ValueKey<String>('analytics-consent-section');
+      final Finder switchFinder = find.byKey(
+        const ValueKey('settings-analytics-consent-switch'),
+      );
+
+      await pumpSection(
+        tester,
+        key: sectionKey,
+        consent: consentA,
+        analytics: analytics,
+      );
+      await tester.pumpAndSettle();
+
+      await pumpSection(
+        tester,
+        key: sectionKey,
+        consent: consentB,
+        analytics: analytics,
+      );
+      await tester.pump();
+
+      expect(tester.widget<SwitchListTile>(switchFinder).onChanged, isNull);
+
+      replacementLoad.complete(true);
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<SwitchListTile>(switchFinder).onChanged, isNotNull);
+      expect(tester.widget<SwitchListTile>(switchFinder).value, isTrue);
+    },
+  );
 }
 
 class _FakeConsent implements AnalyticsConsentRepository {
   bool enabled = false;
   bool failNextSave = false;
+  Completer<bool>? pendingLoad;
   Completer<bool>? pendingSave;
   final StreamController<bool> _changes = StreamController<bool>.broadcast();
 
@@ -259,7 +302,14 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Stream<bool> get changes => _changes.stream;
 
   @override
-  Future<bool> load() async => enabled;
+  Future<bool> load() async {
+    if (pendingLoad != null) {
+      final Completer<bool> gate = pendingLoad!;
+      pendingLoad = null;
+      await gate.future;
+    }
+    return enabled;
+  }
 
   @override
   Future<bool> save({required bool enabled}) async {

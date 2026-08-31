@@ -41,6 +41,7 @@ Settings analytics consent reached into GetIt from presentation, and
 - [x] Toggle disabled while save pending (no overlapping mutations)
 - [x] Stale in-flight save ignored after repository replacement
 - [x] Repository replacement rebinds stream + reloads
+- [x] Toggle stays disabled until replacement repository's initial load settles
 - [x] SettingsPage forwards exact analytics instances to section
 - Files:
   `test/features/settings/presentation/widgets/analytics_consent_section_test.dart`,
@@ -62,6 +63,7 @@ Settings analytics consent reached into GetIt from presentation, and
 
 - Presentation GetIt regress → guard + checklist
 - Lazy demo factory resolve cost in smoke test → already used by router tests
+- Repository swap accepts stale toggle input → loading state blocks mutations
 
 ## Rollback
 
