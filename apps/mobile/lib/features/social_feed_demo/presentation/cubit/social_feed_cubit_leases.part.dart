@@ -37,9 +37,15 @@ mixin _SocialFeedCubitLeases
   Future<void> _onResume() async {
     final int generation = _generation;
     final SocialFeedViewer current = viewer;
-    await _acquireLeases(current, generation: generation);
+    final SocialFeedSyncSummary? seedSummary = await _acquireLeases(
+      current,
+      generation: generation,
+    );
     if (!_isCurrentLease(generation, current)) {
       return;
+    }
+    if (seedSummary != null) {
+      _applySyncSummary(seedSummary, current);
     }
     if (_scenario.isSimulatedOnline) {
       await refresh();

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_local_data_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_mutation_queue.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/offline_first_social_feed_repository.dart';
@@ -143,6 +141,104 @@ void main() {
       0,
     );
   });
+
+  test('online unlike clears stale offline like queue for same post', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.setLiked(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      desiredLiked: true,
+      mutationId: 'offline-like',
+    );
+    scenario.setSimulatedOnline(online: true);
+    final SocialFeedLikeResult result = await repository.setLiked(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      desiredLiked: false,
+      mutationId: 'online-unlike',
+    );
+    expect(result, isA<SocialFeedLikeSynced>());
+    expect((result as SocialFeedLikeSynced).post.isLikedByMe, isFalse);
+    expect(
+      await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+      0,
+    );
+  });
+
+  test(
+    'offline like on load-more post returns projected optimistic post',
+    () async {
+      final SocialFeedPage first = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      expect(first.hasMore, isTrue);
+      final SocialFeedPage page2 = await repository.loadMore(
+        viewer: SocialFeedViewer.alex,
+        cursor: first.nextCursor!,
+      );
+      final String postId = page2.posts.first.id;
+      scenario.setSimulatedOnline(online: false);
+      final SocialFeedLikeResult result = await repository.setLiked(
+        viewer: SocialFeedViewer.alex,
+        postId: postId,
+        desiredLiked: true,
+        mutationId: 'like-p2',
+      );
+      expect(result, isA<SocialFeedLikeQueued>());
+      final SocialFeedLikeQueued queued = result as SocialFeedLikeQueued;
+      expect(queued.post.isLikedByMe, isTrue);
+      expect(queued.post.authorId, isNot('unknown'));
+    },
+  );
+
+  test(
+    'coalesced unlike after like ack applies final intent on dispatch',
+    () async {
+      final SocialFeedPage page = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final String postId = page.posts.first.id;
+      scenario.setSimulatedOnline(online: false);
+      await repository.setLiked(
+        viewer: SocialFeedViewer.alex,
+        postId: postId,
+        desiredLiked: true,
+        mutationId: 'like-1',
+      );
+      await repository.setLiked(
+        viewer: SocialFeedViewer.alex,
+        postId: postId,
+        desiredLiked: false,
+        mutationId: 'like-2',
+      );
+      scenario.setSimulatedOnline(online: true);
+      final SocialFeedSyncLease lease = await repository.acquireSync(
+        viewer: SocialFeedViewer.alex,
+      );
+      for (int i = 0; i < 20; i++) {
+        if (await repository.pendingMutationCount(
+              viewer: SocialFeedViewer.alex,
+            ) ==
+            0) {
+          break;
+        }
+        timer.tick();
+        await pumpEventQueue();
+      }
+      await lease.close();
+      final SocialFeedPage refreshed = await repository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final SocialFeedPost matched = refreshed.posts.firstWhere(
+        (SocialFeedPost p) => p.id == postId,
+      );
+      expect(matched.isLikedByMe, isFalse);
+    },
+  );
 
   test(
     'refresh reconciles stale local commentCount to remote threads',
@@ -347,18 +443,12 @@ void main() {
       final SocialFeedSyncLease lease = await repository.acquireSync(
         viewer: SocialFeedViewer.alex,
       );
-      // Drain queue: initial unawaited tick + periodic may need event-queue
-      // flushes before Hive persist / remove completes.
-      for (int i = 0; i < 20; i++) {
-        if (await repository.pendingMutationCount(
-              viewer: SocialFeedViewer.alex,
-            ) ==
-            0) {
-          break;
-        }
-        timer.tick();
-        await pumpEventQueue();
-      }
+      expect(lease.seedSummary, isNotNull);
+      expect(lease.seedSummary!.dispatchedMutations, isNotEmpty);
+      expect(
+        await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+        0,
+      );
       await lease.close();
       expect(
         await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
@@ -388,6 +478,37 @@ void main() {
     },
   );
 
+  test('acquireSync seedSummary captures queued comment dispatch', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.addComment(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      body: 'Queued for seed',
+      mutationId: 'seed-comment',
+    );
+    scenario.setSimulatedOnline(online: true);
+
+    final SocialFeedSyncLease lease = await repository.acquireSync(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(lease.seedSummary, isNotNull);
+    expect(
+      lease.seedSummary!.dispatchedMutations,
+      contains(
+        isA<SocialFeedDispatchedMutation>().having(
+          (SocialFeedDispatchedMutation m) => m.mutationId,
+          'mutationId',
+          'seed-comment',
+        ),
+      ),
+    );
+    await lease.close();
+  });
+
   test('sync lease can be re-acquired after close', () async {
     final SocialFeedSyncLease first = await repository.acquireSync(
       viewer: SocialFeedViewer.alex,
@@ -396,12 +517,7 @@ void main() {
     final SocialFeedSyncLease second = await repository.acquireSync(
       viewer: SocialFeedViewer.alex,
     );
-    final List<SocialFeedSyncSummary> summaries = <SocialFeedSyncSummary>[];
-    final StreamSubscription<SocialFeedSyncSummary> sub = second.summaries
-        .listen(summaries.add);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
     await second.close();
-    await sub.cancel();
-    expect(summaries, isNotEmpty);
+    expect(second.seedSummary, isNotNull);
   });
 }

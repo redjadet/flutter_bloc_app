@@ -22,7 +22,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
             type: 'like',
             postId: postId,
             sequence: last.sequence,
-            idempotencyKey: last.idempotencyKey,
+            idempotencyKey: mutationId,
             attemptCount: last.attemptCount,
             nextAttemptAt: last.nextAttemptAt,
             desiredLiked: desiredLiked,
@@ -134,9 +134,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
   ) async {
     await _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer)
-        ..removeWhere(
-          (e) => e.mutationId == item.mutationId,
-        );
+        ..removeWhere((e) => e.mutationId == item.mutationId);
       await _writeList(_queueKey(viewer), queue);
       final List<SocialFeedMutationDto> attention = await readNeedsAttention(
         viewer,
@@ -203,6 +201,20 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
     await _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer)
         ..removeWhere((e) => e.mutationId == mutationId);
+      await _writeList(_queueKey(viewer), queue);
+    });
+  }
+
+  /// Drops all undispatched like mutations for [postId] after a successful apply.
+  Future<void> removeQueuedLikesForPost({
+    required SocialFeedViewer viewer,
+    required String postId,
+  }) async {
+    await _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer)
+        ..removeWhere(
+          (e) => e.type == 'like' && e.postId == postId && !e.dispatched,
+        );
       await _writeList(_queueKey(viewer), queue);
     });
   }

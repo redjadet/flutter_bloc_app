@@ -21,6 +21,27 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-31 - Apply replay seed only after the feed is ready
+
+- What went wrong:
+  `acquireSync` completed a queued comment replay before `SocialFeedCubit`
+  reached `SocialFeedReady`. The Cubit tried to patch `SocialFeedLoading`, so
+  the dispatched-comment summary was silently lost.
+- How it was fixed:
+  Keep the first replay summary on `SocialFeedSyncLease.seedSummary`; subscribe
+  first, then apply the seed only after cached or remote data becomes ready.
+- Pattern:
+  A synchronous result from async setup cannot be delivered through a state
+  patcher until that patcher has a compatible initialized state.
+- Preventive rule:
+  For lease/subscription setup that may finish before initial loading, retain
+  the first result and consume it after ready-state emission. Cover the exact
+  ordering in a Cubit test.
+- Evidence or affected files:
+  `apps/mobile/lib/features/social_feed_demo/presentation/cubit/social_feed_cubit_{helpers,load,leases}.part.dart`;
+  `apps/mobile/test/features/social_feed_demo/presentation/cubit/social_feed_cubit_test.dart`;
+  `docs/changes/2026-08-31_social_feed_offline_correctness.md`.
+
 ### 2026-08-21 - Modal sheet drops page Cubit (ProviderNotFound)
 
 - What went wrong:
