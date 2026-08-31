@@ -116,6 +116,7 @@ Hybrid extraction program: [`docs/plans/2026-07-20_hybrid_shared_package_distrib
 - License: Apache-2.0
 - GitHub: `redjadet/<package>`
 - Pub.dev publish: GitHub Actions OIDC via Environment `pub.dev` (reviewer `redjadet`)
+- SDK/Flutter `environment` floors track repo toolchain pins ([`toolchain_versions.env`](../toolchain_versions.env)); after toolchain bump run `dart format` before push — CI enforces `--set-exit-if-changed`
 - After a package is live: this workspace consumes the hosted pub.dev caret (not path/git); do not phrase docs as “when published”
 - Stop before creating the public GitHub repo or the first pub.dev publish until the operator confirms same turn; lock plan G-gates before new extractionsions
 
