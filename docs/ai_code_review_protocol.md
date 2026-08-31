@@ -26,6 +26,7 @@ Pointers: [`agent_knowledge_base.md`](agent_knowledge_base.md) (traps, finish ga
 | Excess I/O/N+1 | looped network/disk/db | batch/cache/index/offload | perf note/benchmark if needed |
 | Deprecated APIs | removed Flutter/SDK calls | update to repo convention | targeted checks |
 | Hallucinated deps/APIs | package/helper not verified | prefer existing utility; verify API exists | `pubspec`/lock unchanged unless required |
+| Opaque or noisy code | vague names, tangled flow, missing invariant comment, or comments that restate syntax | simplify names/control flow first; document only hidden intent, contracts, and constraints | reviewer traces normal + failure paths; comments match current behavior |
 | Weak tests | mirror implementation | assert behavior/contracts + edge inputs | red/green bug proof |
 
 ## Special Cases
@@ -33,6 +34,8 @@ Pointers: [`agent_knowledge_base.md`](agent_knowledge_base.md) (traps, finish ga
 **Dependencies:** justify add/upgrade; check existing deps; `flutter pub get` ≠ validation.
 
 **Generic abstractions:** type params only for repeated error/parsing/lifecycle/widget contracts; first abstraction feature-local unless cross-feature reuse exists; keep endpoint-specific names, failures, tests, mappers at call site.
+
+**Readability and comments:** apply [`ai/agent_operating_manual.md`](ai/agent_operating_manual.md) § Readable code and useful comments. Prefer self-explanatory code. Require comments for non-obvious invariants, ordering/lifecycle/concurrency rules, workarounds, and public contracts the type signature cannot express. Reject line-by-line narration, stale comments, dead-code blocks, and AI/tool commentary.
 
 **Widget identity:** stable `Key` from durable id (not index) when list reorders/filters; `AnimatedSwitcher` needs explicit child identity (`KeyedSubtree`, `ValueKey`, …). Guardrail: `./tool/check_widget_identity.sh`; suppress: `// widget_identity:ignore <reason>`.
 

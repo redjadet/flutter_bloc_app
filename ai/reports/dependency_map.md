@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-08-06T13:43:30Z"
-  git_head: "dacb838bc7d2724c890cc3d3c31d3a4d75f47ce7"
+  generated_at: "2026-08-31T10:01:08Z"
+  git_head: "1c8248f6f8647218fd7632d3880626f3df3798f8"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -18,41 +18,42 @@ ai_snapshot:
 <!-- refresh_ai_reports:feature_metrics:start -->
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
-| chat | 6827 | yes |
-| staff_app_demo | 5735 | yes |
-| todo_list | 5456 | yes |
-| online_therapy_demo | 5340 | yes |
-| case_study_demo | 4830 | yes |
-| counter | 4540 | yes |
-| native_platform_showcase | 3598 | yes |
-| iot_demo | 3280 | yes |
-| iot | 3190 | yes |
+| chat | 6759 | yes |
+| staff_app_demo | 5646 | yes |
+| todo_list | 5594 | yes |
+| online_therapy_demo | 5269 | yes |
+| social_feed_demo | 5195 | yes |
+| case_study_demo | 4777 | yes |
+| counter | 4525 | yes |
+| native_platform_showcase | 3593 | yes |
+| iot_demo | 3269 | yes |
+| iot | 3110 | yes |
 | auth | 2487 | yes |
-| example | 2404 | yes |
-| realtime_market | 2186 | yes |
-| graphql_demo | 2056 | yes |
-| chart | 2027 | yes |
-| calculator | 1866 | yes |
+| example | 2415 | yes |
+| realtime_market | 2167 | yes |
+| graphql_demo | 2042 | yes |
+| chart | 2021 | yes |
+| calculator | 1862 | yes |
 | walletconnect_auth | 1560 | yes |
-| ai_decision_demo | 1536 | yes |
 | google_maps | 1493 | yes |
-| profile | 1404 | yes |
-| settings | 1384 | yes |
-| in_app_purchase_demo | 1363 | yes |
-| igaming_demo | 1334 | yes |
-| remote_config | 1282 | yes |
-| supabase_auth | 1260 | yes |
-| search | 1135 | yes |
-| library_demo | 1045 | yes |
+| ai_decision_demo | 1408 | yes |
+| profile | 1399 | yes |
+| settings | 1381 | yes |
+| in_app_purchase_demo | 1360 | yes |
+| igaming_demo | 1328 | yes |
+| remote_config | 1280 | yes |
+| supabase_auth | 1259 | yes |
+| search | 1126 | yes |
+| library_demo | 1044 | yes |
 | camera_gallery | 1038 | yes |
-| scapes | 991 | yes |
-| production_readiness | 958 | yes |
-| fcm_demo | 879 | yes |
+| scapes | 986 | yes |
+| production_readiness | 957 | yes |
+| fcm_demo | 884 | yes |
 | websocket | 865 | yes |
-| genui_demo | 736 | yes |
-| playlearn | 673 | yes |
-| deeplink | 553 | yes |
-| certificate_pinning_demo | 507 | yes |
+| genui_demo | 735 | yes |
+| playlearn | 660 | yes |
+| deeplink | 552 | yes |
+| certificate_pinning_demo | 502 | yes |
 | event_bus_demo | 311 | yes |
 <!-- refresh_ai_reports:feature_metrics:end -->
 

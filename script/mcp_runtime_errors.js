@@ -21,11 +21,14 @@ const DEFAULT_REPO_ROOT = resolve(__dirname, '..');
 
 const NO_SESSION_PATTERNS = [
   /no active debug session/i,
+  /no active app connection/i,
   /no connected apps/i,
   /no apps currently connected/i,
   /no dtd uris found/i,
   /no dtd instances found/i,
 ];
+
+const NO_CONNECTED_APP_PATTERN = /no connected apps(?: found)?|no active app connection/i;
 
 const NO_ERRORS_PATTERNS = [
   /no runtime errors/i,
@@ -223,6 +226,12 @@ function emitJson(payload) {
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
+  if (opts.selfTest && (
+    !isNoSessionMessage('No active app connection.') ||
+    !NO_CONNECTED_APP_PATTERN.test('No active app connection.')
+  )) {
+    throw new Error('No-active-app DTD response must skip runtime-error checks.');
+  }
   const client = new McpStdioClient();
 
   const finish = (code, payload) => {
@@ -277,9 +286,9 @@ async function main() {
     const appsResult = await client.callTool('dtd', { command: 'listConnectedApps' });
     const appsText = toolText(appsResult);
     const appUris = extractAppUris(appsText);
-    const hasApps = appUris.length > 0 || !/no connected apps/i.test(appsText);
+    const hasApps = appUris.length > 0 || !NO_CONNECTED_APP_PATTERN.test(appsText);
 
-    if (!hasApps || /no connected apps found/i.test(appsText)) {
+    if (!hasApps) {
       const payload = {
         status: 'skipped',
         reason: 'no_connected_app',
@@ -305,12 +314,6 @@ async function main() {
     const errorsResult = await client.callTool('get_runtime_errors', errorArgs);
     const errorsText = toolText(errorsResult);
 
-    if (toolIsError(errorsResult)) {
-      const payload = { status: 'error', reason: 'get_runtime_errors_failed', message: errorsText };
-      if (!opts.json) console.error(`❌ get_runtime_errors failed: ${errorsText}`);
-      return finish(2, payload);
-    }
-
     if (isNoSessionMessage(errorsText)) {
       const payload = {
         status: 'skipped',
@@ -325,6 +328,12 @@ async function main() {
         console.log(errorsText.trim());
       }
       return finish(opts.strict ? 1 : 0, payload);
+    }
+
+    if (toolIsError(errorsResult)) {
+      const payload = { status: 'error', reason: 'get_runtime_errors_failed', message: errorsText };
+      if (!opts.json) console.error(`❌ get_runtime_errors failed: ${errorsText}`);
+      return finish(2, payload);
     }
 
     if (!hasRuntimeErrors(errorsText)) {

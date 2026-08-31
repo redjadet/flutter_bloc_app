@@ -12,7 +12,9 @@ Agents reason over inspectable state.
 - Runtime evidence needs agent-runnable trigger + stable log/metric/trace/fixture signal; human-only dashboards are not proof.
 - Turn unclear goals into inspectable artifacts: acceptance criteria, data-flow sketch, fixture, dry-run, focused proof route.
 - Non-trivial risk => define acceptance contract before broad execution; executable specs/tests beat model confidence.
-- Non-trivial `apps/mobile/lib/features/` work => fill [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) **Tests** section before broad implementation.
+- Non-trivial `apps/mobile/lib/features/` work => fill
+  [`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md) **Tests** section
+  before broad implementation.
 - Spec items must map to deterministic proof: test, fixture, script, lint, screenshot, log/metric, or explicit manual blocker. If not evaluable, treat it as intent/context, not spec.
 - For long/tool-heavy work, make stop rules explicit: retry/fallback/ask/abstain/report conditions.
 - Keep state inspectable: tracker, task graph/checklist, commands, failures, retries, blocker.
@@ -47,7 +49,12 @@ Last 20% builds trust. Before report/commit, ask when suitable:
 
 - Edge cases: empty, malformed, duplicate, concurrent, offline/resume, permission-denied, slow/large input.
 - Failure paths: how errors surface, retry/rollback/idempotency, cleanup, user-visible state, logs/metrics.
-- Readability: names, seams, comments, tests, and docs make the next change obvious.
+- Readability: names, focused units, explicit data flow, tests, and docs make the next change obvious.
+- Comment quality: comments explain hidden intent, contracts, invariants, or
+  constraints; none merely narrate code, preserve dead code, or contradict
+  current behavior. See
+  [`agent_operating_manual.md`](../ai/agent_operating_manual.md)
+  § Readable code and useful comments.
 - Operational clarity: run/verify/debug steps are discoverable from repo artifacts.
 - Breakage impact: what fails first, blast radius, detection signal, and safe recovery path.
 - Drift: intent/spec/docs still match implementation after the patch.

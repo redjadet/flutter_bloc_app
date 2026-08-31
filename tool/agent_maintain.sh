@@ -240,6 +240,18 @@ scope_has_engineering_edits() {
   return 1
 }
 
+scope_has_agent_scorecard_edits() {
+  local path
+  while IFS= read -r path; do
+    case "$path" in
+      analysis/agent_scorecard/*)
+        return 0
+        ;;
+    esac
+  done < <(collect_changed_paths || true)
+  return 1
+}
+
 scope_has_design_md_edits() {
   local path
   while IFS= read -r path; do
@@ -619,6 +631,10 @@ cmd_auto() {
 cmd_closeout() {
   log "workflow|closeout|agents run before claiming task done"
   cmd_auto "$@"
+  if ! scope_has_agent_scorecard_edits; then
+    log "skip|agent-scorecard-freshness|no scorecard artifacts in scope"
+    return 0
+  fi
   if [[ "${AGENT_MAINTAIN_PLAN_ONLY:-}" == "1" ]]; then
     log "plan|agent-scorecard-freshness|bash tool/check_agent_scorecard_freshness.sh"
     return 0

@@ -8,6 +8,7 @@ that.
 ## Index
 
 - [`2026-08-31_go_router_18_migration.md`](2026-08-31_go_router_18_migration.md): `go_router` ^18 — social feed route scope, material_ui pages, integration harness finder fix.
+- [`2026-08-31_runtime_error_no_active_app_skip.md`](2026-08-31_runtime_error_no_active_app_skip.md): Treat DTD's no-active-app response as a skipped runtime check; preserve strict mode.
 - [`2026-08-31_social_feed_offline_correctness.md`](2026-08-31_social_feed_offline_correctness.md): Social-feed offline replay, optimistic projection, sync-seed, and viewer-generation correctness.
 - [`2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md`](2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md): `flex_color_picker` ^4; initial go_router 18 defer (superseded by migration note above); harness sheet-dismiss hardening.
 - [`2026-08-31_flutter_3_47_2_pin.md`](2026-08-31_flutter_3_47_2_pin.md): Pin Flutter `3.47.1` → `3.47.2` and Dart `3.13.1` → `3.13.2`; refresh `pubspec.lock` on new SDK.

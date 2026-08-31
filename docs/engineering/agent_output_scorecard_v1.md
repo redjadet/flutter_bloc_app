@@ -72,8 +72,10 @@ quality in this repository.
 bash tool/check_agent_scorecard_freshness.sh
 ```
 
-Run the build command after event-stream changes. `closeout` enforces the
-freshness check so stale derived summaries cannot be used as evidence.
+Run the build command after event-stream or summary changes. `closeout` enforces
+the freshness check when `analysis/agent_scorecard/**` is in scope, so stale
+derived summaries cannot be used as evidence without blocking unrelated work on
+ignored local event archives.
 
 - Validate broad health:
 

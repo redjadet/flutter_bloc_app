@@ -21,6 +21,25 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-31 - DTD no-active-app response is a skip, not a harness failure
+
+- What went wrong:
+  `mcp_runtime_errors.js` recognized “No connected apps” but not DTD's “No
+  active app connection,” so it called `get_runtime_errors` and failed a
+  no-session preflight.
+- How it was fixed:
+  Classify that response as no connected app and no active debug session before
+  treating tool output as an MCP error.
+- Pattern:
+  External tools can return equivalent unavailable-session wording; skip and
+  strict paths must recognize the same response family.
+- Preventive rule:
+  Add every supported no-session response to both connected-app and
+  runtime-error classification, then prove default skip and `--strict` behavior.
+- Evidence or affected files:
+  `script/mcp_runtime_errors.js`; `tool/check_runtime_errors.sh`;
+  `docs/changes/2026-08-31_runtime_error_no_active_app_skip.md`.
+
 ### 2026-08-31 - Apply replay seed only after the feed is ready
 
 - What went wrong:
