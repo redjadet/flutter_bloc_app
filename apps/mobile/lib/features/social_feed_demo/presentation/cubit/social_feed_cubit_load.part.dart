@@ -54,7 +54,20 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
     }
 
     try {
-      await _acquireLeases(current, generation: gen);
+      final SocialFeedSyncSummary? seedSummary = await _acquireLeases(
+        current,
+        generation: gen,
+      );
+      var seedApplied = false;
+      void applySeedIfReady() {
+        if (seedApplied || seedSummary == null || state is! SocialFeedReady) {
+          return;
+        }
+        seedApplied = true;
+        _applySyncSummary(seedSummary, current);
+      }
+
+      applySeedIfReady();
       if (!_scenario.isSimulatedOnline && cached == null) {
         if (gen != _generation || isClosed) {
           return;
@@ -114,6 +127,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
             ),
           ),
         );
+        applySeedIfReady();
       }
     } on SocialFeedFailure catch (failure) {
       if (gen != _generation || isClosed) {

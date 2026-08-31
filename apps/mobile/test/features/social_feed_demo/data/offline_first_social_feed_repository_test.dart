@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_local_data_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/hive_social_feed_mutation_queue.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/offline_first_social_feed_repository.dart';
@@ -144,38 +142,32 @@ void main() {
     );
   });
 
-  test(
-    'online unlike clears stale offline like queue for same post',
-    () async {
-      final SocialFeedPage page = await repository.refresh(
-        viewer: SocialFeedViewer.alex,
-      );
-      final String postId = page.posts.first.id;
-      scenario.setSimulatedOnline(online: false);
-      await repository.setLiked(
-        viewer: SocialFeedViewer.alex,
-        postId: postId,
-        desiredLiked: true,
-        mutationId: 'offline-like',
-      );
-      scenario.setSimulatedOnline(online: true);
-      final SocialFeedLikeResult result = await repository.setLiked(
-        viewer: SocialFeedViewer.alex,
-        postId: postId,
-        desiredLiked: false,
-        mutationId: 'online-unlike',
-      );
-      expect(result, isA<SocialFeedLikeSynced>());
-      expect(
-        (result as SocialFeedLikeSynced).post.isLikedByMe,
-        isFalse,
-      );
-      expect(
-        await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
-        0,
-      );
-    },
-  );
+  test('online unlike clears stale offline like queue for same post', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.setLiked(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      desiredLiked: true,
+      mutationId: 'offline-like',
+    );
+    scenario.setSimulatedOnline(online: true);
+    final SocialFeedLikeResult result = await repository.setLiked(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      desiredLiked: false,
+      mutationId: 'online-unlike',
+    );
+    expect(result, isA<SocialFeedLikeSynced>());
+    expect((result as SocialFeedLikeSynced).post.isLikedByMe, isFalse);
+    expect(
+      await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+      0,
+    );
+  });
 
   test(
     'offline like on load-more post returns projected optimistic post',
@@ -248,7 +240,9 @@ void main() {
     },
   );
 
-  test('refresh reconciles stale local commentCount to remote threads', () async {
+  test(
+    'refresh reconciles stale local commentCount to remote threads',
+    () async {
       final SocialFeedPage first = await repository.refresh(
         viewer: SocialFeedViewer.alex,
       );
@@ -523,12 +517,7 @@ void main() {
     final SocialFeedSyncLease second = await repository.acquireSync(
       viewer: SocialFeedViewer.alex,
     );
-    final List<SocialFeedSyncSummary> summaries = <SocialFeedSyncSummary>[];
-    final StreamSubscription<SocialFeedSyncSummary> sub = second.summaries
-        .listen(summaries.add);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
     await second.close();
-    await sub.cancel();
-    expect(summaries, isNotEmpty);
+    expect(second.seedSummary, isNotNull);
   });
 }

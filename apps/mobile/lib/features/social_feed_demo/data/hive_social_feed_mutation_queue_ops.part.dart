@@ -134,9 +134,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
   ) async {
     await _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer)
-        ..removeWhere(
-          (e) => e.mutationId == item.mutationId,
-        );
+        ..removeWhere((e) => e.mutationId == item.mutationId);
       await _writeList(_queueKey(viewer), queue);
       final List<SocialFeedMutationDto> attention = await readNeedsAttention(
         viewer,
@@ -215,8 +213,7 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
     await _withViewerLock(viewer, () async {
       final List<SocialFeedMutationDto> queue = await readQueue(viewer)
         ..removeWhere(
-          (SocialFeedMutationDto e) =>
-              e.type == 'like' && e.postId == postId && !e.dispatched,
+          (e) => e.type == 'like' && e.postId == postId && !e.dispatched,
         );
       await _writeList(_queueKey(viewer), queue);
     });

@@ -110,7 +110,8 @@ class SocialFeedSyncSummary {
 abstract class SocialFeedSyncLease {
   Stream<SocialFeedSyncSummary> get summaries;
 
-  /// First dispatch tick completed during [acquireSync], before listeners attach.
+  /// First dispatch tick completed while acquiring this lease, before listeners
+  /// attach.
   SocialFeedSyncSummary? get seedSummary;
 
   Future<void> close();

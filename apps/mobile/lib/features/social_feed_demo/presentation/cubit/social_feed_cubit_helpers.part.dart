@@ -211,7 +211,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     return <String, List<SocialFeedComment>>{...existing, ...incoming};
   }
 
-  Future<void> _acquireLeases(
+  Future<SocialFeedSyncSummary?> _acquireLeases(
     SocialFeedViewer current, {
     int? generation,
   }) async {
@@ -222,7 +222,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
     );
     if (!_isCurrentLease(leaseGeneration, current)) {
       await syncLease.close();
-      return;
+      return null;
     }
     _syncLease = syncLease;
     void onSyncSummary(SocialFeedSyncSummary summary) {
@@ -238,10 +238,6 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
         onError: (Object error, StackTrace stackTrace) {},
       ),
     );
-    final SocialFeedSyncSummary? seed = syncLease.seedSummary;
-    if (seed != null) {
-      onSyncSummary(seed);
-    }
     final SocialFeedRealtimeLease realtimeLease = await _realtimeSource.acquire(
       current,
     );
@@ -250,7 +246,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
       if (identical(_syncLease, syncLease)) {
         await _closeLeases();
       }
-      return;
+      return null;
     }
     _realtimeLease = realtimeLease;
     _realtimeStatusSub = registerSubscription(
@@ -280,6 +276,7 @@ mixin _SocialFeedCubitHelpers on _SocialFeedCubitBase {
         });
       }, onError: (Object error, StackTrace stackTrace) {}),
     );
+    return syncLease.seedSummary;
   }
 
   void _applySyncSummary(
