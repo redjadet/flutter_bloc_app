@@ -45,14 +45,14 @@ void main() {
       }
     });
 
-    test('routes have builder functions', () {
+    test('routes have pageBuilder functions', () {
       final List<RouteBase> routes = createAuxiliaryRoutes(
         AppCompositionRoot.resolveAuxiliaryRouteFactory(),
       );
 
       for (final RouteBase route in routes) {
         final GoRoute go = route as GoRoute;
-        expect(go.builder, isNotNull);
+        expect(go.pageBuilder, isNotNull);
       }
     });
   });

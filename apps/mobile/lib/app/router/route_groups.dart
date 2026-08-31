@@ -11,7 +11,7 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/realtime_market_page.
 import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/router/route_scoped_page.dart';
 import 'package:flutter_bloc_app/app/widgets/deferred_page.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
@@ -30,7 +30,7 @@ import 'package:go_router/go_router.dart';
 List<RouteBase> createAuxiliaryRoutes(AuxiliaryRouteFactory factory) =>
     factory.createRoutes();
 
-class AuxiliaryRouteFactory({
+class const AuxiliaryRouteFactory({
   required final SearchRepository searchRepository,
   required final TimerService timerService,
   required final TodoRepository Function() createTodoRepository,
@@ -44,94 +44,88 @@ class AuxiliaryRouteFactory({
   createRealtimeMarketRepository,
 }) {
   List<RouteBase> createRoutes() => <RouteBase>[
-    GoRoute(
+    RouteScopedPage.route(
       path: AppRoutes.websocketPath,
       name: AppRoutes.websocket,
-      builder: (context, state) => DeferredPage(
+      builder: (_, _) => DeferredPage(
         loadLibrary: websocket_page.loadLibrary,
         builder: (context) => websocket_page.buildWebsocketPage(
           repository: websocketRepository,
         ),
       ),
     ),
-    GoRoute(
+    RouteScopedPage.route(
       path: AppRoutes.realtimeMarketPath,
       name: AppRoutes.realtimeMarket,
-      builder: (context, state) => DeferredPage(
+      builder: (_, _) => DeferredPage(
         loadLibrary: realtime_market_page.loadLibrary,
         builder: (context) => realtime_market_page.buildRealtimeMarketPage(
           createRepository: createRealtimeMarketRepository,
         ),
       ),
     ),
-    GoRoute(
+    RouteScopedPage.route(
       path: AppRoutes.googleMapsPath,
       name: AppRoutes.googleMaps,
-      builder: (context, state) => DeferredPage(
+      builder: (_, _) => DeferredPage(
         loadLibrary: google_maps_page.loadLibrary,
         builder: (context) => google_maps_page.buildGoogleMapsPage(
           repository: mapLocationRepository,
         ),
       ),
     ),
-    GoRoute(
+    RouteScopedPage.route(
       path: AppRoutes.searchPath,
       name: AppRoutes.search,
-      builder: (context, state) => SearchPage(
+      builder: (_, _) => SearchPage(
         repository: searchRepository,
         timerService: timerService,
       ),
     ),
-    GoRoute(
+    RouteScopedPage.routeWithCubit<TodoListCubit>(
       path: AppRoutes.todoListPath,
       name: AppRoutes.todoList,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<TodoListCubit>(
-            create: () => TodoListCubit(
-              repository: createTodoRepository(),
-              timerService: timerService,
-            ),
-            init: (cubit) => cubit.loadInitial(),
-            child: const TodoListPage(),
-          ),
+      create: (_, _) => TodoListCubit(
+        repository: createTodoRepository(),
+        timerService: timerService,
+      ),
+      init: (cubit) => cubit.loadInitial(),
+      child: const TodoListPage(),
     ),
-    GoRoute(
+    RouteScopedPage.route(
       path: AppRoutes.walletconnectAuthPath,
       name: AppRoutes.walletconnectAuth,
-      builder: (context, state) {
+      builder: (context, _) {
         final l10n = context.l10n;
         return AppRouteAuthGate(
           policy: AppRoutePolicies.walletconnectAuth,
           getCurrentUser: () => authRepository.currentUser,
           authStateChanges: authRepository.authStateChanges,
           authPath: AppRoutes.authPath,
-          child: BlocProviderHelpers.withAsyncInit<WalletConnectAuthCubit>(
+          child: const WalletConnectAuthPage().routeScoped(
             create: () => WalletConnectAuthCubit(
               repository: walletConnectAuthRepository,
               l10n: l10n,
             ),
             init: (cubit) => cubit.loadLinkedWallet(),
-            child: const WalletConnectAuthPage(),
           ),
         );
       },
     ),
-    GoRoute(
+    RouteScopedPage.route(
       path: AppRoutes.supabaseAuthPath,
       name: AppRoutes.supabaseAuth,
       builder: (context, state) {
         final l10n = context.l10n;
-        final redirectAfterLogin = state.uri.queryParameters['redirect'];
-        return BlocProviderHelpers.withAsyncInit<SupabaseAuthCubit>(
+        return SupabaseAuthPage(
+          redirectAfterLogin: state.uri.queryParameters['redirect'],
+        ).routeScoped(
           create: () => SupabaseAuthCubit(
             repository: supabaseAuthRepository,
             l10n: l10n,
             sessionCoordinator: sessionCoordinator,
           ),
           init: (cubit) => cubit.loadSession(),
-          child: SupabaseAuthPage(
-            redirectAfterLogin: redirectAfterLogin,
-          ),
         );
       },
     ),

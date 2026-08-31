@@ -20,8 +20,10 @@ under go_router 18 when:
 ## Fix
 
 - **`BlocProviderHelpers.routeScopedWithAsyncInit`** — stateful route-scoped cubit
-  ownership; social feed route uses `pageBuilder` + `NoTransitionPage` keyed with
+  ownership; routes use `pageBuilder` + `NoTransitionPage` keyed with
   `state.pageKey`.
+- **`RouteScopedPage`** — `route` / `routeWithCubit` factories plus
+  `Widget.routeScoped` for nested cubits; pages keyed with `state.pageKey`.
 - **material_ui on social feed feature** — page, body, scenario controls, and
   feed widgets import `material_ui` (aligns with go_router 18 page helpers).
 - **Integration harness** — social feed flow waits for
@@ -36,6 +38,13 @@ under go_router 18 when:
 - `./bin/integration_tests` — web preflight + iOS simulator all_flows (30 tests)
 - Follow-up closeout ([#751](https://github.com/redjadet/flutter_bloc_app/pull/751)):
   `routeScopedWithAsyncInit`, full social feed `material_ui`, route audit doc
+- Proactive demo migration: all demo/auxiliary routes in audit table migrated to
+  `RouteScopedPage` + `routeScopedWithAsyncInit` / `Widget.routeScoped`; Dart 3.13
+  `class const` primary constructors on route factories and route-owned widgets.
+  Proof: `./bin/checklist` (2920 tests, coverage 85.35%); `./bin/integration_tests`
+  web preflight + iOS simulator all_flows (30). macOS desktop all_flows attempted
+  but hung on guest sign-in (not blocking; desktop opt-in via
+  `ALLOW_DESKTOP_INTEGRATION_DEVICE`).
 
 ## Follow-up
 
@@ -44,32 +53,31 @@ under go_router 18 when:
   **2026-08-31 closeout:** inventory in [Route audit](#route-audit) below;
   shared helper `BlocProviderHelpers.routeScopedWithAsyncInit` + remaining social
   feed widgets migrated to `material_ui`.
+- ~~Proactively migrate remaining demo routes from `builder` + `withAsyncInit`~~
+  **2026-08-31:** demo + auxiliary routes migrated (see audit table).
 - When adding route-scoped cubits under go_router 18+, use
-  `routeScopedWithAsyncInit` with `pageBuilder` + `NoTransitionPage(key:
-  state.pageKey)` instead of `withAsyncInit` in `GoRoute.builder`.
+  `RouteScopedPage.withAsyncInit` (or `routeScopedWithAsyncInit` with
+  `pageBuilder` + `NoTransitionPage(key: state.pageKey)`) instead of
+  `withAsyncInit` in `GoRoute.builder`.
+- **Core routes** (`routes_core.dart` / `routes_core.part.dart`) still use
+  `builder` + `withAsyncInit` — migrate when touched or if integration fails.
 
 ## Route audit
 
-Integration matrix (30 flows) passed on go_router 18 before this note; only social
-feed required code changes. Remaining demo/core routes still use
-`GoRoute.builder` + `withAsyncInit` — acceptable until a route shows the same
-dispose/provider failure in device integration.
-
 | Area | File | Pattern | Notes |
 | --- | --- | --- | --- |
-| Demos | `routes_demos.part.dart` | builder + nested `withAsyncInit` | chat, genui, lobby/game, FCM, production readiness, IoT, IAP, AI decision |
-| Demos | `routes_demos.part.dart` | **pageBuilder + `routeScopedWithAsyncInit`** | social feed (fixed) |
-| Demos | `routes_demos.part.dart` | builder + `MultiBlocProvider` / `withAsyncInit` | native platform showcase |
-| Staff app | `routes_staff_app_demo.dart` | shell + nested `withAsyncInit` | session/sites/timeclock/messages/content/forms/proof/admin |
-| Case study | `routes_case_study_demo.dart` | shell + nested `withAsyncInit` | session/history/detail |
-| Online therapy | `routes_online_therapy_demo.dart` | builder routes | therapy demo subtree |
-| Core | `routes_core.dart` / `routes_core.part.dart` | builder + `withAsyncInit` | profile, graphql, counter |
-| Other | `route_groups.dart`, `routes_certificate_pinning_demo.dart` | builder + `withAsyncInit` | todos, wallet, supabase auth, cert pinning |
-| Deferred | `deferred_pages/google_maps_page.dart`, `pages/iot_demo_hub_page.dart` | `withAsyncInit` | loaded inside parent routes |
+| Demos | `routes_demos.part.dart` | **pageBuilder + `RouteScopedPage`** | chat, genui, playlearn, lobby/game, FCM, production readiness, IoT, IAP, AI decision, event bus, social feed, native showcase |
+| Staff app | `routes_staff_app_demo.dart` | shell + **`routeScopedWithAsyncInit`** | session/sites shell; tab routes via `RouteScopedPage` |
+| Case study | `routes_case_study_demo.dart` | shell + **`RouteScopedPage`** | session shell; history/detail + static pages keyed |
+| Online therapy | `routes_online_therapy_demo.dart` | builder routes | scope in shell only; no route-owned cubits |
+| Core | `routes_core.dart` / `routes_core.part.dart` | builder + `withAsyncInit` | profile, graphql, counter — **not migrated** |
+| Other | `route_groups.dart`, `routes_certificate_pinning_demo.dart` | **`RouteScopedPage`** | todos, wallet, supabase auth, cert pinning, deferred aux routes |
+| Deferred | `deferred_pages/google_maps_page.dart`, `pages/iot_demo_hub_page.dart` | **`routeScopedWithAsyncInit`** | maps cubit + IoT BLE tab |
 
 **Mitigation playbook:** (1) migrate route page/widgets to `material_ui` when under
-`MaterialPage`; (2) switch to `pageBuilder` with `state.pageKey`; (3) replace
-`withAsyncInit` with `routeScopedWithAsyncInit` for single route-owned cubits.
+`MaterialPage`; (2) use `RouteScopedPage.route` / `routeWithCubit` (or
+`pageBuilder` + `state.pageKey`); (3) nest route-owned cubits with
+`Widget.routeScoped` / `routeScopedWithAsyncInit` (optional `init`).
 
 Related: [2026-08-31 defer](2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md),
 [2026-08-24 upgrade validate](2026-08-24_upgrade_validate_go_router_freezed_fcm.md).
