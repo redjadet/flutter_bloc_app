@@ -42,7 +42,8 @@ under go_router 18 when:
   ([#756](https://github.com/redjadet/flutter_bloc_app/pull/756)): all
   demo/auxiliary routes in audit table migrated to `RouteScopedPage` +
   `routeScopedWithAsyncInit` / `Widget.routeScoped`; Dart 3.13 `class const`
-  primary constructors on route factories and route-owned widgets.
+  primary constructors on route factories, route-owned widgets, and
+  `AppRoutePolicy` (no duplicated ctor params / fields).
   Proof: `./bin/checklist` (2920 tests, coverage 85.35%); `./bin/integration_tests`
   web preflight + iOS simulator all_flows (30). macOS desktop all_flows attempted
   but hung on guest sign-in (not blocking; desktop opt-in via
