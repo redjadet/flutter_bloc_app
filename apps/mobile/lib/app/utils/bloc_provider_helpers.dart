@@ -19,6 +19,9 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 /// )
 /// ```
 ///
+/// For go_router route-owned cubits (go_router 18+), prefer
+/// `routeScopedWithAsyncInit` with `pageBuilder` and `state.pageKey`.
+///
 /// **Why use `unawaited()`:** The initialization is intentionally fire-and-forget
 /// because we want the widget tree to build immediately while data loads in the background.
 /// Errors are handled within the cubit's error handling mechanism.
@@ -138,4 +141,59 @@ class BlocProviderHelpers {
       },
     ),
   );
+
+  /// Route-scoped cubit ownership for go_router pages that may rebuild mid-transition.
+  ///
+  /// Pair with `GoRoute.pageBuilder` and a page keyed by `GoRouteState.pageKey`
+  /// (for example `NoTransitionPage`) so navigator transitions do not dispose
+  /// route-scoped cubits early under go_router 18+.
+  static Widget routeScopedWithAsyncInit<T extends BlocBase<Object?>>({
+    required T Function() create,
+    required Future<void> Function(T cubit) init,
+    required Widget child,
+  }) => _RouteScopedAsyncInitBloc<T>(
+    create: create,
+    init: init,
+    child: child,
+  );
+}
+
+class _RouteScopedAsyncInitBloc<T extends BlocBase<Object?>>
+    extends StatefulWidget {
+  const _RouteScopedAsyncInitBloc({
+    required this.create,
+    required this.init,
+    required this.child,
+  });
+
+  final T Function() create;
+  final Future<void> Function(T cubit) init;
+  final Widget child;
+
+  @override
+  State<_RouteScopedAsyncInitBloc<T>> createState() =>
+      _RouteScopedAsyncInitBlocState<T>();
+}
+
+class _RouteScopedAsyncInitBlocState<T extends BlocBase<Object?>>
+    extends State<_RouteScopedAsyncInitBloc<T>> {
+  late final T _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = widget.create();
+    unawaited(widget.init(_cubit));
+  }
+
+  @override
+  void dispose() {
+    unawaited(_cubit.close());
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<T>.value(value: _cubit, child: widget.child);
+  }
 }

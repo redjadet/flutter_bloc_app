@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_realtime_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SocialFeedStatusBanner extends StatelessWidget {
   const SocialFeedStatusBanner({required this.data, super.key});
