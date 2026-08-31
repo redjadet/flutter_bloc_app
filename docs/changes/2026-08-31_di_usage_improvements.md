@@ -1,19 +1,19 @@
 # Feature: DI usage improvements (Settings analytics + GetIt guard)
 
-### Problem
+## Problem
 
 Settings analytics consent reached into GetIt from presentation, and
 `check_direct_getit.sh` reported green while missing nested
 `features/<name>/presentation/**` paths (broken `*/presentation/**` glob).
 
-### Scope
+## Scope
 
 - In: explicit constructor DI for Settings analytics; guard repair + self-test;
   composition-root resolve smoke test; architecture/change docs.
 - Out: injectable/Riverpod/BlocSignal migration; `BackendAvailability` singleton
   flip; broad GetIt sweeps outside Settings presentation.
 
-### Layers touched
+## Layers touched
 
 - [x] presentation (Settings)
 - [x] DI (composition resolve into `CoreRouteFactory`)
@@ -22,7 +22,7 @@ Settings analytics consent reached into GetIt from presentation, and
 - [ ] data
 - [ ] l10n
 
-### Contracts
+## Contracts
 
 - Flow: `resolveCoreRouteFactory` → `CoreRouteFactory` → `SettingsPage` →
   `_SettingsView` → `AnalyticsConsentSection`
@@ -30,9 +30,9 @@ Settings analytics consent reached into GetIt from presentation, and
   `ProductAnalytics productAnalytics`
 - No `getIt` in presentation widgets
 
-### Tests (executable contract)
+## Tests (executable contract)
 
-#### Behaviour (widget)
+### Behaviour (widget)
 
 - [x] Toggle consent → save + analytics enabled
 - [x] External stream update → switch syncs
@@ -46,29 +46,29 @@ Settings analytics consent reached into GetIt from presentation, and
   `test/features/settings/presentation/widgets/analytics_consent_section_test.dart`,
   `test/settings_page_test.dart`, `test/responsive_layout_test.dart`
 
-#### Composition
+### Composition
 
 - [x] After `configureDependencies()`, resolve app scope + all typed route
   factories without throw
 - File: `test/app/composition/injector_test.dart`
 
-#### Tooling
+### Tooling
 
 - [x] `check_direct_getit.sh --self-test` flags `getIt<` and `getIt.`; ignores
   comment-only
 - [x] Production scan uses `**/presentation/**` under `apps/mobile`
 
-### Risks
+## Risks
 
 - Presentation GetIt regress → guard + checklist
 - Lazy demo factory resolve cost in smoke test → already used by router tests
 
-### Rollback
+## Rollback
 
 Revert this change note’s write-set; restore optional GetIt fallback only if
 product explicitly requires optional analytics (prefer null-object at factory).
 
-### Proof commands
+## Proof commands
 
 ```bash
 ./bin/format
