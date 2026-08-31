@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_failure.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/social_feed_cubit.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_senior_signal_panel.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_status_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SocialFeedDemoBody extends StatelessWidget {
   const SocialFeedDemoBody({super.key});

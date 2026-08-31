@@ -252,9 +252,15 @@ void registerSocialFeedDemoIntegrationFlow() {
         scrollable: find.byType(Scrollable).first,
       );
       await tapAndPump(tester, feedButton);
-      await pumpUntilFound(tester, find.text('Social feed demo'));
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('social-feed-refresh-button')),
+      );
 
-      expect(find.text('Social feed demo'), findsWidgets);
+      expect(
+        find.byKey(const ValueKey('social-feed-refresh-button')),
+        findsOneWidget,
+      );
       await pumpUntilFound(
         tester,
         find.byKey(const ValueKey('social-feed-list')),
