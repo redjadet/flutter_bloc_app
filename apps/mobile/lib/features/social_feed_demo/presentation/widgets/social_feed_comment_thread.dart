@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_visible_comments.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SocialFeedCommentThread extends StatelessWidget {
   const SocialFeedCommentThread({

@@ -14,4 +14,3 @@ export 'domain/social_feed_viewer.dart';
 export 'presentation/cubit/social_feed_cubit.dart';
 export 'presentation/cubit/social_feed_state.dart';
 export 'presentation/pages/social_feed_demo_page.dart';
-export 'presentation/pages/social_feed_demo_route_scope.dart';

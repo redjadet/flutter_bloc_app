@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_failure.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SocialFeedErrorView extends StatelessWidget {
   const SocialFeedErrorView({

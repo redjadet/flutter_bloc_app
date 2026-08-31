@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/so
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_comment_composer.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_post_card.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_visible_comments.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Selector wrapper so liking one post does not rebuild siblings.
 class SocialFeedPostItem extends StatefulWidget {

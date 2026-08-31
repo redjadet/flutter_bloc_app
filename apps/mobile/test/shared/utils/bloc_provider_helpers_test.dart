@@ -97,7 +97,59 @@ void main() {
         expect(find.text('0'), findsOneWidget);
       },
     );
+
+    testWidgets('routeScopedWithAsyncInit keeps cubit across parent rebuilds', (
+      tester,
+    ) async {
+      int createCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _RebuildParent(
+            child: BlocProviderHelpers.routeScopedWithAsyncInit<TestCubit>(
+              create: () {
+                createCount++;
+                return TestCubit();
+              },
+              init: (_) async {},
+              child: const TestConsumerWidget(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(createCount, 1);
+
+      final _RebuildParentState parentState = tester.state<_RebuildParentState>(
+        find.byType(_RebuildParent),
+      );
+      parentState.triggerRebuild();
+      await tester.pump();
+
+      expect(createCount, 1);
+      expect(find.byType(TestWidget), findsOneWidget);
+    });
   });
+}
+
+class _RebuildParent extends StatefulWidget {
+  const _RebuildParent({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_RebuildParent> createState() => _RebuildParentState();
+}
+
+class _RebuildParentState extends State<_RebuildParent> {
+  int _token = 0;
+
+  void triggerRebuild() => setState(() => _token++);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: <Widget>[Text('$_token'), widget.child]);
+  }
 }
 
 class TestCubit extends Cubit<TestState> {

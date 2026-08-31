@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_comment_thread.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_visible_comments.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SocialFeedPostCard extends StatelessWidget {
   const SocialFeedPostCard({
