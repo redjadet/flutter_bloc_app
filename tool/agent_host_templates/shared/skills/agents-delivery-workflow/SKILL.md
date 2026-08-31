@@ -31,7 +31,7 @@ Host maintain: `agent-maintain preflight`, `agent-maintain closeout`, `host_main
 1. **Format (Dart touched)** — if any `.dart` file changed this task, run `./bin/format` (preferred) or `dart format .` **before** other closeout claims. Prefer `./bin/format --changed` only for huge trees when full format is too slow; default is `./bin/format`.
 2. **Verify** — run narrowest honest validation lane (`docs/engineering/validation_routing_fast_vs_full.md`); report proof, not intent.
 3. **Bug-fix hardening** — if this task fixed a non-trivial bug, race, lifecycle issue, flaky test, or one-off failure that could recur: invoke `agents-regression-capture` **same turn** (before step 4). Skip only with explicit reason in report.
-4. **Report** — Goal / Context / Boundaries / Verification; **Regression capture** block when step 3 ran (or skip reason).
+4. **Report** — `SAFETY-REPORT` including **What We Learned** teach-back (or mechanical skip), Goal / Context / Boundaries / Verification; **Regression capture** block when step 3 ran (or skip reason).
 5. **Host** — `./bin/agent-maintain closeout` when templates or agent docs touched.
 
 **Cursor-only:** Multi-agent hub anchors `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`; `agent_knowledge_base.md#multi-agent-hub`.

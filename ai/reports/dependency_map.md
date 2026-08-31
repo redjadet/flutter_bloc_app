@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-08-31T10:01:08Z"
-  git_head: "1c8248f6f8647218fd7632d3880626f3df3798f8"
+  generated_at: "2026-08-31T21:43:30Z"
+  git_head: "47f01f4c8e2d584806b47065ee168b9f345fe15a"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -38,7 +38,7 @@ ai_snapshot:
 | google_maps | 1493 | yes |
 | ai_decision_demo | 1408 | yes |
 | profile | 1399 | yes |
-| settings | 1381 | yes |
+| settings | 1385 | yes |
 | in_app_purchase_demo | 1360 | yes |
 | igaming_demo | 1328 | yes |
 | remote_config | 1280 | yes |

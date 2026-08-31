@@ -163,7 +163,13 @@ assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.ou
 assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "plan|docs-sync|"
 assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "harness gate"
 
-run_ok agent_maintain_closeout_plan env AGENT_MAINTAIN_PLAN_ONLY=1 \
+scorecard_scope_file="$tmp_dir/agent_maintain_scorecard_scope.txt"
+printf '%s\n' \
+  'analysis/agent_scorecard/summaries/scorecard-summary.md' \
+  >"$scorecard_scope_file"
+run_ok agent_maintain_closeout_plan env \
+  AGENT_MAINTAIN_CHANGED_PATHS_FILE="$scorecard_scope_file" \
+  AGENT_MAINTAIN_PLAN_ONLY=1 \
   bash tool/agent_maintain.sh closeout
 assert_contains agent_maintain_closeout_plan "$tmp_dir/agent_maintain_closeout_plan.out" "workflow|closeout|"
 assert_contains agent_maintain_closeout_plan "$tmp_dir/agent_maintain_closeout_plan.out" \
@@ -177,6 +183,9 @@ run_ok agent_maintain_closeout_skip_after_host env \
   bash tool/agent_maintain.sh closeout
 assert_contains agent_maintain_closeout_skip_after_host \
   "$tmp_dir/agent_maintain_closeout_skip_after_host.out" "scope|host_templates|no"
+assert_contains agent_maintain_closeout_skip_after_host \
+  "$tmp_dir/agent_maintain_closeout_skip_after_host.out" \
+  "skip|agent-scorecard-freshness|no scorecard artifacts in scope"
 if grep -q "auto_action|after-host-edit|" "$tmp_dir/agent_maintain_closeout_skip_after_host.out"; then
   echo "❌ empty scope closeout must not plan after-host-edit" >&2
   exit 1

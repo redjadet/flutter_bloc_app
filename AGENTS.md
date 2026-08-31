@@ -19,7 +19,7 @@ worktrees.
 
 ## Loop
 
-Plan once → execute → verify → report proof. Ask only credentials/tooling,
+Plan once → execute → verify → teach back → report proof. Ask only credentials/tooling,
 unsafe ambiguity below 95% confident, or user-owned choice. Non-trivial: [`AI Failure
 Risks`](docs/ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls` +
 `./bin/agent-maintain preflight`; record Goal / Context / Boundaries /
@@ -64,7 +64,7 @@ Invariants only — expanded rules in [`docs/agent_project_context.md`](docs/age
 - Widget tests — [`docs/testing_overview.md`](docs/testing_overview.md), [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
 - Git / branch / PR / worktree actions — [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md); inspect state first and preserve user work.
 - Destructive/external side effects: confirm same turn; list affected items first.
-- Coding reports: Files Changed + Follow-up Actions.
+- Coding reports: [`SAFETY-REPORT`](docs/agent_kb/agent_safety_contracts.md#safety-report--mandatory-closeout-report).
 - After `.dart` changes: `./bin/format` (or `dart format .`) before finish — [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md) § Validation.
 - Repeated failure ⇒ repo capability — [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) § Missing Capability Loop.
 - Host maintain: `agent-maintain preflight` / `agent-maintain closeout` — [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md), [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md).
