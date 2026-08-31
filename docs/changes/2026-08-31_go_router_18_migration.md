@@ -34,6 +34,8 @@ under go_router 18 when:
 - `cd apps/mobile && flutter test test/features/social_feed_demo/` — 74 passed
 - `flutter test integration_test/social_feed_demo_flow_test.dart` (iOS sim) — passed
 - `./bin/integration_tests` — web preflight + iOS simulator all_flows (30 tests)
+- Follow-up closeout ([#751](https://github.com/redjadet/flutter_bloc_app/pull/751)):
+  `routeScopedWithAsyncInit`, full social feed `material_ui`, route audit doc
 
 ## Follow-up
 
