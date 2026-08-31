@@ -21,9 +21,9 @@ exhaustive switch in the FCM demo repository.
 ## Out of scope
 
 - Domain enum expansion for a distinct permanent-denial state.
-- `go_router` 18 adoption (needs dedicated router/shell dispose investigation).
-  Re-confirmed blocked 2026-08-31 — see
-  [2026-08-31 pub upgrade defer](2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md).
+- `go_router` 18 adoption — completed 2026-08-31; see
+  [2026-08-31 go_router 18 migration](2026-08-31_go_router_18_migration.md).
+  Prior deferral: [2026-08-31 pub upgrade defer](2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md).
 - Unrelated Renovate Android Gradle plugin PRs opened after triage.
 
 ## Proof

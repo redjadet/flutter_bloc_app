@@ -256,17 +256,15 @@ List<RouteBase> createDemoRoutesTail(DemoRouteFactory factory) => <RouteBase>[
 RouteBase createSocialFeedDemoRoute(DemoRouteFactory factory) => GoRoute(
   path: AppRoutes.socialFeedDemoPath,
   name: AppRoutes.socialFeedDemo,
-  builder: (context, state) =>
-      BlocProviderHelpers.withAsyncInit<SocialFeedCubit>(
-        create: () => SocialFeedCubit(
-          repository: factory.socialFeedRepository,
-          realtimeSource: factory.socialFeedRealtimeSource,
-          scenario: factory.socialFeedScenarioController,
-          clock: () => DateTime.now().toUtc(),
-        ),
-        init: (cubit) => cubit.initialize(),
-        child: const SocialFeedDemoPage(),
-      ),
+  pageBuilder: (context, state) => NoTransitionPage<void>(
+    key: state.pageKey,
+    child: SocialFeedDemoRouteScope(
+      repository: factory.socialFeedRepository,
+      realtimeSource: factory.socialFeedRealtimeSource,
+      scenario: factory.socialFeedScenarioController,
+      clock: () => DateTime.now().toUtc(),
+    ),
+  ),
 );
 
 RouteBase createNativePlatformShowcaseRoute(

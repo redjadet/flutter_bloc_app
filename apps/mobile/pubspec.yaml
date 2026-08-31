@@ -29,8 +29,6 @@ resolution: workspace
 # - google_sign_in_mocks 0.4+: needs google_sign_in 7; firebase_ui_oauth_google stays on google_sign_in 6.
 # - intl 0.20.3+: flutter_localizations from the SDK pins intl 0.20.2.
 # - meta 1.18: flutter_test from the SDK pins meta 1.17.0.
-# - go_router 18: integration dispose regressions (InheritedElement, route-scoped
-#   providers); stay on ^17.5.0 until dedicated migration — docs/changes/2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md.
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -98,7 +96,7 @@ dependencies:
   genui_google_generative_ai: ^0.7.1
   geolocator: ^14.0.3
   get_it: ^9.2.1
-  go_router: ^17.5.0
+  go_router: ^18.0.0
   google_fonts: ^8.2.1
   google_maps_flutter: ^2.18.0
   google_maps_flutter_ios_sdk10: ^2.18.5

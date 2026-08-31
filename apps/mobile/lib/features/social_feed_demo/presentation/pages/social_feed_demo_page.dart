@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/presentation/cubit/so
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_demo_body.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_scenario_controls.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SocialFeedDemoPage extends StatefulWidget {
   const SocialFeedDemoPage({super.key});

@@ -75,29 +75,32 @@ void main() {
     expect(items.single.idempotencyKey, 'm2');
   });
 
-  test('removeQueuedLikesForPost drops all undispatched likes for post', () async {
-    await queue.enqueueLike(
-      viewer: SocialFeedViewer.alex,
-      postId: 'p1',
-      desiredLiked: true,
-      mutationId: 'm1',
-    );
-    await queue.enqueueComment(
-      viewer: SocialFeedViewer.alex,
-      postId: 'p1',
-      body: 'keep',
-      mutationId: 'c1',
-    );
-    await queue.removeQueuedLikesForPost(
-      viewer: SocialFeedViewer.alex,
-      postId: 'p1',
-    );
-    final List<SocialFeedMutationDto> items = await queue.readQueue(
-      SocialFeedViewer.alex,
-    );
-    expect(items, hasLength(1));
-    expect(items.single.type, 'comment');
-  });
+  test(
+    'removeQueuedLikesForPost drops all undispatched likes for post',
+    () async {
+      await queue.enqueueLike(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+        desiredLiked: true,
+        mutationId: 'm1',
+      );
+      await queue.enqueueComment(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+        body: 'keep',
+        mutationId: 'c1',
+      );
+      await queue.removeQueuedLikesForPost(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+      );
+      final List<SocialFeedMutationDto> items = await queue.readQueue(
+        SocialFeedViewer.alex,
+      );
+      expect(items, hasLength(1));
+      expect(items.single.type, 'comment');
+    },
+  );
 
   test('viewer queues are isolated and clearViewer wipes one viewer', () async {
     await queue.enqueueLike(
