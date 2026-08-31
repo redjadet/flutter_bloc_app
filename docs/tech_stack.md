@@ -17,8 +17,8 @@ not a replacement for `pubspec.yaml`.
 
 | Area | Current state |
 | --- | --- |
-| Flutter | `3.47.1` |
-| Dart | `3.13.1` |
+| Flutter | `3.47.2` |
+| Dart | `3.13.2` |
 | App root | `apps/mobile/` (`package:flutter_bloc_app`) |
 | App entrypoints | `apps/mobile/lib/main_dev.dart`, `apps/mobile/lib/main_staging.dart`, `apps/mobile/lib/main_prod.dart` |
 | Shared bootstrap | `apps/mobile/lib/main_bootstrap.dart` |
