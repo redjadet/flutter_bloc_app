@@ -18,16 +18,18 @@ class _ViewerReplay {
   final StreamController<SocialFeedSyncSummary> _controller =
       StreamController<SocialFeedSyncSummary>.broadcast();
 
-  SocialFeedSyncLease addLease() {
+  Future<SocialFeedSyncLease> addLease() async {
     _leases += 1;
+    SocialFeedSyncSummary? seed;
     if (_leases == 1) {
-      unawaited(_tick());
+      seed = await _tick();
       _timer = timerService.periodic(const Duration(seconds: 1), () {
         unawaited(_tick());
       });
     }
     return _SyncLease(
       summaries: _controller.stream,
+      seedSummary: seed,
       closeFn: _release,
     );
   }
@@ -53,9 +55,9 @@ class _ViewerReplay {
     await _controller.close();
   }
 
-  Future<void> _tick() async {
+  Future<SocialFeedSyncSummary?> _tick() async {
     if (_leases == 0 || _controller.isClosed) {
-      return;
+      return null;
     }
     final SocialFeedSyncSummary summary = await repository._dispatchQueue(
       viewer,
@@ -63,17 +65,22 @@ class _ViewerReplay {
     if (!_controller.isClosed) {
       _controller.add(summary);
     }
+    return summary;
   }
 }
 
 class _SyncLease implements SocialFeedSyncLease {
   _SyncLease({
     required this.summaries,
+    required this.seedSummary,
     required this._closeFn,
   });
 
   @override
   final Stream<SocialFeedSyncSummary> summaries;
+
+  @override
+  final SocialFeedSyncSummary? seedSummary;
 
   final Future<void> Function() _closeFn;
   bool _closed = false;

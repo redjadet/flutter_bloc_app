@@ -230,6 +230,83 @@ void main() {
   });
 
   test(
+    'seedSummary promotes comment dispatched during lease acquire',
+    () async {
+      final SocialFeedPost base = post(id: 'p1', comments: 1);
+      final _FakeScenario scenario = _FakeScenario();
+      final DateTime fixedNow = DateTime.utc(2026, 8, 20, 12);
+      const String mutationId = 'queued-comment';
+      final SocialFeedComment pending = SocialFeedComment(
+        id: mutationId,
+        postId: 'p1',
+        viewerId: SocialFeedViewer.alex.id,
+        body: 'Queued offline',
+        createdAt: fixedNow,
+        syncStatus: SocialFeedMutationStatus.pending,
+      );
+      final _FakeRepo repo = _FakeRepo(
+        remote: SocialFeedPage(
+          posts: <SocialFeedPost>[base],
+          nextCursor: null,
+          hasMore: false,
+          source: SocialFeedDataSource.remote,
+          fetchedAt: DateTime.utc(2026, 8, 20),
+        ),
+        pendingSnapshot: SocialFeedPendingSnapshot(
+          pendingCommentsByPostId: <String, List<SocialFeedComment>>{
+            'p1': <SocialFeedComment>[pending],
+          },
+          pendingPostIds: <String>{'p1'},
+        ),
+        seedSummary: const SocialFeedSyncSummary(
+          pendingCount: 0,
+          needsAttentionCount: 0,
+          pendingPostIds: <String>{},
+          dispatchedMutations: <SocialFeedDispatchedMutation>[
+            SocialFeedDispatchedMutation(
+              mutationId: mutationId,
+              postId: 'p1',
+              wasComment: true,
+            ),
+          ],
+        ),
+      );
+      repo.commentsByPostId['p1'] = <SocialFeedComment>[
+        SocialFeedComment(
+          id: 'seed',
+          postId: 'p1',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'Seed',
+          createdAt: fixedNow,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+        SocialFeedComment(
+          id: mutationId,
+          postId: 'p1',
+          viewerId: SocialFeedViewer.alex.id,
+          body: 'Queued offline',
+          createdAt: fixedNow,
+          syncStatus: SocialFeedMutationStatus.synced,
+        ),
+      ];
+      final SocialFeedCubit cubit = SocialFeedCubit(
+        repository: repo,
+        realtimeSource: _FakeRealtime(),
+        scenario: scenario,
+        clock: () => fixedNow,
+      );
+      await cubit.load();
+      await Future<void>.delayed(Duration.zero);
+
+      final SocialFeedReady ready = cubit.state as SocialFeedReady;
+      expect(ready.data.pendingCommentsByPostId['p1'], isNull);
+      expect(ready.data.pendingPostIds, isEmpty);
+      expect(ready.data.commentsByPostId['p1'], hasLength(2));
+      await cubit.close();
+    },
+  );
+
+  test(
     'background sync promotes queued comment without manual refresh',
     () async {
       final SocialFeedPost base = post(id: 'p1', comments: 1);
@@ -363,6 +440,49 @@ void main() {
     },
   );
 
+  test('toggleLike after switchViewer ignores stale mutation result', () async {
+    final Completer<SocialFeedLikeResult> likeCompleter =
+        Completer<SocialFeedLikeResult>();
+    final SocialFeedPost shared = post(id: 'shared', likes: 0);
+    final _FakeRepo repo = _FakeRepo(
+      remote: SocialFeedPage(
+        posts: <SocialFeedPost>[shared],
+        nextCursor: null,
+        hasMore: false,
+        source: SocialFeedDataSource.remote,
+        fetchedAt: DateTime.utc(2026, 8, 20),
+      ),
+      likeCompleter: likeCompleter,
+    );
+    final SocialFeedCubit cubit = SocialFeedCubit(
+      repository: repo,
+      realtimeSource: _FakeRealtime(),
+      scenario: _FakeScenario(),
+      clock: () => DateTime.utc(2026, 8, 20, 12),
+    );
+    await cubit.load();
+    final Future<void> likeFuture = cubit.toggleLike('shared');
+    repo.remote = SocialFeedPage(
+      posts: <SocialFeedPost>[post(id: 'shared', likes: 5, liked: true)],
+      nextCursor: null,
+      hasMore: false,
+      source: SocialFeedDataSource.remote,
+      fetchedAt: DateTime.utc(2026, 8, 20),
+    );
+    await cubit.switchViewer(SocialFeedViewer.sam);
+    likeCompleter.complete(
+      SocialFeedLikeSynced(
+        shared.copyWith(isLikedByMe: true, likeCount: 1, serverRevision: 2),
+      ),
+    );
+    await likeFuture;
+    final SocialFeedReady ready = cubit.state as SocialFeedReady;
+    expect(ready.data.viewer, SocialFeedViewer.sam);
+    expect(ready.data.posts.first.isLikedByMe, isTrue);
+    expect(ready.data.posts.first.likeCount, 5);
+    await cubit.close();
+  });
+
   test('switchViewer reloads new viewer', () async {
     final _FakeRepo repo = _FakeRepo(
       remote: SocialFeedPage(
@@ -436,9 +556,14 @@ class _FakeScenario implements SocialFeedScenarioController {
 }
 
 class _FakeLease implements SocialFeedSyncLease {
+  _FakeLease({this.seedSummary});
+
   final StreamController<SocialFeedSyncSummary> _controller =
       StreamController<SocialFeedSyncSummary>.broadcast();
   bool closed = false;
+
+  @override
+  final SocialFeedSyncSummary? seedSummary;
 
   @override
   Stream<SocialFeedSyncSummary> get summaries => _controller.stream;
@@ -496,21 +621,24 @@ class _FakeRepo implements SocialFeedRepository {
     required this.remote,
     this.likeResult,
     this.commentResult,
+    this.likeCompleter,
     this.pendingSnapshot = const SocialFeedPendingSnapshot(
       pendingCommentsByPostId: <String, List<SocialFeedComment>>{},
       pendingPostIds: <String>{},
     ),
-  });
+    SocialFeedSyncSummary? seedSummary,
+  }) : lease = _FakeLease(seedSummary: seedSummary);
 
   SocialFeedPage? cached;
   SocialFeedPage remote;
   SocialFeedLikeResult? likeResult;
   SocialFeedCommentResult? commentResult;
+  Completer<SocialFeedLikeResult>? likeCompleter;
   SocialFeedPendingSnapshot pendingSnapshot;
   int commentCalls = 0;
   final Map<String, List<SocialFeedComment>> commentsByPostId =
       <String, List<SocialFeedComment>>{};
-  final _FakeLease lease = _FakeLease();
+  final _FakeLease lease;
 
   @override
   Future<SocialFeedPage?> readCachedPage({
@@ -534,6 +662,9 @@ class _FakeRepo implements SocialFeedRepository {
     required bool desiredLiked,
     required String mutationId,
   }) async {
+    if (likeCompleter != null) {
+      return likeCompleter!.future;
+    }
     return likeResult ??
         SocialFeedLikeSynced(
           remote.posts.first.copyWith(

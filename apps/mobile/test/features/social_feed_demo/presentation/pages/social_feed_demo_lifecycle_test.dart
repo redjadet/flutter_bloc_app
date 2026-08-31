@@ -83,6 +83,9 @@ class _SyncLease implements SocialFeedSyncLease {
   Stream<SocialFeedSyncSummary> get summaries => c.stream;
 
   @override
+  SocialFeedSyncSummary? get seedSummary => null;
+
+  @override
   Future<void> close() async {
     if (!c.isClosed) {
       await c.close();

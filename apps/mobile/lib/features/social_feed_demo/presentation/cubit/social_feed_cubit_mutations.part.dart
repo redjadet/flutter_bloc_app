@@ -12,6 +12,8 @@ mixin _SocialFeedCubitMutations
       return;
     }
     final bool desired = !post.isLikedByMe;
+    final int generation = _generation;
+    final SocialFeedViewer mutationViewer = currentState.data.viewer;
     final String mutationId = 'like-$postId-${_clock().microsecondsSinceEpoch}';
     _emitReadyPatch((d) {
       final List<SocialFeedPost> posts = d.posts
@@ -35,11 +37,14 @@ mixin _SocialFeedCubitMutations
 
     try {
       final SocialFeedLikeResult result = await _repository.setLiked(
-        viewer: currentState.data.viewer,
+        viewer: mutationViewer,
         postId: postId,
         desiredLiked: desired,
         mutationId: mutationId,
       );
+      if (!_isCurrentLease(generation, mutationViewer)) {
+        return;
+      }
       switch (result) {
         case SocialFeedLikeSynced(:final post):
           _replacePost(post, clearPending: true);
@@ -50,6 +55,9 @@ mixin _SocialFeedCubitMutations
           _emitEffect(const SocialFeedEffect.mutationRejected());
       }
     } on SocialFeedNotQueuedFailure {
+      if (!_isCurrentLease(generation, mutationViewer)) {
+        return;
+      }
       _replacePost(post, clearPending: true);
       _emitEffect(const SocialFeedEffect.mutationRejected());
     }
@@ -71,12 +79,14 @@ mixin _SocialFeedCubitMutations
     if (post == null) {
       return false;
     }
+    final int generation = _generation;
+    final SocialFeedViewer mutationViewer = currentState.data.viewer;
     final String mutationId =
         'comment-$postId-${_clock().microsecondsSinceEpoch}';
     final SocialFeedComment pending = SocialFeedComment(
       id: mutationId,
       postId: postId,
-      viewerId: currentState.data.viewer.id,
+      viewerId: mutationViewer.id,
       body: validated,
       createdAt: _clock().toUtc(),
       syncStatus: SocialFeedMutationStatus.pending,
@@ -104,11 +114,14 @@ mixin _SocialFeedCubitMutations
 
     try {
       final SocialFeedCommentResult result = await _repository.addComment(
-        viewer: currentState.data.viewer,
+        viewer: mutationViewer,
         postId: postId,
         body: validated,
         mutationId: mutationId,
       );
+      if (!_isCurrentLease(generation, mutationViewer)) {
+        return false;
+      }
       switch (result) {
         case SocialFeedCommentSynced(:final post):
           _replacePost(post, clearPending: true);
@@ -125,6 +138,9 @@ mixin _SocialFeedCubitMutations
           return false;
       }
     } on SocialFeedNotQueuedFailure {
+      if (!_isCurrentLease(generation, mutationViewer)) {
+        return false;
+      }
       _replacePost(post, clearPending: true);
       _clearPendingComment(postId, mutationId, synced: false, remove: true);
       _emitEffect(const SocialFeedEffect.mutationRejected());

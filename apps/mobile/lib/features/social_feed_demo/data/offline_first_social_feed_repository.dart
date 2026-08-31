@@ -132,7 +132,7 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
         onZero: () => _replays.remove(viewer.id),
       ),
     );
-    return replay.addLease();
+    return await replay.addLease();
   }
 
   @override

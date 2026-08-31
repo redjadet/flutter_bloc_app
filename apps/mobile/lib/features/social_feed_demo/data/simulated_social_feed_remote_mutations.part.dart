@@ -13,7 +13,7 @@ extension SimulatedSocialFeedRemoteMutations
       throw const SocialFeedOfflineFailure();
     }
     final SocialFeedPost? cached = _mutationAckCache[viewer.id]?[mutationId];
-    if (cached != null) {
+    if (cached != null && cached.isLikedByMe == desiredLiked) {
       return cached;
     }
     if (_scenario.consumeRejectNextLike(viewer: viewer)) {
