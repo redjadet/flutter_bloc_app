@@ -38,9 +38,11 @@ under go_router 18 when:
 - `./bin/integration_tests` — web preflight + iOS simulator all_flows (30 tests)
 - Follow-up closeout ([#751](https://github.com/redjadet/flutter_bloc_app/pull/751)):
   `routeScopedWithAsyncInit`, full social feed `material_ui`, route audit doc
-- Proactive demo migration: all demo/auxiliary routes in audit table migrated to
-  `RouteScopedPage` + `routeScopedWithAsyncInit` / `Widget.routeScoped`; Dart 3.13
-  `class const` primary constructors on route factories and route-owned widgets.
+- Proactive demo migration
+  ([#756](https://github.com/redjadet/flutter_bloc_app/pull/756)): all
+  demo/auxiliary routes in audit table migrated to `RouteScopedPage` +
+  `routeScopedWithAsyncInit` / `Widget.routeScoped`; Dart 3.13 `class const`
+  primary constructors on route factories and route-owned widgets.
   Proof: `./bin/checklist` (2920 tests, coverage 85.35%); `./bin/integration_tests`
   web preflight + iOS simulator all_flows (30). macOS desktop all_flows attempted
   but hung on guest sign-in (not blocking; desktop opt-in via
