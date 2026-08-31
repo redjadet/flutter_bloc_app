@@ -29,15 +29,10 @@ Major dependency bump: `flex_color_picker` ^4 and attempted `go_router` ^18.
 
 ## Follow-up (go_router 18 migration)
 
-Before raising the caret to `^18.0.0`:
-
-1. Audit shell routes and `pageBuilder` / `NoTransitionPage` dispose order.
-2. Ensure route-scoped `BlocProvider`s outlive navigator transitions (social feed
-   is the canary — `SocialFeedCubit` `ProviderNotFoundException`).
-3. Keep integration harness on `_dismissModalSheet` (not route `_pageBack` under sheets).
-4. Re-run `./bin/integration_tests` (web preflight + iOS simulator all_flows).
-5. Update pins in `apps/mobile/pubspec.yaml`, `renovate.json`, and
-   [`DEPENDENCY_UPDATES.md`](../engineering/DEPENDENCY_UPDATES.md).
+**Completed** in [#750](https://github.com/redjadet/flutter_bloc_app/pull/750) and
+[#751](https://github.com/redjadet/flutter_bloc_app/pull/751). See
+[2026-08-31 go_router 18 migration](2026-08-31_go_router_18_migration.md) for
+route audit and mitigation playbook.
 
 Related: [2026-08-24 upgrade validate](2026-08-24_upgrade_validate_go_router_freezed_fcm.md),
 [`docs/tech_stack.md`](../tech_stack.md), [`agent_project_context.md`](../agent_project_context.md).
