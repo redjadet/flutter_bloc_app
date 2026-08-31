@@ -1,5 +1,5 @@
-Dart SDK 3.13.1
-Flutter SDK 3.47.1
+Dart SDK 3.13.2
+Flutter SDK 3.47.2
 flutter_bloc_app 1.0.0+20
 
 dependencies:
