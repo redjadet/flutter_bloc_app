@@ -132,6 +132,22 @@ Future<void> _pageBack(WidgetTester tester) async {
   await tester.pageBack();
 }
 
+/// Dismisses a modal bottom sheet without popping the underlying GoRouter page.
+///
+/// [_pageBack] prefers route chrome (Cupertino/Material back). Under go_router 18
+/// that can pop the page while the sheet route is still active, disposing
+/// route-scoped BlocProviders and tripping `_dependents.isEmpty`.
+Future<void> _dismissModalSheet(WidgetTester tester) async {
+  final Finder barrier = find.byType(ModalBarrier);
+  if (tester.any(barrier)) {
+    await tester.tapAt(const Offset(12, 12));
+    await tester.pumpAndSettle();
+    return;
+  }
+  await tester.pageBack();
+  await tester.pumpAndSettle();
+}
+
 Finder _findAdaptiveButtonByText(
   String text, {
   Finder? scope,

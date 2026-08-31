@@ -115,6 +115,9 @@ the answer.
   migrations; don't assume remote state from local files alone.
 - `firebase_ui_auth` has documented long-display-name overflow caveat; see
   [`firebase_ui_auth_overflow_fix.md`](integrations/firebase_ui_auth_overflow_fix.md).
+- `go_router` 18 deferred: integration fails on route/shell dispose ordering;
+  stay on `^17.5.0` until dedicated migration —
+  [`changes/2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md`](changes/2026-08-31_pub_upgrade_flex_color_picker_go_router_defer.md).
 - Android `android.builtInKotlin` stays **false**. Flip only after
   `desktop_webview_auth`, `flutter_tts`, `reactive_ble_mobile`, and
   `wallet_connect_v2` drop or guard `kotlin-android`. Do not patch pub-cache
