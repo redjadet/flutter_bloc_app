@@ -2,7 +2,6 @@ import 'package:core/core.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:feature_flags/feature_flags.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
@@ -14,12 +13,12 @@ import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/route_scoped_page.dart';
 import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_certificate_pinning_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_staff_app_demo.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/ai_decision_demo.dart';
@@ -73,7 +72,7 @@ part 'routes_demos.part.dart';
 List<RouteBase> createDemoRoutes(DemoRouteFactory factory) =>
     factory.createRoutes();
 
-class DemoRouteFactory({
+class const DemoRouteFactory({
   required final BackendAvailability backendAvailability,
   required final PendingSyncRepository pendingSyncRepository,
   required final ChatRepository chatRepository,
@@ -138,6 +137,19 @@ class DemoRouteFactory({
     authSessionPort: chatAuthSessionPort,
     renderOrchestrationDiagnostics: chatRenderOrchestrationDiagnosticsPort,
     initialModel: SecretConfig.huggingfaceModel,
+  );
+
+  ChatSyncStatusCubit _createChatSyncStatusCubit() => ChatSyncStatusCubit(
+    pendingRepository: pendingSyncRepository,
+  );
+
+  Widget _chatGate({
+    required GoRouterState state,
+    required Widget child,
+  }) => _withChatSupabaseSessionGate(
+    state: state,
+    availability: backendAvailability,
+    child: child,
   );
 
   Widget _withChatSupabaseSessionGate({

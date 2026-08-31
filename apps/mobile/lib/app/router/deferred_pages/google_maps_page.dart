@@ -6,7 +6,7 @@
 library;
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/router/route_scoped_page.dart';
 import 'package:flutter_bloc_app/features/google_maps/google_maps.dart';
 
 /// Builds the Google Maps sample page with lazy-loaded cubit initialization.
@@ -14,10 +14,7 @@ import 'package:flutter_bloc_app/features/google_maps/google_maps.dart';
 /// This function is called after the deferred library is loaded.
 /// It creates a [MapSampleCubit] and initializes it with location data.
 Widget buildGoogleMapsPage({required MapLocationRepository repository}) =>
-    BlocProviderHelpers.withAsyncInit<MapSampleCubit>(
-      create: () => MapSampleCubit(
-        repository: repository,
-      ),
+    const GoogleMapsSamplePage().routeScoped(
+      create: () => MapSampleCubit(repository: repository),
       init: (cubit) => cubit.loadLocations(),
-      child: const GoogleMapsSamplePage(),
     );

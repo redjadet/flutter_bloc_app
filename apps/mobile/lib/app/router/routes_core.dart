@@ -64,7 +64,7 @@ List<RouteBase> createCoreRoutes(CoreRouteFactory factory) =>
 RouteBase createCounterRoute(CoreRouteFactory factory) =>
     factory.createCounterRoute();
 
-class CoreRouteFactory({
+class const CoreRouteFactory({
   required final AuthRepository authRepository,
   required final PaymentCalculator paymentCalculator,
   required final FirebaseAuth? firebaseAuth,

@@ -111,7 +111,6 @@ void main() {
                 createCount++;
                 return TestCubit();
               },
-              init: (_) async {},
               child: const TestConsumerWidget(),
             ),
           ),

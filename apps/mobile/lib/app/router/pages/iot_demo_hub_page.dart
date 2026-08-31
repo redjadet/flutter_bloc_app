@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/router/route_scoped_page.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_section.dart';
@@ -69,12 +69,10 @@ class _IotDemoHubPageState extends State<IotDemoHubPage> {
               IotDemoHubTab.cloud => IotDemoCloudTab(
                 showBackendDisabledBanner: widget.showBackendDisabledBanner,
               ),
-              IotDemoHubTab.ble =>
-                BlocProviderHelpers.withAsyncInit<IotBleCubit>(
-                  create: widget.createIotBleCubit,
-                  init: (cubit) => cubit.initialize(),
-                  child: const IotBleSection(),
-                ),
+              IotDemoHubTab.ble => const IotBleSection().routeScoped(
+                create: widget.createIotBleCubit,
+                init: (cubit) => cubit.initialize(),
+              ),
             },
           ),
         ],

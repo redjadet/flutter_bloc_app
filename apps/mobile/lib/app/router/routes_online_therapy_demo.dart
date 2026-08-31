@@ -19,7 +19,7 @@ import 'package:go_router/go_router.dart';
 RouteBase createOnlineTherapyDemoRoute(OnlineTherapyDemoRouteFactory factory) =>
     factory.createRoute();
 
-class OnlineTherapyDemoRouteFactory({
+class const OnlineTherapyDemoRouteFactory({
   required final AuthRepository appAuthRepository,
   required final TherapyAuthRepository therapyAuthRepository,
   required final OnlineTherapyFakeApi networkModeController,

@@ -147,10 +147,12 @@ class BlocProviderHelpers {
   /// Pair with `GoRoute.pageBuilder` and a page keyed by `GoRouteState.pageKey`
   /// (for example `NoTransitionPage`) so navigator transitions do not dispose
   /// route-scoped cubits early under go_router 18+.
+  ///
+  /// Prefer `Widget.routeScoped` / `RouteScopedPage` at call sites.
   static Widget routeScopedWithAsyncInit<T extends BlocBase<Object?>>({
     required T Function() create,
-    required Future<void> Function(T cubit) init,
     required Widget child,
+    Future<void> Function(T cubit)? init,
   }) => _RouteScopedAsyncInitBloc<T>(
     create: create,
     init: init,
@@ -158,18 +160,11 @@ class BlocProviderHelpers {
   );
 }
 
-class _RouteScopedAsyncInitBloc<T extends BlocBase<Object?>>
-    extends StatefulWidget {
-  const _RouteScopedAsyncInitBloc({
-    required this.create,
-    required this.init,
-    required this.child,
-  });
-
-  final T Function() create;
-  final Future<void> Function(T cubit) init;
-  final Widget child;
-
+class const _RouteScopedAsyncInitBloc<T extends BlocBase<Object?>>({
+  required final T Function() create,
+  required final Widget child,
+  final Future<void> Function(T cubit)? init,
+}) extends StatefulWidget {
   @override
   State<_RouteScopedAsyncInitBloc<T>> createState() =>
       _RouteScopedAsyncInitBlocState<T>();
@@ -183,7 +178,10 @@ class _RouteScopedAsyncInitBlocState<T extends BlocBase<Object?>>
   void initState() {
     super.initState();
     _cubit = widget.create();
-    unawaited(widget.init(_cubit));
+    final init = widget.init;
+    if (init != null) {
+      unawaited(init(_cubit));
+    }
   }
 
   @override

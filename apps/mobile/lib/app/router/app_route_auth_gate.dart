@@ -9,22 +9,14 @@ import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Enforces a route-level auth policy for both normal navigation and deep links.
-class AppRouteAuthGate extends StatefulWidget {
-  const AppRouteAuthGate({
-    required this.policy,
-    required this.getCurrentUser,
-    required this.authStateChanges,
-    required this.authPath,
-    required this.child,
-    super.key,
-  });
-
-  final AppRoutePolicy policy;
-  final AuthUser? Function() getCurrentUser;
-  final Stream<AuthUser?> authStateChanges;
-  final String authPath;
-  final Widget child;
-
+class const AppRouteAuthGate({
+  required final AppRoutePolicy policy,
+  required final AuthUser? Function() getCurrentUser,
+  required final Stream<AuthUser?> authStateChanges,
+  required final String authPath,
+  required final Widget child,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<AppRouteAuthGate> createState() => _AppRouteAuthGateState();
 }

@@ -31,6 +31,7 @@ GoRouterState _stateForRoute(GoRoute route) {
   when(() => state.matchedLocation).thenReturn(path);
   when(() => state.extra).thenReturn(null);
   when(() => state.pathParameters).thenReturn(<String, String>{});
+  when(() => state.pageKey).thenReturn(ValueKey<String>('page:$path'));
   return state;
 }
 
@@ -52,6 +53,8 @@ void _invokeRoutes(BuildContext context, List<RouteBase> routes) {
       when(() => state.matchedLocation).thenReturn(path);
       when(() => state.extra).thenReturn(null);
       when(() => state.pathParameters).thenReturn(<String, String>{});
+      when(() => state.pageKey)
+          .thenReturn(const ValueKey<String>('page:shell'));
       route.builder!(context, state, const SizedBox(key: Key('shell-child')));
       _invokeRoutes(context, route.routes);
     }

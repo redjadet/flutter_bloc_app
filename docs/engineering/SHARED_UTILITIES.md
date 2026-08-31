@@ -44,6 +44,8 @@ Common app-shell areas:
 - `app/composition/` - `get_it` registrations and feature adapter factories
 - `app/config/` - runtime config, flavor, constants, backend availability, secret config
 - `app/router/` - route tables, auth gates, route policies
+- `app/router/route_scoped_page.dart` - `RouteScopedPage.route` /
+  `routeWithCubit` / `Widget.routeScoped` for go_router 18+ keyed pages
 - `app/utils/bloc_provider_helpers.dart` - `BlocProviderHelpers.withAsyncInit` and
   `routeScopedWithAsyncInit` for go_router 18+ route-owned cubits (see
   [go_router 18 migration](../changes/2026-08-31_go_router_18_migration.md))
