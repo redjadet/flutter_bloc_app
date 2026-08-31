@@ -273,16 +273,20 @@ void registerSocialFeedDemoIntegrationFlow() {
       );
       final bool controlsAlreadyVisible = tester.any(scenarioControls);
       if (!controlsAlreadyVisible) {
-        await tapAndPump(
-          tester,
-          find.byKey(const ValueKey('social-feed-scenario-button')),
+        final Finder scenarioButton = find.byKey(
+          const ValueKey('social-feed-scenario-button'),
         );
+        await tester.ensureVisible(scenarioButton);
+        await pumpUntilFound(
+          tester,
+          scenarioButton.hitTestable(),
+        );
+        await tapAndPump(tester, scenarioButton, scrollIntoView: false);
         await pumpUntilFound(tester, scenarioControls);
       }
       expect(scenarioControls, findsWidgets);
       if (!controlsAlreadyVisible) {
-        await _pageBack(tester);
-        await tester.pumpAndSettle();
+        await _dismissModalSheet(tester);
       }
 
       await tapAndPump(
