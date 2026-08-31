@@ -3,6 +3,8 @@ import 'package:design_system/responsive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
@@ -83,6 +85,8 @@ class const CoreRouteFactory({
   required final PendingSyncRepository pendingSyncRepository,
   required final ProfileRepository profileRepository,
   required final ChartRepository chartRepository,
+  required final AnalyticsConsentRepository analyticsConsentRepository,
+  required final ProductAnalytics productAnalytics,
 }) {
   List<RouteBase> createRoutes() => <RouteBase>[
     GoRoute(

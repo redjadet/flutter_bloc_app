@@ -1,23 +1,21 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Settings toggle for consent-gated product analytics collection.
 class AnalyticsConsentSection extends StatefulWidget {
   const AnalyticsConsentSection({
+    required this.analyticsConsentRepository,
+    required this.productAnalytics,
     super.key,
-    this.consentRepository,
-    this.analytics,
   });
 
-  final AnalyticsConsentRepository? consentRepository;
-  final ProductAnalytics? analytics;
+  final AnalyticsConsentRepository analyticsConsentRepository;
+  final ProductAnalytics productAnalytics;
 
   @override
   State<AnalyticsConsentSection> createState() =>
@@ -27,47 +25,31 @@ class AnalyticsConsentSection extends StatefulWidget {
 class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   bool _enabled = false;
   bool _loading = true;
-  bool _available = true;
+  bool _mutating = false;
+  int _mutationEpoch = 0;
   StreamSubscription<bool>? _changesSubscription;
-
-  AnalyticsConsentRepository? get _consentOrNull {
-    if (widget.consentRepository != null) {
-      return widget.consentRepository;
-    }
-    if (getIt.isRegistered<AnalyticsConsentRepository>()) {
-      return getIt<AnalyticsConsentRepository>();
-    }
-    return null;
-  }
-
-  ProductAnalytics? get _analyticsOrNull {
-    if (widget.analytics != null) {
-      return widget.analytics;
-    }
-    if (getIt.isRegistered<ProductAnalytics>()) {
-      return getIt<ProductAnalytics>();
-    }
-    return null;
-  }
 
   @override
   void initState() {
     super.initState();
+    _bindConsentRepository();
     unawaited(_load());
-    final AnalyticsConsentRepository? consent = _consentOrNull;
-    if (consent != null) {
-      _changesSubscription = consent.changes.listen(
-        (enabled) {
-          if (!mounted) {
-            return;
-          }
-          setState(() => _enabled = enabled);
-        },
-        onError: (Object _, StackTrace _) {
-          // Keep last loaded toggle value if the consent stream fails.
-        },
-      );
+  }
+
+  @override
+  void didUpdateWidget(covariant AnalyticsConsentSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (identical(
+      oldWidget.analyticsConsentRepository,
+      widget.analyticsConsentRepository,
+    )) {
+      return;
     }
+    unawaited(_changesSubscription?.cancel());
+    _mutationEpoch++;
+    _mutating = false;
+    _bindConsentRepository();
+    unawaited(_load());
   }
 
   @override
@@ -76,20 +58,24 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     super.dispose();
   }
 
+  void _bindConsentRepository() {
+    _changesSubscription = widget.analyticsConsentRepository.changes.listen(
+      (enabled) {
+        if (!mounted || _mutating) {
+          return;
+        }
+        setState(() => _enabled = enabled);
+      },
+      onError: (Object _, StackTrace _) {
+        // Keep last loaded toggle value if the consent stream fails.
+      },
+    );
+  }
+
   Future<void> _load() async {
-    final AnalyticsConsentRepository? consent = _consentOrNull;
-    if (consent == null) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _available = false;
-        _loading = false;
-      });
-      return;
-    }
-    final bool enabled = await consent.load();
-    if (!mounted) {
+    final int epoch = _mutationEpoch;
+    final bool enabled = await widget.analyticsConsentRepository.load();
+    if (!mounted || epoch != _mutationEpoch) {
       return;
     }
     setState(() {
@@ -99,40 +85,43 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   }
 
   Future<void> _onChanged(bool value) async {
-    final AnalyticsConsentRepository? consent = _consentOrNull;
-    final ProductAnalytics? analytics = _analyticsOrNull;
-    if (consent == null || analytics == null) {
+    if (_mutating) {
       return;
     }
     final bool previous = _enabled;
-    setState(() => _enabled = value);
-    final bool saved = await consent.save(enabled: value);
-    if (!saved) {
-      if (mounted) {
-        setState(() => _enabled = previous);
+    final int epoch = ++_mutationEpoch;
+    setState(() {
+      _enabled = value;
+      _mutating = true;
+    });
+    try {
+      final bool saved = await widget.analyticsConsentRepository.save(
+        enabled: value,
+      );
+      if (epoch != _mutationEpoch) {
+        return;
       }
-      return;
+      if (!saved) {
+        if (mounted) {
+          setState(() => _enabled = previous);
+        }
+        return;
+      }
+      if (epoch != _mutationEpoch) {
+        return;
+      }
+      // Persist collection flag even if the widget was disposed after save.
+      await widget.productAnalytics.setCollectionEnabled(enabled: value);
+    } finally {
+      if (mounted && epoch == _mutationEpoch) {
+        setState(() => _mutating = false);
+      }
     }
-    await analytics.setCollectionEnabled(enabled: value);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    if (!_available) {
-      if (kReleaseMode) {
-        return SettingsSection(
-          title: l10n.settingsAnalyticsConsentSectionTitle,
-          child: CommonCard(
-            child: ListTile(
-              key: const ValueKey('settings-analytics-consent-unavailable'),
-              title: Text(l10n.settingsAnalyticsUnavailable),
-            ),
-          ),
-        );
-      }
-      return const SizedBox.shrink();
-    }
     return SettingsSection(
       title: l10n.settingsAnalyticsConsentSectionTitle,
       child: CommonCard(
@@ -142,7 +131,7 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
           title: Text(l10n.settingsAnalyticsConsentTitle),
           subtitle: Text(l10n.settingsAnalyticsConsentExplanation),
           value: _enabled,
-          onChanged: _loading ? null : _onChanged,
+          onChanged: (_loading || _mutating) ? null : _onChanged,
         ),
       ),
     );

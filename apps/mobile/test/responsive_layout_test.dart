@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -84,6 +86,8 @@ void main() {
             child: SettingsPage(
               appInfoRepository: _FakeAppInfoRepository(),
               showQaExtras: false,
+              analyticsConsentRepository: _FakeAnalyticsConsentRepository(),
+              productAnalytics: InMemoryProductAnalytics(),
             ),
           ),
         ),
@@ -176,6 +180,20 @@ class _FakeAppInfoRepository implements AppInfoRepository {
   @override
   Future<AppInfo> load() async =>
       const AppInfo(version: '1.0.0', buildNumber: '1');
+}
+
+class _FakeAnalyticsConsentRepository implements AnalyticsConsentRepository {
+  @override
+  Stream<bool> get changes => const Stream<bool>.empty();
+
+  @override
+  Future<bool> load() async => false;
+
+  @override
+  Future<bool> save({required bool enabled}) async => true;
+
+  @override
+  Future<void> dispose() async {}
 }
 
 class _StubNetworkStatusService implements NetworkStatusService {
