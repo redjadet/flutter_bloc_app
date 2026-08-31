@@ -48,6 +48,7 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     unawaited(_changesSubscription?.cancel());
     _mutationEpoch++;
     _mutating = false;
+    _loading = true;
     _bindConsentRepository();
     unawaited(_load());
   }
