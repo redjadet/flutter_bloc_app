@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/app/composition/app_composition_root.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -28,12 +30,19 @@ void main() {
   });
 
   setUp(() async {
-    await injector.reset(dispose: true);
+    await test_helpers.setupTestDependencies(
+      const test_helpers.TestSetupOptions(
+        useMockFirebaseAuth: true,
+        useMockFirebasePlatform: true,
+      ),
+    );
+  });
+
+  tearDown(() async {
+    await test_helpers.tearDownTestDependencies();
   });
 
   test('configureDependencies registers shared services', () async {
-    await configureDependencies();
-
     final CounterRepository counterRepository = injector<CounterRepository>();
     expect(counterRepository, isA<OfflineFirstCounterRepository>());
 
@@ -65,11 +74,28 @@ void main() {
   });
 
   test('ensureConfigured can be called after configureDependencies', () async {
-    await configureDependencies();
     ensureConfigured();
     await Future<void>.delayed(Duration.zero);
 
     expect(injector.isRegistered<ChatRepository>(), isTrue);
     expect(injector<HuggingFaceResponseParser>(), isNotNull);
   });
+
+  test(
+    'configureDependencies resolves app scope and typed route factories',
+    () async {
+      final appScope = AppCompositionRoot.resolveAppScopeDependencies();
+      expect(appScope.syncCoordinator, isNotNull);
+      expect(appScope.authRepository, isNotNull);
+      expect(appScope.timerService, isNotNull);
+
+      final AppRouteFactories factories =
+          AppCompositionRoot.resolveRouteFactories();
+      expect(factories.core, isNotNull);
+      expect(factories.auxiliary, isNotNull);
+      expect(factories.demo, isNotNull);
+      expect(factories.core.analyticsConsentRepository, isNotNull);
+      expect(factories.core.productAnalytics, isNotNull);
+    },
+  );
 }

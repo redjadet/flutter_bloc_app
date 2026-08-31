@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
+import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
@@ -11,6 +14,7 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/widgets/analytics_consent_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
@@ -41,6 +45,13 @@ void main() {
       return cubit;
     }
 
+    ({AnalyticsConsentRepository consent, ProductAnalytics analytics})
+    createAnalyticsDeps() {
+      final _FakeConsent consent = _FakeConsent();
+      addTearDown(consent.dispose);
+      return (consent: consent, analytics: InMemoryProductAnalytics());
+    }
+
     testWidgets('changes theme mode and locale when selecting options', (
       WidgetTester tester,
     ) async {
@@ -49,6 +60,7 @@ void main() {
       final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
       final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
       final SyncStatusCubit syncCubit = createSyncStatusCubit();
+      final analyticsDeps = createAnalyticsDeps();
 
       final AppLocalizationsEn en = AppLocalizationsEn();
 
@@ -66,6 +78,8 @@ void main() {
             child: SettingsPage(
               appInfoRepository: _InMemoryAppInfoRepository(),
               showQaExtras: false,
+              analyticsConsentRepository: analyticsDeps.consent,
+              productAnalytics: analyticsDeps.analytics,
             ),
           ),
         ),
@@ -109,6 +123,7 @@ void main() {
       final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
       final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
       final SyncStatusCubit syncCubit = createSyncStatusCubit();
+      final analyticsDeps = createAnalyticsDeps();
       final AppLocalizationsEn en = AppLocalizationsEn();
 
       await tester.pumpWidget(
@@ -125,6 +140,8 @@ void main() {
             child: SettingsPage(
               appInfoRepository: _InMemoryAppInfoRepository(),
               showQaExtras: false,
+              analyticsConsentRepository: analyticsDeps.consent,
+              productAnalytics: analyticsDeps.analytics,
             ),
           ),
         ),
@@ -153,6 +170,7 @@ void main() {
       final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
       final SyncStatusCubit syncCubit = createSyncStatusCubit();
       final _FlakyAppInfoRepository appInfoRepo = _FlakyAppInfoRepository();
+      final analyticsDeps = createAnalyticsDeps();
 
       final AppLocalizationsEn en = AppLocalizationsEn();
 
@@ -170,6 +188,8 @@ void main() {
             child: SettingsPage(
               appInfoRepository: appInfoRepo,
               showQaExtras: false,
+              analyticsConsentRepository: analyticsDeps.consent,
+              productAnalytics: analyticsDeps.analytics,
             ),
           ),
         ),
@@ -202,7 +222,75 @@ void main() {
       expect(find.text('9.9.9'), findsOneWidget);
       expect(appInfoRepo.loadCount, 2);
     });
+
+    testWidgets('forwards analytics dependencies to consent section', (
+      WidgetTester tester,
+    ) async {
+      final ThemeCubit themeCubit = createThemeCubit(
+        _InMemoryThemeRepository(),
+      );
+      final LocaleCubit localeCubit = createLocaleCubit(
+        _InMemoryLocaleRepository(),
+      );
+      final SyncStatusCubit syncCubit = createSyncStatusCubit();
+      final _FakeConsent consent = _FakeConsent();
+      addTearDown(consent.dispose);
+      final InMemoryProductAnalytics analytics = InMemoryProductAnalytics();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: appLocalizationDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: MultiBlocProvider(
+            providers: [
+              BlocProvider<ThemeCubit>.value(value: themeCubit),
+              BlocProvider<LocaleCubit>.value(value: localeCubit),
+              BlocProvider<SyncStatusCubit>.value(value: syncCubit),
+            ],
+            child: SettingsPage(
+              appInfoRepository: _InMemoryAppInfoRepository(),
+              showQaExtras: false,
+              analyticsConsentRepository: consent,
+              productAnalytics: analytics,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final AnalyticsConsentSection section = tester.widget(
+        find.byType(AnalyticsConsentSection),
+      );
+      expect(identical(section.analyticsConsentRepository, consent), isTrue);
+      expect(identical(section.productAnalytics, analytics), isTrue);
+    });
   });
+}
+
+class _FakeConsent implements AnalyticsConsentRepository {
+  bool enabled = false;
+  final StreamController<bool> _changes = StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get changes => _changes.stream;
+
+  @override
+  Future<bool> load() async => enabled;
+
+  @override
+  Future<bool> save({required bool enabled}) async {
+    this.enabled = enabled;
+    _changes.add(enabled);
+    return true;
+  }
+
+  @override
+  Future<void> dispose() async {
+    if (!_changes.isClosed) {
+      await _changes.close();
+    }
+  }
 }
 
 class _InMemoryThemeRepository implements ThemeRepository {

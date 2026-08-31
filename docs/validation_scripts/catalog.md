@@ -51,7 +51,10 @@ below.
   `application/`, `infrastructure/`, `viewmodels/`, `providers/` top-level
   layers. Legacy drift under `apps/mobile/lib/features` warns; `--strict` fails. Supports
   `--paths` fixture runs. Included in `./bin/checklist`.
-- **`check_direct_getit.sh`**: Prevents direct `GetIt` access in presentation widgets (should inject via constructors/cubits). Note: demo-only feature folders (`*_demo`) are excluded.
+- **`check_direct_getit.sh`**: Prevents direct `GetIt` access in presentation
+  widgets (`getIt<…>` and `getIt.…` under `apps/mobile/lib/features/**/presentation/**`;
+  inject via constructors/cubits). Demo-only folders (`*_demo`) excluded.
+  Default run executes an embedded `--self-test` then the production scan.
 - **`check_no_hive_openbox.sh`**: Prevents direct `Hive.openBox` usage (should use `HiveService`/`HiveRepositoryBase`)
 - **`check_unvalidated_base_url_parse.sh`**: Prevents `Uri.parse(...)` directly on dynamic `baseUrl`-like values without validation helper
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`

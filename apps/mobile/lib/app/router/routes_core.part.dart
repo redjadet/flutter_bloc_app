@@ -13,6 +13,8 @@ List<RouteBase> _coreRoutesSettingsAndProfile(CoreRouteFactory factory) =>
           child: SettingsPage(
             appInfoRepository: factory.appInfoRepository,
             authRepository: factory.authRepository,
+            analyticsConsentRepository: factory.analyticsConsentRepository,
+            productAnalytics: factory.productAnalytics,
             showQaExtras: FlavorManager.I.isDev || FlavorManager.I.isQa,
             buildQaExtras: (ctx) => <Widget>[
               GraphqlCacheControlsSection(

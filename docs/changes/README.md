@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-31_di_usage_improvements.md`](2026-08-31_di_usage_improvements.md): Settings analytics constructor DI; repair false-green `check_direct_getit` glob; composition resolve smoke.
 - [`2026-08-31_go_router_18_migration.md`](2026-08-31_go_router_18_migration.md): `go_router` ^18 — social feed route scope, material_ui pages, integration harness finder fix.
 - [`2026-08-31_runtime_error_no_active_app_skip.md`](2026-08-31_runtime_error_no_active_app_skip.md): Treat DTD's no-active-app response as a skipped runtime check; preserve strict mode.
 - [`2026-08-31_social_feed_offline_correctness.md`](2026-08-31_social_feed_offline_correctness.md): Social-feed offline replay, optimistic projection, sync-seed, and viewer-generation correctness.

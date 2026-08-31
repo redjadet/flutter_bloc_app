@@ -63,6 +63,26 @@ the current DAG.
   `AppScopeDependencies` and typed route factories so router/pages do not call
   `getIt` directly.
 
+  **Ownership (GetIt Flavor 3 mitigations):**
+
+  | Lifetime | Mechanism | Examples |
+  | --- | --- | --- |
+  | App-wide singleton | GetIt lazy singleton; pass `dispose:` when the type owns streams/connections | repositories, Dio, sync coordinator |
+  | Route / screen | `BlocProvider` / `RouteScopedPage` | feature cubits |
+  | Scoped non-singleton | Factory callback on a typed route factory; dispose with cubit | realtime market repository |
+  | Forbidden | `getIt` in `features/*/presentation/**` | leaf widgets — inject via constructors |
+
+  Presentation uses **constructor injection** only. `tool/check_direct_getit.sh`
+  enforces no `getIt<` / `getIt.` access under presentation (demo folders
+  excluded). Tests tear down with `getIt.reset(dispose: true)`.
+
+  **Exception:** `BackendAvailability` stays a GetIt **factory**
+  (`fromBootstrap`) so each resolve re-reads live backend flags after deferred
+  Firebase/Supabase bootstrap — not a stable singleton.
+
+  Do not adopt Riverpod, `injectable`, or BlocSignal as a DI container for this
+  app; keep constructor + `flutter_bloc` tree scope + GetIt composition.
+
 ## How Dependencies Flow
 
 1. **Domain contracts** define the feature API and stay free of Flutter and SDK

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
@@ -18,6 +20,8 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.appInfoRepository,
     required this.showQaExtras,
+    required this.analyticsConsentRepository,
+    required this.productAnalytics,
     this.authRepository,
     this.buildQaExtras,
     super.key,
@@ -25,6 +29,8 @@ class SettingsPage extends StatefulWidget {
 
   final AppInfoRepository appInfoRepository;
   final AuthRepository? authRepository;
+  final AnalyticsConsentRepository analyticsConsentRepository;
+  final ProductAnalytics productAnalytics;
 
   /// When true, render [buildQaExtras] (dev/qa flavors; resolved at router).
   final bool showQaExtras;
@@ -57,6 +63,8 @@ class _SettingsPageState extends State<SettingsPage> {
       authRepository: widget.authRepository,
       showQaExtras: widget.showQaExtras,
       buildQaExtras: widget.buildQaExtras,
+      analyticsConsentRepository: widget.analyticsConsentRepository,
+      productAnalytics: widget.productAnalytics,
     ),
   );
 }
@@ -64,6 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
 class _SettingsView extends StatelessWidget {
   const _SettingsView({
     required this.showQaExtras,
+    required this.analyticsConsentRepository,
+    required this.productAnalytics,
     this.authRepository,
     this.buildQaExtras,
   });
@@ -71,6 +81,8 @@ class _SettingsView extends StatelessWidget {
   final AuthRepository? authRepository;
   final bool showQaExtras;
   final SettingsQaExtrasBuilder? buildQaExtras;
+  final AnalyticsConsentRepository analyticsConsentRepository;
+  final ProductAnalytics productAnalytics;
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +101,10 @@ class _SettingsView extends StatelessWidget {
         key: const ValueKey('settings-gap-2'),
         height: context.responsiveGapL,
       ),
-      const AnalyticsConsentSection(
-        key: ValueKey('settings-analytics-consent'),
+      AnalyticsConsentSection(
+        key: const ValueKey('settings-analytics-consent'),
+        analyticsConsentRepository: analyticsConsentRepository,
+        productAnalytics: productAnalytics,
       ),
       SizedBox(
         key: const ValueKey('settings-gap-analytics'),

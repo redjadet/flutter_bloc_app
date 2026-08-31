@@ -1,5 +1,7 @@
 import 'package:core/core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/composition/app_composition_root_demo_route_factory.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -79,6 +81,8 @@ CoreRouteFactory resolveCoreRouteFactory({
     pendingSyncRepository: getIt<PendingSyncRepository>(),
     profileRepository: getIt<ProfileRepository>(),
     chartRepository: getIt<ChartRepository>(),
+    analyticsConsentRepository: getIt<AnalyticsConsentRepository>(),
+    productAnalytics: getIt<ProductAnalytics>(),
   );
 }
 
