@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: analysis_server_plugin
-      sha256: "0ba6a701c8d926f548a736ac3da8536f63f75fd49ad803f9dfcd091b869ef753"
+      sha256: d8d56859902ef8a161fadd8a93972687194d32be93af07f72fb641c23f0e3fdf
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.20"
+    version: "0.3.21"
   analyzer:
     dependency: "direct overridden"
     description:
@@ -45,18 +45,18 @@ packages:
     dependency: transitive
     description:
       name: analyzer_plugin
-      sha256: "8c988c96836e59db019930c603dd1493797a7aaf97ba71469ea13724602be4dd"
+      sha256: "30cd04ad5e90bee9f2ab77f55e43cd05221271b1942c5c4b36b9da56cf83b2f0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.14"
+    version: "0.14.15"
   analyzer_testing:
     dependency: transitive
     description:
       name: analyzer_testing
-      sha256: f46f72b79c4a0fd8c38a71f4cdc604799bfe438c2ef75e7a54dc36cec27d0af6
+      sha256: "26abe5124b8f57c52aeb4b31967342e63f8db4e8b709a79c88de0f02e6c25d27"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.4"
+    version: "0.4.0"
   ansi_styles:
     dependency: transitive
     description:
