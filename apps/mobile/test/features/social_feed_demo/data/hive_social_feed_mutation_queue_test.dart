@@ -102,6 +102,33 @@ void main() {
     },
   );
 
+  test(
+    'removeAllLikesForPost drops dispatched and undispatched likes for post',
+    () async {
+      await queue.enqueueLike(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+        desiredLiked: true,
+        mutationId: 'm1',
+      );
+      await queue.markLikeMutationDispatched(
+        viewer: SocialFeedViewer.alex,
+        mutationId: 'm1',
+      );
+      await queue.enqueueLike(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+        desiredLiked: false,
+        mutationId: 'm2',
+      );
+      await queue.removeAllLikesForPost(
+        viewer: SocialFeedViewer.alex,
+        postId: 'p1',
+      );
+      expect(await queue.readQueue(SocialFeedViewer.alex), isEmpty);
+    },
+  );
+
   test('viewer queues are isolated and clearViewer wipes one viewer', () async {
     await queue.enqueueLike(
       viewer: SocialFeedViewer.alex,

@@ -39,8 +39,37 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
   final SocialFeedMergePolicy _mergePolicy;
 
   final Map<String, _ViewerReplay> _replays = <String, _ViewerReplay>{};
+  final Map<String, Completer<void>> _likeApplyLocks =
+      <String, Completer<void>>{};
   bool _commentsHydrated = false;
   Future<void>? _commentsHydrateInFlight;
+
+  /// Serializes remote like applies per viewer (dispatch + online setLiked).
+  Future<T> withLikeApplyLock<T>(
+    SocialFeedViewer viewer,
+    Future<T> Function() action,
+  ) async {
+    final Completer<void>? previous = _likeApplyLocks[viewer.id];
+    final Completer<void> gate = Completer<void>();
+    _likeApplyLocks[viewer.id] = gate;
+    if (previous != null) {
+      try {
+        await previous.future;
+      } on Object {
+        // Prior critical section failed; continue safely.
+      }
+    }
+    try {
+      return await action();
+    } finally {
+      if (!gate.isCompleted) {
+        gate.complete();
+      }
+      if (identical(_likeApplyLocks[viewer.id], gate)) {
+        _likeApplyLocks.remove(viewer.id);
+      }
+    }
+  }
 
   Future<void> _ensureCommentsHydrated() => _ensureCommentsHydratedImpl(this);
 

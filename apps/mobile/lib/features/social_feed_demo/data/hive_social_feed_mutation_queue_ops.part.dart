@@ -205,6 +205,39 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
     });
   }
 
+  /// Marks a queued like as in-flight so coalesce cannot replace its intent.
+  Future<void> markLikeMutationDispatched({
+    required SocialFeedViewer viewer,
+    required String mutationId,
+  }) {
+    return _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer);
+      final int idx = queue.indexWhere((e) => e.mutationId == mutationId);
+      if (idx < 0) {
+        return;
+      }
+      final SocialFeedMutationDto head = queue[idx];
+      if (head.type != 'like' || head.dispatched) {
+        return;
+      }
+      queue[idx] = SocialFeedMutationDto(
+        mutationId: head.mutationId,
+        viewerId: head.viewerId,
+        type: head.type,
+        postId: head.postId,
+        sequence: head.sequence,
+        idempotencyKey: head.idempotencyKey,
+        attemptCount: head.attemptCount,
+        nextAttemptAt: head.nextAttemptAt,
+        desiredLiked: head.desiredLiked,
+        commentBody: head.commentBody,
+        status: head.status,
+        dispatched: true,
+      );
+      await _writeList(_queueKey(viewer), queue);
+    });
+  }
+
   /// Drops all undispatched like mutations for [postId] after a successful apply.
   Future<void> removeQueuedLikesForPost({
     required SocialFeedViewer viewer,
@@ -215,6 +248,18 @@ extension HiveSocialFeedMutationQueueOps on HiveSocialFeedMutationQueue {
         ..removeWhere(
           (e) => e.type == 'like' && e.postId == postId && !e.dispatched,
         );
+      await _writeList(_queueKey(viewer), queue);
+    });
+  }
+
+  /// Drops every queued like for [postId], including in-flight dispatched rows.
+  Future<void> removeAllLikesForPost({
+    required SocialFeedViewer viewer,
+    required String postId,
+  }) async {
+    await _withViewerLock(viewer, () async {
+      final List<SocialFeedMutationDto> queue = await readQueue(viewer)
+        ..removeWhere((e) => e.type == 'like' && e.postId == postId);
       await _writeList(_queueKey(viewer), queue);
     });
   }

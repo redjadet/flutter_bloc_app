@@ -26,15 +26,17 @@ Future<SocialFeedLikeResult> _setLikedImpl(
   }
 
   try {
-    final SocialFeedPost post = await repo._remote.applyLike(
-      viewer: viewer,
-      postId: postId,
-      desiredLiked: desiredLiked,
-      mutationId: mutationId,
-    );
+    final SocialFeedPost post = await repo.withLikeApplyLock(viewer, () async {
+      return repo._remote.applyLike(
+        viewer: viewer,
+        postId: postId,
+        desiredLiked: desiredLiked,
+        mutationId: mutationId,
+      );
+    });
     await repo._persistViewerLikes();
     await repo._patchCachedPost(viewer, post);
-    await repo._queue.removeQueuedLikesForPost(viewer: viewer, postId: postId);
+    await repo._queue.removeAllLikesForPost(viewer: viewer, postId: postId);
     return SocialFeedLikeSynced(post);
   } on SocialFeedRemoteRejection catch (e) {
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);

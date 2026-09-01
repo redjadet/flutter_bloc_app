@@ -170,18 +170,42 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     }
     try {
       if (head.type == 'like') {
-        final SocialFeedPost updated = await repo._remote.applyLike(
+        await repo._queue.markLikeMutationDispatched(
           viewer: viewer,
-          postId: head.postId,
-          desiredLiked: head.desiredLiked ?? false,
-          mutationId: head.idempotencyKey,
+          mutationId: head.mutationId,
         );
-        await repo._persistViewerLikes();
-        await repo._patchCachedPost(viewer, updated);
-        await repo._queue.removeQueuedLikesForPost(
-          viewer: viewer,
-          postId: head.postId,
-        );
+        await repo.withLikeApplyLock(viewer, () async {
+          final List<SocialFeedMutationDto> currentQueue =
+              await repo._queue.readQueue(viewer);
+          final SocialFeedMutationDto? currentHead =
+              currentQueue.isEmpty ? null : currentQueue.first;
+          if (currentHead?.mutationId != head.mutationId) {
+            await repo._queue.removeFromQueue(
+              viewer: viewer,
+              mutationId: head.mutationId,
+            );
+            return;
+          }
+          final SocialFeedPost updated = await repo._remote.applyLike(
+            viewer: viewer,
+            postId: head.postId,
+            desiredLiked: currentHead!.desiredLiked ?? false,
+            mutationId: head.idempotencyKey,
+          );
+          final List<SocialFeedMutationDto> queueAfterApply =
+              await repo._queue.readQueue(viewer);
+          final bool headStillCurrent =
+              queueAfterApply.isNotEmpty &&
+              queueAfterApply.first.mutationId == head.mutationId;
+          if (headStillCurrent) {
+            await repo._persistViewerLikes();
+            await repo._patchCachedPost(viewer, updated);
+          }
+          await repo._queue.removeFromQueue(
+            viewer: viewer,
+            mutationId: head.mutationId,
+          );
+        });
       } else if (head.type == 'comment') {
         await repo._remote.applyComment(
           viewer: viewer,
@@ -206,9 +230,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
       );
     } on SocialFeedRemoteRejection catch (e) {
       if (head.type == 'like') {
-        await repo._queue.removeQueuedLikesForPost(
+        await repo._queue.removeFromQueue(
           viewer: viewer,
-          postId: head.postId,
+          mutationId: head.mutationId,
         );
       } else {
         await repo._queue.removeFromQueue(
