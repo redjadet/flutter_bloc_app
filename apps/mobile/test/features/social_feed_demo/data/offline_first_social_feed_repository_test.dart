@@ -241,6 +241,74 @@ void main() {
   );
 
   test(
+    'online unlike wins when queued like dispatch is in flight',
+    () async {
+      final SimulatedSocialFeedRemoteDataSource slowRemote =
+          SimulatedSocialFeedRemoteDataSource(
+            scenario: scenario,
+            clock: () => now,
+            latency: const Duration(milliseconds: 100),
+          );
+      final OfflineFirstSocialFeedRepository slowRepository =
+          OfflineFirstSocialFeedRepository(
+            local: local,
+            queue: queue,
+            remote: slowRemote,
+            scenario: scenario,
+            timerService: timer,
+          );
+      addTearDown(slowRepository.dispose);
+
+      final SocialFeedPage page = await slowRepository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final String postId = page.posts.first.id;
+      scenario.setSimulatedOnline(online: false);
+      await slowRepository.setLiked(
+        viewer: SocialFeedViewer.alex,
+        postId: postId,
+        desiredLiked: true,
+        mutationId: 'queued-like',
+      );
+      scenario.setSimulatedOnline(online: true);
+      final SocialFeedSyncLease lease = await slowRepository.acquireSync(
+        viewer: SocialFeedViewer.alex,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      final SocialFeedLikeResult unlikeResult = await slowRepository.setLiked(
+        viewer: SocialFeedViewer.alex,
+        postId: postId,
+        desiredLiked: false,
+        mutationId: 'online-unlike',
+      );
+      expect(unlikeResult, isA<SocialFeedLikeSynced>());
+      for (int i = 0; i < 30; i++) {
+        if (await slowRepository.pendingMutationCount(
+              viewer: SocialFeedViewer.alex,
+            ) ==
+            0) {
+          break;
+        }
+        timer.tick();
+        await pumpEventQueue();
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+      await lease.close();
+      final SocialFeedPage refreshed = await slowRepository.refresh(
+        viewer: SocialFeedViewer.alex,
+      );
+      final SocialFeedPost matched = refreshed.posts.firstWhere(
+        (SocialFeedPost p) => p.id == postId,
+      );
+      expect(matched.isLikedByMe, isFalse);
+      expect(
+        await slowRepository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+        0,
+      );
+    },
+  );
+
+  test(
     'refresh reconciles stale local commentCount to remote threads',
     () async {
       final SocialFeedPage first = await repository.refresh(

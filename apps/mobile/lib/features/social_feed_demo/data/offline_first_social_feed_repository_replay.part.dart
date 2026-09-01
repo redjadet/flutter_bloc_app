@@ -15,6 +15,7 @@ class _ViewerReplay {
 
   int _leases = 0;
   TimerDisposable? _timer;
+  Future<SocialFeedSyncSummary?>? _tickInFlight;
   final StreamController<SocialFeedSyncSummary> _controller =
       StreamController<SocialFeedSyncSummary>.broadcast();
 
@@ -56,6 +57,24 @@ class _ViewerReplay {
   }
 
   Future<SocialFeedSyncSummary?> _tick() async {
+    if (_leases == 0 || _controller.isClosed) {
+      return null;
+    }
+    while (_tickInFlight != null) {
+      await _tickInFlight;
+    }
+    final Future<SocialFeedSyncSummary?> tick = _runTick();
+    _tickInFlight = tick;
+    try {
+      return await tick;
+    } finally {
+      if (identical(_tickInFlight, tick)) {
+        _tickInFlight = null;
+      }
+    }
+  }
+
+  Future<SocialFeedSyncSummary?> _runTick() async {
     if (_leases == 0 || _controller.isClosed) {
       return null;
     }
