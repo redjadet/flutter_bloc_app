@@ -175,11 +175,13 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
           mutationId: head.mutationId,
         );
         await repo.withLikeApplyLock(viewer, () async {
-          final List<SocialFeedMutationDto> currentQueue =
-              await repo._queue.readQueue(viewer);
-          final SocialFeedMutationDto? currentHead =
-              currentQueue.isEmpty ? null : currentQueue.first;
-          if (currentHead?.mutationId != head.mutationId) {
+          final List<SocialFeedMutationDto> currentQueue = await repo._queue
+              .readQueue(viewer);
+          final SocialFeedMutationDto? currentHead = currentQueue.isEmpty
+              ? null
+              : currentQueue.first;
+          if (currentHead == null ||
+              currentHead.mutationId != head.mutationId) {
             await repo._queue.removeFromQueue(
               viewer: viewer,
               mutationId: head.mutationId,
@@ -189,11 +191,11 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
           final SocialFeedPost updated = await repo._remote.applyLike(
             viewer: viewer,
             postId: head.postId,
-            desiredLiked: currentHead!.desiredLiked ?? false,
+            desiredLiked: currentHead.desiredLiked ?? false,
             mutationId: head.idempotencyKey,
           );
-          final List<SocialFeedMutationDto> queueAfterApply =
-              await repo._queue.readQueue(viewer);
+          final List<SocialFeedMutationDto> queueAfterApply = await repo._queue
+              .readQueue(viewer);
           final bool headStillCurrent =
               queueAfterApply.isNotEmpty &&
               queueAfterApply.first.mutationId == head.mutationId;
