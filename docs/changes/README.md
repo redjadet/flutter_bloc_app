@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-01_social_feed_race_early_gate.md`](2026-09-01_social_feed_race_early_gate.md): Run Social Feed online-apply-versus-replay regression before slower checklist lanes.
 - [`2026-09-01_social_feed_like_dispatch_race.md`](2026-09-01_social_feed_like_dispatch_race.md): Serialize social-feed like replay and online applies; preserve newest user intent.
 - [`2026-09-01_session_closeout_teach_back.md`](2026-09-01_session_closeout_teach_back.md): Non-trivial sessions require an evidence-backed understanding loop and concept teach-back.
 - [`2026-08-31_di_usage_improvements.md`](2026-08-31_di_usage_improvements.md): Settings analytics constructor DI; repair false-green `check_direct_getit` glob; composition resolve smoke.
