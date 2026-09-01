@@ -2,7 +2,8 @@
 # Regression guard: offline-first repos must not overwrite newer state with
 # stale sync data. Covers remote-watch/pull applying older remote snapshots,
 # TOCTOU races between initial local snapshot and per-item save/delete, and
-# queued replay pushing older pending snapshots over newer remote state. See
+# queued replay or in-flight dispatch applying stale intent over newer remote
+# state. See
 # docs/offline_first/dont_overwrite_guide.md and
 # test/features/counter/data/offline_first_counter_repository_test.dart and
 # test/features/todo_list/data/offline_first_todo_repository_test.dart.
@@ -18,7 +19,8 @@ MERGE_GUARD_MODE="${CHECK_OFFLINE_FIRST_REMOTE_MERGE_MODE:-always}"
 COUNTER_TEST="test/features/counter/data/offline_first_counter_repository_test.dart"
 TODO_TEST="test/features/todo_list/data/offline_first_todo_repository_test.dart"
 IOT_TEST="test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
-GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
+SOCIAL_FEED_TEST="test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart"
+GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
 
 collect_changed_files() {
   local file
@@ -67,12 +69,16 @@ should_run_remote_merge_guard_auto() {
       apps/mobile/lib/features/todo_list/domain/todo_merge_policy.dart|\
       lib/features/iot_demo/data/*|\
       apps/mobile/lib/features/iot_demo/data/*|\
+      lib/features/social_feed_demo/data/*|\
+      apps/mobile/lib/features/social_feed_demo/data/*|\
       test/features/counter/data/*|\
       apps/mobile/test/features/counter/data/*|\
       test/features/todo_list/data/*|\
       apps/mobile/test/features/todo_list/data/*|\
       test/features/iot_demo/data/*|\
       apps/mobile/test/features/iot_demo/data/*|\
+      test/features/social_feed_demo/data/*|\
+      apps/mobile/test/features/social_feed_demo/data/*|\
       tool/check_offline_first_remote_merge.sh|\
       docs/offline_first/*|\
       docs/engineering/offline_first_flutter_architecture_with_conflict_resolution.md|\
@@ -93,23 +99,24 @@ select_remote_merge_tests() {
   local needs_counter=0
   local needs_todo=0
   local needs_iot=0
+  local needs_social_feed=0
   local needs_all=0
 
   out_ref=()
 
   if [ -n "${CI:-}" ]; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
     return 0
   fi
 
   if ! command -v git >/dev/null 2>&1 || ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
     return 0
   fi
 
   collect_changed_files changed_files
   if [ "${#changed_files[@]}" -eq 0 ]; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
     return 0
   fi
 
@@ -136,11 +143,15 @@ select_remote_merge_tests() {
       test/features/iot_demo/data/*)
         needs_iot=1
         ;;
+      lib/features/social_feed_demo/data/*|\
+      test/features/social_feed_demo/data/*)
+        needs_social_feed=1
+        ;;
     esac
   done
 
-  if [ "$needs_all" -eq 1 ] || { [ "$needs_counter" -eq 0 ] && [ "$needs_todo" -eq 0 ] && [ "$needs_iot" -eq 0 ]; }; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
+  if [ "$needs_all" -eq 1 ] || { [ "$needs_counter" -eq 0 ] && [ "$needs_todo" -eq 0 ] && [ "$needs_iot" -eq 0 ] && [ "$needs_social_feed" -eq 0 ]; }; then
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
     return 0
   fi
 
@@ -152,6 +163,9 @@ select_remote_merge_tests() {
   fi
   if [ "$needs_iot" -eq 1 ]; then
     out_ref+=("$IOT_TEST")
+  fi
+  if [ "$needs_social_feed" -eq 1 ]; then
+    out_ref+=("$SOCIAL_FEED_TEST")
   fi
 }
 
@@ -175,7 +189,7 @@ validate_guard_inventory() {
       discovered_files+=("$discovered_file")
     done < <(
       rg -l \
-        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|does not delete local.*when remote fetch fails|does not overwrite local when remote load fails|re-checks local before save|re-checks local before deleting" \
+        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|does not delete local.*when remote fetch fails|does not overwrite local when remote load fails|re-checks local before save|re-checks local before deleting|queued like dispatch.*in flight" \
         test/features/*/data/*offline_first*_repository_test.dart \
         2>/dev/null || true
     )
@@ -186,7 +200,7 @@ validate_guard_inventory() {
     done < <(
       find test/features -path '*/data/*offline_first*_repository_test.dart' -type f \
         -exec grep -lE \
-          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|does not delete local.*when remote fetch fails|does not overwrite local when remote load fails|re-checks local before save|re-checks local before deleting" \
+          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|does not delete local.*when remote fetch fails|does not overwrite local when remote load fails|re-checks local before save|re-checks local before deleting|queued like dispatch.*in flight" \
           {} + 2>/dev/null || true
     )
   fi

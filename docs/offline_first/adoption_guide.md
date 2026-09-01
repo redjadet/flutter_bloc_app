@@ -56,7 +56,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
      failed-migrator fingerprint behavior, malformed legacy payloads, and
      metadata/temp/dead-letter key filtering where relevant.
    - Repository tests for `save` queueing (if applicable) and `processOperation`/`pullRemote` paths.
-   - For remote merge: timestamp-gate tests (`does not overwrite newer …`), queue replay tests (`does not push stale pending …`), and TOCTOU re-read tests (`re-checks local before save` / `… before deleting`); wire file into `tool/check_offline_first_remote_merge.sh`.
+   - For remote merge: timestamp-gate tests (`does not overwrite newer …`), queue replay tests (`does not push stale pending …`), online-apply-vs-replay tests where both paths can overlap, and TOCTOU re-read tests (`re-checks local before save` / `… before deleting`); wire file into `tool/check_offline_first_remote_merge.sh`.
    - Bloc/widget tests for sync flows; Sync Diagnostics (Settings, dev/qa) for manual inspection.
    - **Reference patterns**:
      - **Write-heavy features (Counter/Chat)**: See `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart`.

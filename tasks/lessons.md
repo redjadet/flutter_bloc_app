@@ -21,6 +21,26 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-01 - Queue replay must yield to newer online mutation intent
+
+- What went wrong:
+  Social Feed replay could hold a stale queued like while an online unlike
+  completed; generic full coverage discovered the resulting race too late.
+- How it was fixed:
+  The existing offline-first remote-merge guard now runs the Social Feed
+  repository regression suite early and inventories the queued-dispatch race
+  test by name.
+- Pattern:
+  Replay and direct online mutation paths can overlap even when each path is
+  individually serialized; newest user intent must win across both paths.
+- Preventive rule:
+  When queued replay and an online apply target the same entity, add an
+  interleaving test to `tool/check_offline_first_remote_merge.sh` before relying
+  on full coverage or later CI stages.
+- Evidence or affected files:
+  `apps/mobile/test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart`;
+  `tool/check_offline_first_remote_merge.sh`.
+
 ### 2026-08-31 - DTD no-active-app response is a skip, not a harness failure
 
 - What went wrong:
