@@ -173,5 +173,9 @@
     "${workspaceFolder}/demos",
     "${workspaceFolder}/third_party",
     "${workspaceFolder}/.worktrees"
+  ],
+  "java.import.exclusions": [
+    "**/vendor/**",
+    "**/build/**"
   ]
 }
