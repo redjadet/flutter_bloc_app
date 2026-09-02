@@ -42,8 +42,8 @@ if [[ "$REPO_NAME" == *".github.io"* && "$BASE_HREF" != "/" ]]; then
   fail "REPO_NAME looks like a root Pages repo; use BASE_HREF='/' for root hosting"
 fi
 
-# shellcheck disable=SC2046
-DEFINE_ARGS=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh") )
+# shellcheck disable=SC2207
+DEFINE_ARGS=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh" --release) )
 
 # Hive 2.x selects its IndexedDB backend via `dart.library.html`. dart2wasm
 # does not define that library, so Hive resolves to the stub backend and
@@ -72,5 +72,4 @@ echo "Running:"
 printf '  %q' "${CMD[@]}" "${DEFINE_ARGS[@]}"
 echo
 
-${CMD[@]} "${DEFINE_ARGS[@]}"
-
+"${CMD[@]}" "${DEFINE_ARGS[@]}"

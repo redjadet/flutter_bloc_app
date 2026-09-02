@@ -130,8 +130,10 @@ dart run melos bootstrap
 cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
-With `.envrc` / `tool/direnv/bin` first in `PATH`, `flutter run` also works
-from the repo root and is routed to `apps/mobile`.
+With `tool/direnv/bin` first in `PATH` (via `.envrc` or
+`export PATH="$PWD/tool/direnv/bin:$PATH"`) and an optional gitignored `.env` at
+the repo root (see [`.env.example`](.env.example)), `flutter run` works from the
+repo root and is routed to `apps/mobile`.
 
 Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.md). Full setup, flavors, and credentials: [docs/new_developer_guide.md](docs/new_developer_guide.md).
 

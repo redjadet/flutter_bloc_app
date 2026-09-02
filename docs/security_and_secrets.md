@@ -11,8 +11,8 @@ secret injection**, not vulnerability triage.
 
 ## Principles
 
-- **Do not commit secrets**: `.envrc`, API keys, and local secret files must be
-  gitignored.
+- **Do not commit secrets**: `.envrc`, `.env`, `.env.local`, API keys, and local
+  secret files must be gitignored.
 - **Do not commit real Firebase config**: keep committed Firebase options and
   CI plist/json files as placeholders. If GitHub secret scanning flags a
   Google API key, rotate or restrict that key in Google Cloud/Firebase, replace
@@ -74,7 +74,7 @@ after **Firebase Auth sign-in**, then persisting it into secure storage.
 - **Important**: Remote Config is **not** a secret store. Treat these as client
   configuration; security must come from Supabase RLS and server-side trust boundaries.
 - **Local overrides**: If you inject `SUPABASE_URL` / `SUPABASE_ANON_KEY` via
-  `--dart-define`/`.envrc`, Supabase may initialize from those values before the
+  `--dart-define`, `.envrc`, or `.env`, Supabase may initialize from those values before the
   Remote Config refresh runs. Disable local injection when validating the Remote
   Config path.
 
@@ -105,6 +105,48 @@ direnv allow
 cd apps/mobile && flutter run -t lib/main_dev.dart $(../../tool/flutter_dart_defines_from_env.sh)
 ```
 
+### Option C: `.env` file (development, no direnv)
+
+If you prefer a dotenv-style file (similar to packages like `flutter_dotenv`, but
+without bundling secrets into the app), copy [`.env.example`](../.env.example) to
+`.env` at the repo root (gitignored). Uncomment and fill keys, then run Flutter
+through the repo wrapper so values become compile-time defines:
+
+```bash
+cp .env.example .env
+# edit .env — never commit it
+export PATH="$PWD/tool/direnv/bin:$PATH"
+flutter run -t apps/mobile/lib/main_dev.dart
+```
+
+Or from `apps/mobile` without changing `PATH`:
+
+```bash
+cd apps/mobile && flutter run -t lib/main_dev.dart $(../../tool/flutter_dart_defines_from_env.sh)
+```
+
+[`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
+loads `.env` / `.env.local` before emitting `--dart-define` flags. Repo-root
+routing to `apps/mobile` still requires the PATH wrapper above (or `direnv`).
+Its dotenv parser accepts literal `KEY=value` assignments (quote values with
+spaces) without evaluating shell expressions, command substitution, or variable
+expansion; loading local configuration never executes code. The Flutter helper
+also rejects forwarded values with whitespace because its command-substitution
+interface is intentionally space-separated.
+
+With `direnv`, the PATH-based [`tool/direnv/bin/flutter`](../tool/direnv/bin/flutter)
+wrapper uses the same helper.
+
+**Why not `flutter_dotenv` in the app?** Runtime `.env` assets are easy to ship
+accidentally in release builds. This repo uses compile-time injection instead:
+
+```dart
+const apiKey = String.fromEnvironment('GEMINI_API_KEY');
+```
+
+See [`secret_config_sources.part.dart`](../apps/mobile/lib/app/config/secret_config_sources.part.dart)
+and [`firebase_options.dart`](../apps/mobile/lib/firebase_options.dart).
+
 The wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
 It intentionally excludes `HUGGINGFACE_API_KEY` and chat shared secrets;
 configure them only in the owning backend's secret manager, never as manual
@@ -113,13 +155,17 @@ Android release builds reject `HUGGINGFACE_API_KEY`, `GEMINI_API_KEY`,
 `GOOGLE_API_KEY`, `CHAT_FASTAPICLOUD_DEMO_SECRET`, and
 `CHAT_RENDER_DEMO_SECRET`; keep them out of `.env.android.release`. iOS
 release/profile builds enforce the same denylist; keep those values out of
-`.env.ios.release` and inherited CI or shell environments. Orchestration
+`.env.ios.release` and inherited CI or shell environments. The PATH-based
+Flutter wrapper and GitHub Pages build helper apply the same policy to
+release/profile builds, including values loaded from `.env` / `.env.local`.
+Orchestration
 demo wiring is summarized in
 [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
-**`RENDER_API_KEY`** stays shell-only (for example `.envrc`); use it for Render
+**`RENDER_API_KEY`** stays shell-only (for example `.envrc` or `.env`); use it for Render
 REST, Cursor MCP, or
 [`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never
-as a Flutter `dart-define` or Remote Config parameter.
+as a Flutter `dart-define` or Remote Config parameter. The Render deploy helper
+loads gitignored `.env` / `.env.local` before checking `RENDER_API_KEY`.
 
 For local iOS development, the helper can forward the same public client
 configuration without re-typing flags:
@@ -139,20 +185,29 @@ When VS Code/Cursor automatic tasks are allowed, `.vscode/tasks.json` runs
 `tool/local_ide_open_preflight.sh` on folder open. It loads approved `direnv`
 values into that task process, refreshes packages only when needed, lists
 forwarded key names without values, and runs the tracked-secret guard. It cannot
-approve `.envrc`; run `direnv allow` once after editing local secrets.
+approve `.envrc`; run `direnv allow` once after editing local secrets. If you use
+`.env` without direnv, keep `tool/direnv/bin` on `PATH` for repo-root `flutter run`,
+or call `tool/flutter_dart_defines_from_env.sh` from `apps/mobile` (it loads `.env`
+automatically).
 
 Use this pre-debug checklist when a feature depends on local secrets:
 
-1. Run `direnv allow` from the repo root after editing `.envrc`; use
-   `direnv reload` or open a new terminal if the current shell did not refresh.
+1. Load local configuration:
+   - **direnv:** run `direnv allow` from the repo root after editing `.envrc`;
+     use `direnv reload` or open a new terminal if the shell did not refresh.
+   - **dotenv:** copy [`.env.example`](../.env.example) to `.env` (gitignored),
+     fill keys, then either put `tool/direnv/bin` on `PATH` for repo-root
+     `flutter run`, or from `apps/mobile` run
+     `flutter run $(../../tool/flutter_dart_defines_from_env.sh)`.
 2. List forwarded `--dart-define` key names without values:
    `./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p'`.
 3. If a needed key is missing from that list, add it to
    [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
-   and [`envrc.example`](envrc.example) before relying on `.envrc`.
+   and [`envrc.example`](envrc.example) / [`.env.example`](../.env.example)
+   before relying on local injection.
 4. Run [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh)
-   before committing or pushing. It checks that local `secrets.json` paths stay
-   gitignored and scans tracked files for secret-looking literals.
+   before committing or pushing. It checks that local `secrets.json` and `.env`
+   paths stay gitignored and scans tracked files for secret-looking literals.
 5. Never paste real values into issue comments, logs, screenshots, or docs;
    refer to env var names only.
 
@@ -172,12 +227,14 @@ For **store release** uploads from a maintainer machine:
 | `.env.android.release` | [`.env.android.release.example`](../.env.android.release.example) | [`tool/release_android_play.sh`](../tool/release_android_play.sh), [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) |
 | `.env.ios.release` | [`.env.ios.release.example`](../.env.ios.release.example) | [`tool/release_both_stores.sh`](../tool/release_both_stores.sh), manual `./tool/fastlane.sh ios …` |
 
-Both wrappers source the env files before Fastlane and use
+Both wrappers parse the env files as literal dotenv assignments before Fastlane and use
 [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
 Only non-secret routing values such as `CHAT_FASTAPICLOUD_DEMO_ENABLED`,
 `CHAT_FASTAPICLOUD_DEMO_BASE_URL`, and `CHAT_FASTAPICLOUD_DEMO_STRICT` belong in
 mobile release defines. Android and iOS release/profile paths reject the
-provider/shared-secret denylist before invoking Flutter.
+provider/shared-secret denylist before invoking Flutter. Web release builds via
+[`tool/build_web_github_pages.sh`](../tool/build_web_github_pages.sh) enforce the
+same denylist.
 
 - Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh) — see [Android Play Store release SOP](engineering/android_play_store_release_sop.md).
 - iOS + Android: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) — see [Deployment](deployment.md#both-stores-ios--android).
@@ -196,9 +253,10 @@ Firebase config is split between **gitignored platform files** and a
 | `apps/mobile/ios/Runner/GoogleService-Info.plist` | gitignored | [`ios/Runner/GoogleService-Info.plist.sample`](../apps/mobile/ios/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
 | `apps/other_platforms/macos/Runner/GoogleService-Info.plist` | gitignored | [`apps/other_platforms/macos/Runner/GoogleService-Info.plist.sample`](../apps/other_platforms/macos/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
 | `firebase.json` | gitignored | [`firebase.json.example`](../firebase.json.example) | Local / CI project selection |
-| [`apps/mobile/lib/firebase_options.dart`](../apps/mobile/lib/firebase_options.dart) | committed placeholder | n/a | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
+| [`apps/mobile/lib/firebase_options.dart`](../apps/mobile/lib/firebase_options.dart) | committed placeholder | n/a | `FIREBASE_*` via `--dart-define` (`.envrc` / `.env` + wrapper) |
 | `.envrc` | gitignored | [`docs/envrc.example`](envrc.example) | Maintainer machine only |
 | `assets/config/secrets.json` | gitignored | [`assets/config/secrets.sample.json`](../assets/config/secrets.sample.json) | Optional local asset fallback |
+| `.env` / `.env.local` | gitignored | [`.env.example`](../.env.example) | Optional dotenv for local dev (shell → `--dart-define`) |
 
 To enable Firebase-dependent features (Auth, Remote Config, Realtime Database,
 etc.), follow [Firebase Setup](integrations/firebase_setup.md). The app should still run when
@@ -214,15 +272,15 @@ Tracked placeholder files such as [`apps/mobile/lib/firebase_options.dart`](../a
 and `ios/ci` / `macos/ci` plist files must not contain real API keys. CI uses
 them only as build placeholders; maintainer machines and deployment pipelines
 should supply real Firebase config through gitignored platform files or
-`FIREBASE_*` injection. For local development, add `FIREBASE_*` values to
-`.envrc`; the direnv Flutter wrapper forwards them through
-[`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
+`FIREBASE_*` injection via `.envrc` or `.env`. For local development, add
+`FIREBASE_*` values to `.envrc` or `.env`; the direnv Flutter wrapper forwards
+them through [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
 When those values are missing or still placeholders, Firebase initialization
 skips safely and logs only field names, not secret values.
 
 After `flutterfire configure`, restore the committed Dart placeholder (`git
-checkout HEAD -- apps/mobile/lib/firebase_options.dart`) and copy keys into `.envrc` — do
-not commit hardcoded API keys from the CLI output.
+checkout HEAD -- apps/mobile/lib/firebase_options.dart`) and copy keys into
+`.envrc` or `.env` — do not commit hardcoded API keys from the CLI output.
 
 ### Git history and secret scanning
 

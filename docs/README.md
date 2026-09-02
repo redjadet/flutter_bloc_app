@@ -162,7 +162,7 @@ root when an existing category applies.
 - [`firebase_app_distribution.md`](integrations/firebase_app_distribution.md) — pre-release testers
 - [`android_play_store_release_sop.md`](engineering/android_play_store_release_sop.md) — Play validation gates and promotion
 - [`../fastlane/README.md`](../fastlane/README.md) — Fastlane lane index (`deploy_all`, platform lanes)
-- Env templates: [`.env.ios.release.example`](../.env.ios.release.example), [`.env.android.release.example`](../.env.android.release.example)
+- Env templates: [`.env.example`](../.env.example), [`docs/envrc.example`](envrc.example), [`.env.ios.release.example`](../.env.ios.release.example), [`.env.android.release.example`](../.env.android.release.example)
 
 ## Historical context (not source of truth)
 

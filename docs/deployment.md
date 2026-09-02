@@ -219,6 +219,10 @@ Use the repo script (required for correct `--base-href` and consistent dart-defi
 REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
 ```
 
+The script loads public client configuration from gitignored `.env` / `.env.local`
+but rejects provider credentials and shared backend secrets before the release
+build. Remove those values or keep them on a trusted backend.
+
 This produces `build/web` as **dart2js** by default. Hive 2.x is incompatible
 with `--wasm` / dart2wasm (`dart.library.html` missing → stub backend →
 `UnimplementedError` on `openBox`, which surfaces as “Failed to save counter”).

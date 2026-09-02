@@ -9,19 +9,13 @@ if [ ! -x "./tool/fastlane.sh" ]; then
   exit 1
 fi
 
-load_env_file() {
-  local file="$1"
-  if [ -f "$file" ]; then
-    set -a
-    # shellcheck disable=SC1090
-    source "$file"
-    set +a
-    echo "Loaded ${file}"
-  fi
-}
+# shellcheck disable=SC1091
+source "$ROOT_DIR/tool/load_env_file.sh"
 
 load_env_file ".env.ios.release"
 load_env_file ".env.android.release"
+[ -f ".env.ios.release" ] && echo "Loaded .env.ios.release"
+[ -f ".env.android.release" ] && echo "Loaded .env.android.release"
 
 if [ -z "${JAVA_HOME:-}" ] && [ -d "/Applications/Android Studio.app/Contents/jbr/Contents/Home" ]; then
   export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"

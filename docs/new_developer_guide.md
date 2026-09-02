@@ -36,7 +36,7 @@ Before running the app, review:
 - [Security and Secrets](security_and_secrets.md)
 - [Tech Stack](tech_stack.md)
 
-**Optional — automatic client-config injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add public client configuration, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `cd apps/mobile && flutter run $(../../tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` from the repo root is routed to `apps/mobile` and passes the same client configuration to iOS and Android. The helper excludes server credentials such as `HUGGINGFACE_API_KEY` and chat shared secrets; configure them only in the FastAPI service secret manager. Only approved client variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat routing keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For store release builds, the same client keys can live in gitignored `.env.android.release` and/or `.env.ios.release` (see [`.env.android.release.example`](../.env.android.release.example), [`.env.ios.release.example`](../.env.ios.release.example), and [Deployment](deployment.md)). Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh). Both stores: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh).
+**Optional — automatic client-config injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add public client configuration, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `cd apps/mobile && flutter run $(../../tool/flutter_dart_defines_from_env.sh)`). **Without direnv**, copy [`.env.example`](../.env.example) to `.env` (gitignored), put `tool/direnv/bin` on `PATH` (`export PATH="$PWD/tool/direnv/bin:$PATH"`), then use plain `flutter run` from the repo root — or stay in `apps/mobile` and run `flutter run $(../../tool/flutter_dart_defines_from_env.sh)` (the helper loads `.env` / `.env.local` automatically). See [Security and Secrets](security_and_secrets.md) (Option C). Plain repo-root `flutter run` is routed to `apps/mobile` only when the repo wrapper is on `PATH`; the SDK `flutter` binary alone does not load `.env`. The helper excludes server credentials such as `HUGGINGFACE_API_KEY` and chat shared secrets; configure them only in the FastAPI service secret manager. Only approved client variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat routing keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For store release builds, release-safe public client keys can live in gitignored `.env.android.release` and/or `.env.ios.release`; provider/shared-secret keys are rejected (see [`.env.android.release.example`](../.env.android.release.example), [`.env.ios.release.example`](../.env.ios.release.example), and [Deployment](deployment.md)). Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh). Both stores: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh).
 
 **Optional — Codex code graph for repo exploration:** if you use Codex heavily in this repo, you can install a local `code-review-graph` MCP server and build a persistent graph cache under `.code-review-graph/`. Setup and caveats live in [Code Review Graph for Codex](ai/code_review_graph.md).
 
@@ -59,20 +59,25 @@ folder open when automatic tasks are allowed. That task loads allowed direnv
 values into its own process, runs `flutter pub get` only when dependency
 metadata is stale, lists forwarded `--dart-define` key names without values,
 and runs the tracked-secret guard. It cannot approve `.envrc` for you; run
-`direnv allow` once after editing `.envrc` or when the IDE reports direnv is not
-allowed.
+`direnv allow` once after editing `.envrc`, or maintain gitignored `.env` and
+re-run Flutter through the wrapper when those values change.
 
 Run these checks before starting a local debug session:
 
 1. Refresh packages: `bash tool/workspace_pub_get.sh`.
-2. Load local environment: `direnv allow` from repo root, then open a new
-   terminal or run `direnv reload`.
+2. Load local environment:
+   - **direnv:** `direnv allow` from repo root, then open a new terminal or run
+     `direnv reload`.
+   - **dotenv:** copy [`.env.example`](../.env.example) to `.env`, fill keys,
+     then either put `tool/direnv/bin` on `PATH` and use repo-root `flutter run`,
+     or from `apps/mobile` run `flutter run $(../../tool/flutter_dart_defines_from_env.sh)`
+     (the helper loads `.env` / `.env.local` automatically).
 3. Confirm injected keys are present without printing values:
    `./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p'`.
 4. Keep Firebase optional: if `FIREBASE_*` values are missing, the app should
    skip Firebase and still run non-Firebase features. Add the values to
-   `.envrc` only when debugging Firebase Auth, Remote Config, RTDB, FCM, or
-   Firebase-backed chart flows.
+   `.envrc` or `.env` only when debugging Firebase Auth, Remote Config, RTDB,
+   FCM, or Firebase-backed chart flows.
 5. Check no tracked secret literals are present: `./tool/check_tracked_secret_literals.sh`.
 6. For iOS/macOS after Firebase/dependency changes, keep SPM enabled:
    `flutter config --enable-swift-package-manager`, then run
@@ -229,7 +234,7 @@ Testing detail lives in:
 
 | Problem | What to check |
 | --- | --- |
-| Firebase features are disabled | Gitignored platform files present (`flutterfire configure`) and `FIREBASE_*` in `.envrc` with `direnv allow`. See [Firebase Setup](integrations/firebase_setup.md) (step 3b). |
+| Firebase features are disabled | Gitignored platform files present (`flutterfire configure`) and `FIREBASE_*` in `.envrc` or `.env` with wrapper/direnv. See [Firebase Setup](integrations/firebase_setup.md) (step 3b). |
 | Supabase-backed flows show "not configured" | Confirm `SUPABASE_URL` and `SUPABASE_ANON_KEY` are available through the configured secrets path. See [Security and Secrets](security_and_secrets.md). |
 | Generated code is stale | Run `dart run build_runner build --delete-conflicting-outputs`. |
 | iOS build fails after dependency or Firebase changes | Run `flutter clean`, `flutter pub get`, `cd ios && pod install && cd ..`, then retry. |

@@ -14,10 +14,9 @@ if [ ! -f ".env.android.release" ]; then
   exit 1
 fi
 
-set -a
 # shellcheck disable=SC1091
-source ".env.android.release"
-set +a
+source "$ROOT_DIR/tool/load_env_file.sh"
+load_env_file ".env.android.release"
 
 require_env() {
   local name="$1"

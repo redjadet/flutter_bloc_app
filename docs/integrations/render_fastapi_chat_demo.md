@@ -127,7 +127,7 @@ service matches `X-Render-Demo-Secret` when that additional gate is enabled.
 
 ### `RENDER_API_KEY` (Render REST / Cursor MCP only)
 
-- **Local:** `export RENDER_API_KEY=...` in gitignored **`.envrc`** (see [`docs/envrc.example`](../envrc.example)).
+- **Local:** `export RENDER_API_KEY=...` in gitignored **`.envrc`** or **`.env`** (see [`docs/envrc.example`](../envrc.example) and [`.env.example`](../../.env.example)). [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) loads `.env` / `.env.local` automatically.
 - **Do not** create a Firebase **Remote Config** parameter for `RENDER_API_KEY`. Remote Config is retrieved by the **client** app; Render API keys are **workspace-admin** credentials and would be exposed to anyone who can read your Remote Config payload.
 - **If you need Firebase-hosted server-side storage:** use **Cloud Functions secrets** (`firebase functions:secrets:set …`) or another server-only channel for Firebase code. The retired `issueRenderChatDemoHfReadToken` Callable fails closed and must not be repurposed to deliver the FastAPI provider credential to Flutter.
 
@@ -165,7 +165,7 @@ Do not append numeric **Cold POST wall (s)** values without a primary measuremen
 
 ## Flutter client (`SecretConfig` compile-time defines)
 
-- **Client configuration:** Export only non-secret `CHAT_FASTAPICLOUD_*` routing values (preferred; legacy `CHAT_RENDER_*` still supported) from `.envrc`. The mobile app sends Firebase identity and payload; the FastAPI service owns `HUGGINGFACE_API_KEY`.
+- **Client configuration:** Export only non-secret `CHAT_FASTAPICLOUD_*` routing values (preferred; legacy `CHAT_RENDER_*` still supported) from `.envrc` or `.env`. The mobile app sends Firebase identity and payload; the FastAPI service owns `HUGGINGFACE_API_KEY`.
 - **Store release (Fastlane):** Android and iOS release/profile paths reject provider keys and demo shared secrets in Dart defines. Keep `HUGGINGFACE_API_KEY`, Gemini/Google keys, and `CHAT_*_DEMO_SECRET` out of mobile release environments. See [Security and Secrets](../security_and_secrets.md).
 - `CHAT_FASTAPICLOUD_DEMO_ENABLED` / `CHAT_RENDER_DEMO_ENABLED` — when `true`, the orchestration **runnable** gate in [`register_chat_services.dart`](../../apps/mobile/lib/app/composition/features/register_chat_services.dart) (`_chatRenderOrchestrationRunnable`) requires a non-empty base URL, a signed-in **Firebase** user, **`https`** origin in release builds, and registered `FirebaseAuth`. The Render repository sends Firebase identity and request data only; provider-key availability is a server-side readiness concern. **DemoFirstChatRepository** still orders orchestration before composite when the gate passes.
 - `CHAT_FASTAPICLOUD_DEMO_BASE_URL` / `CHAT_RENDER_DEMO_BASE_URL` — service origin (no trailing slash); release builds require `https`.

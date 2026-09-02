@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Trigger a manual deploy for the Render FastAPI chat demo web service.
 #
-# Requires RENDER_API_KEY in the environment (e.g. direnv / .envrc — never commit keys).
+# Requires RENDER_API_KEY in the environment (e.g. direnv / `.envrc`, gitignored
+# `.env` — never commit keys).
 # Optional: RENDER_SERVICE_ID — if unset, resolves by RENDER_SERVICE_NAME (default below).
 #
 # Usage:
@@ -10,6 +11,11 @@
 #   RENDER_SERVICE_NAME=my-api ./tool/trigger_render_chat_api_deploy.sh
 
 set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT_DIR/tool/load_repo_dotenv.sh"
+load_repo_dotenv "$ROOT_DIR"
 
 RENDER_API_BASE="${RENDER_API_BASE:-https://api.render.com/v1}"
 RENDER_SERVICE_NAME="${RENDER_SERVICE_NAME:-flutter-bloc-render-chat-api}"
@@ -20,7 +26,7 @@ usage() {
 Trigger a manual deploy for the Render FastAPI chat demo (POST .../services/{id}/deploys).
 
 Environment:
-  RENDER_API_KEY        Required. From direnv / .envrc — never commit.
+  RENDER_API_KEY        Required. From direnv / `.envrc` or gitignored `.env`.
   RENDER_SERVICE_ID     Optional. If unset, looks up RENDER_SERVICE_NAME in GET /v1/services.
   RENDER_SERVICE_NAME   Optional. Default: flutter-bloc-render-chat-api
   RENDER_API_BASE       Optional. Default: https://api.render.com/v1
@@ -54,7 +60,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -z "${RENDER_API_KEY:-}" ]; then
-  echo "error: RENDER_API_KEY is not set (export it or use direnv before running)." >&2
+  echo "error: RENDER_API_KEY is not set (export it, use direnv, or add it to gitignored .env)." >&2
   exit 1
 fi
 

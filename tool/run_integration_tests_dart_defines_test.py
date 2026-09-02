@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import tempfile
 import textwrap
 import unittest
 from pathlib import Path
@@ -86,14 +87,16 @@ class RunIntegrationTestsDartDefinesTest(unittest.TestCase):
         # Keep this fixture independent from a developer's allowed .envrc.
         env["PATH"] = "/usr/bin:/bin"
 
-        result = subprocess.run(
-            ["bash", "-c", script],
-            cwd=PROJECT_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=env,
-        )
+        with tempfile.TemporaryDirectory() as tmp:
+            env["FLUTTER_BLOC_APP_DOTENV_DIR"] = tmp
+            result = subprocess.run(
+                ["bash", "-c", script],
+                cwd=PROJECT_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=env,
+            )
 
         self.assertEqual(
             result.returncode,

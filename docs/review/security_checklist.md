@@ -10,7 +10,8 @@ Primary protocol: [`ai_code_review_protocol.md`](../ai_code_review_protocol.md)
 
 - No API keys, JWTs, DSNs, `sk-`, `AKIA`, or private key blocks in tracked
   source, tests, or docs.
-- Secrets load from secure storage, env, or `--dart-define` — not hardcoded.
+- Secrets load from secure storage, gitignored env files (`.envrc`, `.env`), or
+  `--dart-define` — not hardcoded.
 - Demo-open endpoints are explicit in feature brief or change note.
 - Run `bash tool/check_tracked_secret_literals.sh` and
   `bash tool/check_ai_generated_code_smells.sh` when auth or config changed.

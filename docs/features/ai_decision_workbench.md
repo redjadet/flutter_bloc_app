@@ -90,7 +90,8 @@ flutter run -d chrome
 
 To use a local backend or another deployment, set `AI_DECISION_API_BASE_URL`
 explicitly. With `direnv`, copy [`envrc.example`](../envrc.example), run
-`direnv allow`, and use the repo Flutter wrapper normally.
+`direnv allow`, and use the repo Flutter wrapper normally. Without direnv, use
+[`.env.example`](../../.env.example) → `.env` (see [Security and Secrets](../security_and_secrets.md)).
 
 ## User Flow
 

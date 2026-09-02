@@ -133,11 +133,19 @@ below.
 - **`check_transcript_budgets.sh`**: Report-only transcript inventory + budget signal to prevent conversation/transcript bloat from silently dominating agent context. Requires `CURSOR_AGENT_TRANSCRIPTS_ROOT` (local-only). Writes inventory JSON under `docs/audits/` (gitignored). Also runs from `./bin/checklist-fast` when the env var is set (never fails the checklist).
 - **`validate_task_trackers.sh`**: Validates `tasks/*/todo.md` tracker contract: required headings, non-empty write set, validation command.
 - **`run_harness_fixtures.sh`**: Smoke tests harness scripts and negative-case fixtures; runs in `./bin/checklist-fast` and docs/tooling lanes.
+- **`flutter_dart_defines_from_env.sh`**: Emits approved client `--dart-define`
+  flags from the current environment; loads gitignored `.env` / `.env.local` from
+  the repo root when present before emitting. `--release` rejects the mobile/web
+  provider-secret denylist while preserving public client configuration. Regressions:
+  `tool/flutter_dart_defines_from_env_test.py`, `tool/load_env_file_test.py`.
+- **`load_repo_dotenv.sh`**: Loads gitignored `.env` / `.env.local` for shell
+  helpers; honors `FLUTTER_BLOC_APP_DOTENV_DIR` for isolated tests. Regression:
+  `tool/load_env_file_test.py`.
 - **`check_tracked_secret_literals.sh`**: Verifies local
-  `assets/config/secrets.json` paths remain covered by `.gitignore`, rejects
-  tracked `secrets.json` files, and scans tracked files for secret-looking
-  literals that GitHub secret scanning commonly flags, including Google API
-  keys, OpenAI-style keys, AWS access keys, and private key blocks. Output names
+  `assets/config/secrets.json` and `.env` / `.env.local` paths remain covered by
+  `.gitignore`, rejects tracked `secrets.json` files, and scans tracked files for
+  secret-looking literals that GitHub secret scanning commonly flags, including
+  Google API keys, OpenAI-style keys, AWS access keys, and private key blocks. Output names
   file/line/rule only and never prints the secret value. Does not scan git
   history; for history scrub after a leak, see
   [`firebase_setup.md`](../integrations/firebase_setup.md#secret-scanning-alerts) and
