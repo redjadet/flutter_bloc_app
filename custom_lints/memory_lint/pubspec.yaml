@@ -8,9 +8,9 @@ environment:
 resolution: workspace
 
 dependencies:
-  analysis_server_plugin: 0.3.21
+  analysis_server_plugin: 0.3.22
   analyzer: 10.0.2
-  analyzer_plugin: 0.14.15
+  analyzer_plugin: 0.14.16
 
 dev_dependencies:
   flutter_lints: ^6.0.0

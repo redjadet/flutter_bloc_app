@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: analysis_server_plugin
-      sha256: d8d56859902ef8a161fadd8a93972687194d32be93af07f72fb641c23f0e3fdf
+      sha256: fc372bb4778b901afe4dea2e7f71ec74e6cbe772999d9961a4d8e382bc4fa49c
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.21"
+    version: "0.3.22"
   analyzer:
     dependency: "direct overridden"
     description:
@@ -45,18 +45,18 @@ packages:
     dependency: transitive
     description:
       name: analyzer_plugin
-      sha256: "30cd04ad5e90bee9f2ab77f55e43cd05221271b1942c5c4b36b9da56cf83b2f0"
+      sha256: "521fbb02dada7d99d0fc6d10e4b501a07ae1d39ff2a850afbd0ec2279fb81f5c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.15"
+    version: "0.14.16"
   analyzer_testing:
     dependency: transitive
     description:
       name: analyzer_testing
-      sha256: "26abe5124b8f57c52aeb4b31967342e63f8db4e8b709a79c88de0f02e6c25d27"
+      sha256: "2356fcfd4f39e34296c4d845b3a255637d378acbda1b149ae70325c4c100df2c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   ansi_styles:
     dependency: transitive
     description:
@@ -213,10 +213,10 @@ packages:
     dependency: transitive
     description:
       name: built_value
-      sha256: "31b24be6615ec7fcf70b3aa5a7469fe35826485e639a16dd7eb83ba30e4cc6a8"
+      sha256: f87ea98192116f7093cb214551ce1929caae0681fdba282b3d8b4462adee7bb7
       url: "https://pub.dev"
     source: hosted
-    version: "8.12.7"
+    version: "8.13.0"
   cached_network_image:
     dependency: transitive
     description:
@@ -1752,10 +1752,10 @@ packages:
     dependency: transitive
     description:
       name: json_schema_builder
-      sha256: e46b1a2957590d2c811f47b22079710a273ebf9c8240a9e1440b759efb8ded5f
+      sha256: "657db3229ba10305c48e8686e8b3aca16e12e639c3a7b96687a6eeb7836b6e1b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.6"
+    version: "0.1.7"
   json_serializable:
     dependency: transitive
     description:
