@@ -26,19 +26,27 @@ secret injection**, not vulnerability triage.
 
 ## Client trust and privacy by design
 
-- **Treat the client as untrusted.** Never embed backend/provider secrets in a
-  Flutter artifact. The server validates identity, authorization, ownership,
-  input shape, quotas, and replay/idempotency where applicable; UI checks only
-  improve experience.
-- **Protect session material.** Store tokens and encryption keys through the
-  repo Keychain/Keystore-backed secure-storage abstractions, never
-  `SharedPreferences` or plain local files. Keep sensitive values in memory only
-  as long as their owning session requires.
+- **Treat the client as an untrusted execution environment.** This does not make
+  all user data public. It means anything shipped in an APK/IPA or supplied to
+  the client may be inspected through artifact analysis, reverse engineering,
+  memory, logs, process arguments, or a compromised device. The server validates
+  identity, authorization, ownership, input shape, quotas, and replay/idempotency
+  where applicable; UI checks only improve experience.
+- **Separate configuration from authority.** Public client configuration may
+  ship with the app. Backend/provider secrets, private keys, service-account
+  credentials, and unrestricted permanent tokens stay in the owning server or
+  deployment platform's secret manager.
+- **Protect session material.** User access tokens must be scoped, short-lived,
+  and revocable. Store tokens and encryption keys through the repo
+  Keychain/Keystore-backed secure-storage abstractions, never `SharedPreferences`
+  or plain local files. Keep sensitive values in memory only as long as their
+  owning session requires.
 - **Use transport hardening deliberately.** TLS is mandatory. Certificate
   pinning adds defense for selected threats only when pin rotation, backup pins,
   expiry, observability, and recovery are owned; current repo default is
-  `disabled`. Release obfuscation can raise reverse-engineering cost but cannot
-  protect a secret compiled into the client.
+  `disabled`. Loading a value from `.env` or Remote Config, supplying it through
+  `--dart-define`, storing it in secure storage, or applying release obfuscation
+  does not make an embedded backend secret safe.
 - **Request minimum permissions at point of need.** Explain the user benefit
   before the platform prompt, support denial/restricted states, and do not ask
   at startup merely because a later feature might use the capability.
@@ -50,6 +58,7 @@ secret injection**, not vulnerability triage.
 Review changes with [`review/security_checklist.md`](review/security_checklist.md),
 [`engineering/logging.md`](engineering/logging.md), and
 [`security/privacy_policy.md`](security/privacy_policy.md).
+Applied narrative: [Mobile release secret boundary](case_studies/engineering/mobile_release_secret_boundary.md).
 
 ## Sources (in order)
 

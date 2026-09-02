@@ -45,7 +45,7 @@ root when an existing category applies.
 
 ### Case studies
 
-- [`case_studies/README.md`](case_studies/README.md) — index of product briefs
+- [`case_studies/README.md`](case_studies/README.md) — product briefs and engineering decision stories
 - [`case_studies/dentists.md`](case_studies/dentists.md) — dentist video case-study requirements
 - Implementation and Supabase extension plans live under [`changes/`](changes/README.md) (see index there)
 
@@ -97,8 +97,8 @@ root when an existing category applies.
 - [`review/performance_checklist.md`](review/performance_checklist.md)
 - [`bloc/cubit_file_template.md`](bloc/cubit_file_template.md)
 - [`architecture/feature_brief_scaffold_example.md`](architecture/feature_brief_scaffold_example.md)
-- [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md) — checklist quality-theme gates (MVP, May 2026)
-- [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
+- [`engineering/checklist_quality_gates_baseline.md`](engineering/checklist_quality_gates_baseline.md) — checklist quality-theme gates (MVP, May 2026)
+- [`engineering/checklist_quality_gates_deferred.md`](engineering/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 - [`ci_automation.md`](engineering/ci_automation.md)
@@ -166,6 +166,6 @@ root when an existing category applies.
 
 ## Historical context (not source of truth)
 
-- [`plans/README.md`](plans/README.md)
+- [`PLAN.md`](../PLAN.md)
 - [`audits/README.md`](audits/README.md)
 - [`changes/README.md`](changes/README.md)
