@@ -78,7 +78,32 @@ modules in [feature_overview.md](feature_overview.md).
 | Platform channels / FFI (nice) | Live Swift/Kotlin/C interop, EventChannel telemetry, mobile PlatformView banner, haptic + system share behind clean-arch ports; web/desktop unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
 | Store release (nice) | Release scripts + deployment doc; **dry-run workflow is not publishing** | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference); Actions → Mobile release dry-run |
 
-## 4a. Flutter judgment guidance
+## 4a. Decision-density stories
+
+Experience should change the default from implementing the first workable
+solution to proving the problem, choosing the smallest reversible design,
+protecting security and reliability boundaries, and turning lessons into
+reusable tests, standards, automation, or documentation. Decision density—not
+implementation volume—is the signal.
+
+Present each story in this order:
+
+**Context → Ownership → Options → Decision → Rejected approach → Trade-off →
+Proof/outcome → Reflection → New default → Revisit trigger**
+
+| Story | Changed default | Case study |
+| --- | --- | --- |
+| Mobile release secrets | Classify every value as public-client or server-only before build forwarding. | [Mobile release secret boundary](case_studies/engineering/mobile_release_secret_boundary.md) |
+| macOS plugin compatibility | Isolate incompatible plugins; preserve SwiftPM for compatible dependencies. | [macOS dependency compatibility](case_studies/engineering/macos_dependency_compatibility.md) |
+| Offline-first ownership | Prove newer local intent survives remote merge and online-write/replay overlap. | [Social Feed offline ownership](case_studies/engineering/social_feed_offline_ownership.md) |
+| Performance | Prove a production-path bottleneck before optimizing; retain regression and runtime evidence. | [Todo measurement-gated performance](case_studies/engineering/todo_measurement_gated_performance.md) |
+
+Each case separates implemented behavior, current repository proof, historical
+evidence, deferred scope, and individual contribution from team/system behavior.
+Use **I** only for work personally designed, implemented, reviewed, or driven;
+Git state proves system behavior, not team size, adoption, or one person's role.
+
+## 4b. Flutter judgment guidance
 
 Use this structure for design questions: **choose → name constraints → state the
 trade-off → point to proof**. “It depends” is incomplete until the answer names
