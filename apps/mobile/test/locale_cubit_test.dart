@@ -5,13 +5,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 class _FakeLocaleRepository implements LocaleRepository {
-  _FakeLocaleRepository({this.throwOnSave = false});
+  _FakeLocaleRepository({this.throwOnSave = false, this.throwOnLoad = false});
 
   AppLocale? stored;
   final bool throwOnSave;
+  final bool throwOnLoad;
 
   @override
-  Future<AppLocale?> load() async => stored;
+  Future<AppLocale?> load() async {
+    if (throwOnLoad) {
+      throw StateError('load failed');
+    }
+    return stored;
+  }
 
   @override
   Future<void> save(AppLocale? locale) async {
@@ -39,6 +45,13 @@ void main() {
     expect(cubit.state, isNull);
   });
 
+  test('loadInitial keeps default state when load throws', () async {
+    final repo = _FakeLocaleRepository(throwOnLoad: true);
+    final cubit = LocaleCubit(repository: repo);
+    await cubit.loadInitial();
+    expect(cubit.state, isNull);
+  });
+
   test('setLocale updates state and persists', () async {
     final repo = _FakeLocaleRepository();
     final cubit = LocaleCubit(repository: repo);
@@ -49,18 +62,13 @@ void main() {
     expect(repo.stored?.countryCode, 'FR');
   });
 
-  test('setLocale reverts state and rethrows when save throws', () async {
+  test('setLocale reverts state and completes when save throws', () async {
     final repo = _FakeLocaleRepository(throwOnSave: true);
     final cubit = LocaleCubit(repository: repo);
     await cubit.loadInitial();
     expect(cubit.state, isNull);
 
-    await expectLater(
-      cubit.setLocale(const Locale('de', 'DE')),
-      throwsA(
-        isA<StateError>().having((e) => e.message, 'message', 'save failed'),
-      ),
-    );
+    await cubit.setLocale(const Locale('de', 'DE'));
     expect(cubit.state, isNull);
     expect(repo.stored, isNull);
   });

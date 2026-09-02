@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:core/core.dart';
-
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/iap_demo_credits_store.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls_port.dart';
@@ -31,6 +30,15 @@ class FakeInAppPurchaseRepository
   @override
   IapDemoForcedOutcome forcedOutcome = IapDemoForcedOutcome.deterministic;
 
+  @visibleForTesting
+  bool throwOnLoadProducts = false;
+
+  @visibleForTesting
+  Object? throwOnPurchase;
+
+  @visibleForTesting
+  Object? throwOnRefreshEntitlements;
+
   IapEntitlements _entitlements = const IapEntitlements();
 
   @override
@@ -44,29 +52,34 @@ class FakeInAppPurchaseRepository
   }
 
   @override
-  Future<List<IapProduct>> loadProducts() async => const <IapProduct>[
-    IapProduct(
-      id: IapDemoProductIds.consumableCredits100,
-      title: '100 Credits',
-      description: 'Adds 100 demo credits.',
-      priceLabel: r'$0.99',
-      type: IapProductType.consumable,
-    ),
-    IapProduct(
-      id: IapDemoProductIds.nonConsumablePremium,
-      title: 'Premium Unlock',
-      description: 'One-time premium unlock.',
-      priceLabel: r'$4.99',
-      type: IapProductType.nonConsumable,
-    ),
-    IapProduct(
-      id: IapDemoProductIds.subscriptionMonthly,
-      title: 'Pro Monthly',
-      description: 'Monthly subscription (demo).',
-      priceLabel: r'$1.99',
-      type: IapProductType.subscription,
-    ),
-  ];
+  Future<List<IapProduct>> loadProducts() async {
+    if (throwOnLoadProducts) {
+      throw StateError('init failed');
+    }
+    return const <IapProduct>[
+      IapProduct(
+        id: IapDemoProductIds.consumableCredits100,
+        title: '100 Credits',
+        description: 'Adds 100 demo credits.',
+        priceLabel: r'$0.99',
+        type: IapProductType.consumable,
+      ),
+      IapProduct(
+        id: IapDemoProductIds.nonConsumablePremium,
+        title: 'Premium Unlock',
+        description: 'One-time premium unlock.',
+        priceLabel: r'$4.99',
+        type: IapProductType.nonConsumable,
+      ),
+      IapProduct(
+        id: IapDemoProductIds.subscriptionMonthly,
+        title: 'Pro Monthly',
+        description: 'Monthly subscription (demo).',
+        priceLabel: r'$1.99',
+        type: IapProductType.subscription,
+      ),
+    ];
+  }
 
   @override
   Stream<IapPurchaseResult> watchPurchaseResults() => _resultsController.stream;
@@ -86,8 +99,22 @@ class FakeInAppPurchaseRepository
     _resultsController.add(result);
   }
 
+  Never _throwTestFailure(Object error) {
+    if (error is Exception) {
+      throw error;
+    }
+    if (error is Error) {
+      throw error;
+    }
+    throw Exception('$error');
+  }
+
   @override
   Future<IapPurchaseResult> purchase(IapProduct product) async {
+    final Object? purchaseError = throwOnPurchase;
+    if (purchaseError != null) {
+      _throwTestFailure(purchaseError);
+    }
     await _sleep(delay);
     final outcome = _resolveOutcome(product.id);
 
@@ -138,6 +165,10 @@ class FakeInAppPurchaseRepository
 
   @override
   Future<IapEntitlements> refreshEntitlements() async {
+    final Object? refreshError = throwOnRefreshEntitlements;
+    if (refreshError != null) {
+      _throwTestFailure(refreshError);
+    }
     final int credits = await _creditsStore.loadCredits();
     if (_entitlements.credits != credits) {
       _entitlements = _entitlements.copyWith(credits: credits);

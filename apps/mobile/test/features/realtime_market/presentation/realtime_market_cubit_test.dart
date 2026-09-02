@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
@@ -66,7 +67,10 @@ void main() {
       );
       await Future<void>.delayed(Duration.zero);
 
-      expect(cubit.state.loadErrorMessage, contains('hive unavailable'));
+      expect(
+        cubit.state.loadErrorMessage,
+        NetworkErrorMapper.getErrorMessage(StateError('hive unavailable')),
+      );
       expect(cubit.state.bootstrapComplete, isTrue);
 
       repo.emit(_snap(last: 42));
@@ -107,7 +111,10 @@ void main() {
         repo.emitError(StateError('feed down'));
         await Future<void>.delayed(Duration.zero);
 
-        expect(cubit.state.loadErrorMessage, contains('feed down'));
+        expect(
+          cubit.state.loadErrorMessage,
+          NetworkErrorMapper.getErrorMessage(StateError('feed down')),
+        );
         expect(
           cubit.state.snapshot?.connection,
           MarketConnectionStatus.offline,

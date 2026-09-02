@@ -56,7 +56,7 @@ void main() {
 
           // Longer scroll sequence to better surface list/raster jank.
           await timelineTask('perf.todo.scroll.long', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 4; i++) {
               await tester.fling(
                 scrollTarget,
@@ -81,7 +81,7 @@ void main() {
           });
 
           await timelineTask('perf.todo.zoom.scroll', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 6; i++) {
               await tester.fling(
                 scrollTarget,
@@ -108,7 +108,7 @@ void main() {
 
           // Longer scroll sequence to better surface list/raster jank.
           await timelineTask('perf.chat.scroll.long', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 6; i++) {
               await tester.fling(
                 scrollTarget,
@@ -134,7 +134,7 @@ void main() {
           });
 
           await timelineTask('perf.chat.zoom.scroll', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 10; i++) {
               await tester.fling(
                 scrollTarget,
@@ -160,7 +160,7 @@ void main() {
           });
 
           await timelineTask('perf.scapes.scroll.long', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 10; i++) {
               await tester.fling(
                 scrollTarget,
@@ -187,7 +187,7 @@ void main() {
 
           // Scroll through the chart screen to capture UI/raster work.
           await timelineTask('perf.charts.scroll.long', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 5; i++) {
               await tester.fling(
                 scrollTarget,
@@ -201,7 +201,7 @@ void main() {
 
           // Pull-to-refresh style fling (downwards) to include overscroll/refresh work.
           await timelineTask('perf.charts.refresh.gesture', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             await tester.fling(
               scrollTarget,
               const Offset(0, 500),
@@ -225,7 +225,7 @@ void main() {
           });
 
           await timelineTask('perf.charts.zoom.scroll', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             for (int i = 0; i < 8; i++) {
               await tester.fling(
                 scrollTarget,
@@ -238,7 +238,7 @@ void main() {
           });
 
           await timelineTask('perf.charts.zoom.refresh', () async {
-            final Finder scrollTarget = findScrollTarget(tester);
+            final Finder scrollTarget = await awaitScrollTarget(tester);
             await tester.fling(
               scrollTarget,
               const Offset(0, 520),

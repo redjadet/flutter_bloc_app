@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls_port.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
@@ -10,16 +11,35 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purcha
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_state.dart';
 
-class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
-    with CubitSubscriptionMixin<InAppPurchaseDemoState> {
+// Keep ctor param names for `super.` forwarding from InAppPurchaseDemoCubit.
+// ignore_for_file: prefer_initializing_formals
+
+part 'in_app_purchase_demo_cubit_stream.part.dart';
+
+class InAppPurchaseDemoCubit extends _InAppPurchaseDemoCubitBase
+    with _InAppPurchaseDemoCubitStream {
   InAppPurchaseDemoCubit({
-    required this._fakeRepository,
-    required this._realRepository,
-    this._fakeOutcomeControls,
-    this._realDemoControls,
-  }) : super(const InAppPurchaseDemoState()) {
+    required super.fakeRepository,
+    required super.realRepository,
+    super.fakeOutcomeControls,
+    super.realDemoControls,
+  }) {
     _subscribePurchaseResults();
   }
+}
+
+abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
+    with CubitSubscriptionMixin<InAppPurchaseDemoState> {
+  _InAppPurchaseDemoCubitBase({
+    required InAppPurchaseRepository fakeRepository,
+    required InAppPurchaseRepository realRepository,
+    IapFakeOutcomePort? fakeOutcomeControls,
+    IapDemoControlsPort? realDemoControls,
+  }) : _fakeRepository = fakeRepository,
+       _realRepository = realRepository,
+       _fakeOutcomeControls = fakeOutcomeControls,
+       _realDemoControls = realDemoControls,
+       super(const InAppPurchaseDemoState());
 
   final InAppPurchaseRepository _fakeRepository;
   final InAppPurchaseRepository _realRepository;
@@ -29,6 +49,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
   // ignore: cancel_subscriptions - Lifecycle is centralized via CubitSubscriptionMixin.
   StreamSubscription<IapPurchaseResult>? _sub;
   int _attempt = 0;
+  int _purchaseSubscriptionGeneration = 0;
 
   InAppPurchaseRepository get _activeRepository =>
       state.useFakeRepository ? _fakeRepository : _realRepository;
@@ -49,12 +70,12 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
           errorMessage: null,
         ),
       );
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (isClosed) return;
       emit(
         state.copyWith(
           status: InAppPurchaseDemoStatus.error,
-          errorMessage: e.toString(),
+          errorMessage: NetworkErrorMapper.getErrorMessage(e),
         ),
       );
     }
@@ -66,23 +87,6 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       return;
     }
     _realDemoControls?.resetDemoState();
-  }
-
-  Future<void> toggleRepository({required bool useFake}) async {
-    if (state.isBusy) return;
-    _attempt++;
-    emit(
-      state.copyWith(
-        useFakeRepository: useFake,
-        lastResult: null,
-        errorMessage: null,
-      ),
-    );
-    final StreamSubscription<IapPurchaseResult>? previousSubscription = _sub;
-    _sub = null;
-    await cancelRegisteredSubscription(previousSubscription);
-    _subscribePurchaseResults();
-    await initialize();
   }
 
   void setForcedOutcome(IapDemoForcedOutcome outcome) {
@@ -110,13 +114,13 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       if (attempt == _attempt && !isClosed) {
         emit(state.copyWith(lastResult: result));
       }
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (attempt != _attempt || isClosed) return;
       emit(
         state.copyWith(
           lastResult: IapPurchaseResult.failure(
             productId: product.id,
-            message: e.toString(),
+            message: NetworkErrorMapper.getErrorMessage(e),
           ),
         ),
       );
@@ -149,9 +153,11 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       final entitlements = await _activeRepository.refreshEntitlements();
       if (attempt != _attempt || isClosed) return;
       emit(state.copyWith(entitlements: entitlements, lastResult: null));
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (attempt != _attempt || isClosed) return;
-      emit(state.copyWith(errorMessage: e.toString()));
+      emit(
+        state.copyWith(errorMessage: NetworkErrorMapper.getErrorMessage(e)),
+      );
     } finally {
       if (attempt == _attempt && !isClosed) {
         emit(
@@ -164,58 +170,43 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     }
   }
 
-  Future<void> refreshEntitlements() async {
-    final entitlements = await _activeRepository.refreshEntitlements();
-    if (isClosed) return;
-    emit(state.copyWith(entitlements: entitlements));
+  Future<void> refreshEntitlements({int? subscriptionGeneration}) async {
+    try {
+      final entitlements = await _activeRepository.refreshEntitlements();
+      if (isClosed) return;
+      if (subscriptionGeneration != null &&
+          !_isPurchaseSubscriptionCurrent(subscriptionGeneration)) {
+        return;
+      }
+      emit(state.copyWith(entitlements: entitlements, errorMessage: null));
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'InAppPurchaseDemoCubit.refreshEntitlements',
+        error,
+        stackTrace,
+      );
+      if (isClosed) return;
+      if (subscriptionGeneration != null &&
+          !_isPurchaseSubscriptionCurrent(subscriptionGeneration)) {
+        return;
+      }
+      emit(
+        state.copyWith(
+          status: InAppPurchaseDemoStatus.error,
+          isBusy: false,
+          errorMessage: NetworkErrorMapper.getErrorMessage(error),
+        ),
+      );
+    }
   }
 
-  void _subscribePurchaseResults() {
-    _sub = registerSubscription(
-      _activeRepository.watchPurchaseResults().listen(
-        _onPurchaseResult,
-        onError: _onPurchaseStreamError,
-      ),
-    );
+  int _startPurchaseSubscriptionGeneration() =>
+      ++_purchaseSubscriptionGeneration;
+
+  void _invalidatePurchaseSubscriptionGeneration() {
+    _purchaseSubscriptionGeneration++;
   }
 
-  Future<void> _onPurchaseResult(IapPurchaseResult result) async {
-    if (isClosed) return;
-    final bool isPending = result.maybeWhen(
-      pending: (_, _) => true,
-      orElse: () => false,
-    );
-    emit(
-      state.copyWith(
-        lastResult: result,
-        isBusy: isPending && state.isBusy,
-        status: isPending ? state.status : InAppPurchaseDemoStatus.ready,
-      ),
-    );
-    await refreshEntitlements();
-  }
-
-  void _onPurchaseStreamError(Object error, StackTrace stackTrace) {
-    AppLogger.error(
-      'InAppPurchaseDemoCubit.watchPurchaseResults',
-      error,
-      stackTrace,
-    );
-    if (isClosed) return;
-    emit(
-      state.copyWith(
-        status: InAppPurchaseDemoStatus.error,
-        isBusy: false,
-        errorMessage: error.toString(),
-      ),
-    );
-  }
-
-  @override
-  Future<void> close() async {
-    final StreamSubscription<IapPurchaseResult>? subscription = _sub;
-    _sub = null;
-    await cancelRegisteredSubscription(subscription);
-    await super.close();
-  }
+  bool _isPurchaseSubscriptionCurrent(int generation) =>
+      generation == _purchaseSubscriptionGeneration;
 }

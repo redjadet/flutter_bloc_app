@@ -55,9 +55,14 @@ This baseline includes real **`traceAction()` frame timing artifacts** captured 
 ### Captured frame timing artifacts (traceAction)
 
 - **Test**: `integration_test/perf/perf_smoke_flows_test.dart`
-- **Command**:
-  - `CHECKLIST_INTEGRATION_DEVICE=82B916E8-9CEC-48F1-8219-22C73B6F7037 tool/capture_perf_trace.sh`
-- **Artifact**: `artifacts/perf/perf_report_data_20260325T105350Z.json`
+- **Command** (from repo root; script runs `flutter test` under `apps/mobile`):
+  - `CHECKLIST_INTEGRATION_DEVICE=<iphone_sim_udid> tool/capture_perf_trace.sh`
+- **Harness**: use `awaitScrollTarget(tester)` in `integration_test/perf/perf_helpers.dart` before scroll `traceAction` flows (`timeout` is a total budget across ListView / CustomScrollView / Scrollable candidates).
+- **Social feed trace**: `integration_test/perf/social_feed_demo_perf_test.dart` → `CHECKLIST_INTEGRATION_DEVICE=<udid> tool/capture_perf_trace.sh integration_test/perf/social_feed_demo_perf_test.dart`
+- **Artifacts**:
+  - `artifacts/perf/perf_report_data_20260325T105350Z.json` (2026-03-25 baseline)
+  - `artifacts/perf/perf_report_data_20260902T114455Z.json` (2026-09-02 W2 smoke baseline; audit: `docs/audits/2026-09-02_full_app_hardening_w1.md`)
+  - `artifacts/perf/perf_report_data_20260902T122210Z.json` (2026-09-02 social feed scroll)
 
 Quick “Frame” duration stats (async trace \(b/e\) pairs; best used comparatively):
 

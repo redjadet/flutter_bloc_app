@@ -5,7 +5,9 @@ mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
     required String siteId,
     required String? shiftId,
   }) async {
-    if (_submitInFlight || state.status == StaffDemoProofStatus.submitting) {
+    if (isClosed ||
+        _submitInFlight ||
+        state.status == StaffDemoProofStatus.submitting) {
       return;
     }
     final userId = _authRepository.currentUser?.id;
@@ -60,50 +62,52 @@ mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
 
       if (isClosed) return;
       emit(state.copyWith(status: StaffDemoProofStatus.submitting));
-      try {
-        final proofId = await _repository.submitProof(
-          userId: resolvedUserId,
-          siteId: siteId.trim(),
-          shiftId: shiftId?.trim().isEmpty == true ? null : shiftId?.trim(),
-          photoFilePaths: photoPaths,
-          signaturePngFilePath: signaturePath,
-        );
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoProofStatus.success,
-            errorMessage: null,
-            lastProofId: proofId,
-          ),
-        );
-      } on StaffDemoEventProofOfflineEnqueuedException {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoProofStatus.offlineQueued,
-            errorMessage: null,
-          ),
-        );
-      } on Exception catch (error, stackTrace) {
-        if (isClosed) return;
-        await CubitExceptionHandler.executeAsync<void>(
-          operation: () => Future<void>.error(error, stackTrace),
-          isAlive: () => !isClosed,
-          onSuccess: (_) {},
-          onError: (message) {
-            if (isClosed) return;
-            emit(
-              state.copyWith(
-                status: StaffDemoProofStatus.error,
-                errorMessage: message,
-              ),
-            );
-          },
-          logContext: IntegrationLogMessages.staffDemoProofSubmit,
-        );
-      }
+      final proofId = await _repository.submitProof(
+        userId: resolvedUserId,
+        siteId: siteId.trim(),
+        shiftId: shiftId?.trim().isEmpty == true ? null : shiftId?.trim(),
+        photoFilePaths: photoPaths,
+        signaturePngFilePath: signaturePath,
+      );
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          status: StaffDemoProofStatus.success,
+          errorMessage: null,
+          lastProofId: proofId,
+        ),
+      );
+    } on StaffDemoEventProofOfflineEnqueuedException {
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          status: StaffDemoProofStatus.offlineQueued,
+          errorMessage: null,
+        ),
+      );
+    } on Object catch (error, stackTrace) {
+      await _emitSubmitFailure(error, stackTrace);
     } finally {
       _submitInFlight = false;
     }
+  }
+
+  Future<void> _emitSubmitFailure(Object error, StackTrace stackTrace) async {
+    if (isClosed) return;
+    await CubitExceptionHandler.executeAsync<void>(
+      operation: () => Future<void>.error(error, stackTrace),
+      isAlive: () => !isClosed,
+      onSuccess: (_) {},
+      onError: (message) {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            status: StaffDemoProofStatus.error,
+            errorMessage: message,
+          ),
+        );
+      },
+      logContext: IntegrationLogMessages.staffDemoProofSubmit,
+    );
   }
 }

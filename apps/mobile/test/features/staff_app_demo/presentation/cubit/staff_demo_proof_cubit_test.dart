@@ -360,6 +360,91 @@ void main() {
       );
     });
 
+    test('surfaces error when file existence check throws Error', () async {
+      final authRepository = _MockAuthRepository();
+      final repository = _MockStaffDemoEventProofRepository();
+      final fileStore = _MockStaffDemoProofFileStore();
+      final tempDir = await Directory.systemTemp.createTemp(
+        'staff-proof-file-check-error-test',
+      );
+      final signatureFile = File('${tempDir.path}/signature.png');
+      await signatureFile.writeAsBytes(const <int>[1, 2, 3], flush: true);
+
+      when(() => authRepository.currentUser).thenReturn(
+        const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
+      );
+      when(() => fileStore.fileExists(any()))
+          .thenThrow(StateError('disk read failed'));
+
+      final cubit = StaffDemoProofCubit(
+        authRepository: authRepository,
+        repository: repository,
+        fileStore: fileStore,
+        photoPicker: _MockStaffDemoProofPhotoPicker(),
+      );
+      addTearDown(() async {
+        await cubit.close();
+        await tempDir.delete(recursive: true);
+      });
+
+      cubit.setSignaturePath(signatureFile.path);
+      await cubit.submit(siteId: 'site1', shiftId: null);
+
+      expect(cubit.state.status, StaffDemoProofStatus.error);
+      expect(cubit.state.errorMessage, isNotEmpty);
+      verifyNever(
+        () => repository.submitProof(
+          userId: any(named: 'userId'),
+          siteId: any(named: 'siteId'),
+          shiftId: any(named: 'shiftId'),
+          photoFilePaths: any(named: 'photoFilePaths'),
+          signaturePngFilePath: any(named: 'signaturePngFilePath'),
+        ),
+      );
+    });
+
+    test('surfaces error when submit throws Error', () async {
+      final authRepository = _MockAuthRepository();
+      final repository = _MockStaffDemoEventProofRepository();
+      final fileStore = _MockStaffDemoProofFileStore();
+      final tempDir = await Directory.systemTemp.createTemp(
+        'staff-proof-submit-error-test',
+      );
+      final signatureFile = File('${tempDir.path}/signature.png');
+      await signatureFile.writeAsBytes(const <int>[1, 2, 3], flush: true);
+
+      when(() => authRepository.currentUser).thenReturn(
+        const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
+      );
+      when(
+        () => repository.submitProof(
+          userId: any(named: 'userId'),
+          siteId: any(named: 'siteId'),
+          shiftId: any(named: 'shiftId'),
+          photoFilePaths: any(named: 'photoFilePaths'),
+          signaturePngFilePath: any(named: 'signaturePngFilePath'),
+        ),
+      ).thenThrow(StateError('submit failed'));
+      _stubProofFileStore(fileStore);
+
+      final cubit = StaffDemoProofCubit(
+        authRepository: authRepository,
+        repository: repository,
+        fileStore: fileStore,
+        photoPicker: _MockStaffDemoProofPhotoPicker(),
+      );
+      addTearDown(() async {
+        await cubit.close();
+        await tempDir.delete(recursive: true);
+      });
+
+      cubit.setSignaturePath(signatureFile.path);
+      await cubit.submit(siteId: 'site1', shiftId: null);
+
+      expect(cubit.state.status, StaffDemoProofStatus.error);
+      expect(cubit.state.errorMessage, isNotEmpty);
+    });
+
     test(
       'pickPhotoFromCamera persists photo and returns null on success',
       () async {

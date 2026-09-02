@@ -9,12 +9,13 @@ import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_state.dart';
 import 'package:utilities/utilities.dart';
 
 part 'production_readiness_cubit_consent.part.dart';
-part 'production_readiness_cubit_fcm.part.dart';
 part 'production_readiness_cubit_crashlytics.part.dart';
+part 'production_readiness_cubit_fcm.part.dart';
 
 class ProductionReadinessCubit extends _ProductionReadinessCubitBase
     with
@@ -159,7 +160,7 @@ abstract class _ProductionReadinessCubitBase
       emit(
         state.copyWith(
           status: ProductionReadinessStatus.error,
-          errorMessage: error.toString(),
+          errorMessage: NetworkErrorMapper.getErrorMessage(error),
         ),
       );
     }

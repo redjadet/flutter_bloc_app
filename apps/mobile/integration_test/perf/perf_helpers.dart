@@ -93,12 +93,41 @@ Finder findScrollTarget(WidgetTester tester) {
     find.byType(CustomScrollView),
     find.byType(Scrollable),
   ];
-  for (final candidate in candidates) {
+  for (final Finder candidate in candidates) {
     if (tester.any(candidate)) {
       return candidate.first;
     }
   }
-  return find.byType(Scrollable).first;
+  throw TestFailure('findScrollTarget: no scrollable widget on screen');
+}
+
+/// Waits until a list or scrollable is mounted, then returns [findScrollTarget].
+///
+/// [timeout] is the total budget across all scrollable candidates, not per
+/// candidate.
+Future<Finder> awaitScrollTarget(
+  WidgetTester tester, {
+  Duration timeout = const Duration(seconds: 10),
+}) async {
+  final List<Finder> candidates = <Finder>[
+    find.byType(ListView),
+    find.byType(CustomScrollView),
+    find.byType(Scrollable),
+  ];
+  final Stopwatch stopwatch = Stopwatch()..start();
+  for (final Finder candidate in candidates) {
+    final Duration remaining = timeout - stopwatch.elapsed;
+    if (remaining <= Duration.zero) {
+      break;
+    }
+    try {
+      await pumpUntilFound(tester, candidate, timeout: remaining);
+      return candidate.first;
+    } on TestFailure {
+      continue;
+    }
+  }
+  throw TestFailure('awaitScrollTarget: no scrollable widget within timeout');
 }
 
 Future<void> setSwitchListTileValue(

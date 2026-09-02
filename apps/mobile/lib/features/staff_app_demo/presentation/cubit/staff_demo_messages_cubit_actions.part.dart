@@ -61,7 +61,7 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
         state.copyWith(
           status: StaffDemoMessagesStatus.error,
           knownError: null,
-          errorMessage: error.toString(),
+          errorMessage: NetworkErrorMapper.getErrorMessage(error),
         ),
       );
     }

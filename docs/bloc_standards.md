@@ -45,8 +45,14 @@ new feature state.
   transitions.
 - Use `CubitExceptionHandler` for async work where it matches the existing
   pattern.
+- Fire-and-forget init (`loadInitial` from constructor/DI without `await`) must
+  catch `Object`, log, and **never rethrow** — unawaited callers cannot handle
+  failures. Save/rollback paths in the same cubit follow the same rule.
 - Guard stale async completions and emissions with `isClosed` or request-id /
-  `isAlive` checks.
+  `isAlive` checks (`RequestIdGuard` when overlapping loads can return stale
+  data).
+- `close()` must not throw on teardown (e.g. route `disconnect()` through
+  `CubitExceptionHandler` when the repository may already be in a bad state).
 - Cancel streams, timers, controllers, and lifecycle observers in `close()`.
 - Keep navigation policy in presentation/router surfaces; reusable widgets
   receive callbacks or view data.

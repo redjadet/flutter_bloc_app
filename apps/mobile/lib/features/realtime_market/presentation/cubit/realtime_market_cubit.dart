@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/use_cases/load_cached_market_snapshot.dart';
@@ -54,7 +55,7 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
       if (!isClosed) {
         emit(
           state.copyWith(
-            loadErrorMessage: error.toString(),
+            loadErrorMessage: NetworkErrorMapper.getErrorMessage(error),
             bootstrapComplete: true,
           ),
         );
@@ -96,7 +97,7 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
                   snapshot: state.snapshot?.copyWith(
                     connection: MarketConnectionStatus.offline,
                   ),
-                  loadErrorMessage: error.toString(),
+                  loadErrorMessage: NetworkErrorMapper.getErrorMessage(error),
                   bootstrapComplete: true,
                 ),
               );
@@ -113,7 +114,7 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
       if (!isClosed) {
         emit(
           state.copyWith(
-            loadErrorMessage: error.toString(),
+            loadErrorMessage: NetworkErrorMapper.getErrorMessage(error),
             bootstrapComplete: true,
           ),
         );
@@ -145,7 +146,11 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
     } on Object catch (error, stackTrace) {
       AppLogger.error('RealtimeMarketCubit.reconnect', error, stackTrace);
       if (!isClosed) {
-        emit(state.copyWith(loadErrorMessage: error.toString()));
+        emit(
+          state.copyWith(
+            loadErrorMessage: NetworkErrorMapper.getErrorMessage(error),
+          ),
+        );
       }
     }
   }

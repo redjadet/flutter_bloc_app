@@ -4,6 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
@@ -16,23 +17,11 @@ class WebsocketCubit extends Cubit<WebsocketState>
       super(WebsocketState.initial(repository.endpoint)) {
     _statusSubscription = _repository.connectionStates.listen(
       _onConnectionState,
-      onError: (Object error, StackTrace stackTrace) {
-        AppLogger.error(
-          'WebsocketCubit connection state stream error',
-          error,
-          stackTrace,
-        );
-      },
+      onError: _onStreamError,
     );
     _messageSubscription = _repository.incomingMessages.listen(
       _onIncomingMessage,
-      onError: (Object error, StackTrace stackTrace) {
-        AppLogger.error(
-          'WebsocketCubit incoming messages stream error',
-          error,
-          stackTrace,
-        );
-      },
+      onError: _onStreamError,
     );
     registerSubscription(_statusSubscription);
     registerSubscription(_messageSubscription);
@@ -75,12 +64,32 @@ class WebsocketCubit extends Cubit<WebsocketState>
   }
 
   Future<void> reconnect() async {
-    await _repository.disconnect();
+    var disconnectSucceeded = true;
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: _repository.disconnect,
+      isAlive: () => !isClosed,
+      onSuccess: () {
+        disconnectSucceeded = true;
+      },
+      onError: (errorMessage) {
+        disconnectSucceeded = false;
+        _emitCommandFailure(errorMessage);
+      },
+      logContext: 'WebsocketCubit.reconnect.disconnect',
+    );
+    if (!disconnectSucceeded || isClosed) {
+      return;
+    }
     await connect();
   }
 
   Future<void> disconnect() async {
-    await _repository.disconnect();
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: _repository.disconnect,
+      isAlive: () => !isClosed,
+      onError: _emitCommandFailure,
+      logContext: 'WebsocketCubit.disconnect',
+    );
   }
 
   Future<bool> sendMessage(String rawMessage) async {
@@ -159,12 +168,35 @@ class WebsocketCubit extends Cubit<WebsocketState>
     );
   }
 
+  void _onStreamError(Object error, StackTrace stackTrace) {
+    AppLogger.error('WebsocketCubit stream error', error, stackTrace);
+    if (isClosed) return;
+    _emitCommandFailure(NetworkErrorMapper.getErrorMessage(error));
+  }
+
+  void _emitCommandFailure(String errorMessage) {
+    if (isClosed) return;
+    _inFlightSends = 0;
+    emit(
+      state.copyWith(
+        status: WebsocketStatus.error,
+        errorMessage: errorMessage,
+        isSending: false,
+      ),
+    );
+  }
+
   @override
   Future<void> close() async {
     _inFlightSends = 0;
     _statusSubscription = null;
     _messageSubscription = null;
-    await _repository.disconnect();
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: _repository.disconnect,
+      isAlive: () => true,
+      onError: (_) {},
+      logContext: 'WebsocketCubit.close',
+    );
     return super.close();
   }
 }

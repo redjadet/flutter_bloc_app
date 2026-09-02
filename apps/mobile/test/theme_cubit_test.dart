@@ -7,9 +7,15 @@ import 'package:material_ui/material_ui.dart';
 class _FakeThemeRepository implements ThemeRepository {
   ThemePreference? stored;
   bool throwOnSave = false;
+  bool throwOnLoad = false;
 
   @override
-  Future<ThemePreference?> load() async => stored;
+  Future<ThemePreference?> load() async {
+    if (throwOnLoad) {
+      throw StateError('load failed');
+    }
+    return stored;
+  }
 
   @override
   Future<void> save(ThemePreference mode) async {
@@ -26,6 +32,13 @@ void main() {
     final cubit = ThemeCubit(repository: repo);
     await cubit.loadInitial();
     expect(cubit.state, ThemeMode.dark);
+  });
+
+  test('loadInitial keeps default state when load throws', () async {
+    final repo = _FakeThemeRepository()..throwOnLoad = true;
+    final cubit = ThemeCubit(repository: repo);
+    await cubit.loadInitial();
+    expect(cubit.state, ThemeMode.system);
   });
 
   test('setMode updates state and persists', () async {
@@ -47,17 +60,12 @@ void main() {
     expect(cubit.state, ThemeMode.light);
   });
 
-  test('setMode reverts state and rethrows when save throws', () async {
+  test('setMode reverts state and completes when save throws', () async {
     final repo = _FakeThemeRepository()..throwOnSave = true;
     final cubit = ThemeCubit(repository: repo);
     expect(cubit.state, ThemeMode.system);
 
-    await expectLater(
-      cubit.setMode(ThemeMode.dark),
-      throwsA(
-        isA<StateError>().having((e) => e.message, 'message', 'save failed'),
-      ),
-    );
+    await cubit.setMode(ThemeMode.dark);
     expect(cubit.state, ThemeMode.system);
     expect(repo.stored, isNull);
   });

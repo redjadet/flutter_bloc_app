@@ -222,4 +222,44 @@ void main() {
 
     expect(cubit.state.isScanning, isTrue);
   });
+
+  test('adapter stream error emits initialize failure state', () async {
+    final cubit = IotBleCubit(
+      mockRepository: mockRepository,
+      reactiveRepository: const UnsupportedBleRepository(),
+      classicRepository: classicRepository,
+      platformGateway: const BlePlatformGatewayImpl(),
+      runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
+      timerService: _ImmediateTimerService(),
+    );
+    await cubit.initialize();
+    mockRepository.simulateAdapterStreamError(StateError('adapter down'));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.state.status, IotBleStatus.error);
+    expect(cubit.state.errorCode, IotBleErrorCode.initialize);
+    expect(cubit.state.errorDetail, contains('adapter down'));
+
+    await cubit.close();
+  });
+
+  test('stream error after close does not emit', () async {
+    final cubit = IotBleCubit(
+      mockRepository: mockRepository,
+      reactiveRepository: const UnsupportedBleRepository(),
+      classicRepository: classicRepository,
+      platformGateway: const BlePlatformGatewayImpl(),
+      runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
+      timerService: _ImmediateTimerService(),
+    );
+    await cubit.initialize();
+    final statusBeforeClose = cubit.state.status;
+    await cubit.close();
+
+    mockRepository.simulateAdapterStreamError(StateError('late adapter error'));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.isClosed, isTrue);
+    expect(statusBeforeClose, IotBleStatus.ready);
+  });
 }

@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_discovered_device.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
+import 'package:meta/meta.dart';
 
 part 'mock_ble_repository_gatt.part.dart';
 part 'mock_ble_repository_scan.part.dart';
@@ -55,6 +56,28 @@ class _MockBleRepositoryBase {
   bool _scanning = false;
 
   Stream<BleAdapterStatus> watchAdapterStatus() => _adapterController.stream;
+
+  @visibleForTesting
+  void simulateAdapterStreamError(Object error, [StackTrace? stackTrace]) {
+    _adapterController.addError(error, stackTrace ?? StackTrace.current);
+  }
+
+  @visibleForTesting
+  void simulateScanStreamError(Object error, [StackTrace? stackTrace]) {
+    _scanController.addError(error, stackTrace ?? StackTrace.current);
+  }
+
+  @visibleForTesting
+  void simulateConnectionStreamError(
+    String deviceId,
+    Object error, [
+    StackTrace? stackTrace,
+  ]) {
+    _connectionController(deviceId).addError(
+      error,
+      stackTrace ?? StackTrace.current,
+    );
+  }
 
   Future<Result<void>> ensureReady() async {
     _adapterController.add(

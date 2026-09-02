@@ -9,11 +9,13 @@ set -euo pipefail
 #   CHECKLIST_INTEGRATION_DEVICE=<udid> tool/capture_perf_trace.sh integration_test/perf/perf_smoke_flows_test.dart
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$ROOT"
+cd "$ROOT/apps/mobile"
 
 TARGET="${1:-integration_test/perf/perf_smoke_flows_test.dart}"
-
-mkdir -p artifacts/perf
+# Allow repo-root paths when invoked from monorepo root.
+if [[ "$TARGET" == apps/mobile/* ]]; then
+  TARGET="${TARGET#apps/mobile/}"
+fi
 
 DEVICE_ID="${CHECKLIST_INTEGRATION_DEVICE:-${INTEGRATION_TEST_DEVICE:-}}"
 if [[ -z "$DEVICE_ID" ]]; then
@@ -24,8 +26,10 @@ if [[ -z "$DEVICE_ID" ]]; then
 fi
 
 STAMP="$(date -u +"%Y%m%dT%H%M%SZ")"
-LOG_PATH="artifacts/perf/flutter_test_${STAMP}.log"
-OUT_JSON="artifacts/perf/perf_report_data_${STAMP}.json"
+LOG_PATH="$ROOT/artifacts/perf/flutter_test_${STAMP}.log"
+OUT_JSON="$ROOT/artifacts/perf/perf_report_data_${STAMP}.json"
+
+mkdir -p "$ROOT/artifacts/perf"
 
 echo "[capture_perf_trace] Running on device: $DEVICE_ID"
 echo "[capture_perf_trace] Target: $TARGET"

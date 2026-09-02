@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
@@ -255,6 +256,58 @@ void main() {
     expect(didSend, isFalse);
     expect(cubit.state.isSending, isFalse);
     expect(cubit.state.errorMessage, isNotNull);
+
+    await cubit.close();
+  });
+
+  test('disconnect failure surfaces error and clears sending state', () async {
+    when(() => repository.disconnect())
+        .thenThrow(Exception('disconnect failed'));
+
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+    connectionController.add(const WebsocketConnectionState.connected());
+    await Future<void>.delayed(Duration.zero);
+
+    await cubit.disconnect();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.state.status, WebsocketStatus.error);
+    expect(cubit.state.isSending, isFalse);
+    expect(cubit.state.errorMessage, isNotNull);
+
+    await cubit.close();
+  });
+
+  test('reconnect does not connect after disconnect failure', () async {
+    when(() => repository.disconnect())
+        .thenThrow(Exception('disconnect failed'));
+    when(() => repository.connect()).thenAnswer((_) async {});
+
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+    connectionController.add(const WebsocketConnectionState.connected());
+    await Future<void>.delayed(Duration.zero);
+
+    await cubit.reconnect();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.state.status, WebsocketStatus.error);
+    verifyNever(() => repository.connect());
+
+    await cubit.close();
+  });
+
+  test('message stream error surfaces error state', () async {
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+
+    messageController.addError(Exception('message stream failed'));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.state.status, WebsocketStatus.error);
+    expect(cubit.state.isSending, isFalse);
+    expect(
+      cubit.state.errorMessage,
+      NetworkErrorMapper.getErrorMessage(Exception('message stream failed')),
+    );
 
     await cubit.close();
   });
