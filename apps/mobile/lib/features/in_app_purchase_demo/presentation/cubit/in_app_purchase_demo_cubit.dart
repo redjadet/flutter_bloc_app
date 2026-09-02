@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls_port.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
@@ -54,7 +55,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       emit(
         state.copyWith(
           status: InAppPurchaseDemoStatus.error,
-          errorMessage: e.toString(),
+          errorMessage: NetworkErrorMapper.getErrorMessage(e),
         ),
       );
     }
@@ -116,7 +117,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         state.copyWith(
           lastResult: IapPurchaseResult.failure(
             productId: product.id,
-            message: e.toString(),
+            message: NetworkErrorMapper.getErrorMessage(e),
           ),
         ),
       );
@@ -151,7 +152,9 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       emit(state.copyWith(entitlements: entitlements, lastResult: null));
     } on Object catch (e) {
       if (attempt != _attempt || isClosed) return;
-      emit(state.copyWith(errorMessage: e.toString()));
+      emit(
+        state.copyWith(errorMessage: NetworkErrorMapper.getErrorMessage(e)),
+      );
     } finally {
       if (attempt == _attempt && !isClosed) {
         emit(
@@ -180,7 +183,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         state.copyWith(
           status: InAppPurchaseDemoStatus.error,
           isBusy: false,
-          errorMessage: error.toString(),
+          errorMessage: NetworkErrorMapper.getErrorMessage(error),
         ),
       );
     }
@@ -222,7 +225,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       state.copyWith(
         status: InAppPurchaseDemoStatus.error,
         isBusy: false,
-        errorMessage: error.toString(),
+        errorMessage: NetworkErrorMapper.getErrorMessage(error),
       ),
     );
   }

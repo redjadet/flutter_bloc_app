@@ -21,6 +21,46 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-02 - Fire-and-forget cubit init must not rethrow
+
+- What went wrong:
+  Theme/Locale cubits rethrew on `loadInitial` / save rollback while constructors
+  called `loadInitial()` without `await`, so failures became unhandled async
+  errors instead of logged cubit state.
+- How it was fixed:
+  Wrap fire-and-forget init in `on Object catch`, log, and swallow; map command
+  and stream errors through `CubitExceptionHandler` / `NetworkErrorMapper`; route
+  `close()` disconnect through the handler; add `RequestIdGuard` for stale
+  reload races.
+- Pattern:
+  Any cubit method invoked without `await` must behave like a top-level async
+  entry — catch, log, emit safe state; never `rethrow` to an absent caller.
+- Preventive rule:
+  When adding `loadInitial()` from constructor/DI, audit save/rollback and
+  `close()` for the same rule; update tests that expected rethrow.
+- Evidence or affected files:
+  `docs/audits/2026-09-02_full_app_hardening_w1.md`; theme/locale/IAP/staff/IoT/
+  websocket/scapes/realtime_market cubits and focused tests.
+
+### 2026-09-02 - Perf scroll traces need mounted scroll target
+
+- What went wrong:
+  `perf_smoke_flows_test` scrolled before chat/list `ListView` mounted, so W2
+  `capture_perf_trace.sh` runs failed intermittently.
+- How it was fixed:
+  Added `awaitScrollTarget` in `integration_test/perf/perf_helpers.dart` and
+  switched perf flows to await a scrollable before `traceAction` scrolls.
+- Pattern:
+  Integration perf harness must wait for the scroll widget, not assume first
+  frame has a `ListView`.
+- Preventive rule:
+  New perf scroll traces call `awaitScrollTarget(tester)` (or equivalent pump
+  loop) before scroll gestures; pass `timeout` once — helper shares budget
+  across scrollable candidates.
+- Evidence or affected files:
+  `apps/mobile/integration_test/perf/perf_helpers.dart`,
+  `perf_smoke_flows_test.dart`, `social_feed_demo_perf_test.dart`.
+
 ### 2026-09-01 - Queue replay must yield to newer online mutation intent
 
 - What went wrong:

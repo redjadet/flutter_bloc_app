@@ -4,6 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
@@ -170,7 +171,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
   void _onStreamError(Object error, StackTrace stackTrace) {
     AppLogger.error('WebsocketCubit stream error', error, stackTrace);
     if (isClosed) return;
-    _emitCommandFailure(error.toString());
+    _emitCommandFailure(NetworkErrorMapper.getErrorMessage(error));
   }
 
   void _emitCommandFailure(String errorMessage) {

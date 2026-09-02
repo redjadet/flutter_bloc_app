@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import '../test_harness.dart';
-import '../widget_tester_pumps.dart';
 import 'perf_helpers.dart';
 
 /// Captures social-feed scroll frame timing via the seeded demo journey.

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
@@ -303,7 +304,10 @@ void main() {
 
     expect(cubit.state.status, WebsocketStatus.error);
     expect(cubit.state.isSending, isFalse);
-    expect(cubit.state.errorMessage, contains('message stream failed'));
+    expect(
+      cubit.state.errorMessage,
+      NetworkErrorMapper.getErrorMessage(Exception('message stream failed')),
+    );
 
     await cubit.close();
   });

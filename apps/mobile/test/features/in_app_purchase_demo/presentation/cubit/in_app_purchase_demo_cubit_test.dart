@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
@@ -82,7 +83,10 @@ void main() {
       verify: (cubit) {
         expect(cubit.state.status, InAppPurchaseDemoStatus.error);
         expect(cubit.state.isBusy, isFalse);
-        expect(cubit.state.errorMessage, contains('store stream failed'));
+        expect(
+          cubit.state.errorMessage,
+          NetworkErrorMapper.getErrorMessage(Exception('store stream failed')),
+        );
       },
     );
 
@@ -166,7 +170,11 @@ void main() {
           cubit.state.lastResult,
           isA<IapPurchaseResult>().having(
             (r) => r.maybeWhen(
-              failure: (_, message) => message.contains('purchase failed'),
+              failure: (_, message) =>
+                  message ==
+                  NetworkErrorMapper.getErrorMessage(
+                    StateError('purchase failed'),
+                  ),
               orElse: () => false,
             ),
             'failure',
@@ -192,7 +200,10 @@ void main() {
       verify: (cubit) {
         expect(cubit.state.status, InAppPurchaseDemoStatus.error);
         expect(cubit.state.isBusy, isFalse);
-        expect(cubit.state.errorMessage, contains('refresh failed'));
+        expect(
+          cubit.state.errorMessage,
+          NetworkErrorMapper.getErrorMessage(StateError('refresh failed')),
+        );
       },
     );
   });
