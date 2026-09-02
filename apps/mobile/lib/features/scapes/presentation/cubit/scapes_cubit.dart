@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/toggle_scape_favorite.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 /// Cubit for scapes list: load, grid/list toggle, and favorite toggle.
 class ScapesCubit extends Cubit<ScapesState>
@@ -21,9 +22,11 @@ class ScapesCubit extends Cubit<ScapesState>
 
   final ScapesRepository _repository;
   final TimerService _timerService;
+  final RequestIdGuard _loadRequestIdGuard = RequestIdGuard();
   TimerDisposable? _loadDelayHandle;
 
   void _loadScapes() {
+    final int requestId = _loadRequestIdGuard.next();
     emit(const ScapesState.loading());
 
     _loadDelayHandle?.dispose();
@@ -34,15 +37,15 @@ class ScapesCubit extends Cubit<ScapesState>
       if (identical(_loadDelayHandle, handle)) {
         _loadDelayHandle = null;
       }
-      unawaited(_loadScapesFromRepository());
+      unawaited(_loadScapesFromRepository(requestId));
     });
     _loadDelayHandle = registerTimer(handle);
   }
 
-  Future<void> _loadScapesFromRepository() async {
+  Future<void> _loadScapesFromRepository(int requestId) async {
     try {
       final scapes = await _repository.loadScapes();
-      if (isClosed) return;
+      if (!_loadRequestIdGuard.isCurrent(requestId) || isClosed) return;
       emit(ScapesState.ready(scapes: scapes));
     } on Object catch (e, stackTrace) {
       AppLogger.error(
@@ -50,7 +53,7 @@ class ScapesCubit extends Cubit<ScapesState>
         e,
         stackTrace,
       );
-      if (isClosed) return;
+      if (!_loadRequestIdGuard.isCurrent(requestId) || isClosed) return;
       emit(ScapesState.error(NetworkErrorMapper.getAppError(e)));
     }
   }

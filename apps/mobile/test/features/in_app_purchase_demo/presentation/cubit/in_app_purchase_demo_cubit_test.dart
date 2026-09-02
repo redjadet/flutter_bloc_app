@@ -14,11 +14,16 @@ void main() {
     late FakeInAppPurchaseRepository fakeRepo;
 
     setUp(() {
-      fakeRepo = FakeInAppPurchaseRepository(
-        delay: Duration.zero,
-        clockNow: () => DateTime(2026, 1, 1),
-        timerService: FakeTimerService(),
-      )..forcedOutcome = IapDemoForcedOutcome.success;
+      fakeRepo =
+          FakeInAppPurchaseRepository(
+              delay: Duration.zero,
+              clockNow: () => DateTime(2026, 1, 1),
+              timerService: FakeTimerService(),
+            )
+            ..forcedOutcome = IapDemoForcedOutcome.success
+            ..throwOnLoadProducts = false
+            ..throwOnPurchase = null
+            ..throwOnRefreshEntitlements = null;
     });
 
     tearDown(() async {
@@ -130,6 +135,64 @@ void main() {
       verify: (cubit) {
         expect(cubit.state.entitlements.isPremiumOwned, isTrue);
         expect(cubit.state.entitlements.isSubscriptionActive, isTrue);
+      },
+    );
+
+    blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
+      'initialize completes with error when repository throws Error',
+      build: buildCubit,
+      act: (cubit) async {
+        fakeRepo.throwOnLoadProducts = true;
+        await cubit.initialize();
+      },
+      verify: (cubit) {
+        expect(cubit.state.status, InAppPurchaseDemoStatus.error);
+        expect(cubit.state.errorMessage, isNotNull);
+      },
+    );
+
+    blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
+      'buy completes with failure when repository throws Error',
+      build: buildCubit,
+      act: (cubit) async {
+        await cubit.initialize();
+        final product = cubit.state.products.first;
+        fakeRepo.throwOnPurchase = StateError('purchase failed');
+        await cubit.buy(product);
+      },
+      verify: (cubit) {
+        expect(cubit.state.isBusy, isFalse);
+        expect(
+          cubit.state.lastResult,
+          isA<IapPurchaseResult>().having(
+            (r) => r.maybeWhen(
+              failure: (_, message) => message.contains('purchase failed'),
+              orElse: () => false,
+            ),
+            'failure',
+            isTrue,
+          ),
+        );
+      },
+    );
+
+    blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
+      'purchase result followed by entitlement refresh Error surfaces error',
+      build: buildCubit,
+      act: (cubit) async {
+        await cubit.initialize();
+        fakeRepo.throwOnRefreshEntitlements = StateError('refresh failed');
+        fakeRepo.simulatePurchaseResult(
+          const IapPurchaseResult.success(
+            productId: IapDemoProductIds.consumableCredits100,
+          ),
+        );
+        await Future<void>.delayed(Duration.zero);
+      },
+      verify: (cubit) {
+        expect(cubit.state.status, InAppPurchaseDemoStatus.error);
+        expect(cubit.state.isBusy, isFalse);
+        expect(cubit.state.errorMessage, contains('refresh failed'));
       },
     );
   });

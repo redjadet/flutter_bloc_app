@@ -49,7 +49,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
           errorMessage: null,
         ),
       );
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (isClosed) return;
       emit(
         state.copyWith(
@@ -110,7 +110,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       if (attempt == _attempt && !isClosed) {
         emit(state.copyWith(lastResult: result));
       }
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (attempt != _attempt || isClosed) return;
       emit(
         state.copyWith(
@@ -149,7 +149,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       final entitlements = await _activeRepository.refreshEntitlements();
       if (attempt != _attempt || isClosed) return;
       emit(state.copyWith(entitlements: entitlements, lastResult: null));
-    } on Exception catch (e) {
+    } on Object catch (e) {
       if (attempt != _attempt || isClosed) return;
       emit(state.copyWith(errorMessage: e.toString()));
     } finally {
@@ -165,9 +165,25 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
   }
 
   Future<void> refreshEntitlements() async {
-    final entitlements = await _activeRepository.refreshEntitlements();
-    if (isClosed) return;
-    emit(state.copyWith(entitlements: entitlements));
+    try {
+      final entitlements = await _activeRepository.refreshEntitlements();
+      if (isClosed) return;
+      emit(state.copyWith(entitlements: entitlements, errorMessage: null));
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'InAppPurchaseDemoCubit.refreshEntitlements',
+        error,
+        stackTrace,
+      );
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          status: InAppPurchaseDemoStatus.error,
+          isBusy: false,
+          errorMessage: error.toString(),
+        ),
+      );
+    }
   }
 
   void _subscribePurchaseResults() {

@@ -10,11 +10,19 @@ class LocaleCubit extends Cubit<Locale?> {
   final LocaleRepository _repository;
 
   Future<void> loadInitial() async {
-    final AppLocale? stored = await _repository.load();
-    if (isClosed) return;
-    final Locale? resolved = _toLocale(stored);
-    if (!_isSame(resolved, state)) {
-      emit(resolved);
+    try {
+      final AppLocale? stored = await _repository.load();
+      if (isClosed) return;
+      final Locale? resolved = _toLocale(stored);
+      if (!_isSame(resolved, state)) {
+        emit(resolved);
+      }
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'LocaleCubit.loadInitial failed',
+        error,
+        stackTrace,
+      );
     }
   }
 
@@ -33,7 +41,6 @@ class LocaleCubit extends Cubit<Locale?> {
       if (!isClosed) {
         emit(previous);
       }
-      rethrow;
     }
   }
 

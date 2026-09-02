@@ -10,9 +10,17 @@ class ThemeCubit extends Cubit<ThemeMode> {
   final ThemeRepository _repository;
 
   Future<void> loadInitial() async {
-    final ThemePreference? loaded = await _repository.load();
-    if (isClosed) return;
-    if (loaded != null) emit(_toThemeMode(loaded));
+    try {
+      final ThemePreference? loaded = await _repository.load();
+      if (isClosed) return;
+      if (loaded != null) emit(_toThemeMode(loaded));
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'ThemeCubit.loadInitial failed',
+        error,
+        stackTrace,
+      );
+    }
   }
 
   Future<void> setMode(ThemeMode mode) async {
@@ -30,7 +38,6 @@ class ThemeCubit extends Cubit<ThemeMode> {
       if (!isClosed) {
         emit(previous);
       }
-      rethrow;
     }
   }
 

@@ -101,6 +101,10 @@ mixin IotBleCubitStreams on IotBleCubitCore {
           },
           onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('IotBleCubit adapter stream', error, stackTrace);
+            if (isClosed) {
+              return;
+            }
+            emitBleFailure(IotBleErrorCode.initialize, error);
           },
         );
     registerSubscription(subscription);
@@ -118,6 +122,10 @@ mixin IotBleCubitStreams on IotBleCubitCore {
           },
           onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('IotBleCubit scan stream', error, stackTrace);
+            if (isClosed) {
+              return;
+            }
+            emitBleFailure(IotBleErrorCode.scan, error);
           },
         );
     registerSubscription(subscription);
@@ -135,6 +143,10 @@ mixin IotBleCubitStreams on IotBleCubitCore {
           },
           onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('IotBleCubit classic stream', error, stackTrace);
+            if (isClosed) {
+              return;
+            }
+            emitBleFailure(IotBleErrorCode.initialize, error);
           },
         );
     registerSubscription(subscription);

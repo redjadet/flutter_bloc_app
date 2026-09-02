@@ -46,6 +46,10 @@ mixin IotBleCubitConnection on IotBleCubitCore {
                 error,
                 stackTrace,
               );
+              if (isClosed) {
+                return;
+              }
+              emitBleFailure(IotBleErrorCode.connect, error);
             },
           ),
     );

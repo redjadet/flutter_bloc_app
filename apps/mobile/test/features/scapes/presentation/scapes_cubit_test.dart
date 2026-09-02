@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
@@ -22,6 +24,21 @@ class _SyncThrowScapesRepository implements ScapesRepository {
   @override
   Future<List<Scape>> loadScapes() {
     throw StateError('sync load failure');
+  }
+}
+
+class _DeferredScapesRepository implements ScapesRepository {
+  final List<Completer<List<Scape>>> _pending = <Completer<List<Scape>>>[];
+
+  @override
+  Future<List<Scape>> loadScapes() {
+    final completer = Completer<List<Scape>>();
+    _pending.add(completer);
+    return completer.future;
+  }
+
+  void completeLoad(int index, List<Scape> scapes) {
+    _pending[index].complete(scapes);
   }
 }
 
@@ -211,6 +228,44 @@ void main() {
         expect(cubit.state.hasError, isTrue);
         expect(cubit.state.lastError, isNotNull);
         expect(cubit.state.errorMessage, isNotEmpty);
+      },
+    );
+
+    test(
+      'stale load completion does not overwrite newer reload result',
+      () async {
+        final deferredRepo = _DeferredScapesRepository();
+        final cubit = ScapesCubit(
+          repository: deferredRepo,
+          timerService: timerService,
+        );
+        addTearDown(cubit.close);
+
+        timerService.elapse(const Duration(milliseconds: 350));
+        await Future<void>.delayed(Duration.zero);
+
+        cubit.reload();
+        timerService.elapse(const Duration(milliseconds: 350));
+        await Future<void>.delayed(Duration.zero);
+
+        final firstScapes = _defaultScapes();
+        final secondScapes = [
+          Scape(
+            id: 'scape_new',
+            name: 'New Scape',
+            imageUrl: 'https://example.com/new.jpg',
+            duration: const Duration(minutes: 1),
+            assetCount: 1,
+          ),
+        ];
+
+        deferredRepo.completeLoad(1, secondScapes);
+        await Future<void>.delayed(Duration.zero);
+        deferredRepo.completeLoad(0, firstScapes);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(cubit.state.scapes.length, 1);
+        expect(cubit.state.scapes.single.id, 'scape_new');
       },
     );
   });
