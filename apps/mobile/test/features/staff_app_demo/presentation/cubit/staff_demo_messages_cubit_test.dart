@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auth/auth.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_message.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
@@ -78,6 +79,21 @@ class _ProfileRepo implements StaffDemoProfileRepository {
   Future<StaffDemoProfile?> loadProfile({required String userId}) async => null;
 }
 
+class _ThrowingInboxRepo extends _InboxRepo {
+  _ThrowingInboxRepo()
+    : super(
+        recipients: const <StaffDemoInboxRecipientSnapshot>[
+          StaffDemoInboxRecipientSnapshot(messageId: 'm1'),
+        ],
+        messages: const <String, StaffDemoInboxMessage>{},
+      );
+
+  @override
+  Future<StaffDemoInboxMessage?> loadMessage(String messageId) async {
+    throw StateError('inbox hydrate failed');
+  }
+}
+
 void main() {
   group('StaffDemoMessagesCubit', () {
     test('hydrates typed message into inbox item', () async {
@@ -140,6 +156,28 @@ void main() {
       expect(cubit.state.status, StaffDemoMessagesStatus.ready);
       expect(cubit.state.items, hasLength(2));
       expect(inbox.loadShiftStatusCalls, isEmpty);
+      await cubit.close();
+    });
+
+    test('hydrate failure maps error message via NetworkErrorMapper', () async {
+      final inbox = _ThrowingInboxRepo();
+      final cubit = StaffDemoMessagesCubit(
+        authRepository: _AuthRepo(const AuthUser(id: 'u1', isAnonymous: false)),
+        inboxRepository: inbox,
+        messagingRepository: _MessagingRepo(),
+        profileRepository: _ProfileRepo(),
+      );
+
+      await cubit.initialize();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state.status, StaffDemoMessagesStatus.error);
+      expect(cubit.state.errorMessage, isNot(contains('StateError')));
+      expect(
+        cubit.state.errorMessage,
+        NetworkErrorMapper.getErrorMessage(StateError('inbox hydrate failed')),
+      );
       await cubit.close();
     });
   });

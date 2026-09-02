@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
@@ -13,6 +14,16 @@ import 'package:mocktail/mocktail.dart';
 class _MockDeepLinkService extends Mock implements DeepLinkService {}
 
 class _MockDeepLinkParser extends Mock implements DeepLinkParser {}
+
+final String _initFailedMessage = NetworkErrorMapper.getErrorMessage(
+  Exception('init failed'),
+);
+final String _streamErrorMessage = NetworkErrorMapper.getErrorMessage(
+  Exception('stream error'),
+);
+final String _persistentFailureMessage = NetworkErrorMapper.getErrorMessage(
+  Exception('persistent failure'),
+);
 
 void main() {
   setUpAll(() {
@@ -48,7 +59,7 @@ void main() {
         await cubit.initialize();
         await cubit.close();
       },
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
         DeepLinkState.idle(),
       ],
@@ -64,7 +75,7 @@ void main() {
         return DeepLinkCubit(service: service, parser: parser);
       },
       act: (cubit) => cubit.initialize(),
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
         DeepLinkState.idle(),
       ],
@@ -85,7 +96,7 @@ void main() {
         return DeepLinkCubit(service: service, parser: parser);
       },
       act: (cubit) => cubit.initialize(),
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
         DeepLinkState.navigate(DeepLinkTarget.charts, DeepLinkOrigin.initial),
         DeepLinkState.idle(),
@@ -126,9 +137,9 @@ void main() {
         when(service.getInitialLink).thenAnswer((_) async => null);
         await cubit.retryInitialize();
       },
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
-        DeepLinkState.error('Exception: init failed'),
+        DeepLinkState.error(_initFailedMessage),
         DeepLinkState.loading(),
         DeepLinkState.idle(),
       ],
@@ -155,7 +166,7 @@ void main() {
         pendingInitialLink.complete(null);
         await first;
       },
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
         DeepLinkState.idle(),
       ],
@@ -174,10 +185,10 @@ void main() {
         await cubit.initialize();
         streamController.addError(Exception('stream error'));
       },
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
         DeepLinkState.idle(),
-        DeepLinkState.error('Exception: stream error'),
+        DeepLinkState.error(_streamErrorMessage),
       ],
     );
 
@@ -194,10 +205,10 @@ void main() {
         when(service.getInitialLink).thenAnswer((_) async => null);
         await cubit.retryInitialize();
       },
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
         DeepLinkState.idle(),
-        DeepLinkState.error('Exception: stream error'),
+        DeepLinkState.error(_streamErrorMessage),
         DeepLinkState.loading(),
         DeepLinkState.idle(),
       ],
@@ -228,17 +239,17 @@ void main() {
         when(service.getInitialLink).thenAnswer((_) async => null);
         await cubit.retryInitialize();
       },
-      expect: () => const <DeepLinkState>[
+      expect: () => <DeepLinkState>[
         DeepLinkState.loading(),
-        DeepLinkState.error('Exception: init failed'),
+        DeepLinkState.error(_initFailedMessage),
         DeepLinkState.loading(),
-        DeepLinkState.error('Exception: init failed'),
+        DeepLinkState.error(_initFailedMessage),
         DeepLinkState.loading(),
-        DeepLinkState.error('Exception: init failed'),
+        DeepLinkState.error(_initFailedMessage),
         DeepLinkState.loading(),
-        DeepLinkState.error('Exception: init failed'),
+        DeepLinkState.error(_initFailedMessage),
         DeepLinkState.loading(),
-        DeepLinkState.error('Exception: init failed'),
+        DeepLinkState.error(_initFailedMessage),
         DeepLinkState.loading(),
         DeepLinkState.idle(),
       ],
@@ -295,7 +306,7 @@ void main() {
         30,
         (index) => index % 2 == 0
             ? const DeepLinkState.loading()
-            : const DeepLinkState.error('Exception: persistent failure'),
+            : DeepLinkState.error(_persistentFailureMessage),
       ),
       verify: (_) {
         // Verify initialization attempts were made (15 observed)

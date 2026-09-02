@@ -49,6 +49,28 @@ void main() {
       expect(analytics.eventCount, 0);
     });
 
+    test('initialize maps startup failures via NetworkErrorMapper', () async {
+      final _ThrowingConsent throwingConsent = _ThrowingConsent();
+      addTearDown(throwingConsent.dispose);
+      final ProductionReadinessCubit wired = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: throwingConsent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        firebaseInitialized: false,
+      );
+      addTearDown(wired.close);
+
+      await wired.initialize();
+
+      expect(wired.state.status, ProductionReadinessStatus.error);
+      expect(wired.state.errorMessage, isNot(contains('StateError')));
+      expect(
+        wired.state.errorMessage,
+        'Something went wrong. Please try again.',
+      );
+    });
+
     test('tracks showcase after consent enabled', () async {
       await consent.save(enabled: true);
       await cubit.initialize();
@@ -416,6 +438,26 @@ class _ThrowingFcmMessagingService implements FcmMessagingService {
 
   @override
   Stream<String> get tokenRefreshes => const Stream<String>.empty();
+}
+
+class _ThrowingConsent implements AnalyticsConsentRepository {
+  final StreamController<bool> _changes = StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get changes => _changes.stream;
+
+  @override
+  Future<bool> load() async => throw StateError('consent store unavailable');
+
+  @override
+  Future<bool> save({required bool enabled}) async => enabled;
+
+  @override
+  Future<void> dispose() async {
+    if (!_changes.isClosed) {
+      await _changes.close();
+    }
+  }
 }
 
 class _FakeConsent implements AnalyticsConsentRepository {
