@@ -17,7 +17,7 @@ Nothing is required inside **Strapi** (this integration uses **Stripe** for paym
 
 - **Create or use a Stripe account** at [stripe.com](https://stripe.com). For the demo, use **Test mode** (toggle in the top-right of the Dashboard) so no real money is involved.
 - **Get API keys** (Developers → API keys):
-  - **Publishable key** (starts with `pk_test_...`): used by the Flutter app only. You will provide this to the app via `SecretConfig` / `--dart-define=STRIPE_PUBLISHABLE_KEY=pk_test_...` or the same values exported in `.envrc` when using **`direnv`** (see [Security & Secrets](../security_and_secrets.md)).
+  - **Publishable key** (starts with `pk_test_...`): used by the Flutter app only. You will provide this to the app via `SecretConfig` / `--dart-define=STRIPE_PUBLISHABLE_KEY=pk_test_...` or the same values in gitignored `.envrc` / `.env` when using **`direnv`** or the Flutter wrapper (see [Security & Secrets](../security_and_secrets.md)).
   - **Secret key** (starts with `sk_test_...`): used **only by your backend** (e.g. Firebase Callable Function). Never put this in the app or in git.
 - **No extra Stripe setup** is required for a "save card" (SetupIntent) demo: no Products, Prices, or Checkout Sessions needed. Default payment method types are fine.
 

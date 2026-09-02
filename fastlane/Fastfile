@@ -88,10 +88,12 @@ def ensure_release_inputs!
   end
 end
 
-def flutter_dart_defines
+def flutter_dart_defines(release_safe: false)
   defines = []
   Dir.chdir(project_root) do
-    output = sh(tool_path('flutter_dart_defines_from_env.sh'), log: false).to_s
+    args = [tool_path('flutter_dart_defines_from_env.sh')]
+    args << '--release' if release_safe
+    output = sh(*args, log: false).to_s
     defines = output.split(/\s+/).map(&:strip).reject(&:empty?)
   end
   defines
@@ -201,7 +203,7 @@ def build_flutter(platform, options = {})
       build_mode = options[:build_mode] || ENV['IOS_BUILD_MODE'] || 'release'
       args = ['flutter', 'build', 'ipa', "--#{build_mode}", "--target=#{entrypoint}"]
       args.concat(['--flavor', flavor]) if flavor
-      defines = flutter_dart_defines
+      defines = flutter_dart_defines(release_safe: build_mode != 'debug')
       reject_client_secret_defines!(defines) unless build_mode == 'debug'
       args.concat(defines)
       sh(*args, log: false)
@@ -209,7 +211,7 @@ def build_flutter(platform, options = {})
       args = %w[flutter build appbundle --release]
       args << '--no-tree-shake-icons' if ENV['ANDROID_NO_TREE_SHAKE_ICONS'] != 'false'
       args.concat(['--flavor', flavor]) if flavor
-      defines = flutter_dart_defines
+      defines = flutter_dart_defines(release_safe: true)
       reject_client_secret_defines!(defines)
       args.concat(defines)
       sh(*args, log: false)

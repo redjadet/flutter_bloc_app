@@ -40,11 +40,44 @@ if [ -z "${REAL_FLUTTER// /}" ]; then
   exit 1
 fi
 
-# shellcheck disable=SC2207
-DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh") )
-
 subcommand="${1:-}"
 CURRENT_DIR="$(pwd)"
+DART_DEFINES=()
+
+uses_release_policy() {
+  local command="$1"
+  shift || true
+  local arg
+
+  for arg in "$@"; do
+    case "$arg" in
+      --release | --profile) return 0 ;;
+    esac
+  done
+
+  if [ "$command" = "build" ]; then
+    for arg in "$@"; do
+      if [ "$arg" = "--debug" ]; then
+        return 1
+      fi
+    done
+    return 0
+  fi
+
+  return 1
+}
+
+case "$subcommand" in
+  run | test | drive | attach | build)
+    if uses_release_policy "$subcommand" "${@:2}"; then
+      # shellcheck disable=SC2207
+      DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh" --release) )
+    else
+      # shellcheck disable=SC2207
+      DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh") )
+    fi
+    ;;
+esac
 
 if [ "$subcommand" = "doctor" ]; then
   echo "flutter_resolution|path_flutter|$WRAPPER_DIR/flutter"

@@ -6,6 +6,10 @@ Copy the following into **repo root** as `.envrc`, fill in values, then run:
 direnv allow
 ```
 
+**Alternative:** copy [`.env.example`](../.env.example) to `.env` (gitignored) if you
+prefer dotenv without direnv. See [Security and secrets](security_and_secrets.md)
+(Option C).
+
 Then you can run `flutter run` from the repo root without typing
 `--dart-define` flags manually; the wrapper routes app commands to
 `apps/mobile`.

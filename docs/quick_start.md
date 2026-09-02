@@ -17,8 +17,11 @@ dart run melos bootstrap
 cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
-If `.envrc` has prepended `tool/direnv/bin` to `PATH`, plain `flutter run`
-from the repo root is routed to `apps/mobile`.
+If `tool/direnv/bin` is on `PATH` (via `.envrc` or
+`export PATH="$PWD/tool/direnv/bin:$PATH"`), plain `flutter run` from the repo
+root is routed to `apps/mobile` and loads gitignored `.env` / `.env.local`
+when present (template: [`.env.example`](../.env.example);
+see [security_and_secrets.md](security_and_secrets.md)).
 
 Melos is repo-pinned in the root `pubspec.yaml`; use `dart run melos ...`
 after bootstrap. A global `melos` binary is not required.

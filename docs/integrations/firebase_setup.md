@@ -6,10 +6,10 @@ The repo includes a **placeholder** `apps/mobile/lib/firebase_options.dart` so t
 
 To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below.
 
-- **Gitignored (local only):** `firebase.json`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `apps/other_platforms/macos/Runner/GoogleService-Info.plist`, and `.envrc`.
+- **Gitignored (local only):** `firebase.json`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `apps/other_platforms/macos/Runner/GoogleService-Info.plist`, `.envrc`, `.env`, and `.env.local`.
 - **Committed template:** [`firebase.json.example`](../../firebase.json.example) — copy to `firebase.json` and set your `projectId` / app IDs (or run `flutterfire configure`, which writes `firebase.json` for you).
 - **Committed (placeholders only):** `apps/mobile/lib/firebase_options.dart` uses `String.fromEnvironment('FIREBASE_*', …)` so real API keys are injected via `--dart-define`, not hardcoded in git.
-- **`flutterfire configure`** downloads platform files and *can* overwrite `apps/mobile/lib/firebase_options.dart` with hardcoded keys — restore the committed placeholder after configuring (see [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)) and put values in `.envrc` instead.
+- **`flutterfire configure`** downloads platform files and *can* overwrite `apps/mobile/lib/firebase_options.dart` with hardcoded keys — restore the committed placeholder after configuring (see [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)) and put values in `.envrc` or `.env` instead.
 
 Before committing, run `./tool/check_tracked_secret_literals.sh`.
 
@@ -31,6 +31,7 @@ Use these tracked templates only when you want Firebase-backed features locally:
 | `apps/mobile/ios/Runner/GoogleService-Info.plist` | [`ios/Runner/GoogleService-Info.plist.sample`](../../apps/mobile/ios/Runner/GoogleService-Info.plist.sample) | Optional; iOS copies it into `Runner.app` only when present. |
 | `apps/other_platforms/macos/Runner/GoogleService-Info.plist` | [`macos/Runner/GoogleService-Info.plist.sample`](../../apps/other_platforms/macos/Runner/GoogleService-Info.plist.sample) | Optional; macOS does not require it as a build resource. |
 | `.envrc` | [`docs/envrc.example`](../envrc.example) | Optional; without it Firebase and remote-secret features stay disabled. |
+| `.env` / `.env.local` | [`.env.example`](../../.env.example) | Optional dotenv alternative; loaded by the Flutter wrapper into `--dart-define`. |
 | `assets/config/secrets.json` | [`assets/config/secrets.sample.json`](../../assets/config/secrets.sample.json) | Optional; not bundled by default. |
 
 Do not commit copied local files after replacing placeholders with real project
@@ -104,7 +105,7 @@ This will:
 
 `flutterfire configure` writes **hardcoded** API keys into `apps/mobile/lib/firebase_options.dart`. Keep the repo’s committed placeholder instead:
 
-1. Copy `apiKey`, `appId`, `projectId`, and related fields into `.envrc` as `FIREBASE_*` exports (see [`docs/envrc.example`](../envrc.example)).
+1. Copy `apiKey`, `appId`, `projectId`, and related fields into `.envrc` as `FIREBASE_*` exports (see [`docs/envrc.example`](../envrc.example)) or into gitignored `.env` (see [`.env.example`](../../.env.example)).
 2. Restore the committed placeholder Dart file:
 
    ```bash
@@ -114,13 +115,13 @@ This will:
 3. Load env and verify key names (not values):
 
    ```bash
-   direnv allow
+   direnv allow   # when using .envrc
    ./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p' | grep '^FIREBASE_'
    ```
 
 4. Run `./tool/check_tracked_secret_literals.sh` before any commit.
 
-Native builds use the gitignored plist/json files; Dart uses `--dart-define` from `.envrc`.
+Native builds use the gitignored plist/json files; Dart uses `--dart-define` from `.envrc` or `.env`.
 
 ### 4. Run the app
 
@@ -153,8 +154,8 @@ If you prefer not to use the CLI:
    - Download `GoogleService-Info.plist` and place it at **`apps/other_platforms/macos/Runner/GoogleService-Info.plist`**.
 
 5. **Dart options (local injection)**
-   - Prefer [Option A](#option-a-flutterfire-cli-recommended) plus [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart): platform files from the CLI, `FIREBASE_*` in `.envrc`, committed `apps/mobile/lib/firebase_options.dart` stays a placeholder.
-   - Or copy values from platform files into `.envrc` only; do not hardcode API keys into the committed Dart file.
+   - Prefer [Option A](#option-a-flutterfire-cli-recommended) plus [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart): platform files from the CLI, `FIREBASE_*` in `.envrc` or `.env`, committed `apps/mobile/lib/firebase_options.dart` stays a placeholder.
+   - Or copy values from platform files into `.envrc` or `.env` only; do not hardcode API keys into the committed Dart file.
 
 6. **Run the app**
 
@@ -184,7 +185,7 @@ Once config is in place:
 1. Decide whether this debug session needs Firebase. Non-Firebase screens should
    run with placeholders; Firebase init skips safely when required values are
    missing.
-2. If Firebase is needed, populate `.envrc` with `FIREBASE_*` values from your
+2. If Firebase is needed, populate `.envrc` or `.env` with `FIREBASE_*` values from your
    local Firebase project and run `direnv allow`.
 3. Verify the wrapper sees the keys without printing values:
    `./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p'`.
@@ -199,7 +200,7 @@ Once config is in place:
 7. Start with `cd apps/mobile && flutter run -t lib/main_dev.dart`, or root
    `flutter run -t apps/mobile/lib/main_dev.dart` when the direnv wrapper is active. If
    Firebase still does not initialize, read the log line listing missing field
-   names and add only those `FIREBASE_*` values to `.envrc`.
+   names and add only those `FIREBASE_*` values to `.envrc` or `.env`.
 
 ---
 
@@ -231,7 +232,7 @@ Review open alerts at [GitHub secret scanning](https://github.com/redjadet/flutt
 If GitHub secret scanning flags a Firebase/Google API key:
 
 1. **Rotate or restrict** the key in [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials (and Firebase Console if needed). Treat `publicly_leaked: true` alerts as compromised even after removal from `main`.
-2. **Current tree:** replace any tracked literals with placeholders (`YOUR_*_API_KEY`, `your-project-id`, `1:000000000000:*:placeholder`). Keep real keys only in gitignored paths (`.envrc`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `macos/Runner/GoogleService-Info.plist`).
+2. **Current tree:** replace any tracked literals with placeholders (`YOUR_*_API_KEY`, `your-project-id`, `1:000000000000:*:placeholder`). Keep real keys only in gitignored paths (`.envrc`, `.env`, `.env.local`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `macos/Runner/GoogleService-Info.plist`).
 3. Run `./tool/check_tracked_secret_literals.sh` before pushing.
 4. **Resolve** the GitHub alert (`revoked` after rotation, or `false_positive` only for third-party example keys that are not yours).
 5. **Git history:** removing secrets from `main` does not erase old commits. To scrub all refs locally (requires a coordinated force-push):
@@ -300,7 +301,7 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 
 | Issue | What to do |
 | ----- | ---------- |
-| **Firebase not initializing** | The app skips Firebase init when required `FIREBASE_*` values are missing or still placeholders (e.g. `your-project-id`). Add real values to `.envrc`, run `direnv allow`, and ensure gitignored platform files exist (`flutterfire configure` — then [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)). |
+| **Firebase not initializing** | The app skips Firebase init when required `FIREBASE_*` values are missing or still placeholders (e.g. `your-project-id`). Add real values to `.envrc` or `.env`, run `direnv allow` when using `.envrc`, and ensure gitignored platform files exist (`flutterfire configure` — then [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)). |
 | **`flutterfire configure` fails** (e.g. "Failed to write Dart configuration file", "UnsupportedError not found in macOS", or **"FormatException: Unexpected character (at character 1)"**) | See [Workaround when FlutterFire CLI fails on macOS](#workaround-when-flutterfire-cli-fails-on-macos) below. The FormatException often means the CLI got non-JSON output from a Firebase command (e.g. login prompt or proxy/network issue). |
 | **Missing google-services.json** | Fresh-checkout debug builds should still work. For Firebase-backed Android features, copy `android/app/google-services.json.sample` to `android/app/google-services.json` and replace placeholders, or run `flutterfire configure`. |
 | **Missing GoogleService-Info.plist** | Fresh-checkout iOS/macOS builds should still work. For Firebase-backed Apple features, copy the matching `.sample` plist and replace placeholders, or run `flutterfire configure`. On iOS, the project copies `ios/Runner/GoogleService-Info.plist` into `Runner.app` only when that local file exists; if `FirebaseApp.configure()` crashes with “Could not locate configuration file,” confirm the source plist exists and rebuild from Xcode/Flutter so the copy phase runs. **Integration:** `./bin/integration_tests` skips or removes placeholder plists (`YOUR_IOS_API_KEY`) before simulator runs; `AppDelegate` skips native configure when the plist is missing or still a placeholder. |

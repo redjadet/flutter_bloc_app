@@ -21,8 +21,13 @@ if [ -n "${FLAVOR// /}" ]; then
   args+=("--flavor" "${FLAVOR}")
 fi
 
-# shellcheck disable=SC2207
-dart_defines=( $(./tool/flutter_dart_defines_from_env.sh) )
+if [ "$BUILD_MODE" != "debug" ]; then
+  # shellcheck disable=SC2207
+  dart_defines=( $(./tool/flutter_dart_defines_from_env.sh --release) )
+else
+  # shellcheck disable=SC2207
+  dart_defines=( $(./tool/flutter_dart_defines_from_env.sh) )
+fi
 
 if [ "$BUILD_MODE" != "debug" ]; then
   prohibited=(

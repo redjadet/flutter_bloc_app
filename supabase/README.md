@@ -82,7 +82,7 @@ Dashboard checks:
 
 Repo / CLI checks:
 
-1. Check the app-configured project in [`secrets.json`](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/assets/config/secrets.json):
+1. Check the app-configured project in gitignored `assets/config/secrets.json` (template: [`assets/config/secrets.sample.json`](../assets/config/secrets.sample.json)) or in `.env` / `.envrc`:
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
 2. Check which hosted project the local CLI is linked to:
@@ -146,7 +146,7 @@ the same change set.
   use direct HF only when build policy allows it; otherwise it must surface
   auth-required UX and skip the proxy call.
 
-**Prime tables (one-off sync):** From repo root, run `./script/prime_supabase_tables.sh`. Requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in the process environment (for example from **`direnv`** / `.envrc`—see [`docs/envrc.example`](../docs/envrc.example)) or in a local `assets/config/secrets.json` file if you keep one for scripts only (it is **not** bundled in the app by default). Invokes both functions once so the app can read from tables on first load.
+**Prime tables (one-off sync):** From repo root, run `./script/prime_supabase_tables.sh`. Requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in the process environment (for example from **`direnv`** / `.envrc`, gitignored `.env` — see [`.env.example`](../.env.example) and [`docs/envrc.example`](../docs/envrc.example)) or in a local `assets/config/secrets.json` file if you keep one for scripts only (it is **not** bundled in the app by default). Invokes both functions once so the app can read from tables on first load.
 
 ## Migrations
 

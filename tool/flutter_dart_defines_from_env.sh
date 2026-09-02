@@ -6,21 +6,68 @@ set -euo pipefail
 # command-line arguments are observable and Flutter embeds Dart defines.
 #
 # Intended usage (direnv recommended):
-#   eval "$(./tool/flutter_dart_defines_from_env.sh)"
-#
-# Or within a command:
 #   # shellcheck disable=SC2046
 #   flutter run $(./tool/flutter_dart_defines_from_env.sh)
+#   flutter build web $(./tool/flutter_dart_defines_from_env.sh --release)
 #
 # Notes:
+# - Loads gitignored `.env` / `.env.local` from the repo root when present.
 # - It outputs args separated by spaces.
 # - Server-only variables such as HUGGINGFACE_API_KEY are intentionally excluded.
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT_DIR/tool/load_repo_dotenv.sh"
+load_repo_dotenv "$ROOT_DIR"
+
+release_safe=0
+case "${1:-}" in
+  "") ;;
+  --release)
+    release_safe=1
+    shift
+    ;;
+  -h | --help)
+    echo "usage: tool/flutter_dart_defines_from_env.sh [--release]"
+    exit 0
+    ;;
+  *)
+    echo "error: unknown option: $1" >&2
+    exit 2
+    ;;
+esac
+if [ "$#" -gt 0 ]; then
+  echo "error: unexpected arguments" >&2
+  exit 2
+fi
+
+if [ "$release_safe" -eq 1 ]; then
+  prohibited=(
+    HUGGINGFACE_API_KEY
+    GEMINI_API_KEY
+    GOOGLE_API_KEY
+    CHAT_FASTAPICLOUD_DEMO_SECRET
+    CHAT_RENDER_DEMO_SECRET
+  )
+  for key in "${prohibited[@]}"; do
+    if [ -n "${!key:-}" ]; then
+      echo "error: ${key} must not be supplied to a release/profile build" >&2
+      exit 2
+    fi
+  done
+fi
+
+defines=()
 
 emit_define() {
   local key="$1"
   local value="${!key:-}"
   if [ -n "${value// /}" ]; then
-    printf -- "--dart-define=%s=%s " "$key" "$value"
+    if [[ "$value" =~ [[:space:]] ]]; then
+      printf 'error: %s contains whitespace; dart-define output is space-separated\n' "$key" >&2
+      return 2
+    fi
+    defines+=("--dart-define=${key}=${value}")
   fi
 }
 
@@ -72,4 +119,7 @@ emit_define "CHAT_FASTAPICLOUD_DEMO_BASE_URL"
 emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE"
 emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE_REGION"
 
+if [ "${#defines[@]}" -gt 0 ]; then
+  printf '%s ' "${defines[@]}"
+fi
 printf "\n"

@@ -128,6 +128,10 @@ vendor/cache/
 # Local direnv config (do not commit)
 .envrc
 
+# Local dotenv secrets for development (template: .env.example)
+.env
+.env.local
+
 # Local agent scorecard log (do not commit)
 analysis/agent_scorecard/scorecard-events.jsonl
 tmp/*
