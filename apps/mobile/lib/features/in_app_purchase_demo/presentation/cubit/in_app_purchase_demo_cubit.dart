@@ -49,6 +49,7 @@ abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
   // ignore: cancel_subscriptions - Lifecycle is centralized via CubitSubscriptionMixin.
   StreamSubscription<IapPurchaseResult>? _sub;
   int _attempt = 0;
+  int _purchaseSubscriptionGeneration = 0;
 
   InAppPurchaseRepository get _activeRepository =>
       state.useFakeRepository ? _fakeRepository : _realRepository;
@@ -169,10 +170,14 @@ abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
     }
   }
 
-  Future<void> refreshEntitlements() async {
+  Future<void> refreshEntitlements({int? subscriptionGeneration}) async {
     try {
       final entitlements = await _activeRepository.refreshEntitlements();
       if (isClosed) return;
+      if (subscriptionGeneration != null &&
+          !_isPurchaseSubscriptionCurrent(subscriptionGeneration)) {
+        return;
+      }
       emit(state.copyWith(entitlements: entitlements, errorMessage: null));
     } on Object catch (error, stackTrace) {
       AppLogger.error(
@@ -181,6 +186,10 @@ abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
         stackTrace,
       );
       if (isClosed) return;
+      if (subscriptionGeneration != null &&
+          !_isPurchaseSubscriptionCurrent(subscriptionGeneration)) {
+        return;
+      }
       emit(
         state.copyWith(
           status: InAppPurchaseDemoStatus.error,
@@ -190,4 +199,14 @@ abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
       );
     }
   }
+
+  int _startPurchaseSubscriptionGeneration() =>
+      ++_purchaseSubscriptionGeneration;
+
+  void _invalidatePurchaseSubscriptionGeneration() {
+    _purchaseSubscriptionGeneration++;
+  }
+
+  bool _isPurchaseSubscriptionCurrent(int generation) =>
+      generation == _purchaseSubscriptionGeneration;
 }

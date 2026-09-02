@@ -13,6 +13,8 @@ before broader perf and mapper sweeps.
 - Map stream/command failures through `NetworkErrorMapper` where applicable.
 - Split `InAppPurchaseDemoCubit` stream lifecycle into a part file to satisfy
   `file_length_lint` (max 225 physical lines).
+- Invalidate prior IAP purchase-stream generations before a repository switch
+  or cubit close, so stale entitlement refreshes cannot update current state.
 - Fix `awaitScrollTarget` perf helper to honor a shared timeout budget across
   scroll candidates.
 
