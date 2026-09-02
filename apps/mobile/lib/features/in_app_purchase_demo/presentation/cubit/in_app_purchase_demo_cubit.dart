@@ -11,16 +11,35 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purcha
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_state.dart';
 
-class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
-    with CubitSubscriptionMixin<InAppPurchaseDemoState> {
+// Keep ctor param names for `super.` forwarding from InAppPurchaseDemoCubit.
+// ignore_for_file: prefer_initializing_formals
+
+part 'in_app_purchase_demo_cubit_stream.part.dart';
+
+class InAppPurchaseDemoCubit extends _InAppPurchaseDemoCubitBase
+    with _InAppPurchaseDemoCubitStream {
   InAppPurchaseDemoCubit({
-    required this._fakeRepository,
-    required this._realRepository,
-    this._fakeOutcomeControls,
-    this._realDemoControls,
-  }) : super(const InAppPurchaseDemoState()) {
+    required super.fakeRepository,
+    required super.realRepository,
+    super.fakeOutcomeControls,
+    super.realDemoControls,
+  }) {
     _subscribePurchaseResults();
   }
+}
+
+abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
+    with CubitSubscriptionMixin<InAppPurchaseDemoState> {
+  _InAppPurchaseDemoCubitBase({
+    required InAppPurchaseRepository fakeRepository,
+    required InAppPurchaseRepository realRepository,
+    IapFakeOutcomePort? fakeOutcomeControls,
+    IapDemoControlsPort? realDemoControls,
+  }) : _fakeRepository = fakeRepository,
+       _realRepository = realRepository,
+       _fakeOutcomeControls = fakeOutcomeControls,
+       _realDemoControls = realDemoControls,
+       super(const InAppPurchaseDemoState());
 
   final InAppPurchaseRepository _fakeRepository;
   final InAppPurchaseRepository _realRepository;
@@ -67,23 +86,6 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
       return;
     }
     _realDemoControls?.resetDemoState();
-  }
-
-  Future<void> toggleRepository({required bool useFake}) async {
-    if (state.isBusy) return;
-    _attempt++;
-    emit(
-      state.copyWith(
-        useFakeRepository: useFake,
-        lastResult: null,
-        errorMessage: null,
-      ),
-    );
-    final StreamSubscription<IapPurchaseResult>? previousSubscription = _sub;
-    _sub = null;
-    await cancelRegisteredSubscription(previousSubscription);
-    _subscribePurchaseResults();
-    await initialize();
   }
 
   void setForcedOutcome(IapDemoForcedOutcome outcome) {
@@ -187,54 +189,5 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         ),
       );
     }
-  }
-
-  void _subscribePurchaseResults() {
-    _sub = registerSubscription(
-      _activeRepository.watchPurchaseResults().listen(
-        _onPurchaseResult,
-        onError: _onPurchaseStreamError,
-      ),
-    );
-  }
-
-  Future<void> _onPurchaseResult(IapPurchaseResult result) async {
-    if (isClosed) return;
-    final bool isPending = result.maybeWhen(
-      pending: (_, _) => true,
-      orElse: () => false,
-    );
-    emit(
-      state.copyWith(
-        lastResult: result,
-        isBusy: isPending && state.isBusy,
-        status: isPending ? state.status : InAppPurchaseDemoStatus.ready,
-      ),
-    );
-    await refreshEntitlements();
-  }
-
-  void _onPurchaseStreamError(Object error, StackTrace stackTrace) {
-    AppLogger.error(
-      'InAppPurchaseDemoCubit.watchPurchaseResults',
-      error,
-      stackTrace,
-    );
-    if (isClosed) return;
-    emit(
-      state.copyWith(
-        status: InAppPurchaseDemoStatus.error,
-        isBusy: false,
-        errorMessage: NetworkErrorMapper.getErrorMessage(error),
-      ),
-    );
-  }
-
-  @override
-  Future<void> close() async {
-    final StreamSubscription<IapPurchaseResult>? subscription = _sub;
-    _sub = null;
-    await cancelRegisteredSubscription(subscription);
-    await super.close();
   }
 }
