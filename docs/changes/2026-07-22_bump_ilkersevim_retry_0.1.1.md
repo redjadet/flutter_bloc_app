@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-22
 **Branch:** `chore/bump-ilkersevim-retry-0.1.1`
-**Plan:** [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md) Phase 8 OIDC
+**Plan:** [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md) Phase 8 OIDC
 
 ## Why
 
@@ -13,7 +13,7 @@ to the OIDC patch.
 
 - `apps/mobile` + `packages/networking`: `ilkersevim_retry: ^0.1.1`
 - Workspace lock refreshed to hosted `0.1.1`
-- `SHARED_UTILITIES.md` table caret updated
+- [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md) table caret updated
 
 ## External proof
 

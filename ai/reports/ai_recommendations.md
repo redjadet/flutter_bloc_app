@@ -11,7 +11,7 @@ ai_snapshot:
 
 # AI recommendations
 
-Prioritized actions from discovery (2026-05-21). Each item links evidence; implementation needs Feature Brief per [`docs/plans/FEATURE_TEMPLATE.md`](../../docs/plans/FEATURE_TEMPLATE.md) when touching code.
+Prioritized actions from discovery (2026-05-21). Each item links evidence; implementation needs Feature Brief per [`engineering/FEATURE_TEMPLATE.md`](../../docs/engineering/FEATURE_TEMPLATE.md) when touching code.
 
 | ID | Priority | Recommendation | Evidence | Effort |
 | --- | --- | --- | --- | --- |

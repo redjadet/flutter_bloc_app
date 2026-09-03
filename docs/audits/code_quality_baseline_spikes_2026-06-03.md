@@ -1,6 +1,6 @@
 # Phase 0b — deferred gate readiness spikes (2026-06-03)
 
-Spike tickets for [`checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md).
+Spike tickets for [`checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md).
 Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-03.md).
 
 ## Spike: QG-D07 — lifecycle observer dispose

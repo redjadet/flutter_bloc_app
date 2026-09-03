@@ -28,5 +28,5 @@ Remaining intentional deferrals (do not standalone-churn):
 
 | ID | Item | Doc |
 | --- | --- | --- |
-| MS-D01 | Wave C presentation `part` splits — only with next UI touch | [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md) |
+| MS-D01 | Wave C presentation `part` splits — only with next UI touch | [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md) |
 | MS-D02 | Staff clock-out `flags` stays partial map (pre-existing wire) | same plan |

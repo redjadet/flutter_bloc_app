@@ -33,5 +33,5 @@ Split oversized files into `*.part.dart` helpers; do not raise `max_lines` to si
 
 ## Related
 
-- [`docs/plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md) — QG-D02 row updated to **promoted (fail)**
+- [`engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md) — QG-D02 row updated to **promoted (fail)**
 - [`docs/changes/2026-06-03_renovate-dashboard-issue-2.md`](2026-06-03_renovate-dashboard-issue-2.md) — analyzer 10 / plugin stack context

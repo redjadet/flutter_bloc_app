@@ -1,7 +1,7 @@
 # Maintainability baseline — 2026-07-10
 
 Point-in-time evidence for
-[`docs/plans/2026-07-10_maintainability_program.md`](../plans/2026-07-10_maintainability_program.md).
+[`changes/2026-07-10_maintainability_followup_wave_closeout.md`](../changes/2026-07-10_maintainability_followup_wave_closeout.md).
 Re-run after Phase 0 rebase onto current `origin/main`.
 
 ## Commands

@@ -34,7 +34,7 @@ credential is returned to Flutter.
 
 Before writing code, Cursor agents should confirm:
 
-1. The active slice and write set are recorded in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md).
+1. The active slice and write set are recorded in `tasks/cursor/todo.md`.
 2. Any STOP row the slice depends on is either resolved below or explicitly using the plan default.
 3. FastAPI contract fields used by Flutter are frozen here before repository/UI work begins.
 4. After Python changes under `demos/render_chat_api` or repo `tool/`, run **`./tool/check_pyright_python.sh`** before merge (or rely on **`./bin/checklist`**, which includes it).

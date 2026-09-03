@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-22
 **Branch:** `extract/retire-type-safe-bloc-shims`
-**Plan:** [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md)
+**Plan:** [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md)
 **Related:** [`2026-07-21_type_safe_bloc_public_package.md`](2026-07-21_type_safe_bloc_public_package.md)
 
 ## Why

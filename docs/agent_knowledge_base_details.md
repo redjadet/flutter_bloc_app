@@ -18,7 +18,7 @@ Harness / history rows that stay here:
 | Commands | [`agents_quick_reference.md`](agents_quick_reference.md) | Choosing repo entrypoints. |
 | Code graph | [`code_review_graph.md`](ai/code_review_graph.md) | Narrow non-trivial exploration. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | End-to-end flow changes. |
-| Plans/history | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Active contracts, rationale, historical snapshots. |
+| Plans/history | [`plans/README.md`](plans/README.md) (local/gitignored working plans), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Plan routing stub, shipped rationale, historical snapshots. |
 | Active trackers | `../tasks/codex/todo.md`, `../tasks/cursor/todo.md` | Current plan/proof. |
 | Repeated lessons | [`../tasks/lessons.md`](../tasks/lessons.md) | Durable user corrections. |
 

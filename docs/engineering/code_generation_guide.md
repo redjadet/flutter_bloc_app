@@ -34,7 +34,7 @@ Freezed `when`/`map` is not already in play.
 
 - `tool/check_freezed_preferred.sh` — prefer Freezed over Equatable for new
   models
-- Feature briefs / tests: [`plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md)
+- Feature briefs / tests: [`engineering/FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md)
 
 ## Related
 

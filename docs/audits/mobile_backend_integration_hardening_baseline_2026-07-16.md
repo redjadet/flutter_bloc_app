@@ -43,7 +43,7 @@ Subjective 1–5 per program rubric; overall = weighted average. Task 8 will rec
 | AI Decision API client already injects `Dio`; list mapping still uses `.cast<_JsonMap>()` | [`ai_decision_api_client.dart`](../../apps/mobile/lib/features/ai_decision_demo/data/ai_decision_api_client.dart):41 |
 | Implicit `Dio()` fallbacks remain | `RestCounterRepository`, `CountriesGraphqlRepository`, `HuggingFaceApiClient` (see evidence commands) |
 | Production composition injects shared Dio for GraphQL + HF | [`register_graphql_services.dart`](../../apps/mobile/lib/app/composition/features/register_graphql_services.dart):33, [`register_chat_services.dart`](../../apps/mobile/lib/app/composition/features/register_chat_services.dart):62–64 |
-| No pagination / product-analytics implementation | [`docs/adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md), [`docs/plans/future_observability.md`](../plans/future_observability.md) |
+| No pagination / product-analytics implementation | [`docs/adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md), [`observability.md`](../observability.md) |
 | Guidance split across reliability / offline / auth / observability / DTO / review | At baseline these owners were absent (Task 6 added them): [`backend/API_CONTRACT_GUIDE.md`](../backend/API_CONTRACT_GUIDE.md), [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](../architecture/MOBILE_BACKEND_BOUNDARIES.md), [`contributing/PR_REVIEW_CHECKLIST.md`](../contributing/PR_REVIEW_CHECKLIST.md) |
 
 ## Risks
@@ -181,7 +181,7 @@ Approved factories per program constraints: `createAppDio` ([`app_dio.dart`](../
 | Item | Why deferred |
 | --- | --- |
 | Offset/cursor pagination | No product list needing it; contract in API guide only (Task 6) |
-| Product analytics taxonomy / SDK | ADR-0005 doc-only; see [`future_observability.md`](../plans/future_observability.md) |
+| Product analytics taxonomy / SDK | ADR-0005 doc-only; see [`future_observability.md`](../observability.md) |
 | Broad per-demo DTO rewrite | Only AI Decision + GraphQL country in Tasks 2–3 |
 | Live Render / HF / Supabase network validation | This audit records **no-live-backend** limitation |
 | Domain wire-leak cleanup | Pre-existing warn-only debt outside program scope |

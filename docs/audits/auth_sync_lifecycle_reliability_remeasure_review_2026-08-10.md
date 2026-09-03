@@ -113,7 +113,7 @@ Evidence-only re-measure for auth session, offline/sync, and Cubit lifecycle.
 
 ## Non-goals / deferred
 
-- AUTH-D01..D04 remain deferred ([`docs/plans/auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md)).
+- AUTH-D01..D04 remain deferred ([`authentication.md`](../authentication.md)).
 - Chat remote-watch pause — no current entrypoint.
 - Expanding don't-overwrite guard to Profile/Search — wrong fit (cache refresh,
   no mutation merge).

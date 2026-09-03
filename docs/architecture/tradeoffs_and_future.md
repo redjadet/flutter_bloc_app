@@ -17,7 +17,7 @@ would raise the bar further.
 > [Clean Architecture](../clean_architecture.md) |
 > [Code Quality](../CODE_QUALITY.md) |
 > [Flutter Best Practices Review](../review/flutter_best_practices_review.md) |
-> [Future Architecture & Code Quality Improvement Plan](../plans/future_architecture_code_quality_improvement_plan.md)
+> [Future Architecture & Code Quality Improvement Plan](tradeoffs_and_future.md)
 
 ## Accepted Trade-offs
 

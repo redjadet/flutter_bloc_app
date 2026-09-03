@@ -19,12 +19,13 @@ Top gaps tracked there (cadence 3+):
 1. **Coverage** — thresholds and rollup exclusions owned by
    [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
    and `tool/update_coverage_summary.dart` (CI **75%** filtered; team target
-   **85%** + app-shell ≥75%). Measured filtered rollup: see
-   [coverage summary](../coverage/coverage_summary.md).
+   **85%** + app-shell ≥75%). Measured filtered rollup: generated
+   coverage/coverage_summary (generated, gitignored) (gitignored; refresh via
+   `dart run tool/update_coverage_summary.dart`).
 2. **App shell** — bootstrap/composition/router aggregate tracked by `tool/check_engineering_core_coverage.sh` (not legacy `lib/core/`).
 3. **Next arch slice** — ~~Todo list `AppError`~~ **Done (June 2026)** — [`senior_patterns_review_2026-06.md`](audits/senior_patterns_review_2026-06.md) PR-3; `TodoListState.lastError` uses `AppError`.
 
-Promoted checklist gates (**fail** default): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md) and [deferred gates](plans/checklist_quality_gates_deferred.md). Proof on `main`: 0 violations; env overrides `CHECK_*_MODE=warn` for staged fixes.
+Promoted checklist gates (**fail** default): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md) and [deferred gates](engineering/checklist_quality_gates_deferred.md). Proof on `main`: 0 violations; env overrides `CHECK_*_MODE=warn` for staged fixes.
 
 **Integration proof:** standard 22/22 and exhaustive 23/23 on iPhone 17e (`665deee8`); honesty matrix in baseline audit.
 
@@ -33,7 +34,7 @@ Source of truth for gates and guardrails:
 - `./bin/checklist`
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)
-- Checklist quality-theme gates (May 2026 MVP): [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026); baseline [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md); deferred backlog [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md)
+- Checklist quality-theme gates (May 2026 MVP): [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026); baseline [`engineering/checklist_quality_gates_baseline.md`](engineering/checklist_quality_gates_baseline.md); deferred backlog [`engineering/checklist_quality_gates_deferred.md`](engineering/checklist_quality_gates_deferred.md)
 
 ## Scope and Inputs
 

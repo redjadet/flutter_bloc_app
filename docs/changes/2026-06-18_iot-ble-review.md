@@ -1,6 +1,6 @@
 # IoT BLE feature review (2026-06-18)
 
-Point-in-time note for the mock-first BLE showcase on `/iot-demo`. Plan: [`docs/plans/iot_ble_feature_brief.md`](../plans/iot_ble_feature_brief.md). Change log: [`2026-06-18_iot-ble-feature.md`](2026-06-18_iot-ble-feature.md). User doc: [`features/iot_ble.md`](../features/iot_ble.md).
+Point-in-time note for the mock-first BLE showcase on `/iot-demo`. Plan: [`features/iot_ble.md`](../features/iot_ble.md). Change log: [`2026-06-18_iot-ble-feature.md`](2026-06-18_iot-ble-feature.md). User doc: [`features/iot_ble.md`](../features/iot_ble.md).
 
 ## Why
 

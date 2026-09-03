@@ -37,7 +37,7 @@ Full table: [`validation_scripts/operations_host_skills.md`](../validation_scrip
 
 ## Code quality baseline (program)
 
-[Code quality baseline and gate promotion (2026-06)](../plans/code_quality_baseline_and_gate_promotion_2026-06.md):
+[Code quality baseline and gate promotion (2026-06)](code_quality_baseline_2026-06-03.md):
 
 | Artifact | Path |
 | --- | --- |

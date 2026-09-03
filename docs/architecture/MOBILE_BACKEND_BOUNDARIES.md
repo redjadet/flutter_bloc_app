@@ -71,7 +71,7 @@ or invent server truth.
 | **Repo example** | Firebase Analytics dependency without product event taxonomy; ADR-0005 doc-only posture. |
 | **Mobile rule** | Structured `AppErrorCode`; no tokens/PII in Crashlytics; analytics events only when product asks. |
 | **Backend rule** | Server-side audit logs for security-sensitive actions; don't require chatty clients. |
-| **Evidence** | [`observability.md`](../observability.md), [`plans/future_observability.md`](../plans/future_observability.md). |
+| **Evidence** | [`observability.md`](../observability.md), [`observability.md`](../observability.md). |
 
 ## 6. Backend truth in UI state
 

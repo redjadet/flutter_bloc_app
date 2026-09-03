@@ -25,7 +25,7 @@ behavior change and no gate mode flips in this commit.** Local artifacts under
 | Cross-feature edges | `bash tool/modular_metrics.sh --cross-feature-only` | exit 0; **8 edges** (not zero) | `tmp/quality_remeasure_pr0/cross_feature.txt` | Honesty note (below); does **not** re-rank PR1–3 |
 | Clean Architecture | `bash tool/check_clean_architecture_imports.sh` | 0 | scorecards log | No stop |
 | Modularity leaks | `bash tool/check_feature_modularity_leaks.sh` | 0 | scorecards log | No stop |
-| Unit coverage refresh | `bash tool/test_coverage.sh` | 0; suite `+2800 ~4`; filtered **85.10%** | `tmp/quality_remeasure_pr0/test_coverage.log`; local [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (gitignored) | Badge prose update only |
+| Unit coverage refresh | `bash tool/test_coverage.sh` | 0; suite `+2800 ~4`; filtered **85.10%** | `tmp/quality_remeasure_pr0/test_coverage.log`; local coverage/coverage_summary (generated, gitignored) (gitignored) | Badge prose update only |
 | Coverage 85% enforce | `COVERAGE_THRESHOLD=85 dart run tool/update_coverage_summary.dart --enforce-threshold` | 0 at **85.10%** | `tmp/quality_remeasure_pr0/coverage_enforce.log` | Still above Engineering Coverage 10/10 floor |
 | App-shell coverage | `bash tool/check_engineering_core_coverage.sh` | 0 at **75.53%** (1398/1851) | `tmp/quality_remeasure_pr0/core_coverage.log` | Above ≥75% floor (was 79.25% pre-refresh using older lcov) |
 | D04 fixture good | `CHECK_CONTEXT_READ_WATCH_MODE=fail … --paths …/good.dart` | 0 | `tmp/quality_remeasure_pr0/d04.log` | Contract OK |
@@ -155,7 +155,7 @@ PR1 additional gate from residual: **zero unsuppressed production hits — met.*
 - No product dispose/promotion code
 - No D03 script
 - No checklist wiring changes
-- No commit of `coverage/lcov*.info` / [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md)
+- No commit of `coverage/lcov*.info` / coverage/coverage_summary (generated, gitignored)
 
 ## Proof commands (reproduce)
 

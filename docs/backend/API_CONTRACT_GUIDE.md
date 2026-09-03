@@ -51,7 +51,7 @@ links them and fills gaps (especially future pagination).
 
 - Prefer `AppErrorCode` + short context; never attach tokens/PII to crash reports.
 - **Product analytics** (event taxonomy / Mixpanel-style SDKs) remain deferred —
-  [`plans/future_observability.md`](../plans/future_observability.md), ADR-0005.
+  [`observability.md`](../observability.md), ADR-0005.
 - Owner: [`observability.md`](../observability.md).
 
 ## Pagination contract (future — not implemented yet)

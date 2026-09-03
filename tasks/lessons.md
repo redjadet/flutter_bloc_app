@@ -39,7 +39,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   When adding `loadInitial()` from constructor/DI, audit save/rollback and
   `close()` for the same rule; update tests that expected rethrow.
 - Evidence or affected files:
-  `docs/audits/2026-09-02_full_app_hardening_w1.md`; theme/locale/IAP/staff/IoT/
+  docs/audits/2026-09-02_full_app_hardening_w1 (local audit, gitignored); theme/locale/IAP/staff/IoT/
   websocket/scapes/realtime_market cubits and focused tests.
 
 ### 2026-09-02 - Perf scroll traces need mounted scroll target
@@ -555,7 +555,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - How it was fixed:
   Restored `coverage/lcov.info` / `coverage/lcov.base.info` from the Jul 12 unit
   baseline (`apps/mobile/coverage/lcov.base.info` → **85.23%**), refreshed
-  `coverage/coverage_summary.md` + README badge, re-ran engineering gate.
+  coverage/coverage_summary (generated, gitignored) + README badge, re-ran engineering gate.
 - Pattern:
   Integration `--merge-coverage` can leave `lcov.info` below the Engineering
   **85%** claim while `lcov.base.info` (unit-only from `tool/test_coverage.sh`)

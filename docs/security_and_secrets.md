@@ -300,7 +300,7 @@ can still flag keys in **old commits**. If keys were ever pushed:
 1. Rotate restricted keys in Google Cloud/Firebase.
 2. Confirm `main` has no `AIzaSy…` literals (`./tool/check_tracked_secret_literals.sh`).
 3. Optionally rewrite history with
-   [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt)
+   `tool/firebase_secret_history_replacements.txt`
    and `git filter-repo` (see [Secret scanning alerts](integrations/firebase_setup.md#secret-scanning-alerts) in Firebase Setup).
 4. Force-push all branches and have collaborators re-clone.
 

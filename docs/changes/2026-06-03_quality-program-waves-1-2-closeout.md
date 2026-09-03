@@ -18,7 +18,7 @@ Closed the code quality baseline and gate promotion program (waves 1–2) on `ma
 
 - [code_quality_baseline_2026-06-03.md](../audits/code_quality_baseline_2026-06-03.md) — Phase 2 proof table, backlog B-02/B-03/B-04b
 - [code_quality_baseline_spikes_2026-06-03.md](../audits/code_quality_baseline_spikes_2026-06-03.md) — fail-mode promotion + Phase 2 wave closure
-- [code_quality_baseline_and_gate_promotion_2026-06.md](../plans/code_quality_baseline_and_gate_promotion_2026-06.md) — todos complete
+- [code_quality_baseline_and_gate_promotion_2026-06.md](../audits/code_quality_baseline_2026-06-03.md) — todos complete
 
 ## Cadence 3+ (out of scope for this closeout)
 

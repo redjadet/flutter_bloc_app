@@ -26,5 +26,5 @@ Originally deferred: case_study, chart, igaming, iot_demo, search, staff flags.
 
 ## Intentionally still deferred
 
-See [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md)
+See [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md)
 (**MS-D01** Wave C presentation splits; **MS-D02** staff clock-out partial flags).

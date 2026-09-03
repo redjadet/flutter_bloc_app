@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-22
 **Branch:** `chore/bump-ilkersevim-disposables-0.1.1`
-**Plan:** [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md) Task 28
+**Plan:** [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md) Task 28
 
 ## Why
 
@@ -13,7 +13,7 @@ to the OIDC patch.
 
 - `apps/mobile`, `packages/core`, `packages/networking`: `ilkersevim_disposables: ^0.1.1`
 - Workspace lock refreshed to `0.1.1`
-- `SHARED_UTILITIES.md` table caret updated
+- [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md) table caret updated
 
 ## External proof
 

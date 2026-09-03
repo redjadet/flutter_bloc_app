@@ -43,7 +43,7 @@ Worktree: `.worktrees/docs/dedupe-redundancy-2026-08-25` on branch
   [`reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md)
   (normalize had rewritten `../plans/...` into a path that escapes the checkout
   via worktree symlink resolution). Destination is again
-  [`../plans/senior_patterns_optimization_2026-06.md`](../plans/senior_patterns_optimization_2026-06.md).
+  [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md).
 - Restored agent scorecard summaries after worktree rebuild collapsed events
   (local event archives incomplete in worktree).
 - Trimmed extra blank line at EOF in `agent_knowledge_base_details.md`.

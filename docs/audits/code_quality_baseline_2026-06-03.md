@@ -2,7 +2,7 @@
 
 - **Commit:** `3228d800` (initial snapshot); **post-merge:** `acbcdc6b` ([PR #290](https://github.com/redjadet/flutter_bloc_app/pull/290)); **Phase 2:** `dd883f31` ([PR #292](https://github.com/redjadet/flutter_bloc_app/pull/292))
 - **Auditor:** Cursor agent (code quality baseline program)
-- **Program:** [code quality baseline and gate promotion](../plans/code_quality_baseline_and_gate_promotion_2026-06.md)
+- **Program:** [code quality baseline and gate promotion](code_quality_baseline_2026-06-03.md)
 
 ## Post-merge re-snapshot (2026-06-03, clean `main`)
 
@@ -37,7 +37,9 @@
 | `./bin/checklist-fast` | 1 | Initial doc-gardening block before audit file existed; not rerun after app/`lib/` diff |
 | `bash tool/validate_validation_docs.sh` | 0 | Passed after CHECK_SCRIPTS update in PR2 |
 
-**Resolved pre-fix failure block:** `violation|docs/audits/README.md: missing md token docs/audits/code_quality_baseline_YYYY-MM-DD.md`
+**Resolved pre-fix failure block:** historical doc-gardening miss for the
+audit basename pattern docs/audits/code_quality_baseline_YYYY-MM-DD (fixed by
+landing this baseline file).
 
 **Artifacts:** local log `/tmp/checklist_baseline_2026-06-03.log` (initial partial run); terminal proof from final `./bin/checklist` run (passed).
 
@@ -57,7 +59,7 @@
 
 ## Coverage by layer
 
-Source: [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (generated LCOV rollup).
+Source: coverage/coverage_summary (generated, gitignored LCOV rollup).
 
 | Layer | Coverage | vs 85% target | Note |
 | --- | ---: | --- | --- |
@@ -104,7 +106,7 @@ Source: [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (ge
 
 **Recommended next (cadence 3+):** **Todo list** — offline-first feature with `errorMessage` only (`TodoListState`); aligns with future-arch Phase 4 “one additional high-value cubit” and baseline coverage gap on `apps/mobile/lib/features/todo_list/`.
 
-Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../plans/future_architecture_code_quality_improvement_plan.md) § Current Recommended Next Step):
+Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../architecture/tradeoffs_and_future.md) § Current Recommended Next Step):
 
 > pick the next named high-value error surface after `ChartPage`, `ErrorHandling`, and `CounterPage` (for example another cubit flow or a reusable status/error component)
 

@@ -39,7 +39,7 @@ root when an existing category applies.
 | [contributing/](contributing/README.md) | Contributor guide, FAQ, PR checklist |
 | [offline_first/](offline_first/README.md) | Local-first storage, conflict, and sync guidance |
 | [validation_scripts/](validation_scripts/README.md) | Validation catalog, procedures, and targeted guides |
-| [plans/](plans/README.md) / [changes/](changes/README.md) / [audits/](audits/README.md) | Time-bound plans, shipped changes, and historical evidence |
+| [plans/](plans/README.md) / [changes/](changes/README.md) / [audits/](audits/README.md) | Local (gitignored) working plans + shipped changes + historical audits |
 
 ## Core docs (by concern)
 

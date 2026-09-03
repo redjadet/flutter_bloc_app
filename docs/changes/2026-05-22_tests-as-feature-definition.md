@@ -11,7 +11,7 @@ Adopted the practice that **tests define done** for feature work—not optional 
 
 | Doc | Change |
 | --- | --- |
-| [`plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) | **Tests** block is an executable contract (behaviour, state, unit, integration, proof command) |
+| [`engineering/FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md) | **Tests** block is an executable contract (behaviour, state, unit, integration, proof command) |
 | [`testing_overview.md`](../testing_overview.md) | New § Feature-defined testing (pyramid guidance, P0–P2, non-goals, integration cap) |
 | [`testing/widget_test_playbook.md`](../testing/widget_test_playbook.md) | **New** — BLoC widget test how-to |
 | [`testing/testing_strategy.md`](../testing/testing_strategy.md) | Brief Tests = done; layout-sensitive viewport wording; link to overview § |
@@ -40,6 +40,6 @@ Adopted the practice that **tests define done** for feature work—not optional 
 
 ## For agents
 
-1. Start from [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) for non-trivial `apps/mobile/lib/features/` work.
+1. Start from [`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md) for non-trivial `apps/mobile/lib/features/` work.
 2. RED tests in the **same change series** as implementation.
 3. Widget patterns: [`testing/widget_test_playbook.md`](../testing/widget_test_playbook.md).

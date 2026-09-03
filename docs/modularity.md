@@ -79,7 +79,7 @@ the smallest capability the caller needs:
 - **`RenderOrchestrationRemoteTokenPort`** – Legacy narrow port in `packages/utilities` exposing `readDevToken()` + `forceRefresh()`. It remains for compatibility without creating a **`chat` → `remote_config`** import. The current Render repository does not resolve or send an HF token; FastAPI owns `HUGGINGFACE_API_KEY`. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart`. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
 Completed settings-diagnostics extraction history lives in
-[`settings_diagnostics_decouple_plan.md`](plans/settings_diagnostics_decouple_plan.md).
+[`settings_diagnostics_decouple_plan.md`](modularity.md).
 Current invariant: settings has zero imports of `graphql_demo`, `profile`, or
 `remote_config`; `tool/check_feature_modularity_leaks.sh` enforces the boundary.
 
@@ -141,8 +141,8 @@ or an explicit time-boxed exception documented in this file).
   exit 0) lists `apps/mobile/lib/app/**` imports into feature `presentation/` / `data/` /
   `domain/`. Use when shrinking imports toward per-feature barrels.
 - **Ports sweep:** [`engineering/ports_adapters_modular_sweep_2026-05-12.md`](engineering/ports_adapters_modular_sweep_2026-05-12.md).
-- **Scoped DI spike:** [`plans/feature_scoped_di_feasibility.md`](plans/feature_scoped_di_feasibility.md).
-- **Package split:** [`plans/melos_package_split_feasibility.md`](plans/melos_package_split_feasibility.md).
+- **Scoped DI spike:** [`modularity.md`](modularity.md).
+- **Package split:** [`modularity.md`](modularity.md).
 
 ## Out of scope (by design)
 

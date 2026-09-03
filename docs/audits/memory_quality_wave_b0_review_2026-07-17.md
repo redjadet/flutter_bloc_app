@@ -83,7 +83,7 @@ Full list: `tmp/memory_leak_dry_run/wave_b0_full/failing_files.txt`
 | **B3** | AST rules for timers/listeners; defer alias/GetIt/context until FP rate low |
 
 Open leftovers (merge ops, evidence, non-goals):
-[`../plans/2026-07-17_memory_quality_deferred.md`](../plans/2026-07-17_memory_quality_deferred.md).
+[`changes/2026-07-17_memory_quality_deferred.md`](../changes/2026-07-17_memory_quality_deferred.md).
 
 ## Suppressions / production fixes
 

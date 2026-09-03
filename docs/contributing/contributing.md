@@ -42,7 +42,7 @@ into several files.
 
 - [New Developer Guide](../new_developer_guide.md)
 - [Git and Branching Strategy](../git_and_branching_strategy.md)
-- [Security and Secrets](../security_and_secrets.md) (templates: [`envrc.example`](../envrc.example), [`.env.example`](../.env.example))
+- [Security and Secrets](../security_and_secrets.md) (templates: [`envrc.example`](../envrc.example), [`.env.example`](../../.env.example))
 - [Feature Overview](../feature_overview.md)
 - [Case studies](../case_studies/README.md) (product briefs; **Case Study Demo** feature)
 - [Feature Delivery Guide](../feature_implementation_guide.md)

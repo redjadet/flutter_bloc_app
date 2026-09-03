@@ -68,4 +68,4 @@ Do **not** globally remove `withIgnoredAll()` until B2 evidence supports it.
 Evaluate retiring shell `check_memory_*.sh` heuristics after AST coverage (B3+).
 
 Open / deferred detail (merge ops, non-goals, B0 evidence leftovers, lint
-exclusions): [`../plans/2026-07-17_memory_quality_deferred.md`](../plans/2026-07-17_memory_quality_deferred.md).
+exclusions): [`changes/2026-07-17_memory_quality_deferred.md`](../changes/2026-07-17_memory_quality_deferred.md).

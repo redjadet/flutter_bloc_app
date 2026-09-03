@@ -11,7 +11,7 @@ triad proof.
 - `tool/check_context_read_watch.sh` default `CHECK_CONTEXT_READ_WATCH_MODE=fail`
 - Harness fixtures for good / bad / suppressed under fail mode
 - [`docs/engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md) → **promoted (fail)**
-- [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md) → pointer to engineering owner
+- [`engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md) → pointer to engineering owner
 - catalog severity text updated
 
 ## Scope

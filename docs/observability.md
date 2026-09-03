@@ -21,7 +21,7 @@ Map from exceptions or HTTP status using
 `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing
 `isNetworkError` / `isTimeoutError` helpers.
 
-Product analytics: consent-gated Firebase allowlist for `/production-readiness` (ADR 0006); Mixpanel/Sentry/Patrol remain deferred — see [plans/future_observability.md](plans/future_observability.md)
+Product analytics: consent-gated Firebase allowlist for `/production-readiness` (ADR 0006); Mixpanel/Sentry/Patrol remain deferred — see deferred seams below
 and the mobile/backend contract guide [backend/API_CONTRACT_GUIDE.md](backend/API_CONTRACT_GUIDE.md).
 
 ## Logging
@@ -91,7 +91,7 @@ As code volume increases (including AI-assisted development), **time to find and
 - **Symbolication mismatch**: iOS dSYM / Android mapping / Flutter symbol files not uploaded consistently → unusable stack traces.
 - **Sampling / cost drift**: tracing + session replay can become expensive if enabled broadly.
 
-Mitigations and rollout steps live in [plans/future_observability.md](plans/future_observability.md) under the Sentry section.
+Mitigations and rollout steps live in the Sentry section below.
 
 ## Product analytics
 
@@ -107,8 +107,8 @@ abort. Policy:
 [ADR 0006](adr/0006-production-readiness-demo.md),
 [ADR 0005](adr/0005-interview-showcase-scope.md) (exception to doc-only Mixpanel/Sentry).
 
-**Not configured:** Mixpanel, Sentry product SDK, or Patrol. Planned seams:
-[plans/future_observability.md](plans/future_observability.md).
+**Not configured:** Mixpanel, Sentry product SDK, or Patrol. Planned seams remain
+deferred in this document (interview appendix / product analytics sections).
 
 Operational diagnostics UI (Remote Config view models, cache controls) lives under
 [`apps/mobile/lib/app/diagnostics/`](../apps/mobile/lib/app/diagnostics/) —

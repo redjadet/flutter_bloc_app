@@ -16,7 +16,7 @@
 - **DI orchestration** — [`injector_registrations.dart`](../../apps/mobile/lib/app/composition/injector_registrations.dart) split into `part` files under [`apps/mobile/lib/core/di/groups/`](../../apps/mobile/lib/app/composition/groups): `register_core_services.dart`, `register_feature_services.dart`, `register_demo_services.dart` (`registerCoreServices`, `registerFeatureServices`, `registerDemoServices`).
 - **Tests** — [`test/shared/services/app_memory_service_test.dart`](../../apps/mobile/test/shared/services/app_memory_service_test.dart); domain surface tests under [`test/domain_public_surface/`](../../apps/mobile/test/domain_public_surface).
 - **`tool/check_feature_barrel_exports.sh`** — report-only deep-import list from `apps/mobile/lib/app/`.
-- **Docs** — [`modularity.md`](../modularity.md), [`validation_scripts.md`](../validation_scripts.md); feasibility: [`plans/dependency_validator_feasibility.md`](../plans/dependency_validator_feasibility.md), [`plans/feature_scoped_di_feasibility.md`](../plans/feature_scoped_di_feasibility.md), [`plans/melos_package_split_feasibility.md`](../plans/melos_package_split_feasibility.md); sweep: [`engineering/ports_adapters_modular_sweep_2026-05-12.md`](../engineering/ports_adapters_modular_sweep_2026-05-12.md).
+- **Docs** — [`modularity.md`](../modularity.md), [`validation_scripts.md`](../validation_scripts.md); feasibility: [`modularity.md`](../modularity.md), [`modularity.md`](../modularity.md), [`modularity.md`](../modularity.md); sweep: [`engineering/ports_adapters_modular_sweep_2026-05-12.md`](../engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
 ## Deferred / backlog
 

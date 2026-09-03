@@ -89,4 +89,4 @@ Demonstrate harness feature-brief contract for agent onboarding docs.
 Documentation-only example; no runtime feature shipped.
 ```
 
-Link real feature work to [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
+Link real feature work to [`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md).

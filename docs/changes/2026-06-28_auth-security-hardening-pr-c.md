@@ -22,4 +22,4 @@ flutter gen-l10n
 
 ## Deferred (not in PR C)
 
-See [`plans/auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md) — AUTH-D01 (Render coordinator), AUTH-D02 (`RegisterPage` backend), AUTH-D03 (role/claims ADR), AUTH-D04 (`auth_injection_failed` extra).
+See [`authentication.md`](../authentication.md) — AUTH-D01 (Render coordinator), AUTH-D02 (`RegisterPage` backend), AUTH-D03 (role/claims ADR), AUTH-D04 (`auth_injection_failed` extra).

@@ -57,7 +57,7 @@ For platform setup and configuration, see [Developer Guide](../new_developer_gui
 - Hugging Face Inference API
 
 See [Security & Secrets](../security_and_secrets.md) for setup details. Local
-templates: [`envrc.example`](../envrc.example) and [`.env.example`](../.env.example).
+templates: [`envrc.example`](../envrc.example) and [`.env.example`](../../.env.example).
 
 ## 📱 Are there platform-specific dependencies?
 

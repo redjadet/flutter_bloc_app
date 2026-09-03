@@ -11,7 +11,7 @@ Curated ubiquitous language for this app.
 | Offline-first repository | Writes locally; enqueues remote sync | Sync |
 | Pending sync | Outbound mutation queue | `apps/mobile/lib/shared/sync/` |
 | Counter | Home persisted count feature | `counter` |
-| Feature Brief | Pre-work doc from [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) | Process |
+| Feature Brief | Pre-work doc from [`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md) | Process |
 | ARCH-### | Ranked architecture issue | Audits |
 | REC-### | Prioritized recommendation | `ai/reports/ai_recommendations.md` |
 | Demo feature | Showcase route; may use fake backends | `*_demo` modules |
