@@ -19,7 +19,11 @@ cd "$repo_root"
 
 tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/checklist-cli-contract.XXXXXX")"
 scope_fixture="tool/agent_tool_router_scope_fixture.tmp"
-trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture"' EXIT
+mix_route_fixture="apps/mobile/lib/app/theme/checklist_route_fixture.tmp"
+todo_route_fixture="apps/mobile/lib/features/todo_list/presentation/widgets/checklist_route_fixture.tmp"
+action_route_fixture="apps/mobile/lib/features/profile/presentation/checklist_route_fixture.tmp"
+regression_route_fixture="apps/mobile/lib/features/social_feed_demo/presentation/checklist_route_fixture.tmp"
+trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture" "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture"' EXIT
 
 run_ok() {
   local name="$1"
@@ -62,6 +66,7 @@ assert_contains() {
 run_ok checklist_fast_help ./bin/checklist-fast --help
 assert_contains checklist_fast_help "$tmp_dir/checklist_fast_help.out" "Usage: ./bin/checklist-fast"
 assert_contains checklist_fast_help "$tmp_dir/checklist_fast_help.out" "--explain"
+assert_contains checklist_fast_help "$tmp_dir/checklist_fast_help.out" "auto-route decisions"
 assert_contains checklist_fast_help "$tmp_dir/checklist_fast_help.out" "--print-changed"
 assert_contains checklist_fast_help "$tmp_dir/checklist_fast_help.out" "--no-reuse"
 
@@ -76,6 +81,24 @@ run_ok explain_no_reuse ./bin/checklist-fast --explain --print-changed --no-reus
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|mode|fast"
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|allow_reuse|0"
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "changed_files|"
+assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|auto_route|coverage|"
+
+printf 'route fixture\n' >"$mix_route_fixture"
+printf 'route fixture\n' >"$todo_route_fixture"
+printf 'route fixture\n' >"$action_route_fixture"
+printf 'route fixture\n' >"$regression_route_fixture"
+run_ok explain_melos_app_path ./bin/checklist-fast --explain --print-changed --no-reuse
+assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
+  "changed_files|path|$todo_route_fixture"
+assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
+  "explain|auto_route|mix_lint|run"
+assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
+  "explain|auto_route|regression_guards|run"
+assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
+  "explain|auto_route|todo_layout|run"
+assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
+  "explain|auto_route|action_bar_layout|run"
+rm -f "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture"
 
 run_fail bad_mode 2 ./bin/checklist-fast --mode invalid --print-changed
 assert_contains bad_mode "$tmp_dir/bad_mode.err" "usage-error|invalid --mode: invalid"

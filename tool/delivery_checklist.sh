@@ -28,7 +28,7 @@ Delivery checklist gate. Default mode: full.
 Options:
   -h, --help           Show help.
   --mode <full|fast>   Override CHECKLIST_MODE.
-  --explain            Print detected mode inputs + changed-file summary.
+  --explain            Print mode inputs, changed files, and auto-route decisions.
   --print-changed      Print changed files (git) and exit 0.
   --no-reuse           Force rerun (sets CHECKLIST_ALLOW_REUSE=0).
 
@@ -606,6 +606,17 @@ collect_changed_files() {
   done
 }
 
+# Routing tables predate the Melos move and intentionally use app-relative
+# lib/** and test/** paths. Normalize only for route selection; keep repository
+# paths unchanged for formatting, diagnostics, and cache fingerprints.
+normalize_app_route_path() {
+  local file="$1"
+  case "$file" in
+    apps/mobile/*) file="${file#apps/mobile/}" ;;
+  esac
+  printf '%s\n' "$file"
+}
+
 should_run_mix_lint_auto() {
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return 0
@@ -617,6 +628,7 @@ should_run_mix_lint_auto() {
   fi
 
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       packages/design_system/lib/src/styles/app_styles.dart|\
       packages/design_system/lib/src/theme/mix_app_theme.dart|\
@@ -908,6 +920,7 @@ should_run_todo_layout_tests_auto() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       lib/features/todo_list/*|\
       test/features/todo_list/*|\
@@ -938,11 +951,11 @@ should_run_action_bar_layout_tests_auto() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       lib/features/profile/presentation/*|\
       lib/features/settings/presentation/*|\
       lib/features/*/presentation/widgets/*|\
-      lib/features/*/presentation/widgets/*dialog*|\
       lib/features/*/*dialog*.dart|\
       lib/features/*/presentation/forms/*|\
       lib/features/*/*actions_bar*.dart|\
@@ -1052,6 +1065,7 @@ should_run_regression_guards_before_coverage() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       lib/shared/utils/request_id_guard.dart|\
       packages/utilities/lib/src/request_id_guard.dart|\
@@ -1093,6 +1107,28 @@ CHECKLIST_EXPLAIN="${CHECKLIST_EXPLAIN:-0}"
 CHECKLIST_EXPLAIN_THEMES="${CHECKLIST_EXPLAIN_THEMES:-0}"
 CHECKLIST_PRINT_CHANGED="${CHECKLIST_PRINT_CHANGED:-0}"
 CHECKLIST_MODE_FROM_ARG=0
+
+print_auto_route_decision() {
+  local name="$1"
+  local selector="$2"
+  local result="skip"
+  if "$selector"; then
+    result="run"
+  fi
+  echo "explain|auto_route|$name|$result"
+}
+
+print_auto_route_decisions() {
+  print_auto_route_decision analyze should_run_flutter_analyze_auto
+  print_auto_route_decision mix_lint should_run_mix_lint_auto
+  print_auto_route_decision memory_lint should_run_memory_lint_auto
+  print_auto_route_decision file_length_lint should_run_file_length_lint_auto
+  print_auto_route_decision coverage should_run_coverage_auto
+  print_auto_route_decision regression_guards should_run_regression_guards_before_coverage
+  print_auto_route_decision todo_layout should_run_todo_layout_tests_auto
+  print_auto_route_decision action_bar_layout should_run_action_bar_layout_tests_auto
+  print_auto_route_decision router_feature_validate should_run_router_feature_validate_auto
+}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -1220,6 +1256,7 @@ if [ "$CHECKLIST_EXPLAIN" = "1" ]; then
   echo "explain|mode|$CHECKLIST_MODE"
   echo "explain|allow_reuse|$CHECKLIST_ALLOW_REUSE"
   print_changed_files_summary
+  print_auto_route_decisions
   echo ""
 fi
 

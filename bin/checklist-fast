@@ -11,7 +11,7 @@ Local-only checklist sanity path.
 
 Options (forwarded to underlying runner):
   --mode full|fast  Override CHECKLIST_MODE.
-  --explain        Print mode inputs + changed-file summary.
+  --explain        Print mode inputs, changed files, and auto-route decisions.
   --print-changed  Print detected changed files (git) and exit 0.
   --no-reuse       Force rerun (sets CHECKLIST_ALLOW_REUSE=0).
   --help           Show this help.
@@ -56,7 +56,15 @@ skill_inventory_path="$PROJECT_ROOT/docs/audits/skill_inventory_latest.json"
 
 if [ ! -f "$skill_inventory_path" ]; then
   # Fallback: most recent dated inventory file (if present).
-  skill_inventory_path="$(ls -t "$PROJECT_ROOT"/docs/audits/skill_inventory_*.json 2>/dev/null | head -n 1 || true)"
+  skill_inventory_path=""
+  for candidate in "$PROJECT_ROOT"/docs/audits/skill_inventory_*.json; do
+    if [ ! -f "$candidate" ]; then
+      continue
+    fi
+    if [ -z "$skill_inventory_path" ] || [ "$candidate" -nt "$skill_inventory_path" ]; then
+      skill_inventory_path="$candidate"
+    fi
+  done
 fi
 
 if [ -n "${skill_inventory_path:-}" ] && [ -f "$skill_inventory_path" ]; then
