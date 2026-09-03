@@ -42,9 +42,8 @@
       "allowedVersions": "<0.8.0"
     },
     {
-      "description": "Hold google_sign_in_mocks ^0.3; 0.4+ needs google_sign_in 7 (firebase_ui on 6)",
+      "description": "Hold google_sign_in_mocks ^0.3; 0.4+ needs google_sign_in 7 (firebase_ui on 6). Do not use matchDepTypes: pub manager labels as dev_dependencies, so a npm-style filter skips this rule and groups 0.4 into pub-coordinated-pins.",
       "matchManagers": ["pub"],
-      "matchDepTypes": ["devDependencies"],
       "matchPackageNames": ["google_sign_in_mocks"],
       "allowedVersions": "<0.4.0"
     },
