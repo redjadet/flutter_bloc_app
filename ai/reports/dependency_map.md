@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-08-31T21:43:30Z"
-  git_head: "47f01f4c8e2d584806b47065ee168b9f345fe15a"
+  generated_at: "2026-09-03T09:31:07Z"
+  git_head: "23203591dd20ed9c8d6379385d61f0dec619c21d"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -19,40 +19,40 @@ ai_snapshot:
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
 | chat | 6759 | yes |
-| staff_app_demo | 5646 | yes |
+| staff_app_demo | 5651 | yes |
 | todo_list | 5594 | yes |
+| social_feed_demo | 5316 | yes |
 | online_therapy_demo | 5269 | yes |
-| social_feed_demo | 5195 | yes |
 | case_study_demo | 4777 | yes |
 | counter | 4525 | yes |
 | native_platform_showcase | 3593 | yes |
 | iot_demo | 3269 | yes |
-| iot | 3110 | yes |
+| iot | 3149 | yes |
 | auth | 2487 | yes |
 | example | 2415 | yes |
-| realtime_market | 2167 | yes |
+| realtime_market | 2172 | yes |
 | graphql_demo | 2042 | yes |
 | chart | 2021 | yes |
 | calculator | 1862 | yes |
 | walletconnect_auth | 1560 | yes |
 | google_maps | 1493 | yes |
+| in_app_purchase_demo | 1467 | yes |
 | ai_decision_demo | 1408 | yes |
+| settings | 1399 | yes |
 | profile | 1399 | yes |
-| settings | 1385 | yes |
-| in_app_purchase_demo | 1360 | yes |
 | igaming_demo | 1328 | yes |
 | remote_config | 1280 | yes |
 | supabase_auth | 1259 | yes |
 | search | 1126 | yes |
 | library_demo | 1044 | yes |
 | camera_gallery | 1038 | yes |
-| scapes | 986 | yes |
-| production_readiness | 957 | yes |
+| scapes | 989 | yes |
+| production_readiness | 958 | yes |
+| websocket | 897 | yes |
 | fcm_demo | 884 | yes |
-| websocket | 865 | yes |
 | genui_demo | 735 | yes |
 | playlearn | 660 | yes |
-| deeplink | 552 | yes |
+| deeplink | 556 | yes |
 | certificate_pinning_demo | 502 | yes |
 | event_bus_demo | 311 | yes |
 <!-- refresh_ai_reports:feature_metrics:end -->
