@@ -21,7 +21,7 @@ Credential-safe ownership proof for Flutter judgment guidance:
 - `firebase_functions_test_page` + router auth gate
 - `staff_demo_inbox_firestore_map` + repository delegation
 - Docs: observability runbook, interview showcase, audit note, this change log
-- Tracker: [`tasks/senior_flutter_jd_alignment/todo.md`](../../tasks/senior_flutter_jd_alignment/todo.md)
+- Tracker: tasks/senior_flutter_jd_alignment/todo (local tracker)
 
 ## Residuals
 

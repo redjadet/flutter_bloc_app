@@ -6,7 +6,7 @@
 | Date | 2026-05-20 |
 | Amended | 2026-07-31 |
 | Scope | Portfolio / interview curation |
-| Source docs | [interview_showcase.md](../interview_showcase.md), [future_observability.md](../plans/future_observability.md), [ADR 0006](0006-production-readiness-demo.md) |
+| Source docs | [interview_showcase.md](../interview_showcase.md), [future_observability.md](../observability.md), [ADR 0006](0006-production-readiness-demo.md) |
 
 ## Context
 
@@ -30,7 +30,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 
 1. **Frozen interview spine:** Counter → Todo → Chat list → Settings sync diagnostics (manual) → agent harness. Documented in [`interview_showcase.md`](../interview_showcase.md) §3.
 2. **Alternate job-focused spine:** Production readiness → (optional) offline sync / native telemetry → CI/release dry-run evidence. Documented in [`interview_showcase.md`](../interview_showcase.md) §3b (“12-minute production ownership walkthrough”) and [ADR 0006](0006-production-readiness-demo.md). Does **not** replace §3.
-3. **Doc-only Mixpanel / Sentry / Patrol:** No Mixpanel, Sentry product SDK, or Patrol in `pubspec.yaml` until a real product requires them. Future seams remain in [`plans/future_observability.md`](../plans/future_observability.md).
+3. **Doc-only Mixpanel / Sentry / Patrol:** No Mixpanel, Sentry product SDK, or Patrol in `pubspec.yaml` until a real product requires them. Future seams remain in [`observability.md`](../observability.md).
 4. **Consent-gated Firebase Analytics exception:** A typed product-analytics port with SharedPreferences consent (default off), allowlisted params (`mode`, `source`, `result`, `variant`), in-memory buffer, and Firebase adapter that swallows platform-channel failures is **allowed** for the production-readiness demo. This does **not** authorize Mixpanel/Sentry/Patrol or unscoped event taxonomies. Policy detail: [ADR 0006](0006-production-readiness-demo.md).
 5. **PR smoke alignment:** `registerPrSmokeIntegrationFlows()` includes guest sign-in, counter persistence, chat list, launch/charts/search/settings/todo, and **production readiness (J6)**.
 6. **Workspace packaging does not change the architecture story:** Melos separates reusable capabilities into `packages/*`; `apps/mobile` remains a modular-monolith composed through one app shell.
@@ -61,7 +61,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 
 ## Implementation notes
 
-- Tracker: [`tasks/job_demo_showcase/todo.md`](../../tasks/job_demo_showcase/todo.md)
+- Tracker: tasks/job_demo_showcase/todo (local tracker, gitignored)
 - Outcome brief: [`features/counter_outcome_brief.md`](../features/counter_outcome_brief.md)
 - Production readiness case study: [`changes/2026-07-31_production_readiness_case_study.md`](../changes/2026-07-31_production_readiness_case_study.md)
 - Analytics code: [`apps/mobile/lib/app/analytics/`](../../apps/mobile/lib/app/analytics/)

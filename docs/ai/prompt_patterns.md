@@ -22,7 +22,7 @@ If audits change: git add -f docs/audits/ai_*.md.
 
 ```text
 Role: Planner + Implementer. Cite ARCH-###.
-Complete docs/plans/FEATURE_TEMPLATE.md.
+Complete docs/engineering/FEATURE_TEMPLATE.md.
 RED -> GREEN -> REFACTOR.
 ```
 

@@ -10,7 +10,7 @@ until an explicit extraction PR. Validation scripts still use APP_ROOT-relative
 `lib/**` shorthand (resolved via `tool/workspace_paths.sh` → `apps/mobile`).
 
 Non-trivial features should start from the Feature Brief and AI alignment
-checklist in [`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md).
+checklist in [`engineering/FEATURE_TEMPLATE.md`](engineering/FEATURE_TEMPLATE.md).
 `./bin/checklist` runs `tool/check_feature_brief_linked.sh`, which fails by
 default for feature Dart changes without a `docs/changes/` note. Use
 `SKIP_FEATURE_BRIEF=1` only for documented trivial fixes.
@@ -32,7 +32,7 @@ A new or materially changed feature should usually include:
 
 | Step | What to do |
 | --- | --- |
-| Brief + contract | Copy [`FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md); fill **Tests** (behaviour, state, unit, integration as needed). |
+| Brief + contract | Copy [`FEATURE_TEMPLATE.md`](engineering/FEATURE_TEMPLATE.md); fill **Tests** (behaviour, state, unit, integration as needed). |
 | Reuse first | Check existing packages, `apps/mobile/lib/app/`, and adjacent features before adding new abstractions. |
 | Place files | Follow [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md); copy live layout from [`architecture/reference_features.md`](architecture/reference_features.md). |
 | Keep boundaries clean | Stay within `Presentation -> Domain <- Data`. |

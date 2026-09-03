@@ -27,7 +27,7 @@ mechanical rename already covered by analyzer and existing tests. Record
 ## Feature Brief Contract
 
 Non-trivial `apps/mobile/lib/features/**` changes should fill
-[`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md). Cursor and Codex should
+[`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md). Cursor and Codex should
 run:
 
 ```bash

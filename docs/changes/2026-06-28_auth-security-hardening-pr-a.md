@@ -18,7 +18,7 @@ persistent 401 after replay).
 - HF orchestration token cache cleared via coordinator on sign-out
 - Debug logging redaction (HF token suffix, App Check full token)
 
-**Deferred:** [`plans/auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md) (AUTH-D01–D04).
+**Deferred:** [`authentication.md`](../authentication.md) (AUTH-D01–D04).
 
 ## Verification
 

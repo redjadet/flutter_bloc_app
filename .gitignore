@@ -176,5 +176,6 @@ tool/firebase_secret_history_replacements.txt
 # AI hardening generated outputs
 .repomix/
 ai/reports/.modular_metrics_latest.txt
-# Local plans only (not versioned)
-docs/plans/
+# Local plans only (not versioned); keep a tracked README as the routing stub
+docs/plans/*
+!docs/plans/README.md

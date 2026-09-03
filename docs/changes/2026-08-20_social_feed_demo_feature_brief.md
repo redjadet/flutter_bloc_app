@@ -98,7 +98,7 @@ executable proof (`SF-ARCH-01`, `SF-SCALE-01`, `SF-TEST-01`, `SF-SEC-01`,
 
 ## depends_on
 
-- [ ] [Flutter judgment guidance plan](../plans/2026-08-20_social_feed_senior_signal_demo.md)
+- [ ] [Flutter judgment guidance plan](../features/social_feed_demo.md)
 
 ## blocks
 

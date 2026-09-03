@@ -8,7 +8,7 @@ Users need a **reliable, offline-capable** counter that survives app restarts an
 
 ## Success metrics (would track with product analytics)
 
-Per [future_observability.md](../plans/future_observability.md) (not shipped today):
+Per [future_observability.md](../observability.md) (not shipped today):
 
 | Metric | Definition |
 | --- | --- |

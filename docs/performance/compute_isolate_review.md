@@ -20,7 +20,7 @@ Offload CPU-heavy work with `compute()` via
 ## Related
 
 - [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)
-- [`SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md)
+- [[`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md)](../engineering/SHARED_UTILITIES.md)
 - Change notes: [`2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](../changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md),
   [`2026-07-22_json_isolate_public_package.md`](../changes/2026-07-22_json_isolate_public_package.md),
   [`2026-07-22_retire_json_isolate_shim.md`](../changes/2026-07-22_retire_json_isolate_shim.md)

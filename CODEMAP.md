@@ -21,7 +21,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Architecture | [`docs/architecture_details.md`](docs/architecture_details.md), [`ai/reports/architecture_overview.md`](ai/reports/architecture_overview.md) |
 | Dart 3.13 primary constructors | [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md) § Best-Practice Expectations; DTO policy [`docs/architecture/use_case_dto_policy.md`](docs/architecture/use_case_dto_policy.md) |
 | Modularity / deps | [`docs/modularity.md`](docs/modularity.md), [`ai/reports/dependency_map.md`](ai/reports/dependency_map.md) |
-| AI engineering | [`PLAN.md`](PLAN.md), [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) (runtime; build spec archived) |
+| AI engineering | [`PLAN.md`](PLAN.md), [`plans/README.md`](docs/plans/README.md) (local plans policy; AI-first detail is local/gitignored) |
 | Discovery evidence | [`ai/reports/README.md`](ai/reports/README.md) |
 | Ranked tech debt | [`docs/audits/architecture_review_2026-06.md`](docs/audits/architecture_review_2026-06.md) |
 | Agent governance | [`docs/ai/governance.md`](docs/ai/governance.md) |

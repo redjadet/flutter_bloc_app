@@ -1,6 +1,6 @@
 # Widget test playbook (BLoC)
 
-How-to for screen-level widget tests. **Policy:** [`testing_overview.md`](../testing_overview.md) § Feature-defined testing. **Per-feature contract:** [`plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
+How-to for screen-level widget tests. **Policy:** [`testing_overview.md`](../testing_overview.md) § Feature-defined testing. **Per-feature contract:** [`engineering/FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md).
 
 ## When widget vs cubit-only
 

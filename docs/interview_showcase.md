@@ -74,7 +74,7 @@ modules in [feature_overview.md](feature_overview.md).
 | Firestore mapper seam | Inbox recipient/message map isolated + unit-tested; feature-level P3 still deferred | [`staff_demo_inbox_firestore_map.dart`](../apps/mobile/lib/features/staff_app_demo/data/staff_demo_inbox_firestore_map.dart); [senior_patterns_review_2026-06.md](audits/senior_patterns_review_2026-06.md) | `flutter test …/staff_demo_inbox_firestore_map_test.dart` |
 | RTL / i18n | Six locales including Arabic; ownership spine RTL widget proof | [localization.md](engineering/localization.md); production_readiness + Counter RTL tests | `flutter test` Counter/PR RTL suites |
 | Mixpanel / Sentry (nice) | **Not shipped** — documented seams; Firebase Analytics only via consent-gated port | [observability.md](observability.md) | Interview appendix script §12 |
-| Patrol (nice) | **Plan only** | [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md) | — |
+| Patrol (nice) | **Plan only** (not in pubspec; local pilot notes may exist under gitignored docs/plans) | [observability.md](observability.md), this showcase | — |
 | Platform channels / FFI (nice) | Live Swift/Kotlin/C interop, EventChannel telemetry, mobile PlatformView banner, haptic + system share behind clean-arch ports; web/desktop unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
 | Store release (nice) | Release scripts + deployment doc; **dry-run workflow is not publishing** | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference); Actions → Mobile release dry-run |
 
@@ -246,7 +246,7 @@ Registered in `registerPrSmokeIntegrationFlows()`:
   (source of truth: [`CODE_QUALITY.md`](CODE_QUALITY.md)).
 - **Integration tiers:** `smoke` / `standard` / `exhaustive` via `integration_test/*_flows_test.dart` and env `INTEGRATION_TESTS_TIER`
 - **PR smoke:** `integration_test/pr_smoke_flows_test.dart` — matches spine steps 1–3 plus launch/charts/search/settings
-- **Patrol:** not in `pubspec.yaml`; pilot scoped in [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md)
+- **Patrol:** not in `pubspec.yaml`; pilot remains deferred (local plan notes only)
 
 ## 7. Modular architecture
 

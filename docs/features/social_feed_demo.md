@@ -1,7 +1,7 @@
 # Social Feed Demo — deep feature guide
 
 Canonical design/change guide for `social_feed_demo`. Plan source:
-[Flutter judgment guidance plan](../plans/2026-08-20_social_feed_senior_signal_demo.md).
+[Flutter judgment guidance plan](social_feed_demo.md).
 
 ## Purpose
 

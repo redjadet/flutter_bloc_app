@@ -7,7 +7,7 @@ this doc closes **semantic** gaps (DTO boundaries, invalid states, decisions,
 errors).
 
 Scorecard evidence: [`../audits/senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md).
-Program index: [`../plans/senior_patterns_optimization_2026-06.md`](../plans/senior_patterns_optimization_2026-06.md).
+Program index: this guide (senior-patterns reduce-surprise program, June 2026).
 
 ## When to read
 

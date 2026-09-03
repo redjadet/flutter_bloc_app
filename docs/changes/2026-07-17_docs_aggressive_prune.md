@@ -23,9 +23,9 @@ Removed paths (no longer in tree) → current owners:
 | plans/melos monorepo migration plan | Melos closeout [`2026-07-03_melos-monorepo-migration-closeout.md`](2026-07-03_melos-monorepo-migration-closeout.md); `tool/check_package_dependency_dag.sh` |
 | plans/2026-07-14 AI-native hardening plan | [`ai_snapshot_freshness.md`](../validation_scripts/ai_snapshot_freshness.md) |
 | plans/render FastAPI chat demo plan | [`render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) |
-| plans/2026-05-21 AI-first build spec | [`PLAN.md`](../../PLAN.md); slim [`2026-05-21_ai_first_engineering_plan.md`](../plans/2026-05-21_ai_first_engineering_plan.md) |
+| plans/2026-05-21 AI-first build spec | [`PLAN.md`](../../PLAN.md); slim [`2026-05-21_ai_first_engineering_plan.md`](../../PLAN.md) |
 | plans/native communication architecture | Feature `native_platform_showcase` + related change notes |
-| plans/supabase proxy HF chat Codex review | Shortened [`supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md) + [`chat.md`](../offline_first/chat.md) |
+| plans/supabase proxy HF chat Codex review | Shortened [`supabase_proxy_huggingface_chat_plan.md`](../offline_first/chat.md) + [`chat.md`](../offline_first/chat.md) |
 | ai decision system plan | [`ai_decision_workbench.md`](../features/ai_decision_workbench.md) |
 | genui SDK demo implementation plan | [`genui_demo_user_guide.md`](../features/genui_demo_user_guide.md) |
 | camera gallery integration plan | Feature `camera_gallery` + [`feature_overview.md`](../feature_overview.md) |
@@ -56,10 +56,10 @@ Contracts only — see the files:
 - [`ide_plugins_guide.md`](../engineering/ide_plugins_guide.md)
 - [`compute_isolate_review.md`](../performance/compute_isolate_review.md)
 - [`code_generation_guide.md`](../engineering/code_generation_guide.md)
-- [`supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)
-- [`dio_retrofit_integration_plan.md`](../plans/dio_retrofit_integration_plan.md)
-- [`future_architecture_code_quality_improvement_plan.md`](../plans/future_architecture_code_quality_improvement_plan.md)
-- [`2026-07-10_maintainability_program.md`](../plans/2026-07-10_maintainability_program.md)
+- [`supabase_proxy_huggingface_chat_plan.md`](../offline_first/chat.md)
+- [`dio_retrofit_integration_plan.md`](../backend/API_CONTRACT_GUIDE.md)
+- [`future_architecture_code_quality_improvement_plan.md`](../architecture/tradeoffs_and_future.md)
+- [`2026-07-10_maintainability_program.md`](2026-07-10_maintainability_followup_wave_closeout.md)
 - [`offline_first_flutter_architecture_with_conflict_resolution.md`](../engineering/offline_first_flutter_architecture_with_conflict_resolution.md)
 
 ## Proof

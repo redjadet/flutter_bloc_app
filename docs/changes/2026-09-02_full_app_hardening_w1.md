@@ -20,7 +20,7 @@ before broader perf and mapper sweeps.
 
 ## Proof
 
-- Audit: [`audits/2026-09-02_full_app_hardening_w1.md`](../audits/2026-09-02_full_app_hardening_w1.md)
+- Audit: docs/audits/2026-09-02_full_app_hardening_w1 (local audit, gitignored)
 - `./bin/checklist`
 - `CHECKLIST_INTEGRATION_DEVICE=<simulator> ./bin/integration_tests`
 - Focused cubit tests listed in the audit verification block

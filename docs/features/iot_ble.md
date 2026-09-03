@@ -64,4 +64,4 @@ Integration (extended tier): `integration_test/iot_demo_ble_tab_flow_test.dart` 
 ## Related docs
 
 - Feature README: [`apps/mobile/lib/features/iot/README.md`](../../apps/mobile/lib/features/iot/README.md)
-- Plan / change log: [`plans/iot_ble_feature_brief.md`](../plans/iot_ble_feature_brief.md), [`changes/2026-06-18_iot-ble-feature.md`](../changes/2026-06-18_iot-ble-feature.md)
+- Plan / change log: [`features/iot_ble.md`](iot_ble.md), [`changes/2026-06-18_iot-ble-feature.md`](../changes/2026-06-18_iot-ble-feature.md)

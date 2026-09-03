@@ -7,7 +7,7 @@ this page as the compact implementation summary and keep it aligned with the
 active transport docs:
 
 - [`docs/integrations/render_fastapi_chat_demo.md`](render_fastapi_chat_demo.md)
-- [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)
+- [`offline_first/chat.md`](../offline_first/chat.md)
 
 ## Overview
 
@@ -23,7 +23,7 @@ The chat feature demonstrates production-ready AI integration with:
 
 These rows satisfy the plan's Phase 0 requirement. If product policy changes,
 update this table and
-[`docs/plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)
+[`offline_first/chat.md`](../offline_first/chat.md)
 in the same change set.
 
 | Row | Binding default |
@@ -127,7 +127,7 @@ OfflineFirstChatRepository
 - FastAPI Cloud orchestration:
   [`integrations/render_fastapi_chat_demo.md`](render_fastapi_chat_demo.md)
 - Supabase Edge proxy (authoritative plan):
-  [`plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)
+  [`offline_first/chat.md`](../offline_first/chat.md)
 - Error handling patterns: [`CODE_QUALITY.md`](../CODE_QUALITY.md)
 - Clean architecture: [`clean_architecture.md`](../clean_architecture.md)
 - Security and secrets: [`security_and_secrets.md`](../security_and_secrets.md)

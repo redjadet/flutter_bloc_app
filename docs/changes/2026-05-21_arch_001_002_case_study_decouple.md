@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-21  
 **Shipped:** [PR #240](https://github.com/redjadet/flutter_bloc_app/pull/240) squash-merged to `main` (`c703b9b5`)  
-**Plan:** [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](../plans/2026-05-21_ai_first_engineering_plan.md) post-merge follow-up
+**Plan:** [`PLAN.md`](../../PLAN.md) post-merge follow-up
 
 ## Goal
 

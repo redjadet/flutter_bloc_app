@@ -37,4 +37,4 @@ Behavior-preserving DI maintainability refactor:
 ## Intentionally deferred after this series
 
 Wave C presentation splits and staff clock-out partial `flags` wire shape:
-[`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md).
+[`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).

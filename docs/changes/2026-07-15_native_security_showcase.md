@@ -3,7 +3,7 @@
 **Date:** 2026-07-15
 
 Implements the full one-shot plan
-[`.cursor/plans/native_security_showcase.plan.md`](../../.cursor/plans/native_security_showcase.plan.md)
+.cursor/plans/native_security_showcase.plan (local Cursor plan)
 (Tasks 1–7: Dart + Android/iOS native hosts + integration + gates).
 
 ## Problem
@@ -172,6 +172,6 @@ Current validation status (2026-07-16):
 ## Links
 
 - README: [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md)
-- Plan: [`.cursor/plans/native_security_showcase.plan.md`](../../.cursor/plans/native_security_showcase.plan.md) (gitignored host plan; not part of commit)
+- Plan: .cursor/plans/native_security_showcase.plan (local Cursor plan) (gitignored host plan; not part of commit)
 - Related feature brief: [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](2026-06-08_native_platform_showcase_feature_brief.md)
 - Journey **J6**: [`docs/engineering/integration_journey_map.md`](../engineering/integration_journey_map.md)

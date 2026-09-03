@@ -1,7 +1,7 @@
 # Agent runtime memory candidate v1 — `keep_legacy`
 
 **Date:** 2026-07-23 → 2026-07-24
-**Plan (local, gitignored):** [`docs/plans/2026-07-23_meterless_equivalent_agent_runtime_memory.md`](../plans/2026-07-23_meterless_equivalent_agent_runtime_memory.md)
+**Plan (local, gitignored):** [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md)
 **Transcript:** Meterless runtime memory
 
 ## Verdict

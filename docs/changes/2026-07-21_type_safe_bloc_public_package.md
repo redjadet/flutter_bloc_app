@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-21
 **Branch:** `extract/public-type-safe-bloc`
-**Plan:** [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md)
+**Plan:** [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md)
 
 ## Why
 

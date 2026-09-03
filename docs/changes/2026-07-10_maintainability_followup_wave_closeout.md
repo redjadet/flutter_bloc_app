@@ -5,7 +5,7 @@
 
 ## Outcome
 
-- Program [`2026-07-10_maintainability_program.md`](../plans/2026-07-10_maintainability_program.md) marked **complete**.
+- Program [`2026-07-10_maintainability_program.md`](2026-07-10_maintainability_followup_wave_closeout.md) marked **complete**.
 - Ranks 6–7 closed; `staff_app_demo` Firestore maps stay **deferred** (separate program).
 - [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) re-graded for `counter`, `chat`, `ai_decision_demo`, `scapes`.
 

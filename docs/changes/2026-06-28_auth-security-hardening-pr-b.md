@@ -14,7 +14,7 @@ and adds `sessionExpired` to `SupabaseAuthCubit`.
 - Case-study cubits no longer call `RemoteBackendAuthPort.signOut()` on 401
 - `SupabaseAuthState.sessionExpired` + coordinator listener
 
-**Deferred (auth hardening):** [`auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md).
+**Deferred (auth hardening):** [`auth_security_hardening_deferred.md`](../authentication.md).
 
 ## Verification
 

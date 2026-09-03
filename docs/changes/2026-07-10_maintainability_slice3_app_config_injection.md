@@ -1,7 +1,7 @@
 # Maintainability Slice 3 — presentation app config/bootstrap injection
 
 **Date:** 2026-07-10  
-**PR seam:** Rank 3 of [`docs/plans/2026-07-10_maintainability_program.md`](../plans/2026-07-10_maintainability_program.md)
+**PR seam:** Rank 3 of [`changes/2026-07-10_maintainability_followup_wave_closeout.md`](2026-07-10_maintainability_followup_wave_closeout.md)
 
 ## Goal
 

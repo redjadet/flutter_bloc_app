@@ -12,7 +12,7 @@ from warn-only (always exit 0) to fail when violations exist. Baseline on `main`
 
 - Scripts exit `1` on violations; checklist messages no longer say "(warn-only)"
 - Baseline severity: `warn` → `fail`
-- Removed **QG-D09** from [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md)
+- Removed **QG-D09** from [`engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md)
 - Catalog + validation routing matrix updated
 
 ## Verification

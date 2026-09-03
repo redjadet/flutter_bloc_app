@@ -1,6 +1,6 @@
 # Chat Offline-First Contract
 
-This document defines how the chat feature uses the shared offline-first stack. **Remote inference** is selected by a **`CompositeChatRepository`** (Supabase Edge `chat-complete` when initialized + valid session, otherwise direct **`HuggingfaceChatRepository`** when a client key is allowed). See [`plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md) for transport rules, fallback (**online** only, eligible Edge codes), and badge semantics. The offline-first shell and local persistence below are unchanged.
+This document defines how the chat feature uses the shared offline-first stack. **Remote inference** is selected by a **`CompositeChatRepository`** (Supabase Edge `chat-complete` when initialized + valid session, otherwise direct **`HuggingfaceChatRepository`** when a client key is allowed). Transport rules, online-only Edge fallback, and badge semantics are owned here and in [`integrations/ai_integration.md`](../integrations/ai_integration.md). The offline-first shell and local persistence below are unchanged.
 
 ## Goals
 

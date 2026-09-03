@@ -25,7 +25,7 @@ TDD workflow index for agents. **Detail:** [`docs/testing_overview.md`](../testi
 2. One primary assertion per scenario when possible.
 3. Use existing fakes under `test/` before new mocks.
 4. Layout-sensitive widget tests: use `tester.view` sizing or overflow validators ([`widget_test_playbook.md`](widget_test_playbook.md)); do not add viewport setup to every widget test until a harness exists.
-5. Non-trivial feature: fill [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) **Tests** section before broad implementation; done = those rows satisfied or documented N/A.
+5. Non-trivial feature: fill [`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md) **Tests** section before broad implementation; done = those rows satisfied or documented N/A.
 6. Feature-defined policy: [`testing_overview.md`](../testing_overview.md) § Feature-defined testing.
 
 ## Flaky prevention

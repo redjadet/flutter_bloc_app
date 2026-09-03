@@ -1,7 +1,7 @@
 # Senior patterns — reduce-surprise program
 
 **Date:** 2026-06-19
-**Plan:** [`docs/plans/senior_patterns_optimization_2026-06.md`](../plans/senior_patterns_optimization_2026-06.md)
+**Plan:** [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md)
 
 ## Summary
 

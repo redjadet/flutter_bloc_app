@@ -127,7 +127,7 @@ the answer.
 - Interview portfolio spine and proof commands: [`interview_showcase.md`](interview_showcase.md),
   scope in [`adr/0005-interview-showcase-scope.md`](adr/0005-interview-showcase-scope.md).
 - Mixpanel, Sentry, and Patrol are **not** in `pubspec.yaml`; doc-only seams in
-  [`observability.md`](observability.md) and [`plans/future_observability.md`](plans/future_observability.md).
+  [`observability.md`](observability.md).
 - `tasks/*` trackers are gitignored (local-only); durable conclusions belong in
   `docs/`, not committed tracker paths.
 

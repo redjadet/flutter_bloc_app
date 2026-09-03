@@ -13,7 +13,7 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 
 ## Build readiness checklist
 
-- [x] [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) updated with scope and verification
+- [x] `tasks/cursor/todo.md` updated with scope and verification
 - [x] Implementation defaults reviewed (clip retention, logout scope, schema reset, `retrieveLostData`)
 - [x] After `pubspec.yaml` / ARB changes: `flutter pub get` and your repo’s l10n codegen step if applicable
 - [x] `./bin/router_feature_validate` after routes/auth/example

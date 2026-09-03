@@ -12,7 +12,7 @@ Local BLE showcase tab on `/iot-demo`: mock GATT simulator (ESP32, HRM, thermome
 - `apps/mobile/lib/core/di/features/register_iot_services.dart`, `apps/mobile/lib/core/config/iot_ble_runtime_config.dart`
 - `pubspec.yaml` — `flutter_reactive_ble`, `permission_handler`
 - Platform: `android/app/src/main/AndroidManifest.xml`, `ios/Runner/Info.plist`
-- `docs/features/iot_ble*.md`, [`plans/iot_ble_feature_brief.md`](../plans/iot_ble_feature_brief.md)
+- `docs/features/iot_ble*.md`, [`features/iot_ble.md`](../features/iot_ble.md)
 - Catalog/index: [`feature_overview.md`](../feature_overview.md), [`README.md`](../README.md), [`architecture/reference_features.md`](../architecture/reference_features.md)
 
 ## Tests

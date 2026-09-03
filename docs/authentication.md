@@ -55,7 +55,7 @@ Protected examples:
 
 ## Registration Flow (UI-Only)
 
-- `RegisterPage` validates inputs locally via `RegisterCubit`/`RegisterState` (full name/email/password/phone/terms) and, on success, only shows a confirmation dialog; it **does not create Firebase users** or call any backend (`apps/mobile/lib/features/auth/presentation/pages/register_page.dart`, `cubit/register`). **Backend wiring is deferred** — [AUTH-D02](plans/auth_security_hardening_deferred.md#auth-d02-registerpage-backend).
+- `RegisterPage` validates inputs locally via `RegisterCubit`/`RegisterState` (full name/email/password/phone/terms) and, on success, only shows a confirmation dialog; it **does not create Firebase users** or call any backend (`apps/mobile/lib/features/auth/presentation/pages/register_page.dart`, `cubit/register`). **Backend wiring is deferred** — [AUTH-D02](#auth-d02-registerpage-backend).
 - Terms acceptance is tracked client-side; there is no persistence or policy enforcement beyond the UI.
 
 ## Error Handling & Localization
@@ -122,7 +122,7 @@ Protected examples:
 - On 401 responses, `AuthTokenInterceptor` performs one refresh flow and retries with
   the refreshed bearer token, avoiding chained forced-refresh calls.
 - If Firebase Auth is not configured, the interceptor will skip token injection and proceed with standard headers only.
-- **Deferred:** proactive `auth_injection_failed` request `extra` when `getIdToken` fails before send — [AUTH-D04](plans/auth_security_hardening_deferred.md#auth-d04-auth_injection_failed-extra-flag).
+- **Deferred:** proactive `auth_injection_failed` request `extra` when `getIdToken` fails before send — [AUTH-D04](#auth-d04-auth_injection_failed-extra-flag).
 
 ## Debug & Simulator Auth Behavior
 
@@ -155,24 +155,42 @@ Protected examples:
 ### Deferred from auth security hardening (June 2026)
 
 PR A–C are **shipped**. The following were explicitly **out of scope** for that
-delivery; do not implement without the unblock criteria in
-[`plans/auth_security_hardening_deferred.md`](plans/auth_security_hardening_deferred.md):
+delivery; do not implement without the unblock criteria below:
 
 | ID | Item | Summary |
 | --- | --- | --- |
-| AUTH-D01 | Render FastAPI coordinator hook | Global `invalidateSession` on persistent Render orchestration 401 after refresh — only if repro + product require it |
-| AUTH-D02 | `RegisterPage` backend | Keep UI-only; real signup stays FirebaseUI / Supabase |
-| AUTH-D03 | Role/claims authorization | Blocked on ADR (claims source of truth) before role-aware `AppRoutePolicies` |
-| AUTH-D04 | `auth_injection_failed` extra | Dio `extra` flag when token injection fails pre-flight — deferred until a caller needs it |
+| [AUTH-D01](#auth-d01-render-fastapi-coordinator-hook) | Render FastAPI coordinator hook | Global `invalidateSession` on persistent Render orchestration 401 after refresh — only if repro + product require it |
+| [AUTH-D02](#auth-d02-registerpage-backend) | `RegisterPage` backend | Keep UI-only; real signup stays FirebaseUI / Supabase |
+| [AUTH-D03](#auth-d03-roleclaims-authorization) | Role/claims authorization | Blocked on ADR (claims source of truth) before role-aware `AppRoutePolicies` |
+| [AUTH-D04](#auth-d04-auth_injection_failed-extra-flag) | `auth_injection_failed` extra | Dio `extra` flag when token injection fails pre-flight — deferred until a caller needs it |
+
+#### AUTH-D01: Render FastAPI coordinator hook
+
+Global `invalidateSession` on persistent Render orchestration 401 after refresh
+— only if a reproducible product path requires it.
+
+#### AUTH-D02: RegisterPage backend
+
+Keep registration UI-only; real signup stays FirebaseUI / Supabase Auth.
+
+#### AUTH-D03: Role/claims authorization
+
+Blocked on an ADR for claims source of truth before role-aware
+`AppRoutePolicies`.
+
+#### AUTH-D04: `auth_injection_failed` extra flag
+
+Dio `extra` flag when token injection fails pre-flight — deferred until a
+caller needs to distinguish injection failure from an absent user.
 
 ### Ongoing auth roadmap
 
 - Expand `AppRoutePolicies` coverage for other sensitive routes that currently assume auth implicitly.
-- Decide and document a **roles/claims source of truth** (Firebase custom claims vs profile field vs hybrid) before implementing role-restricted gates — see [AUTH-D03](plans/auth_security_hardening_deferred.md#auth-d03-roleclaims-authorization).
+- Decide and document a **roles/claims source of truth** (Firebase custom claims vs profile field vs hybrid) before implementing role-restricted gates — see [AUTH-D03](#auth-d03-roleclaims-authorization).
 
 ## Roles/claims (design note)
 
-Role-based access is not implemented yet. This is **[AUTH-D03](plans/auth_security_hardening_deferred.md#auth-d03-roleclaims-authorization)** — deferred until an ADR exists. Before adding role-restricted routes, decide a source of truth that can be resolved without introducing async router redirects or startup race conditions:
+Role-based access is not implemented yet. This is **[AUTH-D03](#auth-d03-roleclaims-authorization)** — deferred until an ADR exists. Before adding role-restricted routes, decide a source of truth that can be resolved without introducing async router redirects or startup race conditions:
 
 - **Firebase custom claims** (authoritative, but requires claim refresh and a safe access path)
 - **Profile field** (app-controlled, but needs persistence + sync semantics)
@@ -194,7 +212,7 @@ Until that decision exists, keep route policy to `public | authenticated`, and g
 - Logout clears caches via decorator + coordinator (ATM, HF orchestration token)
 - Never log token values (no suffix, no full App Check token in logs)
 - JWT decode for UI/diagnostics only (`JwtClaimsReader`)
-- No client-side role security until claims ADR ([AUTH-D03](plans/auth_security_hardening_deferred.md#auth-d03-roleclaims-authorization))
+- No client-side role security until claims ADR ([AUTH-D03](#auth-d03-roleclaims-authorization))
 - Explicit UX states: `AppAuthCubit.sessionExpired`, `SupabaseAuthState.sessionExpired`
 
 ## Request Checklist (Current State)

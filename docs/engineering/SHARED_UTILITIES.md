@@ -113,7 +113,7 @@ state in `apps/mobile/lib/app/widgets/` or `apps/mobile/lib/app/sync/`.
 
 ## Public package defaults
 
-Hybrid extraction program: [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md).
+Hybrid extraction program: [`engineering/SHARED_UTILITIES.md`](SHARED_UTILITIES.md).
 
 - License: Apache-2.0
 - GitHub: `redjadet/<package>`

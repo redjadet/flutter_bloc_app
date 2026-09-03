@@ -4,12 +4,12 @@
 
 - **sync-graphql-countries** — Syncs continents/countries from the public GraphQL API into `graphql_continents` and `graphql_countries`. Source: `supabase/functions/sync-graphql-countries/`. Deployed with **verify_jwt: false** (RLS on tables enforces access). App flow: [GraphQL demo](../docs/offline_first/graphql_demo.md). Redeploy: MCP `user-supabase` → `deploy_edge_function` with `name: "sync-graphql-countries"`, `files` from `index.ts`, and `verify_jwt: false`; or CLI: `supabase functions deploy sync-graphql-countries --no-verify-jwt`.
 - **sync-chart-trending** — Syncs Bitcoin 7-day market chart from CoinGecko into `chart_trending_points`. Source: `supabase/functions/sync-chart-trending/`. Deployed with **verify_jwt: false**. App flow: [Chart demo](../docs/offline_first/chart_demo.md). Redeploy: MCP `user-supabase` → `deploy_edge_function` with `name: "sync-chart-trending"`, `files` including **both** `index.ts` and `chart_trending_sync.ts` (index imports the helper), and `verify_jwt: false`; or CLI: `supabase functions deploy sync-chart-trending --no-verify-jwt` (CLI bundles the whole folder).
-- **chat-complete** — Proxies chat completions to Hugging Face (`router.huggingface.co/v1/chat/completions`) with the user JWT verified first. Source: `supabase/functions/chat-complete/`. Deployed with **`verify_jwt: true`** (see [`config.toml`](config.toml)). App flow: [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](../docs/plans/supabase_proxy_huggingface_chat_plan.md). CLI: `npx supabase functions deploy chat-complete` (default JWT verification on). In the Supabase Dashboard, keep **Verify JWT with legacy secret** disabled for this function when your project uses the newer signing-key path; enabling that toggle can reject otherwise valid user sessions with false `401 auth_required` responses.
+- **chat-complete** — Proxies chat completions to Hugging Face (`router.huggingface.co/v1/chat/completions`) with the user JWT verified first. Source: `supabase/functions/chat-complete/`. Deployed with **`verify_jwt: true`** (see [`config.toml`](config.toml)). App flow: [`offline_first/chat.md`](../docs/offline_first/chat.md). CLI: `npx supabase functions deploy chat-complete` (default JWT verification on). In the Supabase Dashboard, keep **Verify JWT with legacy secret** disabled for this function when your project uses the newer signing-key path; enabling that toggle can reject otherwise valid user sessions with false `401 auth_required` responses.
 
 ### Chat → Hugging Face proxy (`chat-complete`)
 
 Implementation: [`functions/chat-complete/index.ts`](functions/chat-complete/index.ts).
-Policy and matrix: [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](../docs/plans/supabase_proxy_huggingface_chat_plan.md)
+Policy and matrix: [`offline_first/chat.md`](../docs/offline_first/chat.md)
 and [`docs/integrations/ai_integration.md`](../docs/integrations/ai_integration.md).
 
 Required secrets/env:

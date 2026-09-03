@@ -72,7 +72,7 @@ flutter test \
 
 - **Exit code:** 0 (`🎉 Delivery checklist complete! All steps passed.`)
 - **Unit/widget tests:** 2463 passed, 4 skipped (`04:10 +2463 ~4: All tests passed!`)
-- **Coverage (unit lane):** 72.70% (`coverage/coverage_summary.md` after checklist)
+- **Coverage (unit lane):** 72.70% (coverage/coverage_summary (generated, gitignored) after checklist)
 - **Notes:** feature folder contract passed with legacy warnings for `staff_app_demo`
   cubit placement (pre-existing; not a blocker)
 
@@ -82,7 +82,7 @@ flutter test \
 - **Preflight:** log-filter regression 4/4; web bootstrap smoke 4/4
 - **iOS `integration_test/all_flows_test.dart`:** 26/26 passed, exit 0 (~300s)
 - **Overall script exit code:** 0
-- **Coverage after integration lane:** 74.65% (`coverage/coverage_summary.md` updated by script)
+- **Coverage after integration lane:** 74.65% (coverage/coverage_summary (generated, gitignored) updated by script)
 
 ## Manual QA (device / simulator)
 
