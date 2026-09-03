@@ -1,8 +1,8 @@
 # Feature Structure Contract
 
-Canonical folder contract for Cursor and Codex agents. Use with
-[Feature Delivery Guide](../feature_implementation_guide.md) and
-[Clean Architecture](../clean_architecture.md).
+Canonical folder contract for AI agents. Codex and Cursor are the primary
+validated hosts. Use with [Feature Delivery Guide](../feature_implementation_guide.md)
+and [Clean Architecture](../clean_architecture.md).
 
 ## Skeleton (non-negotiable)
 

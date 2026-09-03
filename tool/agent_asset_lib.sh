@@ -72,7 +72,6 @@ managed_cursor_project_files=(
 
 # shellcheck disable=SC2034
 managed_codex_files=(
-  "__repo_root__/AGENTS.md|$HOME/.codex/AGENTS.md"
   "shared/skills/agents-quick-reference/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
   "shared/skills/agents-skill-routing/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-skill-routing/SKILL.md"
   "shared/skills/agents-delivery-workflow/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"
@@ -113,25 +112,7 @@ managed_codex_rules_target="$HOME/.codex/rules/default.rules"
 
 agent_asset_source_path() {
   local src_rel="$1"
-  case "$src_rel" in
-    __repo_root__/*)
-      printf '%s/%s\n' "$repo_root" "${src_rel#__repo_root__/}"
-      ;;
-    *)
-      printf '%s/%s\n' "$agent_templates_root" "$src_rel"
-      ;;
-  esac
-}
-
-list_optional_codex_worktree_agent_targets() {
-  local repo_name
-  local target
-  repo_name="$(basename "$repo_root")"
-  shopt -s nullglob
-  for target in "$HOME"/.codex/worktrees/*/"$repo_name"/AGENTS.md; do
-    printf '%s\n' "$target"
-  done
-  shopt -u nullglob
+  printf '%s/%s\n' "$agent_templates_root" "$src_rel"
 }
 
 require_agent_asset_runtime() {

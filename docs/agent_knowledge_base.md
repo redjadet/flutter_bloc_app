@@ -56,7 +56,9 @@ Required anchors (kept here for mechanical checks):
 
 ## Progressive Disclosure
 
-After cold start: this doc → [`agent_project_context.md`](agent_project_context.md) → [`ai_code_review_protocol.md`](ai_code_review_protocol.md) → [`agents_quick_reference.md`](agents_quick_reference.md) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
+Canonical load order: [`ai/context_loading.md`](ai/context_loading.md). This doc
+routes doctrine; [`README.md`](README.md) routes topic owners. UI owners:
+[`../DESIGN.md`](../DESIGN.md) and [`design_system.md`](design_system.md).
 
 ## Adaptive Execution
 
@@ -68,7 +70,13 @@ Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) · hos
 
 ## Prompt Hygiene
 
-Short, stable, outcome-first: `Goal / Context / Boundaries / Verification`; prompts name the target, while evaluators/tests/runtime checks decide trust. Doctrine before task context; evidence/stop contract over long scripts; step order only for safety/validation/migrations/codegen/destructive/repo-required flows; delete prose once script/test/doc owns invariant.
+Short, stable, outcome-first: `Goal / Context / Boundaries / Verification`.
+State each durable instruction once in its canonical owner; keep examples only
+when they encode a product requirement or repair a measured failure. Prompts
+name the target; evaluators, tests, and runtime checks decide trust. Preserve
+step order only for safety, validation, migrations, codegen, destructive, or
+repository-required flows; delete prose once a script, test, or owner doc
+enforces the invariant.
 
 ## Long Session Health
 
@@ -100,7 +108,7 @@ Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Befo
 
 ## System Of Record Layout
 
-Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, invariants, host notes). Hub mechanics: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers: `../tasks/codex/todo.md`, `../tasks/cursor/todo.md`.
+Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, invariants, host notes). Hub mechanics: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers: [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md).
 
 ## Multi-Agent Hub
 
@@ -110,7 +118,13 @@ Anchors: Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`; Coordina
 
 ## Final Agent Contract
 
-Loop: [`AGENTS.md`](../AGENTS.md) § Loop. Execution: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md). Finish/report: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md). Review gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). **Report after checking** request, diff, proof, blockers (details in legibility doc). T1/T2 coding discipline: [`docs/ai/agent_operating_manual.md`](ai/agent_operating_manual.md).
+Entry and routing: [`AGENTS.md`](../AGENTS.md) § Start. Execution:
+[`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md).
+Finish/report: [`AGENTS.md`](../AGENTS.md) § Finish and
+[`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md).
+Review gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+**Report after checking** request, diff, proof, blockers. T1/T2 coding
+discipline: [`docs/ai/agent_operating_manual.md`](ai/agent_operating_manual.md).
 
 ## Host Parity & Mechanical Enforcement
 

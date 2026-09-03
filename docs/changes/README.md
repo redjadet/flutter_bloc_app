@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-03_agent_docs_cross_host_consistency.md`](2026-09-03_agent_docs_cross_host_consistency.md): Lean universal AGENTS map; Codex/Cursor priority; canonical routing and project-scoped host guidance.
 - [`2026-09-03_docs_link_syntax_repair.md`](2026-09-03_docs_link_syntax_repair.md): Fix self-links and malformed double-bracket markdown from link retarget.
 - [`2026-09-03_docs_link_repair.md`](2026-09-03_docs_link_repair.md): Retarget living docs off gitignored `docs/plans/**`; tracked plans README + owner redirect map.
 - [`2026-09-01_social_feed_race_early_gate.md`](2026-09-01_social_feed_race_early_gate.md): Run Social Feed online-apply-versus-replay regression before slower checklist lanes.

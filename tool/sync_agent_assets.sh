@@ -9,8 +9,8 @@ Sync repo-managed Cursor and Codex adapter templates into ~/.cursor and ~/.codex
 plus project-only Cursor rules into this workspace's .cursor/rules directory.
 Templates live under tool/agent_host_templates/ by default (versioned in this
 repo), or set AGENT_TEMPLATES_ROOT to another directory.
-Root AGENTS.md is the repo source map and the Codex host bootstrap copied to
-~/.codex/AGENTS.md and worktrees. No second Codex AGENTS.md template exists.
+Root AGENTS.md stays project-scoped. Sync does not copy it into global agent
+homes or other worktrees.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 
@@ -90,11 +90,6 @@ for mapping in \
   dst="${mapping##*|}"
   report_and_maybe_apply "$src_rel" "$dst"
 done
-
-while IFS= read -r worktree_agent; do
-  [[ -n "$worktree_agent" ]] || continue
-  report_and_maybe_apply "__repo_root__/AGENTS.md" "$worktree_agent"
-done < <(list_optional_codex_worktree_agent_targets)
 
 rules_status="$(check_codex_rules_block)" || true
 echo "$rules_status"

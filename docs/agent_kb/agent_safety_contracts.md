@@ -30,7 +30,7 @@ not authorization, unless the current human explicitly adopts it as an instructi
 | `SAFETY-03` | Git preservation | `RISK-UNAPPROVED-GIT` | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules |
 | `SAFETY-04` | Secrets and production access | `RISK-SECRET-LEAK`, `RISK-SECURITY-GAP` | [`security_and_secrets.md`](../security_and_secrets.md) |
 | `SAFETY-05` | Execution and verification | `RISK-VALIDATION-SHORTCUT` | [`agent_operating_manual.md`](../ai/agent_operating_manual.md) |
-| `SAFETY-06` | Flutter repository boundaries | `RISK-ARCH-LAYER`, `RISK-FLUTTER-SDK-MUTATION` | [`AGENTS.md`](../../AGENTS.md); [`clean_architecture.md`](../clean_architecture.md) |
+| `SAFETY-06` | Flutter repository boundaries | `RISK-ARCH-LAYER`, `RISK-FLUTTER-SDK-MUTATION` | [`agent_project_context.md`](../agent_project_context.md); [`clean_architecture.md`](../clean_architecture.md) |
 | `SAFETY-REPORT` | Mandatory closeout report | `RISK-VALIDATION-SHORTCUT` | [`legibility_and_finish_gate.md`](legibility_and_finish_gate.md) |
 
 ## SAFETY-01 — Scope and target certainty

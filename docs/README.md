@@ -16,7 +16,7 @@ folder** below. Thin hubs (link-only; edit targets, not hubs):
 | Toolchain pins | [`toolchain_versions.env`](toolchain_versions.env), [`tech_stack.md`](tech_stack.md) |
 | Architecture map | [`architecture.md`](architecture.md) → [`clean_architecture.md`](clean_architecture.md) |
 | Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
-| Agent harness | [`ai-workflow.md`](ai-workflow.md), [`AGENTS.md`](../AGENTS.md); bootstrap `bash ../tool/agent_session_bootstrap.sh` |
+| Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); overview [`ai-workflow.md`](ai-workflow.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
 
 ## Browse by folder
@@ -55,7 +55,7 @@ root when an existing category applies.
 - [`../DESIGN.md`](../DESIGN.md) — agent-readable visual brief and DesignMD tokens
 - [`clean_architecture.md`](clean_architecture.md)
 - [`architecture_details.md`](architecture_details.md)
-- [`bloc_standards.md`](bloc_standards.md) — deterministic Cubit/BLoC rules for Cursor and Codex
+- [`bloc_standards.md`](bloc_standards.md) — deterministic Cubit/BLoC rules for AI agents
 - [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) — feature folder and placement contract
 - [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) — use-case, DTO, mapper, and error-boundary policy
 - [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) — semantic patterns (DTO, sealed state, errors)

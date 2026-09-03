@@ -1,7 +1,7 @@
 # BLoC Standards
 
-Canonical state-management rules for Cursor and Codex agents building or
-reviewing feature code. **Cubit/BLoC is presentation-layer state management
+Canonical state-management rules for AI agents building or reviewing feature
+code. Codex and Cursor are the primary validated hosts. **Cubit/BLoC is presentation-layer state management
 only** — under `apps/mobile/lib/features/*/presentation/cubit/` or app-scope presentation
 (`AppScope`); never in `domain/` or `data/`. This complements [Clean Architecture](clean_architecture.md),
 [Feature Structure Contract](architecture/feature_structure_contract.md), and
