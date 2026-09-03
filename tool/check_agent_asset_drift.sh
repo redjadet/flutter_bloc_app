@@ -8,7 +8,7 @@ Usage: check_agent_asset_drift.sh
 Check whether managed Cursor/Codex host assets match repo sources. Cursor
 assets and Codex skills/rules come from tool/agent_host_templates/ (or
 AGENT_TEMPLATES_ROOT); project-only Cursor rules live in workspace
-.cursor/rules; Codex AGENTS.md comes from root AGENTS.md.
+.cursor/rules. Root AGENTS.md stays project-scoped and is not a host-sync asset.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 Otherwise it also verifies docs/toolchain_versions.env pins in literal sinks.
@@ -77,11 +77,6 @@ for mapping in \
   "${managed_cursor_project_files[@]}"; do
   check_mapping "${mapping%%|*}" "${mapping##*|}"
 done
-
-while IFS= read -r worktree_agent; do
-  [[ -n "$worktree_agent" ]] || continue
-  check_mapping "__repo_root__/AGENTS.md" "$worktree_agent"
-done < <(list_optional_codex_worktree_agent_targets)
 
 rules_raw_status="$(check_codex_rules_block)" || true
 rules_status="$(normalize_status_line "$rules_raw_status")"

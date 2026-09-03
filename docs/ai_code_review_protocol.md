@@ -9,7 +9,9 @@ Before report: apply the playbook's **Scope discipline** and
 **Self-verification** requirements; AI must **Self-verify** conclusions against
 the request, diff, proof, blockers, and residual risks.
 
-Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](toolchain_versions.env)). Adapted from [Vinod Pal (Mar 2026)](https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8).
+Toolchain: [`tech_stack.md`](tech_stack.md) (pins:
+[`toolchain_versions.env`](toolchain_versions.env)). Human review remains the
+final trust boundary; see [OpenAI's Codex safety guidance](https://openai.com/index/introducing-upgrades-to-codex/).
 
 Pointers: [`agent_knowledge_base.md`](agent_knowledge_base.md) (traps, finish gate) · [`agents_quick_reference.md`](agents_quick_reference.md) · [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) · [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md) (report shape, legibility, response tiers) · [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) (`./bin/agent-maintain closeout`). Deterministic checklists: [`review/architecture_checklist.md`](review/architecture_checklist.md), [`review/bloc_checklist.md`](review/bloc_checklist.md), [`review/security_checklist.md`](review/security_checklist.md), [`review/performance_checklist.md`](review/performance_checklist.md). Cross-host review only when explicitly requested: `./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`.
 

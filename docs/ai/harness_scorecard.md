@@ -1,8 +1,8 @@
-# Cursor/Codex Harness Scorecard
+# Codex/Cursor Harness Scorecard
 
 Use before claiming this repo's AI harness is complete or at maximum score.
-Scope is Cursor and Codex only; Gemini/Claude/Copilot references in product or
-historical docs are not harness targets.
+Codex and Cursor are the primary validated hosts and define score claims. Other
+AI agents use the same repository canon but remain outside host-parity scoring.
 
 Visible score source: [`README.md`](../../README.md) badge. Agents update it
 with `bash tool/update_harness_score_badge.sh`; score equals the lowest area

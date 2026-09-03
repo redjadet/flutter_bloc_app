@@ -6,10 +6,17 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 
 ## Host Parity
 
-- Root [`AGENTS.md`](../../AGENTS.md) = repo-local map.
-- Root [`AGENTS.md`](../../AGENTS.md) is the only project AGENTS source.
-  `./tool/sync_agent_assets.sh --apply` copies it to the Codex home AGENTS
-  file and Codex worktrees; Cursor reads the root map in-repo.
+- Codex and Cursor are first-class validated hosts. Other AI agents follow the
+  same repository map and owner docs; host-specific conveniences cannot weaken
+  shared safety or validation policy.
+- Root [`AGENTS.md`](../../AGENTS.md) is the only project AGENTS source. Agents
+  read the versioned copy from the repository or active worktree.
+- Do not copy the project map into a global agent home or between worktrees.
+  Home-level instructions are user-wide; each worktree owns the version checked
+  out with its branch. The Codex home AGENTS file under `~/.codex/` is unmanaged
+  user config (recommended: short host-neutral pointer only) — see
+  [`agent_host_notes.md`](../agent_host_notes.md) § Codex; change it only with
+  explicit human authorization.
 - Host-neutral skills live under `tool/agent_host_templates/shared/` and sync
   to both Codex and Cursor. Host-specific skills stay under their host folder.
 - Project-only Cursor rules sync to workspace `.cursor/rules/`; they do not
@@ -39,6 +46,19 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 - User/global host hooks that force broad skill loading are outside this repo's
   source of truth. Change them only on explicit ask; otherwise keep repo docs
   aligned with open-only-needed context.
+
+## Compatibility References
+
+Verified 2026-09-03:
+
+- [OpenAI Codex instruction loading](https://openai.com/index/unrolling-the-codex-agent-loop/)
+  — home instructions are global; repository instructions load by directory scope.
+- [OpenAI harness engineering](https://openai.com/index/harness-engineering/)
+  — keep AGENTS as a short map and repository docs as system of record.
+- [Cursor rules](https://docs.cursor.com/context/rules) — keep rules concise,
+  focused, composable, and scoped.
+- [Cursor CLI](https://docs.cursor.com/en/cli/using) — reads root AGENTS alongside
+  project rules.
 
 ## Mechanical Enforcement
 
