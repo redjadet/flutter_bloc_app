@@ -119,4 +119,4 @@ Wrapper rules (best-effort, local-only):
 
 - [New Developer Guide](../new_developer_guide.md), [Tech Stack](../tech_stack.md)
 - Pilot evidence: [`../../ai/reports/2026-07-29_code_review_graph_pilot.md`](../../ai/reports/2026-07-29_code_review_graph_pilot.md)
-- Reference: [`code_graph.pdf`](code_review_graph.md)
+- Reference: [`code_graph.pdf`](../code_graph.pdf) (local/gitignored)

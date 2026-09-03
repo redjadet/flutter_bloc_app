@@ -16,7 +16,7 @@ overview.
 - **Mobile/backend contracts**: [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md),
   [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](architecture/MOBILE_BACKEND_BOUNDARIES.md).
 - **When adding new cross-cutting behavior**, update the owning utility doc
-  (typically [[`engineering/SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md)](engineering/SHARED_UTILITIES.md)) and add/extend a validator or
+  (typically [`engineering/SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md)) and add/extend a validator or
   regression test when the pattern is important enough to enforce.
 
 ## High-level overview
