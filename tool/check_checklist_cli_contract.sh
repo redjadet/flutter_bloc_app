@@ -23,7 +23,9 @@ mix_route_fixture="apps/mobile/lib/app/theme/checklist_route_fixture.tmp"
 todo_route_fixture="apps/mobile/lib/features/todo_list/presentation/widgets/checklist_route_fixture.tmp"
 action_route_fixture="apps/mobile/lib/features/profile/presentation/checklist_route_fixture.tmp"
 regression_route_fixture="apps/mobile/lib/features/social_feed_demo/presentation/checklist_route_fixture.tmp"
-trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture" "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture"' EXIT
+arb_route_fixture="apps/mobile/lib/l10n/checklist_route_fixture.arb"
+android_route_fixture="apps/mobile/android/checklist_route_fixture.tmp"
+trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture" "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture" "$arb_route_fixture" "$android_route_fixture"' EXIT
 
 run_ok() {
   local name="$1"
@@ -99,6 +101,20 @@ assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
 assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
   "explain|auto_route|action_bar_layout|run"
 rm -f "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture"
+
+# Non-Dart Melos paths must still select analyze/coverage after apps/mobile/ strip.
+printf 'route fixture\n' >"$arb_route_fixture"
+printf 'route fixture\n' >"$android_route_fixture"
+run_ok explain_melos_non_dart ./bin/checklist-fast --explain --print-changed --no-reuse
+assert_contains explain_melos_non_dart "$tmp_dir/explain_melos_non_dart.out" \
+  "changed_files|path|$arb_route_fixture"
+assert_contains explain_melos_non_dart "$tmp_dir/explain_melos_non_dart.out" \
+  "changed_files|path|$android_route_fixture"
+assert_contains explain_melos_non_dart "$tmp_dir/explain_melos_non_dart.out" \
+  "explain|auto_route|analyze|run"
+assert_contains explain_melos_non_dart "$tmp_dir/explain_melos_non_dart.out" \
+  "explain|auto_route|coverage|run"
+rm -f "$arb_route_fixture" "$android_route_fixture"
 
 run_fail bad_mode 2 ./bin/checklist-fast --mode invalid --print-changed
 assert_contains bad_mode "$tmp_dir/bad_mode.err" "usage-error|invalid --mode: invalid"

@@ -4,7 +4,8 @@
 
 Checklist auto-routing retained app-relative `lib/**` and `test/**` selectors
 after application moved under `apps/mobile/`. Changed repository paths therefore
-missed Mix, focused regression, Todo layout, and action-bar layout selectors.
+missed Mix, focused regression, Todo layout, action-bar layout, analyze,
+coverage, and pubspec codegen-preflight selectors.
 
 ## Decision
 
@@ -14,7 +15,8 @@ fingerprints.
 
 `./bin/checklist --explain --print-changed` now reports each automatic route as
 `run` or `skip`. CLI contract creates `apps/mobile/` fixtures and proves Mix,
-focused regression, Todo layout, and action-bar layout routing remains selected.
+focused regression, Todo layout, action-bar layout, analyze (`.arb`), and
+coverage (`.arb` + `android/`) routing remains selected.
 
 Fast-checklist inventory fallback now selects newest dated report without
 parsing `ls` output. Redundant shadowed action-bar glob was removed.

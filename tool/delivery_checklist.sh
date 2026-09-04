@@ -713,6 +713,7 @@ should_run_pubspec_codegen_compat_preflight() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       pubspec.yaml|pubspec.lock)
         return 0
@@ -1006,6 +1007,7 @@ should_run_flutter_analyze_auto() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       *.dart|\
       analysis_options.yaml|\
@@ -1033,6 +1035,7 @@ should_run_coverage_auto() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    file="$(normalize_app_route_path "$file")"
     case "$file" in
       *.dart|\
       analysis_options.yaml|\
