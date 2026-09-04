@@ -586,23 +586,81 @@ void main() {
     expect(second.seedSummary, isNotNull);
   });
 
+  test('dispatch retains queued like when viewer-like persist fails', () async {
+    final SocialFeedPage page = await repository.refresh(
+      viewer: SocialFeedViewer.alex,
+    );
+    final String postId = page.posts.first.id;
+    scenario.setSimulatedOnline(online: false);
+    await repository.setLiked(
+      viewer: SocialFeedViewer.alex,
+      postId: postId,
+      desiredLiked: true,
+      mutationId: 'persist-fail-like',
+    );
+
+    local.failNextSaveViewerLikes = StateError('disk full');
+    scenario.setSimulatedOnline(online: true);
+
+    final SocialFeedSyncLease lease = await repository.acquireSync(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(
+      await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+      1,
+    );
+    expect(lease.seedSummary!.dispatchedMutations, isEmpty);
+    await lease.close();
+
+    final SocialFeedSyncLease retry = await repository.acquireSync(
+      viewer: SocialFeedViewer.alex,
+    );
+    expect(
+      await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
+      0,
+    );
+    expect(retry.seedSummary!.dispatchedMutations, isNotEmpty);
+    await retry.close();
+
+    await repository.dispose();
+    remote = SimulatedSocialFeedRemoteDataSource(
+      scenario: scenario,
+      clock: () => now,
+    );
+    repository = OfflineFirstSocialFeedRepository(
+      local: local,
+      queue: queue,
+      remote: remote,
+      scenario: scenario,
+      timerService: timer,
+    );
+
+    final SocialFeedPage? cached = await repository.readCachedPage(
+      viewer: SocialFeedViewer.alex,
+    );
+    final SocialFeedPost cachedPost = cached!.posts.firstWhere(
+      (SocialFeedPost p) => p.id == postId,
+    );
+    expect(cachedPost.isLikedByMe, isTrue);
+  });
+
   test(
-    'dispatch retains queued like when viewer-like persist fails',
+    'dispatch retains queued comment when comment-thread persist fails',
     () async {
       final SocialFeedPage page = await repository.refresh(
         viewer: SocialFeedViewer.alex,
       );
       final String postId = page.posts.first.id;
       scenario.setSimulatedOnline(online: false);
-      await repository.setLiked(
+      await repository.addComment(
         viewer: SocialFeedViewer.alex,
         postId: postId,
-        desiredLiked: true,
-        mutationId: 'persist-fail-like',
+        body: 'Persist this comment',
+        mutationId: 'persist-fail-comment',
       );
 
+      local.failNextSaveCommentThreads = StateError('disk full');
       scenario.setSimulatedOnline(online: true);
-      local.failNextSaveViewerLikes = StateError('disk full');
 
       final SocialFeedSyncLease lease = await repository.acquireSync(
         viewer: SocialFeedViewer.alex,
@@ -621,29 +679,17 @@ void main() {
         await repository.pendingMutationCount(viewer: SocialFeedViewer.alex),
         0,
       );
-      expect(retry.seedSummary!.dispatchedMutations, isNotEmpty);
+      expect(
+        retry.seedSummary!.dispatchedMutations,
+        contains(
+          isA<SocialFeedDispatchedMutation>().having(
+            (SocialFeedDispatchedMutation mutation) => mutation.mutationId,
+            'mutationId',
+            'persist-fail-comment',
+          ),
+        ),
+      );
       await retry.close();
-
-      await repository.dispose();
-      remote = SimulatedSocialFeedRemoteDataSource(
-        scenario: scenario,
-        clock: () => now,
-      );
-      repository = OfflineFirstSocialFeedRepository(
-        local: local,
-        queue: queue,
-        remote: remote,
-        scenario: scenario,
-        timerService: timer,
-      );
-
-      final SocialFeedPage? cached = await repository.readCachedPage(
-        viewer: SocialFeedViewer.alex,
-      );
-      final SocialFeedPost cachedPost = cached!.posts.firstWhere(
-        (SocialFeedPost p) => p.id == postId,
-      );
-      expect(cachedPost.isLikedByMe, isTrue);
     },
   );
 }

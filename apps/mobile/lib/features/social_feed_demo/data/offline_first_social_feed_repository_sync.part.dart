@@ -226,6 +226,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
               wasComment: false,
             ),
           );
+        } else {
+          // Keep the head for the next scheduled retry after local persistence fails.
+          break;
         }
       } else if (head.type == 'comment') {
         await repo._remote.applyComment(
@@ -247,6 +250,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
               wasComment: true,
             ),
           );
+        } else {
+          // Keep the head for the next scheduled retry after local persistence fails.
+          break;
         }
       }
     } on SocialFeedRemoteRejection catch (e) {
