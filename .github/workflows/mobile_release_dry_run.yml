@@ -31,29 +31,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
-
-      - name: Install ripgrep and lcov
-        shell: bash
-        run: |
-          set -euo pipefail
-          packages=()
-          command -v rg >/dev/null 2>&1 || packages+=(ripgrep)
-          command -v lcov >/dev/null 2>&1 || packages+=(lcov)
-          if ((${#packages[@]} == 0)); then
-            echo "ripgrep and lcov already installed"
-            exit 0
-          fi
-          sudo apt-get update
-          sudo apt-get install -y "${packages[@]}"
+          install-ripgrep: 'true'
+          install-lcov: 'true'
 
       - name: Run delivery checklist
         run: ./bin/checklist
@@ -70,9 +53,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '24.19.0'
+          node-version: '24.20.0'
           cache: npm
           cache-dependency-path: backend/firebase/functions/package-lock.json
 
@@ -96,15 +79,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
 
       - name: Create ephemeral release keystore
         shell: bash
@@ -149,15 +127,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
 
       - name: Build iOS release without codesign
         working-directory: apps/mobile

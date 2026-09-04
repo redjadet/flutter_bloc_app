@@ -10,15 +10,11 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
-    open-pull-requests-limit: 5
+    # Zero disables version-update PRs; security-update PRs remain enabled.
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
       - "security"
-    # Only create PRs for security updates
-    ignore:
-      - dependency-type: "all"
-        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
-    # Focus on security vulnerabilities
     commit-message:
       prefix: "security"
       include: "scope"
@@ -29,14 +25,45 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
-    open-pull-requests-limit: 5
+    # Zero disables version-update PRs; security-update PRs remain enabled.
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
       - "security"
-    ignore:
-      - dependency-type: "all"
-        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
     commit-message:
       prefix: "security"
       include: "scope"
 
+  # Action security bumps. Renovate owns routine version updates.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # Zero disables version-update PRs; security-update PRs remain enabled.
+    open-pull-requests-limit: 0
+    labels:
+      - "dependencies"
+      - "security"
+      - "github-actions"
+    commit-message:
+      prefix: "security"
+      include: "scope"
+
+  # Firebase Functions Node security bumps. Renovate owns routine version updates.
+  - package-ecosystem: "npm"
+    directory: "/backend/firebase/functions"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # Zero disables version-update PRs; security-update PRs remain enabled.
+    open-pull-requests-limit: 0
+    labels:
+      - "dependencies"
+      - "security"
+      - "npm"
+    commit-message:
+      prefix: "security"
+      include: "scope"

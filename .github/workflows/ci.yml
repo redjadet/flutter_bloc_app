@@ -137,29 +137,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
-
-      - name: Install ripgrep and lcov
-        shell: bash
-        run: |
-          set -euo pipefail
-          packages=()
-          command -v rg >/dev/null 2>&1 || packages+=(ripgrep)
-          command -v lcov >/dev/null 2>&1 || packages+=(lcov)
-          if ((${#packages[@]} == 0)); then
-            echo "ripgrep and lcov already installed"
-            exit 0
-          fi
-          sudo apt-get update
-          sudo apt-get install -y "${packages[@]}"
+          install-ripgrep: 'true'
+          install-lcov: 'true'
 
       - name: Run delivery checklist
         if: >-
@@ -192,9 +175,11 @@ jobs:
           name: coverage-lcov
           path: coverage/lcov.info
 
+  # Preflight is Chrome + Dart unit guards — no simulator. Ubuntu saves macOS minutes.
+  # Job name stays `integration-preflight` (branch protection).
   integration-preflight:
     needs: changes
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     continue-on-error: ${{ needs.changes.outputs.integration_non_blocking == 'true' }}
     if: >-
@@ -205,15 +190,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
+          install-chrome: 'true'
 
       - name: Run integration preflight
         id: run_preflight
@@ -239,6 +220,7 @@ jobs:
             echo "## Integration preflight"
             echo ""
             echo "- event: \`${{ github.event_name }}\`"
+            echo "- runner: \`ubuntu-latest\` (Chrome web smoke + unit guards)"
             echo "- tier: \`${{ needs.changes.outputs.integration_tier }}\`"
             echo "- phase: \`${{ needs.changes.outputs.integration_phase }}\`"
             echo "- preflight_passed: \`${{ steps.status.outputs.preflight_passed }}\`"
@@ -260,15 +242,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
 
       - name: Install Firebase iOS/macOS config for CI
         run: |

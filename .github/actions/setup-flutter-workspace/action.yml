@@ -1,0 +1,77 @@
+name: Setup Flutter workspace
+description: >-
+  Install pinned Flutter, run workspace pub get, and optionally install
+  apt packages used by checklist / coverage lanes.
+
+inputs:
+  flutter-version:
+    description: Flutter SDK version pin (match docs/toolchain_versions.env)
+    required: true
+  install-ripgrep:
+    description: Install ripgrep via apt when missing
+    required: false
+    default: 'false'
+  install-lcov:
+    description: Install lcov via apt when missing
+    required: false
+    default: 'false'
+  install-chrome:
+    description: Install Google Chrome when missing (Flutter web device smoke)
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ inputs.flutter-version }}
+        channel: stable
+        cache: true
+
+    - name: Flutter pub get
+      shell: bash
+      run: bash tool/workspace_pub_get.sh
+
+    - name: Install apt packages
+      if: ${{ inputs.install-ripgrep == 'true' || inputs.install-lcov == 'true' || inputs.install-chrome == 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        packages=()
+        if [[ '${{ inputs.install-ripgrep }}' == 'true' ]]; then
+          command -v rg >/dev/null 2>&1 || packages+=(ripgrep)
+        fi
+        if [[ '${{ inputs.install-lcov }}' == 'true' ]]; then
+          command -v lcov >/dev/null 2>&1 || packages+=(lcov)
+        fi
+        if [[ '${{ inputs.install-chrome }}' == 'true' ]]; then
+          if ! command -v google-chrome >/dev/null 2>&1 && \
+             ! command -v google-chrome-stable >/dev/null 2>&1 && \
+             ! command -v chromium-browser >/dev/null 2>&1 && \
+             ! command -v chromium >/dev/null 2>&1; then
+            packages+=(google-chrome-stable)
+          fi
+        fi
+        if ((${#packages[@]} == 0)); then
+          echo "Requested apt packages already present"
+          exit 0
+        fi
+        sudo apt-get update
+        sudo apt-get install -y "${packages[@]}"
+
+    - name: Point Flutter at Chrome when installed
+      if: ${{ inputs.install-chrome == 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        for candidate in google-chrome google-chrome-stable chromium-browser chromium; do
+          if command -v "$candidate" >/dev/null 2>&1; then
+            echo "CHROME_EXECUTABLE=$(command -v "$candidate")" >> "$GITHUB_ENV"
+            echo "Using Chrome executable: $(command -v "$candidate")"
+            exit 0
+          fi
+        done
+        echo "Chrome was requested but no chrome/chromium binary was found on PATH" >&2
+        exit 1
