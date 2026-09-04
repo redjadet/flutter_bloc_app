@@ -56,26 +56,22 @@ This project uses automated dependency update monitoring to keep dependencies up
 
 **Features**:
 
-- Weekly security scans (Mondays at 9am UTC)
+- Weekly configuration schedule (Mondays at 9am UTC)
 - Creates PRs only for security vulnerabilities
-- Limited to 5 open PRs at a time
-- Also scans root `Gemfile.lock` (Fastlane / Ruby) for security advisories
+- Disables routine version-update PRs (`open-pull-requests-limit: 0`); GitHub
+  security-update PRs are not subject to that limit
+- Scans `pub`, root `Gemfile.lock` (Fastlane / Ruby), GitHub Actions, and
+  `backend/firebase/functions` npm manifests for security advisories
 
 **Ruby / Fastlane (`Gemfile`)**: When Rubygems `fastlane` lags a security fix (for example `jwt` CVE-2026-45363), the repo may temporarily pin `fastlane` to a GitHub ref that widens the `jwt` constraint, plus `gem 'jwt', '~> 3.2'`. Revert to a Rubygems `fastlane` version once it ships with the same constraint (for example `2.235.0`).
 
 ## Automated Testing
 
-When Renovate or Dependabot creates a pull request, GitHub Actions automatically:
+When Renovate or Dependabot creates a pull request, the standard **`CI / build`**
+job runs `./bin/checklist` (pub get, analyze, coverage, and repo static gates).
+There is no separate dependency-updates workflow — that duplicated the merge gate.
 
-1. Runs `flutter pub get`
-2. Runs `flutter analyze`
-3. Runs `flutter test --coverage`
-4. Enforces coverage threshold (75% filtered rollup)
-5. Comments on the PR with test results
-
-See `.github/workflows/dependency-updates.yml` for details.
-
-**Renovate `renovate/artifacts` check:** Often fails on this Flutter workspace when the bot runs `dart pub` instead of `flutter pub`. Treat artifacts as **non-blocking** for merge triage when required `build` / dependency-updates checks are green. Prefer `bash tool/commit_push_pr_watch_merge_cleanup.sh` over ad-hoc check polling; see [`validation_scripts/upgrade_pr_triage_validate.md`](../validation_scripts/upgrade_pr_triage_validate.md) and [`agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md) § Durable Prefs.
+**Renovate `renovate/artifacts` check:** Often fails on this Flutter workspace when the bot runs `dart pub` instead of `flutter pub`. Treat artifacts as **non-blocking** for merge triage when required `build` checks are green. Prefer `bash tool/commit_push_pr_watch_merge_cleanup.sh` over ad-hoc check polling; see [`validation_scripts/upgrade_pr_triage_validate.md`](../validation_scripts/upgrade_pr_triage_validate.md) and [`agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md) § Durable Prefs.
 
 ## Adopt a package or implement locally
 
@@ -129,8 +125,8 @@ flutter pub upgrade --major-versions
 ## Configuration Files
 
 - `renovate.json` - Renovate configuration
-- `.github/dependabot.yml` - Dependabot configuration
-- `.github/workflows/dependency-updates.yml` - Automated testing workflow
+- `.github/dependabot.yml` - Dependabot configuration (pub, bundler, github-actions, npm security)
+- `.github/workflows/ci.yml` - Merge-gate testing for all PRs including bot bumps
 
 ## Best Practices
 
@@ -174,27 +170,14 @@ To temporarily disable updates for a specific package, add a comment to `renovat
 | `Custom registries are not allowed for this datasource` | Harmless Renovate warning when `Gemfile` pins `fastlane` from GitHub (`git-refs` datasource); see [renovate#37432](https://github.com/renovatebot/renovate/issues/37432) | Safe to ignore until `fastlane` returns to a Rubygems release (see `Gemfile` comment). |
 | Rate-limited / blocked PRs | Renovate concurrency or manual edit/close | Use checkboxes on the dashboard or merge open dependency PRs; see **PR Edited (Blocked)** / **PR Closed (Blocked)** sections. |
 
-### Dependency update workflow fails to comment on the PR (403)
+### Bot PR merge blocked without green build
 
-If the **Dependency Updates** workflow fails with:
-
-- `Resource not accessible by integration` (HTTP 403) when calling `issues.createComment`
-
-It usually means the workflow run does not have the required token permissions to
-write issue/PR comments (common on `pull_request` workflows depending on repo/org
-policy).
-
-Fix options:
-
-- Ensure `.github/workflows/dependency-updates.yml` includes appropriate
-  `permissions:` (at least `issues: write`).
-- Make the “comment results” step best-effort (for example with
-  `continue-on-error: true`) so tests still report pass/fail even if the comment
-  cannot be posted.
+Require **`CI / build`** on dependency-bot PRs. CodeQL / OSV alone is not enough.
+`renovate/artifacts` failing alone is non-blocking when `build` is green.
 
 ### Tests failing on dependency updates
 
-1. Review the test output in the PR
+1. Review the `CI / build` checklist output in the PR
 2. Check for breaking changes in the dependency
 3. Update code if necessary to accommodate changes
 

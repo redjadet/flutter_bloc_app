@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-04_ci_surgical_optimize.md`](2026-09-04_ci_surgical_optimize.md): Ubuntu Chrome preflight, Flutter composite setup, drop duplicate bot CI + CodeQL ruby, Dependabot actions/npm.
 - [`2026-09-03_agent_docs_cross_host_consistency.md`](2026-09-03_agent_docs_cross_host_consistency.md): Lean universal AGENTS map; Codex/Cursor priority; canonical routing and project-scoped host guidance.
 - [`2026-09-03_docs_link_syntax_repair.md`](2026-09-03_docs_link_syntax_repair.md): Fix self-links and malformed double-bracket markdown from link retarget.
 - [`2026-09-03_docs_link_repair.md`](2026-09-03_docs_link_repair.md): Retarget living docs off gitignored `docs/plans/**`; tracked plans README + owner redirect map.

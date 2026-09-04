@@ -17,7 +17,6 @@ VERSION_TOKEN_PATTERN = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
 # Keep in sync with docs and CI; bash drift check delegates to this module.
 WORKFLOW_FLUTTER_SINKS = (
     ".github/workflows/ci.yml",
-    ".github/workflows/dependency-updates.yml",
     ".github/workflows/drift.yml",
     ".github/workflows/deploy_web.yml",
     ".github/workflows/mobile_release_dry_run.yml",

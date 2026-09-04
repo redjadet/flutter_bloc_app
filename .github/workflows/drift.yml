@@ -38,20 +38,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
-
-      - name: Install ripgrep (rg)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ripgrep
+          install-ripgrep: 'true'
 
       - name: Run delivery checklist
         run: ./bin/checklist
@@ -66,20 +57,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter workspace
+        uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Flutter pub get
-        run: bash tool/workspace_pub_get.sh
-
-      - name: Install ripgrep (rg)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ripgrep
+          install-ripgrep: 'true'
 
       - name: Run upgrade + validate workflow
         run: ./bin/upgrade_validate_all

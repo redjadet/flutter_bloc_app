@@ -105,8 +105,9 @@ tier expectations.
 
 ## CI workflow shape
 
-- **Pull requests / merge queue:** `CI / integration-preflight` runs
-  `./bin/integration_preflight` automatically (browser/bootstrap guardrails).
+- **Pull requests / merge queue:** `CI / integration-preflight` runs on
+  `ubuntu-latest` with Chrome (`./bin/integration_preflight` browser/bootstrap
+  guardrails).
 - **Manual dispatch:** enable `run_integration` on **Actions → CI → Run workflow**
   to run the macOS simulator lane after preflight passes. Choose
   `integration_tier` (`smoke` | `standard` | `exhaustive`).
