@@ -35,13 +35,15 @@ Future<void> _ensureCommentsHydratedImpl(
   await pending;
 }
 
-Future<void> _persistCommentThreadsImpl(
+Future<bool> _persistCommentThreadsImpl(
   OfflineFirstSocialFeedRepository repo,
 ) async {
   try {
     await repo._local.saveCommentThreads(repo._remote.exportCommentThreads());
+    return true;
   } on Object {
     // Persistence degraded; in-memory threads remain for this session.
+    return false;
   }
 }
 

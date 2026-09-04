@@ -163,13 +163,18 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     final SocialFeedMutationDto head = queue.first;
     final String? nextAttemptAt = head.nextAttemptAt;
     if (nextAttemptAt != null) {
-      final DateTime next = DateTime.parse(nextAttemptAt).toUtc();
-      if (next.isAfter(now)) {
-        break;
+      try {
+        final DateTime next = DateTime.parse(nextAttemptAt).toUtc();
+        if (next.isAfter(now)) {
+          break;
+        }
+      } on FormatException {
+        // Corrupt backoff timestamp; retry on the next tick.
       }
     }
     try {
       if (head.type == 'like') {
+        var likeDispatchCompleted = false;
         await repo._queue.markLikeMutationDispatched(
           viewer: viewer,
           mutationId: head.mutationId,
@@ -186,6 +191,7 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
               viewer: viewer,
               mutationId: head.mutationId,
             );
+            likeDispatchCompleted = true;
             return;
           }
           final SocialFeedPost updated = await repo._remote.applyLike(
@@ -199,15 +205,28 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
           final bool headStillCurrent =
               queueAfterApply.isNotEmpty &&
               queueAfterApply.first.mutationId == head.mutationId;
+          var persisted = true;
           if (headStillCurrent) {
-            await repo._persistViewerLikes();
+            persisted = await repo._persistViewerLikes();
             await repo._patchCachedPost(viewer, updated);
           }
-          await repo._queue.removeFromQueue(
-            viewer: viewer,
-            mutationId: head.mutationId,
-          );
+          if (persisted) {
+            await repo._queue.removeFromQueue(
+              viewer: viewer,
+              mutationId: head.mutationId,
+            );
+            likeDispatchCompleted = true;
+          }
         });
+        if (likeDispatchCompleted) {
+          dispatched.add(
+            SocialFeedDispatchedMutation(
+              mutationId: head.mutationId,
+              postId: head.postId,
+              wasComment: false,
+            ),
+          );
+        }
       } else if (head.type == 'comment') {
         await repo._remote.applyComment(
           viewer: viewer,
@@ -215,21 +234,21 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
           body: head.commentBody ?? '',
           mutationId: head.idempotencyKey,
         );
-        await repo._persistCommentThreads();
+        final bool persisted = await repo._persistCommentThreads();
+        if (persisted) {
+          await repo._queue.removeFromQueue(
+            viewer: viewer,
+            mutationId: head.mutationId,
+          );
+          dispatched.add(
+            SocialFeedDispatchedMutation(
+              mutationId: head.mutationId,
+              postId: head.postId,
+              wasComment: true,
+            ),
+          );
+        }
       }
-      if (head.type == 'comment') {
-        await repo._queue.removeFromQueue(
-          viewer: viewer,
-          mutationId: head.mutationId,
-        );
-      }
-      dispatched.add(
-        SocialFeedDispatchedMutation(
-          mutationId: head.mutationId,
-          postId: head.postId,
-          wasComment: head.type == 'comment',
-        ),
-      );
     } on SocialFeedRemoteRejection catch (e) {
       if (head.type == 'like') {
         await repo._queue.removeFromQueue(

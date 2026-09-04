@@ -34,9 +34,11 @@ Future<SocialFeedLikeResult> _setLikedImpl(
         mutationId: mutationId,
       );
     });
-    await repo._persistViewerLikes();
+    final bool persisted = await repo._persistViewerLikes();
     await repo._patchCachedPost(viewer, post);
-    await repo._queue.removeAllLikesForPost(viewer: viewer, postId: postId);
+    if (persisted) {
+      await repo._queue.removeAllLikesForPost(viewer: viewer, postId: postId);
+    }
     return SocialFeedLikeSynced(post);
   } on SocialFeedRemoteRejection catch (e) {
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
@@ -93,8 +95,10 @@ Future<SocialFeedCommentResult> _addCommentImpl(
       body: body,
       mutationId: mutationId,
     );
-    await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
-    await repo._persistCommentThreads();
+    final bool persisted = await repo._persistCommentThreads();
+    if (persisted) {
+      await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
+    }
     return SocialFeedCommentSynced(post: post, mutationId: mutationId);
   } on SocialFeedRemoteRejection catch (e) {
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);

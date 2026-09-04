@@ -73,9 +73,9 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
 
   Future<void> _ensureCommentsHydrated() => _ensureCommentsHydratedImpl(this);
 
-  Future<void> _persistCommentThreads() => _persistCommentThreadsImpl(this);
+  Future<bool> _persistCommentThreads() => _persistCommentThreadsImpl(this);
 
-  Future<void> _persistViewerLikes() => _persistViewerLikesImpl(this);
+  Future<bool> _persistViewerLikes() => _persistViewerLikesImpl(this);
 
   Future<void> _patchCachedPost(
     SocialFeedViewer viewer,

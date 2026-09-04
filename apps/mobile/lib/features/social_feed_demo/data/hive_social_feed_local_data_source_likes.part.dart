@@ -27,6 +27,14 @@ extension HiveSocialFeedLocalDataSourceLikes on HiveSocialFeedLocalDataSource {
   }
 
   Future<void> saveViewerLikes(Map<String, Set<String>> likes) async {
+    final Object? failure = failNextSaveViewerLikes;
+    if (failure != null) {
+      failNextSaveViewerLikes = null;
+      Error.throwWithStackTrace(
+        failure is Exception ? failure : Exception('$failure'),
+        StackTrace.current,
+      );
+    }
     await runWithBox((box) async {
       await box.put(HiveSocialFeedLocalDataSource._likesKey, <String, Object?>{
         for (final MapEntry<String, Set<String>> entry in likes.entries)

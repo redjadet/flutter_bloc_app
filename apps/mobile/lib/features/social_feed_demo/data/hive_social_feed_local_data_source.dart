@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_comment_mapper.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/data/social_feed_post_mapper.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
@@ -32,6 +33,14 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
   final int schemaVersion;
   final int maxCachedPosts;
   final Duration staleAfter;
+
+  /// When set, the next [saveViewerLikes] call throws this error once.
+  @visibleForTesting
+  Object? failNextSaveViewerLikes;
+
+  /// When set, the next [saveCommentThreads] call throws this error once.
+  @visibleForTesting
+  Object? failNextSaveCommentThreads;
 
   @override
   String get boxName => boxNameValue;
@@ -177,6 +186,14 @@ class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
   Future<void> saveCommentThreads(
     Map<String, List<SocialFeedComment>> threads,
   ) async {
+    final Object? failure = failNextSaveCommentThreads;
+    if (failure != null) {
+      failNextSaveCommentThreads = null;
+      Error.throwWithStackTrace(
+        failure is Exception ? failure : Exception('$failure'),
+        StackTrace.current,
+      );
+    }
     await runWithBox((box) async {
       await box.put(_commentsKey, <String, Object?>{
         for (final MapEntry<String, List<SocialFeedComment>> entry
