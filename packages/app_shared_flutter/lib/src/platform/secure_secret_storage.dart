@@ -42,9 +42,37 @@ SecretStorage createDefaultSecretStorage() {
   return FlutterSecureSecretStorage();
 }
 
+/// Apple Keychain policy for session tokens and encryption keys.
+///
+/// Library defaults use [KeychainAccessibility.unlocked], which can migrate
+/// via encrypted backups to another device. Auth material must stay
+/// device-bound (`…ThisDeviceOnly`) and off iCloud Keychain sync.
+///
+/// Prefer [KeychainAccessibility.first_unlock_this_device] so background work
+/// after reboot can still read secrets once the user has unlocked once.
 class FlutterSecureSecretStorage implements SecretStorage {
   FlutterSecureSecretStorage({FlutterSecureStorage? storage})
-    : _storage = storage ?? const FlutterSecureStorage();
+    : _storage = storage ?? createDefaultFlutterSecureStorage();
+
+  /// iOS options: device-only, no iCloud Keychain sync.
+  static const IOSOptions defaultIosOptions = IOSOptions(
+    accessibility: KeychainAccessibility.first_unlock_this_device,
+    synchronizable: false,
+  );
+
+  /// macOS options: same device-bound accessibility as iOS.
+  static const MacOsOptions defaultMacOsOptions = MacOsOptions(
+    accessibility: KeychainAccessibility.first_unlock_this_device,
+    synchronizable: false,
+  );
+
+  /// Builds [FlutterSecureStorage] with explicit Apple accessibility.
+  static FlutterSecureStorage createDefaultFlutterSecureStorage() {
+    return const FlutterSecureStorage(
+      iOptions: defaultIosOptions,
+      mOptions: defaultMacOsOptions,
+    );
+  }
 
   final FlutterSecureStorage _storage;
 

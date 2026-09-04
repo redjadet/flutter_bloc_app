@@ -19,6 +19,20 @@ Where persistent data lives and how plugin-backed storage failures are handled.
 - **Read path:** prefer `readResult(key)` → `Result<String?>` with `StorageFailure` / `PlatformFailure` on errors.
 - **Legacy `read()`:** delegates to `readResult().getOrNull()` for gradual migration.
 - **Never** store secrets in `SharedPreferences` or plain Hive fields.
+- **Apple Keychain accessibility (required):** do not rely on
+  `flutter_secure_storage` defaults. `IOSOptions` /
+  `MacOsOptions` default to `KeychainAccessibility.unlocked`, which can
+  **migrate via encrypted backups** to another device. This repo sets
+  `accessibility: KeychainAccessibility.first_unlock_this_device` and
+  `synchronizable: false` in
+  `FlutterSecureSecretStorage.createDefaultFlutterSecureStorage()` so
+  session tokens and Hive encryption keys stay **device-bound** and off
+  iCloud Keychain sync. Prefer another `…_this_device` / `passcode` value
+  only when the secret’s access window requires it.
+- **Existing Keychain items:** accessibility is fixed at write time.
+  Items written under the old migrate-capable default keep that attribute
+  until deleted and rewritten (re-login / regenerate Hive key on a device
+  that still has the old entry if you need to upgrade in place).
 - **Tests:** mock `SecretStorage` or exercise `readResult` with injected storage (see `test/secure_secret_storage_test.dart`).
 
 ## Hive

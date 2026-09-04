@@ -201,7 +201,9 @@ Until that decision exists, keep route policy to `public | authenticated`, and g
 ## Secure session checklist
 
 - Access tokens short-lived (Firebase ID ~1h; Supabase per project settings)
-- Refresh tokens only in SDK secure storage (never app SharedPreferences/Hive)
+- Refresh tokens only in SDK secure storage (never app SharedPreferences/Hive);
+  Apple Keychain writes must use device-bound accessibility (see
+  [`security/storage_rules.md`](security/storage_rules.md))
 - Access tokens exposed to app API callers only through `TokenRepository`
   memory state; do not read secure storage directly from repositories,
   interceptors, or presentation code.

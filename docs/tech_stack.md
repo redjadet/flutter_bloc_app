@@ -64,7 +64,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Concern | Libraries or approach |
 | --- | --- |
 | Local persistence | `hive` `^2.2.0`, `hive_flutter` `^1.1.0` |
-| Secure storage | `flutter_secure_storage` `^10.0.0` |
+| Secure storage | `flutter_secure_storage` `^11.0.0` (Apple: `first_unlock_this_device`, `synchronizable: false`) |
 | Legacy migration support | `shared_preferences` `^2.5.3` |
 | Sync infrastructure | `packages/storage` (queue/pending) + `packages/networking` (coordinator/runner); app adapters in `apps/mobile/lib/app/**` |
 | Offline-first docs | [Offline-First Adoption Guide](offline_first/adoption_guide.md) |

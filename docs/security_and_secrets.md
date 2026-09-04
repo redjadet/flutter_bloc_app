@@ -319,6 +319,12 @@ can still flag keys in **old commits**. If keys were ever pushed:
   key.
 - **The encryption key is stored in secure storage** (Keychain/Keystore) in
   **release** builds.
+- **Apple Keychain policy:** `FlutterSecureSecretStorage` sets
+  `KeychainAccessibility.first_unlock_this_device` and
+  `synchronizable: false` for iOS and macOS. Values **without**
+  `ThisDeviceOnly` can copy into encrypted backups and restore onto another
+  device; library defaults use migrate-capable `unlocked`. Details:
+  [`security/storage_rules.md`](security/storage_rules.md).
 - **Apple debug (iOS simulator + macOS desktop, non-web)**: Keychain is not
   reliable without entitlements; the app uses in-memory secret storage and a
   stable debug-only encryption key, with Hive roots under `hive_ios_debug` /
