@@ -159,6 +159,23 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   final List<SocialFeedRejectedSync> rejections = <SocialFeedRejectedSync>[];
   final List<SocialFeedDispatchedMutation> dispatched =
       <SocialFeedDispatchedMutation>[];
+  Future<bool> deferAfterFailure(SocialFeedMutationDto mutation) async {
+    final int attempts = mutation.attemptCount + 1;
+    if (attempts >= 5) {
+      await repo._queue.moveToNeedsAttention(viewer, mutation);
+      return false;
+    }
+    final Duration backoff = repo._queue.backoffForAttempt(attempts);
+    await repo._queue.updateMutationAfterFailure(
+      viewer: viewer,
+      mutationId: mutation.mutationId,
+      head: mutation,
+      attemptCount: attempts,
+      nextAttemptAt: now.add(backoff),
+    );
+    return true;
+  }
+
   while (queue.isNotEmpty) {
     final SocialFeedMutationDto head = queue.first;
     final String? nextAttemptAt = head.nextAttemptAt;
@@ -227,8 +244,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
             ),
           );
         } else {
-          // Keep the head for the next scheduled retry after local persistence fails.
-          break;
+          if (await deferAfterFailure(head)) {
+            break;
+          }
         }
       } else if (head.type == 'comment') {
         await repo._remote.applyComment(
@@ -251,8 +269,9 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
             ),
           );
         } else {
-          // Keep the head for the next scheduled retry after local persistence fails.
-          break;
+          if (await deferAfterFailure(head)) {
+            break;
+          }
         }
       }
     } on SocialFeedRemoteRejection catch (e) {
@@ -276,18 +295,7 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         ),
       );
     } on Object {
-      final int attempts = head.attemptCount + 1;
-      if (attempts >= 5) {
-        await repo._queue.moveToNeedsAttention(viewer, head);
-      } else {
-        final Duration backoff = repo._queue.backoffForAttempt(attempts);
-        await repo._queue.updateMutationAfterFailure(
-          viewer: viewer,
-          mutationId: head.mutationId,
-          head: head,
-          attemptCount: attempts,
-          nextAttemptAt: now.add(backoff),
-        );
+      if (await deferAfterFailure(head)) {
         break;
       }
     }

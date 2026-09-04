@@ -36,14 +36,32 @@ Future<SocialFeedLikeResult> _setLikedImpl(
     });
     final bool persisted = await repo._persistViewerLikes();
     await repo._patchCachedPost(viewer, post);
-    if (persisted) {
-      await repo._queue.removeAllLikesForPost(viewer: viewer, postId: postId);
+    if (!persisted) {
+      try {
+        await repo._queue.enqueueLike(
+          viewer: viewer,
+          postId: postId,
+          desiredLiked: desiredLiked,
+          mutationId: mutationId,
+        );
+      } on Object {
+        throw const SocialFeedNotQueuedFailure();
+      }
+      final SocialFeedPost optimistic = await repo._optimisticPost(
+        viewer,
+        postId,
+      );
+      return SocialFeedLikeQueued(optimistic);
     }
+    await repo._queue.removeAllLikesForPost(viewer: viewer, postId: postId);
     return SocialFeedLikeSynced(post);
   } on SocialFeedRemoteRejection catch (e) {
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
     return SocialFeedLikeRejected(e.canonical);
-  } on SocialFeedFailure {
+  } on SocialFeedFailure catch (failure) {
+    if (failure is SocialFeedNotQueuedFailure) {
+      rethrow;
+    }
     try {
       await repo._queue.enqueueLike(
         viewer: viewer,
@@ -96,14 +114,32 @@ Future<SocialFeedCommentResult> _addCommentImpl(
       mutationId: mutationId,
     );
     final bool persisted = await repo._persistCommentThreads();
-    if (persisted) {
-      await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
+    if (!persisted) {
+      try {
+        await repo._queue.enqueueComment(
+          viewer: viewer,
+          postId: postId,
+          body: body,
+          mutationId: mutationId,
+        );
+      } on Object {
+        throw const SocialFeedNotQueuedFailure();
+      }
+      final SocialFeedPost optimistic = await repo._optimisticPost(
+        viewer,
+        postId,
+      );
+      return SocialFeedCommentQueued(post: optimistic, mutationId: mutationId);
     }
+    await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
     return SocialFeedCommentSynced(post: post, mutationId: mutationId);
   } on SocialFeedRemoteRejection catch (e) {
     await repo._queue.removeFromQueue(viewer: viewer, mutationId: mutationId);
     return SocialFeedCommentRejected(e.canonical);
-  } on SocialFeedFailure {
+  } on SocialFeedFailure catch (failure) {
+    if (failure is SocialFeedNotQueuedFailure) {
+      rethrow;
+    }
     try {
       await repo._queue.enqueueComment(
         viewer: viewer,
