@@ -11,6 +11,7 @@ to the design system or a product feature.
 - structured application logging through `AppLogger`
 - platform-environment detection with IO and web implementations
 - secure secret storage abstraction backed by `flutter_secure_storage`
+  (Apple: `first_unlock_this_device`, `synchronizable: false`)
 - media-pick result and error-key contracts
 - shared integration-log message constants
 

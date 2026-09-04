@@ -2,6 +2,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,6 +10,54 @@ void main() {
 
   tearDown(() {
     debugDefaultTargetPlatformOverride = null;
+  });
+
+  group('Apple Keychain accessibility defaults', () {
+    test('iOS options are ThisDeviceOnly and not synchronizable', () {
+      const options = FlutterSecureSecretStorage.defaultIosOptions;
+
+      expect(
+        options.accessibility,
+        KeychainAccessibility.first_unlock_this_device,
+      );
+      expect(options.synchronizable, isFalse);
+      expect(options.toMap()['accessibility'], 'first_unlock_this_device');
+      expect(options.toMap()['synchronizable'], 'false');
+    });
+
+    test('macOS options match iOS device-bound policy', () {
+      const options = FlutterSecureSecretStorage.defaultMacOsOptions;
+
+      expect(
+        options.accessibility,
+        KeychainAccessibility.first_unlock_this_device,
+      );
+      expect(options.synchronizable, isFalse);
+    });
+
+    test('default FlutterSecureStorage uses hardened Apple options', () {
+      final storage =
+          FlutterSecureSecretStorage.createDefaultFlutterSecureStorage();
+
+      expect(
+        storage.iOptions.accessibility,
+        KeychainAccessibility.first_unlock_this_device,
+      );
+      expect(storage.iOptions.synchronizable, isFalse);
+      expect(
+        storage.mOptions.accessibility,
+        KeychainAccessibility.first_unlock_this_device,
+      );
+      expect(storage.mOptions.synchronizable, isFalse);
+    });
+
+    test('plugin default remains migrate-capable (regression guard)', () {
+      // Document why we override: library default is NOT ThisDeviceOnly.
+      expect(
+        IOSOptions.defaultOptions.accessibility,
+        KeychainAccessibility.unlocked,
+      );
+    });
   });
 
   group('InMemorySecretStorage', () {

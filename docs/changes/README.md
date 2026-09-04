@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-04_keychain_this_device_only.md`](2026-09-04_keychain_this_device_only.md): Apple Keychain `first_unlock_this_device` + no iCloud sync for secure storage defaults.
 - [`2026-09-04_social_feed_persistence_early_gate.md`](2026-09-04_social_feed_persistence_early_gate.md): Run and inventory Social Feed Hive-persistence regressions before coverage.
 - [`2026-09-04_ci_surgical_optimize.md`](2026-09-04_ci_surgical_optimize.md): Ubuntu Chrome preflight, Flutter composite setup, drop duplicate bot CI + CodeQL ruby, Dependabot actions/npm.
 - [`2026-09-03_agent_docs_cross_host_consistency.md`](2026-09-03_agent_docs_cross_host_consistency.md): Lean universal AGENTS map; Codex/Cursor priority; canonical routing and project-scoped host guidance.
