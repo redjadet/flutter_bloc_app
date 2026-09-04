@@ -21,6 +21,12 @@ TODO_TEST="test/features/todo_list/data/offline_first_todo_repository_test.dart"
 IOT_TEST="test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
 SOCIAL_FEED_TEST="test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart"
 GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
+SOCIAL_FEED_PERSISTENCE_REGRESSIONS=(
+  "dispatch retains queued like when viewer-like persist fails"
+  "dispatch retains queued comment when comment-thread persist fails"
+  "online like queues when viewer-like persist fails"
+  "online comment queues when comment-thread persist fails"
+)
 
 collect_changed_files() {
   local file
@@ -222,7 +228,25 @@ validate_guard_inventory() {
   return "$failed"
 }
 
+validate_social_feed_persistence_regressions() {
+  local regression_name
+  local failed=0
+
+  for regression_name in "${SOCIAL_FEED_PERSISTENCE_REGRESSIONS[@]}"; do
+    if ! grep -Fq "$regression_name" "$SOCIAL_FEED_TEST"; then
+      echo "ERROR: Social Feed persistence regression is missing from $SOCIAL_FEED_TEST: $regression_name" >&2
+      failed=1
+    fi
+  done
+
+  return "$failed"
+}
+
 if ! validate_guard_inventory; then
+  exit 1
+fi
+
+if ! validate_social_feed_persistence_regressions; then
   exit 1
 fi
 
