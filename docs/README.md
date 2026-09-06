@@ -4,8 +4,8 @@ Source-of-truth docs for Flutter BLoC app.
 
 ## Start here
 
-Onboarding path only — full catalogs live under **Core docs** and **Browse by
-folder** below. Thin hubs (link-only; edit targets, not hubs):
+Pick the current task below; full catalogs live under **Core docs** and
+**Browse by folder**. Thin hubs (link-only; edit targets, not hubs):
 [`architecture.md`](architecture.md), [`testing.md`](testing.md),
 [`engineering-decisions.md`](engineering-decisions.md),
 [`ai-workflow.md`](ai-workflow.md).
@@ -15,8 +15,12 @@ folder** below. Thin hubs (link-only; edit targets, not hubs):
 | First run / onboarding | [`new_developer_guide.md`](new_developer_guide.md) |
 | Toolchain pins | [`toolchain_versions.env`](toolchain_versions.env), [`tech_stack.md`](tech_stack.md) |
 | Architecture map | [`architecture.md`](architecture.md) → [`clean_architecture.md`](clean_architecture.md) |
+| Add or change a feature | [`feature_implementation_guide.md`](feature_implementation_guide.md), [`architecture/reference_features.md`](architecture/reference_features.md) |
+| Find implementation ownership | [`CODEMAP.md`](../CODEMAP.md) |
+| Review a change | [`review/code_review_playbook.md`](review/code_review_playbook.md) |
 | Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
 | Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); overview [`ai-workflow.md`](ai-workflow.md) |
+| Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
 
 ## Browse by folder
