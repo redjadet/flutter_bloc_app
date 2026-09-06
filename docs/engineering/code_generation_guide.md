@@ -2,11 +2,19 @@
 
 ## Freezed / json_serializable / Retrofit
 
-Primary codegen path for models, states, and Retrofit APIs:
+Run from the repository root. The subshell keeps the cleanup command at
+the root after app generation:
 
 ```bash
-cd apps/mobile && dart run build_runner build --delete-conflicting-outputs
-bash tool/strip_freezed_dart_313_params.sh
+(cd apps/mobile && dart run build_runner build --delete-conflicting-outputs) &&
+  bash tool/strip_freezed_dart_313_params.sh
+```
+
+For changes spanning workspace packages with `build_runner`, use the root
+Melos script instead, then run the same cleanup:
+
+```bash
+dart run melos run build_runner && bash tool/strip_freezed_dart_313_params.sh
 ```
 
 Dart 3.13 language forbids `final` on ordinary constructor parameters.
@@ -24,7 +32,7 @@ Prefer Freezed for immutable domain/presentation models. See
 Script: `tool/generate_sealed_switch.dart`
 
 ```bash
-dart run tool/generate_sealed_switch.dart <path-to-sealed-state.dart>
+dart run tool/generate_sealed_switch.dart "<path-to-sealed-state.dart>"
 ```
 
 Use only when a sealed hierarchy needs generated `when`-style helpers and

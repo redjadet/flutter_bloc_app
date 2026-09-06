@@ -36,15 +36,30 @@ Before running the app, review:
 - [Security and Secrets](security_and_secrets.md)
 - [Tech Stack](tech_stack.md)
 
-**Optional — automatic client-config injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add public client configuration, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `cd apps/mobile && flutter run $(../../tool/flutter_dart_defines_from_env.sh)`). **Without direnv**, copy [`.env.example`](../.env.example) to `.env` (gitignored), put `tool/direnv/bin` on `PATH` (`export PATH="$PWD/tool/direnv/bin:$PATH"`), then use plain `flutter run` from the repo root — or stay in `apps/mobile` and run `flutter run $(../../tool/flutter_dart_defines_from_env.sh)` (the helper loads `.env` / `.env.local` automatically). See [Security and Secrets](security_and_secrets.md) (Option C). Plain repo-root `flutter run` is routed to `apps/mobile` only when the repo wrapper is on `PATH`; the SDK `flutter` binary alone does not load `.env`. The helper excludes server credentials such as `HUGGINGFACE_API_KEY` and chat shared secrets; configure them only in the FastAPI service secret manager. Only approved client variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat routing keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For store release builds, release-safe public client keys can live in gitignored `.env.android.release` and/or `.env.ios.release`; provider/shared-secret keys are rejected (see [`.env.android.release.example`](../.env.android.release.example), [`.env.ios.release.example`](../.env.ios.release.example), and [Deployment](deployment.md)). Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh). Both stores: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh).
+The app can run non-Firebase features without Firebase configuration. For
+configured integrations, choose one local setup path:
+
+| Setup | How to run |
+| --- | --- |
+| direnv | Follow [Security and Secrets, Option B](security_and_secrets.md#option-b-recommended-direnv--envrc). The repo wrapper injects approved client configuration and routes root commands to `apps/mobile`. |
+| dotenv without direnv | Follow [Security and Secrets, Option C](security_and_secrets.md#option-c-env-file-development-no-direnv). Put `tool/direnv/bin` first on `PATH` to use the wrapper. |
+| Explicit flags | Use [Security and Secrets, Option A](security_and_secrets.md#option-a-one-off---dart-define-flags) from `apps/mobile`. |
+
+Only public client configuration belongs in Flutter `--dart-define` values.
+Provider tokens and shared backend secrets stay server-side. The SDK `flutter`
+binary alone does not load dotenv files. Supported keys, loading behavior, and
+release configuration belong in [Security and Secrets](security_and_secrets.md);
+store workflows belong in [Deployment](deployment.md).
 
 **Optional — Codex code graph for repo exploration:** if you use Codex heavily in this repo, you can install a local `code-review-graph` MCP server and build a persistent graph cache under `.code-review-graph/`. Setup and caveats live in [Code Review Graph for Codex](ai/code_review_graph.md).
 
 ### Install dependencies and run
 
+Run from the repository root. Parenthesized commands keep your shell there.
+
 ```bash
 bash tool/workspace_pub_get.sh
-cd apps/mobile && flutter run -t lib/main_dev.dart
+(cd apps/mobile && flutter run -t lib/main_dev.dart)
 ```
 
 Other entrypoints:
@@ -81,7 +96,8 @@ Run these checks before starting a local debug session:
 5. Check no tracked secret literals are present: `./tool/check_tracked_secret_literals.sh`.
 6. For iOS/macOS after Firebase/dependency changes, keep SPM enabled:
    `flutter config --enable-swift-package-manager`, then run
-   `flutter clean && flutter pub get`. If a plugin still falls back to
+   `(cd apps/mobile && flutter clean && flutter pub get)` from repo root.
+   If a plugin still falls back to
    CocoaPods or `ios/Podfile.lock`/`macos/Podfile.lock` changes, also run
    `pod install` in the affected platform directory.
 7. Start debug with the intended entrypoint, usually
@@ -97,13 +113,12 @@ Run these checks before starting a local debug session:
 # optional: CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist  (script → theme map)
 ```
 
-Theme gates (navigation/sync-io fail; image/cubit warn): [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026).
+Theme gates (navigation/sync-io fail; image/cubit warn): [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp--promoted-warn-gates).
 
 ### Run code generation when needed
 
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
+Follow the [Code Generation Guide](engineering/code_generation_guide.md) for
+app/workspace generation and the required Dart 3.13 Freezed cleanup.
 
 ## 1. Mental model
 
@@ -158,9 +173,11 @@ For feature-by-feature entry points, see [Feature Overview](feature_overview.md)
 2. `apps/mobile/lib/main_bootstrap.dart` initializes Flutter bindings,
    registers the FCM background handler, and delegates startup to
    `BootstrapCoordinator`.
-3. `apps/mobile/lib/app.dart` creates `MyApp`, configures `GoRouter`, and
-   attaches auth refresh behavior through `GoRouterRefreshStream` when Firebase
-   Auth is available.
+3. `AppCompositionRoot.createApp()` in
+   `apps/mobile/lib/app/composition/app_composition_root.dart` creates the
+   router, wires auth refresh when enabled, and injects resolved dependencies
+   into `MyApp`. `apps/mobile/lib/app.dart` renders `AppScope` and disposes
+   the injected auth refresh listener.
 4. `apps/mobile/lib/app/app_scope.dart` wires app-wide cubits and listeners
    such as locale, theme, deep links, retry notifications, and sync status.
 5. `apps/mobile/lib/app/app_config.dart` builds `MaterialApp.router`, theme,
@@ -200,8 +217,8 @@ Use repo commands instead of ad-hoc validation:
 
 | Command | Purpose |
 | --- | --- |
-| `flutter pub get` | Refresh dependencies. |
-| `dart run build_runner build --delete-conflicting-outputs` | Regenerate code after model/API annotation changes. |
+| `bash tool/workspace_pub_get.sh` | Refresh workspace dependencies from repo root. |
+| [Code Generation Guide](engineering/code_generation_guide.md) | Regenerate models/states/APIs and apply required post-generation cleanup. |
 | `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (run when editing the Render FastAPI demo or repo shell tooling; also runs inside the full delivery gate). |
 | `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate. Broad/pre-ship runs still take the full sweep; some narrow local docs/tooling edits can use built-in fast paths while CI keeps the full checklist bar (`delivery_checklist.sh` is canonical). |
 | `./bin/checklist-fast` | Local-only sanity shortcut for clean trees or narrow docs/tooling work. Refuses CI and broader app/runtime diffs instead of weakening the full gate. |
@@ -236,8 +253,8 @@ Testing detail lives in:
 | --- | --- |
 | Firebase features are disabled | Gitignored platform files present (`flutterfire configure`) and `FIREBASE_*` in `.envrc` or `.env` with wrapper/direnv. See [Firebase Setup](integrations/firebase_setup.md) (step 3b). |
 | Supabase-backed flows show "not configured" | Confirm `SUPABASE_URL` and `SUPABASE_ANON_KEY` are available through the configured secrets path. See [Security and Secrets](security_and_secrets.md). |
-| Generated code is stale | Run `dart run build_runner build --delete-conflicting-outputs`. |
-| iOS build fails after dependency or Firebase changes | Run `flutter clean`, `flutter pub get`, `cd ios && pod install && cd ..`, then retry. |
+| Generated code is stale | Follow the [Code Generation Guide](engineering/code_generation_guide.md), including Freezed cleanup. |
+| iOS build fails after dependency or Firebase changes | Follow step 6 under [Before local debug](#before-local-debug); run app commands inside `apps/mobile`, and use CocoaPods only for the affected fallback platform. |
 | Integration tests choose the wrong device | Set `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` before running `./bin/integration_tests`. |
 | Routes or auth behavior changed unexpectedly | Verify `apps/mobile/lib/app.dart`, `apps/mobile/lib/app/router/auth_redirect.dart`, and the route groups under `apps/mobile/lib/app/router/`. |
 

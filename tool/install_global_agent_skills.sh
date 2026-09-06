@@ -10,7 +10,7 @@ workflow). Uses the skills CLI (npx skills) with -g -a cursor -y.
 
 Bundles (default: all):
   dart          dart-lang/skills (all)
-  flutter       flutter/skills (all) + legacy local copies when present
+  flutter       flutter/agent-plugins (all) + legacy local copies when present
   ios           dpearson2699/swift-ios-skills (all) + ios-development
   ai            obra/superpowers, dart-flutter-patterns, caveman, find-skills
 

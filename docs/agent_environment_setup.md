@@ -21,7 +21,9 @@ Enable only tools you will use; disabled stale servers create noise.
 
 Suggested capabilities for this Flutter repo (server display names vary by host):
 
-- Dart MCP (`dart`; some hosts prefix it as `user-dart`): analyze, DTD, **`get_runtime_errors`**, hot reload, **`read_package_uris`**, **`rip_grep_packages`**, and `pub_dev_search` — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md), [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md)
+- Dart MCP (`dart`; some hosts prefix it as `user-dart`): analyze, DTD, **`get_runtime_errors`**, hot reload, **`read_package_uris`**, **`rip_grep_packages`**, and `pub_dev_search` — use `dart mcp-server --force-roots-fallback` on Cursor — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md), [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md)
+- Official Cursor plugin: `~/.cursor/plugins/local/dart-flutter` from [flutter/agent-plugins](https://github.com/flutter/agent-plugins) (skills + MCP bundle) — [docs.flutter.dev/ai/get-started](https://docs.flutter.dev/ai/get-started)
+- Developer Knowledge / Flutter+Dart docs: Firebase MCP tools `developerknowledge_*` (and optional skill `retrieving-developer-knowledge`)
 - Current-doc lookup: Context7 when installed; otherwise official docs through available ref/browser/web tools
 - Browser or Playwright capability for runtime proof, screenshots, and repeatable browser flows
 - GitHub capability for PRs, comments, checks, and run logs

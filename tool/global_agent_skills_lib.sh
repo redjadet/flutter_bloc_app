@@ -157,7 +157,9 @@ install_dart_skills() {
 }
 
 install_flutter_skills() {
-  run_skills_add "flutter/skills" flutter/skills --all
+  # Official Flutter team skills live in flutter/agent-plugins (docs.flutter.dev/ai).
+  # flutter/skills is legacy; agent-plugins is the Cursor/plugin source of truth.
+  run_skills_add "flutter/agent-plugins" flutter/agent-plugins --all
 }
 
 install_ios_skills() {
