@@ -51,8 +51,15 @@ SecretStorage createDefaultSecretStorage() {
 /// Prefer [KeychainAccessibility.first_unlock_this_device] so background work
 /// after reboot can still read secrets once the user has unlocked once.
 class FlutterSecureSecretStorage implements SecretStorage {
-  FlutterSecureSecretStorage({FlutterSecureStorage? storage})
-    : _storage = storage ?? createDefaultFlutterSecureStorage();
+  FlutterSecureSecretStorage({
+    FlutterSecureStorage? storage,
+    FlutterSecureStorage? legacyMigrationStorage,
+    bool enableLegacyKeychainMigration = true,
+  }) : _storage = storage ?? createDefaultFlutterSecureStorage(),
+       _legacyMigrationStorage =
+           legacyMigrationStorage ??
+           createLegacyMigrationFlutterSecureStorage(),
+       _enableLegacyKeychainMigration = enableLegacyKeychainMigration;
 
   /// iOS options: device-only, no iCloud Keychain sync.
   static const IOSOptions defaultIosOptions = IOSOptions(
@@ -66,6 +73,17 @@ class FlutterSecureSecretStorage implements SecretStorage {
     synchronizable: false,
   );
 
+  /// Pre-#788 defaults: migrate-capable `unlocked` accessibility.
+  static const IOSOptions legacyIosOptions = IOSOptions(
+    accessibility: KeychainAccessibility.unlocked,
+    synchronizable: false,
+  );
+
+  static const MacOsOptions legacyMacOsOptions = MacOsOptions(
+    accessibility: KeychainAccessibility.unlocked,
+    synchronizable: false,
+  );
+
   /// Builds [FlutterSecureStorage] with explicit Apple accessibility.
   static FlutterSecureStorage createDefaultFlutterSecureStorage() {
     return const FlutterSecureStorage(
@@ -74,7 +92,25 @@ class FlutterSecureSecretStorage implements SecretStorage {
     );
   }
 
+  /// Reads secrets written before device-bound accessibility was enforced.
+  static FlutterSecureStorage createLegacyMigrationFlutterSecureStorage() {
+    return const FlutterSecureStorage(
+      iOptions: legacyIosOptions,
+      mOptions: legacyMacOsOptions,
+    );
+  }
+
   final FlutterSecureStorage _storage;
+  final FlutterSecureStorage _legacyMigrationStorage;
+  final bool _enableLegacyKeychainMigration;
+
+  bool _shouldMigrateAppleKeychain() {
+    if (kIsWeb) {
+      return false;
+    }
+    return defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS;
+  }
 
   @override
   Future<String?> read(String key) async {
@@ -85,7 +121,14 @@ class FlutterSecureSecretStorage implements SecretStorage {
   @override
   Future<Result<String?>> readResult(String key) async {
     try {
-      final value = await _storage.read(key: key);
+      final String? value = await _storage.read(key: key);
+      if (value != null && value.isNotEmpty) {
+        return Success<String?>(value);
+      }
+      if (_enableLegacyKeychainMigration && _shouldMigrateAppleKeychain()) {
+        final String? migrated = await _readAndMigrateLegacyKeychainValue(key);
+        return Success<String?>(migrated);
+      }
       return Success<String?>(value);
     } on PlatformException catch (error, stackTrace) {
       AppLogger.error(
@@ -101,6 +144,35 @@ class FlutterSecureSecretStorage implements SecretStorage {
         PlatformFailure(PlatformFailureReason.unavailable, cause: error),
       );
     }
+  }
+
+  /// Upgrades items written under migrate-capable `unlocked` accessibility.
+  ///
+  /// `flutter_secure_storage` filters reads by accessibility, so a policy
+  /// change without migration looks like a missing secret and can rotate Hive
+  /// keys or drop auth sessions. Always return the legacy value when found,
+  /// even if re-write under hardened options fails.
+  Future<String?> _readAndMigrateLegacyKeychainValue(String key) async {
+    final String? legacy = await _legacyMigrationStorage.read(key: key);
+    if (legacy == null || legacy.isEmpty) {
+      return null;
+    }
+
+    await _storage.delete(key: key);
+    await _legacyMigrationStorage.delete(key: key);
+    await _storage.write(key: key, value: legacy);
+
+    final String? verify = await _storage.read(key: key);
+    if (verify == legacy) {
+      return legacy;
+    }
+
+    AppLogger.warning(
+      'FlutterSecureSecretStorage: legacy Keychain value for "$key" could not '
+      'be verified under hardened accessibility; returning legacy value for '
+      'this read to avoid secret rotation.',
+    );
+    return legacy;
   }
 
   @override

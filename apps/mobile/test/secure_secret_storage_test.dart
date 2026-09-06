@@ -5,6 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+String? _iosAccessibilityFromCall(MethodCall call) {
+  final Object? options = call.arguments['options'];
+  if (options is! Map) {
+    return null;
+  }
+  // flutter_secure_storage sends AppleOptions.toMap() as a flat options map
+  // (`accessibility`, `synchronizable`), not nested under `iOptions`.
+  final Object? accessibility = options['accessibility'];
+  if (accessibility is String) {
+    return accessibility;
+  }
+  final Object? ios = options['iOptions'];
+  if (ios is Map) {
+    return ios['accessibility'] as String?;
+  }
+  return null;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -199,6 +217,51 @@ void main() {
 
       expect(result, isA<Success<String?>>());
       expect(result.getOrNull(), 'secure');
+    });
+
+    test('read migrates legacy unlocked Keychain values on Apple platforms', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final Map<String, String> hardenedStore = <String, String>{};
+      final Map<String, String> legacyStore = <String, String>{
+        'hive_encryption_key': 'legacy-secret',
+      };
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            final String? accessibility = _iosAccessibilityFromCall(call);
+            final Map<String, String> store = accessibility == 'unlocked'
+                ? legacyStore
+                : hardenedStore;
+            switch (call.method) {
+              case 'read':
+                return store[call.arguments['key'] as String?] ??
+                    call.arguments['defaultValue'];
+              case 'write':
+                store[call.arguments['key'] as String] =
+                    call.arguments['value'] as String;
+                return null;
+              case 'delete':
+                store.remove(call.arguments['key'] as String);
+                return null;
+              default:
+                throw PlatformException(
+                  code: 'unhandled',
+                  message: call.method,
+                );
+            }
+          });
+
+      final storage = FlutterSecureSecretStorage(
+        storage: FlutterSecureSecretStorage.createDefaultFlutterSecureStorage(),
+        legacyMigrationStorage:
+            FlutterSecureSecretStorage.createLegacyMigrationFlutterSecureStorage(),
+      );
+
+      expect(await storage.read('hive_encryption_key'), 'legacy-secret');
+      expect(legacyStore.containsKey('hive_encryption_key'), isFalse);
+      expect(hardenedStore['hive_encryption_key'], 'legacy-secret');
+      expect(await storage.read('hive_encryption_key'), 'legacy-secret');
     });
 
     test('write and delete swallow platform errors', () async {
