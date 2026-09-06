@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Google Maps implementation of the map view.
 class GoogleMapsView extends StatefulWidget {
-  const GoogleMapsView({
+  const new({
     required this.stateManager,
     required this.controller,
     required this.onCameraMove,

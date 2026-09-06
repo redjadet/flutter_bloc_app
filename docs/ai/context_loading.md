@@ -5,7 +5,7 @@ owners. Other agent docs link here; do not duplicate this list.
 
 ## Ladder
 
-1. [`AGENTS.md`](../../AGENTS.md) — repo map and invariants.
+1. [`AGENTS.md`](../../AGENTS.md) — repository entry map.
 2. [`skill_routing.md`](skill_routing.md) — `agents-skill-routing`; select one
    skill. Tool/validation: `./bin/agent-maintain tools --intent "<goal>" --paths <files>`.
 3. Task evidence — targeted code/tests inside the declared task boundary. Load
@@ -17,7 +17,7 @@ owners. Other agent docs link here; do not duplicate this list.
 
 | Trigger | Load |
 | --- | --- |
-| Non-trivial work | [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight + [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) + `agents-common-pitfalls` |
+| Non-trivial work | [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight + [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) + [`agent_project_context.md`](../agent_project_context.md) + `agents-common-pitfalls` |
 | T1/T2 coding | [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
 | Commands / validation choice | Tool-router output, then matching [`agents_quick_reference.md`](../agents_quick_reference.md) row |

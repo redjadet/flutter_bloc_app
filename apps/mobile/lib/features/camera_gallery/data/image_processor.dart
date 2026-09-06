@@ -5,7 +5,7 @@ import 'package:image/image.dart' as image;
 
 /// Decodes, bounds, filters, and JPEG-encodes a user-selected image in memory.
 class ImageProcessor {
-  const ImageProcessor();
+  const new();
 
   static const int maxPreviewWidth = 1200;
   static const int maxPreviewHeight = 1200;

@@ -14,7 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:material_ui/material_ui.dart';
 
 class MapSampleMapView extends StatefulWidget {
-  const MapSampleMapView({
+  const new({
     required this.initialState,
     required this.cubit,
     required this.useAppleMaps,

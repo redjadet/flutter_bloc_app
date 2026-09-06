@@ -17,7 +17,7 @@ typedef SettingsQaExtrasBuilder = List<Widget> Function(BuildContext context);
 
 /// App settings screen: theme, locale, cache clear, and optional app info.
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({
+  const new({
     required this.appInfoRepository,
     required this.showQaExtras,
     required this.analyticsConsentRepository,
@@ -70,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
 }
 
 class _SettingsView extends StatelessWidget {
-  const _SettingsView({
+  const new({
     required this.showQaExtras,
     required this.analyticsConsentRepository,
     required this.productAnalytics,

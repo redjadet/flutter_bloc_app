@@ -7,8 +7,13 @@ that.
 
 ## Index
 
+- [`2026-09-04_keychain_this_device_only.md`](2026-09-04_keychain_this_device_only.md): Apple Keychain `first_unlock_this_device` + no iCloud sync for secure storage defaults.
+- [`2026-09-04_social_feed_persistence_early_gate.md`](2026-09-04_social_feed_persistence_early_gate.md): Run and inventory Social Feed Hive-persistence regressions before coverage.
+- [`2026-09-04_ci_surgical_optimize.md`](2026-09-04_ci_surgical_optimize.md): Ubuntu Chrome preflight, Flutter composite setup, drop duplicate bot CI + CodeQL ruby, Dependabot actions/npm.
+- [`2026-09-03_agent_docs_cross_host_consistency.md`](2026-09-03_agent_docs_cross_host_consistency.md): Lean universal AGENTS map; Codex/Cursor priority; canonical routing and project-scoped host guidance.
 - [`2026-09-03_docs_link_syntax_repair.md`](2026-09-03_docs_link_syntax_repair.md): Fix self-links and malformed double-bracket markdown from link retarget.
 - [`2026-09-03_docs_link_repair.md`](2026-09-03_docs_link_repair.md): Retarget living docs off gitignored `docs/plans/**`; tracked plans README + owner redirect map.
+- [`2026-09-04_social_feed_persistence_retry_durability.md`](2026-09-04_social_feed_persistence_retry_durability.md): Retain Social Feed mutations through Hive failures; queue direct writes and back off replay retries.
 - [`2026-09-01_social_feed_race_early_gate.md`](2026-09-01_social_feed_race_early_gate.md): Run Social Feed online-apply-versus-replay regression before slower checklist lanes.
 - [`2026-09-01_social_feed_like_dispatch_race.md`](2026-09-01_social_feed_like_dispatch_race.md): Serialize social-feed like replay and online applies; preserve newest user intent.
 - [`2026-09-01_session_closeout_teach_back.md`](2026-09-01_session_closeout_teach_back.md): Non-trivial sessions require an evidence-backed understanding loop and concept teach-back.

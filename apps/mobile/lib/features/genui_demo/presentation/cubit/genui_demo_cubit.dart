@@ -13,8 +13,7 @@ part 'genui_demo_cubit_handlers.part.dart';
 
 class GenUiDemoCubit extends Cubit<GenUiDemoState>
     with CubitSubscriptionMixin<GenUiDemoState> {
-  GenUiDemoCubit({required this._agent})
-    : super(const GenUiDemoState.initial());
+  new({required this._agent}) : super(const GenUiDemoState.initial());
 
   final GenUiDemoAgent _agent;
   // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
@@ -91,11 +90,6 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
       );
       return;
     }
-    emit(
-      GenUiDemoState.ready(
-        surfaceIds: const [],
-        hostHandle: hostHandle,
-      ),
-    );
+    emit(GenUiDemoState.ready(surfaceIds: const [], hostHandle: hostHandle));
   }
 }

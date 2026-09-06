@@ -1,7 +1,7 @@
 part of 'staff_app_demo_content_page.dart';
 
 class _ContentTile extends StatelessWidget {
-  const _ContentTile({required this.item, super.key});
+  const new({required this.item, super.key});
 
   final StaffDemoContentItem item;
 
@@ -32,19 +32,13 @@ class _ContentTile extends StatelessWidget {
           case StaffDemoContentType.pdf:
             await Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => _PdfViewerPage(
-                  title: item.title,
-                  url: url,
-                ),
+                builder: (_) => _PdfViewerPage(title: item.title, url: url),
               ),
             );
           case StaffDemoContentType.video:
             await Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => _VideoViewerPage(
-                  title: item.title,
-                  url: url,
-                ),
+                builder: (_) => _VideoViewerPage(title: item.title, url: url),
               ),
             );
         }
@@ -54,7 +48,7 @@ class _ContentTile extends StatelessWidget {
 }
 
 class _PdfViewerPage extends StatelessWidget {
-  const _PdfViewerPage({required this.title, required this.url});
+  const new({required this.title, required this.url});
 
   final String title;
   final Uri url;
@@ -67,7 +61,7 @@ class _PdfViewerPage extends StatelessWidget {
 }
 
 class _VideoViewerPage extends StatefulWidget {
-  const _VideoViewerPage({required this.title, required this.url});
+  const new({required this.title, required this.url});
 
   final String title;
   final Uri url;

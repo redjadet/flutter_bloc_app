@@ -6,7 +6,7 @@ enum StaffDemoContentType { pdf, video }
 
 @freezed
 abstract class StaffDemoContentItem with _$StaffDemoContentItem {
-  const factory StaffDemoContentItem({
+  const factory({
     required String contentId,
     required String title,
     required StaffDemoContentType type,

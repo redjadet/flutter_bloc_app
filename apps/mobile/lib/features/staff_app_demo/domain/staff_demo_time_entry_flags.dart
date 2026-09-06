@@ -6,7 +6,7 @@ class const StaffDemoTimeEntryFlags({
   required final bool duplicatePunchAttempt,
   required final bool deviceClockSkewSuspected,
 }) {
-  const StaffDemoTimeEntryFlags.none()
+  const new none()
     : this(
         outsideGeofence: false,
         earlyClockIn: false,

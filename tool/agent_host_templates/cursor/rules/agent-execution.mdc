@@ -1,11 +1,11 @@
 ---
-description: Always-on agent loop (repo-aligned). Full canon in AGENTS.md and docs/.
+description: Always-on agent loop (repo-aligned). Map in AGENTS.md; rules in docs/.
 alwaysApply: true
 ---
 
 # Agent execution (always-on)
 
-Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`.
+Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AGENTS.md` (map), `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`.
 
 - **Think:** unsafe ambiguity below 95% confidence → stop; evidence from repo docs, code, tests, or scripts (not guesses).
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.

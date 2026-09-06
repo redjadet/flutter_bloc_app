@@ -1,7 +1,7 @@
 part of 'calculator_keypad.dart';
 
 class _CalculatorButton extends StatelessWidget {
-  const _CalculatorButton({
+  const new({
     required this.config,
     required this.actions,
     required this.onEvaluate,
@@ -60,18 +60,11 @@ class _CalculatorButton extends StatelessWidget {
                   applyHeightToLastDescent: false,
                 ),
               )
-            : Icon(
-                config.icon,
-                color: style.foreground,
-                size: cellSize * 0.54,
-              );
+            : Icon(config.icon, color: style.foreground, size: cellSize * 0.54);
         return SizedBox.expand(
           child: Padding(
             padding: EdgeInsets.all(inset),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: content,
-            ),
+            child: FittedBox(fit: BoxFit.scaleDown, child: content),
           ),
         );
       },
@@ -112,23 +105,19 @@ class _CalculatorButton extends StatelessWidget {
     }
 
     final String semanticsLabel = config.semanticsLabel ?? config.label;
-    return Semantics(
-      button: true,
-      label: semanticsLabel,
-      child: button,
-    );
+    return Semantics(button: true, label: semanticsLabel, child: button);
   }
 }
 
 class _CalculatorPalette {
-  const _CalculatorPalette({
+  const new({
     required this.number,
     required this.function,
     required this.operation,
     required this.borderColor,
   });
 
-  factory _CalculatorPalette.fromTheme(ThemeData theme) {
+  factory fromTheme(ThemeData theme) {
     final ColorScheme colors = theme.colorScheme;
     return _CalculatorPalette(
       number: _CalculatorButtonStyle(
@@ -160,10 +149,7 @@ class _CalculatorPalette {
 }
 
 class _CalculatorButtonStyle {
-  const _CalculatorButtonStyle({
-    required this.background,
-    required this.foreground,
-  });
+  const new({required this.background, required this.foreground});
 
   final Color background;
   final Color foreground;

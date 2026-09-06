@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/ev
 import 'package:material_ui/material_ui.dart';
 
 class EventBusDemoLoginPanel extends StatelessWidget {
-  const EventBusDemoLoginPanel({
+  const new({
     required this.userIdController,
     required this.canFireLogin,
     required this.activeUserId,

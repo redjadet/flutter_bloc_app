@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// App-local search field with default l10n hint text.
 class CommonSearchField extends StatelessWidget {
-  const CommonSearchField({
+  const new({
     required this.controller,
     super.key,
     this.hintText,

@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_mo
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
 
 class AiDecisionRepositoryImpl implements AiDecisionRepository {
-  AiDecisionRepositoryImpl({required this.api});
+  new({required this.api});
 
   final AiDecisionApiClient api;
 

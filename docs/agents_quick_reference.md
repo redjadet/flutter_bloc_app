@@ -1,7 +1,9 @@
 # Agent Quick Reference
 
-Commands and routing. Run tool router first; load only matching row. Map:
-[`AGENTS.md`](../AGENTS.md). Detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md), [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
+Command and validation index. Use after [`AGENTS.md`](../AGENTS.md) and the
+[`context ladder`](ai/context_loading.md) identify the task surface. Load only
+the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md),
+[`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
 
 ## Validation Chooser
 

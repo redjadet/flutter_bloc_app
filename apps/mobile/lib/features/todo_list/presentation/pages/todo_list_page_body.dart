@@ -1,7 +1,7 @@
 part of 'todo_list_page.dart';
 
 class _TodoListBody extends StatefulWidget {
-  const _TodoListBody();
+  const new();
 
   @override
   State<_TodoListBody> createState() => _TodoListBodyState();
@@ -23,37 +23,33 @@ class _TodoListBodyState extends State<_TodoListBody> {
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) => ViewStatusSwitcher<TodoListCubit, TodoListState, TodoListLifecycleData>(
-    selector: TodoListLifecycleData.fromState,
-    isLoading: (data) => data.isLoading,
-    isError: (data) => data.hasError,
-    loadingBuilder: (_) => const CommonLoadingWidget(),
-    errorBuilder: (context, data) => CommonErrorView(
-      message: data.errorMessage ?? context.l10n.todoListLoadError,
-      onRetry: () => context.cubit<TodoListCubit>().loadInitial(),
-    ),
-    builder: (context, _) =>
-        TypeSafeBlocSelector<
-          TodoListCubit,
-          TodoListState,
-          TodoListListProjection
-        >(
-          selector: TodoListListProjection.fromState,
-          builder: (context, listData) => _TodoListSuccessBody(
-            listData: listData,
-            scrollController: _listScrollController,
-          ),
+  Widget build(BuildContext context) =>
+      ViewStatusSwitcher<TodoListCubit, TodoListState, TodoListLifecycleData>(
+        selector: TodoListLifecycleData.fromState,
+        isLoading: (data) => data.isLoading,
+        isError: (data) => data.hasError,
+        loadingBuilder: (_) => const CommonLoadingWidget(),
+        errorBuilder: (context, data) => CommonErrorView(
+          message: data.errorMessage ?? context.l10n.todoListLoadError,
+          onRetry: () => context.cubit<TodoListCubit>().loadInitial(),
         ),
-  );
+        builder: (context, _) =>
+            TypeSafeBlocSelector<
+              TodoListCubit,
+              TodoListState,
+              TodoListListProjection
+            >(
+              selector: TodoListListProjection.fromState,
+              builder: (context, listData) => _TodoListSuccessBody(
+                listData: listData,
+                scrollController: _listScrollController,
+              ),
+            ),
+      );
 }
 
 class _TodoListSuccessBody extends StatelessWidget {
-  const _TodoListSuccessBody({
-    required this.listData,
-    required this.scrollController,
-  });
+  const new({required this.listData, required this.scrollController});
 
   final TodoListListProjection listData;
   final ScrollController scrollController;

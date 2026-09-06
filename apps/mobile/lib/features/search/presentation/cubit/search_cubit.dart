@@ -12,7 +12,7 @@ import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class SearchCubit extends Cubit<SearchState>
     with CubitSubscriptionMixin<SearchState> {
-  SearchCubit({
+  new({
     required this._repository,
     required this._timerService,
     this.debounceDuration = const Duration(milliseconds: 500),
@@ -52,18 +52,9 @@ class SearchCubit extends Cubit<SearchState>
     emit(const SearchState());
   }
 
-  Future<void> _executeSearch(
-    String query,
-    int requestId,
-  ) async {
+  Future<void> _executeSearch(String query, int requestId) async {
     if (!_isRequestActive(requestId, query)) return;
-    emit(
-      state.copyWith(
-        status: ViewStatus.loading,
-        query: query,
-        error: null,
-      ),
-    );
+    emit(state.copyWith(status: ViewStatus.loading, query: query, error: null));
 
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.search(query),

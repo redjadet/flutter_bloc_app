@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 enum Flavor { dev, staging, qa, beta, prod }
 
 class FlavorManager {
-  FlavorManager._internal();
+  new _internal();
   static final FlavorManager _instance = FlavorManager._internal();
   static FlavorManager get I => _instance;
 

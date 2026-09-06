@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
 
 class WatchNativeShowcaseTelemetryUseCase {
-  WatchNativeShowcaseTelemetryUseCase(this._service);
+  new(this._service);
 
   final NativeShowcaseTelemetryService _service;
 

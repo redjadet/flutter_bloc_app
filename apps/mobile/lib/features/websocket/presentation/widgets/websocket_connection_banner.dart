@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:material_ui/material_ui.dart';
 
 class WebsocketConnectionBanner extends StatelessWidget {
-  const WebsocketConnectionBanner({
+  const new({
     required this.endpoint,
     required this.isConnecting,
     required this.isConnected,

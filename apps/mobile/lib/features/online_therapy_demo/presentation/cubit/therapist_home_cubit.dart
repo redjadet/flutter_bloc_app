@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 
 class TherapistHomeState {
-  const TherapistHomeState({
+  const new({
     required this.isBusy,
     required this.appointments,
     this.errorMessage,
@@ -26,7 +26,7 @@ class TherapistHomeState {
 }
 
 class TherapistHomeCubit extends Cubit<TherapistHomeState> {
-  TherapistHomeCubit({required this._appointments})
+  new({required this._appointments})
     : super(
         const TherapistHomeState(isBusy: false, appointments: <Appointment>[]),
       );

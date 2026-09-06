@@ -10,10 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoShellPage extends StatelessWidget {
-  const StaffAppDemoShellPage({
-    required this.child,
-    super.key,
-  });
+  const new({required this.child, super.key});
 
   final Widget child;
 
@@ -22,9 +19,11 @@ class StaffAppDemoShellPage extends StatelessWidget {
     final double bottomPadding = context.safeAreaInsets.bottom;
     final ThemeData theme = Theme.of(context);
     final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
-    final String currentLocation = GoRouter.of(
-      context,
-    ).routerDelegate.currentConfiguration.uri.toString();
+    final String currentLocation = GoRouter.of(context)
+        .routerDelegate
+        .currentConfiguration
+        .uri
+        .toString();
 
     return Scaffold(
       body: child,
@@ -40,7 +39,7 @@ class StaffAppDemoShellPage extends StatelessWidget {
 }
 
 class _NavDestination {
-  const _NavDestination({
+  const new({
     required this.materialIcon,
     required this.cupertinoIcon,
     required this.label,
@@ -116,10 +115,7 @@ int _resolveSelectedIndex(
 }
 
 class _StaffDemoBottomNav extends StatelessWidget {
-  const _StaffDemoBottomNav({
-    required this.currentLocation,
-    required this.useCupertino,
-  });
+  const new({required this.currentLocation, required this.useCupertino});
 
   final String currentLocation;
   final bool useCupertino;

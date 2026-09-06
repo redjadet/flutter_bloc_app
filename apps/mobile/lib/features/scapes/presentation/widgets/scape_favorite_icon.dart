@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Custom favorite (star) icon for scapes, matching Figma design
 class ScapeFavoriteIcon extends StatelessWidget {
-  const ScapeFavoriteIcon({
+  const new({
     required this.isFavorite,
     required this.color,
     this.size = 16,

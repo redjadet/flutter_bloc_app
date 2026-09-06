@@ -3736,4 +3736,59 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get socialFeedDemoSignalStep5 => 'End on failure states';
+
+  @override
+  String get exampleSecureMessagingDemoButton => 'Secure messaging demo';
+
+  @override
+  String get secureMessagingDemoTitle => 'Secure messaging demo';
+
+  @override
+  String get secureMessagingDemoSecurityWarning =>
+      'Demo only: AES key is process-ephemeral. Ciphertext cannot be decrypted after restart. Not production messaging security.';
+
+  @override
+  String get secureMessagingDemoUnavailable =>
+      'Native core unavailable on this platform';
+
+  @override
+  String secureMessagingDemoVersionLabel(String version) {
+    return 'Core version: $version';
+  }
+
+  @override
+  String get secureMessagingDemoPlaintextLabel => 'Message';
+
+  @override
+  String get secureMessagingDemoEncryptButton => 'Encrypt';
+
+  @override
+  String get secureMessagingDemoDecryptButton => 'Decrypt';
+
+  @override
+  String get secureMessagingDemoResetButton => 'Reset';
+
+  @override
+  String get secureMessagingDemoSuccessLabel => 'Round trip matched';
+
+  @override
+  String get secureMessagingDemoErrorInvalidInput =>
+      'Enter a non-empty message';
+
+  @override
+  String get secureMessagingDemoErrorMalformed => 'Ciphertext is malformed';
+
+  @override
+  String get secureMessagingDemoErrorAuthFailed => 'Authentication failed';
+
+  @override
+  String get secureMessagingDemoErrorUnsupportedVersion =>
+      'Unsupported envelope version';
+
+  @override
+  String get secureMessagingDemoErrorInternal => 'Native core error';
+
+  @override
+  String get secureMessagingDemoErrorMismatch =>
+      'Recovered plaintext did not match';
 }

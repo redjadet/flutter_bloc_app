@@ -6,9 +6,7 @@ import 'package:storage/storage.dart';
 
 class SharedPreferencesAnalyticsConsentRepository
     implements AnalyticsConsentRepository {
-  SharedPreferencesAnalyticsConsentRepository([
-    SharedPreferences? instance,
-  ]) : _preferencesInstance = instance;
+  new([SharedPreferences? instance]) : _preferencesInstance = instance;
 
   static const String preferencesKey = 'analytics_collection_enabled';
 
@@ -24,7 +22,7 @@ class SharedPreferencesAnalyticsConsentRepository
       : SharedPreferences.getInstance();
 
   @override
-  Future<bool> load() async => StorageGuard.run<bool>(
+  Future<bool> load() => StorageGuard.run<bool>(
     logContext: 'SharedPreferencesAnalyticsConsentRepository.load',
     action: () async {
       final SharedPreferences preferences = await _preferences();
@@ -39,7 +37,7 @@ class SharedPreferencesAnalyticsConsentRepository
       logContext: 'SharedPreferencesAnalyticsConsentRepository.save',
       action: () async {
         final SharedPreferences preferences = await _preferences();
-        return preferences.setBool(preferencesKey, enabled);
+        return await preferences.setBool(preferencesKey, enabled);
       },
       fallback: () => false,
     );

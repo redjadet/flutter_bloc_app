@@ -18,7 +18,7 @@ part 'in_app_purchase_demo_cubit_stream.part.dart';
 
 class InAppPurchaseDemoCubit extends _InAppPurchaseDemoCubitBase
     with _InAppPurchaseDemoCubitStream {
-  InAppPurchaseDemoCubit({
+  new({
     required super.fakeRepository,
     required super.realRepository,
     super.fakeOutcomeControls,
@@ -30,7 +30,7 @@ class InAppPurchaseDemoCubit extends _InAppPurchaseDemoCubitBase
 
 abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
     with CubitSubscriptionMixin<InAppPurchaseDemoState> {
-  _InAppPurchaseDemoCubitBase({
+  new({
     required InAppPurchaseRepository fakeRepository,
     required InAppPurchaseRepository realRepository,
     IapFakeOutcomePort? fakeOutcomeControls,
@@ -127,10 +127,7 @@ abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
     } finally {
       if (attempt == _attempt && !isClosed) {
         emit(
-          state.copyWith(
-            isBusy: false,
-            status: InAppPurchaseDemoStatus.ready,
-          ),
+          state.copyWith(isBusy: false, status: InAppPurchaseDemoStatus.ready),
         );
       }
     }
@@ -155,16 +152,11 @@ abstract class _InAppPurchaseDemoCubitBase extends Cubit<InAppPurchaseDemoState>
       emit(state.copyWith(entitlements: entitlements, lastResult: null));
     } on Object catch (e) {
       if (attempt != _attempt || isClosed) return;
-      emit(
-        state.copyWith(errorMessage: NetworkErrorMapper.getErrorMessage(e)),
-      );
+      emit(state.copyWith(errorMessage: NetworkErrorMapper.getErrorMessage(e)));
     } finally {
       if (attempt == _attempt && !isClosed) {
         emit(
-          state.copyWith(
-            isBusy: false,
-            status: InAppPurchaseDemoStatus.ready,
-          ),
+          state.copyWith(isBusy: false, status: InAppPurchaseDemoStatus.ready),
         );
       }
     }

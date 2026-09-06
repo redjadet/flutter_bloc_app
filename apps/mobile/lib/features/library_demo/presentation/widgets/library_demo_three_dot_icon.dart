@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Custom three-dot menu icon matching EPOCH design
 class LibraryThreeDotIcon extends StatelessWidget {
-  const LibraryThreeDotIcon({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(

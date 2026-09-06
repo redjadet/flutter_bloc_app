@@ -11,7 +11,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientAppointmentsPage extends StatefulWidget {
-  const OnlineTherapyDemoClientAppointmentsPage({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyDemoClientAppointmentsPage> createState() =>
@@ -37,9 +37,7 @@ class _OnlineTherapyDemoClientAppointmentsPageState
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final isBusy = context
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
           selector: (state) => state.isBusy,
@@ -75,9 +73,7 @@ class _OnlineTherapyDemoClientAppointmentsPageState
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    isBusy ? 'Loading…' : 'Your booked sessions.',
-                  ),
+                  child: Text(isBusy ? 'Loading…' : 'Your booked sessions.'),
                 ),
               );
             }

@@ -11,10 +11,8 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 /// App-scoped auth UX state. Router continues to use [AuthRepository] directly.
 class AppAuthCubit extends Cubit<AppAuthState>
     with CubitSubscriptionMixin<AppAuthState> {
-  AppAuthCubit({
-    required this._authRepository,
-    required this._sessionCoordinator,
-  }) : super(const AppAuthState.initial());
+  new({required this._authRepository, required this._sessionCoordinator})
+    : super(const AppAuthState.initial());
 
   final AuthRepository _authRepository;
   final SessionLifecycleCoordinator _sessionCoordinator;
@@ -43,11 +41,7 @@ class AppAuthCubit extends Cubit<AppAuthState>
       _sessionCoordinator.invalidationEvents.listen(
         _handleInvalidation,
         onError: (Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'AppAuthCubit.invalidationEvents',
-            error,
-            stackTrace,
-          );
+          AppLogger.error('AppAuthCubit.invalidationEvents', error, stackTrace);
         },
         cancelOnError: false,
       ),

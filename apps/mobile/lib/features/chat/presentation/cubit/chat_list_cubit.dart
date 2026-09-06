@@ -8,9 +8,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_stat
 export 'chat_list_state.dart';
 
 class ChatListCubit extends Cubit<ChatListState> {
-  ChatListCubit({
-    required this._repository,
-  }) : super(const ChatListState.initial());
+  new({required this._repository}) : super(const ChatListState.initial());
 
   final ChatListRepository _repository;
 

@@ -16,7 +16,7 @@ class const ChatConversationDto({
   final bool synchronized = true,
   final String? changeId,
 }) {
-  ChatConversationDto.fromDomain(ChatConversation conversation)
+  new fromDomain(ChatConversation conversation)
     : this(
         id: conversation.id,
         createdAt: conversation.createdAt,
@@ -30,7 +30,7 @@ class const ChatConversationDto({
         changeId: conversation.changeId,
       );
 
-  factory ChatConversationDto.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final dynamic messagesRaw = json['messages'];
     final List<dynamic>? messagesList = listFromDynamic(messagesRaw);
     if (messagesRaw != null && messagesList == null) {

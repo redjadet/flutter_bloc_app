@@ -6,11 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Main body content for the GraphQL demo page with list view and error handling.
 class GraphqlBody extends StatelessWidget {
-  const GraphqlBody({
-    required this.bodyData,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.bodyData, required this.l10n, super.key});
 
   final GraphqlBodyData bodyData;
   final AppLocalizations l10n;

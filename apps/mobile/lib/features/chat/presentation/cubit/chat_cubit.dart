@@ -31,7 +31,7 @@ class ChatCubit extends _ChatCubitCore
         _ChatCubitHistoryActions,
         _ChatCubitMessageActions,
         _ChatCubitSelectionActions {
-  ChatCubit({
+  new({
     required super.repository,
     required super.historyRepository,
     super.renderOrchestrationHfTokenProvider,
@@ -44,7 +44,7 @@ class ChatCubit extends _ChatCubitCore
 
 abstract class _ChatCubitCore extends Cubit<ChatState>
     with CubitSubscriptionMixin<ChatState> {
-  _ChatCubitCore({
+  new({
     required this._repository,
     required this._historyRepository,
     this._renderOrchestrationHfTokenProvider,
@@ -115,11 +115,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   void clearError() {
     if (isClosed) return;
     if (state.hasError) {
-      emit(
-        state.copyWith(
-          failure: null,
-        ),
-      );
+      emit(state.copyWith(failure: null));
     }
   }
 
@@ -164,11 +160,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
           _refreshRunnableTransportHintOnly();
         },
         onError: (Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'ChatCubit.onAuthStateChange',
-            error,
-            stackTrace,
-          );
+          AppLogger.error('ChatCubit.onAuthStateChange', error, stackTrace);
         },
       ),
     );

@@ -17,7 +17,7 @@ const Duration kSpinAnimationDuration = Duration(milliseconds: 2500);
 /// Cubit for one play-for-fun game round: stake, play, result, balance update.
 class GameCubit extends Cubit<GameState>
     with CubitSubscriptionMixin<GameState> {
-  GameCubit({
+  new({
     required this._balanceRepository,
     required this._timerService,
     Random? random,
@@ -64,9 +64,7 @@ class GameCubit extends Cubit<GameState>
       },
       onError: (message) {
         if (isClosed) return;
-        emit(
-          GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message),
-        );
+        emit(GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message));
       },
       logContext: 'GameCubit.loadBalance',
     );
@@ -150,25 +148,16 @@ class GameCubit extends Cubit<GameState>
       CubitExceptionHandler.executeAsync<DemoBalance>(
         operation: () async {
           await _balanceRepository.updateBalance(roundResult.netChange);
-          return _balanceRepository.getBalance();
+          return await _balanceRepository.getBalance();
         },
         isAlive: () => !isClosed,
         onSuccess: (newBalance) {
           if (isClosed) return;
-          emit(
-            GameState.result(
-              roundResult,
-              newBalance,
-              betAmount,
-              indices,
-            ),
-          );
+          emit(GameState.result(roundResult, newBalance, betAmount, indices));
         },
         onError: (message) {
           if (isClosed) return;
-          emit(
-            GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message),
-          );
+          emit(GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message));
         },
         logContext: 'GameCubit._resolveRoundAfterSpin',
       ),

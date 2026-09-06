@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 
 /// Bounded in-memory analytics for deterministic demo UI event counts.
 class InMemoryProductAnalytics implements ProductAnalytics {
-  InMemoryProductAnalytics({this.maxEvents = 50});
+  new({this.maxEvents = 50});
 
   final int maxEvents;
 

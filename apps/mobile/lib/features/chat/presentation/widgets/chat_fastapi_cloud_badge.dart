@@ -5,7 +5,7 @@ import 'package:mix/mix.dart';
 
 /// Shown when orchestration is hosted on FastAPI Cloud.
 class ChatFastApiCloudBadge extends StatelessWidget {
-  const ChatFastApiCloudBadge({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

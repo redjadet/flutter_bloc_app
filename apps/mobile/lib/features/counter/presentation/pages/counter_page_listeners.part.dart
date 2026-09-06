@@ -1,7 +1,7 @@
 part of 'counter_page.dart';
 
 final class _CounterPageListenerDelegate {
-  _CounterPageListenerDelegate(this._state);
+  new(this._state);
 
   final _CounterPageState _state;
 
@@ -57,10 +57,7 @@ final class _CounterPageListenerDelegate {
       return;
     }
 
-    final String localizedMessage = counterErrorMessage(
-      context.l10n,
-      error,
-    );
+    final String localizedMessage = counterErrorMessage(context.l10n, error);
     if (error.type == CounterErrorType.cannotGoBelowZero) {
       if (!_state._isCannotGoBelowZeroSnackBarVisible) {
         _showCannotGoBelowZeroSnackBar(localizedMessage);
@@ -70,10 +67,7 @@ final class _CounterPageListenerDelegate {
 
     ErrorHandling.handleCubitError(
       context,
-      UnknownError(
-        message: localizedMessage,
-        cause: error,
-      ),
+      UnknownError(message: localizedMessage, cause: error),
       customMessage: localizedMessage,
       onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
         context,
@@ -82,10 +76,7 @@ final class _CounterPageListenerDelegate {
     );
   }
 
-  void _handleCounterIncremented(
-    BuildContext context,
-    CounterState state,
-  ) {
+  void _handleCounterIncremented(BuildContext context, CounterState state) {
     _state._confettiController.play();
   }
 
@@ -97,10 +88,7 @@ final class _CounterPageListenerDelegate {
     ErrorHandling.clearSnackBars(context);
   }
 
-  void _handleCounterCountChanged(
-    BuildContext context,
-    CounterState state,
-  ) {
+  void _handleCounterCountChanged(BuildContext context, CounterState state) {
     // check-ignore: listener callback is event-driven, not a build side effect
     unawaited(flushSyncIfPossible(context));
   }

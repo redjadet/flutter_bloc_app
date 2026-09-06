@@ -1,7 +1,7 @@
 part of 'calculator_rate_selector.dart';
 
 class _CustomRateDialog extends StatefulWidget {
-  const _CustomRateDialog({
+  const new({
     required this.initialValue,
     required this.title,
     required this.fieldLabel,
@@ -99,9 +99,7 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
             autofocus: true,
             placeholder: widget.fieldLabel,
             suffix: Padding(
-              padding: EdgeInsets.only(
-                right: context.responsiveHorizontalGapS,
-              ),
+              padding: EdgeInsets.only(right: context.responsiveHorizontalGapS),
               child: Text(widget.suffixText),
             ),
             onChanged: _handleChanged,

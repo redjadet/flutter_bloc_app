@@ -5,7 +5,7 @@ import 'package:storage/storage.dart';
 /// Hive-backed implementation of [LocaleRepository].
 class HiveLocaleRepository extends HiveSettingsRepository<AppLocale>
     implements LocaleRepository {
-  HiveLocaleRepository({required super.hiveService})
+  new({required super.hiveService})
     : super(
         key: 'preferred_locale_code',
         fromString: AppLocale.fromTag,

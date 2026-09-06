@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedSeniorSignalPanel extends StatelessWidget {
-  const SocialFeedSeniorSignalPanel({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

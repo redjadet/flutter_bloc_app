@@ -11,7 +11,7 @@ class const ChatMessageDto({
   final DateTime? lastSyncedAt,
   final String? terminalSyncFailureCode,
 }) {
-  ChatMessageDto.fromDomain(ChatMessage message)
+  new fromDomain(ChatMessage message)
     : this(
         author: message.author,
         text: message.text,
@@ -22,7 +22,7 @@ class const ChatMessageDto({
         terminalSyncFailureCode: message.terminalSyncFailureCode,
       );
 
-  factory ChatMessageDto.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final String authorValue = (json['author'] ?? '').toString();
     final ChatAuthor author = ChatAuthor.values.firstWhere(
       (value) => value.name == authorValue,

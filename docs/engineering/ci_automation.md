@@ -7,13 +7,20 @@ This repo uses GitHub Actions as the merge gate + drift detector.
 Require these checks on `main`:
 
 - **`CI / build`**: runs `./bin/checklist` (analyze + repo static checks + mix_lint + coverage).
-- **`CI / integration-preflight`**: runs `./bin/integration_preflight` on PRs / merge queue to catch browser/bootstrap/import drift before slower simulator lanes.
+- **`CI / integration-preflight`**: runs `./bin/integration_preflight` on PRs / merge queue (Ubuntu + Chrome web smoke + unit guards) before slower simulator lanes.
 - **`Dependency Review / dependency-review`**: GitHub dependency review action.
 - **`OSV-Scanner PR Scan / scan-pr`**: vulnerability scan of `pubspec.lock`.
 
-Optional (only if Renovate/Dependabot are in use and you want to enforce bot PRs):
+Renovate / Dependabot PRs are gated by the same **`CI / build`** check — there is no
+separate duplicate analyze/coverage workflow.
 
-- **`Dependency Updates / Test Dependency Updates`**: runs analyze + coverage on dependency update PRs.
+## Shared Flutter setup
+
+Flutter install + `tool/workspace_pub_get.sh` (+ optional apt: ripgrep, lcov, Chrome)
+live in the composite action
+[`.github/actions/setup-flutter-workspace`](../../.github/actions/setup-flutter-workspace/action.yml).
+Workflows pass `flutter-version: ${{ env.FLUTTER_VERSION }}`; keep pins synced via
+`docs/toolchain_versions.env` / `tool/update_agent_toolchain_versions.py`.
 
 ## Merge queue compatibility
 
@@ -40,21 +47,23 @@ Workflow: [`.github/workflows/drift.yml`](../../.github/workflows/drift.yml)
 
 ## Integration preflight on PRs
 
-`CI / integration-preflight` now runs automatically on:
+`CI / integration-preflight` runs automatically on:
 
 - `pull_request`
 - `merge_group`
 
-It executes `./bin/integration_preflight` as an early browser/bootstrap/import
-guard before any slower simulator-based integration lane is requested.
+Runner: **`ubuntu-latest`** (not macOS). The job installs Chrome when needed and
+executes `./bin/integration_preflight` (SwiftPM patch syntax/guard, log-filter
+unit test, Chrome web bootstrap smoke). Job **name** stays `integration-preflight`
+so branch protection does not need updating.
 
 ## Manual integration rollout
 
-Workflow-dispatch integration uses two macOS jobs in order when `run_integration`
+Workflow-dispatch integration uses two jobs in order when `run_integration`
 is enabled:
 
-- **`CI / integration-preflight`**: runs `./bin/integration_preflight`
-- **`CI / integration`**: runs `./bin/integration_tests` only after preflight passes
+- **`CI / integration-preflight`**: Ubuntu Chrome / unit guards (`./bin/integration_preflight`)
+- **`CI / integration`**: macOS simulator lane (`./bin/integration_tests`) only after preflight passes
 
 Workflow inputs:
 
@@ -64,3 +73,10 @@ Workflow inputs:
 
 This keeps browser/bootstrap/import/patch drift failures visible before the
 slower simulator lane starts.
+
+## CodeQL
+
+[`.github/workflows/codeql.yml`](../../.github/workflows/codeql.yml) runs on PR,
+push, merge_group, and weekly schedule for languages this repo ships meaningfully:
+`actions`, `c-cpp` (`native/`), `javascript-typescript`, `python`. Ruby is omitted
+(no first-party Ruby sources).

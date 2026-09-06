@@ -5,7 +5,7 @@ import 'package:mix/mix.dart';
 
 /// Shown when there is no network route; transport chip is hidden in this state.
 class ChatOfflineBadge extends StatelessWidget {
-  const ChatOfflineBadge({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

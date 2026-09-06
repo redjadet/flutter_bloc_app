@@ -12,7 +12,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class RegisterForm extends StatelessWidget {
-  const RegisterForm({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) =>
@@ -98,14 +98,8 @@ class RegisterForm extends StatelessWidget {
                 label: l10n.registerPhoneLabel,
                 field: RegisterPhoneField(
                   state: state,
-                  decorationBuilder:
-                      ({
-                        required hint,
-                        errorText,
-                      }) => decorationBuilder(
-                        hint: hint,
-                        errorText: errorText,
-                      ),
+                  decorationBuilder: ({required hint, errorText}) =>
+                      decorationBuilder(hint: hint, errorText: errorText),
                   hintText: l10n.registerPhoneHint,
                   errorText: phoneErrorText(l10n, state.phoneError),
                   textStyle: fieldTextStyle,

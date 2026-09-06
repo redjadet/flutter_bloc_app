@@ -1,5 +1,5 @@
 class StaffDemoInboxItem {
-  const StaffDemoInboxItem({
+  const new({
     required this.messageId,
     required this.body,
     required this.type,

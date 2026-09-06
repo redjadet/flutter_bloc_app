@@ -4,11 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ConnectionStatusPill extends StatelessWidget {
-  const ConnectionStatusPill({
-    required this.status,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.status, required this.l10n, super.key});
 
   final MarketConnectionStatus status;
   final AppLocalizations l10n;
@@ -49,10 +45,8 @@ class ConnectionStatusPill extends StatelessWidget {
                 : null,
             iconSize: 16,
             iconColor: fg,
-            textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: fg,
-              fontWeight: FontWeight.w600,
-            ),
+            textStyle: Theme.of(context).textTheme.labelLarge
+                ?.copyWith(color: fg, fontWeight: FontWeight.w600),
           ),
         ),
       ),

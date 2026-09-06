@@ -105,8 +105,9 @@ tier expectations.
 
 ## CI workflow shape
 
-- **Pull requests / merge queue:** `CI / integration-preflight` runs
-  `./bin/integration_preflight` automatically (browser/bootstrap guardrails).
+- **Pull requests / merge queue:** `CI / integration-preflight` runs on
+  `ubuntu-latest` with Chrome (`./bin/integration_preflight` browser/bootstrap
+  guardrails).
 - **Manual dispatch:** enable `run_integration` on **Actions → CI → Run workflow**
   to run the macOS simulator lane after preflight passes. Choose
   `integration_tier` (`smoke` | `standard` | `exhaustive`).
@@ -119,3 +120,13 @@ current GitHub Actions contract.
 
 - Keep aggregate suite as canonical gate.
 - Add new integration tests by first attaching them to one journey and one tier.
+
+## Secure messaging demo
+
+| Tier | Target |
+| --- | --- |
+| Dedicated macOS | `integration_test/secure_messaging_demo_flow_test.dart` (real Flutter → Rust) |
+| Selective map | `secure_messaging_demo` in `tool/integration_selective_map.json` (incl. `packages/secure_core_bridge/`) |
+| Ubuntu smoke | **Not** registered — Linux proves via real package `dart test` + Cargo in `tool/check_secure_core.sh` |
+
+Feature guide: [`../features/secure_messaging_demo.md`](../features/secure_messaging_demo.md).

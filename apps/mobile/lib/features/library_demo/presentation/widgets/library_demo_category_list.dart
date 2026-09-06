@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LibraryCategoryList extends StatelessWidget {
-  const LibraryCategoryList({required this.l10n, super.key});
+  const new({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -20,9 +20,7 @@ class LibraryCategoryList extends StatelessWidget {
       children: [
         for (int index = 0; index < categories.length; index += 1) ...[
           Container(
-            padding: EdgeInsets.only(
-              bottom: EpochSpacing.gapMedium,
-            ),
+            padding: EdgeInsets.only(bottom: EpochSpacing.gapMedium),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -44,10 +42,7 @@ class LibraryCategoryList extends StatelessWidget {
 }
 
 class _LibraryCategoryRow extends StatelessWidget {
-  const _LibraryCategoryRow({
-    required this.category,
-    required this.caretColor,
-  });
+  const new({required this.category, required this.caretColor});
 
   final LibraryCategory category;
   final Color caretColor;
@@ -75,7 +70,7 @@ class _LibraryCategoryRow extends StatelessWidget {
 }
 
 class _CaretPainter extends CustomPainter {
-  const _CaretPainter({required this.color});
+  const new({required this.color});
 
   final Color color;
 

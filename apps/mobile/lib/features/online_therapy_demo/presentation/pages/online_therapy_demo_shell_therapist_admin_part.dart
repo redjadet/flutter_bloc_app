@@ -1,7 +1,7 @@
 part of 'online_therapy_demo_shell_page.dart';
 
 class _TherapistPanel extends StatelessWidget {
-  const _TherapistPanel();
+  const new();
 
   @override
   Widget build(BuildContext context) {

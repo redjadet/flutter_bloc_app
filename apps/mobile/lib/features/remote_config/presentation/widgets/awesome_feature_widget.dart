@@ -11,12 +11,11 @@ part 'awesome_feature_widget.freezed.dart';
 
 @freezed
 abstract class _FeatureEnabledData with _$FeatureEnabledData {
-  const factory _FeatureEnabledData({required bool isEnabled}) =
-      __FeatureEnabledData;
+  const factory({required bool isEnabled}) = __FeatureEnabledData;
 }
 
 class AwesomeFeatureWidget extends StatefulWidget {
-  const AwesomeFeatureWidget({super.key});
+  const new({super.key});
 
   @override
   State<AwesomeFeatureWidget> createState() => _AwesomeFeatureWidgetState();

@@ -11,7 +11,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CaseStudyMetadataPage extends StatelessWidget {
-  const CaseStudyMetadataPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class CaseStudyMetadataPage extends StatelessWidget {
 }
 
 class _MetadataForm extends StatefulWidget {
-  const _MetadataForm({
+  const new({
     required super.key,
     required this.initialDoctor,
     required this.initialNotes,

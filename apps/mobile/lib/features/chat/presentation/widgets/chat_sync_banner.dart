@@ -14,7 +14,7 @@ import 'package:networking/networking.dart';
 
 /// Banner showing pending chat sync count and optional manual sync action.
 class ChatSyncBanner extends StatefulWidget {
-  const ChatSyncBanner({super.key});
+  const new({super.key});
 
   @override
   State<ChatSyncBanner> createState() => _ChatSyncBannerState();
@@ -48,11 +48,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
       final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
       await syncCubit.flush();
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'ChatSyncBanner.handleSyncNow failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('ChatSyncBanner.handleSyncNow failed', error, stackTrace);
     } finally {
       if (mounted) {
         setState(() => _isManualSyncing = false);

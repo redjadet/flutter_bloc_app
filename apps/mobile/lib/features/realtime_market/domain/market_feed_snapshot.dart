@@ -8,7 +8,7 @@ part 'market_feed_snapshot.freezed.dart';
 
 @freezed
 abstract class MarketFeedSnapshot with _$MarketFeedSnapshot {
-  const factory MarketFeedSnapshot({
+  const factory({
     required String pairId,
     required double lastPrice,
     required double changePct24h,

@@ -9,7 +9,7 @@ part 'chat_local_conversation_updater.freezed.dart';
 
 @freezed
 abstract class ChatLocalConversationState with _$ChatLocalConversationState {
-  const factory ChatLocalConversationState({
+  const factory({
     required ChatConversation conversation,
     required List<ChatMessage> messages,
     required List<ChatConversation> existing,
@@ -19,9 +19,7 @@ abstract class ChatLocalConversationState with _$ChatLocalConversationState {
 }
 
 class ChatLocalConversationUpdater {
-  ChatLocalConversationUpdater({
-    required this._localDataSource,
-  });
+  new({required this._localDataSource});
 
   final ChatHistoryRepository _localDataSource;
 

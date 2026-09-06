@@ -8,23 +8,21 @@ enum ScapesViewMode { grid, list }
 
 @freezed
 sealed class ScapesState with _$ScapesState {
-  const factory ScapesState.initial() = ScapesInitial;
+  const factory initial() = ScapesInitial;
 
-  const factory ScapesState.loading() = ScapesLoading;
+  const factory loading() = ScapesLoading;
 
-  const factory ScapesState.ready({
+  const factory ready({
     required List<Scape> scapes,
     @Default(ScapesViewMode.grid) ScapesViewMode viewMode,
   }) = ScapesReady;
 
-  const factory ScapesState.error(AppError error) = ScapesError;
+  const factory error(AppError error) = ScapesError;
 
-  const ScapesState._();
+  const new _();
 
-  List<Scape> get scapes => maybeWhen(
-    ready: (scapes, _) => scapes,
-    orElse: () => const <Scape>[],
-  );
+  List<Scape> get scapes =>
+      maybeWhen(ready: (scapes, _) => scapes, orElse: () => const <Scape>[]);
 
   ScapesViewMode get viewMode => maybeWhen(
     ready: (_, viewMode) => viewMode,
@@ -33,10 +31,8 @@ sealed class ScapesState with _$ScapesState {
 
   bool get isLoading => this is ScapesLoading;
 
-  AppError? get lastError => maybeWhen(
-    error: (error) => error,
-    orElse: () => null,
-  );
+  AppError? get lastError =>
+      maybeWhen(error: (error) => error, orElse: () => null);
 
   String? get errorMessage => lastError?.message;
 

@@ -5,7 +5,7 @@ part 'native_capability.freezed.dart';
 
 @freezed
 abstract class NativeCapability with _$NativeCapability {
-  const factory NativeCapability({
+  const factory({
     required NativeCapabilityKind kind,
     required String platformDetail,
   }) = _NativeCapability;

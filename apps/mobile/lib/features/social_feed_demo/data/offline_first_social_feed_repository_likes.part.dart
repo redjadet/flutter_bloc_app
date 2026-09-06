@@ -1,12 +1,14 @@
 part of 'offline_first_social_feed_repository.dart';
 
-Future<void> _persistViewerLikesImpl(
+Future<bool> _persistViewerLikesImpl(
   OfflineFirstSocialFeedRepository repo,
 ) async {
   try {
     await repo._local.saveViewerLikes(repo._remote.exportViewerLikes());
+    return true;
   } on Object {
     // Persistence degraded; in-memory likes remain for this session.
+    return false;
   }
 }
 

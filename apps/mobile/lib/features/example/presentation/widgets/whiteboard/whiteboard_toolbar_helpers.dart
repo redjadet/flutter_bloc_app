@@ -10,11 +10,7 @@ const double kStrokeWidthExtra = 15;
 
 /// Preset width configuration for whiteboard strokes.
 class WidthPreset {
-  const WidthPreset({
-    required this.label,
-    required this.value,
-    required this.icon,
-  });
+  const new({required this.label, required this.value, required this.icon});
 
   final String label;
   final double value;
@@ -48,7 +44,7 @@ List<WidthPreset> defaultWidthPresetsFor(AppLocalizations l10n) =>
 
 /// A button widget for selecting a preset stroke width.
 class WidthPresetButton extends StatelessWidget {
-  const WidthPresetButton({
+  const new({
     required this.preset,
     required this.isSelected,
     required this.currentColor,
@@ -120,7 +116,7 @@ class WidthPresetButton extends StatelessWidget {
 
 /// An action button for the whiteboard toolbar (Undo, Redo, Clear).
 class WhiteboardActionButton extends StatelessWidget {
-  const WhiteboardActionButton({
+  const new({
     required this.label,
     required this.icon,
     required this.tooltip,

@@ -110,6 +110,6 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
   Future<void> close() async {
     await disposeAllTimers();
     await closeAllSubscriptions();
-    return super.close();
+    return await super.close();
   }
 }

@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **111** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **81** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **112** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **82** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -284,7 +284,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
-- **`check_offline_first_remote_merge.sh`**: Early regression guard ensuring offline-first repos don't overwrite newer state with stale sync data (older remote snapshots, TOCTOU races between merge snapshot and save/delete, older queued pending replay, or a queued Social Feed like dispatch overtaken by newer online intent). Inventory scan also matches `re-checks local before save|deleting`, `queued like dispatch.*in flight`, and remote-fetch-failure retention tests. Fails when matching regression test files exist but are not wired into the guard. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
+- **`check_offline_first_remote_merge.sh`**: Early regression guard ensuring offline-first repos don't overwrite newer state with stale sync data (older remote snapshots, TOCTOU races between merge snapshot and save/delete, older queued pending replay, or a queued Social Feed like dispatch overtaken by newer online intent) or drop a mutation after Hive persistence fails. Inventory scan also matches `re-checks local before save|deleting`, `queued like dispatch.*in flight`, remote-fetch-failure retention tests, and the four required Social Feed queued/direct Hive-failure regressions. Fails when matching regression test files are not wired into the guard or one of those durable-mutation tests disappears. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
 - **`check_remote_fetch_failure_fallback.sh`**: Static guard: remote read ops (`fetchAll`, `load`, …) must not use `onFailureFallback` (empty/default fallbacks look like successful empty remotes and can cause offline-first mass-delete on transient errors). See [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) § Remote fetch failures.
 
 ### Context & async safety (checklist; detail in guide shard)
@@ -300,6 +300,10 @@ Long-form examples: [`guides_context_async.md`](guides_context_async.md).
 - **`check_hardcoded_colors.sh`**, **`check_hardcoded_strings.sh`**, **`check_missing_localizations.sh`**: Theme/l10n hygiene — [`guides_theme_l10n.md`](guides_theme_l10n.md)
 - **`check_missing_const.sh`**: Heuristic missing `const` on stable widgets — [`guides_performance_lists.md`](guides_performance_lists.md)
 - **`check_pubspec_codegen_compat.sh`**: Fails on known-incompatible `pubspec.yaml` / lock combos for `build_runner` + analyzer (e.g. `json_serializable` vs `mix_lint`)
+- **`check_package_dependency_dag.sh`**: Workspace `packages/*` path-dep DAG allowlist
+- **`check_secure_core.sh`**: generated FFI freshness, Rust fmt/check/clippy/test
+  (`rust-toolchain.toml` pin), and real host Dart → Rust tests; see
+  [`../architecture/rust_ffi_secure_core_bridge.md`](../architecture/rust_ffi_secure_core_bridge.md)
 
 ### State, layout, memory (checklist; detail in guide shards)
 
@@ -312,7 +316,7 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 
 | Script | Typical invocation | Purpose |
 | --- | --- | --- |
-| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs; RequestIdGuard/chat/call supersession, stream/cache hardening, IoT offline-first pull/setValue windows, realtime trade-id paths, and Social Feed state-driven scenario controls run before coverage when selected); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race, data-integrity, and state-to-UI synchronization bugs |
+| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs; `apps/mobile/` paths are normalized to app-relative routes for Mix, regression, Todo/action-bar layout, analyze, coverage, and pubspec codegen preflight; RequestIdGuard/chat/call supersession, stream/cache hardening, IoT offline-first pull/setValue windows, realtime trade-id paths, and Social Feed state-driven controls or mutation-data paths run before coverage when selected); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race, data-integrity, state-to-UI synchronization, and Social Feed Hive-persistence durability bugs |
 | `check_action_bar_layout.sh` | `./bin/checklist` when `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS` is `auto` or `1` | Widget tests for action-bar / icon-label row layout regressions |
 | `check_docs_gardening.sh` | `./bin/checklist-fast`, docs/tooling lanes | Doc link rot + `validate_validation_docs.sh` |
 | `check_design_md.sh` | Design/agent lane | Google DesignMD lint on root [`DESIGN.md`](../../DESIGN.md) |

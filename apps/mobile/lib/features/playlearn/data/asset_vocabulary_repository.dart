@@ -4,15 +4,12 @@ import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository
 
 /// In-memory vocabulary repository with demo data (Animals topic).
 class AssetVocabularyRepository implements VocabularyRepository {
-  AssetVocabularyRepository();
+  new();
 
   static const String _topicAnimalsId = 'animals';
 
   static final List<TopicItem> _topics = <TopicItem>[
-    const TopicItem(
-      id: _topicAnimalsId,
-      nameL10nKey: 'playlearnTopicAnimals',
-    ),
+    const TopicItem(id: _topicAnimalsId, nameL10nKey: 'playlearnTopicAnimals'),
   ];
 
   static const String _assetPrefix = 'assets/playlearn/files';

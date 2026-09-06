@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Result of [runSupabaseEdgeThenTables].
 class SupabaseEdgeThenTablesResult<T> {
-  const SupabaseEdgeThenTablesResult(this.result, {required this.fromEdge});
+  const new(this.result, {required this.fromEdge});
 
   final List<T> result;
   final bool fromEdge;

@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({required this.user, super.key});
+  const new({required this.user, super.key});
 
   final ProfileUser user;
 

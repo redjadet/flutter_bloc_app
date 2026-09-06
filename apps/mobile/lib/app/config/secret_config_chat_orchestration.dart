@@ -8,7 +8,7 @@ part of 'secret_config.dart';
 // ---------------------------------------------------------------------------
 
 final class _ChatOrchestrationDefines {
-  const _ChatOrchestrationDefines._();
+  const new _();
 
   static const bool fastApiCloudEnabled = bool.fromEnvironment(
     'CHAT_FASTAPICLOUD_DEMO_ENABLED',

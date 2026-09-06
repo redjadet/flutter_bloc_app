@@ -1,8 +1,8 @@
 # AI Failure Risks
 
-Cursor and Codex agents use this register before broad feature, architecture,
-testing, validation, or host-harness work. Goal: prevent mistakes through owner
-docs and scripts, then recover with minimal rollback when a mistake lands.
+AI agents use this register before broad feature, architecture, testing,
+validation, or host-harness work. Codex and Cursor are the primary validated
+hosts; other agents follow the same owner docs and detection paths.
 
 ## Pre-Flight (non-trivial work)
 

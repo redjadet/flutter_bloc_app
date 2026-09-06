@@ -17,11 +17,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 /// Hard rule: child pages must not create demo Cubits; they must read them
 /// from this scope under a ShellRoute.
 class OnlineTherapyDemoScope extends StatelessWidget {
-  const OnlineTherapyDemoScope({
-    required this.deps,
-    required this.child,
-    super.key,
-  });
+  const new({required this.deps, required this.child, super.key});
 
   final OnlineTherapyDemoDependencies deps;
   final Widget child;
@@ -43,26 +39,17 @@ class OnlineTherapyDemoScope extends StatelessWidget {
           ),
         ),
         BlocProvider<TherapistHomeCubit>(
-          create: (_) => TherapistHomeCubit(
-            appointments: deps.appointments,
-          ),
+          create: (_) => TherapistHomeCubit(appointments: deps.appointments),
         ),
         BlocProvider<AdminCubit>(
-          create: (_) => AdminCubit(
-            admin: deps.admin,
-            audit: deps.audit,
-          ),
+          create: (_) => AdminCubit(admin: deps.admin, audit: deps.audit),
         ),
         BlocProvider<MessagingCubit>(
-          create: (_) => MessagingCubit(
-            messaging: deps.messaging,
-          ),
+          create: (_) => MessagingCubit(messaging: deps.messaging),
         ),
         BlocProvider<CallCubit>(
-          create: (_) => CallCubit(
-            appointments: deps.appointments,
-            calls: deps.calls,
-          ),
+          create: (_) =>
+              CallCubit(appointments: deps.appointments, calls: deps.calls),
         ),
       ],
       child:

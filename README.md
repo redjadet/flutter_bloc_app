@@ -1,12 +1,25 @@
 # Flutter BLoC App
 
+Production-style Flutter reference app for a mobile engineering portfolio:
+feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
+CI-backed validation, and a broad set of integration demos. The repo is
+intentionally proof-oriented: claims in the README link to source, docs, or
+commands instead of relying on generic architecture statements.
+
+| Goal | Start here |
+| --- | --- |
+| Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
+| Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
+| Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
+| Work with an AI agent | [AGENTS.md](AGENTS.md) |
+
 ## Platform and toolchain
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.47.2-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.13.2-blue.svg)](https://dart.dev)
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20Android%20%7C%20Web%20%7C%20Desktop-02569B.svg)](docs/deployment.md)
 [![style: very good analysis](https://img.shields.io/badge/Lint-very__good__analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Custom lint](https://img.shields.io/badge/Lint-custom__lint%20%7C%20mix__lint-64748B.svg)](docs/CODE_QUALITY.md)
+[![Custom lint](https://img.shields.io/badge/Lint-analysis__server__plugin%20%7C%20mix__lint-64748B.svg)](docs/CODE_QUALITY.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
 [![Google Play](https://img.shields.io/badge/Google%20Play-Available-34A853.svg?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
@@ -17,11 +30,10 @@
 [![CI](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
 [![Deploy web](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml)
 [![Dependency Review](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml)
-[![Dependency Updates](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml)
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
 [![CodeQL](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-85%2E53%25-brightgreen.svg)](docs/CODE_QUALITY.md)
+[![Coverage](https://img.shields.io/badge/Coverage-85%2E45%25-brightgreen.svg)](docs/CODE_QUALITY.md)
 [![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
 [![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
 [![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
@@ -35,7 +47,7 @@
 [![Routing](https://img.shields.io/badge/Routing-GoRouter-00ADD8.svg)](https://pub.dev/packages/go_router)
 [![DI](https://img.shields.io/badge/DI-get__it-8E44AD.svg)](https://pub.dev/packages/get_it)
 [![Persistence](https://img.shields.io/badge/Persistence-Hive-FFB300.svg)](docs/offline_first/hive_schema_migrations.md)
-[![Networking](https://img.shields.io/badge/Networking-Dio%20%7C%20Retrofit-0EA5E9.svg)](docs/plans/dio_retrofit_integration_plan.md)
+[![Networking](https://img.shields.io/badge/Networking-Dio%20%7C%20Retrofit-0EA5E9.svg)](docs/reliability_error_handling_performance.md)
 [![Codegen](https://img.shields.io/badge/Codegen-Freezed%20%7C%20JSON-7C3AED.svg)](docs/architecture/freezed_usage_analysis.md)
 [![Design System](https://img.shields.io/badge/Design-Material%203%20%7C%20Mix-6200EE.svg)](docs/design_system.md)
 [![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
@@ -62,12 +74,6 @@
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
-
-Production-style Flutter reference app for a mobile engineering portfolio:
-feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
-CI-backed validation, and a broad set of integration demos. The repo is
-intentionally proof-oriented: claims in the README link to source, docs, or
-commands instead of relying on generic architecture statements.
 
 Interview / production-ownership walk: see
 [interview showcase §3b](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough)

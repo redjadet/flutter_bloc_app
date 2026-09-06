@@ -4,11 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Large tap-to-hear button (min 48x48 for accessibility).
 class ListenButton extends StatelessWidget {
-  const ListenButton({
-    required this.onPressed,
-    this.compact = false,
-    super.key,
-  });
+  const new({required this.onPressed, this.compact = false, super.key});
 
   final VoidCallback onPressed;
   final bool compact;

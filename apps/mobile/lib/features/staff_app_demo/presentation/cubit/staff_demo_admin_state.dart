@@ -7,12 +7,12 @@ enum StaffDemoAdminStatus { initial, loading, ready, error }
 
 @freezed
 abstract class StaffDemoAdminState with _$StaffDemoAdminState {
-  const factory StaffDemoAdminState({
+  const factory({
     @Default(StaffDemoAdminStatus.initial) StaffDemoAdminStatus status,
     @Default(<StaffDemoTimeEntrySummary>[])
     List<StaffDemoTimeEntrySummary> recentEntries,
     String? errorMessage,
   }) = _StaffDemoAdminState;
 
-  const StaffDemoAdminState._();
+  const new _();
 }

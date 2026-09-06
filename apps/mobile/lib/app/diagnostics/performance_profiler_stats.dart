@@ -5,7 +5,7 @@ library;
 
 /// Widget rebuild information.
 class WidgetRebuildInfo {
-  WidgetRebuildInfo({
+  new({
     required this.name,
     required this.rebuildCount,
     required this.lastRebuildTime,
@@ -18,7 +18,7 @@ class WidgetRebuildInfo {
 
 /// Frame performance statistics.
 class FrameStats {
-  FrameStats({
+  new({
     required this.averageFrameTime,
     required this.maxFrameTime,
     required this.minFrameTime,

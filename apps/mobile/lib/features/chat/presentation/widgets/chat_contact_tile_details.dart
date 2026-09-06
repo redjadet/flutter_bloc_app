@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact
 import 'package:material_ui/material_ui.dart';
 
 class ChatContactTileDetails extends StatelessWidget {
-  const ChatContactTileDetails({
+  const new({
     required this.contact,
     required this.config,
     required this.timeText,
@@ -67,10 +67,7 @@ class ChatContactTileDetails extends StatelessWidget {
                 ),
               ),
               if (contact.unreadCount > 0)
-                _ChatUnreadBadge(
-                  count: contact.unreadCount,
-                  config: config,
-                ),
+                _ChatUnreadBadge(count: contact.unreadCount, config: config),
             ],
           ),
           SizedBox(height: spacing),
@@ -95,10 +92,7 @@ class ChatContactTileDetails extends StatelessWidget {
                   start: config.messageTimeSpacing,
                   top: timeTopPadding,
                 ),
-                child: Text(
-                  timeText,
-                  style: config.timeTextStyle,
-                ),
+                child: Text(timeText, style: config.timeTextStyle),
               ),
             ],
           ),
@@ -109,10 +103,7 @@ class ChatContactTileDetails extends StatelessWidget {
 }
 
 class _ChatUnreadBadge extends StatelessWidget {
-  const _ChatUnreadBadge({
-    required this.count,
-    required this.config,
-  });
+  const new({required this.count, required this.config});
 
   final int count;
   final ChatContactTileConfig config;
@@ -130,13 +121,8 @@ class _ChatUnreadBadge extends StatelessWidget {
     ),
     decoration: BoxDecoration(
       color: config.unreadBackgroundColor,
-      borderRadius: BorderRadius.circular(
-        config.isTabletOrLarger ? 14 : 12,
-      ),
+      borderRadius: BorderRadius.circular(config.isTabletOrLarger ? 14 : 12),
     ),
-    child: Text(
-      count.toString(),
-      style: config.unreadTextStyle,
-    ),
+    child: Text(count.toString(), style: config.unreadTextStyle),
   );
 }

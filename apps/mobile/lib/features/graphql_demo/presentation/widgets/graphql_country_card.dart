@@ -13,7 +13,7 @@ String? _flagImageUrl(String countryCode) {
 }
 
 class GraphqlCountryCard extends StatelessWidget {
-  const GraphqlCountryCard({
+  const new({
     required this.country,
     required this.capitalLabel,
     required this.currencyLabel,
@@ -80,7 +80,7 @@ class GraphqlCountryCard extends StatelessWidget {
 }
 
 class _CountryFlag extends StatelessWidget {
-  const _CountryFlag({
+  const new({
     required this.countryName,
     required this.countryCode,
     required this.emojiFallback,
@@ -146,7 +146,7 @@ class _CountryFlag extends StatelessWidget {
 }
 
 class _DetailChip extends StatelessWidget {
-  const _DetailChip({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -156,10 +156,7 @@ class _DetailChip extends StatelessWidget {
     final theme = Theme.of(context);
     return Box(
       style: AppStyles.chip,
-      child: Text(
-        '$label: $value',
-        style: theme.textTheme.bodySmall,
-      ),
+      child: Text('$label: $value', style: theme.textTheme.bodySmall),
     );
   }
 }

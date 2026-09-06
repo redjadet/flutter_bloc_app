@@ -31,7 +31,7 @@ class IotBleCubit extends IotBleCubitCore
         IotBleCubitScan,
         IotBleCubitConnection,
         IotBleCubitGatt {
-  IotBleCubit({
+  new({
     required super.mockRepository,
     required super.reactiveRepository,
     required super.classicRepository,
@@ -43,7 +43,7 @@ class IotBleCubit extends IotBleCubitCore
 
 abstract class IotBleCubitCore extends Cubit<IotBleState>
     with CubitSubscriptionMixin<IotBleState> {
-  IotBleCubitCore({
+  new({
     required this._mockRepository,
     required this._reactiveRepository,
     required this._classicRepository,

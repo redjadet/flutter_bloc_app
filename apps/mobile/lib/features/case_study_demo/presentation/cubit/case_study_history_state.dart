@@ -6,7 +6,7 @@ enum CaseStudyHistoryStatus { initial, loading, loaded, error }
 
 // check-ignore: freezed_preferred - demo list state (kept lightweight)
 class CaseStudyHistoryState extends Equatable {
-  const CaseStudyHistoryState({
+  const new({
     this.status = CaseStudyHistoryStatus.initial,
     this.records = const <CaseStudyRecord>[],
     this.dataMode = CaseStudyDataMode.unknown,

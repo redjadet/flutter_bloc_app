@@ -47,7 +47,7 @@ abstract class WalletConnectAuthRepository {
 
 /// Exception thrown by WalletConnect operations.
 class WalletConnectException implements Exception {
-  const WalletConnectException(this.message, [this.cause]);
+  const new(this.message, [this.cause]);
 
   final String message;
   final Object? cause;

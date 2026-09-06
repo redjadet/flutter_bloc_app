@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 /// Box name version `realtime_market_v1` pins payload layout for v1 (no
 /// `HiveBoxSchema` entry): breaking shape changes require a new box name.
 class RealtimeMarketLocalDataSource extends HiveRepositoryBase {
-  RealtimeMarketLocalDataSource({required super.hiveService});
+  new({required super.hiveService});
 
   @override
   String get boxName => 'realtime_market_v1';
@@ -21,10 +21,7 @@ class RealtimeMarketLocalDataSource extends HiveRepositoryBase {
     return MarketSnapshotMapper.fromHiveValue(raw);
   }
 
-  Future<void> saveSnapshot(
-    String pairId,
-    MarketFeedSnapshot snapshot,
-  ) async {
+  Future<void> saveSnapshot(String pairId, MarketFeedSnapshot snapshot) async {
     final Box<dynamic> box = await getBox();
     final MarketFeedSnapshot? existing = await loadCached(pairId);
     if (existing != null && existing.updatedAt.isAfter(snapshot.updatedAt)) {

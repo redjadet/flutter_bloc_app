@@ -20,19 +20,17 @@ typedef AppCheckTokenReader = Future<String?> Function({
 /// `unavailable` / `not_configured_or_token_null` (never treated as a crash).
 class FirebaseAppCheckAttestationServiceImpl
     implements FirebaseAppCheckAttestationService {
-  FirebaseAppCheckAttestationServiceImpl({
-    AppCheckTokenReader? tokenReader,
-  }) : _readToken = tokenReader ?? _defaultTokenReader,
-       _isFirebaseConfigured = tokenReader == null
-           ? _defaultFirebaseConfigured
-           : _configuredForInjectedReader;
+  new({AppCheckTokenReader? tokenReader})
+    : _readToken = tokenReader ?? _defaultTokenReader,
+      _isFirebaseConfigured = tokenReader == null
+          ? _defaultFirebaseConfigured
+          : _configuredForInjectedReader;
 
   final AppCheckTokenReader _readToken;
   final bool Function() _isFirebaseConfigured;
 
-  static Future<String?> _defaultTokenReader({
-    required bool forceRefresh,
-  }) => FirebaseAppCheck.instance.getToken(forceRefresh);
+  static Future<String?> _defaultTokenReader({required bool forceRefresh}) =>
+      FirebaseAppCheck.instance.getToken(forceRefresh);
 
   static bool _defaultFirebaseConfigured() => Firebase.apps.isNotEmpty;
 

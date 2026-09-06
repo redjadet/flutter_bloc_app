@@ -21,6 +21,27 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-04 - Hive mutation durability needs an early gate
+
+- What went wrong:
+  Social Feed Hive-write failure regressions lived in the repository suite, but
+  focused checklist routing selected only page tests; their removal or a repeat
+  defect could reach the slower coverage phase.
+- How it was fixed:
+  Routed Social Feed data changes through the existing early regression suite
+  and made the existing offline-first guard require queued and direct
+  like/comment Hive-failure regressions by name.
+- Pattern:
+  A mutation is not durable merely because remote apply succeeded; local
+  persistence failure must retain intent, use bounded retry, and stay covered
+  on both queued replay and direct-online paths.
+- Preventive rule:
+  For offline-first mutation persistence, extend the existing repository anchor
+  and guard inventory before relying on broad coverage or later CI phases.
+- Evidence or affected files:
+  `apps/mobile/test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart`;
+  `tool/check_regression_guards.sh`; `tool/check_offline_first_remote_merge.sh`.
+
 ### 2026-09-02 - Fire-and-forget cubit init must not rethrow
 
 - What went wrong:

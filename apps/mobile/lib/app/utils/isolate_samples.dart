@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 /// The helpers below intentionally keep the public API simple so the
 /// accompanying tests can focus on multi-isolate behavior.
 class IsolateSamples {
-  const IsolateSamples._();
+  const new _();
 
   /// Computes the `n`th Fibonacci number on a background isolate.
   ///
@@ -39,7 +39,7 @@ class IsolateSamples {
     Duration delay = const Duration(milliseconds: 120),
   }) async {
     if (kIsWeb) {
-      return Future.wait<int>([
+      return await Future.wait<int>([
         for (final int value in values)
           Future<int>.delayed(delay, () => value * 2),
       ]);
@@ -48,13 +48,10 @@ class IsolateSamples {
     final List<Future<int>> tasks = <Future<int>>[
       for (final int value in values) _delayedDouble(value, delay),
     ];
-    return Future.wait(tasks);
+    return await Future.wait(tasks);
   }
 
-  static Future<int> _delayedDouble(
-    int value,
-    Duration delay,
-  ) async {
+  static Future<int> _delayedDouble(int value, Duration delay) async {
     final ReceivePort receivePort = ReceivePort();
     await Isolate.spawn<_DelayMessage>(
       _delayEntryPoint,
@@ -65,14 +62,14 @@ class IsolateSamples {
 }
 
 class _FibonacciMessage {
-  const _FibonacciMessage(this.n, this.replyPort);
+  const new(this.n, this.replyPort);
 
   final int n;
   final SendPort replyPort;
 }
 
 class _DelayMessage {
-  const _DelayMessage(this.value, this.delay, this.replyPort);
+  const new(this.value, this.delay, this.replyPort);
 
   final int value;
   final Duration delay;

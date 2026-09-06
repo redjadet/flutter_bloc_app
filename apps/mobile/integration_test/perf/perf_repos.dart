@@ -7,9 +7,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 
-Future<void> overrideChartRepositoryForPerf({
-  required int pointCount,
-}) async {
+Future<void> overrideChartRepositoryForPerf({required int pointCount}) async {
   if (getIt.isRegistered<ChartRepository>()) {
     await getIt.unregister<ChartRepository>();
   }
@@ -18,9 +16,7 @@ Future<void> overrideChartRepositoryForPerf({
   );
 }
 
-Future<void> overrideTodoRepositoryForPerf({
-  required int itemCount,
-}) async {
+Future<void> overrideTodoRepositoryForPerf({required int itemCount}) async {
   if (getIt.isRegistered<TodoRepository>()) {
     await getIt.unregister<TodoRepository>();
   }
@@ -30,7 +26,7 @@ Future<void> overrideTodoRepositoryForPerf({
 }
 
 class _PerfChartRepository extends ChartRepository {
-  _PerfChartRepository({required int pointCount})
+  new({required int pointCount})
     : _points = List<ChartPoint>.generate(
         pointCount,
         (i) => ChartPoint(
@@ -55,7 +51,7 @@ class _PerfChartRepository extends ChartRepository {
 class _PerfTodoRepository
     with TodoSyncDiagnosticsNoPendingSync
     implements TodoRepository {
-  _PerfTodoRepository({required int itemCount})
+  new({required int itemCount})
     : _items = List<TodoItem>.generate(
         itemCount,
         (i) => TodoItem.create(title: 'Perf seed todo $i'),

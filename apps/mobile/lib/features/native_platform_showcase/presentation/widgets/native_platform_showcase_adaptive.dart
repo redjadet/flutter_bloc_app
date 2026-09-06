@@ -5,14 +5,12 @@ import 'package:material_ui/material_ui.dart';
 
 /// Presentation-only platform chrome for the native platform showcase.
 class NativePlatformShowcaseAdaptive {
-  const NativePlatformShowcaseAdaptive._();
+  const new _();
 
   static bool isCupertino(BuildContext context) =>
       PlatformAdaptive.isCupertino(context);
 
-  static IconData capabilityIcon(
-    NativeCapabilityKind kind,
-  ) => switch (kind) {
+  static IconData capabilityIcon(NativeCapabilityKind kind) => switch (kind) {
     NativeCapabilityKind.nativeViewEmbedding => Icons.view_in_ar_outlined,
     NativeCapabilityKind.platformPackageManager => Icons.inventory_2_outlined,
     NativeCapabilityKind.nativeCodeInterop => Icons.integration_instructions,
@@ -73,11 +71,7 @@ class NativePlatformShowcaseAdaptive {
 }
 
 class _MaterialSummaryRow extends StatelessWidget {
-  const _MaterialSummaryRow({
-    required this.label,
-    required this.value,
-    required this.theme,
-  });
+  const new({required this.label, required this.value, required this.theme});
 
   final String label;
   final String value;
@@ -88,15 +82,9 @@ class _MaterialSummaryRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          label,
-          style: theme.textTheme.labelLarge,
-        ),
+        Text(label, style: theme.textTheme.labelLarge),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.bodyLarge,
-        ),
+        Text(value, style: theme.textTheme.bodyLarge),
       ],
     );
   }

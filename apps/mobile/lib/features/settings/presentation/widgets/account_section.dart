@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AccountSection extends StatelessWidget {
-  const AccountSection({super.key, this.authRepository});
+  const new({super.key, this.authRepository});
 
   final AuthRepository? authRepository;
 
@@ -121,9 +121,7 @@ class AccountSection extends StatelessWidget {
                         SizedBox(height: context.responsiveGapS),
                         const SizedBox(
                           width: double.infinity,
-                          child: SignOutButton(
-                            variant: ButtonVariant.outlined,
-                          ),
+                          child: SignOutButton(variant: ButtonVariant.outlined),
                         ),
                       ],
                     );

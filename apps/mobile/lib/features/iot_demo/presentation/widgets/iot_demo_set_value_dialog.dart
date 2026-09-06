@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// [State.dispose] after the route is torn down, avoiding
 /// "used after being disposed".
 class IotDemoSetValueDialogBody extends StatefulWidget {
-  const IotDemoSetValueDialogBody({
+  const new({
     required this.initialValue,
     required this.l10n,
     required this.minValue,

@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ChartContentList extends StatelessWidget {
-  const ChartContentList({
+  const new({
     required this.l10n,
     required this.points,
     required this.dateFormat,

@@ -22,7 +22,7 @@ part 'offline_first_staff_demo_timeclock_repository_sync.part.dart';
 
 class OfflineFirstStaffDemoTimeclockRepository
     implements StaffDemoTimeclockRepository, SyncableRepository {
-  OfflineFirstStaffDemoTimeclockRepository({
+  new({
     required this._authRepository,
     required this._firestore,
     required this._shiftRepository,

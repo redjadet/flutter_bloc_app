@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterDisplayCard extends StatelessWidget {
-  const CounterDisplayCard({
+  const new({
     required this.count,
     required this.isActive,
     required this.lastChanged,

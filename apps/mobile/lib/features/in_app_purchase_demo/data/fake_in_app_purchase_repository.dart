@@ -12,7 +12,7 @@ import 'package:meta/meta.dart';
 
 class FakeInAppPurchaseRepository
     implements InAppPurchaseRepository, IapFakeOutcomePort {
-  FakeInAppPurchaseRepository({
+  new({
     required this._timerService,
     IapDemoCreditsStore? creditsStore,
     this.delay = const Duration(milliseconds: 450),
@@ -86,10 +86,7 @@ class FakeInAppPurchaseRepository
 
   /// Simulates a platform purchase-stream failure for cubit regression tests.
   @visibleForTesting
-  void simulatePurchaseStreamError(
-    Object error, [
-    StackTrace? stackTrace,
-  ]) {
+  void simulatePurchaseStreamError(Object error, [StackTrace? stackTrace]) {
     _resultsController.addError(error, stackTrace ?? StackTrace.current);
   }
 

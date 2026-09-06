@@ -9,11 +9,7 @@ import 'package:networking/networking.dart' show RetryNotification;
 
 /// Listens to [RetryNotification] stream and shows a SnackBar with retry action.
 class RetrySnackBarListener extends StatefulWidget {
-  const RetrySnackBarListener({
-    required this.notifications,
-    required this.child,
-    super.key,
-  });
+  const new({required this.notifications, required this.child, super.key});
 
   final Stream<RetryNotification> notifications;
   final Widget child;

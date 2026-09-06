@@ -12,7 +12,7 @@ import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 /// Handles the complexity of watching Hive box changes and emitting snapshots
 /// to stream listeners, including error handling and concurrent operation prevention.
 class HiveCounterRepositoryWatchHelper {
-  HiveCounterRepositoryWatchHelper({
+  new({
     required this.loadSnapshot,
     required this.emptySnapshot,
     required this.getBox,
@@ -116,11 +116,7 @@ class HiveCounterRepositoryWatchHelper {
           }
         },
         onError: (Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'Hive box watch error',
-            error,
-            stackTrace,
-          );
+          AppLogger.error('Hive box watch error', error, stackTrace);
           // Cancel subscription on error to prevent repeated errors
           // Use unawaited since we're in an error handler
           final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
@@ -132,11 +128,7 @@ class HiveCounterRepositoryWatchHelper {
       );
       _subscriptionManager.register(_boxSubscription);
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'Failed to start Hive box watch',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('Failed to start Hive box watch', error, stackTrace);
       // Reset subscription on failure to allow retry
       _boxSubscription = null;
       _scheduleBoxWatchRestart();

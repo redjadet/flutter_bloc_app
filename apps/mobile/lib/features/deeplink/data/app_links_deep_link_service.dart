@@ -8,8 +8,7 @@ import 'package:meta/meta.dart';
 
 /// Deep link service backed by the `app_links` plugin.
 class AppLinksDeepLinkService implements DeepLinkService {
-  AppLinksDeepLinkService({AppLinksApi? api})
-    : _api = api ?? DefaultAppLinksApi();
+  new({AppLinksApi? api}) : _api = api ?? DefaultAppLinksApi();
 
   final AppLinksApi _api;
   static bool _pluginAvailable = true;
@@ -113,7 +112,7 @@ abstract class AppLinksApi {
 }
 
 class DefaultAppLinksApi implements AppLinksApi {
-  DefaultAppLinksApi() : _appLinks = AppLinks();
+  new() : _appLinks = AppLinks();
 
   final AppLinks _appLinks;
 

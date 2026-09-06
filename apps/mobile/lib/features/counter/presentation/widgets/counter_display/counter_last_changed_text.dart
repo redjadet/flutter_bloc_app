@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterLastChangedText extends StatelessWidget {
-  const CounterLastChangedText({
+  const new({
     required this.lastChanged,
     required this.l10n,
     required this.textTheme,

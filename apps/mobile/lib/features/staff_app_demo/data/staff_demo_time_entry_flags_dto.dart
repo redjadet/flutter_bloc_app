@@ -9,7 +9,7 @@ class const StaffDemoTimeEntryFlagsDto({
   required final bool duplicatePunchAttempt,
   required final bool deviceClockSkewSuspected,
 }) {
-  StaffDemoTimeEntryFlagsDto.fromDomain(StaffDemoTimeEntryFlags flags)
+  new fromDomain(StaffDemoTimeEntryFlags flags)
     : this(
         outsideGeofence: flags.outsideGeofence,
         earlyClockIn: flags.earlyClockIn,
@@ -19,9 +19,7 @@ class const StaffDemoTimeEntryFlagsDto({
         deviceClockSkewSuspected: flags.deviceClockSkewSuspected,
       );
 
-  factory StaffDemoTimeEntryFlagsDto.fromJson(
-    Map<String, dynamic> json,
-  ) => StaffDemoTimeEntryFlagsDto(
+  factory fromJson(Map<String, dynamic> json) => StaffDemoTimeEntryFlagsDto(
     outsideGeofence: (json['outsideGeofence'] as bool?) ?? false,
     earlyClockIn: (json['earlyClockIn'] as bool?) ?? false,
     locationInsufficient: (json['locationInsufficient'] as bool?) ?? false,

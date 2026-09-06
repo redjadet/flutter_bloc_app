@@ -19,7 +19,7 @@ part 'staff_demo_messages_cubit_actions.part.dart';
 
 class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
     with CubitSubscriptionMixin<StaffDemoMessagesState> {
-  StaffDemoMessagesCubit({
+  new({
     required this._authRepository,
     required this._inboxRepository,
     required this._messagingRepository,

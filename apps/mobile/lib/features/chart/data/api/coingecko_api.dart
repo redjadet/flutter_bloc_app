@@ -8,7 +8,7 @@ part 'coingecko_api.g.dart';
 /// Parsing and cache remain in the chart repository.
 @RestApi(baseUrl: 'https://api.coingecko.com/api/v3/')
 abstract class CoingeckoApi {
-  factory CoingeckoApi(Dio dio, {String? baseUrl}) = _CoingeckoApi;
+  factory(Dio dio, {String? baseUrl}) = _CoingeckoApi;
 
   @GET('coins/bitcoin/market_chart')
   @DioResponseType(ResponseType.bytes)

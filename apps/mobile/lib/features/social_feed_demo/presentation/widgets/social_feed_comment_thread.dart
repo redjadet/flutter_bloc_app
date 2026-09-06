@@ -4,10 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedCommentThread extends StatelessWidget {
-  const SocialFeedCommentThread({
-    required this.comments,
-    super.key,
-  });
+  const new({required this.comments, super.key});
 
   final List<SocialFeedVisibleComment> comments;
 

@@ -1,7 +1,9 @@
-# Harness Auto-Maintenance (Cursor/Codex)
+# Harness Auto-Maintenance (Codex/Cursor)
 
-Agents keep the Cursor/Codex harness at max score by running scoped gates and
-fixing owner wiring in the same turn. Canon: [`harness_scorecard.md`](harness_scorecard.md),
+Agents keep the Codex/Cursor harness at max score by running scoped gates and
+fixing owner wiring in the same turn. Other AI agents follow the same repo
+canon; host-parity claims remain limited to Codex and Cursor. Canon:
+[`harness_scorecard.md`](harness_scorecard.md),
 [`ai_failure_risks.md`](ai_failure_risks.md) (`RISK-HARNESS-SCORE-DROP`).
 Better model choice helps, but repo value comes from harness structure:
 prompts, evaluators, tests, runtime checks, and feedback loops.

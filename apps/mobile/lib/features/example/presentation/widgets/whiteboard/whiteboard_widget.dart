@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 /// - Clear and undo functionality
 /// - Responsive design
 class WhiteboardWidget extends StatefulWidget {
-  const WhiteboardWidget({super.key});
+  const new({super.key});
 
   @override
   State<WhiteboardWidget> createState() => _WhiteboardWidgetState();
@@ -161,20 +161,16 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
               _endStroke();
             },
             child: LayoutBuilder(
-              builder:
-                  (
-                    context,
-                    constraints,
-                  ) => RepaintBoundary(
-                    child: CustomPaint(
-                      key: ValueKey<int>(_version),
-                      painter: WhiteboardPainter(
-                        strokes: allStrokes,
-                        backgroundColor: colors.surface,
-                      ),
-                      size: constraints.biggest,
-                    ),
+              builder: (context, constraints) => RepaintBoundary(
+                child: CustomPaint(
+                  key: ValueKey<int>(_version),
+                  painter: WhiteboardPainter(
+                    strokes: allStrokes,
+                    backgroundColor: colors.surface,
                   ),
+                  size: constraints.biggest,
+                ),
+              ),
             ),
           ),
         ),

@@ -1,28 +1,26 @@
 part of 'staff_app_demo_proof_page.dart';
 
 class _ProofStatusBanner extends StatelessWidget {
-  const _ProofStatusBanner({required this.state});
+  const new({required this.state});
 
   final StaffDemoProofState state;
 
   /// Shared with [StaffAppDemoProofPage] so the banner can be pinned outside
   /// the scroll view only when it has content.
-  static String? messageFor(
-    StaffDemoProofState state,
-    AppLocalizations l10n,
-  ) => switch (state.status) {
-    StaffDemoProofStatus.initial || StaffDemoProofStatus.editing => null,
-    StaffDemoProofStatus.submitting => l10n.staffDemoSubmitting,
-    StaffDemoProofStatus.success =>
-      (state.lastProofId ?? '').trim().isEmpty
-          ? l10n.staffDemoProofSubmittedEmpty
-          : l10n.staffDemoProofSubmittedWithId(
-              (state.lastProofId ?? '').trim(),
-            ),
-    StaffDemoProofStatus.offlineQueued => l10n.staffDemoProofOfflineQueued,
-    StaffDemoProofStatus.error =>
-      state.errorMessage ?? l10n.staffDemoProofFailed,
-  };
+  static String? messageFor(StaffDemoProofState state, AppLocalizations l10n) =>
+      switch (state.status) {
+        StaffDemoProofStatus.initial || StaffDemoProofStatus.editing => null,
+        StaffDemoProofStatus.submitting => l10n.staffDemoSubmitting,
+        StaffDemoProofStatus.success =>
+          (state.lastProofId ?? '').trim().isEmpty
+              ? l10n.staffDemoProofSubmittedEmpty
+              : l10n.staffDemoProofSubmittedWithId(
+                  (state.lastProofId ?? '').trim(),
+                ),
+        StaffDemoProofStatus.offlineQueued => l10n.staffDemoProofOfflineQueued,
+        StaffDemoProofStatus.error =>
+          state.errorMessage ?? l10n.staffDemoProofFailed,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +48,7 @@ class _ProofStatusBanner extends StatelessWidget {
 }
 
 class _PhotoSection extends StatelessWidget {
-  const _PhotoSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -132,20 +130,18 @@ class _PhotoSection extends StatelessWidget {
 }
 
 class _PhotoChip extends StatelessWidget {
-  const _PhotoChip({required this.path, required this.onRemove});
+  const new({required this.path, required this.onRemove});
 
   final String path;
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) => InputChip(
-    label: Text(path.split('/').last),
-    onDeleted: onRemove,
-  );
+  Widget build(BuildContext context) =>
+      InputChip(label: Text(path.split('/').last), onDeleted: onRemove);
 }
 
 class _SubmitSection extends StatefulWidget {
-  const _SubmitSection();
+  const new();
 
   @override
   State<_SubmitSection> createState() => _SubmitSectionState();

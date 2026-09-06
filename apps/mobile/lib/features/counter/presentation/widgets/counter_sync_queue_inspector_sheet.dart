@@ -4,11 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterSyncQueueInspectorSheet extends StatelessWidget {
-  const CounterSyncQueueInspectorSheet({
-    required this.entries,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.entries, required this.l10n, super.key});
 
   final List<CounterSyncQueueEntry> entries;
   final AppLocalizations l10n;
@@ -50,10 +46,8 @@ class CounterSyncQueueInspectorSheet extends StatelessWidget {
                     ),
                   );
                 },
-                separatorBuilder: (
-                  itemContext,
-                  _,
-                ) => SizedBox(height: context.responsiveGapS),
+                separatorBuilder: (itemContext, _) =>
+                    SizedBox(height: context.responsiveGapS),
                 itemCount: entries.length,
               ),
             ),

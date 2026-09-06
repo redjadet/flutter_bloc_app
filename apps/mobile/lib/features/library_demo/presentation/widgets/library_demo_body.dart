@@ -12,7 +12,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LibraryDemoBody extends StatelessWidget {
-  const LibraryDemoBody({
+  const new({
     required this.isGridView,
     required this.onGridPressed,
     required this.onListPressed,
@@ -146,9 +146,7 @@ class LibraryDemoBody extends StatelessWidget {
                 onListPressed: onListPressed,
                 trailing: [
                   SizedBox(height: sectionGap),
-                  ...assets.map(
-                    (asset) => LibraryAssetTile(asset: asset),
-                  ),
+                  ...assets.map((asset) => LibraryAssetTile(asset: asset)),
                 ],
               ),
             ],

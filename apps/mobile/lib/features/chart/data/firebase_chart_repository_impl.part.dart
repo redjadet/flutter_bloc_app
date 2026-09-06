@@ -1,7 +1,7 @@
 part of 'firebase_chart_repository.dart';
 
 class FirebaseChartRepository implements ChartRemoteRepository {
-  FirebaseChartRepository({
+  new({
     this._auth,
     this._functions,
     this._firestore,
@@ -62,7 +62,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
     final existing = _inFlightFetch;
-    if (existing != null) return existing;
+    if (existing != null) return await existing;
 
     final auth = _safeAuth;
     if (auth == null) {
@@ -153,9 +153,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
     throw ChartDataException('Failed to load chart data from Firebase');
   }
 
-  static String _directFallbackDebugMessage(
-    _FirebaseChartFetchAttempt cloud,
-  ) {
+  static String _directFallbackDebugMessage(_FirebaseChartFetchAttempt cloud) {
     final _FirebaseChartFetchFailure? failure = cloud.failure;
     return failure != null
         ? 'using direct CoinGecko after cloud failure (${failure.label})'
@@ -167,9 +165,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
       final functions = _safeFunctions;
       if (functions == null) {
         return const _FirebaseChartFetchAttempt(
-          failure: _FirebaseChartFetchFailure(
-            label: 'functions unavailable',
-          ),
+          failure: _FirebaseChartFetchFailure(label: 'functions unavailable'),
         );
       }
       final callable = functions.httpsCallable(_callableName);
@@ -220,9 +216,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
         final firestore = _safeFirestore;
         if (firestore == null) {
           return const _FirebaseChartFetchAttempt(
-            failure: _FirebaseChartFetchFailure(
-              label: 'firestore unavailable',
-            ),
+            failure: _FirebaseChartFetchFailure(label: 'firestore unavailable'),
           );
         }
         final DocumentSnapshot<Map<String, dynamic>> snap = await firestore
@@ -273,17 +267,14 @@ class FirebaseChartRepository implements ChartRemoteRepository {
 }
 
 final class _FirebaseChartFetchAttempt {
-  const _FirebaseChartFetchAttempt({
-    this.points = const <ChartPoint>[],
-    this.failure,
-  });
+  const new({this.points = const <ChartPoint>[], this.failure});
 
   final List<ChartPoint> points;
   final _FirebaseChartFetchFailure? failure;
 }
 
 final class _FirebaseChartFetchFailure {
-  const _FirebaseChartFetchFailure({
+  const new({
     required this.label,
     this.error,
     this.stackTrace,

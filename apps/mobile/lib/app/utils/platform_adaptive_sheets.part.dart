@@ -1,7 +1,7 @@
 part of 'platform_adaptive_sheets.dart';
 
 class _MaterialPickerSheetContent<T> extends StatelessWidget {
-  const _MaterialPickerSheetContent({
+  const new({
     required this.items,
     required this.selectedItem,
     required this.itemLabel,
@@ -62,7 +62,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
 }
 
 class _MaterialPickerItemTile<T> extends StatelessWidget {
-  const _MaterialPickerItemTile({
+  const new({
     required this.item,
     required this.isSelected,
     required this.itemLabel,
@@ -88,10 +88,7 @@ class _MaterialPickerItemTile<T> extends StatelessWidget {
         _ => Text(itemLabel(item)),
       },
       trailing: isSelected
-          ? Icon(
-              Icons.check,
-              color: theme.colorScheme.primary,
-            )
+          ? Icon(Icons.check, color: theme.colorScheme.primary)
           : null,
       onTap: () => NavigationUtils.maybePop(context, result: item),
     );
@@ -103,7 +100,7 @@ class _MaterialPickerItemTile<T> extends StatelessWidget {
 /// Controllers must be created in initState and disposed in dispose per
 /// Flutter ownership rules.
 class _CupertinoPickerSheetContent<T> extends StatefulWidget {
-  const _CupertinoPickerSheetContent({
+  const new({
     required this.items,
     required this.selectedItem,
     required this.itemLabel,
@@ -155,9 +152,7 @@ class _CupertinoPickerSheetContentState<T>
     return Container(
       height: 250,
       padding: const EdgeInsets.only(top: 6),
-      margin: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
+      margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       color: CupertinoColors.systemBackground.resolveFrom(context),
       child: SafeArea(
         top: false,
@@ -166,10 +161,7 @@ class _CupertinoPickerSheetContentState<T>
             if (widget.title case final t?)
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text(
-                  t,
-                  style: theme.textTheme.titleMedium,
-                ),
+                child: Text(t, style: theme.textTheme.titleMedium),
               ),
             Expanded(
               child: CupertinoPicker(
@@ -182,20 +174,18 @@ class _CupertinoPickerSheetContentState<T>
                     });
                   }
                 },
-                children: widget.items.map(
-                  (item) {
-                    final Object? keyValue = widget.itemKey?.call(item) ?? item;
-                    return KeyedSubtree(
-                      key: ValueKey<Object?>(keyValue),
-                      child: Center(
-                        child: switch (widget.itemBuilder) {
-                          final fn? => fn(context, item),
-                          _ => Text(widget.itemLabel(item)),
-                        },
-                      ),
-                    );
-                  },
-                ).toList(),
+                children: widget.items.map((item) {
+                  final Object? keyValue = widget.itemKey?.call(item) ?? item;
+                  return KeyedSubtree(
+                    key: ValueKey<Object?>(keyValue),
+                    child: Center(
+                      child: switch (widget.itemBuilder) {
+                        final fn? => fn(context, item),
+                        _ => Text(widget.itemLabel(item)),
+                      },
+                    ),
+                  );
+                }).toList(),
               ),
             ),
             ResponsiveActionOverflowBar(

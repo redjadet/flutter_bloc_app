@@ -13,7 +13,7 @@ import 'package:networking/networking.dart';
 ///
 /// Calls domain use cases only — no `MethodChannel` / Firebase imports here.
 class NativeSecurityShowcaseCubit extends Cubit<NativeSecurityShowcaseState> {
-  NativeSecurityShowcaseCubit({
+  new({
     required this._runOperation,
     required this._probeAppCheck,
     required this._loadCertSummary,

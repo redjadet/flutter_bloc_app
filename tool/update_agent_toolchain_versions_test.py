@@ -174,7 +174,6 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
         workflows.mkdir(parents=True)
         for name in (
             "ci.yml",
-            "dependency-updates.yml",
             "drift.yml",
             "deploy_web.yml",
             "mobile_release_dry_run.yml",

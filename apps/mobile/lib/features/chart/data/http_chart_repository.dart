@@ -8,10 +8,8 @@ import 'package:meta/meta.dart';
 import 'package:utilities/utilities.dart';
 
 class HttpChartRepository extends ChartRepository {
-  HttpChartRepository({
-    required this._api,
-    DateTime Function()? now,
-  }) : _now = now ?? DateTime.now;
+  new({required this._api, DateTime Function()? now})
+    : _now = now ?? DateTime.now;
 
   static const Map<String, String> _marketChartQuery = <String, String>{
     'vs_currency': 'usd',
@@ -79,10 +77,7 @@ class HttpChartRepository extends ChartRepository {
     }
   }
 
-  List<ChartPoint> _cache(
-    List<ChartPoint> data,
-    DateTime fetchedAt,
-  ) {
+  List<ChartPoint> _cache(List<ChartPoint> data, DateTime fetchedAt) {
     final List<ChartPoint> cached = List<ChartPoint>.unmodifiable(data);
     _cached = cached;
     _lastFetched = fetchedAt;

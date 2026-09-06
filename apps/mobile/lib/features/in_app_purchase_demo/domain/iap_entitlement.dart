@@ -4,7 +4,7 @@ part 'iap_entitlement.freezed.dart';
 
 @freezed
 abstract class IapEntitlements with _$IapEntitlements {
-  const factory IapEntitlements({
+  const factory({
     @Default(0) int credits,
     @Default(false) bool isPremiumOwned,
     @Default(false) bool isSubscriptionActive,

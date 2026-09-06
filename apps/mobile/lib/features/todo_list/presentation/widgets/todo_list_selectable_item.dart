@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Rebuilds only this row's selection chrome for selection-only state changes.
 class TodoListSelectableItem extends StatelessWidget {
-  const TodoListSelectableItem({
+  const new({
     required this.item,
     required this.showDragHandle,
     required this.onItemSelectionChanged,

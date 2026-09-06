@@ -29,7 +29,7 @@ then apply this repo's architecture, package, migration, and validation rules.
 | DI / routing / app startup | [`architecture_details.md`](architecture_details.md), [`app_initialization_and_feature_control.md`](architecture/app_initialization_and_feature_control.md) |
 | UI/design tokens | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md) |
 | Reusable widgets / responsive / cross-platform UI | [`design_system.md`](design_system.md) § Reusable widgets, § Responsive layout, § Cross-platform form factors; [`ui_ux_responsive_review.md`](review/ui_ux_responsive_review.md) |
-| Agent execution invariants ([`AGENTS.md`](../AGENTS.md) § Must Keep) | This file § Current Caveat Shortlist; [`agent_knowledge_base.md`](agent_knowledge_base.md) § Final Agent Contract |
+| Agent execution and safety | [`agent_knowledge_base.md`](agent_knowledge_base.md) § Final Agent Contract; [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md) |
 | Validation lanes | [`validation_scripts.md`](validation_scripts.md), [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) |
 | Testing strategy | [`testing_overview.md`](testing_overview.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md) |
 | Official skill setup | [`agent_environment_setup.md`](agent_environment_setup.md) |
@@ -60,7 +60,7 @@ the answer.
   dependency/toolchain upgrade flow.
 - **Supported platforms:** iOS, Android, Web, Desktop (macOS). Shared
   presentation, plugins, routing, and bootstrap changes must account for all
-  four — not only the host under debug (`flutter-cross-platform-modern`).
+  four — not only the host under debug.
 - **Melos app shell (Phase 5):** `apps/mobile/lib/` is a thin shell
   (`app/**`, `features/**`, `l10n/**`, `main*.dart`) — no `core/` or `shared/`
   trees. DI registration + composition root live under
@@ -83,8 +83,10 @@ the answer.
 - Feature skeleton is Clean Architecture (`presentation/` → `domain/` ← `data/`);
   MVVM naming applies in presentation only (Cubit/BLoC = ViewModel and
   **presentation state management** — not domain or data).
-- Active debug bugs: use DTD `get_runtime_errors` before claiming UI fixes;
-  unfamiliar pub APIs: read pinned source + MCP docs before coding.
+- Active debug bugs require fresh runtime evidence; unfamiliar package APIs
+  require current documentation plus pinned source. Owners:
+  [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md),
+  [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md).
 - Shared state lives in Cubit/BLoC; use existing type-safe access/selectors
   before new state patterns.
 - GoRouter, DI, l10n, codegen, and route gates are coupled surfaces; update and

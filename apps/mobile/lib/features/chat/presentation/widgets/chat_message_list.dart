@@ -15,7 +15,7 @@ import 'package:material_ui/material_ui.dart';
 part 'chat_message_list.freezed.dart';
 
 class ChatMessageList extends StatelessWidget {
-  const ChatMessageList({
+  const new({
     required this.controller,
     required this.errorNotificationService,
     super.key,
@@ -40,13 +40,11 @@ class ChatMessageList extends StatelessWidget {
               : err;
           await errorNotificationService
               .showSnackBar(context, snackText)
-              .whenComplete(
-                () {
-                  if (!chatCubit.isClosed) {
-                    chatCubit.clearError();
-                  }
-                },
-              );
+              .whenComplete(() {
+                if (!chatCubit.isClosed) {
+                  chatCubit.clearError();
+                }
+              });
         }
         if (state.hasMessages) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -160,7 +158,7 @@ Key _chatMessageKey(ChatMessage message, int index) {
 
 @freezed
 abstract class _ChatListData with _$ChatListData {
-  const factory _ChatListData({
+  const factory({
     required bool hasMessages,
     required bool isLoading,
     required List<ChatMessage> messages,

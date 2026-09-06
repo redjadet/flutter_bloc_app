@@ -9,7 +9,7 @@ bool _defaultAllowLocalFallback() => false;
 /// Picks Supabase Edge first when the user session allows, then optional direct
 /// HF fallback for allowed Edge failures while **online** only.
 class CompositeChatRepository implements ChatRepository {
-  CompositeChatRepository({
+  new({
     required ChatRepository supabaseRepository,
     required HuggingfaceChatRepository directRepository,
     required NetworkStatusService networkStatusService,
@@ -155,7 +155,7 @@ class CompositeChatRepository implements ChatRepository {
         );
       } on ChatRemoteFailureException catch (e) {
         if (_canUseDirect && _shouldEdgeFailureFallbackToDirect(e)) {
-          return _sendViaDirect(
+          return await _sendViaDirect(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
@@ -169,7 +169,7 @@ class CompositeChatRepository implements ChatRepository {
     }
 
     if (_canUseDirect) {
-      return _sendViaDirect(
+      return await _sendViaDirect(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,

@@ -13,7 +13,7 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Firebase Realtime Database backed leaf [CounterDataSource].
 class RealtimeDatabaseCounterRepository implements CounterRepository {
-  RealtimeDatabaseCounterRepository({
+  new({
     FirebaseDatabase? database,
     DatabaseReference? counterRef,
     FirebaseAuth? auth,
@@ -29,7 +29,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   final FirebaseAuth _auth;
 
   @override
-  Future<CounterSnapshot> load() async => _executeForUser<CounterSnapshot>(
+  Future<CounterSnapshot> load() => _executeForUser<CounterSnapshot>(
     operation: 'load',
     action: (user) async {
       AppLogger.debugInDebugMode(

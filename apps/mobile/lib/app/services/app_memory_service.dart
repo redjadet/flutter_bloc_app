@@ -12,7 +12,7 @@ import 'package:utilities/utilities.dart';
 /// Optional `onChartMemoryTrim` is wired from the composition root (DI) so
 /// this library does not depend on feature implementations.
 class AppMemoryService {
-  AppMemoryService({
+  new({
     AppImageCacheManager? imageCacheManager,
     Future<void> Function(AppMemoryTrimLevel level)? onImageCacheTrim,
     Future<void> Function(AppMemoryTrimLevel level)? onChartMemoryTrim,
@@ -34,9 +34,7 @@ class AppMemoryService {
   Future<void>? _trimInFlight;
   AppMemoryTrimLevel? _queuedLevel;
 
-  static Future<void> _missingImageCacheTrim(
-    AppMemoryTrimLevel level,
-  ) async {
+  static Future<void> _missingImageCacheTrim(AppMemoryTrimLevel level) async {
     throw StateError('Provide either imageCacheManager or onImageCacheTrim.');
   }
 
@@ -89,20 +87,14 @@ class AppMemoryService {
       'ResilientSvgAssetImage.trimCache',
       () => ResilientSvgAssetImage.trimCache(level: level),
     );
-    await _runSafely(
-      'chartMemoryTrim',
-      () => _onChartMemoryTrim(level),
-    );
+    await _runSafely('chartMemoryTrim', () => _onChartMemoryTrim(level));
     await _runSafely(
       'AppImageCacheManager.onTrim',
       () => _onImageCacheTrim(level),
     );
   }
 
-  Future<void> _runSafely(
-    String label,
-    Future<void> Function() action,
-  ) async {
+  Future<void> _runSafely(String label, Future<void> Function() action) async {
     try {
       await action();
     } on Object catch (error, stackTrace) {

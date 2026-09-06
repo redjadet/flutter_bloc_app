@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 
 /// Hive-backed drafts and records for the case-study demo (dedicated box).
 class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
-  CaseStudyHiveLocalRepository({required this._hiveService});
+  new({required this._hiveService});
 
   static const String boxName = 'case_study_demo';
   static const String schemaKey = 'schemaVersion';
@@ -57,10 +57,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
   }
 
   @override
-  Future<void> saveDraft(
-    String userId,
-    CaseStudyDraft draft,
-  ) async {
+  Future<void> saveDraft(String userId, CaseStudyDraft draft) async {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();
@@ -86,10 +83,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
   }
 
   @override
-  Future<CaseStudyRecord?> getRecord(
-    String userId,
-    String recordId,
-  ) async {
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId) async {
     final List<CaseStudyRecord> list = await loadRecords(userId);
     for (final CaseStudyRecord r in list) {
       if (r.id == recordId) return r;
@@ -98,10 +92,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
   }
 
   @override
-  Future<void> saveRecords(
-    String userId,
-    List<CaseStudyRecord> records,
-  ) async {
+  Future<void> saveRecords(String userId, List<CaseStudyRecord> records) async {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();

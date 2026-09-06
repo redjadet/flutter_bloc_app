@@ -4,13 +4,9 @@ part 'genui_demo_events.freezed.dart';
 
 @freezed
 sealed class GenUiSurfaceEvent with _$GenUiSurfaceEvent {
-  const GenUiSurfaceEvent._();
+  const new _();
 
-  const factory GenUiSurfaceEvent.added({
-    required String surfaceId,
-  }) = GenUiSurfaceAdded;
+  const factory added({required String surfaceId}) = GenUiSurfaceAdded;
 
-  const factory GenUiSurfaceEvent.removed({
-    required String surfaceId,
-  }) = GenUiSurfaceRemoved;
+  const factory removed({required String surfaceId}) = GenUiSurfaceRemoved;
 }

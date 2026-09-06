@@ -3,7 +3,7 @@ import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 
 class ChatAuthSessionPortAdapter implements ChatAuthSessionPort {
-  ChatAuthSessionPortAdapter({
+  new({
     required this._firebaseAuthRepository,
     required this._supabaseAuthRepository,
   });

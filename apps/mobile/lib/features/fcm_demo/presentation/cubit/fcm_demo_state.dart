@@ -4,17 +4,12 @@ import 'package:utilities/utilities.dart';
 part 'fcm_demo_state.freezed.dart';
 
 /// Status of the FCM demo screen.
-enum FcmDemoStatus {
-  initial,
-  loading,
-  ready,
-  error,
-}
+enum FcmDemoStatus { initial, loading, ready, error }
 
 /// State for the FCM demo page.
 @freezed
 abstract class FcmDemoState with _$FcmDemoState {
-  const factory FcmDemoState({
+  const factory({
     @Default(FcmDemoStatus.initial) FcmDemoStatus status,
     @Default(FcmPermissionState.notDetermined)
     FcmPermissionState permissionState,

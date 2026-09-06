@@ -14,7 +14,7 @@ Future<CountryOption?> showCountryPicker({
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
 
   if (isCupertino) {
-    return showCupertinoModalPopup<CountryOption>(
+    return await showCupertinoModalPopup<CountryOption>(
       context: context,
       builder: (popupContext) => CupertinoActionSheet(
         title: Text(l10n.registerCountryPickerTitle),
@@ -37,7 +37,7 @@ Future<CountryOption?> showCountryPicker({
     );
   }
 
-  return showModalBottomSheet<CountryOption>(
+  return await showModalBottomSheet<CountryOption>(
     context: context,
     useSafeArea: true,
     builder: (sheetContext) {
@@ -76,10 +76,7 @@ Future<CountryOption?> showCountryPicker({
                       title: Text(country.name),
                       subtitle: Text(country.dialCode),
                       trailing: isSelected
-                          ? Icon(
-                              Icons.check,
-                              color: theme.colorScheme.primary,
-                            )
+                          ? Icon(Icons.check, color: theme.colorScheme.primary)
                           : null,
                       onTap: () => NavigationUtils.maybePop(
                         sheetContext,
@@ -98,7 +95,7 @@ Future<CountryOption?> showCountryPicker({
 }
 
 class _CountryPickerRow extends StatelessWidget {
-  const _CountryPickerRow({required this.option});
+  const new({required this.option});
 
   final CountryOption option;
 
@@ -106,10 +103,7 @@ class _CountryPickerRow extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Text(
-        option.flagEmoji,
-        style: const TextStyle(fontSize: 24),
-      ),
+      Text(option.flagEmoji, style: const TextStyle(fontSize: 24)),
       SizedBox(width: context.responsiveHorizontalGapS),
       Expanded(
         child: Text(

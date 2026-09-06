@@ -5,7 +5,7 @@ part 'scape.freezed.dart';
 /// Represents a scape item in the library.
 @freezed
 abstract class Scape with _$Scape {
-  const factory Scape({
+  const factory({
     required String id,
     required String name,
     required String imageUrl,
@@ -14,7 +14,7 @@ abstract class Scape with _$Scape {
     @Default(false) bool isFavorite,
   }) = _Scape;
 
-  const Scape._();
+  const new _();
 
   String get formattedDuration {
     final minutes = duration.inMinutes;

@@ -15,7 +15,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 /// residency labels, and byte counts (see [NativeSecurityChannelReplyMapper]).
 class MethodChannelNativeSecurityShowcaseService
     implements NativeSecurityShowcaseService {
-  const MethodChannelNativeSecurityShowcaseService({
+  const new({
     MethodChannel? channel,
     this.invokeTimeout = const Duration(seconds: 2),
     this.biometricInvokeTimeout = const Duration(seconds: 60),
@@ -110,16 +110,15 @@ class MethodChannelNativeSecurityShowcaseService
           'biometricProtectedOperation',
       };
 
-  static NativeSecurityStatus _statusForPlatformExceptionCode(
-    String code,
-  ) => switch (code) {
-    'biometric_canceled' => NativeSecurityStatus.denied,
-    'biometric_lockout' => NativeSecurityStatus.denied,
-    'biometric_not_enrolled' => NativeSecurityStatus.unavailable,
-    'biometric_unsupported' => NativeSecurityStatus.unavailable,
-    'secure_enclave_unavailable' => NativeSecurityStatus.unavailable,
-    'keystore_unavailable' => NativeSecurityStatus.unavailable,
-    'concurrent_prompt' => NativeSecurityStatus.failed,
-    _ => NativeSecurityStatus.failed,
-  };
+  static NativeSecurityStatus _statusForPlatformExceptionCode(String code) =>
+      switch (code) {
+        'biometric_canceled' => NativeSecurityStatus.denied,
+        'biometric_lockout' => NativeSecurityStatus.denied,
+        'biometric_not_enrolled' => NativeSecurityStatus.unavailable,
+        'biometric_unsupported' => NativeSecurityStatus.unavailable,
+        'secure_enclave_unavailable' => NativeSecurityStatus.unavailable,
+        'keystore_unavailable' => NativeSecurityStatus.unavailable,
+        'concurrent_prompt' => NativeSecurityStatus.failed,
+        _ => NativeSecurityStatus.failed,
+      };
 }

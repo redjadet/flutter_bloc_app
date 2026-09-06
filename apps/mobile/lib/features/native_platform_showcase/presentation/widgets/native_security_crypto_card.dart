@@ -15,7 +15,7 @@ typedef _CryptoSlice = ({
 
 /// Crypto card: separate P-256 and AES-GCM run buttons.
 class NativeSecurityCryptoCard extends StatelessWidget {
-  const NativeSecurityCryptoCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,8 @@ class NativeSecurityCryptoCard extends StatelessWidget {
       NativeSecurityShowcaseState,
       _CryptoSlice
     >(
-      selector: (state) => (
-        p256: state.p256Result,
-        aes: state.aesResult,
-        busy: state.isBusy,
-      ),
+      selector: (state) =>
+          (p256: state.p256Result, aes: state.aesResult, busy: state.isBusy),
       builder: (context, slice) {
         final bool busy = slice.busy;
         return KeyedSubtree(

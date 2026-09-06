@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CalculatorSummaryCard extends StatelessWidget {
-  const CalculatorSummaryCard({required this.padding, super.key});
+  const new({required this.padding, super.key});
 
   final EdgeInsets padding;
 
@@ -23,9 +23,7 @@ class CalculatorSummaryCard extends StatelessWidget {
       final l10n = context.l10n;
       final CalculatorCubit cubit = context.cubit<CalculatorCubit>();
       final PaymentCalculator calculator = cubit.calculator;
-      final CalculatorFormatters formatters = CalculatorFormatters.of(
-        context,
-      );
+      final CalculatorFormatters formatters = CalculatorFormatters.of(context);
       final taxConfig = taxRateSelectorConfig(l10n);
       final tipConfig = tipRateSelectorConfig(l10n);
       final NumberFormat currency = formatters.currency;
@@ -93,9 +91,8 @@ class CalculatorSummaryCard extends StatelessWidget {
                       SizedBox(height: gapM),
                       if (hasError && errorMessage != null) ...[
                         CommonCard(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.error.withValues(alpha: 0.08),
+                          color: Theme.of(context).colorScheme.error
+                              .withValues(alpha: 0.08),
                           elevation: 0,
                           margin: EdgeInsets.zero,
                           padding: EdgeInsets.all(gapS),
@@ -162,11 +159,7 @@ class CalculatorSummaryCard extends StatelessWidget {
 }
 
 class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({
-    required this.label,
-    required this.value,
-    this.highlight = false,
-  });
+  const new({required this.label, required this.value, this.highlight = false});
 
   final String label;
   final String value;

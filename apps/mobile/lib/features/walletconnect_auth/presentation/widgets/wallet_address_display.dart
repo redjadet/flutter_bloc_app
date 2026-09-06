@@ -6,10 +6,7 @@ import 'package:material_ui/material_ui.dart';
 /// Widget displaying a wallet address in a truncated format.
 /// Uses [CommonCard] for consistent shape and padding with outline border.
 class WalletAddressDisplay extends StatelessWidget {
-  const WalletAddressDisplay({
-    required this.address,
-    super.key,
-  });
+  const new({required this.address, super.key});
 
   final WalletAddress address;
 

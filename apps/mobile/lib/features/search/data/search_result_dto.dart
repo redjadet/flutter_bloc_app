@@ -7,7 +7,7 @@ class const SearchResultDto({
   final String? title,
   final String? description,
 }) {
-  SearchResultDto.fromDomain(SearchResult result)
+  new fromDomain(SearchResult result)
     : this(
         id: result.id,
         imageUrl: result.imageUrl,
@@ -15,13 +15,12 @@ class const SearchResultDto({
         description: result.description,
       );
 
-  factory SearchResultDto.fromJson(Map<String, dynamic> json) =>
-      SearchResultDto(
-        id: json['id'] as String,
-        imageUrl: json['imageUrl'] as String,
-        title: json['title'] as String?,
-        description: json['description'] as String?,
-      );
+  factory fromJson(Map<String, dynamic> json) => SearchResultDto(
+    id: json['id'] as String,
+    imageUrl: json['imageUrl'] as String,
+    title: json['title'] as String?,
+    description: json['description'] as String?,
+  );
 
   SearchResult toDomain() => SearchResult(
     id: id,

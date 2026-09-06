@@ -6,15 +6,15 @@ part 'profile_state.freezed.dart';
 
 @freezed
 sealed class ProfileState with _$ProfileState {
-  const factory ProfileState.initial() = ProfileInitial;
+  const factory initial() = ProfileInitial;
 
-  const factory ProfileState.loading() = ProfileLoading;
+  const factory loading() = ProfileLoading;
 
-  const factory ProfileState.ready(ProfileUser user) = ProfileReady;
+  const factory ready(ProfileUser user) = ProfileReady;
 
-  const factory ProfileState.error(ProfileFailure failure) = ProfileError;
+  const factory error(ProfileFailure failure) = ProfileError;
 
-  const ProfileState._();
+  const new _();
 
   bool get isLoading => maybeWhen(loading: () => true, orElse: () => false);
 
@@ -24,8 +24,6 @@ sealed class ProfileState with _$ProfileState {
 
   ProfileUser? get user => maybeWhen(ready: (user) => user, orElse: () => null);
 
-  String? get errorMessage => maybeWhen(
-    error: (failure) => failure.displayMessage,
-    orElse: () => null,
-  );
+  String? get errorMessage =>
+      maybeWhen(error: (failure) => failure.displayMessage, orElse: () => null);
 }

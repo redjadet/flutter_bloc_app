@@ -1,7 +1,7 @@
 part of 'slot_machine_spinner.dart';
 
 class _ReelColumn extends StatelessWidget {
-  const _ReelColumn({
+  const new({
     required this.symbols,
     required this.scrollOffset,
     required this.symbolHeight,

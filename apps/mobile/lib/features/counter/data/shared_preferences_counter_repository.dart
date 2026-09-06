@@ -8,8 +8,7 @@ import 'package:storage/storage.dart';
 
 /// SharedPreferences-backed leaf [CounterDataSource].
 class SharedPreferencesCounterRepository implements CounterRepository {
-  SharedPreferencesCounterRepository([SharedPreferences? instance])
-    : _preferencesInstance = instance;
+  new([SharedPreferences? instance]) : _preferencesInstance = instance;
 
   static const String _preferencesKeyCount = 'last_count';
   static const String _preferencesKeyChanged = 'last_changed';
@@ -29,7 +28,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<CounterSnapshot> load() async => StorageGuard.run<CounterSnapshot>(
+  Future<CounterSnapshot> load() => StorageGuard.run<CounterSnapshot>(
     logContext: 'SharedPreferencesCounterRepository.load',
     action: () async {
       final SharedPreferences preferences = await _preferences();
@@ -54,7 +53,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
   );
 
   @override
-  Future<void> save(CounterSnapshot snapshot) async => StorageGuard.run<void>(
+  Future<void> save(CounterSnapshot snapshot) => StorageGuard.run<void>(
     logContext: 'SharedPreferencesCounterRepository.save',
     action: () async {
       final SharedPreferences preferences = await _preferences();

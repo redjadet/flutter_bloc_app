@@ -7,15 +7,11 @@ part 'chat_list_state.freezed.dart';
 /// Union state for the chat list cubit.
 @freezed
 sealed class ChatListState with _$ChatListState {
-  const factory ChatListState.initial() = ChatListInitial;
+  const factory initial() = ChatListInitial;
 
-  const factory ChatListState.loading() = ChatListLoading;
+  const factory loading() = ChatListLoading;
 
-  const factory ChatListState.loaded({
-    required List<ChatContact> contacts,
-  }) = ChatListLoaded;
+  const factory loaded({required List<ChatContact> contacts}) = ChatListLoaded;
 
-  const factory ChatListState.error({
-    required ChatFailure failure,
-  }) = ChatListError;
+  const factory error({required ChatFailure failure}) = ChatListError;
 }

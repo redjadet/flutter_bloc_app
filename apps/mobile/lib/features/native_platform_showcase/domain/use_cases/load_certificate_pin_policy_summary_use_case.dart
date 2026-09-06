@@ -13,7 +13,7 @@ typedef CertificatePinPolicySummaryBuilder =
     });
 
 class LoadCertificatePinPolicySummaryUseCase {
-  const LoadCertificatePinPolicySummaryUseCase(this._build);
+  const new(this._build);
 
   final CertificatePinPolicySummaryBuilder _build;
 

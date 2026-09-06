@@ -12,7 +12,7 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 
 class WebsocketCubit extends Cubit<WebsocketState>
     with CubitSubscriptionMixin<WebsocketState> {
-  WebsocketCubit({required WebsocketRepository repository})
+  new({required WebsocketRepository repository})
     : _repository = repository,
       super(WebsocketState.initial(repository.endpoint)) {
     _statusSubscription = _repository.connectionStates.listen(
@@ -108,10 +108,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
               text: message,
             ),
           )
-          .copyWith(
-            isSending: _inFlightSends > 0,
-            errorMessage: null,
-          ),
+          .copyWith(isSending: _inFlightSends > 0, errorMessage: null),
     );
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.send(message),
@@ -145,11 +142,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
 
   void _onIncomingMessage(WebsocketMessage message) {
     if (isClosed) return;
-    emit(
-      state.appendMessage(
-        message.copyWith(sequence: _messageSequence++),
-      ),
-    );
+    emit(state.appendMessage(message.copyWith(sequence: _messageSequence++)));
   }
 
   void _onConnectionState(WebsocketConnectionState connectionState) {
@@ -197,6 +190,6 @@ class WebsocketCubit extends Cubit<WebsocketState>
       onError: (_) {},
       logContext: 'WebsocketCubit.close',
     );
-    return super.close();
+    return await super.close();
   }
 }

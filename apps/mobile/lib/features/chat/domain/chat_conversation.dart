@@ -5,7 +5,7 @@ part 'chat_conversation.freezed.dart';
 
 @freezed
 abstract class ChatConversation with _$ChatConversation {
-  const factory ChatConversation({
+  const factory({
     required String id,
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -17,7 +17,7 @@ abstract class ChatConversation with _$ChatConversation {
     @Default(true) bool synchronized,
     String? changeId,
   }) = _ChatConversation;
-  const ChatConversation._();
+  const new _();
 
   bool get hasContent =>
       messages.isNotEmpty ||

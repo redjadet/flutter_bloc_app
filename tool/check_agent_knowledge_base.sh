@@ -10,7 +10,7 @@ if [[ -z "${CI:-}" && "${AGENT_MEMORY_AUTO_MAINTAIN:-1}" != "0" ]]; then
   bash "$PROJECT_ROOT/tool/agent_memory_auto_maintain.sh" --if-changed
 fi
 
-MAX_AGENTS_LINES="${MAX_AGENTS_LINES:-120}"
+MAX_AGENTS_LINES="${MAX_AGENTS_LINES:-50}"
 MAX_AGENT_DOC_LINES="${MAX_AGENT_DOC_LINES:-200}"
 
 failures=0
@@ -236,12 +236,14 @@ if [ -f "AGENTS.md" ]; then
   require_contains "AGENTS.md" "docs/design_system.md"
   require_contains "AGENTS.md" "docs/agent_host_notes.md"
   require_contains "AGENTS.md" "host_maintenance_automation.md"
-  require_contains "AGENTS.md" "agent-maintain preflight"
-  require_contains "AGENTS.md" "agent-maintain closeout"
-  require_contains "AGENTS.md" "Flutter SDK/framework is read-only"
+  require_contains "AGENTS.md" "docs/ai/context_loading.md"
+  require_contains "AGENTS.md" "legibility_and_finish_gate.md"
+  require_contains "AGENTS.md" "docs/agent_project_context.md"
   require_contains "docs/agent_project_context.md" "Flutter/Dart SDK and core framework sources are external read-only"
   require_contains "docs/ai/ai_failure_risks.md" "RISK-FLUTTER-SDK-MUTATION"
   require_contains "docs/agent_kb/tool_orchestration.md" "host_maintenance_automation.md"
+  require_contains "docs/agent_kb/host_parity_and_enforcement.md" "Do not copy the project map into a global agent home"
+  require_not_contains "tool/agent_asset_lib.sh" "__repo_root__/AGENTS.md"
 
   # Guard map-only invariant: host-specific guidance lives in docs/agent_host_notes.md.
   require_not_contains "AGENTS.md" "## Codex"
@@ -249,6 +251,25 @@ if [ -f "AGENTS.md" ]; then
   require_not_contains "AGENTS.md" "## Delegation"
   require_not_contains "AGENTS.md" "## Learned User Preferences"
   require_not_contains "AGENTS.md" "## Learned Workspace Facts"
+  require_not_contains "AGENTS.md" "Codex"
+  require_not_contains "AGENTS.md" "Cursor"
+  require_not_contains "AGENTS.md" "OpenAI"
+  require_not_contains "AGENTS.md" "ChatGPT"
+  require_not_contains "AGENTS.md" "GPT"
+  require_not_contains "AGENTS.md" "Claude"
+  require_not_contains "AGENTS.md" "Gemini"
+  require_not_contains "AGENTS.md" "Copilot"
+  require_not_contains "AGENTS.md" ".cursor/"
+  require_not_contains "AGENTS.md" "agent-maintain"
+  require_not_contains "AGENTS.md" "agents-common-pitfalls"
+  require_not_contains "AGENTS.md" "flutter-cross-platform-modern"
+  require_not_contains "AGENTS.md" "MCP"
+  require_not_contains "AGENTS.md" "DTD"
+  require_not_contains "AGENTS.md" "Context7"
+  require_not_contains "AGENTS.md" "./bin/"
+  require_not_contains "AGENTS.md" "./tool/"
+  require_not_contains "AGENTS.md" "tasks/codex"
+  require_not_contains "AGENTS.md" "tasks/cursor"
   require_contains "AGENTS.md" "operator_preferences_durable.md"
   require_contains "AGENTS.md" "docs/ai/skill_routing.md"
 else
@@ -315,10 +336,9 @@ require_validation_docs_contains "closed-loop invariants"
 
 require_all_contains \
   "AGENTS.md" \
-  "95% confident" \
-  "Surgical diff" \
-  "changed line" \
-  "Report proof"
+  "docs/agent_kb/agent_safety_contracts.md" \
+  "docs/ai/agent_operating_manual.md" \
+  "docs/agent_kb/legibility_and_finish_gate.md"
 
 require_all_contains \
   "docs/agent_knowledge_base.md" \
@@ -371,19 +391,18 @@ fi
 if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "AGENTS.md" \
-    "AGENTS.md" \
     "DESIGN.md" \
     "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/ai_code_review_protocol.md" \
     "docs/agents_quick_reference.md" \
     "docs/README.md" \
-    "tasks/codex/todo.md"
+    "docs/ai/context_loading.md"
   require_all_contains \
     "AGENTS.md" \
-    "95% confident" \
-    "Surgical diff" \
-    "Report proof"
+    "docs/agent_kb/agent_safety_contracts.md" \
+    "docs/ai/agent_operating_manual.md" \
+    "docs/agent_kb/legibility_and_finish_gate.md"
 
   require_absent "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
   require_absent "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"

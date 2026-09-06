@@ -59,7 +59,7 @@ enum SupabaseAuthErrorCode {
 
 /// Exception thrown by Supabase auth operations.
 class SupabaseAuthException implements Exception {
-  const SupabaseAuthException(this.message, {this.code, this.cause});
+  const new(this.message, {this.code, this.cause});
 
   final String message;
   final SupabaseAuthErrorCode? code;

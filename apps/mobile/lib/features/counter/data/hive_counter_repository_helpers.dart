@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 
 /// Helper functions for parsing and normalizing counter data from Hive storage.
 class HiveCounterRepositoryHelpers {
-  HiveCounterRepositoryHelpers._();
+  new _();
 
   /// Maximum allowed future timestamp offset (1 year).
   static const Duration _maxFutureOffset = Duration(days: 365);
@@ -26,9 +26,7 @@ class HiveCounterRepositoryHelpers {
         return DateTime.fromMillisecondsSinceEpoch(timestampMs);
       }
 
-      AppLogger.warning(
-        'Invalid timestamp in Hive: $timestampMs, ignoring',
-      );
+      AppLogger.warning('Invalid timestamp in Hive: $timestampMs, ignoring');
       return null;
     } on Exception catch (error, stackTrace) {
       AppLogger.error(

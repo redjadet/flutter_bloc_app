@@ -18,19 +18,12 @@ import 'package:material_ui/material_ui.dart';
 
 /// Topic selection page for playlearn (kids vocabulary).
 class PlaylearnPage extends StatelessWidget {
-  const PlaylearnPage({
-    required this.repository,
-    required this.audioService,
-    super.key,
-  });
+  const new({required this.repository, required this.audioService, super.key});
 
   final VocabularyRepository repository;
   final AudioPlaybackService audioService;
 
-  static String _topicDisplayName(
-    String nameL10nKey,
-    AppLocalizations l10n,
-  ) {
+  static String _topicDisplayName(String nameL10nKey, AppLocalizations l10n) {
     if (nameL10nKey == 'playlearnTopicAnimals') {
       return l10n.playlearnTopicAnimals;
     }
@@ -95,9 +88,7 @@ class PlaylearnPage extends StatelessWidget {
                   displayName: _topicDisplayName(topic.nameL10nKey, l10n),
                   onTap: () => context.pushNamed(
                     AppRoutes.playlearnVocabulary,
-                    pathParameters: <String, String>{
-                      'topicId': topic.id,
-                    },
+                    pathParameters: <String, String>{'topicId': topic.id},
                   ),
                 );
               },

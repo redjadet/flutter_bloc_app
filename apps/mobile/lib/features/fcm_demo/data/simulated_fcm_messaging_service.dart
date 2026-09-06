@@ -5,7 +5,7 @@ import 'package:utilities/utilities.dart';
 /// Deterministic FCM stand-in when Firebase is not initialized.
 class SimulatedFcmMessagingService
     implements FcmMessagingService, FcmSimulationController {
-  SimulatedFcmMessagingService();
+  new();
 
   static const String simulatedToken = 'sim-fcm-token';
 

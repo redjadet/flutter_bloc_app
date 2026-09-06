@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
-  const GraphqlDemoPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

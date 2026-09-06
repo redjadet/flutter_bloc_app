@@ -11,7 +11,7 @@ import 'package:mix/mix.dart';
 /// (`chartDataSourceCache` / `chartDataSourceSupabaseEdge`
 /// / `chartDataSourceSupabaseTables` / `chartDataSourceRemote`).
 class ChartDataSourceBadge extends StatelessWidget {
-  const ChartDataSourceBadge({required this.source, super.key});
+  const new({required this.source, super.key});
 
   final ChartDataSource source;
 

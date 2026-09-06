@@ -349,10 +349,10 @@ packages:
     dependency: transitive
     description:
       name: code_assets
-      sha256: cfd4f5f575a49c5f10ca856e9846073f1e6c3ee94912377eea5f6cefc5272941
+      sha256: bf394f466ba9205f1812a0433b392d6af280f155f56651eda7c18cc32ed493b8
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "1.2.1"
   code_builder:
     dependency: transitive
     description:
@@ -609,6 +609,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.2"
+  ffigen:
+    dependency: transitive
+    description:
+      name: ffigen
+      sha256: "2bd9a420ca42cb5ce8cff5d80f88547b547a042ae26807704b1698714e4464a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "19.1.0"
   file:
     dependency: transitive
     description:
@@ -1948,6 +1956,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  native_toolchain_rust:
+    dependency: transitive
+    description:
+      name: native_toolchain_rust
+      sha256: "8469a0e32a47a5c84b7fd300de9fd0e8082aac76c37922986324f5082a58350d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   nested:
     dependency: transitive
     description:
@@ -2268,6 +2284,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   rational:
     dependency: transitive
     description:
@@ -2713,6 +2737,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
+  toml:
+    dependency: transitive
+    description:
+      name: toml
+      sha256: "35a35f782228656a2af31e8c73d1353cc4ef3d683fd68af1111b44631879c05e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.0"
   typed_data:
     dependency: transitive
     description:
@@ -2829,10 +2861,10 @@ packages:
     dependency: transitive
     description:
       name: very_good_analysis
-      sha256: "481af67ab5877af20325251dc215a4ebac7666a1c8cf09198ffd457bc612b33d"
+      sha256: "0bd5eb8d6be76aa0d71e70cbdae6cac8f784f761170568e3c2214a6948c7f6d3"
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.0"
+    version: "11.0.0"
   video_player:
     dependency: transitive
     description:

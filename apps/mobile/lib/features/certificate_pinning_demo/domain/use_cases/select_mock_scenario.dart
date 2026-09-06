@@ -1,7 +1,7 @@
 import 'package:networking/networking.dart';
 
 final class SelectMockScenario {
-  const SelectMockScenario(this._controller);
+  const new(this._controller);
 
   final MockCertificateScenarioController _controller;
 

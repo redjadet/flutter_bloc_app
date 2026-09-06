@@ -6,11 +6,9 @@ Senior-engineer operating rules; pointers to canon, not duplicates.
 
 Deliver correct, maintainable, verified outcomes: understand first, preserve
 architecture, make the smallest practical diff, and escalate only dangerous
-actions or genuinely user-owned decisions.
-
-## When to read
-
-T1/T2 coding tasks after [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight and context ladder step 2b.
+actions or genuinely user-owned decisions. Read for T1/T2 coding tasks after
+[`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight and task routing from
+[`context_loading.md`](context_loading.md).
 
 ## Engineering judgment loop
 

@@ -21,5 +21,5 @@ mixin TodoRepositoryNoPendingSync implements TodoSyncDiagnosticsPort {
 
 /// Standalone no-op port for tests / non-offline DI bindings.
 final class NoPendingTodoSyncDiagnostics with TodoSyncDiagnosticsNoPendingSync {
-  const NoPendingTodoSyncDiagnostics();
+  const new();
 }

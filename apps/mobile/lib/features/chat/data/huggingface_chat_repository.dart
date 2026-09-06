@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 
 class HuggingfaceChatRepository implements ChatRepository {
-  HuggingfaceChatRepository({
+  new({
     Dio? client,
     String? apiKey,
     String? model,
@@ -65,7 +65,7 @@ class HuggingfaceChatRepository implements ChatRepository {
 
     final String targetModel = _resolveModel(model);
     if (_useChatCompletions) {
-      return _sendViaChatCompletions(
+      return await _sendViaChatCompletions(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,
@@ -84,7 +84,7 @@ class HuggingfaceChatRepository implements ChatRepository {
       if (!_shouldFallbackToChatCompletions(error)) {
         rethrow;
       }
-      return _sendViaChatCompletions(
+      return await _sendViaChatCompletions(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,

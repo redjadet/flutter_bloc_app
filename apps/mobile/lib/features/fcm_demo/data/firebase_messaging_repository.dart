@@ -52,7 +52,7 @@ PushMessage _toPushMessage(
 
 /// FCM implementation of [FcmMessagingService].
 class FirebaseMessagingRepository implements FcmMessagingService {
-  FirebaseMessagingRepository({
+  new({
     FirebaseMessaging? messaging,
     Stream<RemoteMessage>? foregroundMessages,
     Stream<RemoteMessage>? openedMessages,
@@ -109,42 +109,26 @@ class FirebaseMessagingRepository implements FcmMessagingService {
       message,
       source: PushMessageSource.initial,
     );
-    FcmLogRedaction.logPushMessage(
-      'fcm_initial_message',
-      message: push,
-    );
+    FcmLogRedaction.logPushMessage('fcm_initial_message', message: push);
     return push;
   }
 
   @override
-  Stream<PushMessage> get foregroundMessages => _foregroundMessages.map(
-    (m) {
-      final PushMessage p = _toPushMessage(
-        m,
-        source: PushMessageSource.foreground,
-      );
-      FcmLogRedaction.logPushMessage(
-        'fcm_foreground_message',
-        message: p,
-      );
-      return p;
-    },
-  );
+  Stream<PushMessage> get foregroundMessages => _foregroundMessages.map((m) {
+    final PushMessage p = _toPushMessage(
+      m,
+      source: PushMessageSource.foreground,
+    );
+    FcmLogRedaction.logPushMessage('fcm_foreground_message', message: p);
+    return p;
+  });
 
   @override
-  Stream<PushMessage> get openedMessages => _openedMessages.map(
-    (m) {
-      final PushMessage p = _toPushMessage(
-        m,
-        source: PushMessageSource.opened,
-      );
-      FcmLogRedaction.logPushMessage(
-        'fcm_opened_message',
-        message: p,
-      );
-      return p;
-    },
-  );
+  Stream<PushMessage> get openedMessages => _openedMessages.map((m) {
+    final PushMessage p = _toPushMessage(m, source: PushMessageSource.opened);
+    FcmLogRedaction.logPushMessage('fcm_opened_message', message: p);
+    return p;
+  });
 
   @override
   Stream<String> get tokenRefreshes => _messaging.onTokenRefresh;

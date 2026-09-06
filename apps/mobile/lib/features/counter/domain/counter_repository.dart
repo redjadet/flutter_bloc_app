@@ -9,4 +9,4 @@ export 'counter_sync_diagnostics_port.dart';
 /// Enables substituting OfflineFirst / local-only backends without changing
 /// presentation. Leaf Hive/REST adapters implement [CounterDataSource];
 /// sync inspector APIs live on [CounterSyncDiagnosticsPort].
-abstract class CounterRepository implements CounterDataSource {}
+abstract class CounterRepository implements CounterDataSource;

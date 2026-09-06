@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_showcase_service.dart';
 
 class RunNativeSecurityOperationUseCase {
-  const RunNativeSecurityOperationUseCase(this._service);
+  const new(this._service);
 
   final NativeSecurityShowcaseService _service;
 

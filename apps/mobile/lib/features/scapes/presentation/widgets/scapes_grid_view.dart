@@ -70,17 +70,14 @@ _ScapesGridMetrics _computeScapesGridMetrics(
 }
 
 class _ScapesGridMetrics {
-  const _ScapesGridMetrics({
-    required this.gridLayout,
-    required this.delegate,
-  });
+  const new({required this.gridLayout, required this.delegate});
 
   final ResponsiveGridLayout gridLayout;
   final SliverGridDelegate delegate;
 }
 
 class ScapesGridView extends StatelessWidget {
-  const ScapesGridView({
+  const new({
     required this.scapes,
     required this.onFavoritePressed,
     required this.onMorePressed,
@@ -135,7 +132,7 @@ class ScapesGridView extends StatelessWidget {
 /// Sliver version of the scapes grid for use inside [CustomScrollView].
 /// Uses the same layout as [ScapesGridView] without shrinkWrap.
 class ScapesGridSliver extends StatelessWidget {
-  const ScapesGridSliver({
+  const new({
     required this.scapes,
     required this.onFavoritePressed,
     required this.onMorePressed,
@@ -161,20 +158,17 @@ class ScapesGridSliver extends StatelessWidget {
           ),
           sliver: SliverGrid(
             gridDelegate: metrics.delegate,
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final scape = scapes[index];
-                return RepaintBoundary(
-                  key: ValueKey<String>('scape-${scape.id}'),
-                  child: ScapeGridItem(
-                    scape: scape,
-                    onFavoritePressed: () => onFavoritePressed(scape.id),
-                    onMorePressed: () => onMorePressed(scape.id),
-                  ),
-                );
-              },
-              childCount: scapes.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final scape = scapes[index];
+              return RepaintBoundary(
+                key: ValueKey<String>('scape-${scape.id}'),
+                child: ScapeGridItem(
+                  scape: scape,
+                  onFavoritePressed: () => onFavoritePressed(scape.id),
+                  onMorePressed: () => onMorePressed(scape.id),
+                ),
+              );
+            }, childCount: scapes.length),
           ),
         );
       },

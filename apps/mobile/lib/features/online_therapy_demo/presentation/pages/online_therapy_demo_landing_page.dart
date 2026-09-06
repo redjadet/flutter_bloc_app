@@ -8,7 +8,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoLandingPage extends StatelessWidget {
-  const OnlineTherapyDemoLandingPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +19,13 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           TherapyUser?
-        >(
-          selector: (state) => state.user,
-        );
+        >(selector: (state) => state.user);
     final isBusy = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isBusy,
-        );
+        >(selector: (state) => state.isBusy);
     final List<Widget> items = <Widget>[
       const Text(
         'Interview demo (simulated backend). Not production compliance.',
@@ -50,9 +46,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
           child: Text(isBusy ? 'Signing in…' : 'Sign in'),
         ),
       ] else ...<Widget>[
-        Text(
-          'User: ${user.displayName} (${user.maskedEmail})',
-        ),
+        Text('User: ${user.displayName} (${user.maskedEmail})'),
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: isBusy ? null : () => session.logout(),
@@ -60,10 +54,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
         ),
       ],
       const Divider(height: 24),
-      const Text(
-        'Choose role',
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
+      const Text('Choose role', style: TextStyle(fontWeight: FontWeight.w600)),
       const SizedBox(height: 8),
       _RoleTile(
         role: TherapyRole.client,
@@ -90,20 +81,13 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Online Therapy Demo',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }
 
 class _RoleTile extends StatelessWidget {
-  const _RoleTile({
-    required this.role,
-    required this.title,
-    required this.onTap,
-  });
+  const new({required this.role, required this.title, required this.onTap});
 
   final TherapyRole role;
   final String title;

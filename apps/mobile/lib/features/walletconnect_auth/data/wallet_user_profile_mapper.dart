@@ -23,7 +23,7 @@ abstract class NftMetadataFields {
 
 /// Maps [WalletUserProfile] and [NftMetadata] to/from Firestore maps.
 class WalletUserProfileMapper {
-  WalletUserProfileMapper._();
+  new _();
 
   /// Converts [WalletUserProfile] to a Firestore-serializable map.
   /// The updatedAt field is not included; set separately with [FieldValue.serverTimestamp()].
@@ -97,10 +97,8 @@ class WalletUserProfileMapper {
     };
   }
 
-  static String? _stringFromMap(
-    Map<String, dynamic> map,
-    String key,
-  ) => stringFromDynamic(map[key]);
+  static String? _stringFromMap(Map<String, dynamic> map, String key) =>
+      stringFromDynamic(map[key]);
 
   static NftMetadata? _nftFromMap(Map<String, dynamic>? map) {
     if (map == null) return null;

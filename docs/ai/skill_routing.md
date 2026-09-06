@@ -51,6 +51,10 @@ Use global search/install only on explicit host-skill work:
 
 ### Host availability (do not invent skills)
 
+Codex and Cursor are first-class validated hosts. Other AI agents use the same
+owner docs and the closest available capability; missing host integration does
+not weaken repository safety or validation requirements.
+
 | Kind | Where | Examples |
 | --- | --- | --- |
 | Shared (Codex + Cursor) | `tool/agent_host_templates/shared/skills/` | `agents-quick-reference`, `agents-delivery-workflow`, `agents-feature-delivery`, `gh-watch-merge-pr`, … |

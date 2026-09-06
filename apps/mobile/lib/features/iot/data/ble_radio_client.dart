@@ -19,9 +19,7 @@ abstract class BleRadioClient {
     Duration? connectionTimeout,
   });
 
-  Future<List<BleGattServiceSnapshot>> discoverGattServices(
-    String deviceId,
-  );
+  Future<List<BleGattServiceSnapshot>> discoverGattServices(String deviceId);
 
   Future<List<int>> readCharacteristic(BleCharacteristicRef ref);
 
@@ -38,8 +36,7 @@ abstract class BleRadioClient {
 
 /// Production [BleRadioClient] backed by [FlutterReactiveBle].
 class FlutterReactiveBleRadioClient implements BleRadioClient {
-  FlutterReactiveBleRadioClient({FlutterReactiveBle? ble})
-    : _ble = ble ?? FlutterReactiveBle();
+  new({FlutterReactiveBle? ble}) : _ble = ble ?? FlutterReactiveBle();
 
   final FlutterReactiveBle _ble;
   final Map<String, Map<String, Characteristic>> _characteristicCache =
@@ -61,10 +58,8 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
   Stream<ConnectionStateUpdate> connectToDevice({
     required String deviceId,
     Duration? connectionTimeout,
-  }) => _ble.connectToDevice(
-    id: deviceId,
-    connectionTimeout: connectionTimeout,
-  );
+  }) =>
+      _ble.connectToDevice(id: deviceId, connectionTimeout: connectionTimeout);
 
   @override
   Future<List<BleGattServiceSnapshot>> discoverGattServices(
@@ -78,24 +73,19 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
           (service) => BleGattServiceSnapshot(
             uuid: service.id.toString(),
             characteristics: service.characteristics
-                .map(
-                  (characteristic) {
-                    cache[_characteristicKey(
-                          service.id,
-                          characteristic.id,
-                        )] =
-                        characteristic;
-                    return BleGattCharacteristicSnapshot(
-                      uuid: characteristic.id.toString(),
-                      canRead: characteristic.isReadable,
-                      canWrite: characteristic.isWritableWithResponse,
-                      canWriteWithoutResponse:
-                          characteristic.isWritableWithoutResponse,
-                      canNotify: characteristic.isNotifiable,
-                      canIndicate: characteristic.isIndicatable,
-                    );
-                  },
-                )
+                .map((characteristic) {
+                  cache[_characteristicKey(service.id, characteristic.id)] =
+                      characteristic;
+                  return BleGattCharacteristicSnapshot(
+                    uuid: characteristic.id.toString(),
+                    canRead: characteristic.isReadable,
+                    canWrite: characteristic.isWritableWithResponse,
+                    canWriteWithoutResponse:
+                        characteristic.isWritableWithoutResponse,
+                    canNotify: characteristic.isNotifiable,
+                    canIndicate: characteristic.isIndicatable,
+                  );
+                })
                 .toList(growable: false),
           ),
         )
@@ -107,7 +97,7 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
   @override
   Future<List<int>> readCharacteristic(BleCharacteristicRef ref) async {
     final Characteristic characteristic = _requireCharacteristic(ref);
-    return characteristic.read();
+    return await characteristic.read();
   }
 
   @override
@@ -121,9 +111,7 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
   }
 
   @override
-  Stream<List<int>> subscribeToCharacteristic(
-    BleCharacteristicRef ref,
-  ) {
+  Stream<List<int>> subscribeToCharacteristic(BleCharacteristicRef ref) {
     final Characteristic characteristic = _requireCharacteristic(ref);
     return characteristic.subscribe();
   }
@@ -145,8 +133,6 @@ class FlutterReactiveBleRadioClient implements BleRadioClient {
     return characteristic;
   }
 
-  String _characteristicKey(
-    Uuid serviceId,
-    Uuid characteristicId,
-  ) => '${serviceId.expanded}|${characteristicId.expanded}';
+  String _characteristicKey(Uuid serviceId, Uuid characteristicId) =>
+      '${serviceId.expanded}|${characteristicId.expanded}';
 }

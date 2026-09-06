@@ -11,7 +11,7 @@ import 'package:storage/storage.dart';
 
 /// Hive-backed proof bytes keyed by stable virtual paths for web demos.
 class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
-  LocalStaffDemoProofFileStore({
+  new({
     required this.hiveService,
     @visibleForTesting this.debugPutFailuresRemaining,
   });
@@ -73,13 +73,11 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
       final String payload = sourcePath.substring(commaIndex + 1);
       return base64Decode(payload);
     }
-    return XFile(sourcePath).readAsBytes();
+    return await XFile(sourcePath).readAsBytes();
   }
 
   @override
-  Future<String> persistPhotoFile({
-    required String sourcePath,
-  }) async {
+  Future<String> persistPhotoFile({required String sourcePath}) async {
     try {
       final List<int> bytes = await _readSourceBytes(sourcePath);
       final String destPath =
@@ -100,9 +98,7 @@ class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   }
 
   @override
-  Future<String> persistSignaturePngBytes({
-    required List<int> bytes,
-  }) async {
+  Future<String> persistSignaturePngBytes({required List<int> bytes}) async {
     final String destPath =
         'staff-demo-proof://signature/${DateTime.now().microsecondsSinceEpoch}.png';
     await _putBytes(destPath, bytes);

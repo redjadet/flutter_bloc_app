@@ -8,11 +8,7 @@ import 'package:material_ui/material_ui.dart';
 double _authButtonRadius(double scale) => UI.radiusS * scale * 0.75;
 
 class LoggedOutActionButtons extends StatelessWidget {
-  const LoggedOutActionButtons({
-    required this.scale,
-    required this.verticalScale,
-    super.key,
-  });
+  const new({required this.scale, required this.verticalScale, super.key});
 
   final double scale;
   final double verticalScale;
@@ -49,7 +45,7 @@ class LoggedOutActionButtons extends StatelessWidget {
 }
 
 class _LoggedOutActionButton extends StatelessWidget {
-  const _LoggedOutActionButton({
+  const new({
     required this.label,
     required this.scale,
     required this.backgroundColor,

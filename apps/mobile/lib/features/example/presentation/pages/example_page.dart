@@ -14,10 +14,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Simple example page used to demonstrate GoRouter navigation
 class ExamplePage extends StatefulWidget {
-  const ExamplePage({
-    required this.isFirebaseInitialized,
-    super.key,
-  });
+  const new({required this.isFirebaseInitialized, super.key});
 
   /// Resolved at router from Firebase bootstrap readiness.
   final bool isFirebaseInitialized;
@@ -175,6 +172,8 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenAiDecisionDemo: () => context.pushNamed(AppRoutes.aiDecisionDemo),
         onOpenEventBusDemo: () => context.pushNamed(AppRoutes.eventBusDemo),
         onOpenSocialFeedDemo: () => context.pushNamed(AppRoutes.socialFeedDemo),
+        onOpenSecureMessagingDemo: () =>
+            context.pushNamed(AppRoutes.secureMessagingDemo),
         onOpenNativePlatformShowcase: () =>
             context.pushNamed(AppRoutes.nativePlatformShowcase),
         onOpenOnlineTherapyDemo: () =>

@@ -1,25 +1,20 @@
 part of 'auth_token_interceptor.dart';
 
 class _RetryUnauthorizedResult {
-  const _RetryUnauthorizedResult._({
-    this.response,
-    this.error,
-  });
+  const new _({this.response, this.error});
 
-  const _RetryUnauthorizedResult.noRetry() : this._();
+  const new noRetry() : this._();
 
-  const _RetryUnauthorizedResult.response(Response<dynamic> response)
-    : this._(response: response);
+  const new response(Response<dynamic> response) : this._(response: response);
 
-  const _RetryUnauthorizedResult.error(DioException error)
-    : this._(error: error);
+  const new error(DioException error) : this._(error: error);
 
   final Response<dynamic>? response;
   final DioException? error;
 }
 
 class _AuthTokenUnauthorizedRetrier {
-  _AuthTokenUnauthorizedRetrier({
+  new({
     required this.authTokenManager,
     required this.createRetryDio,
     required this.sessionCoordinator,
@@ -29,9 +24,7 @@ class _AuthTokenUnauthorizedRetrier {
   final Dio Function() createRetryDio;
   final SessionLifecycleCoordinator? sessionCoordinator;
 
-  Future<_RetryUnauthorizedResult> retry(
-    Response<dynamic> response,
-  ) async {
+  Future<_RetryUnauthorizedResult> retry(Response<dynamic> response) async {
     if (response.statusCode != 401) {
       return const _RetryUnauthorizedResult.noRetry();
     }
@@ -92,11 +85,7 @@ class _AuthTokenUnauthorizedRetrier {
       );
       return _RetryUnauthorizedResult.error(error);
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'AuthTokenInterceptor retry failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('AuthTokenInterceptor retry failed', error, stackTrace);
       return _RetryUnauthorizedResult.error(
         DioException(
           requestOptions: retryOptions,

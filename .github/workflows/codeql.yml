@@ -24,6 +24,9 @@ concurrency:
   group: codeql-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -33,6 +36,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Keep PR + push coverage. Drop ruby — no first-party Ruby in this repo
+          # (only vendored build checkouts). Retain c-cpp for native/.
           - language: actions
             build-mode: none
           - language: c-cpp
@@ -40,8 +45,6 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: python
-            build-mode: none
-          - language: ruby
             build-mode: none
 
     steps:

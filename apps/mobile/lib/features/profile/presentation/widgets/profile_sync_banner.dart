@@ -13,7 +13,7 @@ import 'package:networking/networking.dart';
 /// Banner widget that surfaces profile sync status (offline/syncing) and
 /// allows a manual refresh when online.
 class ProfileSyncBanner extends StatefulWidget {
-  const ProfileSyncBanner({super.key});
+  const new({super.key});
 
   @override
   State<ProfileSyncBanner> createState() => _ProfileSyncBannerState();
@@ -94,9 +94,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
                 ? SizedBox(
                     height: context.responsiveGapM,
                     width: context.responsiveGapM,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
+                    child: const CircularProgressIndicator(strokeWidth: 2),
                   )
                 : Text(l10n.syncStatusSyncNowButton),
           ),

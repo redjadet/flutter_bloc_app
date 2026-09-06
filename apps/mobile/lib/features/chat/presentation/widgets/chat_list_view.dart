@@ -25,7 +25,7 @@ part 'chat_list_view_widgets.part.dart';
 
 /// Chat list UI: contact list, selection, and navigation to conversation.
 class ChatListView extends StatelessWidget {
-  const ChatListView({
+  const new({
     required this.chatRepository,
     required this.historyRepository,
     required this.errorNotificationService,

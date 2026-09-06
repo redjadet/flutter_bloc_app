@@ -12,7 +12,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
-  const OnlineTherapyDemoClientBookingConfirmPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final slot = context
         .selectState<ClientBookingCubit, ClientBookingState, AvailabilitySlot?>(
           selector: (state) => state.pendingBookingSlot,
@@ -45,9 +43,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
         const Card(
           child: Padding(
             padding: EdgeInsets.all(12),
-            child: Text(
-              'No pending slot selected. Go back and pick a time.',
-            ),
+            child: Text('No pending slot selected. Go back and pick a time.'),
           ),
         )
       else
@@ -63,9 +59,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text('Therapist: ${slot.therapistId}'),
-                Text(
-                  'Start: ${formatDeviceDateTime(context, slot.startAt)}',
-                ),
+                Text('Start: ${formatDeviceDateTime(context, slot.startAt)}'),
                 Text('End: ${formatDeviceDateTime(context, slot.endAt)}'),
               ],
             ),
@@ -115,10 +109,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Confirm booking',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }

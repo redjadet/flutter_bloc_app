@@ -2,7 +2,7 @@ part of 'offline_first_todo_repository.dart';
 
 class OfflineFirstTodoRepository
     implements TodoRepository, TodoSyncDiagnosticsPort, SyncableRepository {
-  OfflineFirstTodoRepository({
+  new({
     required this._localRepository,
     required this._pendingSyncRepository,
     required this._registry,

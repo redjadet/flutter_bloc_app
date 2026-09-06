@@ -1,7 +1,7 @@
 part of 'staff_app_demo_forms_page.dart';
 
 class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.state});
+  const new({required this.state});
 
   final StaffDemoFormsState state;
 
@@ -30,7 +30,7 @@ class _StatusBanner extends StatelessWidget {
 }
 
 class _AvailabilityCard extends StatefulWidget {
-  const _AvailabilityCard();
+  const new();
 
   @override
   State<_AvailabilityCard> createState() => _AvailabilityCardState();
@@ -89,7 +89,7 @@ class _AvailabilityCardState extends State<_AvailabilityCard> {
 }
 
 class _ManagerReportCard extends StatefulWidget {
-  const _ManagerReportCard();
+  const new();
 
   @override
   State<_ManagerReportCard> createState() => _ManagerReportCardState();

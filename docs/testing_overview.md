@@ -51,6 +51,9 @@ input `coverage/lcov.info`).
 
 ## Test layers
 
+Paths beginning with `test/` or `integration_test/` below are relative to
+`apps/mobile/`. Repository wrappers under `tool/` and `bin/` run from repo root.
+
 | Layer | Scope | Typical location |
 | --- | --- | --- |
 | Unit tests | Pure Dart logic, repositories, services, helpers | `test/**` |
@@ -91,13 +94,19 @@ Chooser and lanes: [`agents_quick_reference.md`](agents_quick_reference.md)
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 Integration env/device: [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md).
 
-```bash
-# Single test file / goldens / approval review
-flutter test test/counter_cubit_test.dart
-flutter test --update-goldens
-# from apps/mobile:
-dart run approval_tests:review
+Run each block from the repository root; subshells preserve that directory.
+Golden updates and approval review are intentional snapshot-maintenance steps.
 
+```bash
+# Single test file
+(cd apps/mobile && flutter test test/counter_cubit_test.dart)
+
+# Update goldens / review approval snapshots when intended
+(cd apps/mobile && flutter test --update-goldens)
+(cd apps/mobile && dart run approval_tests:review)
+```
+
+```bash
 # Coverage-producing unit/bloc/widget lane
 tool/test_coverage.sh
 
@@ -166,7 +175,7 @@ When fixing a bug class, extend these paths (or register in `tool/check_regressi
 | Background sync races | `test/shared/sync/background_sync_coordinator_test.dart` |
 | Repo in-flight coalesce | `test/features/search/data/offline_first_search_repository_test.dart`, `test/features/profile/data/...`, `test/features/remote_config/data/...` |
 | Stream/cache failure hardening | `test/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit_test.dart`, `test/features/supabase_auth/presentation/cubit/supabase_auth_cubit_test.dart`, `test/features/websocket/data/echo_websocket_repository_test.dart`, `test/features/profile/data/offline_first_profile_repository_test.dart` |
-| Don't-overwrite stale sync | `test/features/counter/data/offline_first_counter_repository_test.dart`, `test/features/todo_list/data/offline_first_todo_repository_test.dart`, `test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart`, `test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart` (+ `tool/check_offline_first_remote_merge.sh`). Include timestamp gates (`does not overwrite newer …`), queue replay (`does not push stale pending …`), online-apply-versus-replay (`online unlike wins when queued like dispatch is in flight`), TOCTOU re-read tests (`re-checks local before save` / `… before deleting`), remote fetch failure retention (`does not delete local … when remote fetch fails` / `does not overwrite local when remote load fails`), and IoT debounced `setValue` pull/enqueue windows. |
+| Don't-overwrite stale sync and mutation durability | `test/features/counter/data/offline_first_counter_repository_test.dart`, `test/features/todo_list/data/offline_first_todo_repository_test.dart`, `test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart`, `test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart` (+ `tool/check_offline_first_remote_merge.sh`). Include timestamp gates (`does not overwrite newer …`), queue replay (`does not push stale pending …`), online-apply-versus-replay (`online unlike wins when queued like dispatch is in flight`), Hive persistence failure (`dispatch retains queued … persist fails`, `online … queues … persist fails`), TOCTOU re-read tests (`re-checks local before save` / `… before deleting`), remote fetch failure retention (`does not delete local … when remote fetch fails` / `does not overwrite local when remote load fails`), and IoT debounced `setValue` pull/enqueue windows. |
 | Remote fetch failure fallbacks | `tool/check_remote_fetch_failure_fallback.sh` — no `onFailureFallback` on remote `fetchAll`/`load`. Pair with pullRemote retention tests above. |
 | RequestIdGuard supersession | `test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded`, `test/features/online_therapy_demo/presentation/cubit/call_cubit_test.dart`, `test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart`, `test/chat_cubit_test.dart` (+ `tool/check_mutation_success_after_guard.sh`) |
 | Modal sheet missing `BlocProvider.value` | `test/features/social_feed_demo/presentation/pages/social_feed_demo_page_test.dart` (+ `tool/check_modal_bloc_provider.sh`) |

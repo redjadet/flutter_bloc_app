@@ -9,7 +9,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoTimeclockPage extends StatelessWidget {
-  const StaffAppDemoTimeclockPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,8 @@ class StaffAppDemoTimeclockPage extends StatelessWidget {
     final String? openEntryId = state.openEntryId;
 
     final Widget body = switch (state.status) {
-      StaffDemoTimeclockStatus.initial ||
-      StaffDemoTimeclockStatus.busy => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      StaffDemoTimeclockStatus.initial || StaffDemoTimeclockStatus.busy =>
+        const Center(child: CircularProgressIndicator()),
       StaffDemoTimeclockStatus.error => CommonErrorView(
         message: state.errorMessage ?? l10n.errorUnknown,
       ),
@@ -89,9 +87,6 @@ class StaffAppDemoTimeclockPage extends StatelessWidget {
       ),
     };
 
-    return CommonPageLayout(
-      title: l10n.staffDemoTimeclockTitle,
-      body: body,
-    );
+    return CommonPageLayout(title: l10n.staffDemoTimeclockTitle, body: body);
   }
 }

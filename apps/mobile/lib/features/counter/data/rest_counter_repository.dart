@@ -28,7 +28,7 @@ part 'rest_counter_repository_watch.dart';
 /// 4. Add request/response models as needed
 /// 5. Register in `lib/app/composition/injector.dart` if needed
 class RestCounterRepository implements CounterRepository {
-  RestCounterRepository({
+  new({
     required String baseUrl,
     required this.client,
     Map<String, String>? defaultHeaders,

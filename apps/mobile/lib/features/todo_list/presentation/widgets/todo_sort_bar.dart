@@ -7,11 +7,7 @@ double _todoSortLabelFontSize(BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 18.0);
 
 class TodoSortBar extends StatelessWidget {
-  const TodoSortBar({
-    required this.sortOrder,
-    required this.onSortChanged,
-    super.key,
-  });
+  const new({required this.sortOrder, required this.onSortChanged, super.key});
 
   final TodoSortOrder sortOrder;
   final ValueChanged<TodoSortOrder> onSortChanged;

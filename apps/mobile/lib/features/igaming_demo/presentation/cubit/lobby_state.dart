@@ -6,8 +6,8 @@ part 'lobby_state.freezed.dart';
 /// State for the iGaming demo lobby (virtual balance and entry to game).
 @freezed
 abstract class LobbyState with _$LobbyState {
-  const factory LobbyState.initial() = _LobbyInitial;
-  const factory LobbyState.loading() = _LobbyLoading;
-  const factory LobbyState.ready(DemoBalance balance) = _LobbyReady;
-  const factory LobbyState.error(String message) = _LobbyError;
+  const factory initial() = _LobbyInitial;
+  const factory loading() = _LobbyLoading;
+  const factory ready(DemoBalance balance) = _LobbyReady;
+  const factory error(String message) = _LobbyError;
 }

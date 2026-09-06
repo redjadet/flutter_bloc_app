@@ -18,14 +18,14 @@ const String kNativeShowcaseTelemetryChannel =
 /// broadcast stream with [NativeShowcaseTelemetryStreamConfig] arguments.
 class EventChannelNativeShowcaseTelemetryService
     implements NativeShowcaseTelemetryService {
-  EventChannelNativeShowcaseTelemetryService({
+  new({
     Stream<Object?> Function(NativeShowcaseTelemetryStreamConfig config)?
     events,
   }) : _events =
            events ??
-           ((NativeShowcaseTelemetryStreamConfig config) => const EventChannel(
-             kNativeShowcaseTelemetryChannel,
-           ).receiveBroadcastStream(config.toChannelArguments()));
+           ((NativeShowcaseTelemetryStreamConfig config) =>
+               const EventChannel(kNativeShowcaseTelemetryChannel)
+                   .receiveBroadcastStream(config.toChannelArguments()));
 
   final Stream<Object?> Function(NativeShowcaseTelemetryStreamConfig config)
   _events;

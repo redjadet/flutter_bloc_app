@@ -10,16 +10,12 @@ import 'package:flutter_bloc_app/app/config/flavor.dart';
 ///
 /// See [docs/architecture/app_initialization_and_feature_control.md](../../../../../docs/architecture/app_initialization_and_feature_control.md).
 class AppRuntimeConfig {
-  AppRuntimeConfig({
-    required this.flavor,
-    required this.skeletonDelay,
-    this.apiBaseUrl,
-  });
+  new({required this.flavor, required this.skeletonDelay, this.apiBaseUrl});
 
   /// Builds config from current bootstrap state (flavor + env).
   ///
   /// Call after [FlavorManager.current] is set (e.g. in bootstrap).
-  factory AppRuntimeConfig.fromBootstrap() {
+  factory fromBootstrap() {
     final Flavor flavor = FlavorManager.current;
     const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
     final Duration skeletonDelay = flavor == Flavor.dev

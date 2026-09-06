@@ -8,7 +8,7 @@ part 'chat_state.freezed.dart';
 
 @freezed
 abstract class ChatState with _$ChatState {
-  const factory ChatState({
+  const factory({
     @Default(<ChatMessage>[]) List<ChatMessage> messages,
     @Default(false) bool isLoading,
     ChatFailure? failure,
@@ -21,9 +21,9 @@ abstract class ChatState with _$ChatState {
     ChatRemotePath? lastCompletionTransport,
   }) = _ChatState;
 
-  const ChatState._();
+  const new _();
 
-  factory ChatState.initial({String? currentModel}) =>
+  factory initial({String? currentModel}) =>
       ChatState(currentModel: currentModel);
 
   bool get hasError => failure != null;

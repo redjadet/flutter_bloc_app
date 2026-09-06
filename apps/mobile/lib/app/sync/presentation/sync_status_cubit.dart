@@ -10,7 +10,7 @@ export 'sync_status_state.dart';
 
 class SyncStatusCubit extends Cubit<SyncStatusState>
     with CubitSubscriptionMixin<SyncStatusState> {
-  SyncStatusCubit({
+  new({
     required this._networkStatusService,
     required BackgroundSyncCoordinator coordinator,
   }) : _coordinator = coordinator,
@@ -56,10 +56,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
       (summary) {
         if (isClosed) return;
         emit(
-          state.copyWith(
-            lastSummary: summary,
-            history: _coordinator.history,
-          ),
+          state.copyWith(lastSummary: summary, history: _coordinator.history),
         );
       },
       onError: (Object error, StackTrace stackTrace) {
@@ -109,6 +106,6 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
     _networkSubscription = null;
     _syncSubscription = null;
     _summarySubscription = null;
-    return super.close();
+    return await super.close();
   }
 }

@@ -14,10 +14,7 @@ import 'package:networking/networking.dart';
 /// Sync status banner for the counter feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
 class CounterSyncBanner extends StatefulWidget {
-  const CounterSyncBanner({
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -37,15 +34,12 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   }
 
   @override
-  Widget build(BuildContext context) => _CounterSyncBannerBody(
-    l10n: widget.l10n,
-  );
+  Widget build(BuildContext context) =>
+      _CounterSyncBannerBody(l10n: widget.l10n);
 }
 
 class _CounterSyncBannerBody extends StatelessWidget {
-  const _CounterSyncBannerBody({
-    required this.l10n,
-  });
+  const new({required this.l10n});
 
   final AppLocalizations l10n;
 

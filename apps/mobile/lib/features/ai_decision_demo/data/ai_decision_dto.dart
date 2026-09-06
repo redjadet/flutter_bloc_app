@@ -13,15 +13,14 @@ class const AiDecisionCaseSummaryDto({
   required final String status,
   required final String? lastDecisionBand,
 }) {
-  factory AiDecisionCaseSummaryDto.fromJson(Map<String, dynamic> json) =>
-      AiDecisionCaseSummaryDto(
-        id: requireAiDecisionString(json, 'id'),
-        applicantName: requireAiDecisionString(json, 'applicant_name'),
-        businessName: requireAiDecisionString(json, 'business_name'),
-        amount: requireAiDecisionNumAsDouble(json, 'amount'),
-        status: requireAiDecisionString(json, 'status'),
-        lastDecisionBand: optionalAiDecisionString(json, 'last_decision_band'),
-      );
+  factory fromJson(Map<String, dynamic> json) => AiDecisionCaseSummaryDto(
+    id: requireAiDecisionString(json, 'id'),
+    applicantName: requireAiDecisionString(json, 'applicant_name'),
+    businessName: requireAiDecisionString(json, 'business_name'),
+    amount: requireAiDecisionNumAsDouble(json, 'amount'),
+    status: requireAiDecisionString(json, 'status'),
+    lastDecisionBand: optionalAiDecisionString(json, 'last_decision_band'),
+  );
 
   AiDecisionCaseSummary toDomain() => AiDecisionCaseSummary(
     id: id,
@@ -40,9 +39,7 @@ class const AiDecisionDecisionResultDto({
   required final String rationale,
   required final Map<String, dynamic> proof,
 }) {
-  factory AiDecisionDecisionResultDto.fromJson(
-    Map<String, dynamic> json,
-  ) => AiDecisionDecisionResultDto(
+  factory fromJson(Map<String, dynamic> json) => AiDecisionDecisionResultDto(
     riskScore: requireAiDecisionNumAsDouble(json, 'risk_score'),
     riskBand: requireAiDecisionString(json, 'risk_band'),
     recommendedAction: requireAiDecisionString(json, 'recommended_action'),
@@ -70,7 +67,7 @@ class const AiDecisionCaseDetailDto({
   required final List<Map<String, dynamic>> actions,
   required final AiDecisionDecisionResultDto? latestDecision,
 }) {
-  factory AiDecisionCaseDetailDto.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> caseJson = requireAiDecisionMap(json, 'case');
     final Object? latestRaw = json['latest_decision'];
     AiDecisionDecisionResultDto? latestDecision;

@@ -18,7 +18,7 @@ part 'camera_gallery_page.part.dart';
 
 /// Demo page: take a photo or pick from gallery and show preview.
 class CameraGalleryPage extends StatefulWidget {
-  const CameraGalleryPage({super.key});
+  const new({super.key});
 
   @override
   State<CameraGalleryPage> createState() => _CameraGalleryPageState();
@@ -44,7 +44,7 @@ class _CameraGalleryPageState extends State<CameraGalleryPage> {
 }
 
 class _CameraGalleryPageBody extends StatelessWidget {
-  const _CameraGalleryPageBody();
+  const new();
 
   @override
   Widget build(BuildContext context) {

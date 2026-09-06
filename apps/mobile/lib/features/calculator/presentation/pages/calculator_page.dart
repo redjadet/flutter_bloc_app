@@ -16,7 +16,7 @@ part 'calculator_page_display.part.dart';
 
 /// Calculator screen with keypad, display, and optional tax/tip.
 class CalculatorPage extends StatelessWidget {
-  const CalculatorPage({super.key});
+  const new({super.key});
 
   static const double _maxContentWidthCompact = 480;
   static const double _maxContentWidthWide = 720;
@@ -93,10 +93,7 @@ class CalculatorPage extends StatelessWidget {
             final double maxWidth = constraints.maxWidth < _maxContentWidthWide
                 ? _maxContentWidthCompact
                 : _maxContentWidthWide;
-            return CommonMaxWidth(
-              maxWidth: maxWidth,
-              child: content,
-            );
+            return CommonMaxWidth(maxWidth: maxWidth, child: content);
           },
         ),
       ),
@@ -105,7 +102,7 @@ class CalculatorPage extends StatelessWidget {
 }
 
 class _CalculatorBody extends StatelessWidget {
-  const _CalculatorBody();
+  const new();
 
   @override
   Widget build(BuildContext context) {

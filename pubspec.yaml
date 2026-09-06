@@ -16,6 +16,7 @@ workspace:
   - packages/networking
   - packages/storage
   - packages/utilities
+  - packages/secure_core_bridge
   - custom_lints/file_length_lint
   - custom_lints/mix_lint
   - custom_lints/memory_lint

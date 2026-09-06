@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:material_ui/material_ui.dart';
 
 class LibraryDemoPage extends StatefulWidget {
-  const LibraryDemoPage({
+  const new({
     required this.gridTrailingSlivers,
     required this.timerService,
     super.key,

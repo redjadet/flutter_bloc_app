@@ -4,57 +4,54 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_po
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_viewer.dart';
 
 sealed class SocialFeedLikeResult {
-  const SocialFeedLikeResult();
+  const new();
 }
 
 final class SocialFeedLikeSynced extends SocialFeedLikeResult {
-  const SocialFeedLikeSynced(this.post);
+  const new(this.post);
   final SocialFeedPost post;
 }
 
 final class SocialFeedLikeQueued extends SocialFeedLikeResult {
-  const SocialFeedLikeQueued(this.post);
+  const new(this.post);
   final SocialFeedPost post;
 }
 
 final class SocialFeedLikeRejected extends SocialFeedLikeResult {
-  const SocialFeedLikeRejected(this.canonicalPost);
+  const new(this.canonicalPost);
   final SocialFeedPost canonicalPost;
 }
 
 sealed class SocialFeedCommentResult {
-  const SocialFeedCommentResult();
+  const new();
 }
 
 final class SocialFeedCommentSynced extends SocialFeedCommentResult {
-  const SocialFeedCommentSynced({required this.post, required this.mutationId});
+  const new({required this.post, required this.mutationId});
   final SocialFeedPost post;
   final String mutationId;
 }
 
 final class SocialFeedCommentQueued extends SocialFeedCommentResult {
-  const SocialFeedCommentQueued({required this.post, required this.mutationId});
+  const new({required this.post, required this.mutationId});
   final SocialFeedPost post;
   final String mutationId;
 }
 
 final class SocialFeedCommentRejected extends SocialFeedCommentResult {
-  const SocialFeedCommentRejected(this.canonicalPost);
+  const new(this.canonicalPost);
   final SocialFeedPost canonicalPost;
 }
 
 class SocialFeedAttentionMutation {
-  const SocialFeedAttentionMutation({
-    required this.mutationId,
-    required this.postId,
-  });
+  const new({required this.mutationId, required this.postId});
 
   final String mutationId;
   final String postId;
 }
 
 class SocialFeedRejectedSync {
-  const SocialFeedRejectedSync({
+  const new({
     required this.postId,
     required this.canonicalPost,
     required this.wasComment,
@@ -68,7 +65,7 @@ class SocialFeedRejectedSync {
 }
 
 class SocialFeedDispatchedMutation {
-  const SocialFeedDispatchedMutation({
+  const new({
     required this.mutationId,
     required this.postId,
     required this.wasComment,
@@ -80,7 +77,7 @@ class SocialFeedDispatchedMutation {
 }
 
 class SocialFeedPendingSnapshot {
-  const SocialFeedPendingSnapshot({
+  const new({
     required this.pendingCommentsByPostId,
     required this.pendingPostIds,
   });
@@ -90,7 +87,7 @@ class SocialFeedPendingSnapshot {
 }
 
 class SocialFeedSyncSummary {
-  const SocialFeedSyncSummary({
+  const new({
     required this.pendingCount,
     required this.needsAttentionCount,
     this.attentionMutations = const <SocialFeedAttentionMutation>[],

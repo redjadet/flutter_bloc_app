@@ -9,6 +9,7 @@ Architecture contracts and reference implementations. Start with the root
 | SOLID guidance | [solid_principles.md](solid_principles.md) |
 | Feature folders and placement | [feature_structure_contract.md](feature_structure_contract.md) |
 | Reliable reference features | [reference_features.md](reference_features.md) |
+| Rust FFI secure core (first-of-kind package) | [rust_ffi_secure_core_bridge.md](rust_ffi_secure_core_bridge.md) |
 | DTO, mapper, and error boundaries | [use_case_dto_policy.md](use_case_dto_policy.md) |
 | Semantic patterns | [reduce_surprise_patterns.md](reduce_surprise_patterns.md) |
 | State-management decision and rules | [state_management_choice.md](state_management_choice.md), [`../bloc_standards.md`](../bloc_standards.md) |

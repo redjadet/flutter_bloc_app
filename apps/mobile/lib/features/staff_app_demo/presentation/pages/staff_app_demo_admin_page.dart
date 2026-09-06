@@ -10,7 +10,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoAdminPage extends StatelessWidget {
-  const StaffAppDemoAdminPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +85,14 @@ class StaffAppDemoAdminPage extends StatelessWidget {
 
 @immutable
 class _StaffDemoAdminViewData {
-  const _StaffDemoAdminViewData({
+  const new({
     required this.status,
     required this.errorMessage,
     required this.recentCount,
     required this.flaggedEntries,
   });
 
-  factory _StaffDemoAdminViewData.fromState(StaffDemoAdminState state) {
+  factory fromState(StaffDemoAdminState state) {
     final flaggedEntries = <StaffDemoTimeEntrySummary>[
       for (final entry in state.recentEntries)
         if (entry.isFlagged) entry,

@@ -7,7 +7,7 @@ part 'certificate_pin_policy_summary.freezed.dart';
 /// Never carries raw pin/certificate material — counts and labels only.
 @freezed
 abstract class CertificatePinPolicySummary with _$CertificatePinPolicySummary {
-  const factory CertificatePinPolicySummary({
+  const factory({
     required String modeName,
     required String pinHashKindName,
     required int configuredHostCount,

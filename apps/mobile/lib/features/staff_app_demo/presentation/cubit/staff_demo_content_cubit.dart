@@ -5,8 +5,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_conte
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_content_state.dart';
 
 class StaffDemoContentCubit extends Cubit<StaffDemoContentState> {
-  StaffDemoContentCubit({required this._repository})
-    : super(const StaffDemoContentState());
+  new({required this._repository}) : super(const StaffDemoContentState());
 
   final StaffDemoContentRepository _repository;
 

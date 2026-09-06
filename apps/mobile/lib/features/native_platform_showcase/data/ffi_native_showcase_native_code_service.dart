@@ -8,11 +8,9 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 /// Preferred long-term path for C/C++ (and future JNI-generated bindings).
 class FfiNativeShowcaseNativeCodeService
     implements NativeShowcaseNativeCodeService {
-  const FfiNativeShowcaseNativeCodeService();
+  const new();
 
   @override
-  NativeInteropCallResult invokeCpp({
-    int left = 21,
-    int right = 21,
-  }) => invokeNativeShowcaseCpp(left: left, right: right);
+  NativeInteropCallResult invokeCpp({int left = 21, int right = 21}) =>
+      invokeNativeShowcaseCpp(left: left, right: right);
 }

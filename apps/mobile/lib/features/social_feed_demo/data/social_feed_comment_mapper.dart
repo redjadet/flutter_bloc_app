@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_fa
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_mutation_status.dart';
 
 class SocialFeedCommentMapper {
-  const SocialFeedCommentMapper();
+  const new();
 
   SocialFeedCommentDto fromJson(Map<String, Object?> json) {
     try {

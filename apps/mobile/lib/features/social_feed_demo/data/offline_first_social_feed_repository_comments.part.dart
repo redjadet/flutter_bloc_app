@@ -35,13 +35,15 @@ Future<void> _ensureCommentsHydratedImpl(
   await pending;
 }
 
-Future<void> _persistCommentThreadsImpl(
+Future<bool> _persistCommentThreadsImpl(
   OfflineFirstSocialFeedRepository repo,
 ) async {
   try {
     await repo._local.saveCommentThreads(repo._remote.exportCommentThreads());
+    return true;
   } on Object {
     // Persistence degraded; in-memory threads remain for this session.
+    return false;
   }
 }
 
@@ -66,9 +68,7 @@ Future<SocialFeedPage> _refreshImpl(
     <SocialFeedPost>[
       ...remotePage.posts,
       if (existing != null)
-        ...existing.posts.where(
-          (post) => !remoteIds.contains(post.id),
-        ),
+        ...existing.posts.where((post) => !remoteIds.contains(post.id)),
     ],
   );
   final SocialFeedPage page = SocialFeedPage(
@@ -84,5 +84,5 @@ Future<SocialFeedPage> _refreshImpl(
   } on Object {
     // Keep in-memory result; persistence degraded is surfaced by Cubit.
   }
-  return repo._overlayPending(viewer, page);
+  return await repo._overlayPending(viewer, page);
 }

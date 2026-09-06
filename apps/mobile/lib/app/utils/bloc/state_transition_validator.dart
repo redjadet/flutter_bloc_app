@@ -53,7 +53,7 @@ abstract class StateTransitionValidator<S> {
 /// ```
 class FunctionStateTransitionValidator<S> extends StateTransitionValidator<S> {
   /// Creates a validator from a validation function.
-  FunctionStateTransitionValidator(this._validator);
+  new(this._validator);
 
   final bool Function(S from, S to) _validator;
 
@@ -113,13 +113,10 @@ mixin StateTransitionValidation<S> on Cubit<S> {
   /// **Note:** Only use this in debug mode or tests. In production,
   /// consider logging invalid transitions instead of throwing.
   void validateAndEmit(S newState) {
-    assert(
-      () {
-        _validator.validateTransition(state, newState);
-        return true;
-      }(),
-      'Invalid state transition from $state to $newState',
-    );
+    assert(() {
+      _validator.validateTransition(state, newState);
+      return true;
+    }(), 'Invalid state transition from $state to $newState');
     emit(newState);
   }
 }

@@ -4,10 +4,7 @@ import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 
 /// Always records to [memory] for demo counts; optionally forwards to Firebase.
 class CompositeProductAnalytics implements ProductAnalytics {
-  CompositeProductAnalytics({
-    required this.memory,
-    this.delegate,
-  });
+  new({required this.memory, this.delegate});
 
   final InMemoryProductAnalytics memory;
   final ProductAnalytics? delegate;

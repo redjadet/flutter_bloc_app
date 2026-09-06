@@ -23,7 +23,7 @@ part 'supabase_auth_page_forms.part.dart';
 /// Otherwise shows auth state and email/password forms.
 /// [redirectAfterLogin] if set, navigates to that path after successful sign-in.
 class SupabaseAuthPage extends StatefulWidget {
-  const SupabaseAuthPage({super.key, this.redirectAfterLogin});
+  const new({super.key, this.redirectAfterLogin});
 
   /// Path to navigate to after successful sign-in (e.g. from auth-gated routes).
   final String? redirectAfterLogin;

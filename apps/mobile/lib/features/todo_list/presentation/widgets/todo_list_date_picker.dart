@@ -9,17 +9,13 @@ part 'todo_list_date_picker_dialog.part.dart';
 
 @freezed
 abstract class _DatePickerResult with _$DatePickerResult {
-  const _DatePickerResult._();
+  const new _();
 
-  const factory _DatePickerResult.confirmed(DateTime date) =
-      _DatePickerResultConfirmed;
+  const factory confirmed(DateTime date) = _DatePickerResultConfirmed;
 
-  const factory _DatePickerResult.cleared() = _DatePickerResultCleared;
+  const factory cleared() = _DatePickerResultCleared;
 
-  DateTime? get date => when(
-    confirmed: (date) => date,
-    cleared: () => null,
-  );
+  DateTime? get date => when(confirmed: (date) => date, cleared: () => null);
 
   bool get didConfirm => true;
 }

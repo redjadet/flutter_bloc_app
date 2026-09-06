@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:material_ui/material_ui.dart';
 
 class FlavorBadge extends StatelessWidget {
-  const FlavorBadge({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +44,12 @@ class FlavorBadge extends StatelessWidget {
 
 @immutable
 class _FlavorBadgeStyle {
-  const _FlavorBadgeStyle({required this.label, required this.color});
+  const new({required this.label, required this.color});
   final String label;
   final Color color;
 }
 
-_FlavorBadgeStyle _mapFlavorToBadge(
-  Flavor flavor,
-  ColorScheme colors,
-) {
+_FlavorBadgeStyle _mapFlavorToBadge(Flavor flavor, ColorScheme colors) {
   switch (flavor) {
     case Flavor.dev:
       return _FlavorBadgeStyle(label: 'DEV', color: colors.error);

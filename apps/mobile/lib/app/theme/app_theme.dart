@@ -26,7 +26,7 @@ const List<Color> defaultConfettiParticleColors = [
 /// Single place for [ThemeData], light/dark [ColorScheme], and [TextTheme].
 /// Used by AppConfig when building MaterialApp.
 class AppTheme {
-  AppTheme._();
+  new _();
 
   /// Bundled Arabic font family.
   static const String arabicFontFamily = 'Cairo';

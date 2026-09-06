@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 
 class NativePlatformInfoRepositoryImpl implements NativePlatformInfoRepository {
-  NativePlatformInfoRepositoryImpl({
+  new({
     required NativeShowcaseHostLanguageService hostLanguageService,
     required NativeShowcaseNativeCodeService nativeCodeService,
     RuntimePlatformProbe? probe,
@@ -18,7 +18,7 @@ class NativePlatformInfoRepositoryImpl implements NativePlatformInfoRepository {
          probe: probe,
        );
 
-  NativePlatformInfoRepositoryImpl._({
+  new _({
     required this._hostLanguageService,
     required this._nativeCodeService,
     RuntimePlatformProbe? probe,

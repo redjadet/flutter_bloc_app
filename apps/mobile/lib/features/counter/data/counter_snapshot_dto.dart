@@ -9,7 +9,7 @@ class const CounterSnapshotDto({
   final DateTime? lastSyncedAt,
   final bool synchronized = false,
 }) {
-  CounterSnapshotDto.fromDomain(CounterSnapshot snapshot)
+  new fromDomain(CounterSnapshot snapshot)
     : this(
         count: snapshot.count,
         userId: snapshot.userId,
@@ -19,7 +19,7 @@ class const CounterSnapshotDto({
         synchronized: snapshot.synchronized,
       );
 
-  factory CounterSnapshotDto.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     return CounterSnapshotDto(
       count: (json['count'] as num).toInt(),
       userId: json['userId'] as String?,

@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 /// Compact: single column. Tablet+: two-column wrap for the first four cards;
 /// biometric stays full-width.
 class NativeSecurityShowcaseSection extends StatelessWidget {
-  const NativeSecurityShowcaseSection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +69,7 @@ class NativeSecurityShowcaseSection extends StatelessWidget {
 }
 
 class _WideCardRow extends StatelessWidget {
-  const _WideCardRow({
-    required this.gap,
-    required this.left,
-    required this.right,
-  });
+  const new({required this.gap, required this.left, required this.right});
 
   final double gap;
   final Widget left;

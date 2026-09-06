@@ -11,7 +11,7 @@ part 'app_info_cubit.freezed.dart';
 
 /// Cubit that loads and holds app info (version, build, etc.) from [AppInfoRepository].
 class AppInfoCubit extends Cubit<AppInfoState> {
-  AppInfoCubit({required this._repository}) : super(const AppInfoState());
+  new({required this._repository}) : super(const AppInfoState());
 
   final AppInfoRepository _repository;
   CancelToken? _loadToken;
@@ -47,10 +47,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
       onError: (errorMessage) {
         if (isClosed) return;
         emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorMessage: errorMessage,
-          ),
+          state.copyWith(status: ViewStatus.error, errorMessage: errorMessage),
         );
       },
       logContext: 'AppInfoCubit.load',
@@ -66,7 +63,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
 
 @freezed
 abstract class AppInfoState with _$AppInfoState {
-  const factory AppInfoState({
+  const factory({
     @Default(ViewStatus.initial) ViewStatus status,
     AppInfo? info,
     String? errorMessage,

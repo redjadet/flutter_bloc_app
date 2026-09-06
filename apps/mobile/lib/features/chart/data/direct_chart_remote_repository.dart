@@ -9,7 +9,7 @@ import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 /// Fetches chart trending data directly from CoinGecko (used when Supabase
 /// is not configured or user is not signed in).
 class DirectChartRemoteRepository implements ChartRemoteRepository {
-  DirectChartRemoteRepository({required this._api});
+  new({required this._api});
 
   static const Map<String, String> _marketChartQuery = <String, String>{
     'vs_currency': 'usd',

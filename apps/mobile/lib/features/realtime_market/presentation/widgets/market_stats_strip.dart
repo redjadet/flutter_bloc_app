@@ -4,11 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class MarketStatsStrip extends StatelessWidget {
-  const MarketStatsStrip({
-    required this.stats,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.stats, required this.l10n, super.key});
 
   final MarketStats stats;
   final AppLocalizations l10n;

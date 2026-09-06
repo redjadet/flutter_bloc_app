@@ -17,6 +17,7 @@ import 'package:flutter_bloc_app/app/router/route_scoped_page.dart';
 import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_certificate_pinning_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
+import 'package:flutter_bloc_app/app/router/routes_secure_messaging_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_staff_app_demo.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -124,6 +125,8 @@ class const DemoRouteFactory({
   required final CaseStudyDemoRouteFactory caseStudyDemoRouteFactory,
   required final CertificatePinningDemoRouteFactory
   certificatePinningDemoRouteFactory,
+  required final SecureMessagingDemoRouteFactory
+  secureMessagingDemoRouteFactory,
 }) {
   List<RouteBase> createRoutes() => <RouteBase>[
     ...createDemoRoutesHead(this),

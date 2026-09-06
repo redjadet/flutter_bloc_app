@@ -6,7 +6,7 @@ import 'package:storage/storage.dart';
 ///
 /// Single responsibility: map todo save/delete intent to sync operations.
 class TodoPayloadBuilder {
-  const TodoPayloadBuilder();
+  const new();
 
   /// Builds a sync operation for saving [item] with [idempotencyKey].
   SyncOperation buildSaveOperation(
@@ -26,10 +26,7 @@ class TodoPayloadBuilder {
     String idempotencyKey,
   ) => SyncOperation.create(
     entityType: entityType,
-    payload: <String, dynamic>{
-      'id': id,
-      'deleted': true,
-    },
+    payload: <String, dynamic>{'id': id, 'deleted': true},
     idempotencyKey: idempotencyKey,
   );
 }

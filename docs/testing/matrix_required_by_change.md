@@ -1,7 +1,7 @@
 # Testing Matrix Required By Change
 
-Cursor and Codex agents use this matrix before reporting done. It turns testing
-choice into a deterministic routing step.
+AI agents use this matrix before reporting done. It turns testing choice into a
+deterministic routing step; Codex and Cursor are the primary validated hosts.
 
 | Change | Minimum tests | Escalate when |
 | --- | --- | --- |
@@ -27,8 +27,7 @@ mechanical rename already covered by analyzer and existing tests. Record
 ## Feature Brief Contract
 
 Non-trivial `apps/mobile/lib/features/**` changes should fill
-[`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md). Cursor and Codex should
-run:
+[`FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md). Agents should run:
 
 ```bash
 bash tool/check_feature_brief_linked.sh

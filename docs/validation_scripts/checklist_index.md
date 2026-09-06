@@ -39,6 +39,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_missing_const.sh`
 - `check_pubspec_codegen_compat.sh`
 - `check_package_dependency_dag.sh`
+- `check_secure_core.sh`
 - `check_solid_presentation_data_imports.sh`
 - `check_solid_data_presentation_imports.sh`
 - `check_domain_map_bags.sh`

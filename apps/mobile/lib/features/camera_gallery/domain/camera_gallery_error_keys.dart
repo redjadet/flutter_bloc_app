@@ -6,7 +6,7 @@ export 'package:app_shared_flutter/app_shared_flutter.dart'
 
 /// Back-compat shim for [MediaPickErrorKeys] used by the camera_gallery feature.
 abstract final class CameraGalleryErrorKeys {
-  CameraGalleryErrorKeys._();
+  new _();
 
   static const String permissionDenied = MediaPickErrorKeys.permissionDenied;
   static const String cameraUnavailable = MediaPickErrorKeys.cameraUnavailable;

@@ -1,7 +1,7 @@
 part of 'supabase_auth_page.dart';
 
 class _SupabaseAuthBody extends StatelessWidget {
-  const _SupabaseAuthBody({
+  const new({
     required this.state,
     required this.emailController,
     required this.passwordController,
@@ -98,7 +98,7 @@ class _SupabaseAuthBody extends StatelessWidget {
 }
 
 class _SupabaseAuthCredentialsSection extends StatelessWidget {
-  const _SupabaseAuthCredentialsSection({
+  const new({
     required this.emailController,
     required this.passwordController,
     required this.displayNameController,

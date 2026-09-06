@@ -11,10 +11,8 @@ import 'package:utilities/utilities.dart';
 /// Cubit for the FCM demo: permission, token, and last message.
 class FcmDemoCubit extends Cubit<FcmDemoState>
     with CubitSubscriptionMixin<FcmDemoState> {
-  FcmDemoCubit({
-    required this._messaging,
-    required this._coordinator,
-  }) : super(const FcmDemoState());
+  new({required this._messaging, required this._coordinator})
+    : super(const FcmDemoState());
 
   static const String _streamErrorMessage =
       'Push notification stream is temporarily unavailable.';
@@ -49,10 +47,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
         if (isClosed) return;
         permissionRequestFailed = true;
         emit(
-          state.copyWith(
-            status: FcmDemoStatus.error,
-            errorMessage: message,
-          ),
+          state.copyWith(status: FcmDemoStatus.error, errorMessage: message),
         );
       },
       logContext: 'FcmDemoCubit.initialize.requestPermission',
@@ -66,11 +61,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
         final String? token = await _messaging.getToken();
         final String? apnsToken = await _messaging.getApnsToken();
         final PushMessage? initial = await _messaging.getInitialMessage();
-        return (
-          fcmToken: token,
-          apnsToken: apnsToken,
-          initialMessage: initial,
-        );
+        return (fcmToken: token, apnsToken: apnsToken, initialMessage: initial);
       },
       isAlive: () => !isClosed,
       onSuccess: (data) {
@@ -104,10 +95,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
       onError: (message) {
         if (isClosed) return;
         emit(
-          state.copyWith(
-            status: FcmDemoStatus.error,
-            errorMessage: message,
-          ),
+          state.copyWith(status: FcmDemoStatus.error, errorMessage: message),
         );
       },
       logContext: 'FcmDemoCubit.initialize.loadInitialData',

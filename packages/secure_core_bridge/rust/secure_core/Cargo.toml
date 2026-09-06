@@ -1,0 +1,20 @@
+[package]
+name = "secure_core"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Demo-only AES-256-GCM secure messaging core for Flutter FFI."
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+name = "secure_core"
+
+[dependencies]
+aes-gcm = "0.11.1"
+getrandom = "0.4.3"
+zeroize = { version = "1.9.0", features = ["derive"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "unwind"

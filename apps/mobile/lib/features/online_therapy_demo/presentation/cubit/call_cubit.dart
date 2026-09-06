@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_cal
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class CallState {
-  const CallState({
+  const new({
     required this.isBusy,
     required this.cameraPermissionGranted,
     required this.microphonePermissionGranted,
@@ -52,17 +52,15 @@ class CallState {
 }
 
 class CallCubit extends Cubit<CallState> {
-  CallCubit({
-    required this._appointments,
-    required this._calls,
-  }) : super(
-         const CallState(
-           isBusy: false,
-           cameraPermissionGranted: false,
-           microphonePermissionGranted: false,
-           appointments: <Appointment>[],
-         ),
-       );
+  new({required this._appointments, required this._calls})
+    : super(
+        const CallState(
+          isBusy: false,
+          cameraPermissionGranted: false,
+          microphonePermissionGranted: false,
+          appointments: <Appointment>[],
+        ),
+      );
 
   final AppointmentRepository _appointments;
   final TherapyCallRepository _calls;

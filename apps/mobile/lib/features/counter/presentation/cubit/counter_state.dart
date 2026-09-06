@@ -6,7 +6,7 @@ part 'counter_state.freezed.dart';
 /// Shared counter fields carried across lifecycle variants.
 @freezed
 abstract class CounterViewData with _$CounterViewData {
-  const factory CounterViewData({
+  const factory({
     @Default(0) int count,
     DateTime? lastChanged,
     DateTime? lastSyncedAt,
@@ -18,27 +18,22 @@ abstract class CounterViewData with _$CounterViewData {
 
 @freezed
 sealed class CounterState with _$CounterState {
-  const CounterState._();
+  const new _();
 
-  const factory CounterState.initial({
-    @Default(CounterViewData()) CounterViewData data,
-  }) = CounterInitial;
+  const factory initial({@Default(CounterViewData()) CounterViewData data}) =
+      CounterInitial;
 
-  const factory CounterState.loading({
-    required CounterViewData data,
-  }) = CounterLoading;
+  const factory loading({required CounterViewData data}) = CounterLoading;
 
-  const factory CounterState.ready({
-    required CounterViewData data,
-  }) = CounterReady;
+  const factory ready({required CounterViewData data}) = CounterReady;
 
-  const factory CounterState.failure({
+  const factory failure({
     required CounterViewData data,
     required CounterError error,
   }) = CounterFailure;
 
   /// Ready snapshot used by restoration / remote watch.
-  factory CounterState.success({
+  factory success({
     required int count,
     DateTime? lastChanged,
     DateTime? lastSyncedAt,

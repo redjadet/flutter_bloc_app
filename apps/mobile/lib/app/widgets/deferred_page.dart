@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Loads deferred libraries before rendering the requested page.
 class DeferredPage extends StatefulWidget {
-  const DeferredPage({
+  const new({
     required this.loadLibrary,
     required this.builder,
     super.key,

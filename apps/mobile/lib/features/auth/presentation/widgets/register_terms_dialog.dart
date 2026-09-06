@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class RegisterTermsDialog extends StatelessWidget {
-  const RegisterTermsDialog({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +28,7 @@ class RegisterTermsDialog extends StatelessWidget {
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
-            onPressed: () => NavigationUtils.maybePop(
-              context,
-              result: true,
-            ),
+            onPressed: () => NavigationUtils.maybePop(context, result: true),
             child: Text(l10n.registerTermsAcceptButton),
           ),
         ],
@@ -40,9 +37,7 @@ class RegisterTermsDialog extends StatelessWidget {
 
     return AlertDialog(
       title: Text(l10n.registerTermsDialogTitle),
-      content: SingleChildScrollView(
-        child: Text(l10n.registerTermsDialogBody),
-      ),
+      content: SingleChildScrollView(child: Text(l10n.registerTermsDialogBody)),
       actions: <Widget>[
         PlatformAdaptive.dialogAction(
           context: context,

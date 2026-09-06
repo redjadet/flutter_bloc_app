@@ -27,7 +27,7 @@ Future<void> pullRemoteImpl(OfflineFirstIotDemoRepository r) async {
   if (remote == null || local == null || userId == null) return;
   final Future<void>? inFlight = r._pullRemoteInFlightByUser[userId];
   if (inFlight != null) {
-    return inFlight;
+    return await inFlight;
   }
   final Future<void> future = _doPullRemoteImpl(
     r: r,
@@ -49,7 +49,7 @@ Future<void> pullRemoteImpl(OfflineFirstIotDemoRepository r) async {
       }
     }),
   );
-  return future;
+  return await future;
 }
 
 Future<bool> _shouldSkipPullRemoteReplaceImpl({
@@ -58,9 +58,7 @@ Future<bool> _shouldSkipPullRemoteReplaceImpl({
   required String userId,
 }) async {
   final List<SyncOperation> pending = await r._pendingSyncRepository
-      .getPendingOperations(
-        supabaseUserIdFilter: userId,
-      );
+      .getPendingOperations(supabaseUserIdFilter: userId);
   final bool hasPendingIotOps = pending.any(
     (op) => op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
   );
@@ -100,9 +98,7 @@ Future<void> _doPullRemoteImpl({
     )) {
       return;
     }
-    await localNow.replaceDevices(
-      List<IotDevice>.unmodifiable(remoteDevices),
-    );
+    await localNow.replaceDevices(List<IotDevice>.unmodifiable(remoteDevices));
   } on Object catch (error, stackTrace) {
     AppLogger.error(
       'OfflineFirstIotDemoRepository.pullRemote failed',

@@ -1,10 +1,10 @@
 class StaffDemoEventProofOfflineEnqueuedException implements Exception {
-  const StaffDemoEventProofOfflineEnqueuedException();
+  const new();
 }
 
 /// Local proof asset missing at submit time (photo or signature).
 class StaffDemoProofFileMissingException implements Exception {
-  StaffDemoProofFileMissingException(this.message);
+  new(this.message);
 
   final String message;
 

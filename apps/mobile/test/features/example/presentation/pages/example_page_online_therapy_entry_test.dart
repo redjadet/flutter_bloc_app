@@ -50,6 +50,7 @@ void main() {
                 onOpenProductionReadiness: () {},
                 onOpenEventBusDemo: () {},
                 onOpenSocialFeedDemo: () {},
+                onOpenSecureMessagingDemo: () {},
                 onOpenNativePlatformShowcase: () {},
                 onRunIsolates: null,
                 isRunningIsolates: false,

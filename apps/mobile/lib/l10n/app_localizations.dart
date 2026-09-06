@@ -6696,6 +6696,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'End on failure states'**
   String get socialFeedDemoSignalStep5;
+
+  /// Example hub button for secure messaging Rust FFI demo
+  ///
+  /// In en, this message translates to:
+  /// **'Secure messaging demo'**
+  String get exampleSecureMessagingDemoButton;
+
+  /// Secure messaging demo page title
+  ///
+  /// In en, this message translates to:
+  /// **'Secure messaging demo'**
+  String get secureMessagingDemoTitle;
+
+  /// Security limitation banner for secure messaging demo
+  ///
+  /// In en, this message translates to:
+  /// **'Demo only: AES key is process-ephemeral. Ciphertext cannot be decrypted after restart. Not production messaging security.'**
+  String get secureMessagingDemoSecurityWarning;
+
+  /// Shown when Rust secure core cannot load (e.g. web)
+  ///
+  /// In en, this message translates to:
+  /// **'Native core unavailable on this platform'**
+  String get secureMessagingDemoUnavailable;
+
+  /// Shows native core version string
+  ///
+  /// In en, this message translates to:
+  /// **'Core version: {version}'**
+  String secureMessagingDemoVersionLabel(String version);
+
+  /// Plaintext input label
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get secureMessagingDemoPlaintextLabel;
+
+  /// Encrypt action
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypt'**
+  String get secureMessagingDemoEncryptButton;
+
+  /// Decrypt action
+  ///
+  /// In en, this message translates to:
+  /// **'Decrypt'**
+  String get secureMessagingDemoDecryptButton;
+
+  /// Reset demo form
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get secureMessagingDemoResetButton;
+
+  /// Shown when decrypt recovers exact plaintext
+  ///
+  /// In en, this message translates to:
+  /// **'Round trip matched'**
+  String get secureMessagingDemoSuccessLabel;
+
+  /// Invalid plaintext error
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a non-empty message'**
+  String get secureMessagingDemoErrorInvalidInput;
+
+  /// Malformed envelope error
+  ///
+  /// In en, this message translates to:
+  /// **'Ciphertext is malformed'**
+  String get secureMessagingDemoErrorMalformed;
+
+  /// GCM auth failure
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed'**
+  String get secureMessagingDemoErrorAuthFailed;
+
+  /// Unsupported format version
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported envelope version'**
+  String get secureMessagingDemoErrorUnsupportedVersion;
+
+  /// Internal native failure
+  ///
+  /// In en, this message translates to:
+  /// **'Native core error'**
+  String get secureMessagingDemoErrorInternal;
+
+  /// Round-trip mismatch
+  ///
+  /// In en, this message translates to:
+  /// **'Recovered plaintext did not match'**
+  String get secureMessagingDemoErrorMismatch;
 }
 
 class _AppLocalizationsDelegate

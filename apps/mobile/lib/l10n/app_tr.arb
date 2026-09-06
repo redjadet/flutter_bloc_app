@@ -2724,5 +2724,75 @@
   "socialFeedDemoSignalStep2": "Önce veri modelini sabitle",
   "socialFeedDemoSignalStep3": "Katmanları adlandır ve uygula",
   "socialFeedDemoSignalStep4": "Zor problemleri bağımsız çöz",
-  "socialFeedDemoSignalStep5": "Hata durumlarıyla bitir"
+  "socialFeedDemoSignalStep5": "Hata durumlarıyla bitir",
+
+  "exampleSecureMessagingDemoButton": "Güvenli mesajlaşma demosu",
+  "@exampleSecureMessagingDemoButton": {
+    "description": "Example hub button for secure messaging Rust FFI demo"
+  },
+  "secureMessagingDemoTitle": "Güvenli mesajlaşma demosu",
+  "@secureMessagingDemoTitle": {
+    "description": "Secure messaging demo page title"
+  },
+  "secureMessagingDemoSecurityWarning": "Yalnızca demo: AES anahtarı süreç ömrüne bağlıdır. Yeniden başlatmadan sonra şifre çözülemez. Üretim mesajlaşma güvenliği değildir.",
+  "@secureMessagingDemoSecurityWarning": {
+    "description": "Security limitation banner for secure messaging demo"
+  },
+  "secureMessagingDemoUnavailable": "Yerel çekirdek bu platformda kullanılamıyor",
+  "@secureMessagingDemoUnavailable": {
+    "description": "Shown when Rust secure core cannot load (e.g. web)"
+  },
+  "secureMessagingDemoVersionLabel": "Çekirdek sürümü: {version}",
+  "@secureMessagingDemoVersionLabel": {
+    "description": "Shows native core version string",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "secureMessagingDemoPlaintextLabel": "Mesaj",
+  "@secureMessagingDemoPlaintextLabel": {
+    "description": "Plaintext input label"
+  },
+  "secureMessagingDemoEncryptButton": "Şifrele",
+  "@secureMessagingDemoEncryptButton": {
+    "description": "Encrypt action"
+  },
+  "secureMessagingDemoDecryptButton": "Çöz",
+  "@secureMessagingDemoDecryptButton": {
+    "description": "Decrypt action"
+  },
+  "secureMessagingDemoResetButton": "Sıfırla",
+  "@secureMessagingDemoResetButton": {
+    "description": "Reset demo form"
+  },
+  "secureMessagingDemoSuccessLabel": "Tur eşleşti",
+  "@secureMessagingDemoSuccessLabel": {
+    "description": "Shown when decrypt recovers exact plaintext"
+  },
+  "secureMessagingDemoErrorInvalidInput": "Boş olmayan bir mesaj girin",
+  "@secureMessagingDemoErrorInvalidInput": {
+    "description": "Invalid plaintext error"
+  },
+  "secureMessagingDemoErrorMalformed": "Şifreli metin bozuk",
+  "@secureMessagingDemoErrorMalformed": {
+    "description": "Malformed envelope error"
+  },
+  "secureMessagingDemoErrorAuthFailed": "Kimlik doğrulama başarısız",
+  "@secureMessagingDemoErrorAuthFailed": {
+    "description": "GCM auth failure"
+  },
+  "secureMessagingDemoErrorUnsupportedVersion": "Desteklenmeyen zarf sürümü",
+  "@secureMessagingDemoErrorUnsupportedVersion": {
+    "description": "Unsupported format version"
+  },
+  "secureMessagingDemoErrorInternal": "Yerel çekirdek hatası",
+  "@secureMessagingDemoErrorInternal": {
+    "description": "Internal native failure"
+  },
+  "secureMessagingDemoErrorMismatch": "Kurtarılan düz metin eşleşmedi",
+  "@secureMessagingDemoErrorMismatch": {
+    "description": "Round-trip mismatch"
+  }
 }

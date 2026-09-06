@@ -15,7 +15,7 @@ part 'in_app_purchase_demo_page_cards.part.dart';
 part 'in_app_purchase_demo_page_widgets.part.dart';
 
 class InAppPurchaseDemoPage extends StatelessWidget {
-  const InAppPurchaseDemoPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class InAppPurchaseDemoPage extends StatelessWidget {
 }
 
 class _IapSectionGap extends StatelessWidget {
-  const _IapSectionGap();
+  const new();
 
   @override
   Widget build(BuildContext context) {

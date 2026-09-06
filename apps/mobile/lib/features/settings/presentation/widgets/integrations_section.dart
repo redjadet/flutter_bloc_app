@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Settings section with links to integration pages (e.g. Supabase Auth).
 class IntegrationsSection extends StatelessWidget {
-  const IntegrationsSection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

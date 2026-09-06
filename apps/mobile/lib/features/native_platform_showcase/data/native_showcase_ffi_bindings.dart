@@ -8,28 +8,21 @@ typedef _NativeShowcaseGreetingDart = ffi.Pointer<ffi.Char> Function();
 typedef _NativeShowcaseAddDart = int Function(int left, int right);
 
 final class NativeShowcaseFfiBindings {
-  NativeShowcaseFfiBindings._({
-    required this._greeting,
-    required this._add,
-  });
+  new _({required this._greeting, required this._add});
 
-  factory NativeShowcaseFfiBindings.open() {
+  factory open() {
     final ffi.DynamicLibrary library = _openLibrary();
     return NativeShowcaseFfiBindings._(
       greeting: library
           .lookupFunction<
             ffi.Pointer<ffi.Char> Function(),
             _NativeShowcaseGreetingDart
-          >(
-            'native_showcase_greeting',
-          ),
+          >('native_showcase_greeting'),
       add: library
           .lookupFunction<
             ffi.Int32 Function(ffi.Int32, ffi.Int32),
             _NativeShowcaseAddDart
-          >(
-            'native_showcase_add',
-          ),
+          >('native_showcase_add'),
     );
   }
 

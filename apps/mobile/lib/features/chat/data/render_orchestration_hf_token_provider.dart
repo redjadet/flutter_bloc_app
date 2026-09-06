@@ -16,7 +16,7 @@ part 'render_orchestration_hf_token_provider_layered.part.dart';
 /// Reads only compile-time / asset Hugging Face key (tests / minimal wiring).
 class SecretConfigRenderOrchestrationHfTokenProvider
     implements RenderOrchestrationHfTokenProvider {
-  const SecretConfigRenderOrchestrationHfTokenProvider();
+  const new();
 
   @override
   Future<void> clearRenderOrchestrationTokenCache() async {}

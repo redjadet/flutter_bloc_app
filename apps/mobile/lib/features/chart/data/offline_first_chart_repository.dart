@@ -6,10 +6,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.d
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 
 class OfflineFirstChartRepository extends ChartRepository {
-  OfflineFirstChartRepository({
-    required this._remoteRepository,
-    required this._cacheRepository,
-  });
+  new({required this._remoteRepository, required this._cacheRepository});
 
   static const Duration _maxCacheAge = Duration(hours: 24);
   static const String _logContext =
@@ -36,7 +33,7 @@ class OfflineFirstChartRepository extends ChartRepository {
       return cached;
     }
 
-    return _fetchRemoteAndCache(
+    return await _fetchRemoteAndCache(
       cachedFallback: cached,
       allowCacheFallback: false,
     );
@@ -63,7 +60,7 @@ class OfflineFirstChartRepository extends ChartRepository {
       _lastCached = cached;
     }
 
-    return _fetchRemoteAndCache(
+    return await _fetchRemoteAndCache(
       cachedFallback: cached,
       allowCacheFallback: true,
     );

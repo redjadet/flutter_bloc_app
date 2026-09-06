@@ -8,7 +8,7 @@ import 'package:mix/mix.dart';
 import 'package:networking/networking.dart';
 
 class SyncDiagnosticsSection extends StatefulWidget {
-  const SyncDiagnosticsSection({super.key});
+  const new({super.key});
 
   @override
   State<SyncDiagnosticsSection> createState() => _SyncDiagnosticsSectionState();
@@ -63,84 +63,76 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     SizedBox(height: gap),
-                    ...history.map(
-                      (summary) {
-                        final DateTime local = summary.recordedAt.toLocal();
-                        final String timestamp =
-                            '${material.formatShortDate(local)} · ${material.formatTimeOfDay(
-                              TimeOfDay.fromDateTime(local),
-                            )}';
-                        final List<MapEntry<String, int>> pendingEntries =
-                            summary.pendingByEntity.entries.toList()..sort(
-                              (
-                                a,
-                                b,
-                              ) => a.key.compareTo(b.key),
-                            );
-                        final List<Widget> pendingChips = pendingEntries
-                            .map(
-                              (entry) => Box(
-                                style: AppStyles.chip,
-                                child: Text(
-                                  '${entry.key}: ${entry.value}',
-                                  style: theme.textTheme.labelMedium,
-                                ),
+                    ...history.map((summary) {
+                      final DateTime local = summary.recordedAt.toLocal();
+                      final String timestamp =
+                          '${material.formatShortDate(local)} · ${material.formatTimeOfDay(TimeOfDay.fromDateTime(local))}';
+                      final List<MapEntry<String, int>> pendingEntries =
+                          summary.pendingByEntity.entries.toList()
+                            ..sort((a, b) => a.key.compareTo(b.key));
+                      final List<Widget> pendingChips = pendingEntries
+                          .map(
+                            (entry) => Box(
+                              style: AppStyles.chip,
+                              child: Text(
+                                '${entry.key}: ${entry.value}',
+                                style: theme.textTheme.labelMedium,
                               ),
-                            )
-                            .toList(growable: false);
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: gap),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                l10n.settingsSyncLastRunLabel(timestamp),
-                                style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          )
+                          .toList(growable: false);
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: gap),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              l10n.settingsSyncLastRunLabel(timestamp),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            SizedBox(height: gap),
+                            Text(
+                              l10n.settingsSyncOperationsLabel(
+                                summary.operationsProcessed,
+                                summary.operationsFailed,
                               ),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            SizedBox(height: gap),
+                            Text(
+                              l10n.settingsSyncPendingLabel(
+                                summary.pendingAtStart,
+                              ),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            if (summary.prunedCount > 0) ...<Widget>[
                               SizedBox(height: gap),
                               Text(
-                                l10n.settingsSyncOperationsLabel(
-                                  summary.operationsProcessed,
-                                  summary.operationsFailed,
-                                ),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                              SizedBox(height: gap),
-                              Text(
-                                l10n.settingsSyncPendingLabel(
-                                  summary.pendingAtStart,
-                                ),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                              if (summary.prunedCount > 0) ...<Widget>[
-                                SizedBox(height: gap),
-                                Text(
-                                  l10n.settingsSyncPrunedLabel(
-                                    summary.prunedCount,
-                                  ),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                              if (pendingChips.isNotEmpty) ...<Widget>[
-                                SizedBox(height: gap),
-                                Wrap(
-                                  spacing: gap,
-                                  runSpacing: gap,
-                                  children: pendingChips,
-                                ),
-                              ],
-                              SizedBox(height: gap),
-                              Text(
-                                l10n.settingsSyncDurationLabel(
-                                  summary.durationMs,
+                                l10n.settingsSyncPrunedLabel(
+                                  summary.prunedCount,
                                 ),
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
-                          ),
-                        );
-                      },
-                    ),
+                            if (pendingChips.isNotEmpty) ...<Widget>[
+                              SizedBox(height: gap),
+                              Wrap(
+                                spacing: gap,
+                                runSpacing: gap,
+                                children: pendingChips,
+                              ),
+                            ],
+                            SizedBox(height: gap),
+                            Text(
+                              l10n.settingsSyncDurationLabel(
+                                summary.durationMs,
+                              ),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                   ],
                 );
               },

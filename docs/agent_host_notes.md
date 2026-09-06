@@ -1,11 +1,17 @@
 # Agent Host Notes
 
-Host-specific reminders. Repo canon still starts at [`../AGENTS.md`](../AGENTS.md)
-and [`agent_knowledge_base.md`](agent_knowledge_base.md).
+Host-specific deltas only. Canonical load order starts at
+[`../AGENTS.md`](../AGENTS.md) and [`ai/context_loading.md`](ai/context_loading.md).
 
 ## Codex
 
 - Use [`../tasks/codex/todo.md`](../tasks/codex/todo.md) for non-trivial active work.
+- Project [`AGENTS.md`](../AGENTS.md) is worktree-scoped and is **not** synced into
+  the Codex home AGENTS file under `~/.codex/`. That home file is unmanaged user
+  config: keep it a short host-neutral pointer to the nearest repository map, or
+  omit project rules entirely. Do not overwrite, delete, or re-sync it unless the
+  human explicitly authorizes that host change. Prefer the repository (or active
+  worktree) map when instructions conflict.
 - Dart/Flutter MCP: `codex mcp add dart -- dart mcp-server --force-roots-fallback`
   (repo host config may also set `cwd` and `FLUTTER_SDK`). Smoke:
   `node script/mcp_smoke_dart.js`, then verify with `mcp__dart.roots` +
@@ -31,12 +37,7 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 
 ## Agent doc edit loop
 
-Edit repo canon first ([`AGENTS.md`](../AGENTS.md), `docs/*`, `tool/agent_host_templates/`), then
-`./bin/agent-maintain after-host-edit` when templates changed (or `./bin/agent-maintain kb` for
-agent-map-only edits), and `./bin/agent-maintain closeout` before claiming host/docs work done.
-Low-level equivalent: `./tool/check_agent_knowledge_base.sh`, `./tool/check_agent_memory_compounding.sh`,
-inspect with `./tool/sync_agent_assets.sh --dry-run`, reconcile with `./bin/agent-maintain sync --apply`.
-Sync includes project-only `agent-execution.mdc` in the active workspace; global
-Cursor rules remain limited to the registered host-neutral rules.
-Policy: [`docs/agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md).
-Re-measure with `dart run tool/skill_inventory.dart` → `docs/audits/skill_inventory_latest.json`.
+Edit repo canon first; follow
+[`host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md).
+Re-measure host skills through
+[`operations_host_skills.md`](validation_scripts/operations_host_skills.md).

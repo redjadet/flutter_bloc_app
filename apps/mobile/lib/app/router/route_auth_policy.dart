@@ -1,9 +1,6 @@
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 
-enum RouteAuthRequirement {
-  publicRoute,
-  authenticated,
-}
+enum RouteAuthRequirement { publicRoute, authenticated }
 
 class const AppRoutePolicy({
   required final String path,
@@ -14,7 +11,7 @@ class const AppRoutePolicy({
 }
 
 class AppRoutePolicies {
-  AppRoutePolicies._();
+  new _();
 
   static const AppRoutePolicy settings = AppRoutePolicy(
     path: AppRoutes.settingsPath,

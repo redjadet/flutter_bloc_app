@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 /// [TypeSafeBlocSelector]. Intended to reduce repeated status checks in widgets.
 class ViewStatusSwitcher<C extends StateStreamableSource<S>, S, T>
     extends StatelessWidget {
-  const ViewStatusSwitcher({
+  const new({
     required this.selector,
     required this.isLoading,
     required this.isError,
@@ -40,9 +40,7 @@ class ViewStatusSwitcher<C extends StateStreamableSource<S>, S, T>
 
     if (isError(data)) {
       return errorBuilder?.call(context, data) ??
-          CommonErrorView(
-            message: context.l10n.errorGeneric,
-          );
+          CommonErrorView(message: context.l10n.errorGeneric);
     }
 
     return builder(context, data);

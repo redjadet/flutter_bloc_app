@@ -10,7 +10,7 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseChartRepository implements ChartRemoteRepository {
-  SupabaseChartRepository({
+  new({
     String? Function()? readAccessToken,
     Future<FunctionResponse> Function({
       required String functionName,
@@ -54,7 +54,7 @@ class SupabaseChartRepository implements ChartRemoteRepository {
   Future<List<ChartPoint>> fetchTrendingCounts() async {
     final existing = _inFlightFetch;
     if (existing != null) {
-      return existing;
+      return await existing;
     }
     final future = _fetchTrendingCountsInternal();
     _inFlightFetch = future;
@@ -179,9 +179,7 @@ class SupabaseChartRepository implements ChartRemoteRepository {
   }) {
     return Supabase.instance.client.functions.invoke(
       functionName,
-      headers: <String, String>{
-        _authorizationHeader: 'Bearer $accessToken',
-      },
+      headers: <String, String>{_authorizationHeader: 'Bearer $accessToken'},
       body: body,
     );
   }

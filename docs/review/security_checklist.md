@@ -45,6 +45,11 @@ Primary protocol: [`ai_code_review_protocol.md`](../ai_code_review_protocol.md)
 
 - Sensitive values use Keychain/secure storage abstractions — not
   `SharedPreferences` or plain Hive without review.
+- New or changed `FlutterSecureStorage` / Apple Keychain writes must set an
+  explicit `…ThisDeviceOnly` accessibility (repo default:
+  `first_unlock_this_device`) and keep `synchronizable: false` unless iCloud
+  Keychain sync is an intentional product requirement. See
+  [`security/storage_rules.md`](../security/storage_rules.md).
 - Offline-first queues do not replay destructive actions without idempotency.
 - Apple debug Hive paths follow
   [`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).

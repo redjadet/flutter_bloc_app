@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Page showcasing the whiteboard widget with CustomPainter.
 class WhiteboardPage extends StatelessWidget {
-  const WhiteboardPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => CommonPageLayout(

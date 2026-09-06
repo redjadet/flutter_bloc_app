@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 part 'online_therapy_messaging_view_content.part.dart';
 
 class OnlineTherapyMessagingView extends StatefulWidget {
-  const OnlineTherapyMessagingView({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyMessagingView> createState() =>

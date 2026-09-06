@@ -5,11 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class RecentTradesPanel extends StatelessWidget {
-  const RecentTradesPanel({
-    required this.trades,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.trades, required this.l10n, super.key});
 
   final List<RecentTrade> trades;
   final AppLocalizations l10n;
@@ -54,55 +50,51 @@ class RecentTradesPanel extends StatelessWidget {
             ),
           )
         else
-          ...shown.map(
-            (t) {
-              final Color accent = t.isBuy
-                  ? RealtimeMarketUiTokens.bidAccent(scheme)
-                  : RealtimeMarketUiTokens.askAccent(scheme);
-              return Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: context.responsiveGapXS / 2,
+          ...shown.map((t) {
+            final Color accent = t.isBuy
+                ? RealtimeMarketUiTokens.bidAccent(scheme)
+                : RealtimeMarketUiTokens.askAccent(scheme);
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: context.responsiveGapXS / 2,
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: scheme.outlineVariant.withValues(alpha: 0.35),
+                    ),
+                  ),
                 ),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: scheme.outlineVariant.withValues(alpha: 0.35),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: context.responsiveGapXS),
+                  child: Row(
+                    children: [
+                      Icon(
+                        t.isBuy ? Icons.trending_up : Icons.trending_down,
+                        size: 18,
+                        color: accent,
+                        semanticLabel: t.isBuy
+                            ? l10n.realtimeMarketSideBuy
+                            : l10n.realtimeMarketSideSell,
                       ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: context.responsiveGapXS),
-                    child: Row(
-                      children: [
-                        Icon(
-                          t.isBuy ? Icons.trending_up : Icons.trending_down,
-                          size: 18,
-                          color: accent,
-                          semanticLabel: t.isBuy
-                              ? l10n.realtimeMarketSideBuy
-                              : l10n.realtimeMarketSideSell,
-                        ),
-                        SizedBox(width: context.responsiveGapS),
-                        Expanded(
-                          child: Text(
-                            '${t.price.toStringAsFixed(2)} × ${t.quantity.toStringAsFixed(4)}',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                      SizedBox(width: context.responsiveGapS),
+                      Expanded(
+                        child: Text(
+                          '${t.price.toStringAsFixed(2)} × ${t.quantity.toStringAsFixed(4)}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontFeatures: const [FontFeature.tabularFigures()],
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          }),
       ],
     );
   }

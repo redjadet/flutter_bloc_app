@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ProfileGallery extends StatelessWidget {
-  const ProfileGallery({required this.images, super.key});
+  const new({required this.images, super.key});
 
   final List<ProfileImage> images;
 
@@ -47,7 +47,7 @@ class ProfileGallery extends StatelessWidget {
 }
 
 class _GalleryColumn extends StatelessWidget {
-  const _GalleryColumn({
+  const new({
     required this.images,
     required this.theme,
     required this.columnWidth,

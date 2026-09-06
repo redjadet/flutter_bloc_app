@@ -11,7 +11,7 @@ class DefaultRenderCallerAuthHeaderProvider
   /// Resolves [FirebaseAuth] lazily so DI registration does not touch
   /// [FirebaseAuth.instance] before Firebase is initialized (for example in
   /// unit tests that configure GetIt without a default Firebase app).
-  DefaultRenderCallerAuthHeaderProvider(this._auth);
+  new(this._auth);
 
   final FirebaseAuth Function() _auth;
 
@@ -21,6 +21,6 @@ class DefaultRenderCallerAuthHeaderProvider
     if (user == null) {
       return null;
     }
-    return user.getIdToken(forceRefresh);
+    return await user.getIdToken(forceRefresh);
   }
 }

@@ -16,7 +16,7 @@ part 'staff_demo_proof_cubit_submit.part.dart';
 
 class StaffDemoProofCubit extends _StaffDemoProofCubitBase
     with _StaffDemoProofCubitSubmit {
-  StaffDemoProofCubit({
+  new({
     required super.authRepository,
     required super.repository,
     required super.fileStore,
@@ -25,7 +25,7 @@ class StaffDemoProofCubit extends _StaffDemoProofCubitBase
 }
 
 abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
-  _StaffDemoProofCubitBase({
+  new({
     required this._authRepository,
     required this._repository,
     required this._fileStore,
@@ -93,9 +93,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
   Future<String?> pickPhotoFromGallery() =>
       _pickPhoto(_photoPicker.pickFromGallery);
 
-  Future<String?> _pickPhoto(
-    Future<MediaPickResult> Function() pick,
-  ) async {
+  Future<String?> _pickPhoto(Future<MediaPickResult> Function() pick) async {
     if (_pickInFlight) {
       return null;
     }
@@ -115,7 +113,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
       _releaseStagedFromResult(result);
       return null;
     }
-    return result.when(
+    return await result.when(
       success: (path) async {
         _trackPendingStagedPick(path);
         try {

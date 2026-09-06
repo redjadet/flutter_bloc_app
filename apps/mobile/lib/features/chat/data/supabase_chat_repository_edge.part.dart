@@ -33,7 +33,7 @@ extension _SupabaseChatRepositoryEdge on SupabaseChatRepository {
         isEdge: true,
       );
     }
-    return _invoke(accessToken: token, anonKey: anonKey, body: body);
+    return await _invoke(accessToken: token, anonKey: anonKey, body: body);
   }
 
   ChatResult parseSuccess(
