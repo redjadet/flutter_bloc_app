@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/secure_messaging_demo/presentation/cub
 import 'package:flutter_test/flutter_test.dart';
 
 final class _FakeSecureCoreRepository implements SecureCoreRepository {
-  _FakeSecureCoreRepository({
+  new({
     required this.health,
     required this.versionValue,
     this.encryptResult,

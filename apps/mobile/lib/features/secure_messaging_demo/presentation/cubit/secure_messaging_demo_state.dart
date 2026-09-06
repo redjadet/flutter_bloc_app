@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/encrypted
 import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_core_failure.dart';
 
 sealed class SecureMessagingDemoState {
-  const SecureMessagingDemoState();
+  const new();
 
   String? get version => switch (this) {
     SecureMessagingDemoReady(:final version) ||
@@ -46,15 +46,15 @@ sealed class SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoInitial extends SecureMessagingDemoState {
-  const SecureMessagingDemoInitial();
+  const new();
 }
 
 final class SecureMessagingDemoCheckingHealth extends SecureMessagingDemoState {
-  const SecureMessagingDemoCheckingHealth();
+  const new();
 }
 
 final class SecureMessagingDemoReady extends SecureMessagingDemoState {
-  const SecureMessagingDemoReady({required this.version, this.plaintext = ''});
+  const new({required this.version, this.plaintext = ''});
 
   @override
   final String version;
@@ -63,10 +63,7 @@ final class SecureMessagingDemoReady extends SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoEncrypting extends SecureMessagingDemoState {
-  const SecureMessagingDemoEncrypting({
-    required this.version,
-    required this.plaintext,
-  });
+  const new({required this.version, required this.plaintext});
 
   @override
   final String version;
@@ -75,7 +72,7 @@ final class SecureMessagingDemoEncrypting extends SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoEncrypted extends SecureMessagingDemoState {
-  const SecureMessagingDemoEncrypted({
+  const new({
     required this.version,
     required this.plaintext,
     required this.payload,
@@ -90,7 +87,7 @@ final class SecureMessagingDemoEncrypted extends SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoDecrypting extends SecureMessagingDemoState {
-  const SecureMessagingDemoDecrypting({
+  const new({
     required this.version,
     required this.plaintext,
     required this.payload,
@@ -105,7 +102,7 @@ final class SecureMessagingDemoDecrypting extends SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoSuccess extends SecureMessagingDemoState {
-  const SecureMessagingDemoSuccess({
+  const new({
     required this.version,
     required this.plaintext,
     required this.payload,
@@ -123,7 +120,7 @@ final class SecureMessagingDemoSuccess extends SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoFailure extends SecureMessagingDemoState {
-  const SecureMessagingDemoFailure({
+  const new({
     required this.failure,
     this.version,
     this.plaintext = '',
@@ -140,5 +137,5 @@ final class SecureMessagingDemoFailure extends SecureMessagingDemoState {
 }
 
 final class SecureMessagingDemoUnavailable extends SecureMessagingDemoState {
-  const SecureMessagingDemoUnavailable();
+  const new();
 }

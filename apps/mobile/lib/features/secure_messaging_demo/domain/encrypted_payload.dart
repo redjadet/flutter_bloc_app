@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 /// Opaque base64 envelope. Domain never sees pointers, nonces, or raw bytes.
 @immutable
 final class EncryptedPayload {
-  const EncryptedPayload(this.base64Envelope);
+  const new(this.base64Envelope);
 
   final String base64Envelope;
 

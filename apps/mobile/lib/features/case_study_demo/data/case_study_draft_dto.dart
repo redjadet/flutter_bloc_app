@@ -84,8 +84,8 @@ class const CaseStudyDraftDto({
     }
   }
 
-  // check-ignore: small payload (<8KB) - demo draft
   static String encode(CaseStudyDraft draft) =>
+      // check-ignore: small payload (<8KB) - demo draft
       jsonEncode(CaseStudyDraftDto.fromDomain(draft).toJson());
 
   static CaseStudyDraft? decode(String? raw) {
