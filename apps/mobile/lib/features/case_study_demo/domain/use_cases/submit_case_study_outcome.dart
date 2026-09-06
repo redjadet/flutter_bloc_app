@@ -4,15 +4,12 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/use_cases/submi
 
 /// Outcome of [SubmitCaseStudyUseCase].
 sealed class SubmitCaseStudyOutcome {
-  const SubmitCaseStudyOutcome();
+  const new();
 }
 
 /// Submit + local history persist succeeded; [freshDraft] is the next empty draft.
 final class SubmitCaseStudySuccess extends SubmitCaseStudyOutcome {
-  const SubmitCaseStudySuccess({
-    required this.freshDraft,
-    required this.submittedAtUtc,
-  });
+  const new({required this.freshDraft, required this.submittedAtUtc});
 
   final CaseStudyDraft freshDraft;
   final DateTime submittedAtUtc;
@@ -21,7 +18,7 @@ final class SubmitCaseStudySuccess extends SubmitCaseStudyOutcome {
 /// Submit failed. When [remoteSubmitFinished] is true, remote finalize
 /// succeeded but local history persist failed (caller may retry persist).
 final class SubmitCaseStudyFailure extends SubmitCaseStudyOutcome {
-  const SubmitCaseStudyFailure({
+  const new({
     required this.error,
     required this.stackTrace,
     required this.remoteSubmitFinished,

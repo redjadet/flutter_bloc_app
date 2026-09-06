@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Selector wrapper so liking one post does not rebuild siblings.
 class SocialFeedPostItem extends StatefulWidget {
-  const SocialFeedPostItem({required this.postId, super.key});
+  const new({required this.postId, super.key});
 
   final String postId;
 
@@ -86,10 +86,7 @@ class _SocialFeedPostItemState extends State<SocialFeedPostItem> {
             });
             // check-ignore: side_effects_build - user gesture callback.
             unawaited(
-              SocialFeedCommentComposer.show(
-                context,
-                postId: widget.postId,
-              ),
+              SocialFeedCommentComposer.show(context, postId: widget.postId),
             );
           },
           onRetryAttention: attentionMutationId == null
@@ -105,7 +102,7 @@ class _SocialFeedPostItemState extends State<SocialFeedPostItem> {
 }
 
 class _PostRowView {
-  const _PostRowView({
+  const new({
     required this.post,
     required this.isPending,
     required this.attentionMutationId,

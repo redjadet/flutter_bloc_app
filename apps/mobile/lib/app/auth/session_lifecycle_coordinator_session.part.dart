@@ -7,7 +7,7 @@ extension _SessionLifecycleCoordinatorSession
   }) async {
     final Future<void>? inFlight = _onSignOutCompletedInFlight;
     if (inFlight != null) {
-      return inFlight;
+      return await inFlight;
     }
     final Completer<void> gate = Completer<void>();
     _onSignOutCompletedInFlight = gate.future;

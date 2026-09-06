@@ -31,13 +31,13 @@ Future<T> runWithAuthUser<T>({
   } on FirebaseException catch (error, stackTrace) {
     AppLogger.error('$logContext failed', error, stackTrace);
     if (onFailureFallback != null) {
-      return onFailureFallback();
+      return await onFailureFallback();
     }
     rethrow;
   } on Exception catch (error, stackTrace) {
     AppLogger.error('$logContext failed', error, stackTrace);
     if (onFailureFallback != null) {
-      return onFailureFallback();
+      return await onFailureFallback();
     }
     rethrow;
   } catch (error, stackTrace) {
@@ -53,7 +53,7 @@ Future<T> runWithAuthUser<T>({
           : '$logContext failed with type error';
       AppLogger.error(message, error, stackTrace);
       if (onFailureFallback != null) {
-        return onFailureFallback();
+        return await onFailureFallback();
       }
       rethrow;
     }
@@ -63,7 +63,7 @@ Future<T> runWithAuthUser<T>({
       stackTrace,
     );
     if (onFailureFallback != null) {
-      return onFailureFallback();
+      return await onFailureFallback();
     }
     rethrow;
   }

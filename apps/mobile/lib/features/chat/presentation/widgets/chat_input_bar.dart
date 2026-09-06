@@ -10,18 +10,12 @@ part 'chat_input_bar.freezed.dart';
 
 @freezed
 abstract class _SendButtonData with _$SendButtonData {
-  const factory _SendButtonData({
-    required bool canSend,
-    required bool isLoading,
-  }) = __SendButtonData;
+  const factory({required bool canSend, required bool isLoading}) =
+      __SendButtonData;
 }
 
 class ChatInputBar extends StatelessWidget {
-  const ChatInputBar({
-    required this.controller,
-    required this.onSend,
-    super.key,
-  });
+  const new({required this.controller, required this.onSend, super.key});
 
   final TextEditingController controller;
   final VoidCallback onSend;

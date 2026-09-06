@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Listens for deep link events and navigates using the provided [GoRouter].
 class DeepLinkListener extends StatelessWidget {
-  const DeepLinkListener({
+  const new({
     required this.router,
     required this.child,
     required this.service,
@@ -28,10 +28,7 @@ class DeepLinkListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocProviderHelpers.withAsyncInit<DeepLinkCubit>(
-        create: () => DeepLinkCubit(
-          service: service,
-          parser: parser,
-        ),
+        create: () => DeepLinkCubit(service: service, parser: parser),
         init: (cubit) => cubit.initialize(),
         child: TypeSafeBlocListener<DeepLinkCubit, DeepLinkState>(
           listenWhen: (previous, current) => current is DeepLinkNavigate,

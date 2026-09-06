@@ -3,7 +3,7 @@ import 'package:networking/networking.dart';
 
 /// Result of a developer secure-probe attempt.
 sealed class SecureProbeOutcome {
-  const SecureProbeOutcome();
+  const new();
 }
 
 final class const SecureProbeSuccess({

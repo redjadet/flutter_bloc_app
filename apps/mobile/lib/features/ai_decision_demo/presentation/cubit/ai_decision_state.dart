@@ -6,7 +6,7 @@ part 'ai_decision_state.freezed.dart';
 
 @freezed
 sealed class AiDecisionState with _$AiDecisionState {
-  const factory AiDecisionState({
+  const factory({
     @Default(true) bool isLoadingQueue,
     @Default(<AiDecisionCaseSummary>[]) List<AiDecisionCaseSummary> queue,
     String? selectedCaseId,
@@ -17,5 +17,5 @@ sealed class AiDecisionState with _$AiDecisionState {
     @Default(false) bool isSavingAction,
   }) = _AiDecisionState;
 
-  factory AiDecisionState.initial() => const AiDecisionState();
+  factory initial() => const AiDecisionState();
 }

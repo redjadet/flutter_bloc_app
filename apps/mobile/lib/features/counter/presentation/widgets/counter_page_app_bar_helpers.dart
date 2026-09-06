@@ -22,7 +22,7 @@ enum OverflowAction {
 
 /// Represents an item in the overflow menu.
 class OverflowItem {
-  const OverflowItem({
+  const new({
     required this.action,
     required this.routeName,
     required this.labelBuilder,
@@ -35,7 +35,7 @@ class OverflowItem {
 
 /// Cupertino-style icon button for the app bar.
 class CupertinoIconButton extends StatelessWidget {
-  const CupertinoIconButton({
+  const new({
     required this.icon,
     required this.onPressed,
     required this.tooltip,

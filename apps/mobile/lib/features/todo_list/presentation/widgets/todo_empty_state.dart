@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
 import 'package:material_ui/material_ui.dart';
 
 class TodoEmptyState extends StatelessWidget {
-  const TodoEmptyState({required this.onAddTodo, super.key});
+  const new({required this.onAddTodo, super.key});
 
   final VoidCallback onAddTodo;
 

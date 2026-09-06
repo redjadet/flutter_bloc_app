@@ -11,10 +11,7 @@ enum SocialFeedMutationType { like, comment }
 
 /// Viewer-scoped ordered mutation queue + needsAttention dead-letter list.
 class HiveSocialFeedMutationQueue extends HiveRepositoryBase {
-  HiveSocialFeedMutationQueue({
-    required super.hiveService,
-    required this._clock,
-  });
+  new({required super.hiveService, required this._clock});
 
   static const String boxNameValue = 'social_feed_mutations_v1';
   static const String _schemaNamespace = 'social_feed_mutations:v1';
@@ -63,17 +60,17 @@ class HiveSocialFeedMutationQueue extends HiveRepositoryBase {
   }
 
   Future<List<SocialFeedMutationDto>> readQueue(SocialFeedViewer viewer) async {
-    return _readList(_queueKey(viewer));
+    return await _readList(_queueKey(viewer));
   }
 
   Future<List<SocialFeedMutationDto>> readNeedsAttention(
     SocialFeedViewer viewer,
   ) async {
-    return _readList(_attentionKey(viewer));
+    return await _readList(_attentionKey(viewer));
   }
 
   Future<List<SocialFeedMutationDto>> _readList(String key) async {
-    return runWithBox((box) async {
+    return await runWithBox((box) async {
       final Object? raw = box.get(key);
       if (raw is! List) {
         return <SocialFeedMutationDto>[];
@@ -105,7 +102,7 @@ class HiveSocialFeedMutationQueue extends HiveRepositoryBase {
   }
 
   Future<int> _nextSequence(SocialFeedViewer viewer) async {
-    return runWithBox((box) async {
+    return await runWithBox((box) async {
       final Object? raw = box.get(_seqKey(viewer));
       final int next = (raw is int ? raw : 0) + 1;
       await box.put(_seqKey(viewer), next);

@@ -10,7 +10,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientTherapistsPage extends StatefulWidget {
-  const OnlineTherapyDemoClientTherapistsPage({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyDemoClientTherapistsPage> createState() =>
@@ -39,9 +39,7 @@ class _OnlineTherapyDemoClientTherapistsPageState
           ClientBookingCubit,
           ClientBookingState,
           _VerifiedTherapistsViewData
-        >(
-          selector: _VerifiedTherapistsViewData.fromState,
-        );
+        >(selector: _VerifiedTherapistsViewData.fromState);
     final cubit = context.cubit<ClientBookingCubit>();
 
     return CommonPageLayout(
@@ -99,11 +97,9 @@ class _OnlineTherapyDemoClientTherapistsPageState
 
 @immutable
 class _VerifiedTherapistsViewData {
-  const _VerifiedTherapistsViewData(this.items);
+  const new(this.items);
 
-  factory _VerifiedTherapistsViewData.fromState(
-    ClientBookingState state,
-  ) {
+  factory fromState(ClientBookingState state) {
     final items = <TherapistProfile>[
       for (final therapist in state.therapists)
         if (therapist.isVerified) therapist,

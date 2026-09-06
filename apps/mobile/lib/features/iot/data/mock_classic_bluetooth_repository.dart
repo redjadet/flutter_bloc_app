@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/iot/domain/classic_bt_device.dart';
 
 /// Mock RFCOMM-style chat for the Classic Bluetooth section.
 class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
-  MockClassicBluetoothRepository() {
+  new() {
     _pairedController.add(List<ClassicBtDevice>.unmodifiable(_paired));
   }
   final StreamController<List<ClassicBtDevice>> _pairedController =
@@ -29,9 +29,7 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
   @override
   Future<Result<void>> connect(String deviceId) async {
     if (!_paired.any((d) => d.id == deviceId)) {
-      return const FailureResult<void>(
-        ValidationFailure('device_not_found'),
-      );
+      return const FailureResult<void>(ValidationFailure('device_not_found'));
     }
     _connectedId = deviceId;
     _emitPaired();
@@ -45,10 +43,7 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
   }
 
   @override
-  Future<Result<void>> send(
-    String deviceId,
-    String message,
-  ) async {
+  Future<Result<void>> send(String deviceId, String message) async {
     if (_connectedId != deviceId) {
       return const FailureResult<void>(ValidationFailure('not_connected'));
     }
@@ -77,18 +72,15 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
   void _emitPaired() {
     final List<ClassicBtDevice> devices = _paired
         .map(
-          (device) => device.copyWith(
-            isConnected: device.id == _connectedId,
-          ),
+          (device) => device.copyWith(isConnected: device.id == _connectedId),
         )
         .toList(growable: false);
     _pairedController.add(devices);
   }
 
-  StreamController<ClassicBtMessage> _incomingController(
-    String deviceId,
-  ) => _incomingControllers.putIfAbsent(
-    deviceId,
-    StreamController<ClassicBtMessage>.broadcast,
-  );
+  StreamController<ClassicBtMessage> _incomingController(String deviceId) =>
+      _incomingControllers.putIfAbsent(
+        deviceId,
+        StreamController<ClassicBtMessage>.broadcast,
+      );
 }

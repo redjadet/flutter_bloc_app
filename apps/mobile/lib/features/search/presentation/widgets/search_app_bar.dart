@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 class SearchAppBar extends StatelessWidget {
-  const SearchAppBar({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +21,7 @@ class SearchAppBar extends StatelessWidget {
     final Color titleColor = colors.onSurface;
     final TextStyle effectiveTitleStyle =
         (theme.textTheme.displaySmall ?? TextStyle(color: colors.onSurface))
-            .copyWith(
-              fontSize: headlineSize,
-              color: titleColor,
-            );
+            .copyWith(fontSize: headlineSize, color: titleColor);
 
     final Widget content = Row(
       children: [
@@ -66,9 +63,6 @@ class SearchAppBar extends StatelessWidget {
       );
     }
 
-    return Box(
-      style: AppStyles.appBar,
-      child: content,
-    );
+    return Box(style: AppStyles.appBar, child: content);
   }
 }

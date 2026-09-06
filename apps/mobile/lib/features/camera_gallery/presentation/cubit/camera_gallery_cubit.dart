@@ -11,8 +11,7 @@ import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 /// Cubit for the Camera & Gallery demo: pick from camera/gallery and show preview.
 class CameraGalleryCubit extends Cubit<CameraGalleryState> {
-  CameraGalleryCubit({required this._repository})
-    : super(const CameraGalleryState());
+  new({required this._repository}) : super(const CameraGalleryState());
 
   final CameraGalleryRepository _repository;
   final RequestIdGuard _pickGuard = RequestIdGuard();

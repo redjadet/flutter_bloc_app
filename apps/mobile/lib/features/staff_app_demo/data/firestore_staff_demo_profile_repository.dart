@@ -6,9 +6,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profi
 
 class FirestoreStaffDemoProfileRepository
     implements StaffDemoProfileRepository {
-  FirestoreStaffDemoProfileRepository({
-    required this._firestore,
-  });
+  new({required this._firestore});
 
   final FirebaseFirestore _firestore;
 

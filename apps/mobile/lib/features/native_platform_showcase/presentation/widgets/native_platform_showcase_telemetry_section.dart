@@ -8,7 +8,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcaseTelemetrySection extends StatelessWidget {
-  const NativePlatformShowcaseTelemetrySection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +50,7 @@ class NativePlatformShowcaseTelemetrySection extends StatelessWidget {
 }
 
 class _TelemetryBody extends StatelessWidget {
-  const _TelemetryBody({
-    required this.telemetry,
-    required this.l10n,
-    required this.theme,
-  });
+  const new({required this.telemetry, required this.l10n, required this.theme});
 
   final NativeShowcaseTelemetrySnapshot? telemetry;
   final AppLocalizations l10n;
@@ -115,7 +111,7 @@ class _TelemetryBody extends StatelessWidget {
 }
 
 class _MetricRow extends StatelessWidget {
-  const _MetricRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

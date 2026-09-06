@@ -5,10 +5,7 @@ import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 /// Orchestrates connect → discover without presentation imports.
 class BleSessionCoordinator {
-  BleSessionCoordinator({
-    required this._repository,
-    required this._platformGateway,
-  });
+  new({required this._repository, required this._platformGateway});
 
   final BleRepository _repository;
   final BlePlatformGateway _platformGateway;
@@ -21,12 +18,10 @@ class BleSessionCoordinator {
     if (!_platformGateway.supportsRealBle) {
       return const Success<void>(null);
     }
-    return _repository.ensureReady();
+    return await _repository.ensureReady();
   }
 
-  Future<Result<List<BleService>>> connectAndDiscover(
-    String deviceId,
-  ) async {
+  Future<Result<List<BleService>>> connectAndDiscover(String deviceId) async {
     await _repository.stopScan();
     final Result<void> connectResult = await _repository.connect(deviceId);
     if (connectResult case FailureResult<void>()) {
@@ -49,7 +44,7 @@ class BleSessionCoordinator {
       );
     }
     await _repository.disconnect();
-    return connectAndDiscover(deviceId).then((result) {
+    return await connectAndDiscover(deviceId).then((result) {
       if (result case FailureResult<List<BleService>>(:final failure)) {
         return FailureResult<void>(failure);
       }

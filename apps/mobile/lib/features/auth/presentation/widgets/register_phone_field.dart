@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_cou
 import 'package:material_ui/material_ui.dart';
 
 class RegisterPhoneField extends StatelessWidget {
-  const RegisterPhoneField({
+  const new({
     required this.state,
     required this.decorationBuilder,
     required this.hintText,
@@ -17,10 +17,7 @@ class RegisterPhoneField extends StatelessWidget {
   });
 
   final RegisterState state;
-  final InputDecoration Function({
-    required String hint,
-    String? errorText,
-  })
+  final InputDecoration Function({required String hint, String? errorText})
   decorationBuilder;
   final String hintText;
   final String? errorText;
@@ -48,10 +45,7 @@ class RegisterPhoneField extends StatelessWidget {
         child: TextFormField(
           key: const ValueKey('register-phone-field'),
           initialValue: state.phoneNumber.value,
-          decoration: decorationBuilder(
-            hint: hintText,
-            errorText: errorText,
-          ),
+          decoration: decorationBuilder(hint: hintText, errorText: errorText),
           style: textStyle,
           cursorColor: Theme.of(context).colorScheme.primary,
           keyboardType: TextInputType.phone,
@@ -64,10 +58,7 @@ class RegisterPhoneField extends StatelessWidget {
 }
 
 class _CountryChip extends StatelessWidget {
-  const _CountryChip({
-    required this.country,
-    required this.onPressed,
-  });
+  const new({required this.country, required this.onPressed});
 
   final CountryOption country;
   final Future<void> Function() onPressed;
@@ -82,9 +73,7 @@ class _CountryChip extends StatelessWidget {
       foregroundColor: colorScheme.onSurface,
       backgroundColor: colorScheme.surface,
       side: BorderSide(color: colorScheme.outline),
-      borderRadius: BorderRadius.circular(
-        context.responsiveCardRadius * 0.5,
-      ),
+      borderRadius: BorderRadius.circular(context.responsiveCardRadius * 0.5),
       materialStyle: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.onSurface,
         side: BorderSide(color: colorScheme.outline),
@@ -101,25 +90,18 @@ class _CountryChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            country.flagEmoji,
-            style: const TextStyle(fontSize: 18),
-          ),
+          Text(country.flagEmoji, style: const TextStyle(fontSize: 18)),
           SizedBox(width: context.responsiveHorizontalGapS),
           Flexible(
             child: Text(
               country.dialCode,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
           ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            color: colorScheme.onSurfaceVariant,
-          ),
+          Icon(Icons.keyboard_arrow_down, color: colorScheme.onSurfaceVariant),
         ],
       ),
     );

@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SecureMessagingDemoBody extends StatefulWidget {
-  const SecureMessagingDemoBody({
+  const new({
     required this.state,
     required this.onPlaintextChanged,
     required this.onEncrypt,
@@ -34,9 +34,7 @@ class _SecureMessagingDemoBodyState extends State<SecureMessagingDemoBody> {
   @override
   void initState() {
     super.initState();
-    _plaintextController = TextEditingController(
-      text: widget.state.plaintext,
-    );
+    _plaintextController = TextEditingController(text: widget.state.plaintext);
   }
 
   @override

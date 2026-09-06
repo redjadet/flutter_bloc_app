@@ -2,9 +2,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_uplo
 
 /// Simulates upload latency only.
 class CaseStudyMockUploadRepository implements CaseStudyUploadRepository {
-  CaseStudyMockUploadRepository({
-    this.delay = const Duration(milliseconds: 450),
-  });
+  new({this.delay = const Duration(milliseconds: 450)});
 
   final Duration delay;
 

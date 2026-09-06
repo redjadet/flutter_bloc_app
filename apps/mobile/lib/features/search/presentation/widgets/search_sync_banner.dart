@@ -14,7 +14,7 @@ import 'package:networking/networking.dart';
 /// Search doesn't queue operations, so this banner only shows network/sync
 /// status to inform users when results are being refreshed or when offline.
 class SearchSyncBanner extends StatefulWidget {
-  const SearchSyncBanner({super.key});
+  const new({super.key});
 
   @override
   State<SearchSyncBanner> createState() => _SearchSyncBannerState();

@@ -15,7 +15,7 @@ import 'package:design_system/design_system.dart';
 /// }
 /// ```
 class StateHelpers {
-  StateHelpers._();
+  new _();
 
   /// Check if a ViewStatus indicates loading
   static bool isLoading(ViewStatus status) => status.isLoading;

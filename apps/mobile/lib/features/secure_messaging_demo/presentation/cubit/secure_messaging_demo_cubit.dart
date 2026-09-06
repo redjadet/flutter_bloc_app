@@ -5,9 +5,7 @@ import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_co
 import 'package:flutter_bloc_app/features/secure_messaging_demo/presentation/cubit/secure_messaging_demo_state.dart';
 
 class SecureMessagingDemoCubit extends Cubit<SecureMessagingDemoState> {
-  SecureMessagingDemoCubit({
-    required this._repository,
-  }) : super(const SecureMessagingDemoInitial());
+  new({required this._repository}) : super(const SecureMessagingDemoInitial());
 
   final SecureCoreRepository _repository;
   int _requestGeneration = 0;
@@ -70,12 +68,7 @@ class SecureMessagingDemoCubit extends Cubit<SecureMessagingDemoState> {
     }
     final int generation = ++_requestGeneration;
     _retainedPlaintext = plaintext;
-    emit(
-      SecureMessagingDemoEncrypting(
-        version: version,
-        plaintext: plaintext,
-      ),
-    );
+    emit(SecureMessagingDemoEncrypting(version: version, plaintext: plaintext));
     try {
       final EncryptedPayload payload = await _repository.encrypt(plaintext);
       if (!_isRequestActive(generation)) {

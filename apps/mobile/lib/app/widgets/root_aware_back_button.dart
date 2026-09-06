@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Displays a back button when the navigator can pop, otherwise a home button.
 class RootAwareBackButton extends StatelessWidget {
-  const RootAwareBackButton({required this.homeTooltip, super.key});
+  const new({required this.homeTooltip, super.key});
 
   final String homeTooltip;
 
@@ -35,10 +35,8 @@ class RootAwareBackButton extends StatelessWidget {
           onPressed: onPressed,
         );
 
-  Widget _buildHomeButton(
-    bool useCupertino,
-    VoidCallback onPressed,
-  ) => useCupertino
+  Widget _buildHomeButton(bool useCupertino, VoidCallback onPressed) =>
+      useCupertino
       ? Tooltip(
           message: homeTooltip,
           child: CupertinoButton(

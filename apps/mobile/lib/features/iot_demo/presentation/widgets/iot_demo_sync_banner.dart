@@ -13,7 +13,7 @@ import 'package:networking/networking.dart';
 /// Triggers sync when the banner is first built so pullRemote runs and
 /// devices are loaded from Supabase when online.
 class IotDemoSyncBanner extends StatefulWidget {
-  const IotDemoSyncBanner({super.key});
+  const new({super.key});
 
   @override
   State<IotDemoSyncBanner> createState() => _IotDemoSyncBannerState();
@@ -39,11 +39,8 @@ class _IotDemoSyncBannerState extends State<IotDemoSyncBanner> {
       SyncStatusState,
       (NetworkStatus, SyncStatus, int)
     >(
-      selector: (s) => (
-        s.networkStatus,
-        s.syncStatus,
-        s.lastSummary?.pendingAtStart ?? 0,
-      ),
+      selector: (s) =>
+          (s.networkStatus, s.syncStatus, s.lastSummary?.pendingAtStart ?? 0),
       builder: (context, triple) {
         final bool isOffline = triple.$1 == NetworkStatus.offline;
         final bool isSyncing = triple.$2 == SyncStatus.syncing;

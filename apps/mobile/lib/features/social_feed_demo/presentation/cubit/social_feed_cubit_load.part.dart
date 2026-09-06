@@ -15,9 +15,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
     }
     if (cached != null && cached.posts.isNotEmpty) {
       final Map<String, List<SocialFeedComment>> cachedComments =
-          await _commentsForPosts(
-            cached.posts,
-          );
+          await _commentsForPosts(cached.posts);
       final SocialFeedPendingSnapshot pendingSnapshot =
           await _readPendingSnapshot(current);
       if (gen != _generation || isClosed) {
@@ -81,9 +79,7 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
         return;
       }
       if (_scenario.isSimulatedOnline) {
-        final SocialFeedPage page = await _repository.refresh(
-          viewer: current,
-        );
+        final SocialFeedPage page = await _repository.refresh(viewer: current);
         if (gen != _generation || isClosed) {
           return;
         }
@@ -163,13 +159,11 @@ mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
   Future<void> refresh() async {
     final SocialFeedState currentState = state;
     if (currentState is! SocialFeedReady) {
-      return load();
+      return await load();
     }
     final int gen = _generation;
     _emitReadyPatch(
-      (d) => d.copyWith(
-        refreshStatus: const SocialFeedRefreshStatus.loading(),
-      ),
+      (d) => d.copyWith(refreshStatus: const SocialFeedRefreshStatus.loading()),
     );
     try {
       final SocialFeedPage page = await _repository.refresh(

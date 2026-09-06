@@ -11,10 +11,7 @@ part 'whiteboard_painter.freezed.dart';
 /// - Smooth stroke rendering with anti-aliasing
 /// - Efficient repainting of only changed areas
 class WhiteboardPainter extends CustomPainter {
-  WhiteboardPainter({
-    required this.strokes,
-    this.backgroundColor,
-  });
+  new({required this.strokes, this.backgroundColor});
 
   /// List of stroke data to render.
   final List<WhiteboardStroke> strokes;
@@ -82,7 +79,7 @@ class WhiteboardPainter extends CustomPainter {
 /// Represents a single stroke on the whiteboard.
 @freezed
 abstract class WhiteboardStroke with _$WhiteboardStroke {
-  factory WhiteboardStroke({
+  factory({
     required List<Offset> points,
     required Color color,
     required double width,
@@ -92,7 +89,7 @@ abstract class WhiteboardStroke with _$WhiteboardStroke {
     width: width,
   );
 
-  const factory WhiteboardStroke.raw({
+  const factory raw({
     required List<Offset> points,
     required Color color,
     required double width,

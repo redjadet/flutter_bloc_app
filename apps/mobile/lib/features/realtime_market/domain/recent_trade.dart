@@ -4,7 +4,7 @@ part 'recent_trade.freezed.dart';
 
 @freezed
 abstract class RecentTrade with _$RecentTrade {
-  const factory RecentTrade({
+  const factory({
     required String id,
     required double price,
     required double quantity,

@@ -13,7 +13,7 @@ import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 export 'case_study_history_state.dart';
 
 class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
-  CaseStudyHistoryCubit({
+  new({
     required this._authRepository,
     required CaseStudyLocalRepository localRepository,
     required CaseStudyRemoteRepository remoteRepository,
@@ -84,12 +84,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
     final String? userId = _authRepository.currentUser?.id;
     if (userId == null || userId.isEmpty) return;
 
-    emit(
-      state.copyWith(
-        deletingRecordId: recordId,
-        clearTransientError: true,
-      ),
-    );
+    emit(state.copyWith(deletingRecordId: recordId, clearTransientError: true));
 
     final bool isRemote =
         _remoteAuth.isConfigured && _remoteAuth.currentUser != null;
@@ -112,12 +107,7 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
       await load();
     } on Object catch (error) {
       if (isClosed) return;
-      emit(
-        state.copyWith(
-          clearDeletingRecordId: true,
-          transientError: error,
-        ),
-      );
+      emit(state.copyWith(clearDeletingRecordId: true, transientError: error));
     }
   }
 
@@ -145,6 +135,6 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
     }
 
     await _local.ensureReady();
-    return _local.loadRecords(userId);
+    return await _local.loadRecords(userId);
   }
 }

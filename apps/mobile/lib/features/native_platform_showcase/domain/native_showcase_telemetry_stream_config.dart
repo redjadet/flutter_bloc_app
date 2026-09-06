@@ -5,22 +5,16 @@ part 'native_showcase_telemetry_stream_config.freezed.dart';
 /// Delivery mode for native showcase telemetry.
 ///
 /// Only [render] is implemented. Hosts reject [latencyCritical].
-enum NativeShowcaseTelemetryMode {
-  render,
-  latencyCritical,
-}
+enum NativeShowcaseTelemetryMode { render, latencyCritical }
 
 /// Native pre-bridge aggregation policy for a delivery window.
-enum NativeShowcaseTelemetryAggregation {
-  mean,
-  latest,
-}
+enum NativeShowcaseTelemetryAggregation { mean, latest }
 
 /// Versioned listen arguments for the telemetry EventChannel.
 @freezed
 abstract class NativeShowcaseTelemetryStreamConfig
     with _$NativeShowcaseTelemetryStreamConfig {
-  const factory NativeShowcaseTelemetryStreamConfig({
+  const factory({
     required int schemaVersion,
     required NativeShowcaseTelemetryMode mode,
     required int maxDeliveryHz,
@@ -28,12 +22,10 @@ abstract class NativeShowcaseTelemetryStreamConfig
     required String sessionId,
   }) = _NativeShowcaseTelemetryStreamConfig;
 
-  const NativeShowcaseTelemetryStreamConfig._();
+  const new _();
 
   /// Default render-mode contract used by the showcase Cubit.
-  factory NativeShowcaseTelemetryStreamConfig.renderDefault({
-    required String sessionId,
-  }) {
+  factory renderDefault({required String sessionId}) {
     return NativeShowcaseTelemetryStreamConfig(
       schemaVersion: supportedSchemaVersion,
       mode: NativeShowcaseTelemetryMode.render,

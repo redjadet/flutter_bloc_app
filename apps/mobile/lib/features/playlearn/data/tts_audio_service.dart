@@ -5,7 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 /// TTS implementation of [AudioPlaybackService] using flutter_tts.
 class TtsAudioService implements AudioPlaybackService {
-  TtsAudioService() {
+  new() {
     unawaited(_tts.setLanguage('en-US'));
   }
 

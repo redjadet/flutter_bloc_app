@@ -40,7 +40,7 @@ import 'package:networking/networking.dart';
 /// Widgets below should remain "dumb": they render with injected instances
 /// instead of assembling infrastructure themselves.
 class AppCompositionRoot {
-  const AppCompositionRoot._();
+  const new _();
 
   /// Resolves app-shell dependencies from the configured locator.
   ///

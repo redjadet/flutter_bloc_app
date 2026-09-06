@@ -31,7 +31,7 @@ enum _BatchMenuAction { complete, uncomplete, delete }
 
 @immutable
 class _TodoAppBarData {
-  const _TodoAppBarData({
+  const new({
     required this.hasFilteredItems,
     required this.allFilteredSelected,
     required this.hasSelection,
@@ -40,7 +40,7 @@ class _TodoAppBarData {
     required this.selectedCount,
   });
 
-  factory _TodoAppBarData.fromProjections({
+  factory fromProjections({
     required List<TodoItem> items,
     required List<TodoItem> filteredItems,
     required TodoListSelectionData selection,
@@ -98,7 +98,7 @@ class _TodoAppBarData {
 }
 
 class TodoListPage extends StatelessWidget {
-  const TodoListPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

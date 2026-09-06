@@ -8,7 +8,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterDisplay extends StatefulWidget {
-  const CounterDisplay({super.key});
+  const new({super.key});
 
   @override
   State<CounterDisplay> createState() => _CounterDisplayState();
@@ -78,7 +78,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
 
 @immutable
 class _DisplayState {
-  const _DisplayState({
+  const new({
     required this.count,
     required this.countdownSeconds,
     required this.isActive,

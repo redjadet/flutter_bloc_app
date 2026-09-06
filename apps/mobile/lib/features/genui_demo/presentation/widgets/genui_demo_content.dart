@@ -11,7 +11,7 @@ import 'package:material_ui/material_ui.dart';
 part 'genui_demo_content_widgets.part.dart';
 
 class GenUiDemoContent extends StatefulWidget {
-  const GenUiDemoContent({super.key});
+  const new({super.key});
 
   @override
   State<GenUiDemoContent> createState() => _GenUiDemoContentState();

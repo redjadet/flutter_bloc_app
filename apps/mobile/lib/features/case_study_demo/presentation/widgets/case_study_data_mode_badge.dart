@@ -7,13 +7,11 @@ import 'package:mix/mix.dart';
 enum CaseStudyDataMode { localOnly, supabase, unknown }
 
 class CaseStudyDataModeBadge extends StatelessWidget {
-  const CaseStudyDataModeBadge({required this.mode, super.key});
+  const new({required this.mode, super.key});
 
   final CaseStudyDataMode mode;
 
-  static CaseStudyDataMode fromRemoteBackendAuth(
-    RemoteBackendAuthPort auth,
-  ) {
+  static CaseStudyDataMode fromRemoteBackendAuth(RemoteBackendAuthPort auth) {
     if (!auth.isConfigured) return CaseStudyDataMode.localOnly;
     if (auth.currentUser != null) return CaseStudyDataMode.supabase;
     return CaseStudyDataMode.unknown;

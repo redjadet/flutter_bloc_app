@@ -17,7 +17,7 @@ best practices for AI-assisted Flutter development.
 
 ## Strengths
 
-- **Very Good Analysis 10.2.0** is a strong baseline: includes
+- **Very Good Analysis 11.0.0** is a strong baseline: includes
   `use_build_context_synchronously`, `use_colored_box`,
   `avoid_unnecessary_containers`, `cancel_subscriptions`,
   `no_logic_in_create_state`, `discarded_futures`, `unawaited_futures`,
@@ -48,7 +48,7 @@ best practices for AI-assisted Flutter development.
 
 ## Recommendations
 
-1. **Keep VGV current** - `very_good_analysis` is already at 10.2.0; continue
+1. **Keep VGV current** - `very_good_analysis` is already at 11.0.0; continue
    upgrading with Dart/Flutter SDK changes so new stable lints are inherited.
 2. **Prefer severity overrides over new lint packages** - this repo already has
    VGV, Flutter lints in test/custom packages, and local analyzer plugins.

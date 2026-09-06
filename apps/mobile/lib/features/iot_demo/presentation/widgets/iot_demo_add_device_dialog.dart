@@ -14,10 +14,7 @@ part 'iot_demo_add_device_dialog_ui.part.dart';
 /// Stateful dialog content so [TextEditingController] is disposed in
 /// [State.dispose] after the route is torn down.
 class IotDemoAddDeviceDialogBody extends StatefulWidget {
-  const IotDemoAddDeviceDialogBody({
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -69,11 +66,7 @@ class _IotDemoAddDeviceDialogBodyState
         _selectedType == IotDeviceType.thermostat ||
         _selectedType == IotDeviceType.sensor;
     final double value = hasValue
-        ? iotDemoClampAndRound(
-            _initialValue,
-            iotDemoValueMin,
-            iotDemoValueMax,
-          )
+        ? iotDemoClampAndRound(_initialValue, iotDemoValueMin, iotDemoValueMax)
         : 0.0;
     NavigationUtils.maybePop(
       context,

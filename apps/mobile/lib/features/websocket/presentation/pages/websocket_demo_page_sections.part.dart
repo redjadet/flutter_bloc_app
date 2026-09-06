@@ -1,7 +1,7 @@
 part of 'websocket_demo_page.dart';
 
 class _ReconnectAction extends StatelessWidget {
-  const _ReconnectAction();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class _ReconnectAction extends StatelessWidget {
 }
 
 class _ConnectionBannerSection extends StatelessWidget {
-  const _ConnectionBannerSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _ConnectionBannerSection extends StatelessWidget {
 }
 
 class _MessagesSection extends StatelessWidget {
-  const _MessagesSection({required this.emptyLabel});
+  const new({required this.emptyLabel});
 
   final String emptyLabel;
 
@@ -68,7 +68,7 @@ class _MessagesSection extends StatelessWidget {
 }
 
 class _ComposerSection extends StatelessWidget {
-  const _ComposerSection({
+  const new({
     required this.messageController,
     required this.onSendCurrentMessage,
   });
@@ -85,10 +85,8 @@ class _ComposerSection extends StatelessWidget {
           WebsocketState,
           ({bool isConnected, bool isSending})
         >(
-          selector: (state) => (
-            isConnected: state.isConnected,
-            isSending: state.isSending,
-          ),
+          selector: (state) =>
+              (isConnected: state.isConnected, isSending: state.isSending),
         );
 
     return SafeArea(

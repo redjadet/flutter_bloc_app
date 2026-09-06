@@ -14,7 +14,7 @@ abstract final class RealtimeMarketSnapshotCaps {
 
 /// Simulated feed + Hive cache; emits throttled snapshots from [SimulatedMarketFeed].
 class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
-  RealtimeMarketRepositoryImpl({
+  new({
     required RealtimeMarketLocalDataSource localDataSource,
     required this._feed,
   }) : _local = localDataSource;

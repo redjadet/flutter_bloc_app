@@ -13,7 +13,7 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Firebase Realtime Database backed leaf [TodoDataSource].
 class RealtimeDatabaseTodoRepository implements TodoRepository {
-  RealtimeDatabaseTodoRepository({
+  new({
     FirebaseDatabase? database,
     DatabaseReference? todoRef,
     FirebaseAuth? auth,
@@ -28,7 +28,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   final FirebaseAuth _auth;
 
   @override
-  Future<List<TodoItem>> fetchAll() async => _executeForUser<List<TodoItem>>(
+  Future<List<TodoItem>> fetchAll() => _executeForUser<List<TodoItem>>(
     operation: 'fetchAll',
     action: (user) async {
       AppLogger.debugInDebugMode(
@@ -56,7 +56,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   @override
-  Future<void> save(TodoItem item) async => _executeForUser<void>(
+  Future<void> save(TodoItem item) => _executeForUser<void>(
     operation: 'save',
     action: (user) async {
       AppLogger.debugInDebugMode(
@@ -78,7 +78,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   @override
-  Future<void> delete(String id) async => _executeForUser<void>(
+  Future<void> delete(String id) => _executeForUser<void>(
     operation: 'delete',
     action: (user) async {
       AppLogger.debugInDebugMode(
@@ -90,7 +90,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   @override
-  Future<void> clearCompleted() async => _executeForUser<void>(
+  Future<void> clearCompleted() => _executeForUser<void>(
     operation: 'clearCompleted',
     action: (user) async {
       AppLogger.debugInDebugMode(
@@ -130,10 +130,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
     onFailureFallback: onFailureFallback,
   );
 
-  List<TodoItem> _itemsFromValue(
-    Object? value, {
-    required String userId,
-  }) {
+  List<TodoItem> _itemsFromValue(Object? value, {required String userId}) {
     final List<TodoItem> items = parseMapOfMaps<TodoItem>(
       value,
       logContext: 'RealtimeDatabaseTodoRepository._itemsFromValue',
@@ -149,10 +146,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
     return _sortItems(items);
   }
 
-  Map<String, dynamic> _todoToMap(
-    TodoItem item, {
-    required String userId,
-  }) {
+  Map<String, dynamic> _todoToMap(TodoItem item, {required String userId}) {
     final Map<String, dynamic> map = TodoItemDto.fromDomain(item).toMap();
     map['userId'] = userId;
     return map;
@@ -160,9 +154,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
 
   List<TodoItem> _sortItems(List<TodoItem> items) {
     final List<TodoItem> sorted = List<TodoItem>.from(items)
-      ..sort(
-        (a, b) => b.updatedAt.compareTo(a.updatedAt),
-      );
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     return List<TodoItem>.unmodifiable(sorted);
   }
 

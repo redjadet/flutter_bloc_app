@@ -17,7 +17,7 @@ abstract class FirebaseAnalyticsGateway {
 /// Platform channel failures (tests / missing plugin) are logged once then
 /// swallowed so DI bootstrap never aborts the rest of app registration.
 class FirebaseProductAnalytics implements ProductAnalytics {
-  FirebaseProductAnalytics(this._gateway);
+  new(this._gateway);
 
   final FirebaseAnalyticsGateway _gateway;
   bool _collectionEnabled = false;

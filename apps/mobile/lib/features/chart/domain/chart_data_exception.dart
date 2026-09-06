@@ -4,7 +4,7 @@
 /// handling and testability. Presentation can catch [ChartDataException]
 /// to show user-facing messages.
 class ChartDataException implements Exception {
-  ChartDataException(this.message, {this.cause});
+  new(this.message, {this.cause});
 
   final String message;
   final Object? cause;

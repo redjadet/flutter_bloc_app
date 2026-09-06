@@ -17,7 +17,7 @@ enum ProductionReadinessNonFatalStatus {
 
 @freezed
 abstract class ProductionReadinessState with _$ProductionReadinessState {
-  const factory ProductionReadinessState({
+  const factory({
     @Default(ProductionReadinessStatus.initial)
     ProductionReadinessStatus status,
     @Default(ProductionReadinessMode.simulated) ProductionReadinessMode mode,

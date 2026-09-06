@@ -15,7 +15,7 @@ part 'remote_config_diagnostics_section_components.dart';
 part 'remote_config_diagnostics_section_models.dart';
 
 class RemoteConfigDiagnosticsSection extends StatefulWidget {
-  const RemoteConfigDiagnosticsSection({super.key});
+  const new({super.key});
 
   @override
   State<RemoteConfigDiagnosticsSection> createState() =>
@@ -64,10 +64,7 @@ class _RemoteConfigDiagnosticsSectionState
               builder: (context, data) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _RemoteConfigStatusBadge(
-                    status: data.status,
-                    theme: theme,
-                  ),
+                  _RemoteConfigStatusBadge(status: data.status, theme: theme),
                   if (data.showFlagStatus) ...<Widget>[
                     SizedBox(height: gap),
                     _RemoteConfigFlagRow(
@@ -76,9 +73,7 @@ class _RemoteConfigDiagnosticsSectionState
                   ],
                   if (data.showTestValue) ...<Widget>[
                     SizedBox(height: gap),
-                    _RemoteConfigTestValueRow(
-                      testValue: data.testValue ?? '',
-                    ),
+                    _RemoteConfigTestValueRow(testValue: data.testValue ?? ''),
                   ],
                   if (data.showMetadata) ...<Widget>[
                     SizedBox(height: gap),

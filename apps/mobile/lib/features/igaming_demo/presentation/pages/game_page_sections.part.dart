@@ -1,7 +1,7 @@
 part of 'game_page.dart';
 
 class _GameScaffold extends StatelessWidget {
-  const _GameScaffold();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _GameScaffold extends StatelessWidget {
 }
 
 class _GameBalanceCard extends StatelessWidget {
-  const _GameBalanceCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _GameBalanceCard extends StatelessWidget {
 }
 
 class _StakeSection extends StatelessWidget {
-  const _StakeSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,7 @@ class _StakeSection extends StatelessWidget {
 }
 
 class _GameLegendSection extends StatelessWidget {
-  const _GameLegendSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +182,7 @@ class _GameLegendSection extends StatelessWidget {
 }
 
 class _SpinDisplaySection extends StatelessWidget {
-  const _SpinDisplaySection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +226,7 @@ class _SpinDisplaySection extends StatelessWidget {
 }
 
 class _PrimaryActionSection extends StatelessWidget {
-  const _PrimaryActionSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +244,7 @@ class _PrimaryActionSection extends StatelessWidget {
 }
 
 class _ResultSummarySection extends StatelessWidget {
-  const _ResultSummarySection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -257,10 +257,8 @@ class _ResultSummarySection extends StatelessWidget {
           GameState,
           ({GameRoundResult? result, DemoBalance? balance})
         >(
-          selector: (state) => (
-            result: _roundResult(state),
-            balance: _displayBalance(state),
-          ),
+          selector: (state) =>
+              (result: _roundResult(state), balance: _displayBalance(state)),
         );
 
     final result = resultState.result;

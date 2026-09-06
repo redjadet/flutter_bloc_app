@@ -22,27 +22,22 @@ import 'package:material_ui/material_ui.dart';
 part 'search_page.freezed.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({
-    required this.repository,
-    required this.timerService,
-    super.key,
-  });
+  const new({required this.repository, required this.timerService, super.key});
 
   final SearchRepository repository;
   final TimerService timerService;
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (context) => SearchCubit(
-      repository: repository,
-      timerService: timerService,
-    )..search('dogs'),
+    create: (context) =>
+        SearchCubit(repository: repository, timerService: timerService)
+          ..search('dogs'),
     child: const _SearchPageContent(),
   );
 }
 
 class _SearchPageContent extends StatelessWidget {
-  const _SearchPageContent();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +138,7 @@ class _SearchPageContent extends StatelessWidget {
 
 @freezed
 abstract class _SearchBodyData with _$SearchBodyData {
-  const factory _SearchBodyData({
+  const factory({
     required bool isLoading,
     required bool isError,
     required bool hasResults,
@@ -152,10 +147,7 @@ abstract class _SearchBodyData with _$SearchBodyData {
 }
 
 class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _SearchPageAppBar({
-    required this.backgroundColor,
-    required this.preferredHeight,
-  });
+  const new({required this.backgroundColor, required this.preferredHeight});
 
   final Color backgroundColor;
   final double preferredHeight;
@@ -166,9 +158,6 @@ class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) => Material(
     color: backgroundColor,
-    child: const SafeArea(
-      bottom: false,
-      child: SearchAppBar(),
-    ),
+    child: const SafeArea(bottom: false, child: SearchAppBar()),
   );
 }

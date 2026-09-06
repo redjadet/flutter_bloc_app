@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterStatusChip extends StatelessWidget {
-  const CounterStatusChip({
+  const new({
     required this.active,
     required this.colors,
     required this.textTheme,

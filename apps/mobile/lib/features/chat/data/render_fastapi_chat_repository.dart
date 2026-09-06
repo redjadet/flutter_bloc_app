@@ -24,7 +24,7 @@ String _newRenderClientCorrelationId() {
 
 /// Remote chat via Render FastAPI orchestration (`POST /v1/chat/completions`).
 class RenderFastApiChatRepository implements ChatRepository {
-  RenderFastApiChatRepository({
+  new({
     required this._dio,
     required this._payloadBuilder,
     required this._responseParser,

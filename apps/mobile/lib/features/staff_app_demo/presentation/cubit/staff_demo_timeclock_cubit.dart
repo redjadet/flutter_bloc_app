@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timec
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_state.dart';
 
 class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
-  StaffDemoTimeclockCubit({
+  new({
     required this._authRepository,
     required this._repository,
     required this._localRepository,

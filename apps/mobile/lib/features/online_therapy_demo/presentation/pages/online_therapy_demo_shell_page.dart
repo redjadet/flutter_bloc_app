@@ -38,7 +38,7 @@ double _onlineTherapyEmbeddedPanelHeight({
 }
 
 class OnlineTherapyDemoShellPage extends StatelessWidget {
-  const OnlineTherapyDemoShellPage({required this.deps, super.key});
+  const new({required this.deps, super.key});
 
   final OnlineTherapyDemoDependencies deps;
 
@@ -54,7 +54,7 @@ class OnlineTherapyDemoShellPage extends StatelessWidget {
 // end
 
 class _OnlineTherapyDemoBody extends StatelessWidget {
-  const _OnlineTherapyDemoBody();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -63,25 +63,19 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           TherapyRole
-        >(
-          selector: (state) => state.role,
-        );
+        >(selector: (state) => state.role);
     final user = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           TherapyUser?
-        >(
-          selector: (state) => state.user,
-        );
+        >(selector: (state) => state.user);
     final errorMessage = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           String?
-        >(
-          selector: (state) => state.errorMessage,
-        );
+        >(selector: (state) => state.errorMessage);
 
     return CommonPageLayout(
       title: 'Online Therapy Demo',
@@ -93,9 +87,7 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Text(
                 message,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           const Divider(height: 1),

@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 /// Dependencies are injected so the feature stays free of DI (SoC).
 /// Route layer supplies paths and getCurrentUser from SupabaseAuthRepository.
 class IotDemoAuthGate extends StatefulWidget {
-  const IotDemoAuthGate({
+  const new({
     required this.isSupabaseInitialized,
     required this.getCurrentUser,
     required this.authStateChanges,
@@ -106,9 +106,7 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
   @override
   Widget build(BuildContext context) {
     if (!_allowed) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return widget.child;
   }

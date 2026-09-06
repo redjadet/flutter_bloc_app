@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 ///
 /// Dependencies are injected so the widget is DI-free and reusable.
 class CaseStudySupabaseAuthGate extends StatefulWidget {
-  const CaseStudySupabaseAuthGate({
+  const new({
     required this.isSupabaseInitialized,
     required this.getCurrentUser,
     required this.authStateChanges,
@@ -112,9 +112,7 @@ class _CaseStudySupabaseAuthGateState extends State<CaseStudySupabaseAuthGate> {
   @override
   Widget build(BuildContext context) {
     if (!_allowed) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return widget.child;
   }

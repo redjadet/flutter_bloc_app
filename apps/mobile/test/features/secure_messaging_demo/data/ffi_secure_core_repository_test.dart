@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:secure_core_bridge/secure_core_bridge.dart';
 
 final class _FakeNativeApi implements SecureCoreNativeApi {
-  _FakeNativeApi({this.throwKind, this.decryptBytes});
+  new({this.throwKind, this.decryptBytes});
 
   SecureCoreNativeFailureKind? throwKind;
   Uint8List? decryptBytes;

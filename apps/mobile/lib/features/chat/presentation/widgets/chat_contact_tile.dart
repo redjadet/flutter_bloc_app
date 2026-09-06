@@ -6,7 +6,7 @@ import 'package:ilkersevim_relative_time/ilkersevim_relative_time.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ChatContactTile extends StatelessWidget {
-  const ChatContactTile({
+  const new({
     required this.contact,
     required this.onTap,
     required this.onLongPress,
@@ -41,9 +41,7 @@ class ChatContactTile extends StatelessWidget {
                 contact: contact,
                 size: config.profileImageSize,
               ),
-              SizedBox(
-                width: config.horizontalGap,
-              ),
+              SizedBox(width: config.horizontalGap),
               Expanded(
                 child: ChatContactTileDetails(
                   contact: contact,

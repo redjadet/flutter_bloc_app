@@ -18,7 +18,7 @@ mixin ChatRepository {
 }
 
 class ChatException implements Exception {
-  const ChatException(this.message);
+  const new(this.message);
   final String message;
 
   @override
@@ -27,7 +27,7 @@ class ChatException implements Exception {
 
 /// Typed remote failure for Edge/direct paths (queue table + `supabase/README.md` codes).
 class ChatRemoteFailureException extends ChatException {
-  const ChatRemoteFailureException(
+  const new(
     super.message, {
     required this.code,
     required this.retryable,
@@ -46,9 +46,7 @@ class ChatRemoteFailureException extends ChatException {
 
 /// Exception thrown when a chat message is queued for offline sync.
 class ChatOfflineEnqueuedException extends ChatException {
-  const ChatOfflineEnqueuedException([
-    super.message = 'Message queued; will sync when back online.',
-  ]);
+  const new([super.message = 'Message queued; will sync when back online.']);
 }
 
 class const ChatResult({

@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_host_language_service.dart';
 
 class ShareNativeShowcaseTextUseCase {
-  ShareNativeShowcaseTextUseCase(this._hostLanguageService);
+  new(this._hostLanguageService);
 
   final NativeShowcaseHostLanguageService _hostLanguageService;
 

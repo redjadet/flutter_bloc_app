@@ -1,7 +1,7 @@
 part of 'genui_demo_content.dart';
 
 class _GenUiMainSection extends StatelessWidget {
-  const _GenUiMainSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,7 @@ class _GenUiMainSection extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) => SingleChildScrollView(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: CommonErrorView(message: message),
                 ),
               ),
@@ -80,10 +78,7 @@ class _GenUiMainSection extends StatelessWidget {
 }
 
 class _GenUiSurfacesList extends StatelessWidget {
-  const _GenUiSurfacesList({
-    required this.surfaceIds,
-    required this.hostHandle,
-  });
+  const new({required this.surfaceIds, required this.hostHandle});
 
   final List<String> surfaceIds;
   final genui.A2uiMessageProcessor hostHandle;
@@ -96,20 +91,14 @@ class _GenUiSurfacesList extends StatelessWidget {
       final surfaceId = surfaceIds[index];
       return RepaintBoundary(
         key: ValueKey(surfaceId),
-        child: genui.GenUiSurface(
-          host: hostHandle,
-          surfaceId: surfaceId,
-        ),
+        child: genui.GenUiSurface(host: hostHandle, surfaceId: surfaceId),
       );
     },
   );
 }
 
 class _GenUiInputRow extends StatelessWidget {
-  const _GenUiInputRow({
-    required this.textController,
-    required this.onSendMessage,
-  });
+  const new({required this.textController, required this.onSendMessage});
 
   final TextEditingController textController;
   final Future<void> Function() onSendMessage;
@@ -133,9 +122,7 @@ class _GenUiInputRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: colors.surface,
           border: Border(
-            top: BorderSide(
-              color: colors.outline.withValues(alpha: 0.2),
-            ),
+            top: BorderSide(color: colors.outline.withValues(alpha: 0.2)),
           ),
         ),
         child: Row(

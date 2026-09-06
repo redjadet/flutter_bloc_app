@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Compact spinner used on settings diagnostics cards (metadata load, clear in flight).
 class SettingsDiagnosticsBusyGlyph extends StatelessWidget {
-  const SettingsDiagnosticsBusyGlyph({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SettingsDiagnosticsBusyGlyph extends StatelessWidget {
 
 /// Trailing clear control on a diagnostics card (shows [label] or busy glyph).
 class SettingsDiagnosticsClearButton extends StatelessWidget {
-  const SettingsDiagnosticsClearButton({
+  const new({
     required this.label,
     required this.isBusy,
     required this.onPressed,

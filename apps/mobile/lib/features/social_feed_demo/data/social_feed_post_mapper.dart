@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_fa
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_post.dart';
 
 class SocialFeedPostMapper {
-  const SocialFeedPostMapper();
+  const new();
 
   static final RegExp _offsetSuffix = RegExp(r'[+-]\d{2}:\d{2}$');
 

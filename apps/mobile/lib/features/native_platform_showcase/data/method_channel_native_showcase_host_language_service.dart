@@ -14,11 +14,10 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 /// domain or presentation.
 class MethodChannelNativeShowcaseHostLanguageService
     implements NativeShowcaseHostLanguageService {
-  const MethodChannelNativeShowcaseHostLanguageService({
-    MethodChannel? channel,
-  }) : _channel =
-           channel ??
-           const MethodChannel('com.example.flutter_bloc_app/native_showcase');
+  const new({MethodChannel? channel})
+    : _channel =
+          channel ??
+          const MethodChannel('com.example.flutter_bloc_app/native_showcase');
 
   final MethodChannel _channel;
 
@@ -27,7 +26,7 @@ class MethodChannelNativeShowcaseHostLanguageService
     if (!kIsWeb &&
         (defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS)) {
-      return _invoke(
+      return await _invoke(
         method: 'invokeSwift',
         kind: NativeInteropBridgeKind.swift,
       );
@@ -42,7 +41,7 @@ class MethodChannelNativeShowcaseHostLanguageService
   @override
   Future<NativeInteropCallResult> invokeKotlin() async {
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return _invoke(
+      return await _invoke(
         method: 'invokeKotlin',
         kind: NativeInteropBridgeKind.kotlin,
       );
@@ -64,7 +63,7 @@ class MethodChannelNativeShowcaseHostLanguageService
         message: 'Haptic feedback runs on iOS and Android only.',
       );
     }
-    return _invoke(method: 'triggerHaptic', kind: kind);
+    return await _invoke(method: 'triggerHaptic', kind: kind);
   }
 
   @override
@@ -86,7 +85,7 @@ class MethodChannelNativeShowcaseHostLanguageService
         message: 'System share runs on iOS and Android only.',
       );
     }
-    return _invoke(
+    return await _invoke(
       method: 'shareText',
       kind: kind,
       arguments: <String, Object?>{'text': trimmed},

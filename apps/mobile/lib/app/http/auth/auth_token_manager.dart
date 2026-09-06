@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// (avoids race where each 401 triggers its own refresh and invalidates prior
 /// tokens).
 class AuthTokenManager {
-  AuthTokenManager({this._firebaseAuth, TokenRepository? tokenRepository})
+  new({this._firebaseAuth, TokenRepository? tokenRepository})
     : _tokenRepository = tokenRepository ?? InMemoryTokenRepository();
 
   final FirebaseAuth? _firebaseAuth;
@@ -24,14 +24,14 @@ class AuthTokenManager {
 
   /// Get a valid auth token, refreshing if necessary
   Future<String?> getValidAuthToken(User user) async {
-    return _tokenRepository.getFirebaseAccessToken(user);
+    return await _tokenRepository.getFirebaseAccessToken(user);
   }
 
   /// Runs a single token refresh; concurrent callers await the same future.
   Future<bool> _runRefreshSerialized({User? userOverride}) async {
     final Completer<bool>? existingCompleter = _refreshCompleter;
     if (existingCompleter != null) {
-      return existingCompleter.future;
+      return await existingCompleter.future;
     }
     final Completer<bool> completer = Completer<bool>();
     _refreshCompleter = completer;
@@ -52,13 +52,13 @@ class AuthTokenManager {
     } finally {
       _refreshCompleter = null;
     }
-    return future;
+    return await future;
   }
 
   /// Refresh the authentication token.
   /// When multiple callers hit 401 at once, only one refresh runs; others wait.
   Future<bool> refreshToken() async {
-    return _runRefreshSerialized();
+    return await _runRefreshSerialized();
   }
 
   /// Force-refresh the authentication token and return the updated token value.
@@ -68,7 +68,7 @@ class AuthTokenManager {
     if (!refreshed) {
       return null;
     }
-    return getValidAuthToken(user);
+    return await getValidAuthToken(user);
   }
 
   /// Clear cached token

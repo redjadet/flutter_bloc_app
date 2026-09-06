@@ -17,11 +17,7 @@ part 'supabase_config_provider.part.dart';
 /// Fetches Supabase client config from Firebase Remote Config after the
 /// user is signed in with Firebase Auth, then persists + applies it at runtime.
 final class SupabaseConfigProvider {
-  SupabaseConfigProvider({
-    this._auth,
-    this._remoteConfig,
-    this._storage,
-  });
+  new({this._auth, this._remoteConfig, this._storage});
 
   final FirebaseAuth? _auth;
   final RemoteConfigService? _remoteConfig;
@@ -39,7 +35,7 @@ final class SupabaseConfigProvider {
     bool force = false,
   }) async {
     final existing = _inFlight;
-    if (existing != null) return existing;
+    if (existing != null) return await existing;
 
     final future = _fetchInternal(force: force);
     _inFlight = future;
@@ -136,20 +132,17 @@ final class SupabaseConfigProvider {
         RemoteConfigKeys.supabaseConfigVersion,
       );
 
-      assert(
-        () {
-          final Uri? uri = Uri.tryParse(url);
-          final String host = (uri == null || uri.host.isEmpty)
-              ? '(invalid-url)'
-              : uri.host;
-          AppLogger.debug(
-            'SupabaseConfigProvider: source=remote_config '
-            'version=$versionNumber host=$host',
-          );
-          return true;
-        }(),
-        'SupabaseConfigProvider Remote Config diagnostic',
-      );
+      assert(() {
+        final Uri? uri = Uri.tryParse(url);
+        final String host = (uri == null || uri.host.isEmpty)
+            ? '(invalid-url)'
+            : uri.host;
+        AppLogger.debug(
+          'SupabaseConfigProvider: source=remote_config '
+          'version=$versionNumber host=$host',
+        );
+        return true;
+      }(), 'SupabaseConfigProvider Remote Config diagnostic');
 
       final bool enabledFlag = remoteConfig.getBool(
         RemoteConfigKeys.supabaseConfigEnabled,

@@ -4,7 +4,7 @@ part 'chat_contact.freezed.dart';
 
 @freezed
 abstract class ChatContact with _$ChatContact {
-  const factory ChatContact({
+  const factory({
     required String id,
     required String name,
     required String lastMessage,

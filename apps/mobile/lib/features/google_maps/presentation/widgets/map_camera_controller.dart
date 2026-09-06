@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Controls camera movements and animations for both Google and Apple Maps.
 class MapCameraController {
-  MapCameraController({
+  new({
     required this.cubit,
     required this.useAppleMaps,
     required this.googleController,
@@ -25,7 +25,7 @@ class MapCameraController {
     if (!googleController.isCompleted) {
       return null;
     }
-    return googleController.future;
+    return await googleController.future;
   }
 
   /// Move camera to a specific position without animation.
@@ -34,9 +34,7 @@ class MapCameraController {
       final amap.AppleMapController? controller = appleController;
       if (controller == null) return;
 
-      await controller.moveCamera(
-        appleCameraUpdateForPosition(position),
-      );
+      await controller.moveCamera(appleCameraUpdateForPosition(position));
       return;
     }
 
@@ -44,9 +42,7 @@ class MapCameraController {
         await _ensureGoogleController();
     if (controller == null) return;
 
-    await controller.moveCamera(
-      gmaps.CameraUpdate.newCameraPosition(position),
-    );
+    await controller.moveCamera(gmaps.CameraUpdate.newCameraPosition(position));
   }
 
   /// Animate camera to focus on a location.

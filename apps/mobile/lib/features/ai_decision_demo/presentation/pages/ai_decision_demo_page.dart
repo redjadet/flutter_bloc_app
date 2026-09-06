@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 part 'ai_decision_demo_page.part.dart';
 
 class AiDecisionDemoPage extends StatefulWidget {
-  const AiDecisionDemoPage({super.key});
+  const new({super.key});
 
   @override
   State<AiDecisionDemoPage> createState() => _AiDecisionDemoPageState();

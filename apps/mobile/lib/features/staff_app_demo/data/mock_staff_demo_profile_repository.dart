@@ -2,9 +2,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profi
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 
 class MockStaffDemoProfileRepository implements StaffDemoProfileRepository {
-  MockStaffDemoProfileRepository({
-    this._profiles = const {},
-  });
+  new({this._profiles = const {}});
 
   final Map<String, StaffDemoProfile> _profiles;
 

@@ -16,7 +16,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedDemoBody extends StatelessWidget {
-  const SocialFeedDemoBody({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,8 @@ class SocialFeedDemoBody extends StatelessWidget {
             l10n.socialFeedDemoMutationRejected,
           SocialFeedAnnouncementEffect(:final code) => code,
         };
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
       },
       builder: (context, state) {
         return switch (state) {
@@ -64,7 +63,7 @@ class SocialFeedDemoBody extends StatelessWidget {
 }
 
 class _ReadyBody extends StatelessWidget {
-  const _ReadyBody({required this.data});
+  const new({required this.data});
 
   final SocialFeedReadyData data;
 
@@ -100,7 +99,7 @@ class _ReadyBody extends StatelessWidget {
 }
 
 class _FeedColumn extends StatelessWidget {
-  const _FeedColumn({required this.data});
+  const new({required this.data});
 
   final SocialFeedReadyData data;
 

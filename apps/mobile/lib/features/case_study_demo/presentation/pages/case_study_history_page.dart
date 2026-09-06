@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CaseStudyHistoryPage extends StatelessWidget {
-  const CaseStudyHistoryPage({super.key});
+  const new({super.key});
 
   Future<bool> _confirmDelete(BuildContext context) async {
     final l10n = context.l10n;
@@ -66,9 +66,7 @@ class CaseStudyHistoryPage extends StatelessWidget {
             if (state.status == CaseStudyHistoryStatus.error &&
                 state.records.isEmpty) {
               return Center(
-                child: Text(
-                  state.errorMessage ?? l10n.caseStudyHistoryEmpty,
-                ),
+                child: Text(state.errorMessage ?? l10n.caseStudyHistoryEmpty),
               );
             }
 

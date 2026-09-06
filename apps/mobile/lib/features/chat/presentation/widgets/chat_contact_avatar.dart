@@ -3,11 +3,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ChatContactAvatar extends StatelessWidget {
-  const ChatContactAvatar({
-    required this.contact,
-    required this.size,
-    super.key,
-  });
+  const new({required this.contact, required this.size, super.key});
 
   final ChatContact contact;
   final double size;
@@ -23,11 +19,7 @@ class ChatContactAvatar extends StatelessWidget {
 
     Widget buildFallback() => ColoredBox(
       color: colors.surfaceContainerHighest,
-      child: Icon(
-        Icons.person,
-        color: colors.onSurfaceVariant,
-        size: iconSize,
-      ),
+      child: Icon(Icons.person, color: colors.onSurfaceVariant, size: iconSize),
     );
 
     Widget? buildImage() {
@@ -89,9 +81,7 @@ class ChatContactAvatar extends StatelessWidget {
             shape: BoxShape.circle,
             color: colors.surfaceContainerHighest,
           ),
-          child: ClipOval(
-            child: imageWidget ?? buildFallback(),
-          ),
+          child: ClipOval(child: imageWidget ?? buildFallback()),
         ),
         if (contact.isOnline)
           Positioned(
@@ -103,10 +93,7 @@ class ChatContactAvatar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colors.primary,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: colors.surface,
-                  width: borderWidth,
-                ),
+                border: Border.all(color: colors.surface, width: borderWidth),
               ),
             ),
           ),

@@ -3,7 +3,7 @@
 /// Avoids encoding picked bytes as a `data:` URL (base64 inflates memory and
 /// forces a second decode in `LocalStaffDemoProofFileStore`). Demo-only.
 final class StaffDemoProofPickMemory {
-  StaffDemoProofPickMemory._();
+  new _();
 
   static final StaffDemoProofPickMemory instance = StaffDemoProofPickMemory._();
 

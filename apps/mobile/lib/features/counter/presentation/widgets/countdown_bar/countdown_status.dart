@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CountdownStatus extends StatelessWidget {
-  const CountdownStatus({
+  const new({
     required this.active,
     required this.color,
     required this.label,

@@ -2,7 +2,7 @@ import 'package:design_system/responsive.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ChatContactTileConfig {
-  ChatContactTileConfig({
+  new({
     required this.profileImageSize,
     required this.nameFontSize,
     required this.messageFontSize,
@@ -33,13 +33,10 @@ class ChatContactTileConfig {
       height: messageLineHeight / messageFontSize,
       color: subtleTextColor,
     );
-    timeTextStyle = TextStyle(
-      fontSize: timeFontSize,
-      color: subtleTextColor,
-    );
+    timeTextStyle = TextStyle(fontSize: timeFontSize, color: subtleTextColor);
   }
 
-  factory ChatContactTileConfig.fromContext(BuildContext context) {
+  factory fromContext(BuildContext context) {
     final isDesktopLayout = context.isDesktop;
     final isTabletOrLarger = context.isTabletOrLarger;
     final usesTabletTypography = isTabletOrLarger && !isDesktopLayout;

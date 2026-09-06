@@ -2,10 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_platform_kind.dart';
 
 class RuntimePlatformProbe {
-  const RuntimePlatformProbe({
-    this.isWeb,
-    this.platform,
-  });
+  const new({this.isWeb, this.platform});
 
   final bool? isWeb;
   final TargetPlatform? platform;

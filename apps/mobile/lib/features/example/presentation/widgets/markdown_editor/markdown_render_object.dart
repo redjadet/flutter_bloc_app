@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// - Supports scrolling and text selection
 /// - Uses low-level painting for performance
 class MarkdownRenderObject extends RenderBox {
-  MarkdownRenderObject({
+  new({
     required this._text,
     required this._textStyle,
     required this.onTextChanged,

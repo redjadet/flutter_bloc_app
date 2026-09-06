@@ -5,16 +5,12 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_
 
 class FirestoreStaffDemoTimeEntriesRepository
     implements StaffDemoTimeEntriesRepository {
-  FirestoreStaffDemoTimeEntriesRepository({
-    required this._firestore,
-  });
+  new({required this._firestore});
 
   final FirebaseFirestore _firestore;
 
   @override
-  Future<List<StaffDemoTimeEntrySummary>> fetchRecent({
-    int limit = 20,
-  }) async {
+  Future<List<StaffDemoTimeEntrySummary>> fetchRecent({int limit = 20}) async {
     final snap = await _firestore
         .collection('staffDemoTimeEntries')
         .orderBy('clockInAtClientMs', descending: true)

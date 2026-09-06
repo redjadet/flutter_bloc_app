@@ -5,7 +5,7 @@ part 'counter_snapshot.freezed.dart';
 /// Immutable snapshot of counter state for persistence.
 @freezed
 abstract class CounterSnapshot with _$CounterSnapshot {
-  const factory CounterSnapshot({
+  const factory({
     required int count,
     String? userId,
     DateTime? lastChanged,

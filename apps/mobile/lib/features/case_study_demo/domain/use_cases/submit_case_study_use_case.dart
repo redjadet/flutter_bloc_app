@@ -9,7 +9,7 @@ import 'package:ilkersevim_retry/ilkersevim_retry.dart';
 
 /// Multi-port submit: mock upload → optional remote clips/finalize → local history.
 class SubmitCaseStudyUseCase {
-  const SubmitCaseStudyUseCase({
+  const new({
     required CaseStudyUploadRepository uploadRepository,
     required CaseStudyRemoteRepository remoteRepository,
     required CaseStudyRemoteDeleteRepository remoteDeleteRepository,

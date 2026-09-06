@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ChatHistoryConversationTile extends StatelessWidget {
-  const ChatHistoryConversationTile({
+  const new({
     required this.conversation,
     required this.index,
     required this.isActive,
@@ -31,11 +31,7 @@ class ChatHistoryConversationTile extends StatelessWidget {
       materialLocalizations,
       conversation.updatedAt,
     );
-    final String title = conversationTitle(
-      context,
-      index,
-      conversation,
-    );
+    final String title = conversationTitle(context, index, conversation);
     final String? preview = conversation.messages.isNotEmpty
         ? conversation.messages.last.text
         : null;
@@ -51,10 +47,7 @@ class ChatHistoryConversationTile extends StatelessWidget {
     return PlatformAdaptive.listTile(
       context: context,
       leading: isActive
-          ? Icon(
-              Icons.check_circle,
-              color: theme.colorScheme.primary,
-            )
+          ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
           : null,
       selected: isActive,
       selectedTileColor: tileColor,

@@ -11,7 +11,7 @@ import 'package:mix/mix.dart';
 /// (`graphqlSampleDataSourceCache` / `graphqlSampleDataSourceSupabaseEdge`
 /// / `graphqlSampleDataSourceSupabaseTables` / `graphqlSampleDataSourceRemote`).
 class GraphqlDataSourceBadge extends StatelessWidget {
-  const GraphqlDataSourceBadge({required this.source, super.key});
+  const new({required this.source, super.key});
 
   final GraphqlDataSource source;
 

@@ -15,7 +15,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Cloud IoT tab content extracted for the IoT demo hub (no BLE imports).
 class IotDemoCloudTab extends StatefulWidget {
-  const IotDemoCloudTab({required this.showBackendDisabledBanner, super.key});
+  const new({required this.showBackendDisabledBanner, super.key});
 
   final bool showBackendDisabledBanner;
 
@@ -49,15 +49,13 @@ class _IotDemoCloudTabState extends State<IotDemoCloudTab> {
 }
 
 class _IotDemoFilterSection extends StatelessWidget {
-  const _IotDemoFilterSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
     final filter = context
         .selectState<IotDemoCubit, IotDemoState, IotDemoDeviceFilter?>(
-          selector: (state) => state.mapOrNull(
-            loaded: (state) => state.filter,
-          ),
+          selector: (state) => state.mapOrNull(loaded: (state) => state.filter),
         );
 
     if (filter == null) {
@@ -95,7 +93,7 @@ class _IotDemoFilterSection extends StatelessWidget {
 }
 
 class _IotDemoBodySection extends StatelessWidget {
-  const _IotDemoBodySection();
+  const new();
 
   @override
   Widget build(BuildContext context) {

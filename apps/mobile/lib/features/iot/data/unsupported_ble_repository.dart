@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 /// Phase 1 stub when real BLE selected off-mobile.
 class UnsupportedBleRepository implements BleRepository {
-  const UnsupportedBleRepository();
+  const new();
 
   @override
   Stream<BleAdapterStatus> watchAdapterStatus() =>

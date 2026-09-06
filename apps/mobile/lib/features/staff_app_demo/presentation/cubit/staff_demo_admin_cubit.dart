@@ -4,9 +4,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_state.dart';
 
 class StaffDemoAdminCubit extends Cubit<StaffDemoAdminState> {
-  StaffDemoAdminCubit({
-    required this._timeEntriesRepository,
-  }) : super(const StaffDemoAdminState());
+  new({required this._timeEntriesRepository})
+    : super(const StaffDemoAdminState());
 
   final StaffDemoTimeEntriesRepository _timeEntriesRepository;
 

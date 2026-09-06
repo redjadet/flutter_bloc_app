@@ -22,7 +22,7 @@ class ProductionReadinessCubit extends _ProductionReadinessCubitBase
         _ProductionReadinessCubitConsent,
         _ProductionReadinessCubitFcm,
         _ProductionReadinessCubitCrashlytics {
-  ProductionReadinessCubit({
+  new({
     required super.remoteConfig,
     required super.consentRepository,
     required super.analytics,
@@ -39,7 +39,7 @@ class ProductionReadinessCubit extends _ProductionReadinessCubitBase
 abstract class _ProductionReadinessCubitBase
     extends Cubit<ProductionReadinessState>
     with CubitSubscriptionMixin<ProductionReadinessState> {
-  _ProductionReadinessCubitBase({
+  new({
     required this._remoteConfig,
     required this._consentRepository,
     required this._analytics,

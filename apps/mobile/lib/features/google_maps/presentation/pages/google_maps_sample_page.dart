@@ -26,7 +26,7 @@ part 'google_maps_sample_sections.dart';
 
 @freezed
 abstract class _MapBodyData with _$MapBodyData {
-  const factory _MapBodyData({
+  const factory({
     required bool showLoading,
     required bool hasError,
     required String? errorMessage,
@@ -36,26 +36,20 @@ abstract class _MapBodyData with _$MapBodyData {
 
 @freezed
 abstract class _ControlsViewModel with _$ControlsViewModel {
-  const factory _ControlsViewModel({
-    required bool isHybridMapType,
-    required bool trafficEnabled,
-  }) = __ControlsViewModel;
+  const factory({required bool isHybridMapType, required bool trafficEnabled}) =
+      __ControlsViewModel;
 }
 
 @freezed
 abstract class _LocationListViewModel with _$LocationListViewModel {
-  const factory _LocationListViewModel({
+  const factory({
     required List<MapLocation> locations,
     required String? selectedMarkerId,
   }) = __LocationListViewModel;
 }
 
 class GoogleMapsSamplePage extends StatefulWidget {
-  const GoogleMapsSamplePage({
-    super.key,
-    this.platformService,
-    this.platformOverride,
-  });
+  const new({super.key, this.platformService, this.platformOverride});
 
   final NativePlatformService? platformService;
   final TargetPlatform? platformOverride;

@@ -72,9 +72,8 @@ class AppConfig {
             Center(
               child: IgnorePointer(
                 child: ColoredBox(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.scrim.withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.scrim
+                      .withValues(alpha: 0.7),
                   child: PerformanceOverlay.allEnabled(),
                 ),
               ),
@@ -172,7 +171,7 @@ class AppConfig {
 }
 
 class _AppScrollBehavior extends MaterialScrollBehavior {
-  const _AppScrollBehavior();
+  const new();
 
   @override
   Set<PointerDeviceKind> get dragDevices => <PointerDeviceKind>{

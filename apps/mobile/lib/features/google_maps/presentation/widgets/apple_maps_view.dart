@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Apple Maps implementation of the map view.
 class AppleMapsView extends StatefulWidget {
-  const AppleMapsView({
+  const new({
     required this.stateManager,
     required this.cubit,
     required this.onCameraMove,

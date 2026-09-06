@@ -12,15 +12,13 @@ class const StaffDemoCapturedLocation({
 });
 
 class StaffDemoLocationService {
-  StaffDemoLocationService({
+  new({
     Future<Position> Function()? currentPositionFetcher,
     Duration locationTimeout = const Duration(seconds: 5),
   }) : _currentPositionFetcher =
            currentPositionFetcher ??
            (() => Geolocator.getCurrentPosition(
-             locationSettings: LocationSettings(
-               timeLimit: locationTimeout,
-             ),
+             locationSettings: LocationSettings(timeLimit: locationTimeout),
            ));
 
   final Future<Position> Function() _currentPositionFetcher;
@@ -61,9 +59,7 @@ class StaffDemoLocationService {
 
       final Position pos = await _currentPositionFetcher();
       if (!pos.latitude.isFinite || !pos.longitude.isFinite) {
-        return const FailureResult(
-          ValidationFailure('invalidCoordinates'),
-        );
+        return const FailureResult(ValidationFailure('invalidCoordinates'));
       }
 
       return Success(

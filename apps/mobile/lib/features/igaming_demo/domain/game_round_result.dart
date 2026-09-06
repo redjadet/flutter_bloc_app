@@ -5,13 +5,13 @@ part 'game_round_result.freezed.dart';
 /// Result of one play-for-fun game round.
 @freezed
 abstract class GameRoundResult with _$GameRoundResult {
-  const factory GameRoundResult({
+  const factory({
     required int betAmount,
     required int payoutAmount,
     required bool isWin,
   }) = _GameRoundResult;
 
-  const GameRoundResult._();
+  const new _();
 
   /// Net change in balance (payout - bet); positive on win, negative on loss.
   int get netChange => payoutAmount - betAmount;

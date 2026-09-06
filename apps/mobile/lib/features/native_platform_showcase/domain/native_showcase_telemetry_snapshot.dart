@@ -6,7 +6,7 @@ part 'native_showcase_telemetry_snapshot.freezed.dart';
 @freezed
 abstract class NativeShowcaseTelemetrySnapshot
     with _$NativeShowcaseTelemetrySnapshot {
-  const factory NativeShowcaseTelemetrySnapshot({
+  const factory({
     required NativeShowcaseTelemetryStatus status,
     required int schemaVersion,
     required String sessionId,

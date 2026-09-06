@@ -11,7 +11,7 @@ import 'package:material_ui/material_ui.dart';
 part 'scape_grid_item_icon_button.part.dart';
 
 class ScapeGridItem extends StatelessWidget {
-  const ScapeGridItem({
+  const new({
     required this.scape,
     required this.onFavoritePressed,
     required this.onMorePressed,

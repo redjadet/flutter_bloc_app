@@ -3,15 +3,13 @@
 /// Allowed parameter keys: `mode`, `source`, `result`, `variant`.
 /// Values are schema-constrained (short enum-like tokens), never free-form IDs.
 final class AppAnalyticsEvent {
-  factory AppAnalyticsEvent.showcaseOpened({
-    required String mode,
-    required String source,
-  }) => AppAnalyticsEvent._('showcase_opened', <String, String>{
-    'mode': mode,
-    'source': source,
-  });
+  factory showcaseOpened({required String mode, required String source}) =>
+      AppAnalyticsEvent._('showcase_opened', <String, String>{
+        'mode': mode,
+        'source': source,
+      });
 
-  factory AppAnalyticsEvent.releaseFlagEvaluated({
+  factory releaseFlagEvaluated({
     required String result,
     required String variant,
     required String source,
@@ -21,7 +19,7 @@ final class AppAnalyticsEvent {
     'source': source,
   });
 
-  factory AppAnalyticsEvent.notificationReceived({
+  factory notificationReceived({
     required String mode,
     required String source,
   }) => AppAnalyticsEvent._('notification_received', <String, String>{
@@ -29,15 +27,13 @@ final class AppAnalyticsEvent {
     'source': source,
   });
 
-  factory AppAnalyticsEvent.notificationOpened({
-    required String mode,
-    required String source,
-  }) => AppAnalyticsEvent._('notification_opened', <String, String>{
-    'mode': mode,
-    'source': source,
-  });
+  factory notificationOpened({required String mode, required String source}) =>
+      AppAnalyticsEvent._('notification_opened', <String, String>{
+        'mode': mode,
+        'source': source,
+      });
 
-  factory AppAnalyticsEvent.demoActionCompleted({
+  factory demoActionCompleted({
     required String result,
     required String source,
   }) => AppAnalyticsEvent._('demo_action_completed', <String, String>{
@@ -45,7 +41,7 @@ final class AppAnalyticsEvent {
     'source': source,
   });
 
-  AppAnalyticsEvent._(this.name, Map<String, String> rawParameters)
+  new _(this.name, Map<String, String> rawParameters)
     : parameters = Map<String, String>.unmodifiable(rawParameters) {
     validateParameters(parameters);
   }
@@ -100,10 +96,7 @@ final class AppAnalyticsEvent {
   }
 
   /// Coerce free-form remote/config strings into allowlisted tokens.
-  static String coerceToken(
-    String raw, {
-    required String fallback,
-  }) {
+  static String coerceToken(String raw, {required String fallback}) {
     final String trimmed = raw.trim();
     if (_isAllowedParameterValue(trimmed)) {
       return trimmed;

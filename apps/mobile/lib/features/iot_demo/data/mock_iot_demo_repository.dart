@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dar
 
 /// Mock implementation: in-memory simulated devices, no real hardware.
 class MockIotDemoRepository implements IotDemoRepository {
-  MockIotDemoRepository() {
+  new() {
     _controller = StreamController<List<IotDevice>>.broadcast();
   }
 
@@ -23,11 +23,7 @@ class MockIotDemoRepository implements IotDemoRepository {
       type: IotDeviceType.thermostat,
       value: 21,
     ),
-    const IotDevice(
-      id: 'plug-1',
-      name: 'Smart Plug',
-      type: IotDeviceType.plug,
-    ),
+    const IotDevice(id: 'plug-1', name: 'Smart Plug', type: IotDeviceType.plug),
     const IotDevice(
       id: 'sensor-1',
       name: 'Temperature Sensor',
@@ -140,10 +136,7 @@ class MockIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> sendCommand(
-    String deviceId,
-    IotDeviceCommand command,
-  ) async {
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {
     final i = _indexOf(deviceId);
     if (i < 0) return;
     final d = _devices[i];

@@ -9,7 +9,7 @@ import 'package:storage/storage.dart';
 
 /// Stores chat history in encrypted platform storage.
 class SecureChatHistoryRepository implements ChatHistoryRepository {
-  SecureChatHistoryRepository({SecretStorage? storage})
+  new({SecretStorage? storage})
     : _storage = storage ?? createDefaultSecretStorage();
 
   static const String _storageKeyHistory = 'chat_history';
@@ -17,7 +17,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
   final SecretStorage _storage;
 
   @override
-  Future<List<ChatConversation>> load() async =>
+  Future<List<ChatConversation>> load() =>
       StorageGuard.run<List<ChatConversation>>(
         logContext: 'SecureChatHistoryRepository.load',
         action: () async {
@@ -29,9 +29,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
             final List<dynamic> decoded = await decodeJsonList(stored);
             return decoded
                 .whereType<Map<String, dynamic>>()
-                .map(
-                  (map) => ChatConversationDto.fromJson(map).toDomain(),
-                )
+                .map((map) => ChatConversationDto.fromJson(map).toDomain())
                 .toList(growable: false);
           } on FormatException catch (error, stackTrace) {
             AppLogger.error(

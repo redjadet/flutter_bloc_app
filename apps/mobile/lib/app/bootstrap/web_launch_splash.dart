@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// Replaced by [MyApp] once DI, backends, and migration complete. Keeps the
 /// canvas from staying blank after the engine starts but before `runApp(MyApp)`.
 class WebLaunchSplash extends StatelessWidget {
-  const WebLaunchSplash({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

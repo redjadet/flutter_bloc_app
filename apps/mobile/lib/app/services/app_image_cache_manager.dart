@@ -8,7 +8,7 @@ import 'package:utilities/utilities.dart';
 /// This keeps image caching bounded and gives the app shell a single place to
 /// perform aggressive cache cleanup when the OS reports memory pressure.
 class AppImageCacheManager extends CacheManager {
-  AppImageCacheManager({
+  new({
     Duration stalePeriod = defaultStalePeriod,
     int maxNrOfCacheObjects = defaultMaxNrOfCacheObjects,
   }) : super(

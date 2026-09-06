@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CountdownBarContent extends StatelessWidget {
-  const CountdownBarContent({
+  const new({
     required this.active,
     required this.isLoading,
     required this.progress,

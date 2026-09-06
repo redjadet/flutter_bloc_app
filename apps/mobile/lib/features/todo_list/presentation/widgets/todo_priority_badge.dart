@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:material_ui/material_ui.dart';
 
 class TodoPriorityBadge extends StatelessWidget {
-  const TodoPriorityBadge({required this.priority, super.key});
+  const new({required this.priority, super.key});
 
   final TodoPriority priority;
 

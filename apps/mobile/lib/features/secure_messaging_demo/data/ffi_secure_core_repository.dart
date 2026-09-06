@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_co
 import 'package:secure_core_bridge/secure_core_bridge.dart';
 
 final class FfiSecureCoreRepository implements SecureCoreRepository {
-  FfiSecureCoreRepository(this._nativeApi);
+  new(this._nativeApi);
 
   final SecureCoreNativeApi _nativeApi;
 

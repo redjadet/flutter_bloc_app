@@ -13,10 +13,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientTherapistDetailPage extends StatefulWidget {
-  const OnlineTherapyDemoClientTherapistDetailPage({
-    required this.therapistId,
-    super.key,
-  });
+  const new({required this.therapistId, super.key});
 
   final String therapistId;
 
@@ -47,9 +44,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final therapist = context
         .selectState<ClientBookingCubit, ClientBookingState, TherapistProfile?>(
           selector: (state) => state.therapistById(widget.therapistId),
@@ -59,9 +54,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           ClientBookingCubit,
           ClientBookingState,
           List<AvailabilitySlot>
-        >(
-          selector: (state) => state.availability,
-        );
+        >(selector: (state) => state.availability);
     final isBusy = context
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
           selector: (state) => state.isBusy,
@@ -91,9 +84,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           ],
         ),
         const SizedBox(height: 12),
-        Text(
-          'Languages: ${therapist.languages.join(', ')}',
-        ),
+        Text('Languages: ${therapist.languages.join(', ')}'),
       ],
       const Divider(height: 24),
       Row(
@@ -156,10 +147,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
 
     return CommonPageLayout(
       title: therapist?.title ?? 'Therapist',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }

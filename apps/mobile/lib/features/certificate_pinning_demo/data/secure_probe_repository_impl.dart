@@ -11,11 +11,7 @@ import 'package:networking/networking.dart';
 /// mock validator path (no TLS). When mode is [CertificatePinningMode.real],
 /// issues a Dio GET to [CertificatePinningConfig.realProbeUrl] (required).
 final class SecureProbeRepositoryImpl implements SecureProbeRepository {
-  SecureProbeRepositoryImpl({
-    required this.config,
-    required this.mockValidator,
-    required this.dio,
-  });
+  new({required this.config, required this.mockValidator, required this.dio});
 
   final CertificatePinningConfig config;
   final MockCertificatePinValidator mockValidator;

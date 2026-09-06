@@ -14,7 +14,7 @@ part 'hive_counter_repository_migration.dart';
 /// Hive-backed leaf [CounterDataSource] (local I/O only).
 class HiveCounterRepository extends HiveRepositoryBase
     implements CounterRepository {
-  HiveCounterRepository({required super.hiveService}) {
+  new({required super.hiveService}) {
     _watchHelper = HiveCounterRepositoryWatchHelper(
       loadSnapshot: () => load(),
       emptySnapshot: _emptySnapshot,
@@ -58,7 +58,7 @@ class HiveCounterRepository extends HiveRepositoryBase
   late final HiveCounterRepositoryWatchHelper _watchHelper;
 
   @override
-  Future<CounterSnapshot> load() async => StorageGuard.run<CounterSnapshot>(
+  Future<CounterSnapshot> load() => StorageGuard.run<CounterSnapshot>(
     logContext: 'HiveCounterRepository.load',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -124,7 +124,7 @@ class HiveCounterRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> save(CounterSnapshot snapshot) async => StorageGuard.run<void>(
+  Future<void> save(CounterSnapshot snapshot) => StorageGuard.run<void>(
     logContext: 'HiveCounterRepository.save',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -177,5 +177,5 @@ class HiveCounterRepository extends HiveRepositoryBase
   }
 
   /// Resets counter Hive state to the empty local snapshot.
-  Future<void> clearAllLocalData() async => save(_emptySnapshot);
+  Future<void> clearAllLocalData() => save(_emptySnapshot);
 }

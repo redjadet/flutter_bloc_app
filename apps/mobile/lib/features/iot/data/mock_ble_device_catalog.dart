@@ -10,7 +10,7 @@ class const MockBleDeviceProfile({
 
 /// Catalog of four interview demo peripherals.
 class MockBleDeviceCatalog {
-  MockBleDeviceCatalog._();
+  new _();
 
   static const String esp32Id = 'mock-esp32-001';
   static const String hrmId = 'mock-hrm-002';
@@ -30,11 +30,7 @@ class MockBleDeviceCatalog {
 
   static final List<MockBleDeviceProfile> profiles = <MockBleDeviceProfile>[
     const MockBleDeviceProfile(
-      device: BleDiscoveredDevice(
-        id: esp32Id,
-        name: 'ESP32 Sensor',
-        rssi: -58,
-      ),
+      device: BleDiscoveredDevice(id: esp32Id, name: 'ESP32 Sensor', rssi: -58),
       services: <BleService>[
         BleService(
           uuid: esp32Service,
@@ -59,11 +55,7 @@ class MockBleDeviceCatalog {
         BleService(
           uuid: hrmService,
           characteristics: <BleCharacteristic>[
-            BleCharacteristic(
-              uuid: hrmChar,
-              canRead: true,
-              canNotify: true,
-            ),
+            BleCharacteristic(uuid: hrmChar, canRead: true, canNotify: true),
           ],
         ),
       ],

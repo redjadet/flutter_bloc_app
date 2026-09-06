@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.da
 
 /// JSON-serializable snapshot for Hive (demo feature).
 class MarketSnapshotDto._(final Map<String, Object?> _json) {
-  factory MarketSnapshotDto.fromDomain(MarketFeedSnapshot s) {
+  factory fromDomain(MarketFeedSnapshot s) {
     return MarketSnapshotDto._(<String, Object?>{
       'pairId': s.pairId,
       'lastPrice': s.lastPrice,
@@ -21,7 +21,7 @@ class MarketSnapshotDto._(final Map<String, Object?> _json) {
     });
   }
 
-  factory MarketSnapshotDto.fromJson(Map<dynamic, dynamic> json) {
+  factory fromJson(Map<dynamic, dynamic> json) {
     final Map<String, Object?> out = <String, Object?>{};
     for (final MapEntry<dynamic, dynamic> e in json.entries) {
       out[e.key.toString()] = e.value as Object?;
@@ -156,10 +156,7 @@ RecentTrade _tradeFromMap(Map<dynamic, dynamic> m) {
     price: price.toDouble(),
     quantity: quantity.toDouble(),
     isBuy: isBuy,
-    at: DateTime.fromMillisecondsSinceEpoch(
-      atMs.toInt(),
-      isUtc: true,
-    ),
+    at: DateTime.fromMillisecondsSinceEpoch(atMs.toInt(), isUtc: true),
   );
 }
 

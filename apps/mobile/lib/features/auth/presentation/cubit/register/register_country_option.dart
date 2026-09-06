@@ -4,13 +4,13 @@ part 'register_country_option.freezed.dart';
 
 @freezed
 abstract class CountryOption with _$CountryOption {
-  const factory CountryOption({
+  const factory({
     required String code,
     required String name,
     required String dialCode,
   }) = _CountryOption;
 
-  const CountryOption._();
+  const new _();
 
   String get flagEmoji {
     if (code.length != 2) {

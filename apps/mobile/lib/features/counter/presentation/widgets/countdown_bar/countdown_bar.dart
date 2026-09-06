@@ -8,7 +8,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CountdownBar extends StatefulWidget {
-  const CountdownBar({super.key});
+  const new({super.key});
 
   @override
   State<CountdownBar> createState() => _CountdownBarState();
@@ -19,9 +19,7 @@ class _CountdownBarState extends State<CountdownBar> {
   static const Duration _animFast = UI.animFast;
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ColorScheme colors = Theme.of(context).colorScheme;
 
@@ -66,7 +64,7 @@ class _CountdownBarState extends State<CountdownBar> {
 
 @immutable
 class _CountdownBarData {
-  const _CountdownBarData({
+  const new({
     required this.active,
     required this.isLoading,
     required this.countdownSeconds,

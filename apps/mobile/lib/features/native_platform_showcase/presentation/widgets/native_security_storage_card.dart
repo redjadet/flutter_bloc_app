@@ -11,7 +11,7 @@ typedef _StorageSlice = ({NativeSecurityOperationResult? result, bool busy});
 
 /// Secure-storage write/read/delete demo card.
 class NativeSecurityStorageCard extends StatelessWidget {
-  const NativeSecurityStorageCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 /// Runtime flags for the IoT BLE showcase (dart-define friendly).
 class const IotBleRuntimeConfig({required final bool defaultMockMode}) {
   /// `true` when `IOT_BLE_MOCK_DEFAULT` is unset or explicitly true.
-  factory IotBleRuntimeConfig.fromEnvironment() {
+  factory fromEnvironment() {
     const String raw = String.fromEnvironment(
       'IOT_BLE_MOCK_DEFAULT',
       defaultValue: 'true',

@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_b
 import 'package:material_ui/material_ui.dart';
 
 class ProfileActionButtons extends StatelessWidget {
-  const ProfileActionButtons({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -19,11 +19,7 @@ class ProfileActionButtons extends StatelessWidget {
             onPressed: () {},
           ),
           SizedBox(height: context.responsiveGapL),
-          _ProfileButton(
-            label: 'MESSAGE',
-            isPrimary: false,
-            onPressed: () {},
-          ),
+          _ProfileButton(label: 'MESSAGE', isPrimary: false, onPressed: () {}),
         ],
       ),
     ),
@@ -31,7 +27,7 @@ class ProfileActionButtons extends StatelessWidget {
 }
 
 class _ProfileButton extends StatelessWidget {
-  const _ProfileButton({
+  const new({
     required this.label,
     required this.isPrimary,
     required this.onPressed,

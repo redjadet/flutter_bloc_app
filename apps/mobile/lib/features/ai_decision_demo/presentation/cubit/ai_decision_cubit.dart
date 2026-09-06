@@ -5,8 +5,7 @@ import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_re
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart';
 
 class AiDecisionCubit extends Cubit<AiDecisionState> {
-  AiDecisionCubit({required this.repository})
-    : super(AiDecisionState.initial());
+  new({required this.repository}) : super(AiDecisionState.initial());
 
   final AiDecisionRepository repository;
 
@@ -36,19 +35,11 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
         await loadCase(selected);
       }
     } on Object catch (e) {
-      _safeEmit(
-        state.copyWith(
-          isLoadingQueue: false,
-          failure: _failure(e),
-        ),
-      );
+      _safeEmit(state.copyWith(isLoadingQueue: false, failure: _failure(e)));
     }
   }
 
-  Future<void> loadCase(
-    String caseId, {
-    bool preserveDecision = false,
-  }) async {
+  Future<void> loadCase(String caseId, {bool preserveDecision = false}) async {
     _safeEmit(
       state.copyWith(
         selectedCaseId: caseId,
@@ -77,12 +68,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
       _safeEmit(state.copyWith(isRunningDecision: false, decision: result));
       await loadCase(caseId, preserveDecision: true);
     } on Object catch (e) {
-      _safeEmit(
-        state.copyWith(
-          isRunningDecision: false,
-          failure: _failure(e),
-        ),
-      );
+      _safeEmit(state.copyWith(isRunningDecision: false, failure: _failure(e)));
     }
   }
 
@@ -102,12 +88,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
       _safeEmit(state.copyWith(isSavingAction: false));
       await loadCase(caseId, preserveDecision: true);
     } on Object catch (e) {
-      _safeEmit(
-        state.copyWith(
-          isSavingAction: false,
-          failure: _failure(e),
-        ),
-      );
+      _safeEmit(state.copyWith(isSavingAction: false, failure: _failure(e)));
     }
   }
 }

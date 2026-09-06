@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LanguageSection extends StatelessWidget {
-  const LanguageSection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +28,7 @@ class LanguageSection extends StatelessWidget {
         builder: (context, currentLocale) {
           final List<SettingsOption<Locale?>> options =
               <SettingsOption<Locale?>>[
-                SettingsOption(
-                  label: l10n.languageSystemDefault,
-                  value: null,
-                ),
+                SettingsOption(label: l10n.languageSystemDefault, value: null),
                 for (final Locale locale in AppLocalizations.supportedLocales)
                   SettingsOption(
                     label:

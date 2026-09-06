@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedPostCard extends StatelessWidget {
-  const SocialFeedPostCard({
+  const new({
     required this.post,
     required this.isPending,
     required this.onLike,

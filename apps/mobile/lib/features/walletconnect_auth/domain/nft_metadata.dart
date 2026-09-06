@@ -7,7 +7,7 @@ part 'nft_metadata.freezed.dart';
 /// Domain model; serialization to/from Firestore is done in the data layer.
 @freezed
 abstract class NftMetadata with _$NftMetadata {
-  const factory NftMetadata({
+  const factory({
     required String tokenId,
     required String contractAddress,
     required String name,

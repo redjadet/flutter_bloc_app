@@ -86,7 +86,7 @@ mixin IotBleCubitStreams on IotBleCubitCore {
     await _classicSubscription?.cancel();
     _classicSubscription = null;
     await cancelClassicMessageSubscription();
-    return super.close();
+    return await super.close();
   }
 
   void bindAdapterStream() {

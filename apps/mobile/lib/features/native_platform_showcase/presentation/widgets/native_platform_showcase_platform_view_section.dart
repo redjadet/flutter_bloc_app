@@ -7,10 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Live native banner via [UiKitView] / [AndroidView], or a placeholder.
 class NativePlatformShowcasePlatformViewSection extends StatelessWidget {
-  const NativePlatformShowcasePlatformViewSection({
-    super.key,
-    this.platformOverride,
-  });
+  const new({super.key, this.platformOverride});
 
   /// Test seam — avoid mounting a real platform view in widget tests.
   final TargetPlatform? platformOverride;
@@ -63,7 +60,7 @@ class NativePlatformShowcasePlatformViewSection extends StatelessWidget {
 }
 
 class _NativeBanner extends StatelessWidget {
-  const _NativeBanner({required this.platform});
+  const new({required this.platform});
 
   final TargetPlatform platform;
 

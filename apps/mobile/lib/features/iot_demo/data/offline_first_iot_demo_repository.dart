@@ -27,7 +27,7 @@ part 'offline_first_iot_demo_repository_sync_pull.part.dart';
 /// ops for the current user (legacy ops without payload supabaseUserId are skipped).
 class OfflineFirstIotDemoRepository
     implements IotDemoRepository, SyncableRepository {
-  OfflineFirstIotDemoRepository({
+  new({
     required this._getCurrentSupabaseUserId,
     required this._getPersistentRepository,
     required this._pendingSyncRepository,
@@ -105,30 +105,25 @@ class OfflineFirstIotDemoRepository
     return local.watchDevices(filter);
   }
 
-  Map<String, dynamic> _basePayload(
-    String deviceId,
-    String action,
-  ) => iotDemoBasePayloadForUser(
-    deviceId,
-    action,
-    supabaseUserId: _currentSupabaseUserId(),
-  );
+  Map<String, dynamic> _basePayload(String deviceId, String action) =>
+      iotDemoBasePayloadForUser(
+        deviceId,
+        action,
+        supabaseUserId: _currentSupabaseUserId(),
+      );
 
   @override
-  Future<void> addDevice(IotDevice device) async => addDeviceImpl(this, device);
+  Future<void> addDevice(IotDevice device) => addDeviceImpl(this, device);
 
   @override
-  Future<void> connect(String deviceId) async => connectImpl(this, deviceId);
+  Future<void> connect(String deviceId) => connectImpl(this, deviceId);
 
   @override
-  Future<void> disconnect(String deviceId) async =>
-      disconnectImpl(this, deviceId);
+  Future<void> disconnect(String deviceId) => disconnectImpl(this, deviceId);
 
   @override
-  Future<void> sendCommand(
-    String deviceId,
-    IotDeviceCommand command,
-  ) async => sendCommandImpl(this, deviceId, command);
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) =>
+      sendCommandImpl(this, deviceId, command);
 
   String? _currentSupabaseUserId() {
     final String? userId = _getCurrentSupabaseUserId();
@@ -144,9 +139,9 @@ class OfflineFirstIotDemoRepository
   }) => '$userId::$deviceId';
 
   @override
-  Future<void> processOperation(SyncOperation operation) async =>
+  Future<void> processOperation(SyncOperation operation) =>
       processOperationImpl(this, operation);
 
   @override
-  Future<void> pullRemote() async => pullRemoteImpl(this);
+  Future<void> pullRemote() => pullRemoteImpl(this);
 }

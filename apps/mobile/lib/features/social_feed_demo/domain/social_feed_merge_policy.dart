@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_po
 
 /// Pure merge helpers: pending local intent wins until ack/reject.
 class SocialFeedMergePolicy {
-  const SocialFeedMergePolicy();
+  const new();
 
   /// Prefer higher revision; equal revision keeps [existing].
   SocialFeedPost preferByRevision({

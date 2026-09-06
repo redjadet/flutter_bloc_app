@@ -4,10 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Preview component that renders markdown using a custom RenderObject.
 class MarkdownPreview extends StatelessWidget {
-  const MarkdownPreview({
-    required this.text,
-    super.key,
-  });
+  const new({required this.text, super.key});
 
   final String text;
 
@@ -41,7 +38,7 @@ class MarkdownPreview extends StatelessWidget {
 
 /// Widget that uses the custom RenderObject for markdown rendering.
 class _MarkdownRenderObjectWidget extends LeafRenderObjectWidget {
-  const _MarkdownRenderObjectWidget({
+  const new({
     required this.text,
     required this.textStyle,
     required this.onTextChanged,

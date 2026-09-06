@@ -7,7 +7,7 @@ part of 'render_orchestration_hf_token_provider.dart';
 /// resolution for tracing (`orchestration_cache`, `remote_config`, `callable`, etc.).
 class LayeredRenderOrchestrationHfTokenProvider
     implements RenderOrchestrationHfTokenProvider {
-  LayeredRenderOrchestrationHfTokenProvider({
+  new({
     required this._runtime,
     required this._remoteTokenPort,
     required this._storage,
@@ -40,7 +40,7 @@ class LayeredRenderOrchestrationHfTokenProvider
   Future<String?> readHfTokenForUpstream() async {
     final Future<String?>? existing = _inFlight;
     if (existing != null) {
-      return existing;
+      return await existing;
     }
     final Future<String?> future = _resolve();
     _inFlight = future;

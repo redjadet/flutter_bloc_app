@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_auth_repository.dart';
 
 class OnlineTherapyDemoSessionState {
-  const OnlineTherapyDemoSessionState({
+  const new({
     required this.role,
     required this.networkMode,
     required this.isBusy,
@@ -43,7 +43,7 @@ class OnlineTherapyDemoSessionState {
 
 class OnlineTherapyDemoSessionCubit
     extends Cubit<OnlineTherapyDemoSessionState> {
-  OnlineTherapyDemoSessionCubit({
+  new({
     required TherapyAuthRepository auth,
     required OnlineTherapyNetworkModeController networkModeController,
   }) : _auth = auth,

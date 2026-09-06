@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 /// Shared dark rounded panel: title, search, categories, assets header, and
 /// optional trailing content (e.g. gap only for grid, or gap + tiles for list).
 class LibraryDemoPanel extends StatelessWidget {
-  const LibraryDemoPanel({
+  const new({
     required this.l10n,
     required this.panelTopPadding,
     required this.panelBottomPadding,

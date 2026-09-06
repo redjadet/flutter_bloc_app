@@ -52,7 +52,7 @@ Future<void> configureDependencies() async {
 
   final Future<void>? inFlight = _configureDependenciesInFlight;
   if (inFlight != null) {
-    return inFlight;
+    return await inFlight;
   }
 
   // Coalesce concurrent bootstrap calls so repeated app pumps do not re-run

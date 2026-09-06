@@ -4,8 +4,6 @@ part 'app_info.freezed.dart';
 
 @freezed
 abstract class AppInfo with _$AppInfo {
-  const factory AppInfo({
-    required String version,
-    required String buildNumber,
-  }) = _AppInfo;
+  const factory({required String version, required String buildNumber}) =
+      _AppInfo;
 }

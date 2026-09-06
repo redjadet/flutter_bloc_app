@@ -1,7 +1,7 @@
 part of 'online_therapy_demo_shell_page.dart';
 
 class _ClientBookingPanel extends StatelessWidget {
-  const _ClientBookingPanel();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class _ClientBookingPanel extends StatelessWidget {
 }
 
 class _TherapistList extends StatelessWidget {
-  const _TherapistList({
+  const new({
     required this.therapists,
     required this.selectedId,
     required this.onSelect,

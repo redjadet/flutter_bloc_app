@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 /// Provides a standard pattern for displaying empty states across features
 /// with icon, title, message, and optional primary action button.
 class CommonEmptyState extends StatelessWidget {
-  const CommonEmptyState({
+  const new({
     required this.message,
     super.key,
     this.icon,

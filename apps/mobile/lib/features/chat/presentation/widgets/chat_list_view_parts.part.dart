@@ -6,11 +6,7 @@ const ListEquality<ChatContact> _chatContactListEquality =
 /// Narrow selector data to reduce rebuilds when only unrelated state changes.
 @immutable
 class _ChatListSelectorData {
-  const _ChatListSelectorData({
-    required this.isLoading,
-    this.contacts,
-    this.errorMessage,
-  });
+  const new({required this.isLoading, this.contacts, this.errorMessage});
 
   final bool isLoading;
   final List<ChatContact>? contacts;
@@ -25,18 +21,14 @@ class _ChatListSelectorData {
           errorMessage == other.errorMessage;
 
   @override
-  int get hashCode => Object.hash(
-    isLoading,
-    switch (contacts) {
-      final contacts? => _chatContactListEquality.hash(contacts),
-      null => null,
-    },
-    errorMessage,
-  );
+  int get hashCode => Object.hash(isLoading, switch (contacts) {
+    final contacts? => _chatContactListEquality.hash(contacts),
+    null => null,
+  }, errorMessage);
 }
 
 class _ChatDivider extends StatelessWidget {
-  const _ChatDivider();
+  const new();
 
   @override
   Widget build(BuildContext context) => Divider(

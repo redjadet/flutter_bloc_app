@@ -1,7 +1,7 @@
 part of 'remote_config_diagnostics_section.dart';
 
 class _StatusPalette {
-  const _StatusPalette({
+  const new({
     required this.background,
     required this.color,
     required this.icon,
@@ -15,10 +15,7 @@ class _StatusPalette {
 }
 
 class _RemoteConfigMetadataRow extends StatelessWidget {
-  const _RemoteConfigMetadataRow({
-    this.dataSource,
-    this.lastSyncedAt,
-  });
+  const new({this.dataSource, this.lastSyncedAt});
 
   final String? dataSource;
   final DateTime? lastSyncedAt;

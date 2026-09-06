@@ -6,7 +6,7 @@ enum IapProductType { consumable, nonConsumable, subscription }
 
 @freezed
 abstract class IapProduct with _$IapProduct {
-  const factory IapProduct({
+  const factory({
     required String id,
     required String title,
     required String description,
@@ -20,7 +20,7 @@ abstract class IapProduct with _$IapProduct {
 /// These must match products you create in App Store Connect / Play Console
 /// to exercise the real store repository.
 class IapDemoProductIds {
-  IapDemoProductIds._();
+  new _();
 
   static const consumableCredits100 = 'demo_consumable_credits_100';
   static const nonConsumablePremium = 'demo_nonconsumable_premium';

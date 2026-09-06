@@ -6,9 +6,8 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platfo
 
 class SimulatedNativePlatformInfoRepository
     implements NativePlatformInfoRepository {
-  SimulatedNativePlatformInfoRepository({
-    RuntimePlatformProbe? probe,
-  }) : _probe = probe ?? const RuntimePlatformProbe();
+  new({RuntimePlatformProbe? probe})
+    : _probe = probe ?? const RuntimePlatformProbe();
 
   final RuntimePlatformProbe _probe;
 

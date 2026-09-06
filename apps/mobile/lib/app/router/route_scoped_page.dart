@@ -5,16 +5,13 @@ import 'package:go_router/go_router.dart';
 
 /// go_router 18+ page helpers: stable `NoTransitionPage` keyed by `state.pageKey`.
 abstract final class RouteScopedPage {
-  RouteScopedPage._();
+  new _();
 
   /// Page without route-owned cubit (still needs `state.pageKey` under go_router 18+).
   static Page<void> noTransition({
     required GoRouterState state,
     required Widget child,
-  }) => NoTransitionPage<void>(
-    key: state.pageKey,
-    child: child,
-  );
+  }) => NoTransitionPage<void>(key: state.pageKey, child: child);
 
   /// Page with a single route-scoped cubit and optional async init.
   static Page<void> withAsyncInit<T extends BlocBase<Object?>>({
@@ -39,10 +36,8 @@ abstract final class RouteScopedPage {
     name: name,
     redirect: redirect,
     routes: routes,
-    pageBuilder: (context, state) => noTransition(
-      state: state,
-      child: builder(context, state),
-    ),
+    pageBuilder: (context, state) =>
+        noTransition(state: state, child: builder(context, state)),
   );
 
   /// `GoRoute` with one route-scoped cubit owned for the page lifetime.

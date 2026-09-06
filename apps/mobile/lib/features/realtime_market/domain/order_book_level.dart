@@ -6,7 +6,7 @@ enum OrderBookSide { bid, ask }
 
 @freezed
 abstract class OrderBookLevel with _$OrderBookLevel {
-  const factory OrderBookLevel({
+  const factory({
     required double price,
     required double quantity,
     required OrderBookSide side,

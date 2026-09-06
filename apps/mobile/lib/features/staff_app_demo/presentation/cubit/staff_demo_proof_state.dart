@@ -13,7 +13,7 @@ enum StaffDemoProofStatus {
 
 @freezed
 abstract class StaffDemoProofState with _$StaffDemoProofState {
-  const factory StaffDemoProofState({
+  const factory({
     @Default(StaffDemoProofStatus.initial) StaffDemoProofStatus status,
     @Default(<String>[]) List<String> photoPaths,
     String? signaturePath,

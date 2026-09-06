@@ -3,11 +3,7 @@ import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LoggedOutPhotoHeader extends StatelessWidget {
-  const LoggedOutPhotoHeader({
-    required this.scale,
-    required this.verticalScale,
-    super.key,
-  });
+  const new({required this.scale, required this.verticalScale, super.key});
 
   final double scale;
   final double verticalScale;
@@ -28,10 +24,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
               gradient: LinearGradient(
                 begin: const Alignment(0.296, -0.064),
                 end: const Alignment(0.704, 1.064),
-                colors: [
-                  colorScheme.primary,
-                  colorScheme.tertiary,
-                ],
+                colors: [colorScheme.primary, colorScheme.tertiary],
               ),
             ),
             child: Icon(

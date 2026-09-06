@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 
 class MockProfileRepository implements ProfileRepository {
-  const MockProfileRepository();
+  const new();
 
   static String _decodeUrl(String encoded) =>
       utf8.decode(base64Decode(encoded));

@@ -6,7 +6,7 @@ part 'websocket_state.freezed.dart';
 
 @freezed
 abstract class WebsocketState with _$WebsocketState {
-  const factory WebsocketState({
+  const factory({
     required Uri endpoint,
     required WebsocketStatus status,
     @Default(<WebsocketMessage>[]) List<WebsocketMessage> messages,
@@ -14,12 +14,10 @@ abstract class WebsocketState with _$WebsocketState {
     @Default(false) bool isSending,
   }) = _WebsocketState;
 
-  const WebsocketState._();
+  const new _();
 
-  factory WebsocketState.initial(Uri endpoint) => WebsocketState(
-    endpoint: endpoint,
-    status: WebsocketStatus.disconnected,
-  );
+  factory initial(Uri endpoint) =>
+      WebsocketState(endpoint: endpoint, status: WebsocketStatus.disconnected);
 
   bool get isConnected => status == WebsocketStatus.connected;
   bool get isConnecting => status == WebsocketStatus.connecting;

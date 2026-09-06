@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 /// Debug Firebase auth wrapper that falls back to a local guest on Keychain
 /// entitlement failures (macOS / iOS simulator).
 class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
-  DebugKeychainGuestAuthRepository({required super.firebaseAuth}) {
+  new({required super.firebaseAuth}) {
     _firebaseSubscription = super.authStateChanges.listen(
       (user) {
         if (user != null) {
@@ -86,7 +86,7 @@ class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
 /// Web: enabled via BackendAvailability.allowWebLocalGuestAuth (including
 /// release). Non-web: enabled via existing debug/simulator policy gates.
 class LocalGuestOnlyAuthRepository implements AuthRepository {
-  LocalGuestOnlyAuthRepository({this.localGuestIdOverride});
+  new({this.localGuestIdOverride});
 
   final String? localGuestIdOverride;
 
@@ -137,7 +137,7 @@ class LocalGuestOnlyAuthRepository implements AuthRepository {
 
 /// No-op auth repository when Firebase and local guest policy are unavailable.
 class UnavailableAuthRepository implements AuthRepository {
-  const UnavailableAuthRepository();
+  const new();
 
   @override
   AuthUser? get currentUser => null;

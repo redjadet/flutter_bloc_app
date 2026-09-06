@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 /// A reusable AppBar widget that provides consistent styling and behavior
 /// across the app with automatic back button handling.
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CommonAppBar({
+  const new({
     required this.title,
     super.key,
     this.actions,
@@ -59,9 +59,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
           );
       final TextStyle titleStyle =
           cupertinoTitleStyle ??
-          theme.textTheme.titleMedium?.copyWith(
-            color: colorScheme.onSurface,
-          ) ??
+          theme.textTheme.titleMedium?.copyWith(color: colorScheme.onSurface) ??
           TextStyle(
             color: colorScheme.onSurface,
             fontSize: 17,
@@ -75,10 +73,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
         leading: automaticallyImplyLeading
             ? RootAwareBackButton(homeTooltip: effectiveHomeTooltip)
             : null,
-        middle: DefaultTextStyle(
-          style: titleStyle,
-          child: Text(title),
-        ),
+        middle: DefaultTextStyle(style: titleStyle, child: Text(title)),
         trailing: hasActions ? _buildCupertinoActions() : null,
       );
     }
@@ -103,10 +98,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     final List<Widget>? actionList = actions;
     if (actionList case final list?) {
       if (list.length == 1) return list.first;
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: list,
-      );
+      return Row(mainAxisSize: MainAxisSize.min, children: list);
     }
     return const SizedBox.shrink();
   }

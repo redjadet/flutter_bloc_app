@@ -11,7 +11,7 @@ double _todoSearchFontSize(BuildContext context) =>
     context.responsiveBodySize.clamp(14.0, 22.0);
 
 class TodoSearchField extends StatefulWidget {
-  const TodoSearchField({super.key});
+  const new({super.key});
 
   @override
   State<TodoSearchField> createState() => _TodoSearchFieldState();
@@ -105,17 +105,12 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
         decoration: BoxDecoration(
           color: colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-          border: Border.all(
-            color: colors.outlineVariant,
-          ),
+          border: Border.all(color: colors.outlineVariant),
         ),
         child: textField,
       );
     }
 
-    return Box(
-      style: AppStyles.inputFieldShell,
-      child: textField,
-    );
+    return Box(style: AppStyles.inputFieldShell, child: textField);
   }
 }

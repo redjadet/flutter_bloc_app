@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 
 /// Web implementation storing clip bytes in memory and Hive with virtual paths.
 class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
-  CaseStudyClipFileStoreImpl({required this.hiveService});
+  new({required this.hiveService});
 
   static const String boxName = 'case_study_clip_bytes';
 
@@ -196,6 +196,6 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
         return stagingBytes;
       }
     }
-    return _readBytesFromHive(path);
+    return await _readBytesFromHive(path);
   }
 }

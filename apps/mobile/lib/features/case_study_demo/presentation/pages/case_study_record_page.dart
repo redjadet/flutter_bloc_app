@@ -18,7 +18,7 @@ import 'package:material_ui/material_ui.dart';
 part 'case_study_record_page_redirect.part.dart';
 
 class CaseStudyRecordPage extends StatefulWidget {
-  const CaseStudyRecordPage({super.key});
+  const new({super.key});
 
   @override
   State<CaseStudyRecordPage> createState() => _CaseStudyRecordPageState();
@@ -30,9 +30,7 @@ class _CaseStudyRecordPageState extends State<CaseStudyRecordPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        unawaited(
-          context.cubit<CaseStudySessionCubit>().tryRecoverLostVideo(),
-        );
+        unawaited(context.cubit<CaseStudySessionCubit>().tryRecoverLostVideo());
       }
     });
   }
@@ -100,9 +98,7 @@ class _CaseStudyRecordPageState extends State<CaseStudyRecordPage> {
                 const SizedBox(height: 8),
                 Text(
                   cameraGalleryErrorMessage(l10n, errKey),
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ],
               const SizedBox(height: 16),
@@ -151,9 +147,7 @@ class _CaseStudyRecordPageState extends State<CaseStudyRecordPage> {
                                 context
                                     .cubit<CaseStudySessionCubit>()
                                     .goToReviewPhase();
-                                context.goNamed(
-                                  AppRoutes.caseStudyDemoReview,
-                                );
+                                context.goNamed(AppRoutes.caseStudyDemoReview);
                               } else {
                                 context
                                     .cubit<CaseStudySessionCubit>()

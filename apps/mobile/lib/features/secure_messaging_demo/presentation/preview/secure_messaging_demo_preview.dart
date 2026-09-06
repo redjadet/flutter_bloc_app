@@ -22,7 +22,7 @@ Widget secureMessagingDemoPreview() {
 }
 
 final class _PreviewSecureCoreRepository implements SecureCoreRepository {
-  const _PreviewSecureCoreRepository();
+  const new();
 
   @override
   Future<EncryptedPayload> encrypt(String plaintext) async =>

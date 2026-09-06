@@ -1,34 +1,34 @@
 /// Domain failures for secure messaging demo. Mapped from native bridge only.
 sealed class SecureCoreFailure implements Exception {
-  const SecureCoreFailure();
+  const new();
 }
 
 final class SecureCoreInvalidInputFailure extends SecureCoreFailure {
-  const SecureCoreInvalidInputFailure();
+  const new();
 }
 
 final class SecureCoreMalformedCiphertextFailure extends SecureCoreFailure {
-  const SecureCoreMalformedCiphertextFailure();
+  const new();
 }
 
 final class SecureCoreAuthenticationFailedFailure extends SecureCoreFailure {
-  const SecureCoreAuthenticationFailedFailure();
+  const new();
 }
 
 final class SecureCoreUnsupportedVersionFailure extends SecureCoreFailure {
-  const SecureCoreUnsupportedVersionFailure();
+  const new();
 }
 
 final class SecureCoreUnavailableFailure extends SecureCoreFailure {
-  const SecureCoreUnavailableFailure();
+  const new();
 }
 
 final class SecureCoreInternalFailure extends SecureCoreFailure {
-  const SecureCoreInternalFailure();
+  const new();
 }
 
 final class SecureCoreMismatchFailure extends SecureCoreFailure {
-  const SecureCoreMismatchFailure();
+  const new();
 }
 
 /// Factory helpers matching prior Freezed-style constructors.

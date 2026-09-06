@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/google_maps/domain/map_location_reposi
 
 /// Simple in-memory repository returning curated sample locations.
 class SampleMapLocationRepository implements MapLocationRepository {
-  const SampleMapLocationRepository();
+  const new();
 
   static const List<MapLocation> _locations = <MapLocation>[
     MapLocation(

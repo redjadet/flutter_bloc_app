@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 part 'staff_app_demo_forms_page_widgets.part.dart';
 
 class StaffAppDemoFormsPage extends StatelessWidget {
-  const StaffAppDemoFormsPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

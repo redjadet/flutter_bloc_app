@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_mes
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class MessagingState {
-  const MessagingState({
+  const new({
     required this.isBusy,
     required this.conversations,
     required this.messages,
@@ -46,7 +46,7 @@ class MessagingState {
 }
 
 class MessagingCubit extends Cubit<MessagingState> {
-  MessagingCubit({required this._messaging})
+  new({required this._messaging})
     : super(
         const MessagingState(
           isBusy: false,

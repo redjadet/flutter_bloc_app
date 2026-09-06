@@ -14,7 +14,7 @@ enum IotBleStatus { initial, loading, ready, error }
 
 @freezed
 abstract class IotBleState with _$IotBleState {
-  const factory IotBleState({
+  const factory({
     @Default(IotBleStatus.initial) IotBleStatus status,
     @Default(true) bool useMockBle,
     @Default(false) bool canToggleRealBle,
@@ -36,7 +36,7 @@ abstract class IotBleState with _$IotBleState {
     String? errorDetail,
   }) = _IotBleState;
 
-  const IotBleState._();
+  const new _();
 
   static const int maxLogs = 200;
 

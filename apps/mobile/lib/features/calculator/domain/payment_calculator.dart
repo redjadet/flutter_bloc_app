@@ -6,7 +6,7 @@ enum CalculatorOperation { add, subtract, multiply, divide }
 /// Stateless domain service that provides arithmetic utilities tailored for
 /// currency style calculations.
 class PaymentCalculator {
-  const PaymentCalculator({this.scale = 2});
+  const new({this.scale = 2});
 
   /// Number of fraction digits to retain.
   final int scale;

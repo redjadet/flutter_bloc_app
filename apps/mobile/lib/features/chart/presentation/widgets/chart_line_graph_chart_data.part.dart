@@ -114,7 +114,7 @@ extension _ChartLineGraphStateChartData on _ChartLineGraphState {
 
 @immutable
 class _ChartRenderKey {
-  const _ChartRenderKey({
+  const new({
     required this.primaryColor,
     required this.onSurface,
     required this.reservedSize,

@@ -6,7 +6,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class IotBleServicesExplorer extends StatelessWidget {
-  const IotBleServicesExplorer({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

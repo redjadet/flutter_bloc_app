@@ -6,10 +6,7 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:material_ui/material_ui.dart';
 
 class LibraryAssetTile extends StatelessWidget {
-  const LibraryAssetTile({
-    required this.asset,
-    super.key,
-  });
+  const new({required this.asset, super.key});
 
   final LibraryAsset asset;
 
@@ -17,14 +14,10 @@ class LibraryAssetTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: EpochSpacing.gapMedium / 2,
-      ),
+      padding: EdgeInsets.symmetric(vertical: EpochSpacing.gapMedium / 2),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: epoch.warmGrey.withValues(alpha: 0.35),
-          ),
+          bottom: BorderSide(color: epoch.warmGrey.withValues(alpha: 0.35)),
         ),
       ),
       child: SizedBox(
@@ -102,10 +95,7 @@ class LibraryAssetTile extends StatelessWidget {
     );
   }
 
-  Widget _buildThumbnail(
-    BuildContext context,
-    EpochThemeExtension epoch,
-  ) {
+  Widget _buildThumbnail(BuildContext context, EpochThemeExtension epoch) {
     if (asset.isAudio) {
       return Container(
         width: EpochSpacing.assetThumbnailSize,
@@ -130,9 +120,7 @@ class LibraryAssetTile extends StatelessWidget {
                   assetPath: assetPath,
                   fit: BoxFit.contain,
                   fallbackBuilder: () => Container(
-                    color: epoch.warmGreyLightest.withValues(
-                      alpha: 0.2,
-                    ),
+                    color: epoch.warmGreyLightest.withValues(alpha: 0.2),
                   ),
                 )
               : Image.asset(

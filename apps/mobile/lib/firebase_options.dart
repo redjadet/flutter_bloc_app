@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart'
 
 /// Placeholder [FirebaseOptions] so the app compiles and skips Firebase init.
 class DefaultFirebaseOptions {
-  DefaultFirebaseOptions._();
+  new _();
 
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {

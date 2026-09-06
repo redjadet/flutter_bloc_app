@@ -9,9 +9,8 @@ import 'package:utilities/utilities.dart';
 
 class SupabaseCaseStudyRemoteDeleteRepository
     implements CaseStudyRemoteDeleteRepository {
-  SupabaseCaseStudyRemoteDeleteRepository({
-    SupabaseSessionManager? sessionManager,
-  }) : _sessionManager = sessionManager ?? SupabaseSessionManager();
+  new({SupabaseSessionManager? sessionManager})
+    : _sessionManager = sessionManager ?? SupabaseSessionManager();
 
   final SupabaseSessionManager _sessionManager;
 
@@ -126,9 +125,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
       },
     );
     if (kDebugMode) {
-      AppLogger.debug(
-        'delete-case-study response: status=${response.status}',
-      );
+      AppLogger.debug('delete-case-study response: status=${response.status}');
     }
     if (response.status != 200) {
       throw HttpRequestFailure(

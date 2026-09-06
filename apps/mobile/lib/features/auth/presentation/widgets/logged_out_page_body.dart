@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_u
 import 'package:material_ui/material_ui.dart';
 
 class LoggedOutPageBody extends StatelessWidget {
-  const LoggedOutPageBody({super.key});
+  const new({super.key});
 
   static const double _baseWidth = 375;
   static const double _baseHeight = 812;
@@ -91,9 +91,7 @@ class LoggedOutPageBody extends StatelessWidget {
             height: contentHeight,
             child: Stack(
               children: [
-                LoggedOutBackgroundLayer(
-                  height: backgroundHeight,
-                ),
+                LoggedOutBackgroundLayer(height: backgroundHeight),
                 Padding(
                   padding: contentPadding,
                   child: Column(

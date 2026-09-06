@@ -11,17 +11,15 @@ export 'client_booking_state.dart';
 part 'client_booking_cubit_loaders.part.dart';
 
 class ClientBookingCubit extends Cubit<ClientBookingState> {
-  ClientBookingCubit({
-    required this._therapists,
-    required this._appointments,
-  }) : super(
-         const ClientBookingState(
-           isBusy: false,
-           therapists: <TherapistProfile>[],
-           availability: <AvailabilitySlot>[],
-           appointments: <Appointment>[],
-         ),
-       );
+  new({required this._therapists, required this._appointments})
+    : super(
+        const ClientBookingState(
+          isBusy: false,
+          therapists: <TherapistProfile>[],
+          availability: <AvailabilitySlot>[],
+          appointments: <Appointment>[],
+        ),
+      );
 
   final TherapistRepository _therapists;
   final AppointmentRepository _appointments;

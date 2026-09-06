@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LibraryTopNav extends StatelessWidget {
-  const LibraryTopNav({
+  const new({
     required this.l10n,
     required this.onBack,
     this.padding,

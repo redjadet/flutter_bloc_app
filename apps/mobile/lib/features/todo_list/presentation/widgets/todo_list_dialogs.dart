@@ -19,14 +19,14 @@ class const TodoEditorResult({
 Future<TodoEditorResult?> showTodoEditorDialog({
   required BuildContext context,
   TodoItem? existing,
-}) async => showAdaptiveDialog<TodoEditorResult>(
+}) => showAdaptiveDialog<TodoEditorResult>(
   context: context,
   requestFocus: true,
   builder: (context) => _TodoEditorDialog(existing: existing),
 );
 
 class _TodoEditorDialog extends StatefulWidget {
-  const _TodoEditorDialog({required this.existing});
+  const new({required this.existing});
 
   final TodoItem? existing;
 

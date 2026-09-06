@@ -7,10 +7,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repos
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
 
 class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
-  OfflineFirstGraphqlDemoRepository({
-    required this.remoteRepository,
-    required this.cacheRepository,
-  });
+  new({required this.remoteRepository, required this.cacheRepository});
   static const Duration _maxCacheAge = Duration(hours: 24);
   static const String _logContextFetchContinents =
       'OfflineFirstGraphqlDemoRepository.fetchContinents';
@@ -25,7 +22,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
 
   @override
   Future<List<GraphqlContinent>> fetchContinents() async {
-    return _fetchWithCache<GraphqlContinent>(
+    return await _fetchWithCache<GraphqlContinent>(
       logContext: _logContextFetchContinents,
       readCache: () => cacheRepository.readContinents(maxAge: _maxCacheAge),
       fetchRemote: remoteRepository.fetchContinents,
@@ -35,18 +32,15 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
   }
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  }) async {
-    return _fetchWithCache<GraphqlCountry>(
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
+    return await _fetchWithCache<GraphqlCountry>(
       logContext: _logContextFetchCountries,
       readCache: () => cacheRepository.readCountries(
         continentCode: continentCode,
         maxAge: _maxCacheAge,
       ),
-      fetchRemote: () => remoteRepository.fetchCountries(
-        continentCode: continentCode,
-      ),
+      fetchRemote: () =>
+          remoteRepository.fetchCountries(continentCode: continentCode),
       writeCache: (countries) => cacheRepository.writeCountries(
         countries: countries,
         continentCode: continentCode,
@@ -88,10 +82,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
     }
   }
 
-  void _telemetry(
-    String source, {
-    String? continentCode,
-  }) {
+  void _telemetry(String source, {String? continentCode}) {
     final String details = [
       'source=$source',
       if (continentCode != null) 'continent=$continentCode',

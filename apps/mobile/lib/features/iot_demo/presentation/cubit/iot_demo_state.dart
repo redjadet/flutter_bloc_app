@@ -8,18 +8,16 @@ part 'iot_demo_state.freezed.dart';
 /// State for the IoT demo page.
 @freezed
 abstract class IotDemoState with _$IotDemoState {
-  const factory IotDemoState.initial() = _IotDemoInitial;
+  const factory initial() = _IotDemoInitial;
 
-  const factory IotDemoState.loading() = _IotDemoLoading;
+  const factory loading() = _IotDemoLoading;
 
-  const factory IotDemoState.loaded(
+  const factory loaded(
     List<IotDevice> devices, {
     String? selectedDeviceId,
     @Default(IotDemoDeviceFilter.all) IotDemoDeviceFilter filter,
   }) = _IotDemoLoaded;
 
-  const factory IotDemoState.error({
-    required IotDemoErrorCode code,
-    String? detail,
-  }) = _IotDemoError;
+  const factory error({required IotDemoErrorCode code, String? detail}) =
+      _IotDemoError;
 }

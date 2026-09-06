@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart'
 
 /// Builds request payloads for Hugging Face inference and chat completions APIs.
 class HuggingFacePayloadBuilder {
-  const HuggingFacePayloadBuilder();
+  const new();
 
   JsonMap buildInferencePayload({
     required List<String> pastUserInputs,

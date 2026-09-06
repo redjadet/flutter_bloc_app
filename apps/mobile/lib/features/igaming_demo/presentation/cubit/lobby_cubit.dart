@@ -7,10 +7,8 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 /// Cubit for the iGaming demo lobby: loads and displays virtual balance.
 class LobbyCubit extends Cubit<LobbyState> {
-  LobbyCubit({
-    required this._repository,
-    this._l10n,
-  }) : super(const LobbyState.initial());
+  new({required this._repository, this._l10n})
+    : super(const LobbyState.initial());
 
   final DemoBalanceRepository _repository;
   final AppLocalizations? _l10n;
@@ -27,9 +25,7 @@ class LobbyCubit extends Cubit<LobbyState> {
       },
       onError: (message) {
         if (isClosed) return;
-        emit(
-          LobbyState.error(_l10n?.igamingDemoErrorLoadBalance ?? message),
-        );
+        emit(LobbyState.error(_l10n?.igamingDemoErrorLoadBalance ?? message));
       },
       logContext: 'LobbyCubit.loadBalance',
     );

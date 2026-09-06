@@ -28,7 +28,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
     return devices;
   }
 
-  Future<List<IotDevice>> _loadDevices(Box<dynamic> box) async =>
+  Future<List<IotDevice>> _loadDevices(Box<dynamic> box) =>
       StorageGuard.run<List<IotDevice>>(
         logContext: 'PersistentIotDemoRepository._loadDevices',
         action: () async {
@@ -58,18 +58,16 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
         fallback: () => List<IotDevice>.unmodifiable(<IotDevice>[]),
       );
 
-  Future<void> _saveDevices(
-    Box<dynamic> box,
-    List<IotDevice> devices,
-  ) async => StorageGuard.run<void>(
-    logContext: 'PersistentIotDemoRepository._saveDevices',
-    action: () async {
-      final List<Map<String, dynamic>> serialized = devices
-          .map((d) => IotDeviceDto.fromDomain(d).toJson())
-          .toList(growable: false);
-      await box.put(PersistentIotDemoRepository._keyDevices, serialized);
-    },
-  );
+  Future<void> _saveDevices(Box<dynamic> box, List<IotDevice> devices) =>
+      StorageGuard.run<void>(
+        logContext: 'PersistentIotDemoRepository._saveDevices',
+        action: () async {
+          final List<Map<String, dynamic>> serialized = devices
+              .map((d) => IotDeviceDto.fromDomain(d).toJson())
+              .toList(growable: false);
+          await box.put(PersistentIotDemoRepository._keyDevices, serialized);
+        },
+      );
 
   /// Appends [device] to the stored list and saves.
   Future<void> addDeviceImpl(IotDevice device) async {

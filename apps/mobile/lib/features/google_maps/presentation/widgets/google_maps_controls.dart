@@ -2,7 +2,7 @@ import 'package:design_system/design_system.dart';
 import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsControlsCard extends StatelessWidget {
-  const GoogleMapsControlsCard({
+  const new({
     required this.heading,
     required this.helpText,
     required this.isHybridMapType,

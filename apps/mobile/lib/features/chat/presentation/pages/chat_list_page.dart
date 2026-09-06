@@ -13,7 +13,7 @@ import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_to
 import 'package:material_ui/material_ui.dart';
 
 class ChatListPage extends StatefulWidget {
-  const ChatListPage({
+  const new({
     required this.repository,
     required this.chatRepository,
     required this.historyRepository,

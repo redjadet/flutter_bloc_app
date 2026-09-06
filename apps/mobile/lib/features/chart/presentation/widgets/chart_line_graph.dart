@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 part 'chart_line_graph_chart_data.part.dart';
 
 class ChartLineGraph extends StatefulWidget {
-  const ChartLineGraph({
+  const new({
     required this.points,
     required this.dateFormat,
     required this.zoomEnabled,
@@ -80,10 +80,7 @@ class _ChartLineGraphState extends State<ChartLineGraph> {
   @override
   Widget build(BuildContext context) {
     final chart = LineChart(
-      _getOrBuildChartData(
-        context,
-        zoomEnabled: widget.zoomEnabled,
-      ),
+      _getOrBuildChartData(context, zoomEnabled: widget.zoomEnabled),
     );
 
     return InteractiveViewer(

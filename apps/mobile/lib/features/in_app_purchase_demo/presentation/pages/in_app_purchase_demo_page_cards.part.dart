@@ -1,7 +1,7 @@
 part of 'in_app_purchase_demo_page.dart';
 
 class _RepositoryControlsCard extends StatelessWidget {
-  const _RepositoryControlsCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _RepositoryControlsCard extends StatelessWidget {
 }
 
 class _EntitlementsCard extends StatelessWidget {
-  const _EntitlementsCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +78,8 @@ class _EntitlementsCard extends StatelessWidget {
           InAppPurchaseDemoState,
           ({IapEntitlements entitlements, bool isBusy})
         >(
-          selector: (state) => (
-            entitlements: state.entitlements,
-            isBusy: state.isBusy,
-          ),
+          selector: (state) =>
+              (entitlements: state.entitlements, isBusy: state.isBusy),
         );
 
     return CommonCard(
@@ -123,7 +121,7 @@ class _EntitlementsCard extends StatelessWidget {
 }
 
 class _ProductsCard extends StatelessWidget {
-  const _ProductsCard();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -134,9 +132,7 @@ class _ProductsCard extends StatelessWidget {
           InAppPurchaseDemoCubit,
           InAppPurchaseDemoState,
           _IapProductsViewData
-        >(
-          selector: _IapProductsViewData.fromState,
-        );
+        >(selector: _IapProductsViewData.fromState);
 
     return CommonCard(
       margin: EdgeInsets.zero,
@@ -188,12 +184,8 @@ class _ProductsCard extends StatelessWidget {
               SizedBox(height: context.responsiveGapM),
               Text(
                 message,
-                style:
-                    Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: Theme.of(context).colorScheme.error),
               ),
             ],
           ],
@@ -205,7 +197,7 @@ class _ProductsCard extends StatelessWidget {
 
 @immutable
 class _IapProductsViewData {
-  const _IapProductsViewData({
+  const new({
     required this.status,
     required this.consumableProducts,
     required this.nonConsumableProducts,
@@ -216,7 +208,7 @@ class _IapProductsViewData {
     required this.errorMessage,
   });
 
-  factory _IapProductsViewData.fromState(InAppPurchaseDemoState state) {
+  factory fromState(InAppPurchaseDemoState state) {
     final List<IapProduct> consumable = <IapProduct>[];
     final List<IapProduct> nonConsumable = <IapProduct>[];
     final List<IapProduct> subscriptions = <IapProduct>[];

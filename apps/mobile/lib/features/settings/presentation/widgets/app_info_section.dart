@@ -10,7 +10,7 @@ part 'app_info_section.freezed.dart';
 
 @freezed
 abstract class _AppInfoViewData with _$AppInfoViewData {
-  const factory _AppInfoViewData({
+  const factory({
     required bool showSuccess,
     required bool showError,
     required AppInfo? info,
@@ -19,7 +19,7 @@ abstract class _AppInfoViewData with _$AppInfoViewData {
 }
 
 class AppInfoSection extends StatelessWidget {
-  const AppInfoSection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class AppInfoSection extends StatelessWidget {
 }
 
 class _InfoDetails extends StatelessWidget {
-  const _InfoDetails({required this.info});
+  const new({required this.info});
 
   final AppInfo info;
 
@@ -82,7 +82,7 @@ class _InfoDetails extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
+  const new({
     required this.label,
     required this.value,
     this.labelStyle,
@@ -106,7 +106,7 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ErrorContent extends StatelessWidget {
-  const _ErrorContent({this.error});
+  const new({this.error});
 
   final String? error;
 
@@ -144,7 +144,7 @@ class _ErrorContent extends StatelessWidget {
 }
 
 class _LoadingContent extends StatelessWidget {
-  const _LoadingContent();
+  const new();
 
   @override
   Widget build(BuildContext context) {

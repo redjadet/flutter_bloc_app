@@ -14,7 +14,7 @@ part 'chat_history_sheet.freezed.dart';
 
 @freezed
 abstract class _HistorySheetData with _$HistorySheetData {
-  const factory _HistorySheetData({
+  const factory({
     required List<ChatConversation> history,
     required bool hasHistory,
     required String? activeConversationId,
@@ -23,7 +23,7 @@ abstract class _HistorySheetData with _$HistorySheetData {
 }
 
 class ChatHistorySheet extends StatelessWidget {
-  const ChatHistorySheet({required this.onClose, super.key});
+  const new({required this.onClose, super.key});
 
   final VoidCallback onClose;
 

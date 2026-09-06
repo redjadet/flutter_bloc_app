@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/certificate_pinning_demo/presentation/
 import 'package:networking/networking.dart';
 
 class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
-  CertificatePinningDemoCubit({
+  new({
     required CertificatePinningConfig config,
     required MockCertificateScenarioController scenarioController,
     required CertificatePinningLogger logger,

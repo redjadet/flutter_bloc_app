@@ -16,7 +16,7 @@ import 'package:material_ui/material_ui.dart';
 part 'realtime_market_page_body.part.dart';
 
 class RealtimeMarketLoadErrorBanner extends StatelessWidget {
-  const RealtimeMarketLoadErrorBanner({required this.l10n, super.key});
+  const new({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -99,7 +99,7 @@ class RealtimeMarketLoadErrorBanner extends StatelessWidget {
 }
 
 class RealtimeMarketEmptyOrErrorBody extends StatelessWidget {
-  const RealtimeMarketEmptyOrErrorBody({required this.l10n, super.key});
+  const new({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -149,7 +149,7 @@ class RealtimeMarketEmptyOrErrorBody extends StatelessWidget {
 }
 
 class RealtimeMarketSkeletonPlaceholder extends StatelessWidget {
-  const RealtimeMarketSkeletonPlaceholder({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -161,10 +161,7 @@ class RealtimeMarketSkeletonPlaceholder extends StatelessWidget {
         const SizedBox(height: 8),
         Text('00000.00', style: theme.textTheme.headlineSmall),
         const SizedBox(height: 24),
-        Text(
-          'Lorem ipsum dolor sit',
-          style: theme.textTheme.bodyLarge,
-        ),
+        Text('Lorem ipsum dolor sit', style: theme.textTheme.bodyLarge),
       ],
     );
   }

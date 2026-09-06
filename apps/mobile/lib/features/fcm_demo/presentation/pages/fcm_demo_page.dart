@@ -18,7 +18,7 @@ part 'fcm_demo_page.part.dart';
 
 /// FCM demo page: permission, tokens, last message.
 class FcmDemoPage extends StatelessWidget {
-  const FcmDemoPage({super.key});
+  const new({super.key});
 
   static String _permissionLabel(
     FcmPermissionState state,
@@ -46,7 +46,7 @@ class FcmDemoPage extends StatelessWidget {
 }
 
 class _FcmDemoBody extends StatelessWidget {
-  const _FcmDemoBody();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +56,8 @@ class _FcmDemoBody extends StatelessWidget {
           FcmDemoState,
           ({FcmDemoStatus status, String? errorMessage})
         >(
-          selector: (state) => (
-            status: state.status,
-            errorMessage: state.errorMessage,
-          ),
+          selector: (state) =>
+              (status: state.status, errorMessage: state.errorMessage),
         );
 
     if (viewState.status == FcmDemoStatus.loading ||
@@ -96,16 +94,14 @@ class _FcmDemoBody extends StatelessWidget {
         SizedBox(height: context.responsiveGapL),
         Text(
           context.l10n.fcmDemoScopeNoteIos,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
+          style: Theme.of(context).textTheme.bodySmall
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         SizedBox(height: context.responsiveGapS),
         Text(
           context.l10n.fcmDemoScopeNoteSimulator,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
+          style: Theme.of(context).textTheme.bodySmall
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );
@@ -113,7 +109,7 @@ class _FcmDemoBody extends StatelessWidget {
 }
 
 class _PermissionSection extends StatelessWidget {
-  const _PermissionSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -144,10 +140,7 @@ class _PermissionSection extends StatelessWidget {
 }
 
 class _TokenSectionContainer extends StatelessWidget {
-  const _TokenSectionContainer({
-    required this.label,
-    required this.selector,
-  });
+  const new({required this.label, required this.selector});
 
   final String label;
   final String? Function(FcmDemoState state) selector;
@@ -162,7 +155,7 @@ class _TokenSectionContainer extends StatelessWidget {
 }
 
 class _LastMessageSectionContainer extends StatelessWidget {
-  const _LastMessageSectionContainer();
+  const new();
 
   @override
   Widget build(BuildContext context) {
