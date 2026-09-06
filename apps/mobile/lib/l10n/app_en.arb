@@ -4468,5 +4468,75 @@
   "socialFeedDemoSignalStep2": "Nail the data model first",
   "socialFeedDemoSignalStep3": "Name layers and enforce them",
   "socialFeedDemoSignalStep4": "Attack hard problems independently",
-  "socialFeedDemoSignalStep5": "End on failure states"
+  "socialFeedDemoSignalStep5": "End on failure states",
+
+  "exampleSecureMessagingDemoButton": "Secure messaging demo",
+  "@exampleSecureMessagingDemoButton": {
+    "description": "Example hub button for secure messaging Rust FFI demo"
+  },
+  "secureMessagingDemoTitle": "Secure messaging demo",
+  "@secureMessagingDemoTitle": {
+    "description": "Secure messaging demo page title"
+  },
+  "secureMessagingDemoSecurityWarning": "Demo only: AES key is process-ephemeral. Ciphertext cannot be decrypted after restart. Not production messaging security.",
+  "@secureMessagingDemoSecurityWarning": {
+    "description": "Security limitation banner for secure messaging demo"
+  },
+  "secureMessagingDemoUnavailable": "Native core unavailable on this platform",
+  "@secureMessagingDemoUnavailable": {
+    "description": "Shown when Rust secure core cannot load (e.g. web)"
+  },
+  "secureMessagingDemoVersionLabel": "Core version: {version}",
+  "@secureMessagingDemoVersionLabel": {
+    "description": "Shows native core version string",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "secureMessagingDemoPlaintextLabel": "Message",
+  "@secureMessagingDemoPlaintextLabel": {
+    "description": "Plaintext input label"
+  },
+  "secureMessagingDemoEncryptButton": "Encrypt",
+  "@secureMessagingDemoEncryptButton": {
+    "description": "Encrypt action"
+  },
+  "secureMessagingDemoDecryptButton": "Decrypt",
+  "@secureMessagingDemoDecryptButton": {
+    "description": "Decrypt action"
+  },
+  "secureMessagingDemoResetButton": "Reset",
+  "@secureMessagingDemoResetButton": {
+    "description": "Reset demo form"
+  },
+  "secureMessagingDemoSuccessLabel": "Round trip matched",
+  "@secureMessagingDemoSuccessLabel": {
+    "description": "Shown when decrypt recovers exact plaintext"
+  },
+  "secureMessagingDemoErrorInvalidInput": "Enter a non-empty message",
+  "@secureMessagingDemoErrorInvalidInput": {
+    "description": "Invalid plaintext error"
+  },
+  "secureMessagingDemoErrorMalformed": "Ciphertext is malformed",
+  "@secureMessagingDemoErrorMalformed": {
+    "description": "Malformed envelope error"
+  },
+  "secureMessagingDemoErrorAuthFailed": "Authentication failed",
+  "@secureMessagingDemoErrorAuthFailed": {
+    "description": "GCM auth failure"
+  },
+  "secureMessagingDemoErrorUnsupportedVersion": "Unsupported envelope version",
+  "@secureMessagingDemoErrorUnsupportedVersion": {
+    "description": "Unsupported format version"
+  },
+  "secureMessagingDemoErrorInternal": "Native core error",
+  "@secureMessagingDemoErrorInternal": {
+    "description": "Internal native failure"
+  },
+  "secureMessagingDemoErrorMismatch": "Recovered plaintext did not match",
+  "@secureMessagingDemoErrorMismatch": {
+    "description": "Round-trip mismatch"
+  }
 }

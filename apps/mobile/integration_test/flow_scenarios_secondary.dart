@@ -303,6 +303,61 @@ void registerSocialFeedDemoIntegrationFlow() {
   );
 }
 
+void registerSecureMessagingDemoIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Secure messaging demo flow',
+    testName: 'encrypts and decrypts via Rust core from Example page',
+    body: (tester) async {
+      await launchTestApp(tester);
+
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      await pumpUntilFound(tester, find.text('Example Page'));
+
+      final Finder demoButton = find.byKey(
+        const ValueKey('example-secure-messaging-demo-button'),
+      );
+      await tester.scrollUntilVisible(
+        demoButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, demoButton);
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('secure-messaging-demo-plaintext')),
+      );
+
+      await tester.enterText(
+        find.byKey(const ValueKey('secure-messaging-demo-plaintext')),
+        'integration-round-trip',
+      );
+      await tester.pump();
+      await tapAndPump(
+        tester,
+        find.byKey(const ValueKey('secure-messaging-demo-encrypt')),
+      );
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('secure-messaging-demo-ciphertext')),
+      );
+      await tapAndPump(
+        tester,
+        find.byKey(const ValueKey('secure-messaging-demo-decrypt')),
+      );
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('secure-messaging-demo-success')),
+      );
+      expect(
+        find.byKey(const ValueKey('secure-messaging-demo-recovered')),
+        findsOneWidget,
+      );
+      expect(find.text('integration-round-trip'), findsWidgets);
+    },
+  );
+}
+
 void registerNativePlatformShowcaseIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Native platform showcase flow',

@@ -31,6 +31,17 @@
       "target": "integration_test/native_platform_showcase_flow_test.dart"
     },
     {
+      "id": "secure_messaging_demo",
+      "path_prefixes": [
+        "lib/features/secure_messaging_demo/",
+        "apps/mobile/lib/features/secure_messaging_demo/",
+        "lib/app/composition/features/register_secure_messaging_demo_services.dart",
+        "apps/mobile/lib/app/composition/features/register_secure_messaging_demo_services.dart",
+        "packages/secure_core_bridge/"
+      ],
+      "target": "integration_test/secure_messaging_demo_flow_test.dart"
+    },
+    {
       "id": "social_feed_demo",
       "path_prefixes": [
         "lib/features/social_feed_demo/",

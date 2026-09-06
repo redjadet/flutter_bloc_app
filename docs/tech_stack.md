@@ -27,6 +27,17 @@ not a replacement for `pubspec.yaml`.
 | Non-mobile platforms | Canonical: `apps/other_platforms/{web,macos,linux,windows}/`; `apps/mobile/{web,macos,linux,windows}` are symlinks so Flutter discovers those targets |
 | Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for Podfiles and unsupported plugin fallback |
 
+## Native secure core (demo)
+
+| Item | Detail |
+| --- | --- |
+| Rust pin | **1.98.1** (`packages/secure_core_bridge/rust/secure_core/rust-toolchain.toml`) |
+| Package | `packages/secure_core_bridge` — `dart:ffi` + `native_toolchain_rust` build hooks |
+| Consumer | `secure_messaging_demo` feature — [`features/secure_messaging_demo.md`](features/secure_messaging_demo.md) |
+| Gate | `tool/check_secure_core.sh` in `./bin/checklist`; CI `install-rust: true` |
+| Linux | Host CI / package tests only — **not** a first-class product desktop target |
+| Architecture | [`architecture/rust_ffi_secure_core_bridge.md`](architecture/rust_ffi_secure_core_bridge.md) |
+
 ## Supported platforms
 
 First-class targets for feature work, UI, routing, and validation. Agents must

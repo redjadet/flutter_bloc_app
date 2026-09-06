@@ -16,6 +16,7 @@ Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
 | `profile` | Sealed lifecycle + typed `ProfileFailure` | G | G | G | G | `apps/mobile/lib/features/profile/presentation/cubit/` |
 | `todo_list` | DTO sync boundary, domain merge policy, AppError | G | Y | G | G | `data/todo_item_dto.dart`, `domain/todo_merge_policy.dart` |
 | `native_platform_showcase` | Platform ports; command `MethodChannel` (incl. nested security showcase), streaming `EventChannel`, FFI; cubit → use cases only | G | G | G | G | `domain/use_cases/`, `data/*_service.dart`, `presentation/widgets/native_security_*` |
+| `secure_messaging_demo` | Rust AES-GCM via workspace FFI package (`secure_core_bridge`); domain repo + sealed failures; Cubit request-gen guards | G | G | G | Y | `domain/`, `data/ffi_secure_core_repository.dart`, `packages/secure_core_bridge/` — see [`rust_ffi_secure_core_bridge.md`](rust_ffi_secure_core_bridge.md) |
 | `deeplink` | Sealed deep-link state | G | G | G | G | `presentation/cubit/deep_link_state.dart` |
 | `calculator` | Pure domain payment rules | G | G | G | G | `domain/payment_calculator.dart` |
 | `counter` | Offline-first + `CounterError` | Y | Y | G | G | `presentation/cubit/`, `domain/counter_error.dart` |

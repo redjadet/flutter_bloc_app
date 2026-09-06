@@ -15,6 +15,7 @@ Future<void> registerDemoServices() async {
   registerOnlineTherapyDemoServices();
   registerProductionReadinessServices();
   registerSocialFeedDemoServices();
+  registerSecureMessagingDemoServices();
   registerAppMemoryServices();
   registerCameraGalleryServices();
   registerScapesServices();

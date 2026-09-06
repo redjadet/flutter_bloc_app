@@ -18,6 +18,7 @@ Feature contracts, demo guides, and feature-specific validation. Start with
 | Certificate pinning demo | [certificate_pinning_demo.md](certificate_pinning_demo.md) |
 | IoT demo | [iot_ble.md](iot_ble.md) (+ [permissions](iot_ble_permissions.md), [device checklist](iot_ble_device_test_checklist.md)) |
 | Realtime market demo | [realtime_market.md](realtime_market.md) |
+| Secure messaging demo (Rust FFI) | [secure_messaging_demo.md](secure_messaging_demo.md) |
 | Social feed demo | [social_feed_demo.md](social_feed_demo.md) |
 
 Keep product-specific documentation in this folder. Keep shared architecture and
