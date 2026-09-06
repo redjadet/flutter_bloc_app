@@ -9,7 +9,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoMessagingPage extends StatefulWidget {
-  const OnlineTherapyDemoMessagingPage({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyDemoMessagingPage> createState() =>
@@ -34,9 +34,7 @@ class _OnlineTherapyDemoMessagingPageState
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final isBusy = context.selectState<MessagingCubit, MessagingState, bool>(
       selector: (state) => state.isBusy,
     );

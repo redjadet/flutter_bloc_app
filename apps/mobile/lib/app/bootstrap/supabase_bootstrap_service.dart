@@ -10,15 +10,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Service responsible for Supabase initialization when URL and anon key
 /// are configured. Does not block app startup if keys are missing.
 class SupabaseBootstrapService {
-  SupabaseBootstrapService._();
+  new _();
 
   static bool _initialized = false;
   static Future<void>? _initialization;
   @visibleForTesting
-  static Future<void> Function({
-    required String url,
-    required String anonKey,
-  })
+  static Future<void> Function({required String url, required String anonKey})
   initializeClient = _defaultInitializeClient;
 
   /// Whether Supabase has been successfully initialized (URL and anon key

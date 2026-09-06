@@ -15,7 +15,7 @@ import 'package:networking/networking.dart';
 /// Shows "Sync issues detected" message with retry action when sync status
 /// is degraded. Can be integrated into CommonPageLayout or app scaffold.
 class SyncStatusBanner extends StatefulWidget {
-  const SyncStatusBanner({super.key});
+  const new({super.key});
 
   @override
   State<SyncStatusBanner> createState() => _SyncStatusBannerState();

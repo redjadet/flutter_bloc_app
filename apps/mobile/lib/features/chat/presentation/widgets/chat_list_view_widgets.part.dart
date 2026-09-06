@@ -1,7 +1,7 @@
 part of 'chat_list_view.dart';
 
 class _ChatLoadedList extends StatelessWidget {
-  const _ChatLoadedList({
+  const new({
     required this.contacts,
     required this.onContactTap,
     required this.onContactLongPress,
@@ -14,16 +14,12 @@ class _ChatLoadedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (contacts.isEmpty) {
-      return CommonEmptyState(
-        message: context.l10n.chatHistoryEmpty,
-      );
+      return CommonEmptyState(message: context.l10n.chatHistoryEmpty);
     }
 
     final EdgeInsetsGeometry safeListPadding = context.responsiveListPadding
         .add(
-          EdgeInsets.only(
-            bottom: context.bottomInset + context.responsiveGap,
-          ),
+          EdgeInsets.only(bottom: context.bottomInset + context.responsiveGap),
         );
 
     return SafeArea(
@@ -51,7 +47,7 @@ class _ChatLoadedList extends StatelessWidget {
 }
 
 class _ChatContactListItem extends StatelessWidget {
-  const _ChatContactListItem({
+  const new({
     required this.contact,
     required this.isFirst,
     required this.isLast,
@@ -87,17 +83,12 @@ class _ChatContactListItem extends StatelessWidget {
 }
 
 class _ChatListErrorState extends StatelessWidget {
-  const _ChatListErrorState({
-    required this.message,
-    required this.onRetry,
-  });
+  const new({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) => CommonErrorView(
-    message: message,
-    onRetry: onRetry,
-  );
+  Widget build(BuildContext context) =>
+      CommonErrorView(message: message, onRetry: onRetry);
 }

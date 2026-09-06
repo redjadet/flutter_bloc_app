@@ -9,7 +9,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoAdminAuditPage extends StatefulWidget {
-  const OnlineTherapyDemoAdminAuditPage({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyDemoAdminAuditPage> createState() =>
@@ -34,9 +34,7 @@ class _OnlineTherapyDemoAdminAuditPageState
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final isBusy = context.selectState<AdminCubit, AdminState, bool>(
       selector: (state) => state.isBusy,
     );
@@ -100,11 +98,7 @@ class _OnlineTherapyDemoAdminAuditPageState
           return ListTile(
             key: ValueKey<String>('audit-event-${e.id}'),
             dense: true,
-            title: Text(
-              e.action,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            title: Text(e.action, maxLines: 1, overflow: TextOverflow.ellipsis),
             subtitle: Text(
               'actor=${e.actorId} target=${e.targetId}',
               maxLines: 1,

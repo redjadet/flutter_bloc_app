@@ -1,6 +1,6 @@
 /// Default UTC window for manager shift-assignment compose flows.
 class StaffDemoShiftDefaults {
-  const StaffDemoShiftDefaults._();
+  const new _();
 
   static const Duration leadTime = Duration(minutes: 30);
   static const Duration duration = Duration(hours: 4);
@@ -9,9 +9,6 @@ class StaffDemoShiftDefaults {
     DateTime? now,
   ]) {
     final DateTime startAtUtc = (now ?? DateTime.now()).toUtc().add(leadTime);
-    return (
-      startAtUtc: startAtUtc,
-      endAtUtc: startAtUtc.add(duration),
-    );
+    return (startAtUtc: startAtUtc, endAtUtc: startAtUtc.add(duration));
   }
 }

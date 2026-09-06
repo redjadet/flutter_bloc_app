@@ -5,7 +5,7 @@ import 'package:storage/storage.dart';
 /// Hive-backed implementation of [ThemeRepository].
 class HiveThemeRepository extends HiveSettingsRepository<ThemePreference>
     implements ThemeRepository {
-  HiveThemeRepository({required super.hiveService})
+  new({required super.hiveService})
     : super(
         key: 'theme_mode',
         fromString: _parseThemePreference,

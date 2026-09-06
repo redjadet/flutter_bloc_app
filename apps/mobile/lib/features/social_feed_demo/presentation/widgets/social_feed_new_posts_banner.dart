@@ -2,11 +2,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedNewPostsBanner extends StatelessWidget {
-  const SocialFeedNewPostsBanner({
-    required this.count,
-    required this.onActivate,
-    super.key,
-  });
+  const new({required this.count, required this.onActivate, super.key});
 
   final int count;
   final VoidCallback onActivate;

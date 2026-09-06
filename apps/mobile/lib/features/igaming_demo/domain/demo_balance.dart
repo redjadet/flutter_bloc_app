@@ -8,14 +8,10 @@ const int initialDemoBalanceUnits = 10_000;
 /// Immutable virtual balance for the iGaming demo (play-for-fun).
 @freezed
 abstract class DemoBalance with _$DemoBalance {
-  const factory DemoBalance({
-    required int amountUnits,
-  }) = _DemoBalance;
+  const factory({required int amountUnits}) = _DemoBalance;
 
-  const DemoBalance._();
+  const new _();
 
   /// Creates the initial balance for first-time users.
-  factory DemoBalance.initial() => const DemoBalance(
-    amountUnits: initialDemoBalanceUnits,
-  );
+  factory initial() => const DemoBalance(amountUnits: initialDemoBalanceUnits);
 }

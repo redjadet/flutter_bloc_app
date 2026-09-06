@@ -13,7 +13,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoMessagesPage extends StatelessWidget {
-  const StaffAppDemoMessagesPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class StaffAppDemoMessagesPage extends StatelessWidget {
 }
 
 class _InboxTile extends StatelessWidget {
-  const _InboxTile({required this.item});
+  const new({required this.item});
 
   final StaffDemoInboxItem item;
 

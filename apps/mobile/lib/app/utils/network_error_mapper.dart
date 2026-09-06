@@ -18,16 +18,14 @@ part 'network_error_mapper_messages.dart';
 /// When l10n is null (e.g. repository layer), returns non-localized
 /// English fallbacks intended for logging or repository-layer use.
 class NetworkErrorMapper {
-  NetworkErrorMapper._();
+  new _();
 
   /// Get user-friendly typed error from various error inputs.
   static AppError getAppError(dynamic error) => _getAppError(error);
 
   /// Get user-friendly error message from various error inputs.
-  static String getErrorMessage(
-    dynamic error, {
-    AppLocalizations? l10n,
-  }) => _getErrorMessage(error, l10n: l10n);
+  static String getErrorMessage(dynamic error, {AppLocalizations? l10n}) =>
+      _getErrorMessage(error, l10n: l10n);
 
   /// Map HTTP status code to [AppErrorCode] for branching and analytics.
   static AppErrorCode getErrorCodeForStatusCode(int statusCode) =>

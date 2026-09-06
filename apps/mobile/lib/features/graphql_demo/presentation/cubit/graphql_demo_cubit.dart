@@ -11,8 +11,7 @@ import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:utilities/utilities.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
-  GraphqlDemoCubit({required this._repository})
-    : super(const GraphqlDemoState());
+  new({required this._repository}) : super(const GraphqlDemoState());
 
   final GraphqlDemoRepository _repository;
   final RequestIdGuard _loadGuard = RequestIdGuard();
@@ -89,9 +88,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     );
     AppError? latestError;
     await CubitExceptionHandler.executeAsync(
-      operation: () => _repository.fetchCountries(
-        continentCode: continentCode,
-      ),
+      operation: () => _repository.fetchCountries(continentCode: continentCode),
       isAlive: () => !isClosed,
       onSuccess: (countries) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;

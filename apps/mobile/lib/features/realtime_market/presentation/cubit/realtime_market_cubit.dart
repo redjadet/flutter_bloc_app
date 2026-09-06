@@ -13,14 +13,12 @@ import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/rea
 
 class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
     with CubitSubscriptionMixin<RealtimeMarketState> {
-  RealtimeMarketCubit({
-    required RealtimeMarketRepository repository,
-    required String pairId,
-  }) : _repository = repository,
-       _loadCached = LoadCachedMarketSnapshot(repository),
-       _watch = WatchRealtimeMarket(repository),
-       _reconnect = ReconnectRealtimeMarket(repository),
-       super(RealtimeMarketState(pairId: pairId)) {
+  new({required RealtimeMarketRepository repository, required String pairId})
+    : _repository = repository,
+      _loadCached = LoadCachedMarketSnapshot(repository),
+      _watch = WatchRealtimeMarket(repository),
+      _reconnect = ReconnectRealtimeMarket(repository),
+      super(RealtimeMarketState(pairId: pairId)) {
     unawaited(_bootstrap());
   }
 

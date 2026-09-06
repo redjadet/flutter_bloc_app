@@ -1,7 +1,7 @@
 part of 'realtime_market_page_body.dart';
 
 class RealtimeMarketLoadedBody extends StatelessWidget {
-  const RealtimeMarketLoadedBody({
+  const new({
     required this.snapshot,
     required this.sideTab,
     required this.l10n,

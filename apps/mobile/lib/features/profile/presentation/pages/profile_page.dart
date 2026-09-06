@@ -18,7 +18,7 @@ import 'package:material_ui/material_ui.dart';
 part 'profile_page.freezed.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +144,7 @@ class ProfilePage extends StatelessWidget {
 
 @freezed
 abstract class _ProfileBodyData with _$ProfileBodyData {
-  const factory _ProfileBodyData({
+  const factory({
     required bool isLoading,
     required bool hasError,
     required bool hasUser,

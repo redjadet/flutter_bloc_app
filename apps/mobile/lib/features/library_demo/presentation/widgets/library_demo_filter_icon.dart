@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Custom filter icon matching EPOCH design
 class LibraryFilterIcon extends StatelessWidget {
-  const LibraryFilterIcon({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(

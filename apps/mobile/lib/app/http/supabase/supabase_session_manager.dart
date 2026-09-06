@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Single-flight Supabase access-token refresh and session invalidation.
 class SupabaseSessionManager {
-  SupabaseSessionManager({
+  new({
     this._sessionCoordinator,
     TokenRepository? tokenRepository,
     Future<AuthResponse> Function()? refreshSession,
@@ -54,7 +54,7 @@ class SupabaseSessionManager {
   Future<bool> refreshSessionSerialized() async {
     final Completer<bool>? existingCompleter = _refreshCompleter;
     if (existingCompleter != null) {
-      return existingCompleter.future;
+      return await existingCompleter.future;
     }
     final Completer<bool> completer = Completer<bool>();
     _refreshCompleter = completer;

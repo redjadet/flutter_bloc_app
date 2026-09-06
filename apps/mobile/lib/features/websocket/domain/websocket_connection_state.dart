@@ -6,19 +6,15 @@ enum WebsocketStatus { disconnected, connecting, connected, error }
 
 @freezed
 sealed class WebsocketConnectionState with _$WebsocketConnectionState {
-  const WebsocketConnectionState._();
+  const new _();
 
-  const factory WebsocketConnectionState.disconnected() =
-      WebsocketConnectionStateDisconnected;
+  const factory disconnected() = WebsocketConnectionStateDisconnected;
 
-  const factory WebsocketConnectionState.connecting() =
-      WebsocketConnectionStateConnecting;
+  const factory connecting() = WebsocketConnectionStateConnecting;
 
-  const factory WebsocketConnectionState.connected() =
-      WebsocketConnectionStateConnected;
+  const factory connected() = WebsocketConnectionStateConnected;
 
-  const factory WebsocketConnectionState.error(String message) =
-      WebsocketConnectionStateError;
+  const factory error(String message) = WebsocketConnectionStateError;
 
   WebsocketStatus get status => when(
     disconnected: () => WebsocketStatus.disconnected,

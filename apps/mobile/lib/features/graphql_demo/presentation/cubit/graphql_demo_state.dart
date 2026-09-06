@@ -9,7 +9,7 @@ part 'graphql_demo_state.freezed.dart';
 
 @freezed
 abstract class GraphqlDemoState with _$GraphqlDemoState {
-  const factory GraphqlDemoState({
+  const factory({
     @Default(ViewStatus.initial) ViewStatus status,
     @Default(<GraphqlCountry>[]) List<GraphqlCountry> countries,
     @Default(<GraphqlContinent>[]) List<GraphqlContinent> continents,
@@ -20,7 +20,7 @@ abstract class GraphqlDemoState with _$GraphqlDemoState {
     @Default(GraphqlDataSource.unknown) GraphqlDataSource dataSource,
   }) = _GraphqlDemoState;
 
-  const GraphqlDemoState._();
+  const new _();
 
   bool get isLoading => status.isLoading;
   bool get hasError =>

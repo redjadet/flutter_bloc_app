@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repos
 
 /// First initial [fetchCountries] (null continent) throws network error; subsequent loads return fake data.
 final class GraphqlFailOnceNetworkRepository implements GraphqlDemoRepository {
-  GraphqlFailOnceNetworkRepository();
+  new();
 
   static const List<GraphqlContinent> _continents = <GraphqlContinent>[
     GraphqlContinent(code: 'EU', name: 'Europe'),
@@ -41,9 +41,7 @@ final class GraphqlFailOnceNetworkRepository implements GraphqlDemoRepository {
   Future<List<GraphqlContinent>> fetchContinents() async => _continents;
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  }) async {
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
     if (continentCode == null) {
       _initialLoadAttempt++;
       if (_initialLoadAttempt == 1) {

@@ -12,7 +12,7 @@ part 'native_security_operation_result.freezed.dart';
 @freezed
 abstract class NativeSecurityOperationResult
     with _$NativeSecurityOperationResult {
-  const factory NativeSecurityOperationResult({
+  const factory({
     required NativeSecurityStatus status,
     required String reasonCode,
     required String platform,

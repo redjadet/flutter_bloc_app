@@ -36,7 +36,7 @@ class CaseStudySessionCubit extends _CaseStudySessionCubitBase
         _CaseStudySessionCubitHistory,
         _CaseStudySessionCubitSubmit,
         _CaseStudySessionCubitVideo {
-  CaseStudySessionCubit({
+  new({
     required super.authRepository,
     required super.localRepository,
     required super.videoRepository,
@@ -52,7 +52,7 @@ class CaseStudySessionCubit extends _CaseStudySessionCubitBase
 }
 
 abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
-  _CaseStudySessionCubitBase({
+  new({
     required AuthRepository authRepository,
     required CaseStudyLocalRepository localRepository,
     required CaseStudyVideoRepository videoRepository,
@@ -211,6 +211,6 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   @override
   Future<void> close() async {
     await _authSub?.cancel();
-    return super.close();
+    return await super.close();
   }
 }

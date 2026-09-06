@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staf
 import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoDashboardPage extends StatelessWidget {
-  const StaffAppDemoDashboardPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class StaffAppDemoDashboardPage extends StatelessWidget {
 }
 
 class _DashboardBody extends StatelessWidget {
-  const _DashboardBody({required this.state});
+  const new({required this.state});
 
   final StaffDemoSessionState state;
 

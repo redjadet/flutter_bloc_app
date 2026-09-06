@@ -17,12 +17,10 @@ enum RegisterPhoneError { empty, invalid }
 
 @freezed
 abstract class RegisterFieldState with _$RegisterFieldState {
-  const factory RegisterFieldState({
-    @Default('') String value,
-    @Default(false) bool isDirty,
-  }) = _RegisterFieldState;
+  const factory({@Default('') String value, @Default(false) bool isDirty}) =
+      _RegisterFieldState;
 
-  const RegisterFieldState._();
+  const new _();
 
   RegisterFieldState update(String value) =>
       copyWith(value: value, isDirty: true);
@@ -30,7 +28,7 @@ abstract class RegisterFieldState with _$RegisterFieldState {
 
 @freezed
 abstract class RegisterState with _$RegisterState {
-  const factory RegisterState({
+  const factory({
     @Default(RegisterFieldState()) RegisterFieldState fullName,
     @Default(RegisterFieldState()) RegisterFieldState email,
     @Default(RegisterFieldState()) RegisterFieldState password,
@@ -44,7 +42,7 @@ abstract class RegisterState with _$RegisterState {
     @Default(false) bool acceptedTerms,
   }) = _RegisterState;
 
-  const RegisterState._();
+  const new _();
 
   bool get isValid =>
       _validateFullName() == null &&

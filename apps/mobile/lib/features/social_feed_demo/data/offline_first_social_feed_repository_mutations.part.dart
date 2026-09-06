@@ -27,7 +27,7 @@ Future<SocialFeedLikeResult> _setLikedImpl(
 
   try {
     final SocialFeedPost post = await repo.withLikeApplyLock(viewer, () async {
-      return repo._remote.applyLike(
+      return await repo._remote.applyLike(
         viewer: viewer,
         postId: postId,
         desiredLiked: desiredLiked,

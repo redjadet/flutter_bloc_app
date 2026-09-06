@@ -5,10 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 /// Manages map state synchronization and updates for both Google and Apple Maps.
 class MapStateManager {
-  MapStateManager({
-    required this.cubit,
-    required this.useAppleMaps,
-  });
+  new({required this.cubit, required this.useAppleMaps});
 
   final MapSampleCubit cubit;
   final bool useAppleMaps;
@@ -81,7 +78,7 @@ class MapStateManager {
 
 /// Represents what state properties changed in an update.
 class MapStateChanges {
-  const MapStateChanges({
+  const new({
     required this.mapTypeChanged,
     required this.trafficChanged,
     required this.markersChanged,

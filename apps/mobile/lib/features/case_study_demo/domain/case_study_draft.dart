@@ -19,7 +19,7 @@ class const CaseStudyDraft({
   required final int currentQuestionIndex,
   required final CaseStudyDraftPhase phase,
 }) extends Equatable {
-  factory CaseStudyDraft.fresh({required String caseId}) {
+  factory fresh({required String caseId}) {
     return CaseStudyDraft(
       caseId: caseId,
       doctorName: '',
@@ -80,11 +80,7 @@ class const CaseStudyDraft({
   ];
 }
 
-enum CaseStudyDraftPhase {
-  metadata,
-  recording,
-  reviewing,
-}
+enum CaseStudyDraftPhase { metadata, recording, reviewing }
 
 extension CaseStudyDraftPhaseX on CaseStudyDraftPhase {
   static CaseStudyDraftPhase? tryParse(String? raw) {

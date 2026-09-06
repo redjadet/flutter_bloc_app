@@ -12,7 +12,7 @@ part 'hive_social_feed_local_data_source_likes.part.dart';
 /// Viewer-scoped first-page cache + shared comment threads. Schema mismatch
 /// invalidates only this feature snapshot — never shared Hive.
 class HiveSocialFeedLocalDataSource extends HiveRepositoryBase {
-  HiveSocialFeedLocalDataSource({
+  new({
     required super.hiveService,
     required this._clock,
     this.schemaVersion = 1,

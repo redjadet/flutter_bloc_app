@@ -12,7 +12,7 @@ typedef JsonMap = Map<String, dynamic>;
 /// Thin wrapper around [Dio] that centralizes Hugging Face specific
 /// headers, error handling and JSON parsing.
 class HuggingFaceApiClient {
-  HuggingFaceApiClient({
+  new({
     required this.dio,
     String? apiKey,
     this._requestTimeout = const Duration(seconds: 30),
@@ -40,10 +40,7 @@ class HuggingFaceApiClient {
         uri.toString(),
         // check-ignore: small payload (<8KB) - request body is small
         data: jsonEncode(payload),
-        options: Options(
-          headers: _headers(),
-          responseType: ResponseType.bytes,
-        ),
+        options: Options(headers: _headers(), responseType: ResponseType.bytes),
       ),
       timeout: _requestTimeout,
       isSuccess: (statusCode) => statusCode < 400,
@@ -151,10 +148,7 @@ class HuggingFaceApiClient {
     return '';
   }
 
-  static String _formatErrorFromStatusAndBody(
-    int code,
-    String body,
-  ) {
+  static String _formatErrorFromStatusAndBody(int code, String body) {
     String? detail;
 
     try {

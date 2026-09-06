@@ -4,11 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Platform-adaptive button for connecting a wallet.
 class ConnectWalletButton extends StatelessWidget {
-  const ConnectWalletButton({
-    required this.onPressed,
-    this.isLoading = false,
-    super.key,
-  });
+  const new({required this.onPressed, this.isLoading = false, super.key});
 
   final VoidCallback onPressed;
   final bool isLoading;

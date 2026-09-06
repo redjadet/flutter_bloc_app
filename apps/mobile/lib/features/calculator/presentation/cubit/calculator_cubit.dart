@@ -9,7 +9,7 @@ part 'calculator_cubit_helpers.dart';
 /// Cubit orchestrating payment calculator behaviour and summaries.
 class CalculatorCubit extends Cubit<CalculatorState>
     with CalculatorCubitHelpers {
-  CalculatorCubit({required this.calculator}) : super(const CalculatorState());
+  new({required this.calculator}) : super(const CalculatorState());
 
   @override
   final PaymentCalculator calculator;
@@ -32,12 +32,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
 
     final CalculatorState current = state;
     if (current.replaceInput) {
-      emit(
-        current.copyWith(
-          display: '0.',
-          replaceInput: false,
-        ),
-      );
+      emit(current.copyWith(display: '0.', replaceInput: false));
       return;
     }
 
@@ -46,12 +41,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
       return;
     }
 
-    emit(
-      current.copyWith(
-        display: '${current.display}.',
-        replaceInput: false,
-      ),
-    );
+    emit(current.copyWith(display: '${current.display}.', replaceInput: false));
   }
 
   void selectOperation(CalculatorOperation operation) {

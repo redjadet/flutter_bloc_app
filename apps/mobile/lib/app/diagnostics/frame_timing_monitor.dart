@@ -4,7 +4,7 @@ import 'package:flutter/scheduler.dart';
 
 /// Aggregated frame timing metrics for diagnostics cards.
 class FrameTimingSummary {
-  const FrameTimingSummary({
+  const new({
     required this.sampleCount,
     required this.p90Ms,
     required this.p99Ms,
@@ -72,7 +72,7 @@ abstract interface class FrameTimingMonitor {
 }
 
 class SchedulerFrameTimingMonitor implements FrameTimingMonitor {
-  SchedulerFrameTimingMonitor({this.maxSamples = 120});
+  new({this.maxSamples = 120});
 
   final int maxSamples;
   final ListQueue<double> _durationsMs = ListQueue<double>();

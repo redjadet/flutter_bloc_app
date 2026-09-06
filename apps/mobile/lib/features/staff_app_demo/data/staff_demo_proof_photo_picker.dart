@@ -6,8 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 class ImagePickerStaffDemoProofPhotoPicker
     implements StaffDemoProofPhotoPicker {
-  ImagePickerStaffDemoProofPhotoPicker({ImagePicker? picker})
-    : _picker = picker ?? ImagePicker();
+  new({ImagePicker? picker}) : _picker = picker ?? ImagePicker();
 
   /// Demo guardrail for web gallery picks with empty `path`.
   static const int maxWebPickBytes = 6 * 1024 * 1024;
@@ -15,11 +14,11 @@ class ImagePickerStaffDemoProofPhotoPicker
   final ImagePicker _picker;
 
   @override
-  Future<MediaPickResult> pickFromCamera() async =>
+  Future<MediaPickResult> pickFromCamera() =>
       _pickImage(source: ImageSource.camera, isCamera: true);
 
   @override
-  Future<MediaPickResult> pickFromGallery() async =>
+  Future<MediaPickResult> pickFromGallery() =>
       _pickImage(source: ImageSource.gallery, isCamera: false);
 
   Future<MediaPickResult> _pickImage({
@@ -98,10 +97,7 @@ class ImagePickerStaffDemoProofPhotoPicker
     );
   }
 
-  static bool _isCameraUnavailableCodeOrMessage(
-    String code,
-    String? message,
-  ) {
+  static bool _isCameraUnavailableCodeOrMessage(String code, String? message) {
     final String lowerCode = code.toLowerCase();
     if (lowerCode == 'no_available_camera' ||
         lowerCode == 'camera_not_available' ||

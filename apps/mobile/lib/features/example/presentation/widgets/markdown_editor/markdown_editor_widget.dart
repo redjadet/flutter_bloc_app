@@ -11,7 +11,7 @@ import 'package:material_ui/material_ui.dart';
 /// - Scrollable editor with preview
 /// - Responsive design
 class MarkdownEditorWidget extends StatefulWidget {
-  const MarkdownEditorWidget({super.key});
+  const new({super.key});
 
   @override
   State<MarkdownEditorWidget> createState() => _MarkdownEditorWidgetState();

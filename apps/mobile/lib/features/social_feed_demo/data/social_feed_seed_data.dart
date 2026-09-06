@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_po
 /// Deterministic fictional seed (60 posts). Shared content; likes personalize
 /// per viewer in the simulated remote.
 class SocialFeedSeedData {
-  const SocialFeedSeedData();
+  const new();
 
   static const int postCount = 60;
 

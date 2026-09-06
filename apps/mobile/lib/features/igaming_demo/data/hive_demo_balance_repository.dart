@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 /// Hive-backed implementation of [DemoBalanceRepository].
 class HiveDemoBalanceRepository extends HiveRepositoryBase
     implements DemoBalanceRepository {
-  HiveDemoBalanceRepository({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'igaming_demo_balance';
   static const String _keyAmountUnits = 'amount_units';
@@ -17,7 +17,7 @@ class HiveDemoBalanceRepository extends HiveRepositoryBase
   String get boxName => _boxName;
 
   @override
-  Future<DemoBalance> getBalance() async => StorageGuard.run<DemoBalance>(
+  Future<DemoBalance> getBalance() => StorageGuard.run<DemoBalance>(
     logContext: 'HiveDemoBalanceRepository.getBalance',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -41,7 +41,7 @@ class HiveDemoBalanceRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> setBalance(DemoBalance balance) async => StorageGuard.run<void>(
+  Future<void> setBalance(DemoBalance balance) => StorageGuard.run<void>(
     logContext: 'HiveDemoBalanceRepository.setBalance',
     action: () async {
       final int safe = balance.amountUnits < 0 ? 0 : balance.amountUnits;
@@ -52,7 +52,7 @@ class HiveDemoBalanceRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> updateBalance(int deltaUnits) async => StorageGuard.run<void>(
+  Future<void> updateBalance(int deltaUnits) => StorageGuard.run<void>(
     logContext: 'HiveDemoBalanceRepository.updateBalance',
     action: () async {
       final DemoBalance current = await getBalance();

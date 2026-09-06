@@ -6,7 +6,7 @@ part 'playlearn_state.freezed.dart';
 
 @freezed
 abstract class PlaylearnState with _$PlaylearnState {
-  const factory PlaylearnState({
+  const factory({
     @Default(<TopicItem>[]) List<TopicItem> topics,
     String? selectedTopicId,
     @Default(<VocabularyItem>[]) List<VocabularyItem> words,
@@ -14,7 +14,7 @@ abstract class PlaylearnState with _$PlaylearnState {
     String? errorMessage,
   }) = _PlaylearnState;
 
-  const PlaylearnState._();
+  const new _();
 
   bool get hasError => errorMessage != null;
 }

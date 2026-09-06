@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.d
 /// changes between two overlapping calls, each delegate keeps its own in-flight
 /// work (see tests).
 class AuthAwareChartRemoteRepository implements ChartRemoteRepository {
-  AuthAwareChartRemoteRepository({
+  new({
     required this._supabaseRemote,
     required this._firebaseRemote,
     required this._directRemote,
@@ -61,7 +61,7 @@ class AuthAwareChartRemoteRepository implements ChartRemoteRepository {
     final _ChartFetchInFlight? slot = _inFlightByDelegate[active];
     final Future<List<ChartPoint>>? existing = slot?.future;
     if (existing != null) {
-      return existing;
+      return await existing;
     }
     final Future<List<ChartPoint>> future = _fetchFromActive(active);
     _inFlightByDelegate[active] = _ChartFetchInFlight(future);
@@ -90,7 +90,7 @@ class AuthAwareChartRemoteRepository implements ChartRemoteRepository {
 }
 
 final class _ChartFetchInFlight {
-  _ChartFetchInFlight(this.future);
+  new(this.future);
 
   final Future<List<ChartPoint>> future;
 }

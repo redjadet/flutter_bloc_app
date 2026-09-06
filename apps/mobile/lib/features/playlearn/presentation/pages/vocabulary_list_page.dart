@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Vocabulary list page (tap-to-hear words) for a topic.
 class VocabularyListPage extends StatelessWidget {
-  const VocabularyListPage({
+  const new({
     required this.topicId,
     required this.repository,
     required this.audioService,
@@ -43,10 +43,8 @@ class VocabularyListPage extends StatelessWidget {
                   PlaylearnState,
                   ({bool isLoading, List<VocabularyItem> words})
                 >(
-                  selector: (state) => (
-                    isLoading: state.isLoading,
-                    words: state.words,
-                  ),
+                  selector: (state) =>
+                      (isLoading: state.isLoading, words: state.words),
                 );
             if (viewState.words.isEmpty && !viewState.isLoading) {
               return CommonEmptyState(message: l10n.playlearnNoWords);

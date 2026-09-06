@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LibrarySearchRow extends StatefulWidget {
-  const LibrarySearchRow({required this.l10n, super.key});
+  const new({required this.l10n, super.key});
 
   final AppLocalizations l10n;
 
@@ -44,9 +44,8 @@ class _LibrarySearchRowState extends State<LibrarySearchRow> {
               child: TextField(
                 key: const ValueKey('library-demo-search-field'),
                 controller: _controller,
-                style: EpochTextStyles.searchPlaceholder(context).copyWith(
-                  color: epoch.warmGreyLightest,
-                ),
+                style: EpochTextStyles.searchPlaceholder(context)
+                    .copyWith(color: epoch.warmGreyLightest),
                 decoration: InputDecoration(
                   hintText: widget.l10n.libraryDemoSearchHint.toUpperCase(),
                   hintStyle: EpochTextStyles.searchPlaceholder(context),

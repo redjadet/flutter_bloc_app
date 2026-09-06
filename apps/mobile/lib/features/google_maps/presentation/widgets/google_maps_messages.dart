@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsUnsupportedMessage extends StatelessWidget {
-  const GoogleMapsUnsupportedMessage({required this.message, super.key});
+  const new({required this.message, super.key});
 
   final String message;
 
@@ -13,11 +13,7 @@ class GoogleMapsUnsupportedMessage extends StatelessWidget {
 }
 
 class GoogleMapsErrorMessage extends StatelessWidget {
-  const GoogleMapsErrorMessage({
-    required this.message,
-    this.onRetry,
-    super.key,
-  });
+  const new({required this.message, this.onRetry, super.key});
 
   final String message;
   final VoidCallback? onRetry;
@@ -42,11 +38,7 @@ class GoogleMapsErrorMessage extends StatelessWidget {
 }
 
 class GoogleMapsMissingKeyMessage extends StatelessWidget {
-  const GoogleMapsMissingKeyMessage({
-    required this.title,
-    required this.description,
-    super.key,
-  });
+  const new({required this.title, required this.description, super.key});
 
   final String title;
   final String description;

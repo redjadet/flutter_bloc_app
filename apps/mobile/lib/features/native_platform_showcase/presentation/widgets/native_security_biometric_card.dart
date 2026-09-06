@@ -11,7 +11,7 @@ typedef _BiometricSlice = ({NativeSecurityOperationResult? result, bool busy});
 
 /// Biometric-gated protected crypto operation card.
 class NativeSecurityBiometricCard extends StatelessWidget {
-  const NativeSecurityBiometricCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

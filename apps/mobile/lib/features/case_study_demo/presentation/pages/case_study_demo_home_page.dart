@@ -11,7 +11,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CaseStudyDemoHomePage extends StatelessWidget {
-  const CaseStudyDemoHomePage({required this.remoteAuth, super.key});
+  const new({required this.remoteAuth, super.key});
 
   final RemoteBackendAuthPort remoteAuth;
 

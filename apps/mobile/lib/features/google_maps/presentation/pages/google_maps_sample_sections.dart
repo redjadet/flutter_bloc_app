@@ -4,7 +4,7 @@
 part of 'google_maps_sample_page.dart';
 
 class _GoogleMapsMapSection extends StatelessWidget {
-  const _GoogleMapsMapSection({
+  const new({
     required this.controller,
     required this.cubit,
     required this.useAppleMaps,
@@ -34,10 +34,7 @@ class _GoogleMapsMapSection extends StatelessWidget {
         ),
       );
 
-  bool _mapStateChanged(
-    MapSampleState previous,
-    MapSampleState current,
-  ) =>
+  bool _mapStateChanged(MapSampleState previous, MapSampleState current) =>
       previous.cameraPosition != current.cameraPosition ||
       previous.markers != current.markers ||
       previous.mapType != current.mapType ||
@@ -47,7 +44,7 @@ class _GoogleMapsMapSection extends StatelessWidget {
 }
 
 class _GoogleMapsControlsSection extends StatelessWidget {
-  const _GoogleMapsControlsSection({
+  const new({
     required this.l10n,
     required this.onToggleMapType,
     required this.onToggleTraffic,
@@ -79,10 +76,7 @@ class _GoogleMapsControlsSection extends StatelessWidget {
 }
 
 class _GoogleMapsLocationListSection extends StatelessWidget {
-  const _GoogleMapsLocationListSection({
-    required this.l10n,
-    required this.onFocus,
-  });
+  const new({required this.l10n, required this.onFocus});
 
   final AppLocalizations l10n;
   final ValueChanged<MapLocation> onFocus;
@@ -98,18 +92,14 @@ class _GoogleMapsLocationListSection extends StatelessWidget {
           locations: state.locations,
           selectedMarkerId: state.selectedMarkerId?.value,
         ),
-        builder:
-            (
-              context,
-              viewModel,
-            ) => GoogleMapsLocationList(
-              locations: viewModel.locations,
-              selectedMarkerId: viewModel.selectedMarkerId,
-              emptyLabel: l10n.googleMapsPageEmptyLocations,
-              heading: l10n.googleMapsPageLocationsHeading,
-              focusLabel: l10n.googleMapsPageFocusButton,
-              selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
-              onFocus: onFocus,
-            ),
+        builder: (context, viewModel) => GoogleMapsLocationList(
+          locations: viewModel.locations,
+          selectedMarkerId: viewModel.selectedMarkerId,
+          emptyLabel: l10n.googleMapsPageEmptyLocations,
+          heading: l10n.googleMapsPageLocationsHeading,
+          focusLabel: l10n.googleMapsPageFocusButton,
+          selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
+          onFocus: onFocus,
+        ),
       );
 }

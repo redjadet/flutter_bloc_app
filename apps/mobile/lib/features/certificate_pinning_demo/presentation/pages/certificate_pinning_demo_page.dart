@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 class CertificatePinningDemoPage extends StatelessWidget {
-  const CertificatePinningDemoPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class CertificatePinningDemoPage extends StatelessWidget {
 }
 
 class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.state, required this.l10n});
+  const new({required this.state, required this.l10n});
 
   final CertificatePinningDemoState state;
   final AppLocalizations l10n;

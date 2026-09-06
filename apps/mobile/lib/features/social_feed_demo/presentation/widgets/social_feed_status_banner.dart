@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedStatusBanner extends StatelessWidget {
-  const SocialFeedStatusBanner({required this.data, super.key});
+  const new({required this.data, super.key});
 
   final SocialFeedReadyData data;
 
@@ -16,9 +16,7 @@ class SocialFeedStatusBanner extends StatelessWidget {
       lines.add(l10n.socialFeedDemoSimulatedOffline);
     }
     if (data.isShowingCachedData) {
-      lines.add(
-        l10n.socialFeedDemoStaleCache(data.cacheAge.inMinutes),
-      );
+      lines.add(l10n.socialFeedDemoStaleCache(data.cacheAge.inMinutes));
     }
     if (data.pendingMutationCount > 0) {
       lines.add(l10n.socialFeedDemoPendingCount(data.pendingMutationCount));
@@ -41,9 +39,7 @@ class SocialFeedStatusBanner extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            for (final String line in lines) Text(line),
-          ],
+          children: <Widget>[for (final String line in lines) Text(line)],
         ),
       ),
     );

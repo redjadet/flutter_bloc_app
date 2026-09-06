@@ -14,7 +14,7 @@ import 'package:storage/storage.dart';
 /// Implements [SyncableRepository] to allow background refresh of cached results.
 class OfflineFirstSearchRepository
     implements SearchRepository, SyncableRepository {
-  OfflineFirstSearchRepository({
+  new({
     required this._remoteRepository,
     required this._cacheRepository,
     required this._networkStatusService,

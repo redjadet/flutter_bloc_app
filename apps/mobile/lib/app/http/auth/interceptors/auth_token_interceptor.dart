@@ -13,7 +13,7 @@ part 'auth_token_interceptor_retry.part.dart';
 
 /// Injects Firebase auth token and retries once on 401 after refresh.
 class AuthTokenInterceptor extends QueuedInterceptor {
-  AuthTokenInterceptor({
+  new({
     required this._authTokenManager,
     required this._createRetryDio,
     this._firebaseAuth,
@@ -39,21 +39,18 @@ class AuthTokenInterceptor extends QueuedInterceptor {
       'allow_auth_retry_non_idempotent';
 
   @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     unawaited(
-      _injectToken(options).then((_) => handler.next(options)).catchError(
-        (Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'AuthTokenInterceptor failed to inject token',
-            error,
-            stackTrace,
-          );
-          handler.next(options);
-        },
-      ),
+      _injectToken(options)
+          .then((_) => handler.next(options))
+          .catchError((Object error, StackTrace stackTrace) {
+            AppLogger.error(
+              'AuthTokenInterceptor failed to inject token',
+              error,
+              stackTrace,
+            );
+            handler.next(options);
+          }),
     );
   }
 

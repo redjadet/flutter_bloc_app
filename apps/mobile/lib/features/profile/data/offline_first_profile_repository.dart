@@ -14,7 +14,7 @@ import 'package:storage/storage.dart';
 /// when online. Read-only; no pending operations are queued.
 class OfflineFirstProfileRepository
     implements ProfileRepository, SyncableRepository {
-  OfflineFirstProfileRepository({
+  new({
     required this._remoteRepository,
     required this._cacheRepository,
     required this._networkStatusService,
@@ -49,10 +49,7 @@ class OfflineFirstProfileRepository
       // Return cached immediately and refresh in the background when online.
       // In-flight coalescing: concurrent callers share one refresh.
       unawaited(
-        _refreshAndCache().catchError((
-          Object error,
-          StackTrace st,
-        ) {
+        _refreshAndCache().catchError((Object error, StackTrace st) {
           AppLogger.error(
             'OfflineFirstProfileRepository background refresh failed',
             error,

@@ -8,9 +8,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
 
 class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
-  FirestoreStaffDemoInboxRepository({
-    required this._firestore,
-  });
+  new({required this._firestore});
 
   final FirebaseFirestore _firestore;
 
@@ -30,22 +28,17 @@ class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
             List<StaffDemoInboxRecipientSnapshot>,
             List<StaffDemoInboxRecipientSnapshot>
           >.fromHandlers(
-            handleError:
-                (
-                  error,
-                  stackTrace,
-                  sink,
-                ) {
-                  if (error is FirebaseException &&
-                      error.code == 'permission-denied') {
-                    AppLogger.info(
-                      'FirestoreStaffDemoInboxRepository.watchRecipients permission denied; emitting empty list',
-                    );
-                    sink.add(const <StaffDemoInboxRecipientSnapshot>[]);
-                    return;
-                  }
-                  sink.addError(error, stackTrace);
-                },
+            handleError: (error, stackTrace, sink) {
+              if (error is FirebaseException &&
+                  error.code == 'permission-denied') {
+                AppLogger.info(
+                  'FirestoreStaffDemoInboxRepository.watchRecipients permission denied; emitting empty list',
+                );
+                sink.add(const <StaffDemoInboxRecipientSnapshot>[]);
+                return;
+              }
+              sink.addError(error, stackTrace);
+            },
           ),
         );
   }

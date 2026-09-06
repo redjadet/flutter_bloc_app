@@ -9,7 +9,7 @@ part 'platform_adaptive_sheets.part.dart';
 
 /// Platform-adaptive bottom sheets and action dialogs (Cupertino vs Material).
 class PlatformAdaptiveSheets {
-  const PlatformAdaptiveSheets._();
+  const new _();
 
   static Future<T?> showAdaptiveModalBottomSheet<T>({
     required BuildContext context,
@@ -21,10 +21,7 @@ class PlatformAdaptiveSheets {
     bool enableDrag = true,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
-      return showCupertinoModalPopup<T>(
-        context: context,
-        builder: builder,
-      );
+      return showCupertinoModalPopup<T>(context: context, builder: builder);
     }
     return showModalBottomSheet<T>(
       context: context,
@@ -47,7 +44,7 @@ class PlatformAdaptiveSheets {
     Widget Function(BuildContext, T)? itemBuilder,
   }) async {
     if (PlatformAdaptive.isCupertino(context)) {
-      return showCupertinoModalPopup<T>(
+      return await showCupertinoModalPopup<T>(
         context: context,
         builder: (popupContext) => _CupertinoPickerSheetContent<T>(
           items: items,
@@ -63,7 +60,7 @@ class PlatformAdaptiveSheets {
       );
     }
 
-    return showModalBottomSheet<T>(
+    return await showModalBottomSheet<T>(
       context: context,
       builder: (sheetContext) => _MaterialPickerSheetContent<T>(
         items: items,

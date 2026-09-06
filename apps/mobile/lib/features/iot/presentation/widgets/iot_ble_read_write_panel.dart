@@ -6,7 +6,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class IotBleReadWritePanel extends StatefulWidget {
-  const IotBleReadWritePanel({super.key});
+  const new({super.key});
 
   @override
   State<IotBleReadWritePanel> createState() => _IotBleReadWritePanelState();

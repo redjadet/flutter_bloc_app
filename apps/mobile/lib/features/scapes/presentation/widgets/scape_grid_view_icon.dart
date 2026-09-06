@@ -3,10 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Grid view icon for scapes page, matching Figma design
 class ScapeGridViewIcon extends StatelessWidget {
-  const ScapeGridViewIcon({
-    required this.isSelected,
-    super.key,
-  });
+  const new({required this.isSelected, super.key});
 
   final bool isSelected;
 
@@ -43,10 +40,7 @@ class ScapeGridViewIcon extends StatelessWidget {
 
 /// List view icon for scapes page, matching Figma design.
 class ScapeListViewIcon extends StatelessWidget {
-  const ScapeListViewIcon({
-    required this.isSelected,
-    super.key,
-  });
+  const new({required this.isSelected, super.key});
 
   final bool isSelected;
 
@@ -64,11 +58,8 @@ class ScapeListViewIcon extends StatelessWidget {
         child: ResilientSvgAssetImage(
           assetPath: 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon.svg',
           fit: BoxFit.contain,
-          fallbackBuilder: () => Icon(
-            Icons.view_list,
-            size: iconSize,
-            color: iconColor,
-          ),
+          fallbackBuilder: () =>
+              Icon(Icons.view_list, size: iconSize, color: iconColor),
         ),
       ),
     );

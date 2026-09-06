@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Custom favorite (star) icon matching EPOCH design
 class LibraryFavoriteIcon extends StatelessWidget {
-  const LibraryFavoriteIcon({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(

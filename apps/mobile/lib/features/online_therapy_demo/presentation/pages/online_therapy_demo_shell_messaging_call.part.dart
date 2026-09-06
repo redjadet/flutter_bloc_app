@@ -1,7 +1,7 @@
 part of 'online_therapy_demo_shell_page.dart';
 
 class _MessagingPanel extends StatefulWidget {
-  const _MessagingPanel();
+  const new();
 
   @override
   State<_MessagingPanel> createState() => _MessagingPanelState();
@@ -79,9 +79,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
     }
 
     final convId = viewState.selectedConversationId;
-    Widget buildMessagesPane({
-      required bool compact,
-    }) {
+    Widget buildMessagesPane({required bool compact}) {
       return Column(
         children: <Widget>[
           Expanded(
@@ -175,10 +173,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                       .map(
                         (c) => DropdownMenuItem<String>(
                           value: c.id,
-                          child: Text(
-                            c.id,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          child: Text(c.id, overflow: TextOverflow.ellipsis),
                         ),
                       )
                       .toList(growable: false),
@@ -247,7 +242,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
 // end
 
 class _CallPanel extends StatelessWidget {
-  const _CallPanel();
+  const new();
 
   @override
   Widget build(BuildContext context) {

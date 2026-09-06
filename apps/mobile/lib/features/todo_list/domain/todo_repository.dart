@@ -8,4 +8,4 @@ export 'todo_sync_diagnostics_port.dart';
 ///
 /// Leaf Hive/RTDB adapters implement [TodoDataSource]; pending-sync inspector
 /// APIs live on [TodoSyncDiagnosticsPort].
-abstract class TodoRepository implements TodoDataSource {}
+abstract class TodoRepository implements TodoDataSource;

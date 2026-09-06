@@ -9,16 +9,14 @@ Future<bool?> showTodoDeleteConfirmDialog({
 }) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
-  return showAdaptiveDialog<bool>(
+  return await showAdaptiveDialog<bool>(
     context: context,
     builder: (context) => isCupertino
         ? CupertinoAlertDialog(
             title: Text(l10n.todoListDeleteDialogTitle),
             content: Padding(
               padding: EdgeInsets.only(top: context.responsiveGapS),
-              child: Text(
-                l10n.todoListDeleteDialogMessage(title),
-              ),
+              child: Text(l10n.todoListDeleteDialogMessage(title)),
             ),
             actions: [
               PlatformAdaptive.dialogAction(
@@ -36,9 +34,7 @@ Future<bool?> showTodoDeleteConfirmDialog({
           )
         : AlertDialog(
             title: Text(l10n.todoListDeleteDialogTitle),
-            content: Text(
-              l10n.todoListDeleteDialogMessage(title),
-            ),
+            content: Text(l10n.todoListDeleteDialogMessage(title)),
             actions: [
               PlatformAdaptive.dialogAction(
                 context: context,
@@ -62,16 +58,14 @@ Future<bool?> showTodoBatchDeleteConfirmDialog({
 }) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
-  return showAdaptiveDialog<bool>(
+  return await showAdaptiveDialog<bool>(
     context: context,
     builder: (context) => isCupertino
         ? CupertinoAlertDialog(
             title: Text(l10n.todoListBatchDeleteDialogTitle),
             content: Padding(
               padding: EdgeInsets.only(top: context.responsiveGapS),
-              child: Text(
-                l10n.todoListBatchDeleteDialogMessage(count),
-              ),
+              child: Text(l10n.todoListBatchDeleteDialogMessage(count)),
             ),
             actions: [
               PlatformAdaptive.dialogAction(
@@ -89,9 +83,7 @@ Future<bool?> showTodoBatchDeleteConfirmDialog({
           )
         : AlertDialog(
             title: Text(l10n.todoListBatchDeleteDialogTitle),
-            content: Text(
-              l10n.todoListBatchDeleteDialogMessage(count),
-            ),
+            content: Text(l10n.todoListBatchDeleteDialogMessage(count)),
             actions: [
               PlatformAdaptive.dialogAction(
                 context: context,
@@ -115,16 +107,14 @@ Future<bool?> showTodoClearCompletedConfirmDialog({
 }) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
-  return showAdaptiveDialog<bool>(
+  return await showAdaptiveDialog<bool>(
     context: context,
     builder: (context) => isCupertino
         ? CupertinoAlertDialog(
             title: Text(l10n.todoListClearCompletedDialogTitle),
             content: Padding(
               padding: EdgeInsets.only(top: context.responsiveGapS),
-              child: Text(
-                l10n.todoListClearCompletedDialogMessage(count),
-              ),
+              child: Text(l10n.todoListClearCompletedDialogMessage(count)),
             ),
             actions: [
               PlatformAdaptive.dialogAction(
@@ -142,9 +132,7 @@ Future<bool?> showTodoClearCompletedConfirmDialog({
           )
         : AlertDialog(
             title: Text(l10n.todoListClearCompletedDialogTitle),
-            content: Text(
-              l10n.todoListClearCompletedDialogMessage(count),
-            ),
+            content: Text(l10n.todoListClearCompletedDialogMessage(count)),
             actions: [
               PlatformAdaptive.dialogAction(
                 context: context,

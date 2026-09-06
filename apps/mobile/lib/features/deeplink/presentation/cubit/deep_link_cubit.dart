@@ -12,7 +12,7 @@ import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_
 /// Handles incoming deep/universal links and exposes navigation events.
 class DeepLinkCubit extends Cubit<DeepLinkState>
     with CubitSubscriptionMixin<DeepLinkState> {
-  DeepLinkCubit({required this._service, required this._parser})
+  new({required this._service, required this._parser})
     : super(const DeepLinkState.idle());
 
   final DeepLinkService _service;
@@ -136,7 +136,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
   @override
   Future<void> close() async {
     await _disposeSubscription();
-    return super.close();
+    return await super.close();
   }
 
   Future<void> _disposeSubscription() async {
@@ -145,10 +145,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     await cancelRegisteredSubscription(subscription);
   }
 
-  void _handleInitializeError(
-    Object error,
-    StackTrace? stackTrace,
-  ) {
+  void _handleInitializeError(Object error, StackTrace? stackTrace) {
     _consecutiveFailureCount++;
     AppLogger.error('Deep link initialization failed', error, stackTrace);
     _logFailureTelemetry(error);

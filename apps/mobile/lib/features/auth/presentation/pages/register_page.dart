@@ -13,7 +13,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
@@ -32,7 +32,7 @@ class RegisterPage extends StatelessWidget {
 }
 
 class _RegisterView extends StatelessWidget {
-  const _RegisterView();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +48,7 @@ class _RegisterView extends StatelessWidget {
         color: colorScheme.onSurface,
       ),
       useResponsiveBody: false,
-      body: const SafeArea(
-        child: ResponsiveRegisterBody(),
-      ),
+      body: const SafeArea(child: ResponsiveRegisterBody()),
     );
   }
 }

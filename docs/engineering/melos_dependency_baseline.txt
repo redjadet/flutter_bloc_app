@@ -103,7 +103,7 @@ dev dependencies:
 - mock_exceptions 0.8.2 [matcher]
 - mocktail 1.0.5 [collection matcher test_api]
 - retrofit_generator 10.2.7 [analyzer build built_collection code_builder dart_style dio protobuf retrofit source_gen]
-- very_good_analysis 10.3.0
+- very_good_analysis 11.0.0
 - video_player_platform_interface 6.8.0 [flutter plugin_platform_interface]
 
 dependency overrides:

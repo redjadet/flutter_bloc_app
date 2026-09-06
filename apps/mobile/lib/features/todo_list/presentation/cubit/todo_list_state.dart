@@ -21,7 +21,7 @@ enum TodoSortOrder {
 
 @freezed
 abstract class TodoListState with _$TodoListState {
-  const factory TodoListState({
+  const factory({
     @Default(ViewStatus.initial) ViewStatus status,
     @Default(<TodoItem>[]) List<TodoItem> items,
     @Default(TodoFilter.all) TodoFilter filter,
@@ -33,7 +33,7 @@ abstract class TodoListState with _$TodoListState {
     AppError? lastError,
   }) = _TodoListState;
 
-  const TodoListState._();
+  const new _();
 
   String? get errorMessage => lastError?.message;
 
@@ -85,11 +85,7 @@ abstract class TodoListState with _$TodoListState {
   static int _compareByUpdatedAtDesc(TodoItem a, TodoItem b) =>
       b.updatedAt.compareTo(a.updatedAt);
 
-  static int _compareByDueDate(
-    TodoItem a,
-    TodoItem b,
-    bool ascending,
-  ) {
+  static int _compareByDueDate(TodoItem a, TodoItem b, bool ascending) {
     final DateTime? aDue = a.dueDate;
     final DateTime? bDue = b.dueDate;
     if (aDue == null && bDue == null) {

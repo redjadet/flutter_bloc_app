@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrol
 import 'package:material_ui/material_ui.dart';
 
 class ChartMessageList extends StatelessWidget {
-  const ChartMessageList({required this.message, super.key});
+  const new({required this.message, super.key});
 
   final String message;
 

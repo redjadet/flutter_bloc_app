@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 /// flags. This ticker exists so route builders that capture banner bools can
 /// rebuild after deferred web backend init completes.
 class BackendAvailabilityUpdates extends ChangeNotifier {
-  BackendAvailabilityUpdates._();
+  new _();
 
   static final BackendAvailabilityUpdates instance =
       BackendAvailabilityUpdates._();
@@ -21,7 +21,7 @@ class BackendAvailabilityUpdates extends ChangeNotifier {
 /// Web behavior: backends are opportunistic (used when available) but never
 /// required for feature usability.
 class BackendAvailability {
-  const BackendAvailability({
+  const new({
     required this.firebaseInitialized,
     required this.supabaseInitialized,
     required this.webNoBackendMode,
@@ -29,7 +29,7 @@ class BackendAvailability {
     required this.allowLocalChatFallback,
   });
 
-  factory BackendAvailability.fromBootstrap() {
+  factory fromBootstrap() {
     const bool webNoBackendMode = kIsWeb;
     return BackendAvailability(
       firebaseInitialized: FirebaseBootstrapService.isFirebaseInitialized,

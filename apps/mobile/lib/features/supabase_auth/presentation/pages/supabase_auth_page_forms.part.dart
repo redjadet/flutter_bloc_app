@@ -2,7 +2,7 @@ part of 'supabase_auth_page.dart';
 
 /// Signed-in state: user info and sign-out button.
 class SupabaseAuthAuthenticatedSection extends StatelessWidget {
-  const SupabaseAuthAuthenticatedSection({
+  const new({
     required this.user,
     required this.theme,
     required this.colors,
@@ -63,7 +63,7 @@ class SupabaseAuthAuthenticatedSection extends StatelessWidget {
 
 /// Sign-in/sign-up form: email, password, actions, optional display name.
 class SupabaseAuthSignInForm extends StatelessWidget {
-  const SupabaseAuthSignInForm({
+  const new({
     required this.emailController,
     required this.passwordController,
     required this.displayNameController,

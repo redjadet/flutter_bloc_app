@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoControlsPage extends StatelessWidget {
-  const OnlineTherapyDemoControlsPage({super.key});
+  const new({super.key});
 
   String _explain({
     required OnlineTherapyNetworkMode mode,
@@ -34,10 +34,8 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           ({OnlineTherapyNetworkMode networkMode, bool isBusy})
         >(
-          selector: (state) => (
-            networkMode: state.networkMode,
-            isBusy: state.isBusy,
-          ),
+          selector: (state) =>
+              (networkMode: state.networkMode, isBusy: state.isBusy),
         );
     final List<Widget> items = <Widget>[
       Text(l10n.onlineTherapyDemoControlsIntro),
@@ -52,9 +50,7 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
             .map(
               (m) => DropdownMenuItem<OnlineTherapyNetworkMode>(
                 value: m,
-                child: Text(
-                  l10n.onlineTherapyDemoControlsModeLabel(m.name),
-                ),
+                child: Text(l10n.onlineTherapyDemoControlsModeLabel(m.name)),
               ),
             )
             .toList(growable: false),
@@ -62,18 +58,13 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
       const SizedBox(height: 8),
       Text(
         _explain(mode: controls.networkMode, l10n: l10n),
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     ];
 
     return CommonPageLayout(
       title: l10n.onlineTherapyDemoControlsTitle,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }

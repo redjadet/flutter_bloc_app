@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 part 'example_page_body_content.part.dart';
 
 class ExamplePageBody extends StatelessWidget {
-  const ExamplePageBody({
+  const new({
     required this.l10n,
     required this.theme,
     required this.colors,

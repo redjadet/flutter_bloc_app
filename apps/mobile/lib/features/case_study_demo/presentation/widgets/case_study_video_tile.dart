@@ -10,11 +10,7 @@ import 'package:video_player/video_player.dart';
 
 /// Inline video preview with lifecycle-safe controller ownership.
 class CaseStudyVideoTile extends StatefulWidget {
-  const CaseStudyVideoTile({
-    required this.videoPath,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.videoPath, required this.l10n, super.key});
 
   final String videoPath;
   final AppLocalizations l10n;

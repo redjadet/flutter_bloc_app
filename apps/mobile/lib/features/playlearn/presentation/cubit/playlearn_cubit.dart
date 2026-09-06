@@ -6,11 +6,8 @@ import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 class PlaylearnCubit extends Cubit<PlaylearnState> {
-  PlaylearnCubit({
-    required this._repository,
-    required this._audioService,
-    this._l10n,
-  }) : super(const PlaylearnState()) {
+  new({required this._repository, required this._audioService, this._l10n})
+    : super(const PlaylearnState()) {
     loadTopics();
   }
 
@@ -25,11 +22,7 @@ class PlaylearnCubit extends Cubit<PlaylearnState> {
       if (isClosed) return;
       emit(state.copyWith(topics: topics, isLoading: false));
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'PlaylearnCubit.loadTopics failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('PlaylearnCubit.loadTopics failed', error, stackTrace);
       if (isClosed) return;
       emit(
         state.copyWith(
@@ -45,12 +38,7 @@ class PlaylearnCubit extends Cubit<PlaylearnState> {
     try {
       final words = _repository.getWordsByTopic(topicId);
       if (isClosed) return;
-      emit(
-        state.copyWith(
-          selectedTopicId: topicId,
-          words: words,
-        ),
-      );
+      emit(state.copyWith(selectedTopicId: topicId, words: words));
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'PlaylearnCubit.loadWordsForTopic failed',
@@ -72,11 +60,7 @@ class PlaylearnCubit extends Cubit<PlaylearnState> {
     try {
       await _audioService.speak(text);
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'PlaylearnCubit.speakWord failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('PlaylearnCubit.speakWord failed', error, stackTrace);
       if (isClosed) return;
       emit(
         state.copyWith(

@@ -2,7 +2,7 @@ import 'package:design_system/design_system.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LibraryDemoIconButton extends StatelessWidget {
-  const LibraryDemoIconButton({
+  const new({
     required this.icon,
     required this.onPressed,
     required this.tooltip,

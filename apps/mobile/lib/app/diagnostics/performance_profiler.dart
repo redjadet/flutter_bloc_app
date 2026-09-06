@@ -21,7 +21,7 @@ import 'package:material_ui/material_ui.dart';
 /// PerformanceProfiler.enabled = true;
 /// ```
 class PerformanceProfiler {
-  PerformanceProfiler._();
+  new _();
 
   static bool _enabled = kDebugMode;
   static final Map<String, WidgetRebuildInfoInternal> _rebuildCounts = {};
@@ -46,18 +46,12 @@ class PerformanceProfiler {
   /// ```dart
   /// PerformanceProfiler.trackWidget('CounterDisplay', () => CounterDisplay());
   /// ```
-  static Widget trackWidget(
-    String name,
-    Widget Function() builder,
-  ) {
+  static Widget trackWidget(String name, Widget Function() builder) {
     if (!_enabled) {
       return builder();
     }
 
-    return TrackedWidget(
-      name: name,
-      child: builder(),
-    );
+    return TrackedWidget(name: name, child: builder());
   }
 
   /// Track frame rendering time.
@@ -90,11 +84,9 @@ class PerformanceProfiler {
   ///   // Async operation
   /// });
   /// ```
-  static Future<T> trackFrameAsync<T>(
-    Future<T> Function() operation,
-  ) async {
+  static Future<T> trackFrameAsync<T>(Future<T> Function() operation) async {
     if (!_enabled) {
-      return operation();
+      return await operation();
     }
 
     final stopwatch = Stopwatch()..start();
@@ -186,10 +178,7 @@ class PerformanceProfiler {
 
   static void _recordFrameTime(int microseconds) {
     _frameTimes.add(
-      _FrameInfo(
-        microseconds: microseconds,
-        timestamp: DateTime.now(),
-      ),
+      _FrameInfo(microseconds: microseconds, timestamp: DateTime.now()),
     );
 
     // Keep only recent frames
@@ -200,10 +189,7 @@ class PerformanceProfiler {
 }
 
 class _FrameInfo {
-  _FrameInfo({
-    required this.microseconds,
-    required this.timestamp,
-  });
+  new({required this.microseconds, required this.timestamp});
 
   final int microseconds;
   final DateTime timestamp;

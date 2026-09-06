@@ -4,10 +4,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messa
 
 class FirestoreStaffDemoMessagingRepository
     implements StaffDemoMessagingRepository {
-  FirestoreStaffDemoMessagingRepository({
-    required this._firestore,
-    required this._authRepository,
-  });
+  new({required this._firestore, required this._authRepository});
 
   final FirebaseFirestore _firestore;
   final AuthRepository _authRepository;
@@ -73,12 +70,9 @@ class FirestoreStaffDemoMessagingRepository
     final recipientRef = _firestore
         .collection('staffDemoMessageRecipients')
         .doc('${messageId}_$userId');
-    await recipientRef.set(
-      <String, dynamic>{
-        'confirmedAt': FieldValue.serverTimestamp(),
-      },
-      SetOptions(merge: true),
-    );
+    await recipientRef.set(<String, dynamic>{
+      'confirmedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     await _firestore.collection('staffDemoShifts').doc(shiftId).set(
       <String, dynamic>{

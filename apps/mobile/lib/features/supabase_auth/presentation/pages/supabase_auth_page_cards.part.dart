@@ -2,7 +2,7 @@ part of 'supabase_auth_page.dart';
 
 /// Shown when Supabase is not configured.
 class SupabaseAuthNotConfiguredCard extends StatelessWidget {
-  const SupabaseAuthNotConfiguredCard({
+  const new({
     required this.theme,
     required this.colors,
     required this.l10n,
@@ -32,7 +32,7 @@ class SupabaseAuthNotConfiguredCard extends StatelessWidget {
 
 /// Error message card with dismiss and optional child content below.
 class SupabaseAuthErrorSection extends StatelessWidget {
-  const SupabaseAuthErrorSection({
+  const new({
     required this.message,
     required this.theme,
     required this.colors,

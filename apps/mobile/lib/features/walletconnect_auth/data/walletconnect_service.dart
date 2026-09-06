@@ -9,9 +9,7 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnec
 /// Handles WalletConnect client initialization, session management,
 /// and wallet address extraction.
 class WalletConnectService {
-  WalletConnectService({
-    String? projectId,
-  }) : _projectId = projectId ?? _defaultProjectId;
+  new({String? projectId}) : _projectId = projectId ?? _defaultProjectId;
 
   static const String _defaultProjectId = 'YOUR_PROJECT_ID';
 

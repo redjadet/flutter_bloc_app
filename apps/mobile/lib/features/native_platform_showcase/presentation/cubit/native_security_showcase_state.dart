@@ -8,7 +8,7 @@ part 'native_security_showcase_state.freezed.dart';
 
 @freezed
 abstract class NativeSecurityShowcaseState with _$NativeSecurityShowcaseState {
-  const factory NativeSecurityShowcaseState({
+  const factory({
     required CertificatePinPolicySummary certificateSummary,
     NativeSecurityOperation? inFlight,
     @Default(false) bool appCheckInFlight,
@@ -19,7 +19,7 @@ abstract class NativeSecurityShowcaseState with _$NativeSecurityShowcaseState {
     AppCheckAttestationResult? appCheckResult,
   }) = _NativeSecurityShowcaseState;
 
-  const NativeSecurityShowcaseState._();
+  const new _();
 
   /// Shared busy gate for crypto/storage/biometric + App Check buttons.
   bool get isBusy => inFlight != null || appCheckInFlight;

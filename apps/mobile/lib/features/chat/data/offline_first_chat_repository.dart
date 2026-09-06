@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 
 /// Chat repository that prefers local/cache and syncs with remote when online.
 class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
-  OfflineFirstChatRepository({
+  new({
     required this._remoteRepository,
     required this._pendingSyncRepository,
     required this._registry,

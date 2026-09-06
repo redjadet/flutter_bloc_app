@@ -7,10 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 class GraphqlCacheControlsSection extends StatefulWidget {
-  const GraphqlCacheControlsSection({
-    required this.cacheRepository,
-    super.key,
-  });
+  const new({required this.cacheRepository, super.key});
 
   @visibleForTesting
   final GraphqlCacheClearPort cacheRepository;

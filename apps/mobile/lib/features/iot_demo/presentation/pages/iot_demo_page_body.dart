@@ -16,7 +16,7 @@ part 'iot_demo_page_body.part.dart';
 
 /// Loading state body for the IoT demo page.
 class IotDemoLoadingBody extends StatelessWidget {
-  const IotDemoLoadingBody({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,7 @@ class IotDemoLoadingBody extends StatelessWidget {
 
 /// Loaded state body: device list and selected device actions.
 class IotDemoLoadedBody extends StatelessWidget {
-  const IotDemoLoadedBody({
-    required this.devices,
-    this.selectedDeviceId,
-    super.key,
-  });
+  const new({required this.devices, this.selectedDeviceId, super.key});
 
   final List<IotDevice> devices;
   final String? selectedDeviceId;

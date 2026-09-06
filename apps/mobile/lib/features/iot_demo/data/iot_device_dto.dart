@@ -10,7 +10,7 @@ class const IotDeviceDto({
   final bool toggledOn = false,
   final double value = 0,
 }) {
-  IotDeviceDto.fromDomain(IotDevice device)
+  new fromDomain(IotDevice device)
     : this(
         id: device.id,
         name: device.name,
@@ -21,7 +21,7 @@ class const IotDeviceDto({
         value: device.value,
       );
 
-  factory IotDeviceDto.fromJson(Map<String, dynamic> json) => IotDeviceDto(
+  factory fromJson(Map<String, dynamic> json) => IotDeviceDto(
     id: json['id'] as String,
     name: json['name'] as String,
     type: _deviceTypeFromWire(json['type'] as String?),

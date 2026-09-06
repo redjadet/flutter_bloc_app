@@ -11,7 +11,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SocialFeedDemoPage extends StatefulWidget {
-  const SocialFeedDemoPage({super.key});
+  const new({super.key});
 
   @override
   State<SocialFeedDemoPage> createState() => _SocialFeedDemoPageState();

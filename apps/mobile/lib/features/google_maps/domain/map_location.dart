@@ -6,7 +6,7 @@ part 'map_location.freezed.dart';
 /// Describes a point of interest to showcase on the Google Map sample page.
 @freezed
 abstract class MapLocation with _$MapLocation {
-  const factory MapLocation({
+  const factory({
     required String id,
     required String title,
     required String description,

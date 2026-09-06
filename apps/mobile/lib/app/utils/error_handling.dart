@@ -9,13 +9,10 @@ import 'package:utilities/utilities.dart' show AppError;
 
 /// Common error handling utilities to reduce code duplication
 class ErrorHandling {
-  ErrorHandling._();
+  new _();
 
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
-  _showSnackBar(
-    BuildContext context,
-    SnackBar snackBar,
-  ) {
+  _showSnackBar(BuildContext context, SnackBar snackBar) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling._showSnackBar');
       return null;
@@ -210,9 +207,6 @@ class ErrorHandling {
       ContextUtils.logNotMounted('ErrorHandling.hideLoadingDialog');
       return;
     }
-    NavigationUtils.maybePop(
-      context,
-      useRootNavigator: true,
-    );
+    NavigationUtils.maybePop(context, useRootNavigator: true);
   }
 }

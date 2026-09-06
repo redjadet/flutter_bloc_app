@@ -12,9 +12,7 @@ import 'package:image_picker/image_picker.dart';
 
 /// Data adapter for turning a picker result into a processed preview data URL.
 class ImageProcessingCameraGalleryService {
-  const ImageProcessingCameraGalleryService({
-    this.processor = const ImageProcessor(),
-  });
+  const new({this.processor = const ImageProcessor()});
 
   final ImageProcessor processor;
 
@@ -62,6 +60,6 @@ class ImageProcessingCameraGalleryService {
       }
       return base64Decode(sourcePath.substring(separator + 1));
     }
-    return XFile(sourcePath).readAsBytes();
+    return await XFile(sourcePath).readAsBytes();
   }
 }

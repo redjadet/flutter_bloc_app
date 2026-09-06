@@ -15,7 +15,7 @@ abstract class CalculatorActions {
 
 /// Concrete adapter wiring [CalculatorCubit] to [CalculatorActions].
 class CalculatorCubitActions implements CalculatorActions {
-  const CalculatorCubitActions(this._cubit);
+  const new(this._cubit);
 
   final CalculatorCubit _cubit;
 
@@ -47,13 +47,13 @@ class CalculatorCubitActions implements CalculatorActions {
 
 /// Command object that encapsulates calculator keypad behaviour.
 abstract class CalculatorCommand {
-  const CalculatorCommand();
+  const new();
 
   void execute(CalculatorActions actions);
 }
 
 class DigitCommand extends CalculatorCommand {
-  const DigitCommand(this.digit);
+  const new(this.digit);
 
   final String digit;
 
@@ -62,7 +62,7 @@ class DigitCommand extends CalculatorCommand {
 }
 
 class OperationCommand extends CalculatorCommand {
-  const OperationCommand(this.operation);
+  const new(this.operation);
 
   final CalculatorOperation operation;
 
@@ -71,42 +71,42 @@ class OperationCommand extends CalculatorCommand {
 }
 
 class DecimalCommand extends CalculatorCommand {
-  const DecimalCommand();
+  const new();
 
   @override
   void execute(CalculatorActions actions) => actions.inputDecimalPoint();
 }
 
 class EvaluateCommand extends CalculatorCommand {
-  const EvaluateCommand();
+  const new();
 
   @override
   void execute(CalculatorActions actions) => actions.evaluate();
 }
 
 class ToggleSignCommand extends CalculatorCommand {
-  const ToggleSignCommand();
+  const new();
 
   @override
   void execute(CalculatorActions actions) => actions.toggleSign();
 }
 
 class ApplyPercentageCommand extends CalculatorCommand {
-  const ApplyPercentageCommand();
+  const new();
 
   @override
   void execute(CalculatorActions actions) => actions.applyPercentage();
 }
 
 class ClearAllCommand extends CalculatorCommand {
-  const ClearAllCommand();
+  const new();
 
   @override
   void execute(CalculatorActions actions) => actions.clearAll();
 }
 
 class BackspaceCommand extends CalculatorCommand {
-  const BackspaceCommand();
+  const new();
 
   @override
   void execute(CalculatorActions actions) => actions.backspace();

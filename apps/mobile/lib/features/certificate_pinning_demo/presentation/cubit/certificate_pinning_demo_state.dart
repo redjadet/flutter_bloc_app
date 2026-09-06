@@ -8,7 +8,7 @@ enum CertificatePinningDemoStatus { initial, validating, success, failure }
 
 @freezed
 sealed class CertificatePinningDemoState with _$CertificatePinningDemoState {
-  const factory CertificatePinningDemoState({
+  const factory({
     required CertificatePinningMode mode,
     required MockCertificateScenario scenario,
     @Default(CertificatePinningDemoStatus.initial)

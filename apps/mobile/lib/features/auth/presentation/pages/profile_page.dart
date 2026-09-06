@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// High-level profile page backed by FirebaseUI's [ProfileScreen].
 class AuthProfilePage extends StatelessWidget {
-  const AuthProfilePage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

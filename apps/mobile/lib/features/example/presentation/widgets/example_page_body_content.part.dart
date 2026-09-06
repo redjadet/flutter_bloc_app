@@ -1,7 +1,7 @@
 part of 'example_page_body.dart';
 
 class _ExamplePageBodyContent extends StatelessWidget {
-  const _ExamplePageBodyContent({
+  const new({
     required this.l10n,
     required this.theme,
     required this.colors,

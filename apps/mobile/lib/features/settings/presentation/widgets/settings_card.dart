@@ -7,7 +7,7 @@ class const SettingsOption<T>({
 });
 
 class SettingsCard<T> extends StatelessWidget {
-  const SettingsCard({
+  const new({
     required this.options,
     required this.isSelected,
     required this.onSelect,
@@ -37,11 +37,7 @@ class SettingsCard<T> extends StatelessWidget {
 }
 
 class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
+  const new({required this.label, required this.selected, required this.onTap});
 
   final String label;
   final bool selected;

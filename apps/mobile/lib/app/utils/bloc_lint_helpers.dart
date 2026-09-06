@@ -20,7 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// }
 /// ```
 class BlocLintHelpers {
-  BlocLintHelpers._();
+  new _();
 
   /// Validates that async operations in a cubit check `isClosed` before emitting.
   ///

@@ -13,7 +13,7 @@ part 'session_lifecycle_coordinator_session.part.dart';
 
 /// Emitted when a provider session is invalidated (refresh failure, remote 401, etc.).
 class SessionInvalidationEvent {
-  const SessionInvalidationEvent({
+  const new({
     required this.provider,
     required this.reason,
     required this.occurredAt,
@@ -89,7 +89,7 @@ abstract interface class SessionLifecycleCoordinator {
 }
 
 class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
-  SessionLifecycleCoordinatorImpl();
+  new();
 
   final StreamController<SessionInvalidationEvent> _invalidationController =
       StreamController<SessionInvalidationEvent>.broadcast();
@@ -120,20 +120,19 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
       _hasSessionReadyUser ? _sessionReadyUser : null;
 
   @override
-  Stream<AuthUser?> get sessionReadyAuthStateChanges => Stream<AuthUser?>.multi(
-    (controller) {
-      if (_hasSessionReadyUser) {
-        controller.add(_sessionReadyUser);
-      }
-      final StreamSubscription<AuthUser?> sub = _sessionReadyFanout.stream
-          .listen(
-            controller.add,
-            onError: controller.addError,
-            onDone: controller.close,
-          );
-      controller.onCancel = sub.cancel;
-    },
-  );
+  Stream<AuthUser?> get sessionReadyAuthStateChanges =>
+      Stream<AuthUser?>.multi((controller) {
+        if (_hasSessionReadyUser) {
+          controller.add(_sessionReadyUser);
+        }
+        final StreamSubscription<AuthUser?> sub = _sessionReadyFanout.stream
+            .listen(
+              controller.add,
+              onError: controller.addError,
+              onDone: controller.close,
+            );
+        controller.onCancel = sub.cancel;
+      });
 
   @override
   void onSignInCompleted({required AuthUser user}) =>
@@ -164,9 +163,8 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
       attachAuthRepositoryBody(repository);
 
   @override
-  Future<void> onSignOutCompleted({
-    required AuthProviderKind provider,
-  }) => onSignOutCompletedBody(provider: provider);
+  Future<void> onSignOutCompleted({required AuthProviderKind provider}) =>
+      onSignOutCompletedBody(provider: provider);
 
   @override
   Future<void> invalidateSession({

@@ -5,10 +5,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_
 
 class FirestoreStaffDemoPushTokenRepository
     implements StaffDemoPushTokenRepository {
-  FirestoreStaffDemoPushTokenRepository({
-    required this._firestore,
-    FirebaseMessaging? messaging,
-  }) : _messaging = messaging ?? FirebaseMessaging.instance;
+  new({required this._firestore, FirebaseMessaging? messaging})
+    : _messaging = messaging ?? FirebaseMessaging.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseMessaging _messaging;

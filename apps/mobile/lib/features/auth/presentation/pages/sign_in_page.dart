@@ -25,7 +25,7 @@ const Key signInGuestButtonKey = Key('sign_in_guest_button');
 
 /// Sign-in page that hosts the FirebaseUI Auth drop-in experience.
 class SignInPage extends StatelessWidget {
-  const SignInPage({
+  const new({
     super.key,
     this._auth,
     this.authRepository,

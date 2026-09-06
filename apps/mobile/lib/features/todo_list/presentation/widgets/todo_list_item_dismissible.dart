@@ -19,10 +19,7 @@ Widget buildTodoItemDismissible({
   final l10n = context.l10n;
   final colors = Theme.of(context).colorScheme;
 
-  Future<bool> confirmDelete(
-    BuildContext context,
-    String title,
-  ) async {
+  Future<bool> confirmDelete(BuildContext context, String title) async {
     final bool? shouldDelete = await showTodoDeleteConfirmDialog(
       context: context,
       title: title,
@@ -68,7 +65,7 @@ Widget buildTodoItemDismissible({
         } else {
           // check-ignore: side_effects_build - triggered by user gesture callback.
           unawaited(HapticFeedback.mediumImpact());
-          return confirmDelete(context, item.title);
+          return await confirmDelete(context, item.title);
         }
       },
       onDismissed: (direction) {

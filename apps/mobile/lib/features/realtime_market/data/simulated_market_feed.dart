@@ -28,7 +28,7 @@ int _initialTradeSeqFromRecentTrades(List<RecentTrade> recentTrades) {
 
 /// High-frequency simulated crypto book (demo only; no exchange).
 class SimulatedMarketFeed {
-  SimulatedMarketFeed({
+  new({
     required this._random,
     required this._timerService,
     this.fastTick = const Duration(milliseconds: 20),
@@ -75,11 +75,7 @@ class SimulatedMarketFeed {
 
     void emitInner() {
       tradeSeq += 1;
-      state = state.withNewTrade(
-        seq: tradeSeq,
-        random: _random,
-        clock: _clock,
-      );
+      state = state.withNewTrade(seq: tradeSeq, random: _random, clock: _clock);
       if (!controller.isClosed) {
         controller.add(state.toSnapshot(_clock()));
       }

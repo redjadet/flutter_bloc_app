@@ -12,7 +12,7 @@ double _todoStatsLabelFontSize(BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 24.0);
 
 class TodoStatsWidget extends StatelessWidget {
-  const TodoStatsWidget({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class TodoStatsWidget extends StatelessWidget {
 
 @immutable
 class _TodoStatsData {
-  const _TodoStatsData({
+  const new({
     required this.total,
     required this.completed,
     required this.active,
@@ -76,11 +76,7 @@ class _TodoStatsData {
 }
 
 class _StatItem extends StatelessWidget {
-  const _StatItem({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+  const new({required this.label, required this.value, required this.color});
 
   final String label;
   final int value;

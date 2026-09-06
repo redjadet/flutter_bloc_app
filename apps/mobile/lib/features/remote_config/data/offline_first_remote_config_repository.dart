@@ -20,7 +20,7 @@ part 'offline_first_remote_config_repository_sync.part.dart';
 /// with the global sync registry so background sync can refresh Remote Config.
 class OfflineFirstRemoteConfigRepository
     implements RemoteConfigService, SyncableRepository {
-  OfflineFirstRemoteConfigRepository({
+  new({
     required this._remoteRepository,
     required this._cacheRepository,
     required this._networkStatusService,
@@ -87,10 +87,7 @@ class OfflineFirstRemoteConfigRepository
       await _hydrateFromCache();
       return;
     }
-    await _refreshFromRemote(
-      reason: 'forceFetch',
-      skipNetworkCheck: true,
-    );
+    await _refreshFromRemote(reason: 'forceFetch', skipNetworkCheck: true);
   }
 
   @override
@@ -137,10 +134,7 @@ class OfflineFirstRemoteConfigRepository
   @override
   Future<void> pullRemote() => _refreshFromRemote(reason: 'pullRemote');
 
-  static void _defaultTelemetry(
-    String event,
-    Map<String, Object?> payload,
-  ) {
+  static void _defaultTelemetry(String event, Map<String, Object?> payload) {
     AppLogger.debug('RemoteConfigTelemetry[$event] $payload');
   }
 }

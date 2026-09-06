@@ -7,28 +7,23 @@ part 'game_state.freezed.dart';
 /// State for the play-for-fun game screen (stake, round, result).
 @freezed
 abstract class GameState with _$GameState {
-  const GameState._();
+  const new _();
 
-  const factory GameState.idle(
-    DemoBalance balance,
-    int selectedStake,
-  ) = _GameIdle;
-  const factory GameState.placingBet(
-    DemoBalance balance,
-    int selectedStake,
-  ) = _GamePlacingBet;
-  const factory GameState.spinning(
+  const factory idle(DemoBalance balance, int selectedStake) = _GameIdle;
+  const factory placingBet(DemoBalance balance, int selectedStake) =
+      _GamePlacingBet;
+  const factory spinning(
     DemoBalance balance,
     int bet,
     List<int> targetReelSymbolIndices,
   ) = _GameSpinning;
-  const factory GameState.result(
+  const factory result(
     GameRoundResult roundResult,
     DemoBalance newBalance,
     int selectedStake,
     List<int> targetReelSymbolIndices,
   ) = _GameResult;
-  const factory GameState.error(String message) = _GameError;
+  const factory error(String message) = _GameError;
 
   /// Current balance when in idle, placingBet, spinning, or result; null otherwise.
   DemoBalance? get balanceOrNull => mapOrNull(

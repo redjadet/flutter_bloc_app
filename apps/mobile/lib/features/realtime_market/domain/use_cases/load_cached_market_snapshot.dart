@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_sna
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 
 class LoadCachedMarketSnapshot {
-  LoadCachedMarketSnapshot(this._repository);
+  new(this._repository);
 
   final RealtimeMarketRepository _repository;
 

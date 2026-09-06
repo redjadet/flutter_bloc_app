@@ -4,7 +4,7 @@ import 'package:storage/storage.dart';
 
 class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
     implements StaffDemoTimeclockLocalStore {
-  HiveStaffDemoTimeclockLocalStore({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'staff_demo_timeclock_local';
 
@@ -14,33 +14,32 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
   String _openEntryKey(String userId) => 'openEntry:$userId';
 
   @override
-  Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({
-    required String userId,
-  }) => StorageGuard.run<StaffDemoOpenEntrySnapshot?>(
-    logContext: 'HiveStaffDemoTimeclockLocalStore.loadOpenEntry',
-    action: () async {
-      final box = await getBox();
-      final dynamic raw = box.get(_openEntryKey(userId));
-      if (raw is! Map) return null;
-      final map = Map<String, dynamic>.from(raw);
-      final entryId = map['entryId'];
-      final clockInAtMs = map['clockInAtMs'];
-      if (entryId is! String || entryId.isEmpty) return null;
-      if (clockInAtMs is! int) return null;
-      final shiftId = map['shiftId'] as String?;
-      final siteId = map['siteId'] as String?;
-      return StaffDemoOpenEntrySnapshot(
-        entryId: entryId,
-        clockInAtUtc: DateTime.fromMillisecondsSinceEpoch(
-          clockInAtMs,
-          isUtc: true,
-        ),
-        shiftId: shiftId,
-        siteId: siteId,
+  Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({required String userId}) =>
+      StorageGuard.run<StaffDemoOpenEntrySnapshot?>(
+        logContext: 'HiveStaffDemoTimeclockLocalStore.loadOpenEntry',
+        action: () async {
+          final box = await getBox();
+          final dynamic raw = box.get(_openEntryKey(userId));
+          if (raw is! Map) return null;
+          final map = Map<String, dynamic>.from(raw);
+          final entryId = map['entryId'];
+          final clockInAtMs = map['clockInAtMs'];
+          if (entryId is! String || entryId.isEmpty) return null;
+          if (clockInAtMs is! int) return null;
+          final shiftId = map['shiftId'] as String?;
+          final siteId = map['siteId'] as String?;
+          return StaffDemoOpenEntrySnapshot(
+            entryId: entryId,
+            clockInAtUtc: DateTime.fromMillisecondsSinceEpoch(
+              clockInAtMs,
+              isUtc: true,
+            ),
+            shiftId: shiftId,
+            siteId: siteId,
+          );
+        },
+        fallback: () => null,
       );
-    },
-    fallback: () => null,
-  );
 
   @override
   Future<void> saveOpenEntry({

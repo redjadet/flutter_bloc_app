@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Simple page shown when the user is logged out (e.g. example flow).
 class LoggedOutPage extends StatelessWidget {
-  const LoggedOutPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => CommonPageLayout(

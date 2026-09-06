@@ -39,10 +39,7 @@ class NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
 
 /// Offline timeclock that persists open entries to the local store only.
 class NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository {
-  NoOpStaffDemoTimeclockRepository({
-    required this._authRepository,
-    required this._localRepository,
-  });
+  new({required this._authRepository, required this._localRepository});
 
   final AuthRepository _authRepository;
   final StaffDemoTimeclockLocalStore _localRepository;

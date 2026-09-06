@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Filter bar for selecting continents in the GraphQL demo.
 class GraphqlFilterBar extends StatelessWidget {
-  const GraphqlFilterBar({
+  const new({
     required this.continents,
     required this.activeContinentCode,
     required this.isLoading,
@@ -28,17 +28,12 @@ class GraphqlFilterBar extends StatelessWidget {
         : null;
 
     // Create list of items for picker (null for "All", then continents)
-    final List<String?> allItems = [
-      null,
-      ...continents.map((c) => c.code),
-    ];
+    final List<String?> allItems = [null, ...continents.map((c) => c.code)];
 
     return CommonDropdownField<String?>(
       value: selectedContinentCode,
       items: [
-        DropdownMenuItem<String?>(
-          child: Text(l10n.graphqlSampleAllContinents),
-        ),
+        DropdownMenuItem<String?>(child: Text(l10n.graphqlSampleAllContinents)),
         ...continents.map(
           (continent) => DropdownMenuItem<String?>(
             value: continent.code,

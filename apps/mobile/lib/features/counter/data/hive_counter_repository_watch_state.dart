@@ -4,10 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 
 class HiveCounterRepositoryWatchState {
-  HiveCounterRepositoryWatchState({
-    required this.loadSnapshot,
-    required this.emptySnapshot,
-  });
+  new({required this.loadSnapshot, required this.emptySnapshot});
 
   final Future<CounterSnapshot> Function() loadSnapshot;
   final CounterSnapshot emptySnapshot;

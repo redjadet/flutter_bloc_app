@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Toolbar for the markdown editor with preview toggle and markdown shortcuts.
 class MarkdownToolbar extends StatelessWidget {
-  const MarkdownToolbar({
+  const new({
     required this.showPreview,
     required this.onTogglePreview,
     required this.controller,
@@ -26,9 +26,7 @@ class MarkdownToolbar extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.surfaceContainerHighest,
         border: Border(
-          bottom: BorderSide(
-            color: colors.outline.withValues(alpha: 0.2),
-          ),
+          bottom: BorderSide(color: colors.outline.withValues(alpha: 0.2)),
         ),
       ),
       child: Row(
@@ -57,7 +55,7 @@ class MarkdownToolbar extends StatelessWidget {
 
 /// Popup menu for inserting markdown shortcuts.
 class MarkdownShortcutsMenu extends StatelessWidget {
-  const MarkdownShortcutsMenu({required this.controller, super.key});
+  const new({required this.controller, super.key});
 
   final TextEditingController controller;
 
@@ -127,18 +125,9 @@ class MarkdownShortcutsMenu extends StatelessWidget {
     icon: const Icon(Icons.more_vert),
     onSelected: _insertMarkdown,
     itemBuilder: (context) => <PopupMenuEntry<String>>[
-      const PopupMenuItem<String>(
-        value: 'header',
-        child: Text('Header (#)'),
-      ),
-      const PopupMenuItem<String>(
-        value: 'bold',
-        child: Text('Bold (**)'),
-      ),
-      const PopupMenuItem<String>(
-        value: 'italic',
-        child: Text('Italic (*)'),
-      ),
+      const PopupMenuItem<String>(value: 'header', child: Text('Header (#)')),
+      const PopupMenuItem<String>(value: 'bold', child: Text('Bold (**)')),
+      const PopupMenuItem<String>(value: 'italic', child: Text('Italic (*)')),
       const PopupMenuItem<String>(
         value: 'code',
         child: Text('Inline Code (`)'),

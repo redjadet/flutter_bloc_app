@@ -10,7 +10,7 @@ import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:utilities/utilities.dart';
 
 class MapSampleCubit extends Cubit<MapSampleState> {
-  MapSampleCubit({required this._repository}) : super(MapSampleState.initial());
+  new({required this._repository}) : super(MapSampleState.initial());
 
   final MapLocationRepository _repository;
   final RequestIdGuard _loadGuard = RequestIdGuard();
@@ -145,24 +145,19 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   gmaps.CameraUpdate cameraUpdateForLocation(MapLocation location) =>
-      gmaps.CameraUpdate.newCameraPosition(
-        cameraPositionForLocation(location),
+      gmaps.CameraUpdate.newCameraPosition(cameraPositionForLocation(location));
+
+  gmaps.CameraPosition cameraPositionForLocation(MapLocation location) =>
+      gmaps.CameraPosition(
+        target: gmaps.LatLng(
+          location.coordinate.latitude,
+          location.coordinate.longitude,
+        ),
+        zoom: 16,
+        tilt: 45,
       );
 
-  gmaps.CameraPosition cameraPositionForLocation(
-    MapLocation location,
-  ) => gmaps.CameraPosition(
-    target: gmaps.LatLng(
-      location.coordinate.latitude,
-      location.coordinate.longitude,
-    ),
-    zoom: 16,
-    tilt: 45,
-  );
-
-  gmaps.CameraPosition? _resolveInitialCamera(
-    List<MapLocation> locations,
-  ) {
+  gmaps.CameraPosition? _resolveInitialCamera(List<MapLocation> locations) {
     if (locations.isEmpty) {
       return null;
     }

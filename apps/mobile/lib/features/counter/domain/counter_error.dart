@@ -6,24 +6,18 @@ enum CounterErrorType { cannotGoBelowZero, loadError, saveError, unknown }
 
 @freezed
 sealed class CounterError with _$CounterError implements Exception {
-  const CounterError._();
+  const new _();
 
-  const factory CounterError.cannotGoBelowZero() = _CannotGoBelowZero;
+  const factory cannotGoBelowZero() = _CannotGoBelowZero;
 
-  const factory CounterError.load({
-    Object? originalError,
-    String? message,
-  }) = _LoadCounterError;
+  const factory load({Object? originalError, String? message}) =
+      _LoadCounterError;
 
-  const factory CounterError.save({
-    Object? originalError,
-    String? message,
-  }) = _SaveCounterError;
+  const factory save({Object? originalError, String? message}) =
+      _SaveCounterError;
 
-  const factory CounterError.unknown({
-    Object? originalError,
-    String? message,
-  }) = _UnknownCounterError;
+  const factory unknown({Object? originalError, String? message}) =
+      _UnknownCounterError;
 
   CounterErrorType get type => when(
     cannotGoBelowZero: () => CounterErrorType.cannotGoBelowZero,

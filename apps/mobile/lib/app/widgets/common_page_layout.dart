@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// A reusable page layout widget that provides consistent structure
 /// across the app with responsive design and common AppBar pattern.
 class CommonPageLayout extends StatelessWidget {
-  const CommonPageLayout({
+  const new({
     required this.body,
     super.key,
     this.title = '',
@@ -128,7 +128,7 @@ class CommonPageLayout extends StatelessWidget {
 
 /// Responsive body wrapper that applies consistent padding and constraints
 class _ResponsiveBody extends StatelessWidget {
-  const _ResponsiveBody({required this.child});
+  const new({required this.child});
 
   final Widget child;
 

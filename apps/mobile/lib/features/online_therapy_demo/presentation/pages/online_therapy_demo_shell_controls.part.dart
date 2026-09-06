@@ -1,7 +1,7 @@
 part of 'online_therapy_demo_shell_page.dart';
 
 class _TopControls extends StatelessWidget {
-  const _TopControls();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class _TopControls extends StatelessWidget {
 }
 
 class _LoginPanel extends StatefulWidget {
-  const _LoginPanel();
+  const new();
 
   @override
   State<_LoginPanel> createState() => _LoginPanelState();
@@ -131,10 +131,8 @@ class _LoginPanelState extends State<_LoginPanel> {
           OnlineTherapyDemoSessionState,
           ({String? emailDraft, bool isBusy})
         >(
-          selector: (state) => (
-            emailDraft: state.emailDraft,
-            isBusy: state.isBusy,
-          ),
+          selector: (state) =>
+              (emailDraft: state.emailDraft, isBusy: state.isBusy),
         );
     final cubit = context.cubit<OnlineTherapyDemoSessionCubit>();
 

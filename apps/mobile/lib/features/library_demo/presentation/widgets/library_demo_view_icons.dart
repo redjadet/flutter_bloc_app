@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Grid view icon matching EPOCH design
 class LibraryGridViewIcon extends StatelessWidget {
-  const LibraryGridViewIcon({this.isActive = false, super.key});
+  const new({this.isActive = false, super.key});
 
   final bool isActive;
 
@@ -26,7 +26,7 @@ class LibraryGridViewIcon extends StatelessWidget {
 
 /// List view icon matching EPOCH design
 class LibraryListViewIcon extends StatelessWidget {
-  const LibraryListViewIcon({this.isActive = false, super.key});
+  const new({this.isActive = false, super.key});
 
   final bool isActive;
 

@@ -8,7 +8,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class IotBleStatusCard extends StatelessWidget {
-  const IotBleStatusCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +58,7 @@ class IotBleStatusCard extends StatelessWidget {
   void _toggleMode(BuildContext context, Set<bool> selected) {
     final bool? useMock = selected.firstOrNull;
     if (useMock != null) {
-      unawaited(
-        context.cubit<IotBleCubit>().toggleBleMode(useMock: useMock),
-      );
+      unawaited(context.cubit<IotBleCubit>().toggleBleMode(useMock: useMock));
     }
   }
 }

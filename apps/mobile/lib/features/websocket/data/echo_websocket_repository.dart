@@ -10,7 +10,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 typedef WebSocketConnector = FutureOr<WebSocketChannel> Function(Uri uri);
 
 class EchoWebsocketRepository implements WebsocketRepository {
-  EchoWebsocketRepository({
+  new({
     Uri? endpoint,
     WebSocketConnector? connector,
     Duration? connectionTimeout,
@@ -122,7 +122,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
   }
 
   Future<WebSocketChannel> _connectWithTimeout() => WebSocketGuard.connect(
-    connect: () async => Future<WebSocketChannel>.value(_connector(endpoint)),
+    connect: () => Future<WebSocketChannel>.value(_connector(endpoint)),
     timeout: _connectionTimeout,
     logContext: 'EchoWebsocketRepository.connect',
   );
@@ -141,10 +141,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     );
   }
 
-  Future<void> _handleError(
-    Object error, [
-    StackTrace? stackTrace,
-  ]) async {
+  Future<void> _handleError(Object error, [StackTrace? stackTrace]) async {
     await _cleanupChannel();
     _updateState(WebsocketConnectionState.error(error.toString()));
   }

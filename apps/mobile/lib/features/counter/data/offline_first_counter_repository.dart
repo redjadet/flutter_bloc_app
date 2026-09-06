@@ -19,7 +19,7 @@ class OfflineFirstCounterRepository
         CounterRepository,
         CounterSyncDiagnosticsPort,
         SyncableRepository {
-  OfflineFirstCounterRepository({
+  new({
     required this._localRepository,
     required this._pendingSyncRepository,
     required this._registry,

@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CalculatorPaymentPage extends StatelessWidget {
-  const CalculatorPaymentPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

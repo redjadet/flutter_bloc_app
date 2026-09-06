@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class FallbackSignInContent extends StatelessWidget {
-  const FallbackSignInContent({
+  const new({
     required this.l10n,
     required this.theme,
     required this.upgradingAnonymous,

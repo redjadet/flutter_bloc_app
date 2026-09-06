@@ -51,9 +51,7 @@ final List<_SecretStorageField> _secureStorageFields = <_SecretStorageField>[
   ),
 ];
 
-Future<Map<String, dynamic>?> _readSecureSecrets(
-  SecretStorage storage,
-) async {
+Future<Map<String, dynamic>?> _readSecureSecrets(SecretStorage storage) async {
   try {
     final Map<String, dynamic> secrets = <String, dynamic>{};
     for (final _SecretStorageField field in _secureStorageFields) {
@@ -120,9 +118,8 @@ void _applySecrets(Map<String, dynamic> json) {
     if (current != null && current.isNotEmpty) {
       // secure storage has precedence; do not overwrite
     } else {
-      final String? googleKey = stringFromDynamic(
-        json['GOOGLE_API_KEY'],
-      )?.trim();
+      final String? googleKey = stringFromDynamic(json['GOOGLE_API_KEY'])
+          ?.trim();
       final String? geminiKey = SecretConfig._geminiApiKey;
       final String? resolvedKey = (geminiKey?.isNotEmpty ?? false)
           ? geminiKey
@@ -216,10 +213,7 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
   final String? raw = await bundle
       .loadString(assetPath)
       .then<String?>((value) => value)
-      .catchError(
-        (Object _) => null,
-        test: (error) => error is FlutterError,
-      );
+      .catchError((Object _) => null, test: (error) => error is FlutterError);
   if (raw == null) {
     // Asset not bundled; ignore silently for developers without a local file.
     return null;
@@ -244,9 +238,7 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
 
 Future<void> _persistGoogleMapsKey(SecretStorage storage) async {
   await _secureStorageFields
-      .firstWhere(
-        (field) => field.storageKey == SecretConfig._keyGoogleMaps,
-      )
+      .firstWhere((field) => field.storageKey == SecretConfig._keyGoogleMaps)
       .persist(storage);
 }
 
@@ -265,7 +257,7 @@ Future<bool> _loadFromSource(
 }
 
 final class _SecretStorageField {
-  const _SecretStorageField({
+  const new({
     required this.storageKey,
     required this.envKey,
     required this.readValue,

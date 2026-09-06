@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
 
 class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
-  StaffDemoSessionCubit({
+  new({
     required this._authRepository,
     required this._profileRepository,
     required this._pushTokenRepository,

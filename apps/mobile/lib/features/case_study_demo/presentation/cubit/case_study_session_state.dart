@@ -5,7 +5,7 @@ enum CaseStudyHydrationStatus { initial, loading, ready }
 
 // check-ignore: freezed_preferred - demo state (kept lightweight)
 class CaseStudySessionState extends Equatable {
-  const CaseStudySessionState({
+  const new({
     required this.hydration,
     required this.draft,
     this.pickErrorKey,

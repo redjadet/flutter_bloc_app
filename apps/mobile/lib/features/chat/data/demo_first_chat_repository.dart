@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 ///
 /// Resolves `auto` for composite to 20B.
 class DemoFirstChatRepository implements ChatRepository {
-  DemoFirstChatRepository({
+  new({
     required ChatRepository renderRepository,
     required ChatRepository compositeRepository,
     required this._isRenderAttemptedFirst,
@@ -66,7 +66,7 @@ class DemoFirstChatRepository implements ChatRepository {
       }
     }
     if (!renderFirst) {
-      return _composite.sendMessage(
+      return await _composite.sendMessage(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,
@@ -89,7 +89,7 @@ class DemoFirstChatRepository implements ChatRepository {
       if (_isRenderStrict()) {
         rethrow;
       }
-      return _composite.sendMessage(
+      return await _composite.sendMessage(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,
@@ -102,7 +102,7 @@ class DemoFirstChatRepository implements ChatRepository {
         rethrow;
       }
       mapDirectChatException(e);
-      return _composite.sendMessage(
+      return await _composite.sendMessage(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,

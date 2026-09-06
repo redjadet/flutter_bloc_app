@@ -7,7 +7,7 @@ part 'profile_user.freezed.dart';
 
 @freezed
 abstract class ProfileUser with _$ProfileUser {
-  const factory ProfileUser({
+  const factory({
     required String name,
     required String location,
     required String avatarUrl,
@@ -17,8 +17,6 @@ abstract class ProfileUser with _$ProfileUser {
 
 @freezed
 abstract class ProfileImage with _$ProfileImage {
-  const factory ProfileImage({
-    required String url,
-    required double aspectRatio,
-  }) = _ProfileImage;
+  const factory({required String url, required double aspectRatio}) =
+      _ProfileImage;
 }

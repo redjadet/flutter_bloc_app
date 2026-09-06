@@ -5,18 +5,14 @@ class const ChartPointDto({
   required final DateTime date,
   required final double value,
 }) {
-  ChartPointDto.fromDomain(ChartPoint point)
-    : this(
-        date: point.date,
-        value: point.value,
-      );
+  new fromDomain(ChartPoint point) : this(date: point.date, value: point.value);
 
-  factory ChartPointDto.fromJson(Map<String, dynamic> json) => ChartPointDto(
+  factory fromJson(Map<String, dynamic> json) => ChartPointDto(
     date: DateTime.parse(json['date'] as String),
     value: (json['value'] as num).toDouble(),
   );
 
-  factory ChartPointDto.fromApi(List<dynamic> entry) {
+  factory fromApi(List<dynamic> entry) {
     if (entry.length < 2) {
       throw const FormatException('Chart entry requires timestamp and value');
     }
@@ -26,10 +22,7 @@ class const ChartPointDto({
       throw const FormatException('Chart entry types are invalid');
     }
     return ChartPointDto(
-      date: DateTime.fromMillisecondsSinceEpoch(
-        timestamp.toInt(),
-        isUtc: true,
-      ),
+      date: DateTime.fromMillisecondsSinceEpoch(timestamp.toInt(), isUtc: true),
       value: rawValue.toDouble(),
     );
   }

@@ -1,7 +1,7 @@
 part of 'scape_grid_item.dart';
 
 class _ScapeIconButton extends StatelessWidget {
-  const _ScapeIconButton({
+  const new({
     required this.size,
     required this.tooltip,
     required this.onPressed,

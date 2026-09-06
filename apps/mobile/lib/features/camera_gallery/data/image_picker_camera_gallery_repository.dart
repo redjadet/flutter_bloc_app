@@ -12,7 +12,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
-  ImagePickerCameraGalleryRepository({
+  new({
     ImagePicker? picker,
     bool Function()? isAndroid,
     ImageProcessingCameraGalleryService? processingService,
@@ -29,11 +29,11 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
       defaultTargetPlatform == TargetPlatform.android;
 
   @override
-  Future<CameraGalleryResult> pickFromCamera() async =>
+  Future<CameraGalleryResult> pickFromCamera() =>
       _pickImage(source: ImageSource.camera, isCamera: true);
 
   @override
-  Future<CameraGalleryResult> pickFromGallery() async =>
+  Future<CameraGalleryResult> pickFromGallery() =>
       _pickImage(source: ImageSource.gallery, isCamera: false);
 
   Future<CameraGalleryResult> _pickImage({
@@ -123,10 +123,7 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
 
   /// Returns true if the error indicates no camera is available (e.g. iOS
   /// Simulator or Android emulator without camera).
-  static bool _isCameraUnavailableCodeOrMessage(
-    String code,
-    String? message,
-  ) {
+  static bool _isCameraUnavailableCodeOrMessage(String code, String? message) {
     final String lowerCode = code.toLowerCase();
     if (lowerCode == 'no_available_camera' ||
         lowerCode == 'camera_not_available' ||

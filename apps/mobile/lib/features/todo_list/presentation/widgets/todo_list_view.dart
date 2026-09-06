@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// Optimized list view for todo items.
 /// Uses ListView.builder for 100+ items, ListView.separated for smaller lists.
 class TodoListView extends StatelessWidget {
-  const TodoListView({
+  const new({
     required this.items,
     required this.sortOrder,
     required this.scrollController,

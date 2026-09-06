@@ -10,7 +10,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoAdminVerificationPage extends StatefulWidget {
-  const OnlineTherapyDemoAdminVerificationPage({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyDemoAdminVerificationPage> createState() =>
@@ -36,9 +36,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final isBusy = context.selectState<AdminCubit, AdminState, bool>(
       selector: (state) => state.isBusy,
     );
@@ -94,10 +92,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
           icon: const Icon(Icons.refresh),
         ),
       ],
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }

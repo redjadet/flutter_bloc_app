@@ -2,7 +2,7 @@ part of 'chart_cubit.dart';
 
 @freezed
 abstract class ChartState with _$ChartState {
-  const factory ChartState({
+  const factory({
     @Default(ViewStatus.initial) ViewStatus status,
     @Default(<ChartPoint>[]) List<ChartPoint> points,
     String? errorMessage,
@@ -11,7 +11,7 @@ abstract class ChartState with _$ChartState {
     AppError? lastError,
   }) = _ChartState;
 
-  const ChartState._();
+  const new _();
 
   bool get hasPoints => points.isNotEmpty;
   bool get isEmpty => status.isSuccess && points.isEmpty;

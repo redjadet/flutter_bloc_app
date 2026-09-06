@@ -11,9 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 part 'supabase_case_study_remote_repository_queries.part.dart';
 
 class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
-  const SupabaseCaseStudyRemoteRepository({
-    required this._clipFileStore,
-  });
+  const new({required this._clipFileStore});
 
   final CaseStudyClipFileStore _clipFileStore;
 
@@ -104,9 +102,8 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
       listSubmittedCasesImpl();
 
   @override
-  Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required String caseId,
-  }) => getSubmittedCaseImpl(caseId: caseId);
+  Future<RemoteCaseStudyDetail?> getSubmittedCase({required String caseId}) =>
+      getSubmittedCaseImpl(caseId: caseId);
 
   @override
   Future<String> createSignedPlaybackUrl({

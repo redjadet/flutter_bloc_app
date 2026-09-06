@@ -10,12 +10,11 @@ class const TodoListLifecycleData({
   required final bool hasError,
   required final String? errorMessage,
 }) {
-  factory TodoListLifecycleData.fromState(TodoListState state) =>
-      TodoListLifecycleData(
-        isLoading: state.isLoading,
-        hasError: state.hasError,
-        errorMessage: state.errorMessage,
-      );
+  factory fromState(TodoListState state) => TodoListLifecycleData(
+    isLoading: state.isLoading,
+    hasError: state.hasError,
+    errorMessage: state.errorMessage,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -40,14 +39,13 @@ class const TodoListListProjection({
   required final TodoSortOrder sortOrder,
   required final Map<String, int> manualOrder,
 }) {
-  factory TodoListListProjection.fromState(TodoListState state) =>
-      TodoListListProjection(
-        items: state.items,
-        filter: state.filter,
-        searchQuery: state.searchQuery,
-        sortOrder: state.sortOrder,
-        manualOrder: state.manualOrder,
-      );
+  factory fromState(TodoListState state) => TodoListListProjection(
+    items: state.items,
+    filter: state.filter,
+    searchQuery: state.searchQuery,
+    sortOrder: state.sortOrder,
+    manualOrder: state.manualOrder,
+  );
 
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
 
@@ -94,12 +92,11 @@ class const TodoListSelectionData({
   required final bool hasSelectedItems,
   required final int selectedCount,
 }) {
-  factory TodoListSelectionData.fromState(TodoListState state) =>
-      TodoListSelectionData(
-        selectedItemIds: state.selectedItemIds,
-        hasSelectedItems: state.hasSelectedItems,
-        selectedCount: state.selectedCount,
-      );
+  factory fromState(TodoListState state) => TodoListSelectionData(
+    selectedItemIds: state.selectedItemIds,
+    hasSelectedItems: state.hasSelectedItems,
+    selectedCount: state.selectedCount,
+  );
 
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
 

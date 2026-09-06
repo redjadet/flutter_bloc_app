@@ -4,12 +4,10 @@ part 'app_locale.freezed.dart';
 
 @freezed
 abstract class AppLocale with _$AppLocale {
-  const factory AppLocale({
-    required String languageCode,
-    String? countryCode,
-  }) = _AppLocale;
+  const factory({required String languageCode, String? countryCode}) =
+      _AppLocale;
 
-  const AppLocale._();
+  const new _();
 
   String get tag => switch (countryCode) {
     final code? when code.isNotEmpty => '${languageCode}_$code',

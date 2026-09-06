@@ -3,24 +3,19 @@ library;
 
 /// Annotation to generate exhaustive switch helpers for sealed state classes
 class GenerateSwitchHelper {
-  const GenerateSwitchHelper();
+  const new();
 }
 
 /// Annotation to generate state transition validators
 class GenerateStateValidator {
-  const GenerateStateValidator({
-    this.transitions = const [],
-  });
+  const new({this.transitions = const []});
 
   final List<StateTransition> transitions;
 }
 
 /// Defines a valid state transition
 class StateTransition {
-  const StateTransition({
-    required this.from,
-    required this.to,
-  });
+  const new({required this.from, required this.to});
 
   final String from;
   final String to;
@@ -28,5 +23,5 @@ class StateTransition {
 
 /// Annotation to generate type-safe cubit factory
 class GenerateCubitFactory {
-  const GenerateCubitFactory();
+  const new();
 }

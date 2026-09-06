@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_ch
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/firebase_app_check_attestation_service.dart';
 
 class ProbeAppCheckAttestationUseCase {
-  const ProbeAppCheckAttestationUseCase(this._service);
+  const new(this._service);
 
   final FirebaseAppCheckAttestationService _service;
 

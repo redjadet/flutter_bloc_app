@@ -14,7 +14,7 @@ class const TodoItemDto({
   final DateTime? lastSyncedAt,
   final bool synchronized = false,
 }) {
-  TodoItemDto.fromDomain(TodoItem item)
+  new fromDomain(TodoItem item)
     : this(
         id: item.id,
         title: item.title,
@@ -29,7 +29,7 @@ class const TodoItemDto({
         synchronized: item.synchronized,
       );
 
-  factory TodoItemDto.fromMap(Map<dynamic, dynamic> raw) {
+  factory fromMap(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
       (dynamic key, dynamic value) => MapEntry(key.toString(), value),
     );

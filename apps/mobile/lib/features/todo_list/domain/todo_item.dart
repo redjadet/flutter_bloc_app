@@ -8,7 +8,7 @@ enum TodoPriority { none, low, medium, high }
 
 @freezed
 abstract class TodoItem with _$TodoItem {
-  const factory TodoItem({
+  const factory({
     required String id,
     required String title,
     required DateTime createdAt,
@@ -22,9 +22,9 @@ abstract class TodoItem with _$TodoItem {
     @Default(false) bool synchronized,
   }) = _TodoItem;
 
-  const TodoItem._();
+  const new _();
 
-  factory TodoItem.create({
+  factory create({
     required String title,
     String? description,
     DateTime? dueDate,
@@ -70,7 +70,7 @@ abstract class TodoItem with _$TodoItem {
 }
 
 class _TodoIdGenerator {
-  _TodoIdGenerator._();
+  new _();
 
   static final _TodoIdGenerator instance = _TodoIdGenerator._();
   final math.Random _random = math.Random();

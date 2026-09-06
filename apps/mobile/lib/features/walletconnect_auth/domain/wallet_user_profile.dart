@@ -9,7 +9,7 @@ part 'wallet_user_profile.freezed.dart';
 /// Domain model; serialization to/from Firestore is done in the data layer.
 @freezed
 abstract class WalletUserProfile with _$WalletUserProfile {
-  const factory WalletUserProfile({
+  const factory({
     @Default(0.0) double balanceOffChain,
     @Default(0.0) double balanceOnChain,
     @Default(0.0) double rewards,

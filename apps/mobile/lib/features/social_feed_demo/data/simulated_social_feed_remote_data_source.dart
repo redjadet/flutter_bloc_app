@@ -13,7 +13,7 @@ part 'simulated_social_feed_remote_persist.part.dart';
 
 /// Deterministic in-memory remote with opaque cursor = last post id.
 class SimulatedSocialFeedRemoteDataSource {
-  SimulatedSocialFeedRemoteDataSource({
+  new({
     required this._scenario,
     required this._clock,
     this.pageSize = 10,

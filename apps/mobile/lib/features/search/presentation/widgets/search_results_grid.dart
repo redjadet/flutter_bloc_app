@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SearchResultsGrid extends StatelessWidget {
-  const SearchResultsGrid({required this.results, super.key});
+  const new({required this.results, super.key});
 
   final List<SearchResult> results;
 

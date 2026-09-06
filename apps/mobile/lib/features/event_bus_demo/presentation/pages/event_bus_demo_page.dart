@@ -15,7 +15,7 @@ import 'package:material_ui/material_ui.dart';
 /// https://medium.com/@savaliya.ravi.rs/what-is-the-event-bus-pattern-in-flutter-c008c9e0813d
 /// without coupling screens via direct references.
 class EventBusDemoPage extends StatefulWidget {
-  const EventBusDemoPage({required this.eventBus, super.key});
+  const new({required this.eventBus, super.key});
 
   final EventBus eventBus;
 
@@ -78,10 +78,7 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
     });
   }
 
-  void _onEventBusStreamError(
-    Object error,
-    StackTrace stackTrace,
-  ) {
+  void _onEventBusStreamError(Object error, StackTrace stackTrace) {
     FlutterError.reportError(
       FlutterErrorDetails(
         exception: error,
@@ -124,10 +121,7 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
       body: ListView(
         padding: context.pagePadding,
         children: [
-          Text(
-            l10n.eventBusDemoIntro,
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(l10n.eventBusDemoIntro, style: theme.textTheme.bodyMedium),
           SizedBox(height: context.responsiveGapL),
           EventBusDemoLoginPanel(
             userIdController: _userIdController,

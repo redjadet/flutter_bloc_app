@@ -1,14 +1,12 @@
 part of 'calculator_keypad.dart';
 
-_ButtonConfig _digit(String label) => _ButtonConfig.number(
-  label: label,
-  command: DigitCommand(label),
-);
+_ButtonConfig _digit(String label) =>
+    _ButtonConfig.number(label: label, command: DigitCommand(label));
 
 enum _ButtonType { number, operation, function }
 
 class _ButtonConfig {
-  const _ButtonConfig._({
+  const new _({
     required this.label,
     required this.type,
     required this.command,
@@ -17,7 +15,7 @@ class _ButtonConfig {
     this.tooltip,
   });
 
-  const _ButtonConfig.number({
+  const new number({
     required String label,
     required CalculatorCommand command,
     String? semanticsLabel,
@@ -30,7 +28,7 @@ class _ButtonConfig {
          tooltip: tooltip,
        );
 
-  const _ButtonConfig.operation({
+  const new operation({
     required String label,
     required CalculatorCommand command,
     String? semanticsLabel,
@@ -43,7 +41,7 @@ class _ButtonConfig {
          tooltip: tooltip,
        );
 
-  const _ButtonConfig.function({
+  const new function({
     required String label,
     required CalculatorCommand command,
     IconData? icon,

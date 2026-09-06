@@ -4,7 +4,7 @@ library;
 part 'app_routes_auth.part.dart';
 
 class AppRoutes {
-  AppRoutes._();
+  new _();
 
   static const counter = 'counter';
   static const counterPath = '/';

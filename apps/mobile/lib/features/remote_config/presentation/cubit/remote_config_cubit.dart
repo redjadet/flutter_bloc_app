@@ -7,8 +7,7 @@ import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remot
 export 'remote_config_state.dart';
 
 class RemoteConfigCubit extends Cubit<RemoteConfigState> {
-  RemoteConfigCubit(this._remoteConfigService)
-    : super(const RemoteConfigState.initial());
+  new(this._remoteConfigService) : super(const RemoteConfigState.initial());
 
   final RemoteConfigService _remoteConfigService;
   bool _hasInitialized = false;

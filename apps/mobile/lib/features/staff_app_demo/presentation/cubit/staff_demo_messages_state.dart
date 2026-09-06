@@ -10,7 +10,7 @@ enum StaffDemoMessagesKnownError { notSignedIn, inboxStreamFailed }
 
 @freezed
 abstract class StaffDemoMessagesState with _$StaffDemoMessagesState {
-  const factory StaffDemoMessagesState({
+  const factory({
     @Default(StaffDemoMessagesStatus.initial) StaffDemoMessagesStatus status,
     @Default(<StaffDemoInboxItem>[]) List<StaffDemoInboxItem> items,
     StaffDemoMessagesKnownError? knownError,

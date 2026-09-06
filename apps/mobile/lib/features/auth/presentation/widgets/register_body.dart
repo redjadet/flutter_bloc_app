@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_for
 import 'package:material_ui/material_ui.dart';
 
 class ResponsiveRegisterBody extends StatelessWidget {
-  const ResponsiveRegisterBody({super.key});
+  const new({super.key});
 
   static const double _horizontalPadding = 20;
 

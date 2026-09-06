@@ -2,7 +2,7 @@ part of 'todo_list_cubit.dart';
 
 /// Helper functions for TodoListCubit list operations.
 class _TodoListCubitHelpers {
-  _TodoListCubitHelpers._();
+  new _();
 
   /// Returns the maximum value in [order], or -1 if empty.
   static int maxOrderValue(Map<String, int> order) =>
@@ -14,14 +14,9 @@ class _TodoListCubitHelpers {
       });
 
   /// saves an item into a list, maintaining sort order by updatedAt descending.
-  static List<TodoItem> saveInList(
-    List<TodoItem> items,
-    TodoItem item,
-  ) {
+  static List<TodoItem> saveInList(List<TodoItem> items, TodoItem item) {
     final List<TodoItem> updated = List<TodoItem>.from(items);
-    final int index = updated.indexWhere(
-      (current) => current.id == item.id,
-    );
+    final int index = updated.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       updated.add(item);
     } else {

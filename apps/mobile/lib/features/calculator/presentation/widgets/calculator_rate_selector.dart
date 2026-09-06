@@ -19,17 +19,12 @@ const List<double> calculatorTaxRateOptions = <double>[
 ];
 
 /// Preset options for tip rate selection, expressed as fractions.
-const List<double> calculatorTipRateOptions = <double>[
-  0,
-  0.1,
-  0.15,
-  0.2,
-];
+const List<double> calculatorTipRateOptions = <double>[0, 0.1, 0.15, 0.2];
 
 /// Immutable configuration for instantiating [CalculatorRateSelector].
 @immutable
 class CalculatorRateSelectorConfig {
-  const CalculatorRateSelectorConfig({
+  const new({
     required this.title,
     required this.options,
     required this.customLabel,
@@ -52,35 +47,33 @@ class CalculatorRateSelectorConfig {
   final String? suffixText;
 }
 
-CalculatorRateSelectorConfig taxRateSelectorConfig(
-  AppLocalizations l10n,
-) => CalculatorRateSelectorConfig(
-  title: l10n.calculatorTaxPresetsLabel,
-  options: calculatorTaxRateOptions,
-  customLabel: l10n.calculatorCustomTaxLabel,
-  customDialogTitle: l10n.calculatorCustomTaxDialogTitle,
-  customFieldLabel: l10n.calculatorCustomTaxFieldLabel,
-  customApplyLabel: l10n.calculatorApply,
-  customCancelLabel: l10n.calculatorCancel,
-  resetLabel: l10n.calculatorResetTax,
-);
+CalculatorRateSelectorConfig taxRateSelectorConfig(AppLocalizations l10n) =>
+    CalculatorRateSelectorConfig(
+      title: l10n.calculatorTaxPresetsLabel,
+      options: calculatorTaxRateOptions,
+      customLabel: l10n.calculatorCustomTaxLabel,
+      customDialogTitle: l10n.calculatorCustomTaxDialogTitle,
+      customFieldLabel: l10n.calculatorCustomTaxFieldLabel,
+      customApplyLabel: l10n.calculatorApply,
+      customCancelLabel: l10n.calculatorCancel,
+      resetLabel: l10n.calculatorResetTax,
+    );
 
-CalculatorRateSelectorConfig tipRateSelectorConfig(
-  AppLocalizations l10n,
-) => CalculatorRateSelectorConfig(
-  title: l10n.calculatorTipRateLabel,
-  options: calculatorTipRateOptions,
-  customLabel: l10n.calculatorCustomTipLabel,
-  customDialogTitle: l10n.calculatorCustomTipDialogTitle,
-  customFieldLabel: l10n.calculatorCustomTipFieldLabel,
-  customApplyLabel: l10n.calculatorApply,
-  customCancelLabel: l10n.calculatorCancel,
-  resetLabel: l10n.calculatorResetTip,
-);
+CalculatorRateSelectorConfig tipRateSelectorConfig(AppLocalizations l10n) =>
+    CalculatorRateSelectorConfig(
+      title: l10n.calculatorTipRateLabel,
+      options: calculatorTipRateOptions,
+      customLabel: l10n.calculatorCustomTipLabel,
+      customDialogTitle: l10n.calculatorCustomTipDialogTitle,
+      customFieldLabel: l10n.calculatorCustomTipFieldLabel,
+      customApplyLabel: l10n.calculatorApply,
+      customCancelLabel: l10n.calculatorCancel,
+      resetLabel: l10n.calculatorResetTip,
+    );
 
 /// Reusable selector for choosing percentage-based rates (e.g. tax, tip).
 class CalculatorRateSelector extends StatelessWidget {
-  const CalculatorRateSelector({
+  const new({
     required this.config,
     required this.selectedRate,
     required this.onChanged,
@@ -108,10 +101,7 @@ class CalculatorRateSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          config.title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(config.title, style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: context.responsiveGapS),
         Wrap(
           spacing: wrapSpacing,

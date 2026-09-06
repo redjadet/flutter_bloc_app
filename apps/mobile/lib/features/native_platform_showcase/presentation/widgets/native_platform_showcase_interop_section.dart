@@ -7,10 +7,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcaseInteropSection extends StatelessWidget {
-  const NativePlatformShowcaseInteropSection({
-    required this.results,
-    super.key,
-  });
+  const new({required this.results, super.key});
 
   final List<NativeInteropCallResult> results;
 
@@ -48,10 +45,7 @@ class NativePlatformShowcaseInteropSection extends StatelessWidget {
 }
 
 class _InteropTile extends StatelessWidget {
-  const _InteropTile({
-    required this.result,
-    required this.l10n,
-  });
+  const new({required this.result, required this.l10n});
 
   final NativeInteropCallResult result;
   final AppLocalizations l10n;
@@ -95,10 +89,7 @@ class _InteropTile extends StatelessWidget {
               Icon(_bridgeIcon(result.kind)),
               SizedBox(width: context.responsiveGapS),
               Expanded(
-                child: Text(
-                  bridgeLabel,
-                  style: theme.textTheme.titleSmall,
-                ),
+                child: Text(bridgeLabel, style: theme.textTheme.titleSmall),
               ),
             ],
           ),

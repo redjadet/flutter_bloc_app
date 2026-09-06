@@ -29,7 +29,7 @@ class TodoListCubit extends Cubit<TodoListState>
         _TodoListCubitPendingSync,
         _TodoListCubitMethodsReorder,
         _TodoListCubitCrud {
-  TodoListCubit({
+  new({
     required this.repository,
     required this._timerService,
     this._searchDebounceDuration = const Duration(milliseconds: 300),
@@ -166,10 +166,7 @@ class TodoListCubit extends Cubit<TodoListState>
   }
 
   Future<void> batchDeleteSelected() async {
-    await _applyToSelectedItems(
-      shouldProcess: (_) => true,
-      action: deleteTodo,
-    );
+    await _applyToSelectedItems(shouldProcess: (_) => true, action: deleteTodo);
   }
 
   Future<void> batchCompleteSelected() async {
@@ -213,6 +210,6 @@ class TodoListCubit extends Cubit<TodoListState>
     _cancelSearchDebounce();
     isLoading = false;
     subscription = null;
-    return super.close();
+    return await super.close();
   }
 }

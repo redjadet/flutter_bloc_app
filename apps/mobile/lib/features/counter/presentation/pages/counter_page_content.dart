@@ -1,7 +1,7 @@
 part of 'counter_page.dart';
 
 class _CounterPageContent extends StatelessWidget {
-  const _CounterPageContent({
+  const new({
     required this.title,
     required this.showFlavorBadge,
     required this.confettiController,
@@ -57,9 +57,7 @@ class _CounterPageContent extends StatelessWidget {
 }
 
 class _CounterPageConfettiOverlay extends StatelessWidget {
-  const _CounterPageConfettiOverlay({
-    required this.confettiController,
-  });
+  const new({required this.confettiController});
 
   final ConfettiController confettiController;
 

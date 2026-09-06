@@ -9,10 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 class ProfileCacheControlsSection extends StatefulWidget {
-  const ProfileCacheControlsSection({
-    required this.profileCacheRepository,
-    super.key,
-  });
+  const new({required this.profileCacheRepository, super.key});
 
   final ProfileCacheControlsPort profileCacheRepository;
 
@@ -142,10 +139,7 @@ class _ProfileCacheControlsSectionState
     );
   }
 
-  String _formatMetadata(
-    BuildContext context,
-    ProfileCacheMetadata metadata,
-  ) {
+  String _formatMetadata(BuildContext context, ProfileCacheMetadata metadata) {
     final List<String> parts = <String>[];
     if (metadata.lastSyncedAt case final t?) {
       if (isPlausibleDiagnosticsSyncTime(t)) {

@@ -14,7 +14,7 @@ class const CaseStudyDraftDto({
   required final int currentQuestionIndex,
   required final CaseStudyDraftPhase phase,
 }) {
-  CaseStudyDraftDto.fromDomain(CaseStudyDraft draft)
+  new fromDomain(CaseStudyDraft draft)
     : this(
         caseId: draft.caseId,
         doctorName: draft.doctorName,
@@ -85,9 +85,8 @@ class const CaseStudyDraftDto({
   }
 
   // check-ignore: small payload (<8KB) - demo draft
-  static String encode(CaseStudyDraft draft) => jsonEncode(
-    CaseStudyDraftDto.fromDomain(draft).toJson(),
-  );
+  static String encode(CaseStudyDraft draft) =>
+      jsonEncode(CaseStudyDraftDto.fromDomain(draft).toJson());
 
   static CaseStudyDraft? decode(String? raw) {
     if (raw == null || raw.isEmpty) return null;

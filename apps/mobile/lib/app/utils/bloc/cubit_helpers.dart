@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 /// Uses type-safe `context.tryCubit<T>()` under the hood; prefer
 /// `context.cubit<T>()` / `context.state<C, S>()` in UI when the cubit is required.
 class CubitHelpers {
-  CubitHelpers._();
+  new _();
 
   static T? _tryCubit<T extends Cubit<Object?>>(
     BuildContext context, {
@@ -51,15 +51,12 @@ class CubitHelpers {
   }
 
   /// Check if a Cubit is available in the widget tree.
-  static bool isCubitAvailable<T extends Cubit<S>, S>(
-    BuildContext context,
-  ) => context.tryCubit<T>() != null;
+  static bool isCubitAvailable<T extends Cubit<S>, S>(BuildContext context) =>
+      context.tryCubit<T>() != null;
 
   /// Get the current state of a Cubit safely.
   /// Returns null if Cubit is not found.
-  static S? getCurrentState<T extends Cubit<S>, S>(
-    BuildContext context,
-  ) {
+  static S? getCurrentState<T extends Cubit<S>, S>(BuildContext context) {
     final T? cubit = _tryCubit<T>(
       context,
       failureMessage: 'Failed to get state from Cubit',

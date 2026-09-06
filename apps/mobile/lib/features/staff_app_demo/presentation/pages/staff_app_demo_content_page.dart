@@ -15,7 +15,7 @@ import 'package:video_player/video_player.dart';
 part 'staff_app_demo_content_page_viewers.part.dart';
 
 class StaffAppDemoContentPage extends StatelessWidget {
-  const StaffAppDemoContentPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

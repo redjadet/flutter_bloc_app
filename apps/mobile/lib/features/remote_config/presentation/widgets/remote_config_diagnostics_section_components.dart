@@ -1,7 +1,7 @@
 part of 'remote_config_diagnostics_section.dart';
 
 class _RemoteConfigFlagRow extends StatelessWidget {
-  const _RemoteConfigFlagRow({required this.isEnabled});
+  const new({required this.isEnabled});
 
   final bool isEnabled;
 
@@ -21,7 +21,7 @@ class _RemoteConfigFlagRow extends StatelessWidget {
 }
 
 class _RemoteConfigTestValueRow extends StatelessWidget {
-  const _RemoteConfigTestValueRow({required this.testValue});
+  const new({required this.testValue});
 
   final String testValue;
 
@@ -41,10 +41,7 @@ class _RemoteConfigTestValueRow extends StatelessWidget {
 }
 
 class _RemoteConfigStatusBadge extends StatelessWidget {
-  const _RemoteConfigStatusBadge({
-    required this.status,
-    required this.theme,
-  });
+  const new({required this.status, required this.theme});
 
   final RemoteConfigDiagnosticsStatus status;
   final ThemeData theme;

@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 
 /// Cubit for registration form state and submission.
 class RegisterCubit extends Cubit<RegisterState> {
-  RegisterCubit() : super(const RegisterState());
+  new() : super(const RegisterState());
 
   void fullNameChanged(String value) {
     emit(
@@ -89,9 +89,7 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   void resetSubmissionStatus() {
     if (state.submissionStatus != RegisterSubmissionStatus.initial) {
-      emit(
-        state.copyWith(submissionStatus: RegisterSubmissionStatus.initial),
-      );
+      emit(state.copyWith(submissionStatus: RegisterSubmissionStatus.initial));
     }
   }
 }

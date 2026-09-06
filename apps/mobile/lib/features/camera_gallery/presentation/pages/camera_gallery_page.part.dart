@@ -4,7 +4,7 @@
 part of 'camera_gallery_page.dart';
 
 class _PreviewSection extends StatelessWidget {
-  const _PreviewSection({required this.theme, required this.colors});
+  const new({required this.theme, required this.colors});
 
   final ThemeData theme;
   final ColorScheme colors;
@@ -64,7 +64,7 @@ class _PreviewSection extends StatelessWidget {
 }
 
 class _PreviewContainer extends StatelessWidget {
-  const _PreviewContainer({required this.colors, required this.child});
+  const new({required this.colors, required this.child});
 
   final ColorScheme colors;
   final Widget child;
@@ -88,7 +88,7 @@ class _PreviewContainer extends StatelessWidget {
 }
 
 class _PreviewLoadingState extends StatelessWidget {
-  const _PreviewLoadingState({required this.colors});
+  const new({required this.colors});
 
   final ColorScheme colors;
 
@@ -105,7 +105,7 @@ class _PreviewLoadingState extends StatelessWidget {
 }
 
 class _PreviewImage extends StatefulWidget {
-  const _PreviewImage({required this.path, required this.emptyPreviewBuilder});
+  const new({required this.path, required this.emptyPreviewBuilder});
 
   final String path;
   final Widget Function() emptyPreviewBuilder;
@@ -169,25 +169,20 @@ class _PreviewImageState extends State<_PreviewImage> {
     return imageFromPath(
       path: path,
       fit: BoxFit.contain,
-      errorBuilder:
-          (
-            BuildContext _,
-            Object error,
-            StackTrace? stackTrace,
-          ) {
-            AppLogger.error(
-              'CameraGalleryPage.imagePreviewLoad',
-              error,
-              stackTrace,
-            );
-            return widget.emptyPreviewBuilder();
-          },
+      errorBuilder: (BuildContext _, Object error, StackTrace? stackTrace) {
+        AppLogger.error(
+          'CameraGalleryPage.imagePreviewLoad',
+          error,
+          stackTrace,
+        );
+        return widget.emptyPreviewBuilder();
+      },
     );
   }
 }
 
 class _ProcessingControls extends StatelessWidget {
-  const _ProcessingControls();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +250,7 @@ class _ProcessingControls extends StatelessWidget {
 }
 
 class _ProcessingViewData {
-  const _ProcessingViewData({
+  const new({
     required this.canProcess,
     required this.isLoading,
     required this.selectedFilter,
@@ -267,7 +262,7 @@ class _ProcessingViewData {
 }
 
 class _ActionButtons extends StatelessWidget {
-  const _ActionButtons();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -306,14 +301,14 @@ class _ActionButtons extends StatelessWidget {
 }
 
 class _PreviewViewData {
-  const _PreviewViewData({required this.isLoading, required this.imagePath});
+  const new({required this.isLoading, required this.imagePath});
 
   final bool isLoading;
   final String? imagePath;
 }
 
 class _ErrorSection extends StatelessWidget {
-  const _ErrorSection({required this.l10n, required this.colors});
+  const new({required this.l10n, required this.colors});
 
   final AppLocalizations l10n;
   final ColorScheme colors;
@@ -335,9 +330,8 @@ class _ErrorSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: context.responsiveGapM),
           child: Text(
             message,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: colors.error),
+            style: Theme.of(context).textTheme.bodySmall
+                ?.copyWith(color: colors.error),
             textAlign: TextAlign.center,
           ),
         );
@@ -345,10 +339,7 @@ class _ErrorSection extends StatelessWidget {
     );
   }
 
-  static String _errorKeyToMessage(
-    AppLocalizations l10n,
-    String key,
-  ) {
+  static String _errorKeyToMessage(AppLocalizations l10n, String key) {
     switch (key) {
       case CameraGalleryErrorKeys.permissionDenied:
         return l10n.cameraGalleryPermissionDenied;

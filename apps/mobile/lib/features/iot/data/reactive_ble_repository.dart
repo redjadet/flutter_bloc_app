@@ -23,7 +23,7 @@ part 'reactive_ble_repository_scan.part.dart';
 class ReactiveBleRepository extends _ReactiveBleRepositoryBase
     with _ReactiveBleRepositoryScan, _ReactiveBleRepositoryConnection
     implements BleRepository {
-  ReactiveBleRepository({
+  new({
     required super.client,
     required super.timerService,
     super.permissionGateway,
@@ -31,7 +31,7 @@ class ReactiveBleRepository extends _ReactiveBleRepositoryBase
 }
 
 class _ReactiveBleRepositoryBase {
-  _ReactiveBleRepositoryBase({
+  new({
     required this.client,
     required this.timerService,
     BlePermissionGateway? permissionGateway,
@@ -52,9 +52,8 @@ class _ReactiveBleRepositoryBase {
   String? _connectedDeviceId;
   TimerDisposable? _scanTimeoutHandle;
 
-  Stream<BleAdapterStatus> watchAdapterStatus() => client.statusStream.map(
-    _mapAdapterStatus,
-  );
+  Stream<BleAdapterStatus> watchAdapterStatus() =>
+      client.statusStream.map(_mapAdapterStatus);
 
   Future<Result<void>> ensureReady() async {
     if (client.status == BleStatus.ready) {
@@ -93,9 +92,7 @@ class _ReactiveBleRepositoryBase {
     try {
       final List<BleGattServiceSnapshot> services = await client
           .discoverGattServices(id);
-      return Success<List<BleService>>(
-        mapGattSnapshotsToBleServices(services),
-      );
+      return Success<List<BleService>>(mapGattSnapshotsToBleServices(services));
     } on Object catch (error) {
       return FailureResult<List<BleService>>(
         UnknownFailure(message: 'discover_failed', cause: error),
@@ -103,9 +100,7 @@ class _ReactiveBleRepositoryBase {
     }
   }
 
-  Future<Result<List<int>>> readCharacteristic(
-    BleCharacteristicRef ref,
-  ) async {
+  Future<Result<List<int>>> readCharacteristic(BleCharacteristicRef ref) async {
     try {
       final List<int> value = await client.readCharacteristic(ref);
       return Success<List<int>>(value);

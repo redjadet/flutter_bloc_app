@@ -1,7 +1,7 @@
 part of 'online_therapy_demo_shell_page.dart';
 
 class _AdminPanel extends StatelessWidget {
-  const _AdminPanel();
+  const new();
 
   @override
   Widget build(BuildContext context) {

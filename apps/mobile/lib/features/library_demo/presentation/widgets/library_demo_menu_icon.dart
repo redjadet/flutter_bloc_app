@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Custom hamburger menu icon matching EPOCH design
 class LibraryMenuIcon extends StatelessWidget {
-  const LibraryMenuIcon({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(

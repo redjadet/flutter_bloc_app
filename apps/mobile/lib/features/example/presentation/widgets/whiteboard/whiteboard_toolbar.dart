@@ -10,7 +10,7 @@ const double _widthPreviewRadius = 4;
 
 /// Toolbar for the whiteboard with color picker, width presets, and labeled actions.
 class WhiteboardToolbar extends StatelessWidget {
-  const WhiteboardToolbar({
+  const new({
     required this.theme,
     required this.colors,
     required this.currentColor,
@@ -45,9 +45,7 @@ class WhiteboardToolbar extends StatelessWidget {
     decoration: BoxDecoration(
       color: colors.surfaceContainerHighest,
       border: Border(
-        bottom: BorderSide(
-          color: colors.outline.withValues(alpha: 0.2),
-        ),
+        bottom: BorderSide(color: colors.outline.withValues(alpha: 0.2)),
       ),
     ),
     child: Column(

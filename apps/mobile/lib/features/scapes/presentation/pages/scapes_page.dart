@@ -16,11 +16,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ScapesPage extends StatelessWidget {
-  const ScapesPage({
-    required this.repository,
-    required this.timerService,
-    super.key,
-  });
+  const new({required this.repository, required this.timerService, super.key});
 
   final ScapesRepository repository;
   final TimerService timerService;
@@ -42,10 +38,8 @@ class ScapesPage extends StatelessWidget {
     );
 
     return BlocProvider(
-      create: (_) => ScapesCubit(
-        repository: repository,
-        timerService: timerService,
-      ),
+      create: (_) =>
+          ScapesCubit(repository: repository, timerService: timerService),
       child: Theme(
         data: pageTheme,
         child: CommonPageLayout(
@@ -72,9 +66,7 @@ class ScapesPage extends StatelessWidget {
                   onRetry: () => context.cubit<ScapesCubit>().reload(),
                 ),
                 ScapesReady(:final scapes) when scapes.isEmpty =>
-                  CommonEmptyState(
-                    message: l10n.noScapesAvailable,
-                  ),
+                  CommonEmptyState(message: l10n.noScapesAvailable),
                 ScapesReady(:final scapes) => ScapesGridView(
                   scapes: scapes,
                   onFavoritePressed: (id) =>

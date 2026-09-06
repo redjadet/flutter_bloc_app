@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 
 class ClientBookingState {
-  const ClientBookingState({
+  const new({
     required this.isBusy,
     required this.therapists,
     required this.availability,

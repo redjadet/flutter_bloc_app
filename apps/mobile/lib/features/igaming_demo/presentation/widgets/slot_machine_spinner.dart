@@ -24,7 +24,7 @@ const int _spinCycles = 8;
 /// When [targetSymbolIndices] is non-null (length 3), each reel lands on that
 /// symbol index so the result matches the game outcome (three matching = win).
 class SlotMachineSpinner extends StatefulWidget {
-  const SlotMachineSpinner({
+  const new({
     required this.duration,
     this.staticProgress,
     this.targetSymbolIndices,
@@ -63,10 +63,7 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
       duration: widget.duration,
     );
     _controller = controller;
-    _animation = CurvedAnimation(
-      parent: controller,
-      curve: Curves.easeOut,
-    );
+    _animation = CurvedAnimation(parent: controller, curve: Curves.easeOut);
     controller.forward();
   }
 

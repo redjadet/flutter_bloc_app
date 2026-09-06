@@ -5,7 +5,7 @@ import 'package:design_system/responsive.dart';
 import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsContentLayout extends StatelessWidget {
-  const GoogleMapsContentLayout({
+  const new({
     required this.map,
     required this.controls,
     required this.locations,

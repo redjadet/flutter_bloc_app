@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 @immutable
 class LibraryAsset {
-  const LibraryAsset({
+  const new({
     required this.name,
     required this.type,
     required this.durationLabel,
@@ -23,7 +23,7 @@ class LibraryAsset {
 
 @immutable
 class LibraryCategory {
-  const LibraryCategory({required this.label});
+  const new({required this.label});
 
   final String label;
 }

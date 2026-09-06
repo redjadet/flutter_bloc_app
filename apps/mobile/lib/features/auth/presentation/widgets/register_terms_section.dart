@@ -2,7 +2,7 @@ import 'package:design_system/design_system.dart';
 import 'package:material_ui/material_ui.dart';
 
 class RegisterTermsSection extends StatelessWidget {
-  const RegisterTermsSection({
+  const new({
     required this.accepted,
     required this.showError,
     required this.onAcceptRequested,
@@ -63,10 +63,7 @@ class RegisterTermsSection extends StatelessWidget {
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: Text(
-                      linkLabel,
-                      style: linkStyle,
-                    ),
+                    child: Text(linkLabel, style: linkStyle),
                   ),
                 ),
                 Text(suffixText, style: bodyStyle),
@@ -75,10 +72,7 @@ class RegisterTermsSection extends StatelessWidget {
             if (showError)
               Padding(
                 padding: EdgeInsets.only(top: context.responsiveGapXS),
-                child: Text(
-                  errorText,
-                  style: errorStyle,
-                ),
+                child: Text(errorText, style: errorStyle),
               ),
           ],
         ),

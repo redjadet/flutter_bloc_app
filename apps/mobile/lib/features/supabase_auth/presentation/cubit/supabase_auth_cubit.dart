@@ -15,11 +15,8 @@ part 'supabase_auth_cubit_handlers.part.dart';
 /// Cubit managing Supabase authentication state and actions.
 class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
     with CubitSubscriptionMixin<SupabaseAuthState>, _SupabaseAuthCubitHandlers {
-  SupabaseAuthCubit({
-    required this._repository,
-    this._l10n,
-    this._sessionCoordinator,
-  }) : super(const SupabaseAuthState.initial());
+  new({required this._repository, this._l10n, this._sessionCoordinator})
+    : super(const SupabaseAuthState.initial());
 
   final SupabaseAuthRepository _repository;
   final AppLocalizations? _l10n;
@@ -95,16 +92,11 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
   }
 
   /// Signs in with email and password.
-  Future<void> signIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> signIn({required String email, required String password}) async {
     await _runAuthAction(
       logContext: 'SupabaseAuthCubit.signIn',
-      operation: () => _repository.signInWithPassword(
-        email: email,
-        password: password,
-      ),
+      operation: () =>
+          _repository.signInWithPassword(email: email, password: password),
     );
   }
 

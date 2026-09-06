@@ -7,7 +7,7 @@ enum StaffDemoContentStatus { initial, loading, ready, error }
 
 @freezed
 abstract class StaffDemoContentState with _$StaffDemoContentState {
-  const factory StaffDemoContentState({
+  const factory({
     @Default(StaffDemoContentStatus.initial) StaffDemoContentStatus status,
     @Default(<StaffDemoContentItem>[]) List<StaffDemoContentItem> items,
     String? errorMessage,

@@ -1,10 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 class LoggedOutBackgroundLayer extends StatelessWidget {
-  const LoggedOutBackgroundLayer({
-    required this.height,
-    super.key,
-  });
+  const new({required this.height, super.key});
 
   final double height;
 
@@ -17,9 +14,7 @@ class LoggedOutBackgroundLayer extends StatelessWidget {
 }
 
 class _BackgroundImage extends StatelessWidget {
-  const _BackgroundImage({
-    required this.height,
-  });
+  const new({required this.height});
 
   final double height;
 
@@ -28,9 +23,7 @@ class _BackgroundImage extends StatelessWidget {
     'assets/figma/Logged_out_0-2/Rectangle_0-42.png',
     height: height,
     fit: BoxFit.fill,
-    errorBuilder: (context, error, stackTrace) => Container(
-      height: height,
-      color: Theme.of(context).colorScheme.surface,
-    ),
+    errorBuilder: (context, error, stackTrace) =>
+        Container(height: height, color: Theme.of(context).colorScheme.surface),
   );
 }

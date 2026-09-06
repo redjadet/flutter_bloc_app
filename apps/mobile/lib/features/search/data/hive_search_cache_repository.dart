@@ -11,7 +11,7 @@ import 'package:storage/storage.dart';
 /// can hydrate instantly and work offline.
 class HiveSearchCacheRepository extends HiveRepositoryBase
     implements SearchCacheRepository {
-  HiveSearchCacheRepository({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'search_cache';
   static const String _keyPrefix = 'query_';
@@ -32,7 +32,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<List<SearchResult>?> loadCachedResults(String query) async =>
+  Future<List<SearchResult>?> loadCachedResults(String query) =>
       StorageGuard.run<List<SearchResult>?>(
         logContext: 'HiveSearchCacheRepository.loadCachedResults',
         action: () async {
@@ -42,54 +42,51 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
           final Box<dynamic> box = await getBox();
           final String key = '$_keyPrefix${_normalizeQuery(query)}';
           final dynamic raw = box.get(key);
-          return _parseStored(raw);
+          return await _parseStored(raw);
         },
         fallback: () => null,
       );
 
   @override
-  Future<void> saveCachedResults(
-    String query,
-    List<SearchResult> results,
-  ) async => StorageGuard.run<void>(
-    logContext: 'HiveSearchCacheRepository.saveCachedResults',
-    action: () async {
-      if (query.isEmpty) {
-        return;
-      }
-      final Box<dynamic> box = await getBox();
-      final String normalizedQuery = _normalizeQuery(query);
-      final String key = '$_keyPrefix$normalizedQuery';
-
-      final List<Map<String, dynamic>> serialized = results
-          .map((r) => SearchResultDto.fromDomain(r).toJson())
-          .toList(growable: false);
-      await box.put(key, serialized);
-
-      await _addToRecentQueries(box, normalizedQuery);
-    },
-  );
-
-  @override
-  Future<List<String>> loadRecentQueries() async =>
-      StorageGuard.run<List<String>>(
-        logContext: 'HiveSearchCacheRepository.loadRecentQueries',
+  Future<void> saveCachedResults(String query, List<SearchResult> results) =>
+      StorageGuard.run<void>(
+        logContext: 'HiveSearchCacheRepository.saveCachedResults',
         action: () async {
-          final Box<dynamic> box = await getBox();
-          final dynamic raw = box.get(_keyRecentQueries);
-          if (raw is List<dynamic>) {
-            return raw
-                .whereType<String>()
-                .take(_maxRecentQueries)
-                .toList(growable: false);
+          if (query.isEmpty) {
+            return;
           }
-          return const <String>[];
+          final Box<dynamic> box = await getBox();
+          final String normalizedQuery = _normalizeQuery(query);
+          final String key = '$_keyPrefix$normalizedQuery';
+
+          final List<Map<String, dynamic>> serialized = results
+              .map((r) => SearchResultDto.fromDomain(r).toJson())
+              .toList(growable: false);
+          await box.put(key, serialized);
+
+          await _addToRecentQueries(box, normalizedQuery);
         },
-        fallback: () => const <String>[],
       );
 
   @override
-  Future<void> clearCache() async => StorageGuard.run<void>(
+  Future<List<String>> loadRecentQueries() => StorageGuard.run<List<String>>(
+    logContext: 'HiveSearchCacheRepository.loadRecentQueries',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      final dynamic raw = box.get(_keyRecentQueries);
+      if (raw is List<dynamic>) {
+        return raw
+            .whereType<String>()
+            .take(_maxRecentQueries)
+            .toList(growable: false);
+      }
+      return const <String>[];
+    },
+    fallback: () => const <String>[],
+  );
+
+  @override
+  Future<void> clearCache() => StorageGuard.run<void>(
     logContext: 'HiveSearchCacheRepository.clearCache',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -104,10 +101,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
     },
   );
 
-  Future<void> _addToRecentQueries(
-    Box<dynamic> box,
-    String query,
-  ) async {
+  Future<void> _addToRecentQueries(Box<dynamic> box, String query) async {
     final dynamic raw = box.get(_keyRecentQueries);
     final List<String> recent =
         raw is List<dynamic>

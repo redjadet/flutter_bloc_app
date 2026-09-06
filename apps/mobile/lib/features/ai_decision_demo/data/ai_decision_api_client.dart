@@ -9,7 +9,7 @@ typedef _JsonMap = Map<String, dynamic>;
 typedef _JsonMapper<T> = T Function(_JsonMap json);
 
 class AiDecisionApiClient {
-  AiDecisionApiClient({required this._dio});
+  new({required this._dio});
 
   final Dio _dio;
 
@@ -33,7 +33,7 @@ class AiDecisionApiClient {
   }
 
   Future<List<AiDecisionCaseSummary>> getCases() async {
-    return _getJson<List<AiDecisionCaseSummary>>(
+    return await _getJson<List<AiDecisionCaseSummary>>(
       '/cases',
       emptyResponseMessage:
           'AI Decision API returned empty case queue response.',
@@ -51,7 +51,7 @@ class AiDecisionApiClient {
   }
 
   Future<AiDecisionCaseDetail> getCaseDetail(String caseId) async {
-    return _getJson<AiDecisionCaseDetail>(
+    return await _getJson<AiDecisionCaseDetail>(
       '/cases/$caseId',
       emptyResponseMessage:
           'AI Decision API returned empty case detail response.',
@@ -63,7 +63,7 @@ class AiDecisionApiClient {
     required String caseId,
     required String operatorNote,
   }) async {
-    return _postJson<AiDecisionDecisionResult>(
+    return await _postJson<AiDecisionDecisionResult>(
       '/cases/$caseId/decision',
       data: <String, dynamic>{'operator_note': operatorNote},
       emptyResponseMessage: 'AI Decision API returned empty decision response.',
@@ -78,10 +78,7 @@ class AiDecisionApiClient {
   }) async {
     await _postJson<void>(
       '/cases/$caseId/actions',
-      data: <String, dynamic>{
-        'action_type': actionType,
-        'note': note,
-      },
+      data: <String, dynamic>{'action_type': actionType, 'note': note},
       emptyResponseMessage: 'AI Decision API returned empty action response.',
       mapper: (_) {},
     );

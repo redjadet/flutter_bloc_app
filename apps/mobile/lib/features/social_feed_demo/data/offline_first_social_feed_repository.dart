@@ -22,7 +22,7 @@ part 'offline_first_social_feed_repository_replay.part.dart';
 part 'offline_first_social_feed_repository_sync.part.dart';
 
 class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
-  OfflineFirstSocialFeedRepository({
+  new({
     required this._local,
     required this._queue,
     required this._remote,
@@ -91,7 +91,7 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
     if (cached == null) {
       return null;
     }
-    return _overlayPending(viewer, cached);
+    return await _overlayPending(viewer, cached);
   }
 
   @override
@@ -109,7 +109,7 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
       cursor: cursor,
       isRefresh: false,
     );
-    return _overlayPending(viewer, remotePage);
+    return await _overlayPending(viewer, remotePage);
   }
 
   @override
@@ -161,7 +161,7 @@ class OfflineFirstSocialFeedRepository implements SocialFeedRepository {
         onZero: () => _replays.remove(viewer.id),
       ),
     );
-    return replay.addLease();
+    return await replay.addLease();
   }
 
   @override

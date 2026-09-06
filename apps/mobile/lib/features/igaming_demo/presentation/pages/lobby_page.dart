@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Lobby page for the iGaming demo: shows virtual balance and entry to game.
 class LobbyPage extends StatelessWidget {
-  const LobbyPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +28,14 @@ class LobbyPage extends StatelessWidget {
                 ({bool isLoading, DemoBalance? balance, String? errorMessage})
               >(
                 selector: (state) => state.when(
-                  initial: () => (
-                    isLoading: true,
-                    balance: null,
-                    errorMessage: null,
-                  ),
-                  loading: () => (
-                    isLoading: true,
-                    balance: null,
-                    errorMessage: null,
-                  ),
-                  ready: (balance) => (
-                    isLoading: false,
-                    balance: balance,
-                    errorMessage: null,
-                  ),
-                  error: (message) => (
-                    isLoading: false,
-                    balance: null,
-                    errorMessage: message,
-                  ),
+                  initial: () =>
+                      (isLoading: true, balance: null, errorMessage: null),
+                  loading: () =>
+                      (isLoading: true, balance: null, errorMessage: null),
+                  ready: (balance) =>
+                      (isLoading: false, balance: balance, errorMessage: null),
+                  error: (message) =>
+                      (isLoading: false, balance: null, errorMessage: message),
                 ),
               );
 
@@ -78,7 +66,7 @@ class LobbyPage extends StatelessWidget {
 }
 
 class _LoadingBody extends StatelessWidget {
-  const _LoadingBody();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +75,7 @@ class _LoadingBody extends StatelessWidget {
 }
 
 class _ReadyBody extends StatelessWidget {
-  const _ReadyBody({
-    required this.balance,
-    required this.onPlayGame,
-  });
+  const new({required this.balance, required this.onPlayGame});
 
   final DemoBalance balance;
   final VoidCallback onPlayGame;

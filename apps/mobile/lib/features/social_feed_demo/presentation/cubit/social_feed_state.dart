@@ -9,32 +9,29 @@ part 'social_feed_state.freezed.dart';
 
 @freezed
 sealed class SocialFeedRefreshStatus with _$SocialFeedRefreshStatus {
-  const factory SocialFeedRefreshStatus.idle() = SocialFeedRefreshIdle;
-  const factory SocialFeedRefreshStatus.loading() = SocialFeedRefreshLoading;
-  const factory SocialFeedRefreshStatus.failure(SocialFeedFailure failure) =
-      SocialFeedRefreshFailure;
+  const factory idle() = SocialFeedRefreshIdle;
+  const factory loading() = SocialFeedRefreshLoading;
+  const factory failure(SocialFeedFailure failure) = SocialFeedRefreshFailure;
 }
 
 @freezed
 sealed class SocialFeedPageStatus with _$SocialFeedPageStatus {
-  const factory SocialFeedPageStatus.idle() = SocialFeedPageIdle;
-  const factory SocialFeedPageStatus.loading() = SocialFeedPageLoading;
-  const factory SocialFeedPageStatus.failure(SocialFeedFailure failure) =
+  const factory idle() = SocialFeedPageIdle;
+  const factory loading() = SocialFeedPageLoading;
+  const factory failure(SocialFeedFailure failure) =
       SocialFeedPageFailureStatus;
-  const factory SocialFeedPageStatus.exhausted() = SocialFeedPageExhausted;
+  const factory exhausted() = SocialFeedPageExhausted;
 }
 
 @freezed
 sealed class SocialFeedEffect with _$SocialFeedEffect {
-  const factory SocialFeedEffect.mutationRejected() =
-      SocialFeedMutationRejectedEffect;
-  const factory SocialFeedEffect.announcement(String code) =
-      SocialFeedAnnouncementEffect;
+  const factory mutationRejected() = SocialFeedMutationRejectedEffect;
+  const factory announcement(String code) = SocialFeedAnnouncementEffect;
 }
 
 @freezed
 abstract class SocialFeedReadyData with _$SocialFeedReadyData {
-  const factory SocialFeedReadyData({
+  const factory({
     required SocialFeedViewer viewer,
     required List<SocialFeedPost> posts,
     required String? nextCursor,
@@ -60,21 +57,18 @@ abstract class SocialFeedReadyData with _$SocialFeedReadyData {
     @Default(0) int effectId,
   }) = _SocialFeedReadyData;
 
-  const SocialFeedReadyData._();
+  const new _();
 
   bool get hasMore => nextCursor != null;
 }
 
 @freezed
 sealed class SocialFeedState with _$SocialFeedState {
-  const factory SocialFeedState.initial(SocialFeedViewer viewer) =
-      SocialFeedInitial;
-  const factory SocialFeedState.loading(SocialFeedViewer viewer) =
-      SocialFeedLoading;
-  const factory SocialFeedState.failure({
+  const factory initial(SocialFeedViewer viewer) = SocialFeedInitial;
+  const factory loading(SocialFeedViewer viewer) = SocialFeedLoading;
+  const factory failure({
     required SocialFeedViewer viewer,
     required SocialFeedFailure failure,
   }) = SocialFeedFailureState;
-  const factory SocialFeedState.ready(SocialFeedReadyData data) =
-      SocialFeedReady;
+  const factory ready(SocialFeedReadyData data) = SocialFeedReady;
 }

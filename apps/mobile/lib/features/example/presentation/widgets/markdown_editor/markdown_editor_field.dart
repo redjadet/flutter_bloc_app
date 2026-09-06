@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Text field component for editing markdown content.
 class MarkdownEditorField extends StatelessWidget {
-  const MarkdownEditorField({
+  const new({
     required this.controller,
     required this.scrollController,
     required this.onChanged,

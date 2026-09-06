@@ -3,7 +3,7 @@
 /// Web keeps a full copy of each clip here and may duplicate into a blob URL
 /// for playback. Keep demo clips short on web to avoid memory pressure.
 final class CaseStudyClipBytesMemory {
-  CaseStudyClipBytesMemory._();
+  new _();
 
   static final CaseStudyClipBytesMemory instance = CaseStudyClipBytesMemory._();
 
@@ -39,8 +39,6 @@ final class CaseStudyClipBytesMemory {
     if (caseId.isEmpty) {
       return;
     }
-    _bytesByPath.removeWhere(
-      (path, _) => path.contains('/$caseId/'),
-    );
+    _bytesByPath.removeWhere((path, _) => path.contains('/$caseId/'));
   }
 }

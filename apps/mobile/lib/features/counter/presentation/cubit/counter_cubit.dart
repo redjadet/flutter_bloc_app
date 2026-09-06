@@ -19,7 +19,7 @@ part 'counter_cubit_sync.part.dart';
 /// Cubit that orchestrates counter state, persistence, and timers.
 class CounterCubit extends _CounterCubitBase
     with _CounterCubitSyncMixin, _CounterCubitLoadMixin {
-  CounterCubit({
+  new({
     required super.repository,
     required super.timerService,
     super.syncDiagnostics,
@@ -28,10 +28,7 @@ class CounterCubit extends _CounterCubitBase
     DateTime Function()? now,
     Duration? manualThrottle,
   }) : _manualThrottleDuration = manualThrottle ?? _manualThrottle,
-       super(
-         now: now ?? DateTime.now,
-         initialLoadDelay: loadDelay,
-       ) {
+       super(now: now ?? DateTime.now, initialLoadDelay: loadDelay) {
     if (startTicker) {
       _ensureCountdownTickerStarted();
     }

@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.da
 import 'package:package_info_plus/package_info_plus.dart';
 
 class PackageInfoAppInfoRepository implements AppInfoRepository {
-  const PackageInfoAppInfoRepository();
+  const new();
 
   @override
   Future<AppInfo> load() async {
