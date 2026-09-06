@@ -1,0 +1,23 @@
+name: secure_core_bridge
+publish_to: none
+description: >
+  Demo-only Dart FFI bridge to the Rust secure_core AES-GCM library.
+  Linux native is for CI/host tests only — not a product-supported desktop target.
+resolution: workspace
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+dependencies:
+  # Aligned with native_toolchain_rust 1.0.6 (code_assets ^1.2.1, hooks ^2.1.0).
+  code_assets: ^1.2.1
+  ffi: ^2.2.0
+  hooks: ^2.1.0
+  native_toolchain_rust: ^1.0.6
+
+dev_dependencies:
+  # ffigen 21 requires code_assets ^1.1 but conflicts with workspace solver when
+  # paired with code_assets 2.x; keep generator optional. Bindings checked in.
+  ffigen: ^19.0.0
+  lints: ^6.1.0
+  test: ^1.31.1
