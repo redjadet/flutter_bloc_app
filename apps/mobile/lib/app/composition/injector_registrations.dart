@@ -31,6 +31,7 @@ import 'package:flutter_bloc_app/app/composition/features/register_realtime_mark
 import 'package:flutter_bloc_app/app/composition/features/register_remote_config_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_scapes_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_search_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_secure_messaging_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_settings_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_social_feed_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_staff_app_demo_services.dart';

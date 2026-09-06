@@ -27,6 +27,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required this.onOpenAiDecisionDemo,
     required this.onOpenEventBusDemo,
     required this.onOpenSocialFeedDemo,
+    required this.onOpenSecureMessagingDemo,
     required this.onOpenNativePlatformShowcase,
     required this.onOpenOnlineTherapyDemo,
     required this.onOpenProductionReadiness,
@@ -68,6 +69,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final VoidCallback onOpenAiDecisionDemo;
   final VoidCallback onOpenEventBusDemo;
   final VoidCallback onOpenSocialFeedDemo;
+  final VoidCallback onOpenSecureMessagingDemo;
   final VoidCallback onOpenNativePlatformShowcase;
   final VoidCallback onOpenOnlineTherapyDemo;
   final VoidCallback onOpenProductionReadiness;
@@ -156,6 +158,14 @@ class _ExamplePageBodyContent extends StatelessWidget {
             icon: Icons.dynamic_feed_outlined,
             label: l10n.exampleSocialFeedDemoButton,
             key: const ValueKey('example-social-feed-demo-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenSecureMessagingDemo,
+            icon: Icons.lock_outline,
+            label: l10n.exampleSecureMessagingDemoButton,
+            key: const ValueKey('example-secure-messaging-demo-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

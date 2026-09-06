@@ -16,7 +16,8 @@ and the next document to read.
 
 Complex features may include a co-located README (see
 [`architecture/complex_feature_readme_template.md`](architecture/complex_feature_readme_template.md)).
-Current READMEs: `native_platform_showcase`, `iot`, `library_demo`.
+Current READMEs: `native_platform_showcase`, `iot`, `library_demo`,
+`secure_messaging_demo`.
 
 ## Foundation and core flows
 
@@ -60,6 +61,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | --- | --- | --- | --- |
 | Google / Apple Maps | `/google-maps` | `apps/mobile/lib/features/google_maps/` | Deferred-loaded map experience with platform-specific map providers. |
 | Native Platform Showcase | `/native-platform-showcase` (Example hub entry) | `apps/mobile/lib/features/native_platform_showcase/` | Capability catalog plus live command `MethodChannel` (Swift/Kotlin), bounded streaming `EventChannel` telemetry demo, and FFI (C/C++); presentation → use cases → repository / telemetry service ports. Web builds with unavailable stubs. README: [`apps/mobile/lib/features/native_platform_showcase/README.md`](../apps/mobile/lib/features/native_platform_showcase/README.md). Portfolio depth: [`interview_showcase.md`](interview_showcase.md) §13. |
+| Secure messaging demo (Rust FFI) | `/secure-messaging-demo` (Example hub entry) | `apps/mobile/lib/features/secure_messaging_demo/` + `packages/secure_core_bridge/` | Demo AES-256-GCM round trip via package build hooks + Rust 1.98.1. Process-ephemeral key; web unavailable; Linux = CI host only. Doc: [`features/secure_messaging_demo.md`](features/secure_messaging_demo.md). |
 | WebSocket Demo | `/websocket` | `apps/mobile/lib/features/websocket/` | Deferred-loaded reconnecting WebSocket flow. |
 | Realtime market demo (simulated) | `/realtime-market` (Example hub entry) | `apps/mobile/lib/features/realtime_market/` | Simulated order book + trades; Hive cache; no production exchange. Doc: [`features/realtime_market.md`](features/realtime_market.md). |
 | Social feed demo (simulated) | `/social-feed-demo` (Example hub entry) | `apps/mobile/lib/features/social_feed_demo/` | Credential-free Flutter judgment guidance: cursor paging, offline queue, optimistic like/comment, realtime banner, viewer isolation. Doc: [`features/social_feed_demo.md`](features/social_feed_demo.md). |
@@ -126,3 +128,4 @@ See [Architecture Details](architecture_details.md) and
 - [GenUI Demo User Guide](features/genui_demo_user_guide.md)
 - [Google Maps Integration](integrations/google_maps_integration.md)
 - [Native Platform Showcase](../apps/mobile/lib/features/native_platform_showcase/README.md) (feature README; brief: [2026-06-08](changes/2026-06-08_native_platform_showcase_feature_brief.md))
+- [Secure messaging demo](features/secure_messaging_demo.md) (Rust FFI; brief: [2026-09-06](changes/2026-09-06_secure_messaging_demo_rust_core.md))

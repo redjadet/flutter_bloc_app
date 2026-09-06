@@ -3697,4 +3697,59 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get socialFeedDemoSignalStep5 => 'Hata durumlarıyla bitir';
+
+  @override
+  String get exampleSecureMessagingDemoButton => 'Güvenli mesajlaşma demosu';
+
+  @override
+  String get secureMessagingDemoTitle => 'Güvenli mesajlaşma demosu';
+
+  @override
+  String get secureMessagingDemoSecurityWarning =>
+      'Yalnızca demo: AES anahtarı süreç ömrüne bağlıdır. Yeniden başlatmadan sonra şifre çözülemez. Üretim mesajlaşma güvenliği değildir.';
+
+  @override
+  String get secureMessagingDemoUnavailable =>
+      'Yerel çekirdek bu platformda kullanılamıyor';
+
+  @override
+  String secureMessagingDemoVersionLabel(String version) {
+    return 'Çekirdek sürümü: $version';
+  }
+
+  @override
+  String get secureMessagingDemoPlaintextLabel => 'Mesaj';
+
+  @override
+  String get secureMessagingDemoEncryptButton => 'Şifrele';
+
+  @override
+  String get secureMessagingDemoDecryptButton => 'Çöz';
+
+  @override
+  String get secureMessagingDemoResetButton => 'Sıfırla';
+
+  @override
+  String get secureMessagingDemoSuccessLabel => 'Tur eşleşti';
+
+  @override
+  String get secureMessagingDemoErrorInvalidInput =>
+      'Boş olmayan bir mesaj girin';
+
+  @override
+  String get secureMessagingDemoErrorMalformed => 'Şifreli metin bozuk';
+
+  @override
+  String get secureMessagingDemoErrorAuthFailed => 'Kimlik doğrulama başarısız';
+
+  @override
+  String get secureMessagingDemoErrorUnsupportedVersion =>
+      'Desteklenmeyen zarf sürümü';
+
+  @override
+  String get secureMessagingDemoErrorInternal => 'Yerel çekirdek hatası';
+
+  @override
+  String get secureMessagingDemoErrorMismatch =>
+      'Kurtarılan düz metin eşleşmedi';
 }

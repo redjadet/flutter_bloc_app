@@ -30,6 +30,7 @@ ALLOWED: dict[str, frozenset[str]] = {
     "design_system": frozenset({"app_shared_flutter", "core", "utilities"}),
     "feature_flags": frozenset({"core", "utilities"}),
     "networking": frozenset({"app_shared_flutter", "core", "storage", "utilities"}),
+    "secure_core_bridge": frozenset(),
     "storage": frozenset({"app_shared_flutter", "core", "utilities"}),
     "utilities": frozenset({"core"}),
 }

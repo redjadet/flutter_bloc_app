@@ -135,6 +135,8 @@ dependencies:
   provider: ^6.1.5
   responsive_framework: ^1.5.1
   retrofit: ^4.10.0
+  secure_core_bridge:
+    path: ../../packages/secure_core_bridge
   shared_preferences: ^2.5.5
   signature: ^6.4.0
   skeletonizer: ^2.1.3

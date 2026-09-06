@@ -51,6 +51,7 @@ void main() {
             onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenSocialFeedDemo: () {},
+            onOpenSecureMessagingDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
         ),
@@ -113,6 +114,7 @@ void main() {
             onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenSocialFeedDemo: () {},
+            onOpenSecureMessagingDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
         ),
@@ -172,6 +174,7 @@ void main() {
             onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenSocialFeedDemo: () {},
+            onOpenSecureMessagingDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
         ),
@@ -230,6 +233,7 @@ void main() {
             onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenSocialFeedDemo: () {},
+            onOpenSecureMessagingDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
         ),
@@ -294,6 +298,7 @@ void main() {
             onOpenProductionReadiness: () {},
             onOpenNativePlatformShowcase: () {},
             onOpenSocialFeedDemo: () {},
+            onOpenSecureMessagingDemo: () {},
             onOpenEventBusDemo: () {
               tapped = true;
             },
@@ -361,6 +366,7 @@ void main() {
               onOpenProductionReadiness: () {},
               onOpenEventBusDemo: () {},
               onOpenSocialFeedDemo: () {},
+              onOpenSecureMessagingDemo: () {},
               onOpenNativePlatformShowcase: () {
                 tapped = true;
               },
@@ -430,6 +436,7 @@ void main() {
               onOpenSocialFeedDemo: () {
                 tapped = true;
               },
+              onOpenSecureMessagingDemo: () {},
               onOpenNativePlatformShowcase: () {},
             ),
           ),
@@ -437,6 +444,74 @@ void main() {
 
         final button = find.byKey(
           const ValueKey('example-social-feed-demo-button'),
+        );
+        await tester.scrollUntilVisible(
+          button,
+          300,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pump();
+        await tester.tap(button, warnIfMissed: false);
+        await tester.pump();
+
+        expect(tapped, isTrue);
+      },
+    );
+
+    testWidgets(
+      'invokes onOpenSecureMessagingDemo when tapping secure messaging button',
+      (tester) async {
+        var tapped = false;
+        final theme = ThemeData.light();
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
+            home: ExamplePageBody(
+              l10n: AppLocalizationsEn(),
+              theme: theme,
+              colors: theme.colorScheme,
+              onBackPressed: () {},
+              onLoadPlatformInfo: () {},
+              onOpenWebsocket: () {},
+              onOpenRealtimeMarket: () {},
+              onOpenCertificatePinningDemo: () {},
+              onOpenSearch: () {},
+              onOpenTodoList: () {},
+              onOpenProfile: () {},
+              onOpenRegister: () {},
+              onOpenLoggedOut: () {},
+              onRunIsolates: () {},
+              isRunningIsolates: false,
+              isolateError: null,
+              fibonacciInput: null,
+              fibonacciResult: null,
+              parallelValues: const <int>[],
+              parallelDuration: Duration.zero,
+              onOpenChatList: () {},
+              onOpenLibraryDemo: () {},
+              onOpenIgamingDemo: () {},
+              onOpenStaffAppDemo: () {},
+              onOpenFcmDemo: () {},
+              onOpenScapes: () {},
+              onOpenWalletconnectAuth: () {},
+              onOpenCameraGallery: () {},
+              onOpenCaseStudyDemo: () {},
+              onOpenIapDemo: () {},
+              onOpenAiDecisionDemo: () {},
+              onOpenOnlineTherapyDemo: () {},
+              onOpenProductionReadiness: () {},
+              onOpenEventBusDemo: () {},
+              onOpenSocialFeedDemo: () {},
+              onOpenSecureMessagingDemo: () {
+                tapped = true;
+              },
+              onOpenNativePlatformShowcase: () {},
+            ),
+          ),
+        );
+
+        final button = find.byKey(
+          const ValueKey('example-secure-messaging-demo-button'),
         );
         await tester.scrollUntilVisible(
           button,

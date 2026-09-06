@@ -140,6 +140,8 @@ class AppRoutes {
   static const eventBusDemoPath = '/event-bus-demo';
   static const socialFeedDemo = 'social-feed-demo';
   static const socialFeedDemoPath = '/social-feed-demo';
+  static const secureMessagingDemo = 'secure-messaging-demo';
+  static const secureMessagingDemoPath = '/secure-messaging-demo';
   static const nativePlatformShowcase = 'native-platform-showcase';
   static const nativePlatformShowcasePath = '/native-platform-showcase';
   static const staffAppDemoDashboard = 'staff-app-demo-dashboard';

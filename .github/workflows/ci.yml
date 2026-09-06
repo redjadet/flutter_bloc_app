@@ -143,6 +143,7 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           install-ripgrep: 'true'
           install-lcov: 'true'
+          install-rust: 'true'
 
       - name: Run delivery checklist
         if: >-
@@ -246,6 +247,7 @@ jobs:
         uses: ./.github/actions/setup-flutter-workspace
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          install-rust: 'true'
 
       - name: Install Firebase iOS/macOS config for CI
         run: |

@@ -120,3 +120,13 @@ current GitHub Actions contract.
 
 - Keep aggregate suite as canonical gate.
 - Add new integration tests by first attaching them to one journey and one tier.
+
+## Secure messaging demo
+
+| Tier | Target |
+| --- | --- |
+| Dedicated macOS | `integration_test/secure_messaging_demo_flow_test.dart` (real Flutter → Rust) |
+| Selective map | `secure_messaging_demo` in `tool/integration_selective_map.json` (incl. `packages/secure_core_bridge/`) |
+| Ubuntu smoke | **Not** registered — Linux proves via real package `dart test` + Cargo in `tool/check_secure_core.sh` |
+
+Feature guide: [`../features/secure_messaging_demo.md`](../features/secure_messaging_demo.md).
