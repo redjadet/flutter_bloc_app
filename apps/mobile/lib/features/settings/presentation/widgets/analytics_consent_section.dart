@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Settings toggle for consent-gated product analytics collection.
 class AnalyticsConsentSection extends StatefulWidget {
-  const AnalyticsConsentSection({
+  const new({
     required this.analyticsConsentRepository,
     required this.productAnalytics,
     super.key,

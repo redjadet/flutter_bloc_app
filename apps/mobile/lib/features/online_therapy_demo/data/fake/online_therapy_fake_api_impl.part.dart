@@ -1,7 +1,7 @@
 part of 'online_therapy_fake_api.dart';
 
 class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
-  OnlineTherapyFakeApi({
+  new({
     OnlineTherapyNetworkMode initialMode = OnlineTherapyNetworkMode.normal,
     TimerService? timerService,
     DateTime Function()? now,
@@ -82,9 +82,7 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
     return results.toList(growable: false);
   }
 
-  Future<TherapistProfile> getTherapist({
-    required String therapistId,
-  }) async {
+  Future<TherapistProfile> getTherapist({required String therapistId}) async {
     await _simulateNetwork();
     _requireCurrentUser();
     return _therapists.firstWhere((t) => t.id == therapistId);
@@ -230,9 +228,7 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
         .toList(growable: false);
   }
 
-  Future<List<Message>> listMessages({
-    required String conversationId,
-  }) async {
+  Future<List<Message>> listMessages({required String conversationId}) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
     final conv = _conversations.firstWhere((c) => c.id == conversationId);

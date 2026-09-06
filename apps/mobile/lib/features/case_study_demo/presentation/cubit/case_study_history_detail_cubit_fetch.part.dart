@@ -48,20 +48,18 @@ mixin _CaseStudyHistoryDetailCubitFetch on _CaseStudyHistoryDetailCubitBase {
 }
 
 class _DetailLoadResult {
-  const _DetailLoadResult._({
+  const new _({
     required this.unavailable,
     required this.notFound,
     this.record,
     this.usesExpiringCloudPlaybackUrls = false,
   });
 
-  const _DetailLoadResult.unavailable()
-    : this._(unavailable: true, notFound: false);
+  const new unavailable() : this._(unavailable: true, notFound: false);
 
-  const _DetailLoadResult.notFound()
-    : this._(unavailable: false, notFound: true);
+  const new notFound() : this._(unavailable: false, notFound: true);
 
-  const _DetailLoadResult.ok({
+  const new ok({
     required CaseStudyRecord record,
     required bool usesExpiringCloudPlaybackUrls,
   }) : this._(

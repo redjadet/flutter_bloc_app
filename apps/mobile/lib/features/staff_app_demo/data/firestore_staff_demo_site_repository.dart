@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 
 class FirestoreStaffDemoSiteRepository implements StaffDemoSiteRepository {
-  FirestoreStaffDemoSiteRepository({required this._firestore});
+  new({required this._firestore});
 
   final FirebaseFirestore _firestore;
 
@@ -19,10 +19,7 @@ class FirestoreStaffDemoSiteRepository implements StaffDemoSiteRepository {
     final sites = <StaffDemoSite>[];
     for (final doc in snap.docs) {
       final data = doc.data();
-      final parsed = staffDemoSiteFromFirestoreMap(
-        siteId: doc.id,
-        data: data,
-      );
+      final parsed = staffDemoSiteFromFirestoreMap(siteId: doc.id, data: data);
       if (parsed != null) {
         sites.add(parsed);
       }

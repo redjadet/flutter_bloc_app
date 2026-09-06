@@ -5,7 +5,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyCallView extends StatelessWidget {
-  const OnlineTherapyCallView({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,7 @@ class OnlineTherapyCallView extends StatelessWidget {
               .map(
                 (a) => DropdownMenuItem<String>(
                   value: a.id,
-                  child: Text(
-                    a.id,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  child: Text(a.id, overflow: TextOverflow.ellipsis),
                 ),
               )
               .toList(growable: false),

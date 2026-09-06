@@ -6,7 +6,7 @@ enum StaffDemoProofSubmitBlockReason {
 }
 
 abstract final class StaffDemoProofSubmitEligibility {
-  const StaffDemoProofSubmitEligibility._();
+  const new _();
 
   /// Returns a block reason when draft inputs cannot be submitted yet.
   static StaffDemoProofSubmitBlockReason? validateDraft({

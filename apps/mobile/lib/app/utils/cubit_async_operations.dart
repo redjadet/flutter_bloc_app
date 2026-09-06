@@ -10,7 +10,7 @@ import 'package:utilities/utilities.dart';
 /// - Handling specific exception types
 /// - Converting exceptions to error messages
 class CubitExceptionHandler {
-  CubitExceptionHandler._();
+  new _();
 
   /// Handle an exception with standardized logging and error conversion.
   ///

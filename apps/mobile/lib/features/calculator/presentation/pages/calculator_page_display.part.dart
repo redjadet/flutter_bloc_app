@@ -1,7 +1,7 @@
 part of 'calculator_page.dart';
 
 class _CalculatorDisplay extends StatelessWidget {
-  const _CalculatorDisplay();
+  const new();
 
   @override
   Widget build(
@@ -96,7 +96,7 @@ class _CalculatorDisplay extends StatelessWidget {
 
 @freezed
 abstract class _DisplayData with _$DisplayData {
-  const factory _DisplayData({
+  const factory({
     required String display,
     required String history,
     required CalculatorError? error,

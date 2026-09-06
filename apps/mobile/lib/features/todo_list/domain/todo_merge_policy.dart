@@ -5,16 +5,13 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 /// Used by offline-first todo repository to avoid overwriting newer or
 /// unsynced local changes when merging remote data.
 class TodoMergePolicy {
-  const TodoMergePolicy();
+  const new();
 
   /// Whether a queued pending item should be pushed to remote.
   ///
   /// Symmetric to [shouldApplyRemote]: never push an older pending write over a
   /// newer remote snapshot (multi-device stale queue replay).
-  bool shouldPushPendingToRemote(
-    TodoItem pendingItem,
-    TodoItem remoteItem,
-  ) {
+  bool shouldPushPendingToRemote(TodoItem pendingItem, TodoItem remoteItem) {
     if (remoteItem.updatedAt.isAfter(pendingItem.updatedAt)) {
       return false;
     }
@@ -25,10 +22,7 @@ class TodoMergePolicy {
   ///
   /// When local is synchronized, accepts remote if equal or newer; when local
   /// has unsynced changes, accepts only if remote is strictly newer.
-  bool shouldApplyRemote(
-    TodoItem? localItem,
-    TodoItem remoteItem,
-  ) {
+  bool shouldApplyRemote(TodoItem? localItem, TodoItem remoteItem) {
     if (localItem == null) {
       return true;
     }

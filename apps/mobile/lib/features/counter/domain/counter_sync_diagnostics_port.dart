@@ -42,5 +42,5 @@ mixin CounterRepositoryNoPendingSync implements CounterSyncDiagnosticsPort {
 /// Standalone no-op port for tests / non-offline DI bindings.
 final class NoPendingCounterSyncDiagnostics
     with CounterSyncDiagnosticsNoPendingSync {
-  const NoPendingCounterSyncDiagnostics();
+  const new();
 }

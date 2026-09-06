@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientHubPage extends StatelessWidget {
-  const OnlineTherapyDemoClientHubPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +17,7 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final List<Widget> items = <Widget>[
       if (!isLoggedIn)
         _LoggedOutPrompt(
@@ -59,16 +57,13 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: l10n.onlineTherapyDemoClientHubTitle,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }
 
 class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
-  const OnlineTherapyDemoTherapistHubPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +73,7 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final List<Widget> items = <Widget>[
       if (!isLoggedIn)
         _LoggedOutPrompt(
@@ -115,16 +108,13 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: l10n.onlineTherapyDemoTherapistHubTitle,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }
 
 class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
-  const OnlineTherapyDemoAdminHubPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -134,9 +124,7 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final List<Widget> items = <Widget>[
       if (!isLoggedIn)
         _LoggedOutPrompt(
@@ -164,16 +152,13 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: l10n.onlineTherapyDemoAdminHubTitle,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }
 
 class _LoggedOutPrompt extends StatelessWidget {
-  const _LoggedOutPrompt({required this.onGoToLanding});
+  const new({required this.onGoToLanding});
 
   final VoidCallback onGoToLanding;
 

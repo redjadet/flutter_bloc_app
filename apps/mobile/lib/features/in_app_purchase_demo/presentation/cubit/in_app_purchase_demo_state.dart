@@ -17,7 +17,7 @@ enum InAppPurchaseDemoStatus {
 
 @freezed
 abstract class InAppPurchaseDemoState with _$InAppPurchaseDemoState {
-  const factory InAppPurchaseDemoState({
+  const factory({
     @Default(InAppPurchaseDemoStatus.initial) InAppPurchaseDemoStatus status,
     @Default(<IapProduct>[]) List<IapProduct> products,
     @Default(IapEntitlements()) IapEntitlements entitlements,
@@ -29,5 +29,5 @@ abstract class InAppPurchaseDemoState with _$InAppPurchaseDemoState {
     @Default(false) bool isBusy,
   }) = _InAppPurchaseDemoState;
 
-  const InAppPurchaseDemoState._();
+  const new _();
 }

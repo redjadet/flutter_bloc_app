@@ -18,18 +18,13 @@ part 'mock_ble_repository_scan.part.dart';
 class MockBleRepository extends _MockBleRepositoryBase
     with _MockBleRepositoryScan, _MockBleRepositoryGatt
     implements BleRepository {
-  MockBleRepository({
-    super.timerService,
-    super.random,
-  });
+  new({super.timerService, super.random});
 }
 
 class _MockBleRepositoryBase {
-  _MockBleRepositoryBase({
-    TimerService? timerService,
-    Random? random,
-  }) : _timerService = timerService ?? DefaultTimerService(),
-       _random = random ?? Random() {
+  new({TimerService? timerService, Random? random})
+    : _timerService = timerService ?? DefaultTimerService(),
+      _random = random ?? Random() {
     _adapterController.add(
       const BleAdapterStatus(state: BleAdapterState.poweredOn),
     );
@@ -73,10 +68,8 @@ class _MockBleRepositoryBase {
     Object error, [
     StackTrace? stackTrace,
   ]) {
-    _connectionController(deviceId).addError(
-      error,
-      stackTrace ?? StackTrace.current,
-    );
+    _connectionController(deviceId)
+        .addError(error, stackTrace ?? StackTrace.current);
   }
 
   Future<Result<void>> ensureReady() async {
@@ -131,12 +124,11 @@ class _MockBleRepositoryBase {
     _scanController.add(List<BleDiscoveredDevice>.unmodifiable(sorted));
   }
 
-  StreamController<BleConnectionPhase> _connectionController(
-    String deviceId,
-  ) => _connectionControllers.putIfAbsent(
-    deviceId,
-    StreamController<BleConnectionPhase>.broadcast,
-  );
+  StreamController<BleConnectionPhase> _connectionController(String deviceId) =>
+      _connectionControllers.putIfAbsent(
+        deviceId,
+        StreamController<BleConnectionPhase>.broadcast,
+      );
 
   List<int> _readValue(BleCharacteristicRef ref) {
     if (ref.deviceId == MockBleDeviceCatalog.thermometerId) {
@@ -210,12 +202,11 @@ class _MockBleRepositoryBase {
     }
   }
 
-  StreamController<List<int>> _notifyChannelFor(
-    BleCharacteristicRef ref,
-  ) => _notifyControllers.putIfAbsent(
-    _notifyKey(ref),
-    StreamController<List<int>>.broadcast,
-  );
+  StreamController<List<int>> _notifyChannelFor(BleCharacteristicRef ref) =>
+      _notifyControllers.putIfAbsent(
+        _notifyKey(ref),
+        StreamController<List<int>>.broadcast,
+      );
 
   void _stopNotifyTimer() {
     _notifyTimerHandle?.dispose();

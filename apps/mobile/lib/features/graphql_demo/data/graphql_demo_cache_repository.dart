@@ -6,7 +6,7 @@ import 'package:storage/storage.dart';
 
 class GraphqlDemoCacheRepository extends HiveRepositoryBase
     implements GraphqlCacheRepository {
-  GraphqlDemoCacheRepository({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'graphql_demo_cache';
   static const String _continentsKey = 'continents';
@@ -18,53 +18,45 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
   String get boxName => _boxName;
 
   @override
-  Future<List<GraphqlContinent>> readContinents({
-    Duration? maxAge,
-  }) async => StorageGuard.run<List<GraphqlContinent>>(
-    logContext: 'GraphqlDemoCacheRepository.readContinents',
-    action: () async {
-      final Box<dynamic> box = await getBox();
-      final dynamic stored = box.get(_continentsKey);
-      if (stored is! Map<dynamic, dynamic>) {
-        return const <GraphqlContinent>[];
-      }
-      final DateTime? updatedAt = _parseUpdatedAt(stored);
-      if (_isStale(updatedAt, maxAge)) {
-        return const <GraphqlContinent>[];
-      }
-      final dynamic items = stored[_itemsKey];
-      if (items is! List<dynamic>) {
-        return const <GraphqlContinent>[];
-      }
-      return items
-          .whereType<Map<dynamic, dynamic>>()
-          .map(
-            (json) {
-              // Hive returns Map<dynamic, dynamic>, convert to Map<String, dynamic>
-              final Map<String, dynamic> typedJson = _convertMapToTyped(json);
-              return GraphqlContinentDto.fromJson(typedJson).toDomain();
-            },
-          )
-          .toList(growable: false);
-    },
-    fallback: () => const <GraphqlContinent>[],
-  );
+  Future<List<GraphqlContinent>> readContinents({Duration? maxAge}) =>
+      StorageGuard.run<List<GraphqlContinent>>(
+        logContext: 'GraphqlDemoCacheRepository.readContinents',
+        action: () async {
+          final Box<dynamic> box = await getBox();
+          final dynamic stored = box.get(_continentsKey);
+          if (stored is! Map<dynamic, dynamic>) {
+            return const <GraphqlContinent>[];
+          }
+          final DateTime? updatedAt = _parseUpdatedAt(stored);
+          if (_isStale(updatedAt, maxAge)) {
+            return const <GraphqlContinent>[];
+          }
+          final dynamic items = stored[_itemsKey];
+          if (items is! List<dynamic>) {
+            return const <GraphqlContinent>[];
+          }
+          return items
+              .whereType<Map<dynamic, dynamic>>()
+              .map((json) {
+                // Hive returns Map<dynamic, dynamic>, convert to Map<String, dynamic>
+                final Map<String, dynamic> typedJson = _convertMapToTyped(json);
+                return GraphqlContinentDto.fromJson(typedJson).toDomain();
+              })
+              .toList(growable: false);
+        },
+        fallback: () => const <GraphqlContinent>[],
+      );
 
   @override
-  Future<void> writeContinents(
-    List<GraphqlContinent> continents,
-  ) async {
+  Future<void> writeContinents(List<GraphqlContinent> continents) async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.writeContinents',
       action: () async {
         final Box<dynamic> box = await getBox();
-        await box.put(
-          _continentsKey,
-          <String, dynamic>{
-            _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
-            _itemsKey: continents.map(_continentToJson).toList(),
-          },
-        );
+        await box.put(_continentsKey, <String, dynamic>{
+          _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
+          _itemsKey: continents.map(_continentToJson).toList(),
+        });
       },
     );
   }
@@ -73,7 +65,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
   Future<List<GraphqlCountry>> readCountries({
     String? continentCode,
     Duration? maxAge,
-  }) async => StorageGuard.run<List<GraphqlCountry>>(
+  }) => StorageGuard.run<List<GraphqlCountry>>(
     logContext: 'GraphqlDemoCacheRepository.readCountries',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -91,13 +83,11 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       }
       return items
           .whereType<Map<dynamic, dynamic>>()
-          .map(
-            (json) {
-              // Hive returns Map<dynamic, dynamic>, recursively convert to Map<String, dynamic>
-              final Map<String, dynamic> typedJson = _convertMapToTyped(json);
-              return GraphqlCountryDto.fromJson(typedJson).toDomain();
-            },
-          )
+          .map((json) {
+            // Hive returns Map<dynamic, dynamic>, recursively convert to Map<String, dynamic>
+            final Map<String, dynamic> typedJson = _convertMapToTyped(json);
+            return GraphqlCountryDto.fromJson(typedJson).toDomain();
+          })
           .toList(growable: false);
     },
     fallback: () => const <GraphqlCountry>[],
@@ -112,13 +102,10 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       logContext: 'GraphqlDemoCacheRepository.writeCountries',
       action: () async {
         final Box<dynamic> box = await getBox();
-        await box.put(
-          _countriesKey(continentCode),
-          <String, dynamic>{
-            _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
-            _itemsKey: countries.map(_countryToJson).toList(),
-          },
-        );
+        await box.put(_countriesKey(continentCode), <String, dynamic>{
+          _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
+          _itemsKey: countries.map(_countryToJson).toList(),
+        });
       },
     );
   }
@@ -141,10 +128,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
   }
 
   Map<String, dynamic> _continentToJson(GraphqlContinent continent) =>
-      <String, dynamic>{
-        'code': continent.code,
-        'name': continent.name,
-      };
+      <String, dynamic>{'code': continent.code, 'name': continent.name};
 
   Map<String, dynamic> _countryToJson(GraphqlCountry country) =>
       <String, dynamic>{

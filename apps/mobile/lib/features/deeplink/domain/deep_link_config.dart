@@ -1,6 +1,6 @@
 /// Shared constants for the universal link configuration.
 class DeepLinkConfig {
-  const DeepLinkConfig._();
+  const new _();
 
   /// HTTPS host that owns the apple-app-site-association / assetlinks.json files.
   static const String universalHost = 'links.flutterbloc.app';

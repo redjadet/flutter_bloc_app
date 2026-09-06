@@ -5,7 +5,7 @@ part 'remote_config_snapshot.freezed.dart';
 /// Immutable snapshot of cached Remote Config values + metadata.
 @freezed
 abstract class RemoteConfigSnapshot with _$RemoteConfigSnapshot {
-  factory RemoteConfigSnapshot({
+  factory({
     required Map<String, dynamic> values,
     DateTime? lastFetchedAt,
     String? templateVersion,
@@ -13,7 +13,7 @@ abstract class RemoteConfigSnapshot with _$RemoteConfigSnapshot {
     DateTime? lastSyncedAt,
   }) = _RemoteConfigSnapshot;
 
-  const RemoteConfigSnapshot._();
+  const new _();
 
   /// Convenience empty snapshot used when cache is missing.
   static final RemoteConfigSnapshot empty = RemoteConfigSnapshot(

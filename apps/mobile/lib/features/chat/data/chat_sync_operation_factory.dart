@@ -4,7 +4,7 @@ import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 
 class ChatSyncOperationFactory {
-  ChatSyncOperationFactory({required this._entityType});
+  new({required this._entityType});
 
   final String _entityType;
 

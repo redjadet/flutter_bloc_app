@@ -10,7 +10,7 @@ class _SimState({
   required final MarketStats stats,
   required final List<double> chartCloses,
 }) {
-  factory _SimState.fromSnapshot(MarketFeedSnapshot snapshot) {
+  factory fromSnapshot(MarketFeedSnapshot snapshot) {
     final double denominator = 1 + snapshot.changePct24h / 100;
     final double reconstructedOpen = denominator > 0
         ? snapshot.lastPrice / denominator
@@ -30,7 +30,7 @@ class _SimState({
     );
   }
 
-  factory _SimState.initial({required String pairId}) {
+  factory initial({required String pairId}) {
     const double price = 43250;
     const double open = 43000;
     final List<OrderBookLevel> bids = <OrderBookLevel>[

@@ -45,6 +45,10 @@ GEMINI.md
 **/build/
 **/build/**
 
+# Rust crate build outputs (secure_core_bridge and future native crates)
+**/rust/**/target/
+**/Cargo.toml.orig
+
 # Coverage outputs — regenerate: bash tool/test_coverage.sh
 # + dart run tool/update_coverage_summary.dart
 **/coverage/lcov.info

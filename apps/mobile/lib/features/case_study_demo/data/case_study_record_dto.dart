@@ -12,7 +12,7 @@ class const CaseStudyRecordDto({
   required final String notes,
   required final Map<String, String> answers,
 }) {
-  CaseStudyRecordDto.fromDomain(CaseStudyRecord record)
+  new fromDomain(CaseStudyRecord record)
     : this(
         id: record.id,
         submittedAt: record.submittedAt,

@@ -13,10 +13,8 @@ import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 /// Cubit for scapes list: load, grid/list toggle, and favorite toggle.
 class ScapesCubit extends Cubit<ScapesState>
     with CubitSubscriptionMixin<ScapesState> {
-  ScapesCubit({
-    required this._repository,
-    required this._timerService,
-  }) : super(const ScapesState.initial()) {
+  new({required this._repository, required this._timerService})
+    : super(const ScapesState.initial()) {
     _loadScapes();
   }
 
@@ -71,9 +69,7 @@ class ScapesCubit extends Cubit<ScapesState>
     final current = state;
     if (current is! ScapesReady) return;
     emit(
-      current.copyWith(
-        scapes: toggleScapeFavorite(current.scapes, scapeId),
-      ),
+      current.copyWith(scapes: toggleScapeFavorite(current.scapes, scapeId)),
     );
   }
 

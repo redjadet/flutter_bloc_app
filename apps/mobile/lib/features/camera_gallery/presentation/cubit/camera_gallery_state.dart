@@ -6,7 +6,7 @@ part 'camera_gallery_state.freezed.dart';
 
 @freezed
 abstract class CameraGalleryState with _$CameraGalleryState {
-  const factory CameraGalleryState({
+  const factory({
     @Default(ViewStatus.initial) ViewStatus status,
     String? sourceImagePath,
     String? imagePath,
@@ -17,7 +17,7 @@ abstract class CameraGalleryState with _$CameraGalleryState {
     String? errorKey,
   }) = _CameraGalleryState;
 
-  const CameraGalleryState._();
+  const new _();
 
   bool get isLoading => status.isLoading;
   bool get hasError => status.isError;

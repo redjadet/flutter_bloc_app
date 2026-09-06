@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 /// Large tappable card for a vocabulary topic (kid-friendly, min 44x48).
 /// Uses [CommonCard] with primaryContainer; padding and radius from tokens.
 class TopicCard extends StatelessWidget {
-  const TopicCard({
+  const new({
     required this.topic,
     required this.displayName,
     required this.onTap,

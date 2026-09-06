@@ -6,7 +6,7 @@ part 'calculator_state.freezed.dart';
 
 @freezed
 abstract class CalculatorState with _$CalculatorState {
-  const factory CalculatorState({
+  const factory({
     @Default('0') String display,
     double? accumulator,
     CalculatorOperation? operation,
@@ -20,7 +20,7 @@ abstract class CalculatorState with _$CalculatorState {
     CalculatorError? error,
   }) = _CalculatorState;
 
-  const CalculatorState._();
+  const new _();
 
   double subtotal(PaymentCalculator calculator) =>
       calculator.round(settledAmount);

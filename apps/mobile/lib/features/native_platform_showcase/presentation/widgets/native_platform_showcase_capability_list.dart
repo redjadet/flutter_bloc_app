@@ -6,10 +6,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcaseCapabilityList extends StatelessWidget {
-  const NativePlatformShowcaseCapabilityList({
-    required this.capabilities,
-    super.key,
-  });
+  const new({required this.capabilities, super.key});
 
   final List<NativeCapability> capabilities;
 

@@ -8,7 +8,7 @@ enum RealtimeMarketSideTab { bids, asks }
 
 @freezed
 abstract class RealtimeMarketState with _$RealtimeMarketState {
-  const factory RealtimeMarketState({
+  const factory({
     required String pairId,
     MarketFeedSnapshot? snapshot,
     @Default(false) bool bootstrapComplete,

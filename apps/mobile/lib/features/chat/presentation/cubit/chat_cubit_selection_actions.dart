@@ -137,15 +137,10 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     if (found == null) {
       return null;
     }
-    return _LoadedConversation(
-      conversation: found,
-      history: mergedHistory,
-    );
+    return _LoadedConversation(conversation: found, history: mergedHistory);
   }
 
-  ChatConversation _rebuildFromTranscripts(
-    ChatConversation conversation,
-  ) {
+  ChatConversation _rebuildFromTranscripts(ChatConversation conversation) {
     final List<ChatMessage> messages = <ChatMessage>[];
     final int pairs = conversation.pastUserInputs.length;
     final int responses = conversation.generatedResponses.length;
@@ -176,10 +171,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
 }
 
 class _LoadedConversation {
-  _LoadedConversation({
-    required this.conversation,
-    required this.history,
-  });
+  new({required this.conversation, required this.history});
 
   final ChatConversation conversation;
   final List<ChatConversation> history;

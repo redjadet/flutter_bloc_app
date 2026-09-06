@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_
 enum StaffDemoSitesStatus { initial, loading, ready, error }
 
 class StaffDemoSitesState {
-  const StaffDemoSitesState({
+  const new({
     this.status = StaffDemoSitesStatus.initial,
     this.sites = const <StaffDemoSite>[],
     this.errorMessage,
@@ -30,8 +30,7 @@ class StaffDemoSitesState {
 }
 
 class StaffDemoSitesCubit extends Cubit<StaffDemoSitesState> {
-  StaffDemoSitesCubit({required this._repository})
-    : super(const StaffDemoSitesState());
+  new({required this._repository}) : super(const StaffDemoSitesState());
 
   final StaffDemoSiteRepository _repository;
 
@@ -43,12 +42,7 @@ class StaffDemoSitesCubit extends Cubit<StaffDemoSitesState> {
       isAlive: () => !isClosed,
       onSuccess: (sites) {
         if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoSitesStatus.ready,
-            sites: sites,
-          ),
-        );
+        emit(state.copyWith(status: StaffDemoSitesStatus.ready, sites: sites));
       },
       onError: (message) {
         if (isClosed) return;

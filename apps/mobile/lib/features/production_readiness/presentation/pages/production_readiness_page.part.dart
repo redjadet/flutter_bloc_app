@@ -1,7 +1,7 @@
 part of 'production_readiness_page.dart';
 
 class _CrashlyticsCard extends StatelessWidget {
-  const _CrashlyticsCard({required this.state, super.key});
+  const new({required this.state, super.key});
 
   final ProductionReadinessState state;
 
@@ -68,7 +68,7 @@ class _CrashlyticsCard extends StatelessWidget {
 }
 
 class _FcmCard extends StatelessWidget {
-  const _FcmCard({
+  const new({
     required this.state,
     required this.showSimulatedButton,
     super.key,
@@ -143,7 +143,7 @@ class _FcmCard extends StatelessWidget {
 }
 
 class _FrameTimingCard extends StatelessWidget {
-  const _FrameTimingCard({required this.state, super.key});
+  const new({required this.state, super.key});
 
   final ProductionReadinessState state;
 
@@ -162,11 +162,7 @@ class _FrameTimingCard extends StatelessWidget {
 }
 
 class _ConsentCard extends StatelessWidget {
-  const _ConsentCard({
-    required this.enabled,
-    required this.onChanged,
-    super.key,
-  });
+  const new({required this.enabled, required this.onChanged, super.key});
 
   final bool enabled;
   final ValueChanged<bool> onChanged;
@@ -200,11 +196,7 @@ class _ConsentCard extends StatelessWidget {
 }
 
 class _ReleaseFlagCard extends StatelessWidget {
-  const _ReleaseFlagCard({
-    required this.state,
-    required this.onRefresh,
-    super.key,
-  });
+  const new({required this.state, required this.onRefresh, super.key});
 
   final ProductionReadinessState state;
   final VoidCallback onRefresh;
@@ -244,20 +236,13 @@ class _ReleaseFlagCard extends StatelessWidget {
 }
 
 class _StatusCard extends StatelessWidget {
-  const _StatusCard({
-    required this.title,
-    required this.value,
-    super.key,
-  });
+  const new({required this.title, required this.value, super.key});
 
   final String title;
   final String value;
 
   @override
   Widget build(BuildContext context) => CommonCard(
-    child: ListTile(
-      title: Text(title),
-      subtitle: Text(value),
-    ),
+    child: ListTile(title: Text(title), subtitle: Text(value)),
   );
 }

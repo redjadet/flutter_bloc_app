@@ -1,6 +1,6 @@
 /// Trim/length validation for comment submission (Unicode scalar count).
 class SocialFeedCommentPolicy {
-  const SocialFeedCommentPolicy();
+  const new();
 
   static const int minLength = 1;
   static const int maxLength = 280;

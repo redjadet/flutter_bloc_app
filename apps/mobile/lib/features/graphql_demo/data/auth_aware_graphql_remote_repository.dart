@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_sourc
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
 
 class AuthAwareGraphqlRemoteRepository implements GraphqlRemoteRepository {
-  AuthAwareGraphqlRemoteRepository({
+  new({
     required this._supabaseRemote,
     required this._directRemote,
     required this._isSupabaseSignedIn,
@@ -44,9 +44,7 @@ class AuthAwareGraphqlRemoteRepository implements GraphqlRemoteRepository {
   }
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  }) async {
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
     final GraphqlRemoteRepository active = _active;
     final List<GraphqlCountry> countries = await active.fetchCountries(
       continentCode: continentCode,

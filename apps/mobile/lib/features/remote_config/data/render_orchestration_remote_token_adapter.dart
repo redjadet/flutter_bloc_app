@@ -6,9 +6,7 @@ import 'package:feature_flags/feature_flags.dart';
 /// `lib/features/remote_config/`.
 class RemoteConfigRenderOrchestrationTokenAdapter
     implements RenderOrchestrationRemoteTokenPort {
-  const RemoteConfigRenderOrchestrationTokenAdapter({
-    required this._remoteConfig,
-  });
+  const new({required this._remoteConfig});
 
   final RemoteConfigService _remoteConfig;
 

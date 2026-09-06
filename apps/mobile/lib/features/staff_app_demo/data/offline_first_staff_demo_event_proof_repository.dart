@@ -14,7 +14,7 @@ import 'package:storage/storage.dart';
 
 class OfflineFirstStaffDemoEventProofRepository
     implements StaffDemoEventProofRepository, SyncableRepository {
-  OfflineFirstStaffDemoEventProofRepository({
+  new({
     required this._firestore,
     required this._storage,
     required this._pendingSyncRepository,
@@ -48,9 +48,7 @@ class OfflineFirstStaffDemoEventProofRepository
     final String proofId =
         _proofIdFactory?.call() ??
         _firestore
-            .collection(
-              StaffDemoEventProofSyncConstants.firestoreCollection,
-            )
+            .collection(StaffDemoEventProofSyncConstants.firestoreCollection)
             .doc()
             .id;
 

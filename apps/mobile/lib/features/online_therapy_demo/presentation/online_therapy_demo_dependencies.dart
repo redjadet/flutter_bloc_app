@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_mes
 
 /// Composition-root dependencies for the Online Therapy demo subtree.
 class OnlineTherapyDemoDependencies {
-  const OnlineTherapyDemoDependencies({
+  const new({
     required this.auth,
     required this.networkModeController,
     required this.therapists,

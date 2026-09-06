@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart
 import 'package:material_ui/material_ui.dart';
 
 class LocaleCubit extends Cubit<Locale?> {
-  LocaleCubit({required this._repository}) : super(null);
+  new({required this._repository}) : super(null);
 
   final LocaleRepository _repository;
 
@@ -18,11 +18,7 @@ class LocaleCubit extends Cubit<Locale?> {
         emit(resolved);
       }
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'LocaleCubit.loadInitial failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('LocaleCubit.loadInitial failed', error, stackTrace);
     }
   }
 
@@ -33,11 +29,7 @@ class LocaleCubit extends Cubit<Locale?> {
     try {
       await _repository.save(_toAppLocale(locale));
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'LocaleCubit.setLocale save failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('LocaleCubit.setLocale save failed', error, stackTrace);
       if (!isClosed) {
         emit(previous);
       }

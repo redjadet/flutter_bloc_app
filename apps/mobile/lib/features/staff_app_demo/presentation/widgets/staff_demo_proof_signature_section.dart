@@ -9,7 +9,7 @@ import 'package:signature/signature.dart';
 
 /// Signature capture for staff demo proof flow (theme-aware pad + export).
 class StaffDemoProofSignatureSection extends StatefulWidget {
-  const StaffDemoProofSignatureSection({super.key});
+  const new({super.key});
 
   @override
   State<StaffDemoProofSignatureSection> createState() =>

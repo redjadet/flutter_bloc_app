@@ -2,7 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterValueText extends StatelessWidget {
-  const CounterValueText({
+  const new({
     required this.count,
     required this.textTheme,
     required this.animDuration,

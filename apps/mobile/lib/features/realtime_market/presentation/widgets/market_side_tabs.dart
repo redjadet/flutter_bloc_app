@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class MarketSideTabs extends StatelessWidget {
-  const MarketSideTabs({
+  const new({
     required this.selected,
     required this.onChanged,
     required this.l10n,

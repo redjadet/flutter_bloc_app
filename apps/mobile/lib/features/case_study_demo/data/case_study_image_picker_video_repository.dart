@@ -7,11 +7,9 @@ import 'package:image_picker/image_picker.dart';
 
 /// [CaseStudyVideoRepository] using [ImagePicker.pickVideo].
 class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
-  CaseStudyImagePickerVideoRepository({
-    ImagePicker? picker,
-    bool Function()? isAndroid,
-  }) : _picker = picker ?? ImagePicker(),
-       _isAndroid = isAndroid ?? _defaultIsAndroid;
+  new({ImagePicker? picker, bool Function()? isAndroid})
+    : _picker = picker ?? ImagePicker(),
+      _isAndroid = isAndroid ?? _defaultIsAndroid;
 
   final ImagePicker _picker;
   final bool Function() _isAndroid;
@@ -20,11 +18,11 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   @override
-  Future<MediaPickResult> pickVideoFromCamera() async =>
+  Future<MediaPickResult> pickVideoFromCamera() =>
       _pickVideo(source: ImageSource.camera, isCamera: true);
 
   @override
-  Future<MediaPickResult> pickVideoFromGallery() async =>
+  Future<MediaPickResult> pickVideoFromGallery() =>
       _pickVideo(source: ImageSource.gallery, isCamera: false);
 
   Future<MediaPickResult> _pickVideo({
@@ -88,10 +86,7 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
     );
   }
 
-  static bool _isCameraUnavailableCodeOrMessage(
-    String code,
-    String? message,
-  ) {
+  static bool _isCameraUnavailableCodeOrMessage(String code, String? message) {
     final String lowerCode = code.toLowerCase();
     if (lowerCode == 'no_available_camera' ||
         lowerCode == 'camera_not_available' ||

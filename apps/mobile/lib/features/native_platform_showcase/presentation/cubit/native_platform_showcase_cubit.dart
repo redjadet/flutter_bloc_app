@@ -12,14 +12,14 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_ca
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
 
 class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
-  NativePlatformShowcaseCubit({
+  new({
     required LoadNativePlatformShowcaseUseCase loadShowcase,
     required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
     required TriggerNativeShowcaseHapticUseCase triggerHaptic,
     required ShareNativeShowcaseTextUseCase shareText,
   }) : this._(loadShowcase, watchTelemetry, triggerHaptic, shareText);
 
-  NativePlatformShowcaseCubit._(
+  new _(
     this._loadShowcase,
     this._watchTelemetry,
     this._triggerHaptic,
@@ -114,10 +114,8 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
           sessionId: 'showcase-${DateTime.now().microsecondsSinceEpoch}',
         );
 
-    _telemetrySubscription = _watchTelemetry(config: config).listen(
-      _onTelemetrySnapshot,
-      onError: _onTelemetryError,
-    );
+    _telemetrySubscription = _watchTelemetry(config: config)
+        .listen(_onTelemetrySnapshot, onError: _onTelemetryError);
   }
 
   void _onTelemetrySnapshot(NativeShowcaseTelemetrySnapshot snapshot) {
@@ -192,6 +190,6 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
   Future<void> close() async {
     await _telemetrySubscription?.cancel();
     _telemetrySubscription = null;
-    return super.close();
+    return await super.close();
   }
 }

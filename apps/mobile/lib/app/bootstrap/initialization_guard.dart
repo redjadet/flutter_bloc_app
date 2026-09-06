@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 /// Provides safe execution patterns for non-critical initialization steps
 /// that shouldn't block app startup if they fail.
 class InitializationGuard {
-  InitializationGuard._();
+  new _();
 
   /// Executes an async initialization operation, logging errors but not throwing.
   ///
@@ -40,18 +40,10 @@ class InitializationGuard {
       await operation();
     } on FlutterError catch (error, stackTrace) {
       // Flutter wraps some platform/storage startup failures in FlutterError.
-      AppLogger.error(
-        '$context: $failureMessage',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('$context: $failureMessage', error, stackTrace);
       // Don't rethrow - allow app to continue
     } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        '$context: $failureMessage',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('$context: $failureMessage', error, stackTrace);
       // Don't rethrow - allow app to continue
     }
   }

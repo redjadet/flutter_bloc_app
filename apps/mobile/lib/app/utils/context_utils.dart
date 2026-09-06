@@ -3,14 +3,11 @@ import 'package:flutter/widgets.dart';
 
 /// Helpers for safely working with [BuildContext] across async boundaries.
 class ContextUtils {
-  const ContextUtils._();
+  const new _();
 
   /// Returns `true` if the [context] is still mounted. Otherwise logs a debug
   /// message (when [debugLabel] is provided) and returns `false`.
-  static bool ensureMounted(
-    BuildContext context, {
-    String? debugLabel,
-  }) {
+  static bool ensureMounted(BuildContext context, {String? debugLabel}) {
     if (context.mounted) {
       return true;
     }
@@ -21,8 +18,6 @@ class ContextUtils {
   }
 
   static void logNotMounted(String debugLabel) {
-    AppLogger.debug(
-      'Skipping $debugLabel — context is no longer mounted.',
-    );
+    AppLogger.debug('Skipping $debugLabel — context is no longer mounted.');
   }
 }

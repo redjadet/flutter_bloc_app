@@ -6,16 +6,13 @@ import 'package:intl/intl.dart';
 /// Formatters are cached per locale to avoid expensive NumberFormat
 /// instantiation on every build, improving performance in hot rebuild paths.
 class CalculatorFormatters {
-  const CalculatorFormatters._({
-    required this.currency,
-    required this.percent,
-  });
+  const new _({required this.currency, required this.percent});
 
   /// Creates formatters based on the locale available in [context].
   ///
   /// Formatters are cached per locale to avoid recreating NumberFormat
   /// instances on every build, which is expensive due to locale data allocation.
-  factory CalculatorFormatters.of(BuildContext context) {
+  factory of(BuildContext context) {
     final Locale locale = Localizations.localeOf(context);
     final String localeName = Intl.canonicalizedLocale(locale.toString());
 

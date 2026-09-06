@@ -7,7 +7,7 @@ part 'graphql_demo_view_models.freezed.dart';
 
 @freezed
 abstract class GraphqlFilterBarData with _$GraphqlFilterBarData {
-  const factory GraphqlFilterBarData({
+  const factory({
     required List<GraphqlContinent> continents,
     required String? activeContinentCode,
     required bool isLoading,
@@ -16,7 +16,7 @@ abstract class GraphqlFilterBarData with _$GraphqlFilterBarData {
 
 @freezed
 abstract class GraphqlBodyData with _$GraphqlBodyData {
-  const factory GraphqlBodyData({
+  const factory({
     required bool isLoading,
     required bool hasError,
     required List<GraphqlCountry> countries,

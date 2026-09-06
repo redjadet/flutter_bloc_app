@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_li
 import 'package:material_ui/material_ui.dart';
 
 class TodoListContent extends StatelessWidget {
-  const TodoListContent({
+  const new({
     required this.filteredItems,
     required this.sortOrder,
     required this.scrollController,

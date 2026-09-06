@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class FirebaseFunctionsTestPage extends StatefulWidget {
-  const FirebaseFunctionsTestPage({
+  const new({
     required this.isFirebaseReady,
     this.isAuthenticated = false,
     this.functions,
@@ -174,17 +174,15 @@ class _FirebaseFunctionsTestPageState extends State<FirebaseFunctionsTestPage> {
               Text(
                 l10n.firebaseUnavailableMessage,
                 key: const ValueKey('firebase-functions-unavailable'),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.error),
               ),
             if (_isFirebaseReady && !_isAuthenticated) ...<Widget>[
               Text(
                 l10n.firebaseFunctionsAuthRequired,
                 key: const ValueKey('firebase-functions-auth-required'),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.error),
               ),
               const SizedBox(height: 12),
             ],

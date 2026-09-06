@@ -8,7 +8,7 @@ import 'package:storage/storage.dart';
 /// Persists picked videos under app documents for stable paths across restarts.
 class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   // ignore: avoid_unused_constructor_parameters - keeps DI parity with web.
-  CaseStudyClipFileStoreImpl({HiveService? hiveService});
+  new({HiveService? hiveService});
 
   /// Copies [sourcePath] to a unique staging file so concurrent commits cannot
   /// overwrite each other's destination until promotion to the final path.
@@ -61,9 +61,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
 
   Future<Directory> _caseDir(String caseId) async {
     final Directory docs = await getApplicationDocumentsDirectory();
-    return Directory(
-      p.join(docs.path, 'case_study_clips', caseId),
-    );
+    return Directory(p.join(docs.path, 'case_study_clips', caseId));
   }
 
   @override
@@ -112,6 +110,6 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
 
   @override
   Future<List<int>> readClipBytes(String path) async {
-    return File(path).readAsBytes();
+    return await File(path).readAsBytes();
   }
 }

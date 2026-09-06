@@ -12,7 +12,7 @@ const RetryPolicy _caseStudyLocalPersistRetryPolicy = RetryPolicy(
 
 /// Persists a submitted case to local history and seeds a fresh draft.
 class PersistCaseStudySubmissionUseCase {
-  const PersistCaseStudySubmissionUseCase({
+  const new({
     required CaseStudyLocalRepository localRepository,
     required this._newCaseId,
   }) : _local = localRepository;

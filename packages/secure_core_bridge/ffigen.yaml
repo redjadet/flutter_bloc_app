@@ -1,0 +1,16 @@
+# Run via: dart run tool/generate_bindings.dart
+name: SecureCoreBindings
+description: Generated bindings for secure_core C ABI.
+output: 'lib/src/ffi/generated_bindings.dart'
+headers:
+  entry-points:
+    - 'include/secure_core.h'
+  include-directives:
+    - '**/secure_core.h'
+ffi-native:
+  asset-id: 'package:secure_core_bridge/src/ffi/generated_bindings.dart'
+silence-enum-warning: true
+preamble: |
+  // ignore_for_file: always_specify_types, type_annotate_public_apis
+  // GENERATED — do not edit by hand. Regenerate with:
+  // dart run packages/secure_core_bridge/tool/generate_bindings.dart

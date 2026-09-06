@@ -5,7 +5,7 @@ import 'package:storage/storage.dart';
 
 /// Hive-backed cache for Remote Config values and metadata.
 class RemoteConfigCacheRepository extends HiveRepositoryBase {
-  RemoteConfigCacheRepository({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'remote_config_cache';
   static const String _snapshotKey = 'snapshot';
@@ -54,16 +54,13 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
     logContext: 'RemoteConfigCacheRepository.saveSnapshot',
     action: () async {
       final Box<dynamic> box = await getBox();
-      await box.put(
-        _snapshotKey,
-        <String, dynamic>{
-          _valuesKey: Map<String, dynamic>.from(snapshot.values),
-          _lastFetchedKey: snapshot.lastFetchedAt?.toIso8601String(),
-          _templateVersionKey: snapshot.templateVersion,
-          _dataSourceKey: snapshot.dataSource,
-          _lastSyncedKey: snapshot.lastSyncedAt?.toIso8601String(),
-        },
-      );
+      await box.put(_snapshotKey, <String, dynamic>{
+        _valuesKey: Map<String, dynamic>.from(snapshot.values),
+        _lastFetchedKey: snapshot.lastFetchedAt?.toIso8601String(),
+        _templateVersionKey: snapshot.templateVersion,
+        _dataSourceKey: snapshot.dataSource,
+        _lastSyncedKey: snapshot.lastSyncedAt?.toIso8601String(),
+      });
     },
   );
 
@@ -78,10 +75,7 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
   Map<String, dynamic> _mapValues(dynamic rawValues) {
     if (rawValues is Map<dynamic, dynamic>) {
       return rawValues.map(
-        (dynamic key, dynamic value) => MapEntry(
-          key.toString(),
-          value,
-        ),
+        (dynamic key, dynamic value) => MapEntry(key.toString(), value),
       );
     }
     return <String, dynamic>{};

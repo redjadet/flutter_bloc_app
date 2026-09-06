@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Certificate pin policy summary + optional mutable demo navigation.
 class NativeSecurityCertificateCard extends StatelessWidget {
-  const NativeSecurityCertificateCard({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class NativeSecurityCertificateCard extends StatelessWidget {
 }
 
 class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({required this.label, required this.value});
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;

@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_vi
 
 /// Reference-counted viewer-scoped simulated realtime source.
 class SimulatedSocialFeedRealtimeSource implements SocialFeedRealtimeSource {
-  SimulatedSocialFeedRealtimeSource({
+  new({
     required this._scenario,
     required this._remote,
     required this._timerService,
@@ -56,7 +56,7 @@ class SimulatedSocialFeedRealtimeSource implements SocialFeedRealtimeSource {
 }
 
 class _ViewerSession {
-  _ViewerSession({
+  new({
     required this.viewer,
     required this.scenario,
     required this.remote,
@@ -175,7 +175,7 @@ class _ViewerSession {
 }
 
 class _Lease implements SocialFeedRealtimeLease {
-  _Lease({
+  new({
     required this.connectionStatus,
     required this.posts,
     required this._closeFn,

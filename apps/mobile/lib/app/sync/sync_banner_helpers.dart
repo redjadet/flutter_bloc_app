@@ -57,7 +57,7 @@ bool shouldShowSyncBanner({
 /// Shared content for sync status banners: [AppMessage] plus optional
 /// [trailing] (e.g. Sync now button). Wrap with [Padding] as needed.
 class SyncBannerContent extends StatelessWidget {
-  const SyncBannerContent({
+  const new({
     required this.title,
     required this.message,
     required this.isError,
@@ -76,11 +76,7 @@ class SyncBannerContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        AppMessage(
-          title: title,
-          message: message,
-          isError: isError,
-        ),
+        AppMessage(title: title, message: message, isError: isError),
         if (trailing case final Widget t) t,
       ],
     );

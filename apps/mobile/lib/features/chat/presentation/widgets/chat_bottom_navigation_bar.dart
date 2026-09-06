@@ -2,7 +2,7 @@ import 'package:design_system/responsive.dart';
 import 'package:material_ui/material_ui.dart';
 
 class ChatBottomNavigationBar extends StatelessWidget {
-  const ChatBottomNavigationBar({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,21 +11,16 @@ class ChatBottomNavigationBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.surface,
         border: Border(
-          top: BorderSide(
-            color: colors.outlineVariant,
-            width: 0.5,
-          ),
+          top: BorderSide(color: colors.outlineVariant, width: 0.5),
         ),
       ),
-      child: const SafeArea(
-        child: _ChatBottomNavigationBarContent(),
-      ),
+      child: const SafeArea(child: _ChatBottomNavigationBarContent()),
     );
   }
 }
 
 class _ChatBottomNavigationBarContent extends StatelessWidget {
-  const _ChatBottomNavigationBarContent();
+  const new();
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -33,11 +28,7 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildNavItem(
-          Icons.home_outlined,
-          isSelected: false,
-          context: context,
-        ),
+        _buildNavItem(Icons.home_outlined, isSelected: false, context: context),
         _buildNavItem(
           Icons.search_outlined,
           isSelected: false,
@@ -81,21 +72,14 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                colors.primary,
-                colors.tertiary,
-              ],
+              colors: [colors.primary, colors.tertiary],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           child: Center(
-            child: Icon(
-              icon,
-              color: colors.onPrimary,
-              size: iconSize,
-            ),
+            child: Icon(icon, color: colors.onPrimary, size: iconSize),
           ),
         ),
       );

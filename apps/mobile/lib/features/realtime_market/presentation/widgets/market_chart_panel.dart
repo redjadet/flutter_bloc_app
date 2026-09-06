@@ -4,11 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class MarketChartPanel extends StatelessWidget {
-  const MarketChartPanel({
-    required this.closes,
-    required this.l10n,
-    super.key,
-  });
+  const new({required this.closes, required this.l10n, super.key});
 
   final List<double> closes;
   final AppLocalizations l10n;

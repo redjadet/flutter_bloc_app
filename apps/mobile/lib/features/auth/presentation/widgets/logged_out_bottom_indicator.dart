@@ -3,11 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LoggedOutBottomIndicator extends StatelessWidget {
-  const LoggedOutBottomIndicator({
-    required this.scale,
-    required this.verticalScale,
-    super.key,
-  });
+  const new({required this.scale, required this.verticalScale, super.key});
 
   final double scale;
   final double verticalScale;
@@ -16,18 +12,12 @@ class LoggedOutBottomIndicator extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
     width: 135 * scale,
     height: 5 * verticalScale,
-    child: _ShapeIndicator(
-      width: 135 * scale,
-      height: 5 * verticalScale,
-    ),
+    child: _ShapeIndicator(width: 135 * scale, height: 5 * verticalScale),
   );
 }
 
 class _ShapeIndicator extends StatelessWidget {
-  const _ShapeIndicator({
-    required this.width,
-    required this.height,
-  });
+  const new({required this.width, required this.height});
 
   final double width;
   final double height;

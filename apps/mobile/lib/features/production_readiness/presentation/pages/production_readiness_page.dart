@@ -13,10 +13,7 @@ import 'package:utilities/utilities.dart';
 part 'production_readiness_page.part.dart';
 
 class ProductionReadinessPage extends StatelessWidget {
-  const ProductionReadinessPage({
-    this.showSimulatedNotificationButton = false,
-    super.key,
-  });
+  const new({this.showSimulatedNotificationButton = false, super.key});
 
   /// When true, shows the emit-simulated-notification action (simulated FCM).
   final bool showSimulatedNotificationButton;
@@ -136,9 +133,8 @@ class ProductionReadinessPage extends StatelessWidget {
                       ),
                       child: PlatformAdaptive.textButton(
                         context: context,
-                        onPressed: () => context.pushNamed(
-                          AppRoutes.nativePlatformShowcase,
-                        ),
+                        onPressed: () =>
+                            context.pushNamed(AppRoutes.nativePlatformShowcase),
                         child: Text(l10n.productionReadinessNativeShowcaseLink),
                       ),
                     ),

@@ -10,17 +10,15 @@ enum DeepLinkOrigin { initial, resumed }
 @freezed
 sealed class DeepLinkState with _$DeepLinkState {
   /// Idle state when no navigation is pending.
-  const factory DeepLinkState.idle() = DeepLinkIdle;
+  const factory idle() = DeepLinkIdle;
 
   /// Indicates the cubit is preparing deep link subscriptions.
-  const factory DeepLinkState.loading() = DeepLinkLoading;
+  const factory loading() = DeepLinkLoading;
 
   /// Signals that navigation to [target] should occur.
-  const factory DeepLinkState.navigate(
-    DeepLinkTarget target,
-    DeepLinkOrigin origin,
-  ) = DeepLinkNavigate;
+  const factory navigate(DeepLinkTarget target, DeepLinkOrigin origin) =
+      DeepLinkNavigate;
 
   /// Emitted when initialization fails or the stream encounters an error.
-  const factory DeepLinkState.error(String message) = DeepLinkError;
+  const factory error(String message) = DeepLinkError;
 }

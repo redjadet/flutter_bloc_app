@@ -19,7 +19,7 @@ class CaseStudyHistoryDetailCubit extends _CaseStudyHistoryDetailCubitBase
     with
         _CaseStudyHistoryDetailCubitFetch,
         _CaseStudyHistoryDetailCubitActions {
-  CaseStudyHistoryDetailCubit({
+  new({
     required super.recordId,
     required super.authRepository,
     required super.localRepository,
@@ -32,7 +32,7 @@ class CaseStudyHistoryDetailCubit extends _CaseStudyHistoryDetailCubitBase
 
 abstract class _CaseStudyHistoryDetailCubitBase
     extends Cubit<CaseStudyHistoryDetailState> {
-  _CaseStudyHistoryDetailCubitBase({
+  new({
     required this.recordId,
     required this.authRepository,
     required CaseStudyLocalRepository localRepository,

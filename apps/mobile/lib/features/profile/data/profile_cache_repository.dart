@@ -11,7 +11,7 @@ import 'package:utilities/utilities.dart';
 /// Hive-backed cache for profile data so the profile page can hydrate offline.
 class HiveProfileCacheRepository extends HiveRepositoryBase
     implements ProfileCacheRepository {
-  HiveProfileCacheRepository({required super.hiveService});
+  new({required super.hiveService});
 
   /// Writes a UTC instant with an explicit `Z` suffix so [DateTime.tryParse] never
   /// treats the value as local wall time (zone-less ISO is local in Dart).
@@ -54,7 +54,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
   String get boxName => _boxName;
 
   @override
-  Future<ProfileUser?> loadProfile() async => StorageGuard.run<ProfileUser?>(
+  Future<ProfileUser?> loadProfile() => StorageGuard.run<ProfileUser?>(
     logContext: 'HiveProfileCacheRepository.loadProfile',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -65,7 +65,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> saveProfile(ProfileUser user) async => StorageGuard.run<void>(
+  Future<void> saveProfile(ProfileUser user) => StorageGuard.run<void>(
     logContext: 'HiveProfileCacheRepository.saveProfile',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -79,7 +79,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> clearProfile() async => StorageGuard.run<void>(
+  Future<void> clearProfile() => StorageGuard.run<void>(
     logContext: 'HiveProfileCacheRepository.clearProfile',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -89,7 +89,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<ProfileCacheMetadata> loadMetadata() async => StorageGuard.run(
+  Future<ProfileCacheMetadata> loadMetadata() => StorageGuard.run(
     logContext: 'HiveProfileCacheRepository.loadMetadata',
     action: () async {
       final Box<dynamic> box = await getBox();

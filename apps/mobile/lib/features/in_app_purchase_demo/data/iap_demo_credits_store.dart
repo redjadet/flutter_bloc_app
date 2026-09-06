@@ -7,7 +7,7 @@ abstract interface class IapDemoCreditsStore {
 }
 
 class InMemoryIapDemoCreditsStore implements IapDemoCreditsStore {
-  InMemoryIapDemoCreditsStore([this._credits = 0]);
+  new([this._credits = 0]);
 
   int _credits;
 
@@ -21,7 +21,7 @@ class InMemoryIapDemoCreditsStore implements IapDemoCreditsStore {
 }
 
 class HiveIapDemoCreditsStore implements IapDemoCreditsStore {
-  HiveIapDemoCreditsStore({required this._hiveService});
+  new({required this._hiveService});
 
   static const String _boxName = 'iap_demo';
   static const String _keyCredits = 'credits';
@@ -32,7 +32,7 @@ class HiveIapDemoCreditsStore implements IapDemoCreditsStore {
   Future<Box<dynamic>> _getBox() => _box ??= _hiveService.openBox(_boxName);
 
   @override
-  Future<int> loadCredits() async => StorageGuard.run<int>(
+  Future<int> loadCredits() => StorageGuard.run<int>(
     logContext: 'HiveIapDemoCreditsStore.loadCredits',
     action: () async {
       final Box<dynamic> box = await _getBox();
@@ -43,7 +43,7 @@ class HiveIapDemoCreditsStore implements IapDemoCreditsStore {
   );
 
   @override
-  Future<void> saveCredits(int credits) async => StorageGuard.run<void>(
+  Future<void> saveCredits(int credits) => StorageGuard.run<void>(
     logContext: 'HiveIapDemoCreditsStore.saveCredits',
     action: () async {
       final Box<dynamic> box = await _getBox();

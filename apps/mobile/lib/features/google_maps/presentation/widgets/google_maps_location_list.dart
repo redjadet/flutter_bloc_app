@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
-  const GoogleMapsLocationList({
+  const new({
     required this.locations,
     required this.selectedMarkerId,
     required this.emptyLabel,
@@ -27,9 +27,7 @@ class GoogleMapsLocationList extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     if (locations.isEmpty) {
-      return CommonEmptyState(
-        message: emptyLabel,
-      );
+      return CommonEmptyState(message: emptyLabel);
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,7 +60,7 @@ class GoogleMapsLocationList extends StatelessWidget {
 }
 
 class _LocationFocusActions extends StatelessWidget {
-  const _LocationFocusActions({
+  const new({
     required this.isSelected,
     required this.focusLabel,
     required this.selectedLabel,

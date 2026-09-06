@@ -26,7 +26,7 @@ part 'counter_page_content.dart';
 part 'counter_page_listeners.part.dart';
 
 class CounterPage extends StatefulWidget {
-  const CounterPage({
+  const new({
     required this.title,
     required this.errorNotificationService,
     required this.biometricAuthenticator,

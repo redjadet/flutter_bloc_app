@@ -11,7 +11,7 @@ import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 /// Single owner rule: only this coordinator should trigger fetches based on
 /// Firebase Auth lifecycle to avoid duplicate calls and duplicate init attempts.
 final class SupabaseConfigCoordinator {
-  SupabaseConfigCoordinator({
+  new({
     required this._auth,
     required this._provider,
     @visibleForTesting this._fetchAndApplyIfNeeded,
@@ -58,14 +58,12 @@ final class SupabaseConfigCoordinator {
   Future<void> _safeFetch() async {
     final Future<void>? inFlight = _inFlightFetch;
     if (inFlight != null) {
-      return inFlight;
+      return await inFlight;
     }
     try {
       final Future<SupabaseConfigFetchResult> Function() fetcher =
           _fetchAndApplyIfNeeded ?? _provider.fetchAndApplyIfNeeded;
-      final Future<void> fetch = fetcher().then((
-        result,
-      ) {
+      final Future<void> fetch = fetcher().then((result) {
         if (result.updated) {
           AppLogger.info(
             'SupabaseConfigCoordinator: applied supabase config '

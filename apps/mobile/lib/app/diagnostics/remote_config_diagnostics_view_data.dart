@@ -9,7 +9,7 @@ enum RemoteConfigDiagnosticsStatus { idle, loading, loaded, error }
 @freezed
 abstract class RemoteConfigDiagnosticsViewData
     with _$RemoteConfigDiagnosticsViewData {
-  const factory RemoteConfigDiagnosticsViewData({
+  const factory({
     required RemoteConfigDiagnosticsStatus status,
     String? errorMessage,
     @Default(false) bool isAwesomeFeatureEnabled,
@@ -18,7 +18,7 @@ abstract class RemoteConfigDiagnosticsViewData
     DateTime? lastSyncedAt,
   }) = _RemoteConfigDiagnosticsViewData;
 
-  const RemoteConfigDiagnosticsViewData._();
+  const new _();
 
   bool get showFlagStatus => status == RemoteConfigDiagnosticsStatus.loaded;
   bool get showTestValue => status == RemoteConfigDiagnosticsStatus.loaded;

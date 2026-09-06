@@ -7,7 +7,7 @@ part 'platform_showcase_data.freezed.dart';
 
 @freezed
 abstract class PlatformShowcaseData with _$PlatformShowcaseData {
-  const factory PlatformShowcaseData({
+  const factory({
     required AppPlatformKind platform,
     required List<NativeCapability> capabilities,
     required List<NativeInteropCallResult> interopResults,

@@ -1,7 +1,7 @@
 part of 'profile_bottom_nav.dart';
 
 class _NavDestination {
-  const _NavDestination({
+  const new({
     required this.materialIcon,
     required this.cupertinoIcon,
     required this.label,
@@ -20,12 +20,12 @@ class _NavDestination {
 }
 
 class _NavItem {
-  const _NavItem.destination(this.destination)
+  const new destination(this.destination)
     : _labelOverride = null,
       _materialIconOverride = null,
       _cupertinoIconOverride = null;
 
-  const _NavItem.action({
+  const new action({
     required String label,
     required IconData materialIcon,
     required IconData cupertinoIcon,
@@ -46,26 +46,22 @@ class _NavItem {
     (_, final labelOverride?) => labelOverride,
     _ => throw StateError('_NavItem: destination or label override required'),
   };
-  IconData get materialIcon => switch ((
-    destination?.materialIcon,
-    _materialIconOverride,
-  )) {
-    (final destIcon?, _) => destIcon,
-    (_, final iconOverride?) => iconOverride,
-    _ => throw StateError(
-      '_NavItem: destination or materialIcon override required',
-    ),
-  };
-  IconData get cupertinoIcon => switch ((
-    destination?.cupertinoIcon,
-    _cupertinoIconOverride,
-  )) {
-    (final destIcon?, _) => destIcon,
-    (_, final iconOverride?) => iconOverride,
-    _ => throw StateError(
-      '_NavItem: destination or cupertinoIcon override required',
-    ),
-  };
+  IconData get materialIcon =>
+      switch ((destination?.materialIcon, _materialIconOverride)) {
+        (final destIcon?, _) => destIcon,
+        (_, final iconOverride?) => iconOverride,
+        _ => throw StateError(
+          '_NavItem: destination or materialIcon override required',
+        ),
+      };
+  IconData get cupertinoIcon =>
+      switch ((destination?.cupertinoIcon, _cupertinoIconOverride)) {
+        (final destIcon?, _) => destIcon,
+        (_, final iconOverride?) => iconOverride,
+        _ => throw StateError(
+          '_NavItem: destination or cupertinoIcon override required',
+        ),
+      };
 }
 
 const int _profileTabIndex = 0;

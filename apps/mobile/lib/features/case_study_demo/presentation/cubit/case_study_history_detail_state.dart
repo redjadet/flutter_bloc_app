@@ -12,7 +12,7 @@ enum CaseStudyHistoryDetailStatus {
 
 // check-ignore: freezed_preferred - demo detail state (kept lightweight)
 class CaseStudyHistoryDetailState extends Equatable {
-  const CaseStudyHistoryDetailState({
+  const new({
     this.status = CaseStudyHistoryDetailStatus.initial,
     this.record,
     this.usesExpiringCloudPlaybackUrls = false,

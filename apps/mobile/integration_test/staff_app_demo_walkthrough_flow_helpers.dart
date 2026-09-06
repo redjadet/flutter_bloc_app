@@ -15,10 +15,7 @@ import 'package:material_ui/material_ui.dart';
 import 'test_harness.dart';
 
 class FakeStaffDemoLocationService extends StaffDemoLocationService {
-  FakeStaffDemoLocationService({
-    required this.lat,
-    required this.lng,
-  });
+  new({required this.lat, required this.lng});
 
   final double lat;
   final double lng;
@@ -50,9 +47,7 @@ Future<void> openStaffAppDemoFromExample(WidgetTester tester) async {
   tester
       .widget<AppScope>(find.byType(AppScope))
       .router
-      .go(
-        AppRoutes.staffAppDemoPath,
-      );
+      .go(AppRoutes.staffAppDemoPath);
   await tester.pump(const Duration(milliseconds: 100));
   // Staff demo boot can take a bit longer on cold Firebase / iOS simulator.
   await pumpUntilFound(

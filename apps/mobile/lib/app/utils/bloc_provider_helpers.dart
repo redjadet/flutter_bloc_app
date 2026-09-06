@@ -26,7 +26,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 /// because we want the widget tree to build immediately while data loads in the background.
 /// Errors are handled within the cubit's error handling mechanism.
 class BlocProviderHelpers {
-  BlocProviderHelpers._();
+  new _();
 
   /// Creates a BlocProvider with async initialization.
   ///
@@ -153,11 +153,7 @@ class BlocProviderHelpers {
     required T Function() create,
     required Widget child,
     Future<void> Function(T cubit)? init,
-  }) => _RouteScopedAsyncInitBloc<T>(
-    create: create,
-    init: init,
-    child: child,
-  );
+  }) => _RouteScopedAsyncInitBloc<T>(create: create, init: init, child: child);
 }
 
 class const _RouteScopedAsyncInitBloc<T extends BlocBase<Object?>>({

@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// A reusable error view widget with consistent styling
 class CommonErrorView extends StatelessWidget {
-  const CommonErrorView({
+  const new({
     required this.message,
     super.key,
     this.onRetry,
@@ -55,11 +55,7 @@ class CommonErrorView extends StatelessWidget {
 /// A reusable retry button with consistent styling
 /// Uses platform-adaptive button styling (CupertinoButton on iOS, OutlinedButton on Android)
 class CommonRetryButton extends StatelessWidget {
-  const CommonRetryButton({
-    required this.onPressed,
-    required this.label,
-    super.key,
-  });
+  const new({required this.onPressed, required this.label, super.key});
 
   final VoidCallback onPressed;
   final String label;
@@ -76,10 +72,7 @@ class CommonRetryButton extends StatelessWidget {
         backgroundColor: Colors.transparent,
         foregroundColor: colors.onSurface,
         borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-        side: BorderSide(
-          color: colors.outline,
-          width: 1.5,
-        ),
+        side: BorderSide(color: colors.outline, width: 1.5),
         materialStyle: OutlinedButton.styleFrom(
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(

@@ -6,7 +6,7 @@ part 'native_interop_call_result.freezed.dart';
 
 @freezed
 abstract class NativeInteropCallResult with _$NativeInteropCallResult {
-  const factory NativeInteropCallResult({
+  const factory({
     required NativeInteropBridgeKind kind,
     required NativeInteropStatus status,
     required String message,

@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_certificate_pinning_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_demos.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
+import 'package:flutter_bloc_app/app/router/routes_secure_messaging_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_staff_app_demo.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
@@ -49,6 +50,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_cal
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
+import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_core_repository.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_realtime_source.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_repository.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_scenario_controller.dart';
@@ -179,6 +181,9 @@ DemoRouteFactory resolveDemoRouteFactory({
       triggerSecureProbe: getIt<TriggerSecureProbe>(),
       selectMockScenario: getIt<SelectMockScenario>(),
       resetMockScenario: getIt<ResetMockScenario>(),
+    ),
+    secureMessagingDemoRouteFactory: SecureMessagingDemoRouteFactory(
+      repository: getIt<SecureCoreRepository>(),
     ),
   );
 }

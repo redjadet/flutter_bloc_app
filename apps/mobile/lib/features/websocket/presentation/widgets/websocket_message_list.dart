@@ -4,11 +4,7 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dar
 import 'package:material_ui/material_ui.dart';
 
 class WebsocketMessageList extends StatelessWidget {
-  const WebsocketMessageList({
-    required this.messages,
-    required this.emptyLabel,
-    super.key,
-  });
+  const new({required this.messages, required this.emptyLabel, super.key});
 
   final List<WebsocketMessage> messages;
   final String emptyLabel;

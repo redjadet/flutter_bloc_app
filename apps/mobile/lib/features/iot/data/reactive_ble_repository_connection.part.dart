@@ -2,9 +2,7 @@ part of 'reactive_ble_repository.dart';
 
 mixin _ReactiveBleRepositoryConnection on _ReactiveBleRepositoryBase {
   Stream<BleConnectionPhase> watchConnection(String deviceId) =>
-      _connectionController.stream.where(
-        (phase) => phase.deviceId == deviceId,
-      );
+      _connectionController.stream.where((phase) => phase.deviceId == deviceId);
 
   Future<Result<void>> connect(String deviceId) async {
     await _connectionSubscription?.cancel();
@@ -60,7 +58,7 @@ mixin _ReactiveBleRepositoryConnection on _ReactiveBleRepositoryBase {
             }
           },
         );
-    return completer.future;
+    return await completer.future;
   }
 
   Future<void> disconnect() async {

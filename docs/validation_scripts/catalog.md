@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **111** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **81** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **112** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **82** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -300,6 +300,10 @@ Long-form examples: [`guides_context_async.md`](guides_context_async.md).
 - **`check_hardcoded_colors.sh`**, **`check_hardcoded_strings.sh`**, **`check_missing_localizations.sh`**: Theme/l10n hygiene — [`guides_theme_l10n.md`](guides_theme_l10n.md)
 - **`check_missing_const.sh`**: Heuristic missing `const` on stable widgets — [`guides_performance_lists.md`](guides_performance_lists.md)
 - **`check_pubspec_codegen_compat.sh`**: Fails on known-incompatible `pubspec.yaml` / lock combos for `build_runner` + analyzer (e.g. `json_serializable` vs `mix_lint`)
+- **`check_package_dependency_dag.sh`**: Workspace `packages/*` path-dep DAG allowlist
+- **`check_secure_core.sh`**: generated FFI freshness, Rust fmt/check/clippy/test
+  (`rust-toolchain.toml` pin), and real host Dart → Rust tests; see
+  [`../architecture/rust_ffi_secure_core_bridge.md`](../architecture/rust_ffi_secure_core_bridge.md)
 
 ### State, layout, memory (checklist; detail in guide shards)
 

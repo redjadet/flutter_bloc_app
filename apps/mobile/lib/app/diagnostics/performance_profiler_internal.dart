@@ -6,7 +6,7 @@ library;
 
 /// Internal widget rebuild info class.
 class WidgetRebuildInfoInternal {
-  WidgetRebuildInfoInternal({required this.name});
+  new({required this.name});
 
   final String name;
   int rebuildCount = 0;

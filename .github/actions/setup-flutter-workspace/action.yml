@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
 name: Setup Flutter workspace
 description: >-
   Install pinned Flutter, run workspace pub get, and optionally install
@@ -19,6 +20,12 @@ inputs:
     description: Install Google Chrome when missing (Flutter web device smoke)
     required: false
     default: 'false'
+  install-rust:
+    description: >-
+      Install pinned Rust 1.98.1 (+ rustfmt/clippy) for secure_core CI gates.
+      Linux host is for package/Cargo tests only — not a product desktop target.
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -29,6 +36,13 @@ runs:
         flutter-version: ${{ inputs.flutter-version }}
         channel: stable
         cache: true
+
+    - name: Setup Rust 1.98.1
+      if: ${{ inputs.install-rust == 'true' }}
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: '1.98.1'
+        components: rustfmt, clippy
 
     - name: Flutter pub get
       shell: bash

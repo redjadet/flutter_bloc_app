@@ -1,11 +1,7 @@
 part of 'fcm_demo_page.dart';
 
 class _TokenSection extends StatelessWidget {
-  const _TokenSection({
-    required this.label,
-    required this.value,
-    required this.l10n,
-  });
+  const new({required this.label, required this.value, required this.l10n});
 
   final String label;
   final String? value;
@@ -33,12 +29,7 @@ class _TokenSection extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Expanded(
-                child: Text(
-                  label,
-                  style: theme.textTheme.titleSmall,
-                ),
-              ),
+              Expanded(child: Text(label, style: theme.textTheme.titleSmall)),
               if (hasToken && _canRevealToken)
                 PlatformAdaptive.textButton(
                   context: context,
@@ -48,10 +39,7 @@ class _TokenSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: context.responsiveGapXS),
-          SelectableText(
-            display,
-            style: theme.textTheme.bodySmall,
-          ),
+          SelectableText(display, style: theme.textTheme.bodySmall),
         ],
       ),
     );
@@ -65,27 +53,18 @@ class _TokenSection extends StatelessWidget {
     try {
       await Clipboard.setData(ClipboardData(text: text));
       if (context.mounted) {
-        ErrorHandling.showSuccessSnackBar(
-          context,
-          l10n.fcmDemoCopySuccess,
-        );
+        ErrorHandling.showSuccessSnackBar(context, l10n.fcmDemoCopySuccess);
       }
     } on Exception {
       if (context.mounted) {
-        ErrorHandling.showErrorSnackBar(
-          context,
-          l10n.fcmDemoCopyFailure,
-        );
+        ErrorHandling.showErrorSnackBar(context, l10n.fcmDemoCopyFailure);
       }
     }
   }
 }
 
 class _LastMessageSection extends StatelessWidget {
-  const _LastMessageSection({
-    required this.message,
-    required this.l10n,
-  });
+  const new({required this.message, required this.l10n});
 
   final PushMessage? message;
   final AppLocalizations l10n;
@@ -106,31 +85,18 @@ class _LastMessageSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(
-            l10n.fcmDemoLastMessageLabel,
-            style: theme.textTheme.titleSmall,
-          ),
+          Text(l10n.fcmDemoLastMessageLabel, style: theme.textTheme.titleSmall),
           SizedBox(height: context.responsiveGapXS),
           if (msg == null)
-            Text(
-              l10n.fcmDemoLastMessageNone,
-              style: theme.textTheme.bodyMedium,
-            )
+            Text(l10n.fcmDemoLastMessageNone, style: theme.textTheme.bodyMedium)
           else
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 if (hasTitle)
-                  Text(
-                    titleText,
-                    style: theme.textTheme.titleSmall,
-                  ),
-                if (hasBody)
-                  Text(
-                    bodyText,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(titleText, style: theme.textTheme.titleSmall),
+                if (hasBody) Text(bodyText, style: theme.textTheme.bodyMedium),
                 if (hasData)
                   Padding(
                     padding: EdgeInsets.only(top: context.responsiveGapS),

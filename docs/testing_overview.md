@@ -51,6 +51,9 @@ input `coverage/lcov.info`).
 
 ## Test layers
 
+Paths beginning with `test/` or `integration_test/` below are relative to
+`apps/mobile/`. Repository wrappers under `tool/` and `bin/` run from repo root.
+
 | Layer | Scope | Typical location |
 | --- | --- | --- |
 | Unit tests | Pure Dart logic, repositories, services, helpers | `test/**` |
@@ -91,13 +94,19 @@ Chooser and lanes: [`agents_quick_reference.md`](agents_quick_reference.md)
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 Integration env/device: [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md).
 
-```bash
-# Single test file / goldens / approval review
-flutter test test/counter_cubit_test.dart
-flutter test --update-goldens
-# from apps/mobile:
-dart run approval_tests:review
+Run each block from the repository root; subshells preserve that directory.
+Golden updates and approval review are intentional snapshot-maintenance steps.
 
+```bash
+# Single test file
+(cd apps/mobile && flutter test test/counter_cubit_test.dart)
+
+# Update goldens / review approval snapshots when intended
+(cd apps/mobile && flutter test --update-goldens)
+(cd apps/mobile && dart run approval_tests:review)
+```
+
+```bash
 # Coverage-producing unit/bloc/widget lane
 tool/test_coverage.sh
 

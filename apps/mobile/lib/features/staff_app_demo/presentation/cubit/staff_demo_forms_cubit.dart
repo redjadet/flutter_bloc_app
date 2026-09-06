@@ -5,10 +5,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_forms_state.dart';
 
 class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
-  StaffDemoFormsCubit({
-    required this._authRepository,
-    required this._repository,
-  }) : super(const StaffDemoFormsState());
+  new({required this._authRepository, required this._repository})
+    : super(const StaffDemoFormsState());
 
   final AuthRepository _authRepository;
   final StaffDemoFormsRepository _repository;
@@ -35,10 +33,7 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
     }
 
     emit(
-      state.copyWith(
-        status: StaffDemoFormsStatus.submitting,
-        knownError: null,
-      ),
+      state.copyWith(status: StaffDemoFormsStatus.submitting, knownError: null),
     );
     await CubitExceptionHandler.executeAsync<void>(
       operation: () => _repository.submitAvailability(
@@ -102,10 +97,7 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
     }
 
     emit(
-      state.copyWith(
-        status: StaffDemoFormsStatus.submitting,
-        knownError: null,
-      ),
+      state.copyWith(status: StaffDemoFormsStatus.submitting, knownError: null),
     );
     await CubitExceptionHandler.executeAsync<void>(
       operation: () => _repository.submitManagerReport(

@@ -16,27 +16,25 @@ void registerWalletConnectAuthServices() {
     dispose: (service) => service.dispose(),
   );
 
-  registerLazySingletonIfAbsent<WalletConnectAuthRepository>(
-    () {
-      // Try to get Firebase services if available
-      try {
-        final app = Firebase.app();
-        final auth = FirebaseAuth.instanceFor(app: app);
-        final firestore = FirebaseFirestore.instanceFor(app: app);
-        return WalletConnectAuthRepositoryImpl(
-          walletConnectService: getIt<WalletConnectService>(),
-          firebaseAuth: auth,
-          firestore: firestore,
-        );
-      } on Exception {
-        // If Firebase is not available, create a mock implementation
-        // This allows the feature to work in tests or when Firebase is not initialized
-        return _createMockWalletConnectAuthRepository(
-          walletConnectService: getIt<WalletConnectService>(),
-        );
-      }
-    },
-  );
+  registerLazySingletonIfAbsent<WalletConnectAuthRepository>(() {
+    // Try to get Firebase services if available
+    try {
+      final app = Firebase.app();
+      final auth = FirebaseAuth.instanceFor(app: app);
+      final firestore = FirebaseFirestore.instanceFor(app: app);
+      return WalletConnectAuthRepositoryImpl(
+        walletConnectService: getIt<WalletConnectService>(),
+        firebaseAuth: auth,
+        firestore: firestore,
+      );
+    } on Exception {
+      // If Firebase is not available, create a mock implementation
+      // This allows the feature to work in tests or when Firebase is not initialized
+      return _createMockWalletConnectAuthRepository(
+        walletConnectService: getIt<WalletConnectService>(),
+      );
+    }
+  });
 }
 
 /// Creates a mock repository for testing or when Firebase is unavailable.
@@ -48,16 +46,14 @@ WalletConnectAuthRepository _createMockWalletConnectAuthRepository({
 
 /// Mock implementation for testing.
 class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
-  _MockWalletConnectAuthRepository({
-    required this._walletConnectService,
-  });
+  new({required this._walletConnectService});
 
   final WalletConnectService _walletConnectService;
   WalletAddress? _linkedAddress;
 
   @override
   Future<WalletAddress> connectWallet() async {
-    return _walletConnectService.connect();
+    return await _walletConnectService.connect();
   }
 
   @override
@@ -91,7 +87,6 @@ class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
   }
 
   @override
-  Future<WalletUserProfile?> getWalletUserProfile(
-    String walletAddress,
-  ) async => null;
+  Future<WalletUserProfile?> getWalletUserProfile(String walletAddress) async =>
+      null;
 }

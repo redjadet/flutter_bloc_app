@@ -8,11 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Card showing a vocabulary word with tap-to-hear (kid-friendly).
 class WordCard extends StatelessWidget {
-  const WordCard({
-    required this.item,
-    required this.onListen,
-    super.key,
-  });
+  const new({required this.item, required this.onListen, super.key});
 
   final VocabularyItem item;
   final VoidCallback onListen;
@@ -51,12 +47,7 @@ class WordCard extends StatelessWidget {
                       height: compactSize,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(imageRadius),
-                        child: _buildImage(
-                          context,
-                          path,
-                          compactSize,
-                          theme,
-                        ),
+                        child: _buildImage(context, path, compactSize, theme),
                       ),
                     ),
                   ),
@@ -71,12 +62,7 @@ class WordCard extends StatelessWidget {
                   maxLines: 2,
                 ),
                 SizedBox(height: gapM),
-                Align(
-                  child: ListenButton(
-                    onPressed: onListen,
-                    compact: true,
-                  ),
-                ),
+                Align(child: ListenButton(onPressed: onListen, compact: true)),
               ],
             );
           }
@@ -90,12 +76,7 @@ class WordCard extends StatelessWidget {
                     height: size,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(imageRadius),
-                      child: _buildImage(
-                        context,
-                        path,
-                        size,
-                        theme,
-                      ),
+                      child: _buildImage(context, path, size, theme),
                     ),
                   ),
                 ),

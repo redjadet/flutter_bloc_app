@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_li
 import 'package:material_ui/material_ui.dart';
 
 class TodoListItem extends StatelessWidget {
-  const TodoListItem({
+  const new({
     required this.item,
     required this.onEdit,
     required this.onDelete,
@@ -54,11 +54,7 @@ class TodoListItem extends StatelessWidget {
         context.responsiveHorizontalGapM * horizontalScale;
     final double cardVerticalPadding =
         context.responsiveGapXS *
-        density.resolve(
-          regular: 1,
-          compact: 0.5,
-          phoneLandscape: 0.2,
-        );
+        density.resolve(regular: 1, compact: 0.5, phoneLandscape: 0.2);
     final double itemGapS = context.responsiveHorizontalGapS * horizontalScale;
     final TextStyle? titleStyle = theme.textTheme.titleMedium?.copyWith(
       fontSize: titleFontSize,

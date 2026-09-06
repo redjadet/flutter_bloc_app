@@ -61,7 +61,7 @@ Widget _buildBody({
 }
 
 class _AiDecisionWorkbench extends StatelessWidget {
-  const _AiDecisionWorkbench({
+  const new({
     required this.queue,
     required this.operatorNote,
     required this.actionNote,
@@ -155,7 +155,7 @@ class _AiDecisionWorkbench extends StatelessWidget {
 }
 
 class _AiDecisionCaseDetailSection extends StatelessWidget {
-  const _AiDecisionCaseDetailSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +197,7 @@ class _AiDecisionCaseDetailSection extends StatelessWidget {
 }
 
 class _AiDecisionRunButton extends StatelessWidget {
-  const _AiDecisionRunButton({required this.onRunDecisionSupport});
+  const new({required this.onRunDecisionSupport});
 
   final void Function(BuildContext context) onRunDecisionSupport;
 
@@ -231,10 +231,7 @@ class _AiDecisionRunButton extends StatelessWidget {
 }
 
 class _AiDecisionDecisionSection extends StatelessWidget {
-  const _AiDecisionDecisionSection({
-    required this.bandColor,
-    required this.pillBuilder,
-  });
+  const new({required this.bandColor, required this.pillBuilder});
 
   final Color Function(ColorScheme colors, String band) bandColor;
   final Widget Function({
@@ -321,7 +318,7 @@ class _AiDecisionDecisionSection extends StatelessWidget {
 }
 
 class _AiDecisionActionButtons extends StatelessWidget {
-  const _AiDecisionActionButtons({required this.actionNote});
+  const new({required this.actionNote});
 
   final TextEditingController actionNote;
 
@@ -366,7 +363,7 @@ class _AiDecisionActionButtons extends StatelessWidget {
 }
 
 class _AiDecisionActionHistorySection extends StatelessWidget {
-  const _AiDecisionActionHistorySection();
+  const new();
 
   @override
   Widget build(BuildContext context) {

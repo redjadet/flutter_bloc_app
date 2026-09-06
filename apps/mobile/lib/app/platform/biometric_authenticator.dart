@@ -12,7 +12,7 @@ mixin BiometricAuthenticator {
 
 /// Uses the `local_auth` package to request biometric authentication.
 class LocalBiometricAuthenticator implements BiometricAuthenticator {
-  LocalBiometricAuthenticator({LocalAuthentication? localAuth})
+  new({LocalAuthentication? localAuth})
     : _localAuth = localAuth ?? LocalAuthentication();
 
   final LocalAuthentication _localAuth;

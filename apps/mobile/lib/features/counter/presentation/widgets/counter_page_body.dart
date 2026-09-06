@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CounterPageBody extends StatelessWidget {
-  const CounterPageBody({
+  const new({
     required this.theme,
     required this.l10n,
     required this.showFlavorBadge,
@@ -43,7 +43,7 @@ class CounterPageBody extends StatelessWidget {
 }
 
 class _CounterContent extends StatelessWidget {
-  const _CounterContent({
+  const new({
     required this.theme,
     required this.l10n,
     required this.showFlavorBadge,

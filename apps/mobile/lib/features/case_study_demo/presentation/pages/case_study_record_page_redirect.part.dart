@@ -1,7 +1,7 @@
 part of 'case_study_record_page.dart';
 
 class _CaseStudyStepRedirect extends StatefulWidget {
-  const _CaseStudyStepRedirect({required this.targetRouteName});
+  const new({required this.targetRouteName});
 
   final String targetRouteName;
 

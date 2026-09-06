@@ -14,7 +14,7 @@ typedef _AppCheckSlice = ({AppCheckAttestationResult? result, bool busy});
 /// Missing Firebase Console registration is an expected demo state: the card
 /// shows a calm "Setup needed" outcome with Console guidance, not an error.
 class NativeSecurityAppCheckCard extends StatelessWidget {
-  const NativeSecurityAppCheckCard({super.key});
+  const new({super.key});
 
   static const Set<String> _allowedProviderLabels = <String>{
     'debug',
@@ -80,7 +80,7 @@ class NativeSecurityAppCheckCard extends StatelessWidget {
 }
 
 class _AppCheckOutcomePanel extends StatelessWidget {
-  const _AppCheckOutcomePanel({required this.result});
+  const new({required this.result});
 
   final AppCheckAttestationResult? result;
 

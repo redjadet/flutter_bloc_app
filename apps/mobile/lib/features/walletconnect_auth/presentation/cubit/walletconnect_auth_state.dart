@@ -7,7 +7,7 @@ part 'walletconnect_auth_state.freezed.dart';
 
 @freezed
 abstract class WalletConnectAuthState with _$WalletConnectAuthState {
-  const factory WalletConnectAuthState({
+  const factory({
     @Default(ViewStatus.initial) ViewStatus status,
     WalletAddress? walletAddress,
     WalletAddress? linkedWalletAddress,
@@ -15,7 +15,7 @@ abstract class WalletConnectAuthState with _$WalletConnectAuthState {
     String? errorMessage,
   }) = _WalletConnectAuthState;
 
-  const WalletConnectAuthState._();
+  const new _();
 
   /// Whether a wallet is currently connected.
   bool get isConnected => walletAddress != null;

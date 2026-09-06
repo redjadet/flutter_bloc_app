@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CounterActions extends StatelessWidget {
-  const CounterActions({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,7 @@ class CounterActions extends StatelessWidget {
             heroTag: 'fab_increment',
             onPressed: () => context.cubit<CounterCubit>().increment(),
             tooltip: l10n.incrementTooltip,
-            child: Center(
-              child: Icon(Icons.add, size: iconSize),
-            ),
+            child: Center(child: Icon(Icons.add, size: iconSize)),
           ),
         ),
         SizedBox(height: context.responsiveGapM),
@@ -38,9 +36,7 @@ class CounterActions extends StatelessWidget {
             heroTag: 'fab_decrement',
             onPressed: () => context.cubit<CounterCubit>().decrement(),
             tooltip: l10n.decrementTooltip,
-            child: Center(
-              child: Icon(Icons.remove, size: iconSize),
-            ),
+            child: Center(child: Icon(Icons.remove, size: iconSize)),
           ),
         ),
       ],

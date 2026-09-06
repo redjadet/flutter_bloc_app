@@ -5,10 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcasePlatformSummaryCard extends StatelessWidget {
-  const NativePlatformShowcasePlatformSummaryCard({
-    required this.platform,
-    super.key,
-  });
+  const new({required this.platform, super.key});
 
   final AppPlatformKind platform;
 

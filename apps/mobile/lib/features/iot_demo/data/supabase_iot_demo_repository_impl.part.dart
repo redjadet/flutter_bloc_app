@@ -6,12 +6,9 @@ part of 'supabase_iot_demo_repository.dart';
 /// and commands via updates. When Supabase is not configured, throws or
 /// returns empty; used by the offline-first repository for pull and sync.
 class SupabaseIotDemoRepository implements IotDemoRepository {
-  SupabaseIotDemoRepository({
+  new({
     Future<Object?> Function(IotDemoDeviceFilter filter)? fetchRows,
-    Future<void> Function(
-      String deviceId,
-      Map<String, dynamic> updates,
-    )?
+    Future<void> Function(String deviceId, Map<String, dynamic> updates)?
     updateDevice,
     Future<void> Function(Map<String, dynamic> payload)? insertDevice,
     Future<Object?> Function(String deviceId)? fetchToggleState,
@@ -28,10 +25,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       'id,name,type,last_seen,connection_state,toggled_on,value';
 
   final Future<Object?> Function(IotDemoDeviceFilter filter) _fetchRows;
-  final Future<void> Function(
-    String deviceId,
-    Map<String, dynamic> updates,
-  )
+  final Future<void> Function(String deviceId, Map<String, dynamic> updates)
   _updateDevice;
   final Future<void> Function(Map<String, dynamic> payload) _insertDevice;
   final Future<Object?> Function(String deviceId) _fetchToggleState;
@@ -91,9 +85,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   @override
   Future<void> connect(String deviceId) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
-      throw StateError(
-        'Supabase is not configured (missing URL or anon key).',
-      );
+      throw StateError('Supabase is not configured (missing URL or anon key).');
     }
     final String now = DateTime.now().toUtc().toIso8601String();
     await _updateDevice(deviceId, <String, dynamic>{
@@ -106,9 +98,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   @override
   Future<void> disconnect(String deviceId) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
-      throw StateError(
-        'Supabase is not configured (missing URL or anon key).',
-      );
+      throw StateError('Supabase is not configured (missing URL or anon key).');
     }
     final String now = DateTime.now().toUtc().toIso8601String();
     await _updateDevice(deviceId, <String, dynamic>{
@@ -128,9 +118,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       );
     }
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
-      throw StateError(
-        'Supabase is not configured (missing URL or anon key).',
-      );
+      throw StateError('Supabase is not configured (missing URL or anon key).');
     }
     final String? userId = _readCurrentUserId();
     if (userId == null || userId.isEmpty) {
@@ -170,14 +158,9 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> sendCommand(
-    String deviceId,
-    IotDeviceCommand command,
-  ) async {
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
-      throw StateError(
-        'Supabase is not configured (missing URL or anon key).',
-      );
+      throw StateError('Supabase is not configured (missing URL or anon key).');
     }
     final String now = DateTime.now().toUtc().toIso8601String();
     final Map<String, dynamic> updates = <String, dynamic>{
@@ -270,29 +253,25 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     _ => null,
   };
 
-  static Future<Object?> _defaultFetchRows(
-    IotDemoDeviceFilter filter,
-  ) async {
+  static Future<Object?> _defaultFetchRows(IotDemoDeviceFilter filter) async {
     if (filter == IotDemoDeviceFilter.toggledOnOnly) {
-      return Supabase.instance.client
+      return await Supabase.instance.client
           .from(_table)
           .select(_selectColumns)
           .eq('toggled_on', true)
           .order('id');
     }
     if (filter == IotDemoDeviceFilter.toggledOffOnly) {
-      return Supabase.instance.client
+      return await Supabase.instance.client
           .from(_table)
           .select(_selectColumns)
           .eq('toggled_on', false)
           .order('id');
     }
-    return Supabase.instance.client
+    return await Supabase.instance.client
         .from(_table)
         .select(_selectColumns)
-        .order(
-          'id',
-        );
+        .order('id');
   }
 
   static Future<void> _defaultUpdateDevice(

@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Bar of batch actions (complete, uncomplete, delete) for selected todo items.
 class TodoBatchActionsBar extends StatelessWidget {
-  const TodoBatchActionsBar({
+  const new({
     required this.items,
     required this.filteredItems,
     required this.selectedItemIds,

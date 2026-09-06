@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Application-wide constants
 class AppConstants {
-  AppConstants._();
+  new _();
 
   // Colors
   static const Color primarySeedColor = Color(0xFF6750A4);

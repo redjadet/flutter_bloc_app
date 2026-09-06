@@ -32,7 +32,7 @@ class SocialFeedCubit extends _SocialFeedCubitBase
         _SocialFeedCubitMutations,
         _SocialFeedCubitLeases,
         _SocialFeedCubitPaging {
-  SocialFeedCubit({
+  new({
     required super.repository,
     required super.realtimeSource,
     required super.scenario,
@@ -45,9 +45,7 @@ class SocialFeedCubit extends _SocialFeedCubitBase
 
   Future<void> setSimulatedOnline({required bool online}) async {
     _scenario.setSimulatedOnline(online: online);
-    _emitReadyPatch(
-      (data) => data.copyWith(isSimulatedOffline: !online),
-    );
+    _emitReadyPatch((data) => data.copyWith(isSimulatedOffline: !online));
     if (online) {
       await refresh();
     }
@@ -57,13 +55,13 @@ class SocialFeedCubit extends _SocialFeedCubitBase
   Future<void> close() async {
     ++_generation;
     await _closeLeases();
-    return super.close();
+    return await super.close();
   }
 }
 
 class _SocialFeedCubitBase extends Cubit<SocialFeedState>
     with CubitSubscriptionMixin<SocialFeedState> {
-  _SocialFeedCubitBase({
+  new({
     required SocialFeedRepository repository,
     required SocialFeedRealtimeSource realtimeSource,
     required SocialFeedScenarioController scenario,

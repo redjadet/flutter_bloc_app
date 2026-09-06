@@ -3,9 +3,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_
 
 class ChatRenderOrchestrationDiagnosticsAdapter
     implements ChatRenderOrchestrationDiagnosticsPort {
-  ChatRenderOrchestrationDiagnosticsAdapter({
-    required this._isFirebaseAuthRegistered,
-  });
+  new({required this._isFirebaseAuthRegistered});
 
   final bool Function() _isFirebaseAuthRegistered;
 

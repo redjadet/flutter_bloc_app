@@ -1,13 +1,15 @@
 /// Week calendar helpers for staff demo availability forms.
 class StaffDemoWeekCalendar {
-  const StaffDemoWeekCalendar._();
+  const new _();
 
   static DateTime weekStartUtc([DateTime? now]) {
     final DateTime utc = (now ?? DateTime.now()).toUtc();
     final int weekday = utc.weekday; // Mon=1..Sun=7
-    return DateTime.utc(utc.year, utc.month, utc.day).subtract(
-      Duration(days: weekday - 1),
-    );
+    return DateTime.utc(
+      utc.year,
+      utc.month,
+      utc.day,
+    ).subtract(Duration(days: weekday - 1));
   }
 
   static List<DateTime> weekDaysUtc(DateTime weekStartUtc) =>

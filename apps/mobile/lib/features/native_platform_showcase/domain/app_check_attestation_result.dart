@@ -9,7 +9,7 @@ enum AppCheckAttestationStatus { issued, unavailable, failed }
 /// Never carries the token string itself — client-side evidence only.
 @freezed
 abstract class AppCheckAttestationResult with _$AppCheckAttestationResult {
-  const factory AppCheckAttestationResult({
+  const factory({
     required AppCheckAttestationStatus status,
     required String providerLabel,
     required String reasonCode,

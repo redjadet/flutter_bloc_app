@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Card shell for one Event Bus listener panel in the demo.
 class EventBusDemoListenerCard extends StatelessWidget {
-  const EventBusDemoListenerCard({
+  const new({
     required this.title,
     required this.icon,
     required this.child,
@@ -28,10 +28,7 @@ class EventBusDemoListenerCard extends StatelessWidget {
                 Icon(icon, color: theme.colorScheme.primary),
                 SizedBox(width: context.responsiveGapS),
                 Expanded(
-                  child: Text(
-                    title,
-                    style: theme.textTheme.titleMedium,
-                  ),
+                  child: Text(title, style: theme.textTheme.titleMedium),
                 ),
               ],
             ),

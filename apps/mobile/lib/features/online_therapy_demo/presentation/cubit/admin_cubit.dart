@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_admin_repository.dart';
 
 class AdminState {
-  const AdminState({
+  const new({
     required this.isBusy,
     required this.pendingTherapists,
     required this.auditEvents,
@@ -31,16 +31,14 @@ class AdminState {
 }
 
 class AdminCubit extends Cubit<AdminState> {
-  AdminCubit({
-    required this._admin,
-    required this._audit,
-  }) : super(
-         const AdminState(
-           isBusy: false,
-           pendingTherapists: <TherapistProfile>[],
-           auditEvents: <AuditEvent>[],
-         ),
-       );
+  new({required this._admin, required this._audit})
+    : super(
+        const AdminState(
+          isBusy: false,
+          pendingTherapists: <TherapistProfile>[],
+          auditEvents: <AuditEvent>[],
+        ),
+      );
 
   final TherapyAdminRepository _admin;
   final AuditRepository _audit;

@@ -2,10 +2,7 @@ part of 'iot_demo_page_body.dart';
 
 /// Actions panel for the currently selected device.
 class IotDemoSelectedDeviceActions extends StatelessWidget {
-  const IotDemoSelectedDeviceActions({
-    required this.device,
-    super.key,
-  });
+  const new({required this.device, super.key});
 
   final IotDevice device;
 
@@ -62,10 +59,7 @@ class IotDemoSelectedDeviceActions extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text(
-          device.name,
-          style: theme.textTheme.titleMedium,
-        ),
+        Text(device.name, style: theme.textTheme.titleMedium),
         SizedBox(height: context.responsiveGapS),
         Text(
           iotDemoConnectionStateLabel(device.connectionState, l10n),
@@ -142,7 +136,7 @@ class IotDemoSelectedDeviceActions extends StatelessWidget {
 
 /// A single device row in the IoT demo list.
 class IotDemoDeviceTile extends StatelessWidget {
-  const IotDemoDeviceTile({
+  const new({
     required this.device,
     required this.isSelected,
     required this.connectionLabel,

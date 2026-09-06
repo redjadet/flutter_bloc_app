@@ -7,19 +7,17 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
 import 'package:storage/storage.dart';
 
 class ChatSyncStatusState {
-  const ChatSyncStatusState({this.pendingCount = 0});
+  const new({this.pendingCount = 0});
 
   final int pendingCount;
 
-  ChatSyncStatusState copyWith({int? pendingCount}) => ChatSyncStatusState(
-    pendingCount: pendingCount ?? this.pendingCount,
-  );
+  ChatSyncStatusState copyWith({int? pendingCount}) =>
+      ChatSyncStatusState(pendingCount: pendingCount ?? this.pendingCount);
 }
 
 /// Route-scoped cubit exposing pending chat sync queue depth for banner UI.
 class ChatSyncStatusCubit extends Cubit<ChatSyncStatusState> {
-  ChatSyncStatusCubit({required this.pendingRepository})
-    : super(const ChatSyncStatusState()) {
+  new({required this.pendingRepository}) : super(const ChatSyncStatusState()) {
     _enqueueSubscription = pendingRepository.onOperationEnqueued.listen(
       (_) {
         unawaited(refresh());
@@ -40,16 +38,14 @@ class ChatSyncStatusCubit extends Cubit<ChatSyncStatusState> {
   @override
   Future<void> close() async {
     await _enqueueSubscription?.cancel();
-    return super.close();
+    return await super.close();
   }
 
   Future<void> refresh() async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
         final List<SyncOperation> operations = await pendingRepository
-            .getPendingOperations(
-              now: DateTime.now().toUtc(),
-            );
+            .getPendingOperations(now: DateTime.now().toUtc());
         final int chatPending = operations
             .where((op) => op.entityType == chatSyncEntityType)
             .length;

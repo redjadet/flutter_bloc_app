@@ -6,7 +6,7 @@ import 'package:mix/mix.dart';
 
 /// Online-only chip: which remote path chat used or would use for the badge row.
 class ChatTransportBadge extends StatelessWidget {
-  const ChatTransportBadge({
+  const new({
     required this.transport,
     this.renderDemoStrict = false,
     super.key,
@@ -73,10 +73,7 @@ class ChatTransportBadge extends StatelessWidget {
 
     return Semantics(
       label: semanticsLabel,
-      child: Tooltip(
-        message: semanticsLabel,
-        child: chipCore,
-      ),
+      child: Tooltip(message: semanticsLabel, child: chipCore),
     );
   }
 }

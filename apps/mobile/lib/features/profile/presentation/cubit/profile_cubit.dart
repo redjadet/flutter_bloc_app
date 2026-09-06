@@ -8,8 +8,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_sta
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit({required this._repository})
-    : super(const ProfileState.initial());
+  new({required this._repository}) : super(const ProfileState.initial());
 
   final ProfileRepository _repository;
   final RequestIdGuard _loadGuard = RequestIdGuard();
@@ -29,11 +28,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
       onError: (errorMessage) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        emit(
-          ProfileState.error(
-            ProfileFailure.load(message: errorMessage),
-          ),
-        );
+        emit(ProfileState.error(ProfileFailure.load(message: errorMessage)));
       },
       logContext: 'ProfileCubit.loadProfile',
     );

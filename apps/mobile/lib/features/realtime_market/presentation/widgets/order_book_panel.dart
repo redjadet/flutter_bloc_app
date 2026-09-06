@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OrderBookPanel extends StatelessWidget {
-  const OrderBookPanel({
+  const new({
     required this.bids,
     required this.asks,
     required this.l10n,

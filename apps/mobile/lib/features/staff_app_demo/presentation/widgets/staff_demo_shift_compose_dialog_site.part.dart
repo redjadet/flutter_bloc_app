@@ -1,10 +1,7 @@
 part of 'staff_demo_shift_compose_dialog.dart';
 
 class _ShiftComposeSiteDropdown extends StatelessWidget {
-  const _ShiftComposeSiteDropdown({
-    required this.selectedSiteId,
-    required this.onChanged,
-  });
+  const new({required this.selectedSiteId, required this.onChanged});
 
   final String? selectedSiteId;
   final ValueChanged<String?> onChanged;

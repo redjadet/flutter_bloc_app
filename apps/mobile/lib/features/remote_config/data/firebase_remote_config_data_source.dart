@@ -8,10 +8,8 @@ import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_rem
 import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
-  FirebaseRemoteConfigDataSource(
-    this._remoteConfig, {
-    void Function(String message)? debugLogger,
-  }) : _logDebug = debugLogger ?? AppLogger.debug;
+  new(this._remoteConfig, {void Function(String message)? debugLogger})
+    : _logDebug = debugLogger ?? AppLogger.debug;
 
   static const Duration _fetchTimeout = Duration(minutes: 1);
   static const Duration _minimumFetchInterval = Duration(hours: 1);
@@ -40,21 +38,19 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
         minimumFetchInterval: _minimumFetchInterval,
       ),
     );
-    await _remoteConfig.setDefaults(
-      const <String, dynamic>{
-        RemoteConfigKeys.awesomeFeatureEnabled: false,
-        RemoteConfigKeys.testValue1: '',
-        RemoteConfigKeys.supabaseUrl: '',
-        RemoteConfigKeys.supabaseAnonKey: '',
-        RemoteConfigKeys.supabaseConfigVersion: 1,
-        // Default to enabled so missing console wiring doesn't brick config.
-        // Remote disable is still supported by setting the key to false.
-        RemoteConfigKeys.supabaseConfigEnabled: true,
-        RemoteConfigKeys.renderChatDemoHfReadToken: '',
-        RemoteConfigKeys.productionDemoEnabled: true,
-        RemoteConfigKeys.productionDemoVariant: 'control',
-      },
-    );
+    await _remoteConfig.setDefaults(const <String, dynamic>{
+      RemoteConfigKeys.awesomeFeatureEnabled: false,
+      RemoteConfigKeys.testValue1: '',
+      RemoteConfigKeys.supabaseUrl: '',
+      RemoteConfigKeys.supabaseAnonKey: '',
+      RemoteConfigKeys.supabaseConfigVersion: 1,
+      // Default to enabled so missing console wiring doesn't brick config.
+      // Remote disable is still supported by setting the key to false.
+      RemoteConfigKeys.supabaseConfigEnabled: true,
+      RemoteConfigKeys.renderChatDemoHfReadToken: '',
+      RemoteConfigKeys.productionDemoEnabled: true,
+      RemoteConfigKeys.productionDemoVariant: 'control',
+    });
 
     _subscribeToRealtimeUpdates();
   }
@@ -173,9 +169,7 @@ class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
 
   void _logTestValue({required String source}) {
     final String value = _remoteConfig.getString(RemoteConfigKeys.testValue1);
-    _logDebug(
-      'RemoteConfig[$source] ${RemoteConfigKeys.testValue1}="$value"',
-    );
+    _logDebug('RemoteConfig[$source] ${RemoteConfigKeys.testValue1}="$value"');
   }
 
   void _logAwesomeFeatureFlag({required String source}) {

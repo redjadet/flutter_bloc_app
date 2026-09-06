@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 /// Requests platform BLE runtime permissions when FRB reports unauthorized.
 class BlePermissionGatewayImpl implements BlePermissionGateway {
-  const BlePermissionGatewayImpl({this.androidSdkIntProvider});
+  const new({this.androidSdkIntProvider});
 
   final Future<int> Function()? androidSdkIntProvider;
 
@@ -17,10 +17,10 @@ class BlePermissionGatewayImpl implements BlePermissionGateway {
       return false;
     }
     if (Platform.isIOS) {
-      return _requestIos();
+      return await _requestIos();
     }
     if (Platform.isAndroid) {
-      return _requestAndroid();
+      return await _requestAndroid();
     }
     return false;
   }
@@ -52,7 +52,7 @@ class BlePermissionGatewayImpl implements BlePermissionGateway {
   Future<int> _androidSdkInt() async {
     final provider = androidSdkIntProvider;
     if (provider != null) {
-      return provider();
+      return await provider();
     }
     final AndroidDeviceInfo info = await DeviceInfoPlugin().androidInfo;
     return info.version.sdkInt;

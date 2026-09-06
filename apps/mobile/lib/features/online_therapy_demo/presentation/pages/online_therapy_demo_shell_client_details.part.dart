@@ -1,7 +1,7 @@
 part of 'online_therapy_demo_shell_page.dart';
 
 class _TherapistDetails extends StatelessWidget {
-  const _TherapistDetails({
+  const new({
     required this.therapist,
     required this.availability,
     required this.appointments,

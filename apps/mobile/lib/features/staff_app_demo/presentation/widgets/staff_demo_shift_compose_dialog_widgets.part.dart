@@ -1,10 +1,7 @@
 part of 'staff_demo_shift_compose_dialog.dart';
 
 class _StaffDemoShiftComposeDialog extends StatefulWidget {
-  const _StaffDemoShiftComposeDialog({
-    required this.staffFuture,
-    required this.defaultBodyText,
-  });
+  const new({required this.staffFuture, required this.defaultBodyText});
 
   final Future<List<StaffDemoProfile>> staffFuture;
   final String defaultBodyText;

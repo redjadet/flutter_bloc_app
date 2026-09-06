@@ -19,11 +19,9 @@ part 'flutter_in_app_purchase_repository_purchases.part.dart';
 /// - Consumable credits are persisted locally (demo UX) via [IapDemoCreditsStore].
 class FlutterInAppPurchaseRepository
     implements InAppPurchaseRepository, IapDemoControlsPort {
-  FlutterInAppPurchaseRepository({
-    InAppPurchase? store,
-    IapDemoCreditsStore? creditsStore,
-  }) : _store = store ?? InAppPurchase.instance,
-       _creditsStore = creditsStore ?? InMemoryIapDemoCreditsStore();
+  new({InAppPurchase? store, IapDemoCreditsStore? creditsStore})
+    : _store = store ?? InAppPurchase.instance,
+      _creditsStore = creditsStore ?? InMemoryIapDemoCreditsStore();
 
   final InAppPurchase _store;
   final IapDemoCreditsStore _creditsStore;
@@ -139,9 +137,7 @@ class FlutterInAppPurchaseRepository
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: details);
     switch (product.type) {
       case IapProductType.consumable:
-        await _store.buyConsumable(
-          purchaseParam: purchaseParam,
-        );
+        await _store.buyConsumable(purchaseParam: purchaseParam);
         break;
       case IapProductType.nonConsumable:
         await _store.buyNonConsumable(purchaseParam: purchaseParam);

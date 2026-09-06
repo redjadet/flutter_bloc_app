@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 /// Navigation helpers shared across presentation layer widgets.
 class NavigationUtils {
-  const NavigationUtils._();
+  const new _();
 
   /// Attempts to pop the current route.
   /// Returns true if a route was popped, false otherwise.

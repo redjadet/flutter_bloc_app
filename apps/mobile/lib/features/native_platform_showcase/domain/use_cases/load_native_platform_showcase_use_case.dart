@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platfo
 
 /// Loads the educational showcase catalog plus live native interop results.
 class LoadNativePlatformShowcaseUseCase {
-  LoadNativePlatformShowcaseUseCase(this._repository);
+  new(this._repository);
 
   final NativePlatformInfoRepository _repository;
 

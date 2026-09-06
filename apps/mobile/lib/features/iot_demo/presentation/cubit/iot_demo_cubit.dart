@@ -17,9 +17,7 @@ part 'iot_demo_cubit_devices.part.dart';
 /// Cubit for the IoT demo: list devices, connect, disconnect, send commands.
 class IotDemoCubit extends Cubit<IotDemoState>
     with CubitSubscriptionMixin<IotDemoState> {
-  IotDemoCubit({
-    required this._repository,
-  }) : super(const IotDemoState.initial());
+  new({required this._repository}) : super(const IotDemoState.initial());
 
   final IotDemoRepository _repository;
   // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin.
@@ -27,10 +25,7 @@ class IotDemoCubit extends Cubit<IotDemoState>
   int _devicesWatchRequestId = 0;
   List<IotDevice> _allDevices = const <IotDevice>[];
 
-  void _emitError(
-    IotDemoErrorCode code, {
-    String? detail,
-  }) {
+  void _emitError(IotDemoErrorCode code, {String? detail}) {
     if (isClosed) return;
     emit(IotDemoState.error(code: code, detail: detail));
   }
@@ -98,10 +93,7 @@ class IotDemoCubit extends Cubit<IotDemoState>
     );
   }
 
-  Future<void> sendCommand(
-    String deviceId,
-    IotDeviceCommand command,
-  ) async {
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.sendCommand(deviceId, command),
       isAlive: () => !isClosed,

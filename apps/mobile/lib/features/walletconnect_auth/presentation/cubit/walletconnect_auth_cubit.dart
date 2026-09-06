@@ -11,10 +11,8 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 /// Cubit managing WalletConnect authentication state.
 class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
-  WalletConnectAuthCubit({
-    required this._repository,
-    this._l10n,
-  }) : super(const WalletConnectAuthState());
+  new({required this._repository, this._l10n})
+    : super(const WalletConnectAuthState());
 
   final WalletConnectAuthRepository _repository;
   final AppLocalizations? _l10n;
@@ -35,17 +33,11 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
       operation: () async {
         final address = await _repository.connectWallet();
         _emitSuccess(
-          state.copyWith(
-            walletAddress: address,
-            errorMessage: null,
-          ),
+          state.copyWith(walletAddress: address, errorMessage: null),
         );
       },
       onError: (message) {
-        _emitError(
-          message,
-          nextState: state.copyWith(walletAddress: null),
-        );
+        _emitError(message, nextState: state.copyWith(walletAddress: null));
       },
     );
   }
@@ -179,7 +171,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
     if (linkedAddress == null) {
       return null;
     }
-    return _repository.getWalletUserProfile(linkedAddress.value);
+    return await _repository.getWalletUserProfile(linkedAddress.value);
   }
 
   void _emitSuccess(WalletConnectAuthState nextState) {
@@ -187,10 +179,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
     emit(nextState.copyWith(status: ViewStatus.success));
   }
 
-  void _emitError(
-    String message, {
-    WalletConnectAuthState? nextState,
-  }) {
+  void _emitError(String message, {WalletConnectAuthState? nextState}) {
     if (isClosed) return;
     emit(
       (nextState ?? state).copyWith(

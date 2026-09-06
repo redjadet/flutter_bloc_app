@@ -11,11 +11,11 @@ enum NativePlatformShowcaseAction { haptic, share }
 
 @freezed
 abstract class NativePlatformShowcaseState with _$NativePlatformShowcaseState {
-  const factory NativePlatformShowcaseState.initial() = _Initial;
+  const factory initial() = _Initial;
 
-  const factory NativePlatformShowcaseState.loading() = _Loading;
+  const factory loading() = _Loading;
 
-  const factory NativePlatformShowcaseState.loaded(
+  const factory loaded(
     PlatformShowcaseData data, {
     NativeShowcaseTelemetrySnapshot? telemetry,
     NativePlatformShowcaseAction? lastAction,
@@ -23,7 +23,6 @@ abstract class NativePlatformShowcaseState with _$NativePlatformShowcaseState {
     NativePlatformShowcaseAction? actionInFlight,
   }) = _Loaded;
 
-  const factory NativePlatformShowcaseState.error({
-    required NativePlatformShowcaseFailureKind failure,
-  }) = _Error;
+  const factory error({required NativePlatformShowcaseFailureKind failure}) =
+      _Error;
 }

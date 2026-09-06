@@ -7,7 +7,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SearchTextField extends StatefulWidget {
-  const SearchTextField({super.key});
+  const new({super.key});
 
   @override
   State<SearchTextField> createState() => _SearchTextFieldState();
@@ -94,10 +94,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: colors.surface,
-                  border: Border.all(
-                    color: colors.onSurface,
-                    width: 2,
-                  ),
+                  border: Border.all(color: colors.onSurface, width: 2),
                   borderRadius: borderRadius,
                 ),
                 child: Padding(

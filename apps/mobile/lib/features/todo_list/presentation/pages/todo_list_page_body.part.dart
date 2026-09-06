@@ -2,7 +2,7 @@ part of 'todo_list_page.dart';
 
 @immutable
 class _TodoHeaderLayout {
-  const _TodoHeaderLayout({
+  const new({
     required this.gapM,
     required this.gapS,
     required this.showCompactHeader,
@@ -14,7 +14,7 @@ class _TodoHeaderLayout {
     required this.showAddButton,
   });
 
-  factory _TodoHeaderLayout.resolve({
+  factory resolve({
     required BuildContext context,
     required TodoListListProjection listData,
     required List<TodoItem> filteredItems,

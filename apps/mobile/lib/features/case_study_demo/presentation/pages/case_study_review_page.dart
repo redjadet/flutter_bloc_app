@@ -16,7 +16,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class CaseStudyReviewPage extends StatelessWidget {
-  const CaseStudyReviewPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +196,7 @@ class CaseStudyReviewPage extends StatelessWidget {
 }
 
 class _CaseStudyStepRedirect extends StatefulWidget {
-  const _CaseStudyStepRedirect({required this.targetRouteName});
+  const new({required this.targetRouteName});
 
   final String targetRouteName;
 

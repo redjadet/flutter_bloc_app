@@ -3,10 +3,7 @@ import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:material_ui/material_ui.dart';
 
 class BackendDisabledBanner extends StatelessWidget {
-  const BackendDisabledBanner({
-    required this.visible,
-    super.key,
-  });
+  const new({required this.visible, super.key});
 
   final bool visible;
 
@@ -30,10 +27,7 @@ class BackendDisabledBanner extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Icon(
-              Icons.cloud_off,
-              color: colors.onSurface,
-            ),
+            Icon(Icons.cloud_off, color: colors.onSurface),
             SizedBox(width: context.responsiveGapS),
             Expanded(
               child: Column(

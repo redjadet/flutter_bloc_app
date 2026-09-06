@@ -1,7 +1,7 @@
 part of 'case_study_history_detail_page.dart';
 
 class CaseStudyHistoryDetailPage extends StatelessWidget {
-  const CaseStudyHistoryDetailPage({super.key});
+  const new({super.key});
 
   Future<bool> _confirmDelete(BuildContext context) async {
     final l10n = context.l10n;
@@ -128,9 +128,9 @@ class CaseStudyHistoryDetailPage extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.surfaceContainerHighest,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Padding(
@@ -141,17 +141,17 @@ class CaseStudyHistoryDetailPage extends StatelessWidget {
                                   Icon(
                                     Icons.schedule,
                                     size: 22,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary,
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       l10n.caseStudySignedUrlsRefreshHint,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
                                     ),
                                   ),
                                 ],

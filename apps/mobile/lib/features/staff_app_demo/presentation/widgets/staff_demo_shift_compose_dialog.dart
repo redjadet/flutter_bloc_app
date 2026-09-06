@@ -12,11 +12,7 @@ part 'staff_demo_shift_compose_dialog_widgets.part.dart';
 
 /// Values collected when the user confirms shift assignment in the compose dialog.
 class _StaffDemoShiftComposeResult {
-  const _StaffDemoShiftComposeResult({
-    required this.toUserId,
-    required this.body,
-    required this.siteId,
-  });
+  const new({required this.toUserId, required this.body, required this.siteId});
 
   final String toUserId;
   final String body;
@@ -24,9 +20,7 @@ class _StaffDemoShiftComposeResult {
 }
 
 /// Manager/accountant shift assignment compose flow (Firestore-backed demo).
-Future<void> showStaffDemoShiftComposeDialog(
-  BuildContext context,
-) async {
+Future<void> showStaffDemoShiftComposeDialog(BuildContext context) async {
   final l10n = context.l10n;
   final StaffDemoMessagesCubit messagesCubit = context
       .cubit<StaffDemoMessagesCubit>();

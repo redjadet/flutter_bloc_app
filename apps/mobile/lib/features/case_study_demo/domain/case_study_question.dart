@@ -3,7 +3,7 @@ typedef CaseStudyQuestionId = String;
 
 /// Canonical question ordering for the dentist case-study demo.
 class CaseStudyQuestions {
-  CaseStudyQuestions._();
+  new _();
 
   static const List<CaseStudyQuestionId> orderedIds = <CaseStudyQuestionId>[
     'q1',
@@ -20,9 +20,7 @@ class CaseStudyQuestions {
 
   static Set<CaseStudyQuestionId> get idSet => orderedIds.toSet();
 
-  static bool isCompleteAnswers(
-    Map<CaseStudyQuestionId, String> answers,
-  ) {
+  static bool isCompleteAnswers(Map<CaseStudyQuestionId, String> answers) {
     if (answers.length != orderedIds.length) return false;
     for (final CaseStudyQuestionId id in orderedIds) {
       final String? p = answers[id];

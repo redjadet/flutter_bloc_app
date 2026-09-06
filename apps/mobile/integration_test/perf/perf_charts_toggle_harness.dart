@@ -7,10 +7,7 @@ typedef ZoomChildBuilder = Widget Function(
 });
 
 class MinimalChartToggleHarness extends StatefulWidget {
-  const MinimalChartToggleHarness({
-    required this.childBuilder,
-    super.key,
-  });
+  const new({required this.childBuilder, super.key});
 
   final ZoomChildBuilder childBuilder;
 
@@ -85,25 +82,15 @@ Widget buildPlaceholderNoInteractiveViewer(
   ),
 );
 
-Widget buildConstantChild(
-  BuildContext context, {
-  required bool zoomEnabled,
-}) => const SizedBox.expand();
+Widget buildConstantChild(BuildContext context, {required bool zoomEnabled}) =>
+    const SizedBox.expand();
 
 class BareLineChart extends StatelessWidget {
-  const BareLineChart({
-    required this.data,
-    super.key,
-  });
+  const new({required this.data, super.key});
 
   final LineChartData data;
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: SizedBox(
-      width: 320,
-      height: 220,
-      child: LineChart(data),
-    ),
-  );
+  Widget build(BuildContext context) =>
+      Center(child: SizedBox(width: 320, height: 220, child: LineChart(data)));
 }

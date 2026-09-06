@@ -10,16 +10,13 @@ part 'supabase_auth_repository_impl.part.dart';
 
 /// Supabase implementation of [SupabaseAuthRepository].
 class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
-  SupabaseAuthRepositoryImpl({
+  new({
     this._isConfiguredOverride,
     this.tokenRepository,
     User? Function()? readCurrentUser,
     String? Function()? readCurrentAccessToken,
     Stream<AuthState> Function()? authStateChangesStream,
-    Future<void> Function({
-      required String email,
-      required String password,
-    })?
+    Future<void> Function({required String email, required String password})?
     signInWithPasswordImpl,
     Future<void> Function({
       required String email,

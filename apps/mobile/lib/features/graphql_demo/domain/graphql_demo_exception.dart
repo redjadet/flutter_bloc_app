@@ -1,11 +1,7 @@
 enum GraphqlDemoErrorType { network, invalidRequest, server, data, unknown }
 
 class GraphqlDemoException implements Exception {
-  GraphqlDemoException(
-    this.message, {
-    this.cause,
-    this.type = GraphqlDemoErrorType.unknown,
-  });
+  new(this.message, {this.cause, this.type = GraphqlDemoErrorType.unknown});
 
   final String message;
   final Object? cause;

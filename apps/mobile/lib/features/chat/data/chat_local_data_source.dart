@@ -11,7 +11,7 @@ import 'package:storage/storage.dart';
 /// and queue pending sends while offline.
 class ChatLocalDataSource extends HiveRepositoryBase
     implements ChatHistoryRepository {
-  ChatLocalDataSource({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'chat_history';
   static const String _keyConversations = 'conversations';
@@ -20,19 +20,19 @@ class ChatLocalDataSource extends HiveRepositoryBase
   String get boxName => _boxName;
 
   @override
-  Future<List<ChatConversation>> load() async =>
+  Future<List<ChatConversation>> load() =>
       StorageGuard.run<List<ChatConversation>>(
         logContext: 'ChatLocalDataSource.load',
         action: () async {
           final Box<dynamic> box = await getBox();
           final dynamic raw = box.get(_keyConversations);
-          return _parseStored(raw);
+          return await _parseStored(raw);
         },
         fallback: () => const <ChatConversation>[],
       );
 
   @override
-  Future<void> save(List<ChatConversation> conversations) async =>
+  Future<void> save(List<ChatConversation> conversations) =>
       StorageGuard.run<void>(
         logContext: 'ChatLocalDataSource.save',
         action: () async {

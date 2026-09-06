@@ -1,7 +1,7 @@
 part of 'test_harness.dart';
 
 class _FakeBiometricAuthenticator implements BiometricAuthenticator {
-  _FakeBiometricAuthenticator({required this._result});
+  new({required this._result});
 
   final bool _result;
 
@@ -16,8 +16,7 @@ class _FakeAppInfoRepository implements AppInfoRepository {
 }
 
 class _FixedLocaleRepository implements LocaleRepository {
-  _FixedLocaleRepository({required AppLocale? initialLocale})
-    : _locale = initialLocale;
+  new({required AppLocale? initialLocale}) : _locale = initialLocale;
 
   AppLocale? _locale;
 
@@ -31,7 +30,7 @@ class _FixedLocaleRepository implements LocaleRepository {
 }
 
 class _FakeChartRepository extends ChartRepository {
-  const _FakeChartRepository();
+  const new();
 
   static final List<ChartPoint> _points = <ChartPoint>[
     ChartPoint(date: DateTime.utc(2026), value: 42000),
@@ -57,7 +56,7 @@ Future<void> _overrideChartRepository() async {
 }
 
 class _FakeGraphqlDemoRepository implements GraphqlDemoRepository {
-  const _FakeGraphqlDemoRepository();
+  const new();
 
   static const List<GraphqlContinent> _continents = <GraphqlContinent>[
     GraphqlContinent(code: 'EU', name: 'Europe'),
@@ -90,9 +89,7 @@ class _FakeGraphqlDemoRepository implements GraphqlDemoRepository {
   Future<List<GraphqlContinent>> fetchContinents() async => _continents;
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  }) async {
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
     if (continentCode == null) {
       return _countries;
     }
@@ -117,7 +114,7 @@ Future<void> _overrideGraphqlRepository({
 /// Deterministic camera/gallery demo for integration: gallery returns a tiny
 /// PNG data URL; processing uses the real on-device service.
 class _FakeCameraGalleryRepository implements CameraGalleryRepository {
-  const _FakeCameraGalleryRepository();
+  const new();
 
   static const ImageProcessingCameraGalleryService _processingService =
       ImageProcessingCameraGalleryService();

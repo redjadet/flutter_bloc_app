@@ -21,11 +21,7 @@ import 'package:material_ui/material_ui.dart';
 /// from the sync-diagnostics port directly. Otherwise the widget expects
 /// [CounterCubit] in the tree (counter page).
 class CounterSyncQueueInspectorButton extends StatefulWidget {
-  const CounterSyncQueueInspectorButton({
-    this.repository,
-    this.onPendingSyncEnqueued,
-    super.key,
-  });
+  const new({this.repository, this.onPendingSyncEnqueued, super.key});
 
   final CounterSyncDiagnosticsPort? repository;
 
@@ -200,10 +196,8 @@ class _CounterSyncQueueInspectorButtonState
     // modal_bloc_provider:ignore sheet is data-only; queue entries passed in.
     await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
-      builder: (sheetContext) => CounterSyncQueueInspectorSheet(
-        entries: entries,
-        l10n: l10n,
-      ),
+      builder: (sheetContext) =>
+          CounterSyncQueueInspectorSheet(entries: entries, l10n: l10n),
     );
   }
 }

@@ -9,7 +9,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoCallPage extends StatefulWidget {
-  const OnlineTherapyDemoCallPage({super.key});
+  const new({super.key});
 
   @override
   State<OnlineTherapyDemoCallPage> createState() =>
@@ -33,9 +33,7 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
-        >(
-          selector: (state) => state.isLoggedIn,
-        );
+        >(selector: (state) => state.isLoggedIn);
     final isBusy = context.selectState<CallCubit, CallState, bool>(
       selector: (state) => state.isBusy,
     );
@@ -53,10 +51,7 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
           icon: const Icon(Icons.refresh),
         ),
       ],
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: items,
-      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
 }

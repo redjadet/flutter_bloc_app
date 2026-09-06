@@ -7,7 +7,7 @@ part 'map_sample_state.freezed.dart';
 
 @freezed
 abstract class MapSampleState with _$MapSampleState {
-  const factory MapSampleState({
+  const factory({
     required gmaps.CameraPosition cameraPosition,
     @Default(true) bool isLoading,
     String? errorMessage,
@@ -19,9 +19,9 @@ abstract class MapSampleState with _$MapSampleState {
     gmaps.MarkerId? selectedMarkerId,
   }) = _MapSampleState;
 
-  const MapSampleState._();
+  const new _();
 
-  factory MapSampleState.initial() => const MapSampleState(
+  factory initial() => const MapSampleState(
     cameraPosition: gmaps.CameraPosition(
       target: gmaps.LatLng(37.7955, -122.3937),
       zoom: 13,

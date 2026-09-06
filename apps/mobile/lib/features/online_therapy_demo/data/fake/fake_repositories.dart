@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories.dart';
 
 class FakeTherapyAuthRepository implements TherapyAuthRepository {
-  FakeTherapyAuthRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -21,7 +21,7 @@ class FakeTherapyAuthRepository implements TherapyAuthRepository {
 }
 
 class FakeTherapistRepository implements TherapistRepository {
-  FakeTherapistRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -48,7 +48,7 @@ class FakeTherapistRepository implements TherapistRepository {
 }
 
 class FakeAppointmentRepository implements AppointmentRepository {
-  FakeAppointmentRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -75,7 +75,7 @@ class FakeAppointmentRepository implements AppointmentRepository {
 }
 
 class FakeTherapyMessagingRepository implements TherapyMessagingRepository {
-  FakeTherapyMessagingRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -98,7 +98,7 @@ class FakeTherapyMessagingRepository implements TherapyMessagingRepository {
 }
 
 class FakeTherapyCallRepository implements TherapyCallRepository {
-  FakeTherapyCallRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -112,14 +112,13 @@ class FakeTherapyCallRepository implements TherapyCallRepository {
 }
 
 class FakeTherapyAdminRepository implements TherapyAdminRepository {
-  FakeTherapyAdminRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
   @override
-  Future<TherapistProfile> approveTherapist({
-    required String therapistId,
-  }) => _api.approveTherapist(therapistId: therapistId);
+  Future<TherapistProfile> approveTherapist({required String therapistId}) =>
+      _api.approveTherapist(therapistId: therapistId);
 
   @override
   Future<List<TherapistProfile>> listPendingTherapists() =>
@@ -127,7 +126,7 @@ class FakeTherapyAdminRepository implements TherapyAdminRepository {
 }
 
 class FakeAuditRepository implements AuditRepository {
-  FakeAuditRepository({required this._api});
+  new({required this._api});
 
   final OnlineTherapyFakeApi _api;
 

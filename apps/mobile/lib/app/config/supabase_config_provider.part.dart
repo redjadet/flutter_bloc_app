@@ -17,7 +17,7 @@ const String kSupabaseConfigReasonRemoteConfigFetchFailed =
 
 @immutable
 final class SupabaseConfigFetchResult {
-  const SupabaseConfigFetchResult({
+  const new({
     required this.updated,
     required this.skipped,
     this.version,

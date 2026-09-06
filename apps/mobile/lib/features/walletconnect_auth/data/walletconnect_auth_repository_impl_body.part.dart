@@ -2,7 +2,7 @@ part of 'walletconnect_auth_repository_impl.dart';
 
 /// Implementation of [WalletConnectAuthRepository].
 class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
-  WalletConnectAuthRepositoryImpl({
+  new({
     required this._walletConnectService,
     required this._firebaseAuth,
     required this._firestore,
@@ -179,16 +179,12 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   }
 
   @override
-  Future<WalletUserProfile?> getWalletUserProfile(
-    String walletAddress,
-  ) async {
+  Future<WalletUserProfile?> getWalletUserProfile(String walletAddress) async {
     try {
       final user = _firebaseAuth.currentUser;
       if (user == null) return null;
       final WalletAddress? linkedWallet =
-          await _linkedWalletAddressForCurrentUser(
-            walletAddress,
-          );
+          await _linkedWalletAddressForCurrentUser(walletAddress);
       if (linkedWallet == null) {
         return null;
       }

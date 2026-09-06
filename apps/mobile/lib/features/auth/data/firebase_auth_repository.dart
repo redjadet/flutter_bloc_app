@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 
 /// Firebase Auth implementation of [AuthRepository].
 class FirebaseAuthRepository implements AuthRepository {
-  FirebaseAuthRepository({required this._firebaseAuth});
+  new({required this._firebaseAuth});
 
   final FirebaseAuth _firebaseAuth;
 

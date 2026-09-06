@@ -15,7 +15,7 @@ import 'package:networking/networking.dart';
 /// Sync status banner for the todo list feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
 class TodoSyncBanner extends StatefulWidget {
-  const TodoSyncBanner({super.key});
+  const new({super.key});
 
   @override
   State<TodoSyncBanner> createState() => _TodoSyncBannerState();

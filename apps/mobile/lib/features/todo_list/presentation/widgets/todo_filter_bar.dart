@@ -7,7 +7,7 @@ double _todoFilterChipFontSize(BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 18.0);
 
 class TodoFilterBar extends StatelessWidget {
-  const TodoFilterBar({
+  const new({
     required this.filter,
     required this.hasCompleted,
     required this.onFilterChanged,
@@ -54,7 +54,7 @@ class TodoFilterBar extends StatelessWidget {
 }
 
 class _FilterChip extends StatelessWidget {
-  const _FilterChip({
+  const new({
     required this.label,
     required this.isSelected,
     required this.onPressed,

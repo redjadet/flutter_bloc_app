@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
 import 'package:material_ui/material_ui.dart';
 
 class PlatformInfoSection extends StatelessWidget {
-  const PlatformInfoSection({
+  const new({
     required this.isLoading,
     required this.info,
     required this.errorMessage,
@@ -65,24 +65,21 @@ class PlatformInfoSection extends StatelessWidget {
     child: const CommonLoadingWidget(),
   );
 
-  Widget _errorText(
-    BuildContext context,
-    ThemeData theme,
-    String message,
-  ) => Padding(
-    padding: EdgeInsets.only(top: context.responsiveGapS),
-    child: Text(
-      message,
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.error,
-      ),
-      textAlign: TextAlign.center,
-    ),
-  );
+  Widget _errorText(BuildContext context, ThemeData theme, String message) =>
+      Padding(
+        padding: EdgeInsets.only(top: context.responsiveGapS),
+        child: Text(
+          message,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.error,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
 }
 
 class IsolateResultSection extends StatelessWidget {
-  const IsolateResultSection({
+  const new({
     required this.isLoading,
     required this.errorMessage,
     required this.fibonacciInput,
@@ -156,18 +153,15 @@ class IsolateResultSection extends StatelessWidget {
     child: const CommonLoadingWidget(),
   );
 
-  Widget _errorText(
-    BuildContext context,
-    ThemeData theme,
-    String message,
-  ) => Padding(
-    padding: EdgeInsets.only(top: context.responsiveGapS),
-    child: Text(
-      message,
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.error,
-      ),
-      textAlign: TextAlign.center,
-    ),
-  );
+  Widget _errorText(BuildContext context, ThemeData theme, String message) =>
+      Padding(
+        padding: EdgeInsets.only(top: context.responsiveGapS),
+        child: Text(
+          message,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.error,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
 }

@@ -1,0 +1,5 @@
+# Local regenerable outputs for secure_core_bridge.
+# Cargo.lock and rust-toolchain.toml stay tracked.
+rust/**/target/
+build/
+.dart_tool/

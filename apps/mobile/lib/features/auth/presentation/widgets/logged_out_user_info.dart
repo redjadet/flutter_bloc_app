@@ -3,11 +3,7 @@ import 'dart:math' as math;
 import 'package:material_ui/material_ui.dart';
 
 class LoggedOutUserInfo extends StatelessWidget {
-  const LoggedOutUserInfo({
-    required this.scale,
-    required this.verticalScale,
-    super.key,
-  });
+  const new({required this.scale, required this.verticalScale, super.key});
 
   final double scale;
   final double verticalScale;
@@ -82,9 +78,8 @@ class LoggedOutUserInfo extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 11 * scale,
                         fontWeight: FontWeight.w400,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.8),
+                        color: Theme.of(context).colorScheme.onSurface
+                            .withValues(alpha: 0.8),
                         height: handleLineHeight / 11,
                       ),
                       overflow: TextOverflow.ellipsis,

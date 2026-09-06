@@ -16,7 +16,7 @@ part 'calculator_keypad_button.dart';
 part 'calculator_keypad_config.dart';
 
 class CalculatorKeypad extends StatelessWidget {
-  const CalculatorKeypad({super.key, this.shrinkWrap = false});
+  const new({super.key, this.shrinkWrap = false});
 
   final bool shrinkWrap;
 
@@ -32,10 +32,7 @@ class CalculatorKeypad extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double spacing = math.min(
-          rawSpacing,
-          constraints.maxWidth / 3,
-        );
+        final double spacing = math.min(rawSpacing, constraints.maxWidth / 3);
         return GridView.builder(
           shrinkWrap: shrinkWrap,
           physics: const NeverScrollableScrollPhysics(),
@@ -59,10 +56,7 @@ class CalculatorKeypad extends StatelessWidget {
                 }
                 // check-ignore: navigation is triggered by user action
                 unawaited(
-                  context.pushNamed(
-                    AppRoutes.calculatorPayment,
-                    extra: cubit,
-                  ),
+                  context.pushNamed(AppRoutes.calculatorPayment, extra: cubit),
                 );
               },
             );

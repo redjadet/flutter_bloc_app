@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Page showcasing the markdown editor widget with custom RenderObject.
 class MarkdownEditorPage extends StatelessWidget {
-  const MarkdownEditorPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) => const CommonPageLayout(

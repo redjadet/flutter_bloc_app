@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_vi
 /// In-memory simulated fault flags shared by remote/realtime/repository.
 class SimulatedSocialFeedScenarioController
     implements SocialFeedScenarioController {
-  SimulatedSocialFeedScenarioController();
+  new();
 
   bool _online = true;
   final Map<String, _ViewerFaults> _byViewer = <String, _ViewerFaults>{};

@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:material_ui/material_ui.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit({required this._repository}) : super(ThemeMode.system);
+  new({required this._repository}) : super(ThemeMode.system);
 
   final ThemeRepository _repository;
 
@@ -15,11 +15,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
       if (isClosed) return;
       if (loaded != null) emit(_toThemeMode(loaded));
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'ThemeCubit.loadInitial failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('ThemeCubit.loadInitial failed', error, stackTrace);
     }
   }
 
@@ -30,11 +26,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
     try {
       await _repository.save(_toPreference(mode));
     } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'ThemeCubit.setMode save failed',
-        error,
-        stackTrace,
-      );
+      AppLogger.error('ThemeCubit.setMode save failed', error, stackTrace);
       if (!isClosed) {
         emit(previous);
       }

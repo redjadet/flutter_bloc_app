@@ -8,7 +8,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 class _ActionUiSnapshot {
-  const _ActionUiSnapshot({
+  const new({
     required this.busy,
     required this.lastAction,
     required this.lastActionResult,
@@ -20,7 +20,7 @@ class _ActionUiSnapshot {
 }
 
 class NativePlatformShowcaseActionSection extends StatelessWidget {
-  const NativePlatformShowcaseActionSection({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,12 +133,10 @@ class NativePlatformShowcaseActionSection extends StatelessWidget {
     return '$actionLabel · $statusLabel · ${result.message}';
   }
 
-  static Color _statusColor(
-    ThemeData theme,
-    NativeInteropStatus status,
-  ) => switch (status) {
-    NativeInteropStatus.success => theme.colorScheme.primary,
-    NativeInteropStatus.unavailable => theme.colorScheme.outline,
-    NativeInteropStatus.failed => theme.colorScheme.error,
-  };
+  static Color _statusColor(ThemeData theme, NativeInteropStatus status) =>
+      switch (status) {
+        NativeInteropStatus.success => theme.colorScheme.primary,
+        NativeInteropStatus.unavailable => theme.colorScheme.outline,
+        NativeInteropStatus.failed => theme.colorScheme.error,
+      };
 }

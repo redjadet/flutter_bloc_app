@@ -27,6 +27,17 @@ not a replacement for `pubspec.yaml`.
 | Non-mobile platforms | Canonical: `apps/other_platforms/{web,macos,linux,windows}/`; `apps/mobile/{web,macos,linux,windows}` are symlinks so Flutter discovers those targets |
 | Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for Podfiles and unsupported plugin fallback |
 
+## Native secure core (demo)
+
+| Item | Detail |
+| --- | --- |
+| Rust pin | **1.98.1** (`packages/secure_core_bridge/rust/secure_core/rust-toolchain.toml`) |
+| Package | `packages/secure_core_bridge` — `dart:ffi` + `native_toolchain_rust` build hooks |
+| Consumer | `secure_messaging_demo` feature — [`features/secure_messaging_demo.md`](features/secure_messaging_demo.md) |
+| Gate | `tool/check_secure_core.sh` in `./bin/checklist`; CI `install-rust: true` |
+| Linux | Host CI / package tests only — **not** a first-class product desktop target |
+| Architecture | [`architecture/rust_ffi_secure_core_bridge.md`](architecture/rust_ffi_secure_core_bridge.md) |
+
 ## Supported platforms
 
 First-class targets for feature work, UI, routing, and validation. Agents must
@@ -105,7 +116,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Golden tests | `golden_toolkit` `^0.15.0` |
 | Integration tests | `integration_test` plus repo scripts under `bin/` and `tool/` |
 | Code generation | `build_runner`, `json_serializable`, `freezed`, `retrofit_generator` |
-| Static analysis | `very_good_analysis` `^10.2.0`, `flutter_lints` `^6.0.0`, custom lint packages in `custom_lints/` |
+| Static analysis | `very_good_analysis` `^11.0.0`, `flutter_lints` `^6.0.0`, custom lint packages in `custom_lints/` |
 | Optional Codex repo graph | `code-review-graph` local MCP server plus SQLite cache under `.code-review-graph/` |
 
 ## Platform-Specific Dependencies

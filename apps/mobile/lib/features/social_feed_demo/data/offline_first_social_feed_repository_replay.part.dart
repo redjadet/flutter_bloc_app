@@ -1,7 +1,7 @@
 part of 'offline_first_social_feed_repository.dart';
 
 class _ViewerReplay {
-  _ViewerReplay({
+  new({
     required this.viewer,
     required this.repository,
     required this.timerService,
@@ -89,7 +89,7 @@ class _ViewerReplay {
 }
 
 class _SyncLease implements SocialFeedSyncLease {
-  _SyncLease({
+  new({
     required this.summaries,
     required this.seedSummary,
     required this._closeFn,

@@ -12,7 +12,7 @@ part 'supabase_chat_repository_edge.part.dart';
 /// Remote chat via Supabase Edge `chat-complete` (HF proxy). Contract:
 /// `supabase/README.md`.
 class SupabaseChatRepository implements ChatRepository {
-  SupabaseChatRepository({
+  new({
     required this._payloadBuilder,
     SupabaseSessionManager? sessionManager,
     String? Function()? readAccessToken,

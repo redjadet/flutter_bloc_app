@@ -4,7 +4,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     with
         CubitSubscriptionMixin<CounterState>,
         StateRestorationMixin<CounterState> {
-  _CounterCubitBase({
+  new({
     required CounterRepository repository,
     required this._timerService,
     required this._now,
@@ -97,10 +97,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   }
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
-  CounterState _emitCountUpdate({
-    required int count,
-    DateTime? timestamp,
-  }) {
+  CounterState _emitCountUpdate({required int count, DateTime? timestamp}) {
     if (isClosed) {
       // Return current state if cubit is closed to prevent errors
       return state;

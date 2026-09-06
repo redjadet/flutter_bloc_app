@@ -28,6 +28,7 @@ export 'realtime_market/realtime_market.dart';
 export 'remote_config/remote_config.dart';
 export 'scapes/scapes.dart';
 export 'search/search.dart';
+export 'secure_messaging_demo/secure_messaging_demo.dart';
 export 'settings/settings.dart';
 export 'social_feed_demo/social_feed_demo.dart';
 export 'staff_app_demo/staff_app_demo.dart';

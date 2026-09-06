@@ -6,11 +6,7 @@ import 'package:material_ui/material_ui.dart';
 /// Extracted from the main profiler to keep file size manageable.
 
 class TrackedWidget extends StatefulWidget {
-  const TrackedWidget({
-    required this.name,
-    required this.child,
-    super.key,
-  });
+  const new({required this.name, required this.child, super.key});
 
   final String name;
   final Widget child;

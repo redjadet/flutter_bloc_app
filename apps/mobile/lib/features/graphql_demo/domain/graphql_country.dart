@@ -4,15 +4,13 @@ part 'graphql_country.freezed.dart';
 
 @freezed
 abstract class GraphqlContinent with _$GraphqlContinent {
-  const factory GraphqlContinent({
-    required String code,
-    required String name,
-  }) = _GraphqlContinent;
+  const factory({required String code, required String name}) =
+      _GraphqlContinent;
 }
 
 @freezed
 abstract class GraphqlCountry with _$GraphqlCountry {
-  const factory GraphqlCountry({
+  const factory({
     required String code,
     required String name,
     required GraphqlContinent continent,

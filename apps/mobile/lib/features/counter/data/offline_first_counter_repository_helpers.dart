@@ -5,7 +5,7 @@ import 'package:utilities/utilities.dart';
 
 /// Snapshot merge and normalization helpers for [OfflineFirstCounterRepository].
 class OfflineFirstCounterRepositoryHelpers {
-  OfflineFirstCounterRepositoryHelpers._();
+  new _();
 
   static CounterSnapshot normalizeSnapshot(
     CounterSnapshot snapshot, {

@@ -10,16 +10,18 @@ part 'profile_bottom_nav_handlers.part.dart';
 part 'profile_bottom_nav_models.part.dart';
 
 class ProfileBottomNav extends StatelessWidget {
-  const ProfileBottomNav({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
     final double bottomPadding = context.safeAreaInsets.bottom;
     final ThemeData theme = Theme.of(context);
     final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
-    final String currentLocation = GoRouter.of(
-      context,
-    ).routerDelegate.currentConfiguration.uri.toString();
+    final String currentLocation = GoRouter.of(context)
+        .routerDelegate
+        .currentConfiguration
+        .uri
+        .toString();
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding),
@@ -34,7 +36,7 @@ class ProfileBottomNav extends StatelessWidget {
 }
 
 class _AdaptiveBottomNavBar extends StatelessWidget {
-  const _AdaptiveBottomNavBar({
+  const new({
     required this.items,
     required this.selectedIndex,
     required this.currentLocation,

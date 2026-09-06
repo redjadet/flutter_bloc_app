@@ -19,7 +19,7 @@ part 'game_page_sections.part.dart';
 
 /// Game page for one play-for-fun round: stake, spin, result.
 class GamePage extends StatelessWidget {
-  const GamePage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +54,7 @@ DemoBalance? _displayBalance(GameState state) => state.when(
   spinning: (balance, bet, targetIndices) => DemoBalance(
     amountUnits: (balance.amountUnits - bet).clamp(0, balance.amountUnits),
   ),
-  result: (
-    roundResult,
-    newBalance,
-    selectedStake,
-    targetIndices,
-  ) => newBalance,
+  result: (roundResult, newBalance, selectedStake, targetIndices) => newBalance,
   error: (message) => null,
 );
 

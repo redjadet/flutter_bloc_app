@@ -7,7 +7,7 @@ import 'package:storage/storage.dart';
 
 class ChartDemoCacheRepository extends HiveRepositoryBase
     implements ChartCacheRepository {
-  ChartDemoCacheRepository({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'chart_cache';
   static const String _trendingKey = 'trending_points';
@@ -18,46 +18,45 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
   String get boxName => _boxName;
 
   @override
-  Future<List<ChartPoint>> readTrendingCounts({
-    Duration? maxAge,
-  }) async => StorageGuard.run<List<ChartPoint>>(
-    logContext: 'ChartDemoCacheRepository.readTrendingCounts',
-    action: () async {
-      final Box<dynamic> box = await getBox();
-      final dynamic stored = box.get(_trendingKey);
-      if (stored is! Map<dynamic, dynamic>) {
-        return const <ChartPoint>[];
-      }
-      final DateTime? updatedAt = _parseUpdatedAt(stored);
-      if (_isStale(updatedAt, maxAge)) {
-        return const <ChartPoint>[];
-      }
-      final dynamic items = stored[_itemsKey];
-      if (items is! List<dynamic>) {
-        return const <ChartPoint>[];
-      }
-      final List<ChartPoint> result = <ChartPoint>[];
-      for (final dynamic item in items) {
-        if (item is! Map<dynamic, dynamic>) continue;
-        final Map<String, dynamic> typed = _convertMapToTyped(item);
-        try {
-          result.add(ChartPointDto.fromJson(typed).toDomain());
-        } on Object catch (error, stackTrace) {
-          AppLogger.warning(
-            'ChartDemoCacheRepository skipped invalid cached chart point',
-          );
-          AppLogger.error(
-            'ChartDemoCacheRepository.readTrendingCounts',
-            error,
-            stackTrace,
-          );
-          continue;
-        }
-      }
-      return result;
-    },
-    fallback: () => const <ChartPoint>[],
-  );
+  Future<List<ChartPoint>> readTrendingCounts({Duration? maxAge}) =>
+      StorageGuard.run<List<ChartPoint>>(
+        logContext: 'ChartDemoCacheRepository.readTrendingCounts',
+        action: () async {
+          final Box<dynamic> box = await getBox();
+          final dynamic stored = box.get(_trendingKey);
+          if (stored is! Map<dynamic, dynamic>) {
+            return const <ChartPoint>[];
+          }
+          final DateTime? updatedAt = _parseUpdatedAt(stored);
+          if (_isStale(updatedAt, maxAge)) {
+            return const <ChartPoint>[];
+          }
+          final dynamic items = stored[_itemsKey];
+          if (items is! List<dynamic>) {
+            return const <ChartPoint>[];
+          }
+          final List<ChartPoint> result = <ChartPoint>[];
+          for (final dynamic item in items) {
+            if (item is! Map<dynamic, dynamic>) continue;
+            final Map<String, dynamic> typed = _convertMapToTyped(item);
+            try {
+              result.add(ChartPointDto.fromJson(typed).toDomain());
+            } on Object catch (error, stackTrace) {
+              AppLogger.warning(
+                'ChartDemoCacheRepository skipped invalid cached chart point',
+              );
+              AppLogger.error(
+                'ChartDemoCacheRepository.readTrendingCounts',
+                error,
+                stackTrace,
+              );
+              continue;
+            }
+          }
+          return result;
+        },
+        fallback: () => const <ChartPoint>[],
+      );
 
   @override
   Future<void> writeTrendingCounts(List<ChartPoint> points) async {
@@ -65,17 +64,12 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
       logContext: 'ChartDemoCacheRepository.writeTrendingCounts',
       action: () async {
         final Box<dynamic> box = await getBox();
-        await box.put(
-          _trendingKey,
-          <String, dynamic>{
-            _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
-            _itemsKey: points
-                .map(
-                  (point) => ChartPointDto.fromDomain(point).toJson(),
-                )
-                .toList(),
-          },
-        );
+        await box.put(_trendingKey, <String, dynamic>{
+          _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
+          _itemsKey: points
+              .map((point) => ChartPointDto.fromDomain(point).toJson())
+              .toList(),
+        });
       },
     );
   }

@@ -6,15 +6,11 @@ part 'iot_ble_connection_lifecycle.freezed.dart';
 /// Connection lifecycle slice grouped on BLE cubit state (phase 1).
 @freezed
 sealed class IotBleConnectionLifecycle with _$IotBleConnectionLifecycle {
-  const factory IotBleConnectionLifecycle.idle({
-    String? selectedDeviceId,
-  }) = IotBleConnectionIdle;
+  const factory idle({String? selectedDeviceId}) = IotBleConnectionIdle;
 
-  const factory IotBleConnectionLifecycle.active(
-    BleConnectionPhase phase,
-  ) = IotBleConnectionActive;
+  const factory active(BleConnectionPhase phase) = IotBleConnectionActive;
 
-  const IotBleConnectionLifecycle._();
+  const new _();
 
   String? get selectedDeviceId => switch (this) {
     IotBleConnectionIdle(:final selectedDeviceId) => selectedDeviceId,

@@ -13,11 +13,7 @@ import 'package:material_ui/material_ui.dart';
 part 'counter_page_app_bar_overflow.part.dart';
 
 class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CounterPageAppBar({
-    required this.title,
-    required this.onOpenSettings,
-    super.key,
-  });
+  const new({required this.title, required this.onOpenSettings, super.key});
 
   final String title;
   final VoidCallback onOpenSettings;

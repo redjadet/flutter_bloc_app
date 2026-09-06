@@ -11,7 +11,7 @@ import 'package:storage/storage.dart';
 part 'hive_todo_repository_migration.dart';
 
 class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
-  HiveTodoRepository({required super.hiveService});
+  new({required super.hiveService});
 
   static const String _boxName = 'todo_list';
   static const String _keyTodos = 'todos';
@@ -36,11 +36,11 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   );
 
   @override
-  Future<List<TodoItem>> fetchAll() async => StorageGuard.run<List<TodoItem>>(
+  Future<List<TodoItem>> fetchAll() => StorageGuard.run<List<TodoItem>>(
     logContext: 'HiveTodoRepository.fetchAll',
     action: () async {
       final Box<dynamic> box = await getBox();
-      return _loadFromBox(box);
+      return await _loadFromBox(box);
     },
     fallback: () => const <TodoItem>[],
   );
@@ -59,7 +59,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   }
 
   @override
-  Future<void> save(TodoItem item) async => StorageGuard.run<void>(
+  Future<void> save(TodoItem item) => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.save',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -70,7 +70,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   );
 
   @override
-  Future<void> delete(String id) async => StorageGuard.run<void>(
+  Future<void> delete(String id) => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.delete',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -83,7 +83,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   );
 
   @override
-  Future<void> clearCompleted() async => StorageGuard.run<void>(
+  Future<void> clearCompleted() => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.clearCompleted',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -96,7 +96,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   );
 
   /// Wipes every stored todo. Used on Firebase sign-out / account switch.
-  Future<void> clearAllLocalData() async => StorageGuard.run<void>(
+  Future<void> clearAllLocalData() => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.clearAllLocalData',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -104,7 +104,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     },
   );
 
-  Future<List<TodoItem>> _loadFromBox(Box<dynamic> box) async =>
+  Future<List<TodoItem>> _loadFromBox(Box<dynamic> box) =>
       StorageGuard.run<List<TodoItem>>(
         logContext: 'HiveTodoRepository._loadFromBox',
         action: () async {
@@ -128,14 +128,9 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     // The box.watch() in watchAll() will automatically emit when _keyTodos changes
   }
 
-  List<TodoItem> _applyItem(
-    List<TodoItem> existing,
-    TodoItem item,
-  ) {
+  List<TodoItem> _applyItem(List<TodoItem> existing, TodoItem item) {
     final List<TodoItem> items = List<TodoItem>.from(existing);
-    final int index = items.indexWhere(
-      (current) => current.id == item.id,
-    );
+    final int index = items.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       items.add(item);
     } else {

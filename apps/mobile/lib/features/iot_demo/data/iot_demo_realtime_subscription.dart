@@ -12,7 +12,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Requires the table to be in the `supabase_realtime` publication:
 /// `alter publication supabase_realtime add table iot_devices;`
 class IotDemoRealtimeSubscription {
-  IotDemoRealtimeSubscription({
+  new({
     this._isConfiguredOverride,
     RealtimeChannel Function(
       void Function(PostgresChangePayload payload) onPayload,

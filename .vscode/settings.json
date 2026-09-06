@@ -150,6 +150,31 @@
   "files.associations": {
     "*.config": "plaintext"
   },
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-action.json": [
+      ".github/actions/**/action.yml",
+      ".github/actions/**/action.yaml",
+      "**/.github/actions/**/action.yml",
+      "**/.github/actions/**/action.yaml"
+    ],
+    "https://json.schemastore.org/github-workflow.json": [
+      ".github/workflows/**/*.yml",
+      ".github/workflows/**/*.yaml",
+      "**/.github/workflows/**/*.yml",
+      "**/.github/workflows/**/*.yaml"
+    ]
+  },
+  "yaml.schemaStore.enable": true,
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml",
+    "**/.github/actions/**/action.yml",
+    "**/.github/actions/**/action.yaml"
+  ],
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },

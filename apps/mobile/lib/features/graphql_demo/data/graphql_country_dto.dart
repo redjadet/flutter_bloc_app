@@ -5,11 +5,10 @@ class const GraphqlContinentDto({
   required final String code,
   required final String name,
 }) {
-  factory GraphqlContinentDto.fromJson(Map<String, dynamic> json) =>
-      GraphqlContinentDto(
-        code: requireGraphqlString(json, 'code'),
-        name: requireGraphqlString(json, 'name'),
-      );
+  factory fromJson(Map<String, dynamic> json) => GraphqlContinentDto(
+    code: requireGraphqlString(json, 'code'),
+    name: requireGraphqlString(json, 'name'),
+  );
 
   GraphqlContinent toDomain() => GraphqlContinent(code: code, name: name);
 }
@@ -22,17 +21,16 @@ class const GraphqlCountryDto({
   final String? currency,
   final String? emoji,
 }) {
-  factory GraphqlCountryDto.fromJson(Map<String, dynamic> json) =>
-      GraphqlCountryDto(
-        code: requireGraphqlString(json, 'code'),
-        name: requireGraphqlString(json, 'name'),
-        continent: GraphqlContinentDto.fromJson(
-          requireGraphqlMap(json, 'continent'),
-        ),
-        capital: optionalGraphqlString(json, 'capital'),
-        currency: optionalGraphqlString(json, 'currency'),
-        emoji: optionalGraphqlString(json, 'emoji'),
-      );
+  factory fromJson(Map<String, dynamic> json) => GraphqlCountryDto(
+    code: requireGraphqlString(json, 'code'),
+    name: requireGraphqlString(json, 'name'),
+    continent: GraphqlContinentDto.fromJson(
+      requireGraphqlMap(json, 'continent'),
+    ),
+    capital: optionalGraphqlString(json, 'capital'),
+    currency: optionalGraphqlString(json, 'currency'),
+    emoji: optionalGraphqlString(json, 'emoji'),
+  );
 
   GraphqlCountry toDomain() => GraphqlCountry(
     code: code,

@@ -5,7 +5,7 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 typedef JsonMap = Map<String, dynamic>;
 
 class HuggingFaceResponseParser {
-  const HuggingFaceResponseParser({required this._fallbackMessage});
+  const new({required this._fallbackMessage});
 
   final String _fallbackMessage;
 

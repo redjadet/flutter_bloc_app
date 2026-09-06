@@ -22,10 +22,7 @@ import 'package:utilities/utilities.dart';
 part 'chart_page.freezed.dart';
 
 class ChartPage extends StatefulWidget {
-  const ChartPage({
-    required this._repository,
-    super.key,
-  });
+  const new({required this._repository, super.key});
 
   final ChartRepository _repository;
 
@@ -50,15 +47,13 @@ class _ChartPageState extends State<ChartPage> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocProvider.value(
-    value: _cubit,
-    child: const _ChartView(),
-  );
+  Widget build(BuildContext context) =>
+      BlocProvider.value(value: _cubit, child: const _ChartView());
 }
 
 @freezed
 abstract class _ChartViewData with _$ChartViewData {
-  const factory _ChartViewData({
+  const factory({
     required bool showLoading,
     required bool showError,
     required bool showEmpty,
@@ -69,7 +64,7 @@ abstract class _ChartViewData with _$ChartViewData {
 }
 
 class _ChartView extends StatelessWidget {
-  const _ChartView();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +113,7 @@ class _ChartView extends StatelessWidget {
                 ),
                 builder: (context, data) {
                   if (data.showEmpty) {
-                    return CommonEmptyState(
-                      message: l10n.chartPageEmpty,
-                    );
+                    return CommonEmptyState(message: l10n.chartPageEmpty);
                   }
 
                   final locale = Localizations.localeOf(context).toString();

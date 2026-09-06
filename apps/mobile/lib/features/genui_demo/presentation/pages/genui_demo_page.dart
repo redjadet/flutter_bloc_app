@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/genui_demo/presentation/widgets/genui_
 import 'package:material_ui/material_ui.dart';
 
 class GenUiDemoPage extends StatelessWidget {
-  const GenUiDemoPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -22,10 +22,9 @@ part 'countries_graphql_repository_queries.part.dart';
 /// when the app shuts down.
 class CountriesGraphqlRepository
     implements GraphqlDemoRepository, GraphqlRemoteRepository {
-  CountriesGraphqlRepository({required Dio client}) : this._fromClient(client);
+  new({required Dio client}) : this._fromClient(client);
 
-  CountriesGraphqlRepository._fromClient(Dio client)
-    : _api = CountriesGraphqlApi(client);
+  new _fromClient(Dio client) : _api = CountriesGraphqlApi(client);
 
   static const String _opContinents = 'Continents';
   static const String _opAllCountries = 'AllCountries';
@@ -50,9 +49,7 @@ class CountriesGraphqlRepository
   }
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  }) async {
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
     final String? normalizedCode = normalizedContinentCode(continentCode);
     if (normalizedCode == null) {
       final Map<String, dynamic> data = await postQuery(

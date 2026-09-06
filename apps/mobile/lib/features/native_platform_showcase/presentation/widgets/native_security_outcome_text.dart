@@ -9,7 +9,7 @@ import 'package:material_ui/material_ui.dart';
 /// [NativeSecurityStatus] enum, a locked l10n-mapped reason code, and optional
 /// allowlisted metadata (algorithm / residency / hw / verified / counts).
 class NativeSecurityOutcomeText extends StatelessWidget {
-  const NativeSecurityOutcomeText({required this.result, super.key});
+  const new({required this.result, super.key});
 
   final NativeSecurityOperationResult? result;
 
@@ -58,48 +58,42 @@ String nativeSecurityStatusLabel(
 };
 
 /// Maps [NativeSecurityStatus] to a themed emphasis color.
-Color nativeSecurityStatusColor(
-  NativeSecurityStatus status,
-  ThemeData theme,
-) => switch (status) {
-  NativeSecurityStatus.success => theme.colorScheme.primary,
-  NativeSecurityStatus.unavailable => theme.colorScheme.onSurfaceVariant,
-  NativeSecurityStatus.denied => theme.colorScheme.error,
-  NativeSecurityStatus.failed => theme.colorScheme.error,
-};
+Color nativeSecurityStatusColor(NativeSecurityStatus status, ThemeData theme) =>
+    switch (status) {
+      NativeSecurityStatus.success => theme.colorScheme.primary,
+      NativeSecurityStatus.unavailable => theme.colorScheme.onSurfaceVariant,
+      NativeSecurityStatus.denied => theme.colorScheme.error,
+      NativeSecurityStatus.failed => theme.colorScheme.error,
+    };
 
 /// Shared reason-code → l10n mapping for native security + App Check cards.
 ///
 /// Unknown codes never render raw channel text (zero-secrets UI contract);
 /// they fall back to the locked `platform_error` label.
-String nativeSecurityReasonLabel(
-  String reasonCode,
-  AppLocalizations l10n,
-) => switch (reasonCode) {
-  'ok' => l10n.nativeSecurityReasonOk,
-  'mobile_only' => l10n.nativeSecurityReasonMobileOnly,
-  'missing_plugin' => l10n.nativeSecurityReasonMissingPlugin,
-  'timeout' => l10n.nativeSecurityReasonTimeout,
-  'malformed_reply' => l10n.nativeSecurityReasonMalformedReply,
-  'platform_error' => l10n.nativeSecurityReasonPlatformError,
-  'secure_enclave_unavailable' =>
-    l10n.nativeSecurityReasonSecureEnclaveUnavailable,
-  'keystore_unavailable' => l10n.nativeSecurityReasonKeystoreUnavailable,
-  'biometric_not_enrolled' => l10n.nativeSecurityReasonBiometricNotEnrolled,
-  'biometric_lockout' => l10n.nativeSecurityReasonBiometricLockout,
-  'biometric_canceled' => l10n.nativeSecurityReasonBiometricCanceled,
-  'biometric_unsupported' => l10n.nativeSecurityReasonBiometricUnsupported,
-  'concurrent_prompt' => l10n.nativeSecurityReasonConcurrentPrompt,
-  'not_configured_or_token_null' =>
-    l10n.nativeSecurityReasonNotConfiguredOrTokenNull,
-  'app_check_error' => l10n.nativeSecurityReasonAppCheckError,
-  _ => l10n.nativeSecurityReasonPlatformError,
-};
+String nativeSecurityReasonLabel(String reasonCode, AppLocalizations l10n) =>
+    switch (reasonCode) {
+      'ok' => l10n.nativeSecurityReasonOk,
+      'mobile_only' => l10n.nativeSecurityReasonMobileOnly,
+      'missing_plugin' => l10n.nativeSecurityReasonMissingPlugin,
+      'timeout' => l10n.nativeSecurityReasonTimeout,
+      'malformed_reply' => l10n.nativeSecurityReasonMalformedReply,
+      'platform_error' => l10n.nativeSecurityReasonPlatformError,
+      'secure_enclave_unavailable' =>
+        l10n.nativeSecurityReasonSecureEnclaveUnavailable,
+      'keystore_unavailable' => l10n.nativeSecurityReasonKeystoreUnavailable,
+      'biometric_not_enrolled' => l10n.nativeSecurityReasonBiometricNotEnrolled,
+      'biometric_lockout' => l10n.nativeSecurityReasonBiometricLockout,
+      'biometric_canceled' => l10n.nativeSecurityReasonBiometricCanceled,
+      'biometric_unsupported' => l10n.nativeSecurityReasonBiometricUnsupported,
+      'concurrent_prompt' => l10n.nativeSecurityReasonConcurrentPrompt,
+      'not_configured_or_token_null' =>
+        l10n.nativeSecurityReasonNotConfiguredOrTokenNull,
+      'app_check_error' => l10n.nativeSecurityReasonAppCheckError,
+      _ => l10n.nativeSecurityReasonPlatformError,
+    };
 
 /// Compact allowlisted metadata line (never channel-raw strings).
-String? nativeSecurityOutcomeDetail(
-  NativeSecurityOperationResult result,
-) {
+String? nativeSecurityOutcomeDetail(NativeSecurityOperationResult result) {
   final List<String> parts = <String>[];
   final String? algorithm = result.algorithm;
   if (algorithm != null) {

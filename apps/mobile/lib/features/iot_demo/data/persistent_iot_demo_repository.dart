@@ -24,7 +24,7 @@ String _sanitizeBoxSuffix(String supabaseUserId) {
 /// Empty storage returns an empty list (no shared defaults).
 class PersistentIotDemoRepository extends HiveRepositoryBase
     implements IotDemoRepository {
-  PersistentIotDemoRepository({
+  new({
     required super.hiveService,
     required String supabaseUserId,
     required this._timerService,
@@ -75,8 +75,6 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
   Future<void> disconnect(String deviceId) => disconnectImpl(deviceId);
 
   @override
-  Future<void> sendCommand(
-    String deviceId,
-    IotDeviceCommand command,
-  ) => sendCommandImpl(deviceId, command);
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) =>
+      sendCommandImpl(deviceId, command);
 }

@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 part 'counter_hint.freezed.dart';
 
 class CounterHint extends StatelessWidget {
-  const CounterHint({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +15,8 @@ class CounterHint extends StatelessWidget {
     final l10n = context.l10n;
 
     return ViewStatusSwitcher<CounterCubit, CounterState, _CounterHintData>(
-      selector: (state) => _CounterHintData(
-        count: state.count,
-        isLoading: state.isLoading,
-      ),
+      selector: (state) =>
+          _CounterHintData(count: state.count, isLoading: state.isLoading),
       isLoading: (data) => data.isLoading,
       isError: (_) => false,
       loadingBuilder: (_) => const SizedBox.shrink(),
@@ -40,8 +38,6 @@ class CounterHint extends StatelessWidget {
 
 @freezed
 abstract class _CounterHintData with _$CounterHintData {
-  const factory _CounterHintData({
-    required int count,
-    required bool isLoading,
-  }) = __CounterHintData;
+  const factory({required int count, required bool isLoading}) =
+      __CounterHintData;
 }

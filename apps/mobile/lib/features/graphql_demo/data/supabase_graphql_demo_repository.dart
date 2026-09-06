@@ -15,7 +15,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 part 'supabase_graphql_demo_repository_impl.part.dart';
 
 class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
-  SupabaseGraphqlDemoRepository({
+  new({
     String? Function()? readAccessToken,
     String? Function()? readCurrentUserId,
     Future<FunctionResponse> Function({
@@ -61,10 +61,8 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
           tryEdge: _tryFetchContinentsFromEdge,
           fetchTables: _fetchContinentsFromTables,
           onPostgrestException: graphqlDemoExceptionFromPostgrest,
-          onGenericException: (msg, cause) => GraphqlDemoException(
-            msg,
-            cause: cause,
-          ),
+          onGenericException: (msg, cause) =>
+              GraphqlDemoException(msg, cause: cause),
           logContext: 'SupabaseGraphqlDemoRepository.fetchContinents',
           genericFailureMessage: 'Failed to load continents from Supabase',
         );
@@ -75,9 +73,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
   }
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  }) async {
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
     _ensureConfigured();
     final String? normalized = _normalizedContinentCode(continentCode);
     final SupabaseEdgeThenTablesResult<GraphqlCountry> result =
@@ -86,10 +82,8 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
           fetchTables: () =>
               _fetchCountriesFromTables(continentCode: normalized),
           onPostgrestException: graphqlDemoExceptionFromPostgrest,
-          onGenericException: (msg, cause) => GraphqlDemoException(
-            msg,
-            cause: cause,
-          ),
+          onGenericException: (msg, cause) =>
+              GraphqlDemoException(msg, cause: cause),
           logContext: 'SupabaseGraphqlDemoRepository.fetchCountries',
           genericFailureMessage: 'Failed to load countries from Supabase',
         );
@@ -112,9 +106,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
   }) {
     return Supabase.instance.client.functions.invoke(
       functionName,
-      headers: <String, String>{
-        _authorizationHeader: 'Bearer $accessToken',
-      },
+      headers: <String, String>{_authorizationHeader: 'Bearer $accessToken'},
       body: body,
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart'
 
 /// Maps incoming URIs to in-app destinations.
 class DeepLinkParser {
-  const DeepLinkParser();
+  const new();
 
   /// Returns the matching [DeepLinkTarget] for the provided [uri].
   /// Returns null when the URI is not supported.

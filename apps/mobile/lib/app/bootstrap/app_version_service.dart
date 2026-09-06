@@ -6,7 +6,7 @@ const String kDefaultAppVersion = '1.0.0';
 
 /// Service for loading and caching app version information.
 class AppVersionService {
-  AppVersionService._();
+  new _();
 
   static String? _appVersion;
 

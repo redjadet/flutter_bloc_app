@@ -1,7 +1,7 @@
 part of 'secret_config.dart';
 
 class SecretConfig {
-  SecretConfig._();
+  new _();
 
   /// When true, a base URL is non-empty and the app may attempt orchestration
   /// before composite chat.

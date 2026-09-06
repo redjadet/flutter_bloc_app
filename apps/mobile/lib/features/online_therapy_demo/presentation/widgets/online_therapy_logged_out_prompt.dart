@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyLoggedOutPrompt extends StatelessWidget {
-  const OnlineTherapyLoggedOutPrompt({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

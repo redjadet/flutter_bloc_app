@@ -15,7 +15,7 @@ import 'package:material_ui/material_ui.dart';
 part 'chat_page_actions.part.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({
+  const new({
     required this.errorNotificationService,
     required this.showBackendDisabledBanner,
     required this.renderTransportDemoStrict,

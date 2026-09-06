@@ -1,7 +1,7 @@
 part of 'in_app_purchase_demo_page.dart';
 
 class _DemoControls extends StatelessWidget {
-  const _DemoControls({
+  const new({
     required this.cubit,
     required this.enabled,
     required this.selected,
@@ -16,12 +16,7 @@ class _DemoControls extends StatelessWidget {
     final l10n = context.l10n;
     final List<DropdownMenuItem<IapDemoForcedOutcome>> items =
         IapDemoForcedOutcome.values
-            .map(
-              (o) => DropdownMenuItem(
-                value: o,
-                child: Text(o.name),
-              ),
-            )
+            .map((o) => DropdownMenuItem(value: o, child: Text(o.name)))
             .toList();
 
     return Row(
@@ -43,7 +38,7 @@ class _DemoControls extends StatelessWidget {
 }
 
 class _ProductSection extends StatelessWidget {
-  const _ProductSection({
+  const new({
     required this.title,
     required this.products,
     required this.entitlements,

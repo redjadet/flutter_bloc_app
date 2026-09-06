@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 part 'websocket_demo_page_sections.part.dart';
 
 class WebsocketDemoPage extends StatefulWidget {
-  const WebsocketDemoPage({super.key});
+  const new({super.key});
 
   @override
   State<WebsocketDemoPage> createState() => _WebsocketDemoPageState();

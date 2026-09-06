@@ -2,7 +2,7 @@ part of 'walletconnect_auth_page.dart';
 
 /// Page for WalletConnect authentication demo.
 class WalletConnectAuthPage extends StatelessWidget {
-  const WalletConnectAuthPage({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class WalletConnectAuthPage extends StatelessWidget {
 }
 
 class _WalletConnectAuthContent extends StatelessWidget {
-  const _WalletConnectAuthContent();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _WalletConnectAuthContent extends StatelessWidget {
 }
 
 class _StatusSections extends StatelessWidget {
-  const _StatusSections();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +46,8 @@ class _StatusSections extends StatelessWidget {
           WalletConnectAuthState,
           ({String? errorMessage, bool isLinked})
         >(
-          selector: (state) => (
-            errorMessage: state.errorMessage,
-            isLinked: state.isLinked,
-          ),
+          selector: (state) =>
+              (errorMessage: state.errorMessage, isLinked: state.isLinked),
         );
 
     if (state.errorMessage == null && !state.isLinked) {
@@ -61,16 +59,11 @@ class _StatusSections extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         if (state.errorMessage case final msg?) ...<Widget>[
-          _StatusBannerCard.error(
-            message: msg,
-            onDismiss: cubit.clearError,
-          ),
+          _StatusBannerCard.error(message: msg, onDismiss: cubit.clearError),
           SizedBox(height: context.responsiveGapM),
         ],
         if (state.isLinked) ...<Widget>[
-          _StatusBannerCard.success(
-            message: context.l10n.walletLinked,
-          ),
+          _StatusBannerCard.success(message: context.l10n.walletLinked),
           SizedBox(height: context.responsiveGapM),
         ],
       ],
@@ -79,7 +72,7 @@ class _StatusSections extends StatelessWidget {
 }
 
 class _LinkedWalletSectionContainer extends StatelessWidget {
-  const _LinkedWalletSectionContainer();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +109,7 @@ class _LinkedWalletSectionContainer extends StatelessWidget {
 }
 
 class _WalletProfileSectionContainer extends StatelessWidget {
-  const _WalletProfileSectionContainer();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +118,7 @@ class _WalletProfileSectionContainer extends StatelessWidget {
           WalletConnectAuthCubit,
           WalletConnectAuthState,
           WalletUserProfile?
-        >(
-          selector: (state) => state.linkedProfile,
-        );
+        >(selector: (state) => state.linkedProfile);
 
     if (profile == null) {
       return const SizedBox.shrink();
@@ -144,7 +135,7 @@ class _WalletProfileSectionContainer extends StatelessWidget {
 }
 
 class _UnlinkedWalletAddressSection extends StatelessWidget {
-  const _UnlinkedWalletAddressSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -153,9 +144,7 @@ class _UnlinkedWalletAddressSection extends StatelessWidget {
           WalletConnectAuthCubit,
           WalletConnectAuthState,
           WalletAddress?
-        >(
-          selector: (state) => state.unlinkedWalletAddress,
-        );
+        >(selector: (state) => state.unlinkedWalletAddress);
 
     if (address == null) {
       return const SizedBox.shrink();
@@ -172,7 +161,7 @@ class _UnlinkedWalletAddressSection extends StatelessWidget {
 }
 
 class _ActionSections extends StatelessWidget {
-  const _ActionSections();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +223,7 @@ class _ActionSections extends StatelessWidget {
 }
 
 class _StatusBannerCard extends StatelessWidget {
-  const _StatusBannerCard._({
+  const new _({
     required this.message,
     required this.iconData,
     required this.backgroundColor,
@@ -242,25 +231,22 @@ class _StatusBannerCard extends StatelessWidget {
     this.onDismiss,
   });
 
-  const _StatusBannerCard.error({
-    required String message,
-    required VoidCallback onDismiss,
-  }) : this._(
-         message: message,
-         iconData: Icons.error_outline,
-         backgroundColor: null,
-         foregroundColor: null,
-         onDismiss: onDismiss,
-       );
+  const new error({required String message, required VoidCallback onDismiss})
+    : this._(
+        message: message,
+        iconData: Icons.error_outline,
+        backgroundColor: null,
+        foregroundColor: null,
+        onDismiss: onDismiss,
+      );
 
-  const _StatusBannerCard.success({
-    required String message,
-  }) : this._(
-         message: message,
-         iconData: Icons.check_circle_outline,
-         backgroundColor: null,
-         foregroundColor: null,
-       );
+  const new success({required String message})
+    : this._(
+        message: message,
+        iconData: Icons.check_circle_outline,
+        backgroundColor: null,
+        foregroundColor: null,
+      );
 
   final String message;
   final IconData iconData;
@@ -289,11 +275,7 @@ class _StatusBannerCard extends StatelessWidget {
       padding: context.responsiveCardPaddingInsets,
       child: Row(
         children: <Widget>[
-          Icon(
-            iconData,
-            color: resolvedForegroundColor,
-            size: iconSize,
-          ),
+          Icon(iconData, color: resolvedForegroundColor, size: iconSize),
           SizedBox(width: context.responsiveHorizontalGapM),
           Expanded(
             child: Text(
@@ -321,7 +303,7 @@ class _StatusBannerCard extends StatelessWidget {
 }
 
 class _LinkedWalletSection extends StatelessWidget {
-  const _LinkedWalletSection({
+  const new({
     required this.address,
     required this.showRelinkButton,
     required this.onRelink,
@@ -350,7 +332,7 @@ class _LinkedWalletSection extends StatelessWidget {
 }
 
 class _LoadingSection extends StatelessWidget {
-  const _LoadingSection();
+  const new();
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +347,7 @@ class _LoadingSection extends StatelessWidget {
 
 /// Displays wallet user profile (balance, rewards, last claim, NFTs) on the connect wallet screen.
 class _WalletProfileSection extends StatelessWidget {
-  const _WalletProfileSection({required this.profile});
+  const new({required this.profile});
 
   final WalletUserProfile profile;
 
@@ -412,10 +394,7 @@ class _WalletProfileSection extends StatelessWidget {
             value: profile.rewards.toStringAsFixed(2),
           ),
           SizedBox(height: context.responsiveGapS),
-          _ProfileRow(
-            label: l10n.lastClaim,
-            value: dateText,
-          ),
+          _ProfileRow(label: l10n.lastClaim, value: dateText),
           SizedBox(height: context.responsiveGapS),
           _ProfileRow(
             label: l10n.nfts,
@@ -428,10 +407,7 @@ class _WalletProfileSection extends StatelessWidget {
 }
 
 class _ProfileRow extends StatelessWidget {
-  const _ProfileRow({
-    required this.label,
-    required this.value,
-  });
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
