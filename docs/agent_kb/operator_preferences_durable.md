@@ -5,6 +5,7 @@ Durable operator choices. Keep simple; link to owner; avoid duplicate prose.
 ## Agent Docs
 
 - Keep root [`AGENTS.md`](../../AGENTS.md) a lean map: links only in `## Map`. Put behavior here or owning `docs/`. Never add long prose or `## Learned User Preferences` / `## Learned Workspace Facts`.
+- Do **not** link [`engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) (or other human-primary skill guides) from [`AGENTS.md`](../../AGENTS.md) — that map is agent-facing; those guides target humans.
 - **Repo documentation language:** Agent-facing and repo docs (`docs/**`, [`AGENTS.md`](../../AGENTS.md), skills, rules) stay **English only** — do not embed Turkish phrases in durable docs even when the operator states a preference in Turkish. App user-facing l10n (e.g. `app_tr.arb`) is separate.
 - Agent docs/templates: reduce context/token load only when signal exists and mechanical-check anchors survive. Classify edits via `docs/audits/dedup_matrix_*.md` (canonical / echo / stale).
 - **Automatic memory upkeep (safe):** [`tool/agent_memory_auto_maintain.sh`](../../tool/agent_memory_auto_maintain.sh) — local `--if-changed` link normalize on agent-scope markdown (via [`check_agent_knowledge_base.sh`](../../tool/check_agent_knowledge_base.sh)); `--verify` after [`sync_agent_assets.sh`](../../tool/sync_agent_assets.sh) `--apply`; optional report-only `--codex-memory-health` / `AGENT_MEMORY_CODEX_HEALTH=1`. No compress/trim/host-memory mutation. Opt-out: `AGENT_MEMORY_AUTO_MAINTAIN=0`.
@@ -18,7 +19,7 @@ Durable operator choices. Keep simple; link to owner; avoid duplicate prose.
 
 ## README
 
-Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch, grouped repo-backed badges, quick start, one doc table. Put **Scope** before **Screenshots**; screenshots last. Route detail to [`docs/README.md`](../README.md) and topic docs. No ADR tables, command essays, or duplicate deep dives in README body.
+Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch, grouped repo-backed badges, quick start, one doc table. Put **Scope** before **Screenshots**; screenshots last. List **critical human skill** docs before any “work with an AI agent” section. Route detail to [`docs/README.md`](../README.md) and topic docs. No ADR tables, command essays, or duplicate deep dives in README body.
 
 ## Workflow
 
@@ -42,7 +43,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - **Dart format before finish:** After any task that changed `.dart` files, run `./bin/format` (preferred; git-aware wrapper for `dart format`) or `dart format .` **before** claiming done / closeout report. Do not leave format drift for the user or CI. See [`legibility_and_finish_gate.md`](legibility_and_finish_gate.md) § Definition of done.
 - Fix failures in product code/DI/config first; do not "pass" checks by weakening scripts or validators. Change scripts only for demonstrated false positives.
 - Extend preflight checks when dependency/codegen drift appears before full builds break (see `./bin/integration_preflight` and delivery-checklist dependency preflight).
-- **Web/browser:** `integration_test` does not run on web; use `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` — [`agents_quick_reference.md`](../agents_quick_reference.md).
+- **Web/browser:** `integration_test` does not run on web; use `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` — [`agents_quick_reference.md`](../agents_quick_reference.md). After web startup/loading failures, land automated early detection (preflight, harness, or static guard) in the same series — do not rely on manual browser retesting to catch regressions.
 - **Native interop on web:** guard host calls when `kIsWeb`; use short MethodChannel timeouts so web/preflight does not hang; register showcase channel mocks once in `test/flutter_test_config.dart` via `registerNativeShowcaseChannelMock()` (`test/helpers/native_showcase_channel_mocks.dart`)—do not duplicate per test file or web bootstrap `setUpAll`. FFI uses io/stub split—web loads stub. Prove with `flutter build web` when the feature ships cross-platform.
 - **Web no-backend / guest-first:** On web, showcase features stay navigable and demo-usable without Firebase, Supabase, or mandatory login. Gate via `BackendAvailability`; use local guest auth, io/web stores, local chat/IoT fallbacks, and backend-disabled banners—not hard auth/backend gates. Detail: [`changes/2026-06-17_web-no-backend-mode.md`](../changes/2026-06-17_web-no-backend-mode.md), [`firebase_setup.md`](../integrations/firebase_setup.md).
 - **Web feature parity:** When shipping or hardening cross-platform features, prefer io/web splits and graceful stubs over web-only DI/route blocks that hide iOS/Android capability. Prove with `flutter build web` and browser integration when seams change ([`changes/2026-06-15_web-parity-staff-case-study.md`](../changes/2026-06-15_web-parity-staff-case-study.md)).
