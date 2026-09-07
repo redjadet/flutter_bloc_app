@@ -50,10 +50,32 @@ on_clause = re.compile(r"\}\s*on\s+([A-Za-z0-9_.<>,\s]+?)(?:\s+catch|\s*\{)")
 ignore_re = re.compile(r"check-ignore|firebase-app-object-catch-ignore")
 
 def strip_strings_and_comments(text: str) -> str:
-    """Replace comments/strings with spaces so indices stay aligned with original."""
+    """Replace comments/strings with spaces so indices stay aligned with original.
+
+    Non-raw string interpolations keep `${...}` bodies visible so calls like
+    `log('${Firebase.app()}')` still match (Codex review / PR #805 follow-up).
+    """
     out = [" "] * len(text)
     i = 0
     n = len(text)
+
+    def copy_interpolation(start: int) -> int:
+        # start points at '$' of '${'
+        j = start
+        out[j] = text[j]
+        out[j + 1] = text[j + 1]
+        j += 2
+        depth = 1
+        while j < n and depth > 0:
+            ch2 = text[j]
+            out[j] = ch2
+            if ch2 == "{":
+                depth += 1
+            elif ch2 == "}":
+                depth -= 1
+            j += 1
+        return j
+
     while i < n:
         if text.startswith("//", i):
             while i < n and text[i] != "\n":
@@ -65,24 +87,29 @@ def strip_strings_and_comments(text: str) -> str:
             i = end
             continue
         ch = text[i]
-        if ch in "'\"":
-            quote = ch
-            i += 1
+        raw = ch == "r" and i + 1 < n and text[i + 1] in "'\""
+        if raw or ch in "'\"":
+            if raw:
+                i += 1
+                ch = text[i]
+            if text.startswith(ch * 3, i):
+                quote = ch * 3
+                i += 3
+            else:
+                quote = ch
+                i += 1
             while i < n:
-                if text[i] == "\\":
+                if len(quote) == 1 and text[i] == "\\":
                     i = min(n, i + 2)
                     continue
-                if text[i] == quote:
-                    i += 1
+                if text.startswith(quote, i):
+                    i += len(quote)
                     break
+                # Executable interpolations must remain scannable.
+                if not raw and text.startswith("${", i):
+                    i = copy_interpolation(i)
+                    continue
                 i += 1
-            continue
-        if ch == "r" and i + 1 < n and text[i + 1] in "'\"":
-            quote = text[i + 1]
-            i += 2
-            while i < n and text[i] != quote:
-                i += 1
-            i = min(n, i + 1)
             continue
         out[i] = ch
         i += 1
@@ -233,12 +260,19 @@ PY
 
 run_self_test() {
   local FIXTURE_DIR="$WORKSPACE_ROOT/tool/fixtures/firebase_app_object_catch"
-  local bad_out good_out
+  local bad_out interp_out good_out
 
   bad_out="$(scan_paths "$FIXTURE_DIR/bad.dart" || true)"
   if ! printf '%s\n' "$bad_out" | grep -q 'Firebase.app() catch must include on Object'; then
     echo "❌ self-test: expected bad.dart to fail"
     printf '%s\n' "$bad_out"
+    return 1
+  fi
+
+  interp_out="$(scan_paths "$FIXTURE_DIR/bad_interpolation.dart" || true)"
+  if ! printf '%s\n' "$interp_out" | grep -q 'Firebase.app() catch must include on Object'; then
+    echo "❌ self-test: expected bad_interpolation.dart to fail"
+    printf '%s\n' "$interp_out"
     return 1
   fi
 

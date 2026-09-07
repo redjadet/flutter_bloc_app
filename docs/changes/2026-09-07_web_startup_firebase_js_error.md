@@ -27,7 +27,7 @@ only `Exception` / `Firebase*Exception` (misses dart2js JS `Error`).
 
 | Lane | Artifact |
 | --- | --- |
-| Static guard | `tool/check_firebase_app_object_catch.sh` (+ fixtures) |
+| Static guard | `tool/check_firebase_app_object_catch.sh` (+ fixtures; keeps `${...}` visible) |
 | Checklist | wired in `tool/delivery_checklist.sh` |
 | Unit | `test/app/composition/register_walletconnect_auth_services_test.dart` in `tool/check_regression_guards.sh` |
 | Lesson | `tasks/lessons.md` (2026-09-07) |
