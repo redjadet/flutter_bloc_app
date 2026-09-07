@@ -43,7 +43,8 @@ Deferred imports / `DeferredPage` builders:
 | `apps/mobile/lib/app/router/route_groups.dart` | `google_maps_page`, `realtime_market_page`, `websocket_page` |
 | `apps/mobile/lib/app/router/routes_core.dart` | `chart_page`, `markdown_editor_page` |
 
-Heuristic `check_deferred_heavy_routes` remains **deferred** until allowlist strategy exists.
+Allowlist gate `check_deferred_heavy_routes.sh` is **fail** in `CHECK_SCRIPTS`
+(promoted 2026-06-03). Soften locally with `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn`.
 
 ## Regression guard
 
@@ -52,7 +53,8 @@ Heuristic `check_deferred_heavy_routes` remains **deferred** until allowlist str
 
 ## Checklist metadata
 
-- `CHECK_SCRIPT_THEMES` (59 entries) aligned with `CHECK_SCRIPTS` / `CHECK_MESSAGES`
+- `CHECK_SCRIPT_THEMES` length **must equal** `CHECK_SCRIPTS` / `CHECK_MESSAGES`
+  (currently 82 each; `validate_checklist_configuration()` enforces match)
 - Validated in `validate_checklist_configuration()` at checklist start (tool `*.dart` via `dart compile kernel`, not `dart analyze`, to avoid analyzer-plugin hangs on excluded `tool/**` paths)
 - `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script
 
@@ -77,17 +79,19 @@ with coverage; coverage summary stayed at **71.22%**.
 `CHECKLIST_EXPLAIN_THEMES=1` prints after checklist metadata exists; warn gates
 emit line-scoped fixture samples.
 
-## Explicitly deferred (not in MVP)
+## Post-MVP status (see deferred backlog)
 
-Full backlog (IDs, unblock criteria, reject vs defer):
+Open / parked / rejected backlog (IDs, unblock criteria):
 [`checklist_quality_gates_deferred.md`](checklist_quality_gates_deferred.md).
 
-Summary:
+Current snapshot (keep in sync with that owner doc):
 
-- **Defer:** `bloc_lint`, `check_bloc_rebuild_scoping`,
-  `check_context_read_watch`, `check_deferred_heavy_routes`,
-  `check_startup_work_in_build`, `check_lifecycle_observer_dispose`,
-  `CHECK_THEME` filter, warn→fail promotion
+- **Open only:** `bloc_lint` (**QG-D01** ADR-deferred); `check_bloc_rebuild_scoping.sh`
+  (**QG-D03** warn inventory, not in `CHECK_SCRIPTS`); `CHECK_THEME` filter
+  (**QG-D08** ADR-deferred)
+- **Promoted fail (in checklist):** `check_context_read_watch.sh`,
+  `check_deferred_heavy_routes.sh`, `check_lifecycle_observer_dispose.sh`,
+  plus MVP navigation / sync-io / image-cache / cubit-subscription gates
 - **Cancelled (optional M3):** `check_presentation_build_method_size.sh`
-- **Reject:** `check_sync_io_in_lib` (data-layer `existsSync` in Hive/file stores is valid;
-  use presentation-only `check_sync_io_in_presentation.sh` instead)
+- **Reject:** `check_startup_work_in_build.sh` (overlaps side-effects gate);
+  `check_sync_io_in_lib` (data-layer `existsSync` valid — use presentation-only gate)

@@ -59,6 +59,53 @@ forbid_contains() {
   fi
 }
 
+array_entry_count() {
+  local array_name="$1"
+  local path="$2"
+
+  awk -v array_name="$array_name" '
+    BEGIN { count = 0; in_array = 0 }
+    $0 == array_name "=(" { in_array = 1; next }
+    in_array && /^\)/ { print count + 0; exit }
+    in_array && /^[[:space:]]*"[^"]+"[[:space:]]*$/ { count++ }
+    END {
+      if (!in_array) {
+        print count + 0
+      }
+    }
+  ' "$path"
+}
+
+checklist_scripts_include() {
+  local script="$1"
+
+  awk -v expected="\"tool/${script}\"" '
+    /^CHECK_SCRIPTS=\(/ { in_scripts = 1; next }
+    in_scripts && /^\)/ { exit }
+    in_scripts {
+      line = $0
+      sub(/^[[:space:]]*/, "", line)
+      sub(/[[:space:]]*$/, "", line)
+      if (line == expected) {
+        found = 1
+        exit
+      }
+    }
+    END { exit found ? 0 : 1 }
+  ' tool/delivery_checklist.sh
+}
+
+baseline_promoted_fail_includes() {
+  local script="$1"
+
+  awk -v expected="$script" '
+    /^- \*\*Promoted fail \(in checklist\):\*\*/ { in_promoted = 1 }
+    in_promoted && /^- \*\*/ && $0 !~ /^- \*\*Promoted fail \(in checklist\):\*\*/ { exit }
+    in_promoted && index($0, expected) { found = 1 }
+    END { exit found ? 0 : 1 }
+  ' "$baseline_doc"
+}
+
 area_score() {
   local area="$1"
   local line
@@ -102,11 +149,81 @@ forbid_contains "docs/interview_showcase.md" "~399 tests"
 forbid_contains "docs/interview_showcase.md" "60% gate"
 forbid_contains "docs/CODE_QUALITY.md" "aggregate ~65% coverage"
 
+baseline_doc="docs/engineering/checklist_quality_gates_baseline.md"
+require_file "$baseline_doc"
+forbid_contains "$baseline_doc" 'Heuristic `check_deferred_heavy_routes` remains **deferred**'
+forbid_contains "$baseline_doc" 'CHECK_SCRIPT_THEMES` (59 entries)'
+forbid_contains "$baseline_doc" "## Explicitly deferred (not in MVP)"
+require_contains "$baseline_doc" "## Post-MVP status (see deferred backlog)"
+
+check_script_count="$(array_entry_count "CHECK_SCRIPTS" "tool/delivery_checklist.sh")"
+check_message_count="$(array_entry_count "CHECK_MESSAGES" "tool/delivery_checklist.sh")"
+check_theme_count="$(array_entry_count "CHECK_SCRIPT_THEMES" "tool/delivery_checklist.sh")"
+if [[ "$check_script_count" -eq 0 || "$check_script_count" != "$check_message_count" || "$check_script_count" != "$check_theme_count" ]]; then
+  missing+=("CHECK_SCRIPTS/CHECK_MESSAGES/CHECK_SCRIPT_THEMES counts disagree: $check_script_count/$check_message_count/$check_theme_count")
+fi
+require_contains "$baseline_doc" "(currently ${check_script_count} each;"
+
+# Fail-wired quality gates must stay in the delivery checklist.
+for promoted_fail_script in \
+  check_context_read_watch.sh \
+  check_deferred_heavy_routes.sh \
+  check_lifecycle_observer_dispose.sh \
+  check_navigation_outside_presentation.sh \
+  check_sync_io_in_presentation.sh \
+  check_remote_image_cache_hints.sh \
+  check_cubit_subscription_cancel.sh
+do
+  if ! checklist_scripts_include "$promoted_fail_script"; then
+    missing+=("tool/${promoted_fail_script} is not in CHECK_SCRIPTS")
+  fi
+done
+
+for baseline_promoted_script in \
+  check_context_read_watch.sh \
+  check_deferred_heavy_routes.sh \
+  check_lifecycle_observer_dispose.sh
+do
+  if ! baseline_promoted_fail_includes "$baseline_promoted_script"; then
+    missing+=("$baseline_doc Post-MVP promoted-fail status omits $baseline_promoted_script")
+  fi
+done
+
+# Rebuild scoping stays report-only until explicitly promoted into CHECK_SCRIPTS.
+if awk '
+  BEGIN { in_scripts = 0; found = 0 }
+  /^CHECK_SCRIPTS=\(/ { in_scripts = 1; next }
+  in_scripts && /^\)/ { in_scripts = 0 }
+  in_scripts && /check_bloc_rebuild_scoping\.sh/ { found = 1 }
+  END { exit found ? 0 : 1 }
+' tool/delivery_checklist.sh; then
+  missing+=("tool/check_bloc_rebuild_scoping.sh is in CHECK_SCRIPTS but QG-D03 is still open (warn); update deferred backlog + baseline before wiring")
+fi
+
 deferred_doc="docs/engineering/checklist_quality_gates_deferred.md"
 if [[ -f "$deferred_doc" ]]; then
   if grep -E '\|[[:space:]]*defer[[:space:]]*\|' "$deferred_doc" | grep -q 'QG-D'; then
-    missing+=("$deferred_doc has bare defer decision rows (use promoted/reject/ADR-deferred)")
+    missing+=("$deferred_doc has bare defer decision rows (use open (warn)/reject/ADR-deferred)")
   fi
+  require_contains "$deferred_doc" "## Open backlog"
+  require_contains "$deferred_doc" "**QG-D03**"
+  require_contains "$deferred_doc" "**open (warn)**"
+  # Fail-wired gates must not remain in the open backlog.
+  for stale_open_claim in \
+    "check_context_read_watch.sh" \
+    "check_deferred_heavy_routes.sh" \
+    "check_lifecycle_observer_dispose.sh"
+  do
+    if awk -v needle="$stale_open_claim" '
+      BEGIN { in_open = 0; found = 0 }
+      /^## Open backlog/ { in_open = 1; next }
+      /^## / { in_open = 0 }
+      in_open && index($0, needle) { found = 1 }
+      END { exit found ? 0 : 1 }
+    ' "$deferred_doc"; then
+      missing+=("$deferred_doc open backlog still lists shipped fail gate: $stale_open_claim")
+    fi
+  done
 else
   missing+=("missing file: $deferred_doc")
 fi

@@ -1,16 +1,21 @@
 # Checklist quality gates — deferred backlog
 
-**Status:** Post-MVP (2026-05-20). MVP (M0–M4) is **shipped**; items below are **not**
-blocking merge of the four new gates. Source plan:
-[checklist quality gates](checklist_quality_gates_baseline.md) (MVP proof).
+**Status:** Post-MVP. MVP (M0–M4) shipped 2026-05-20; several follow-ups
+promoted since. This doc is the **open** backlog only. Source MVP proof:
+[checklist quality gates baseline](checklist_quality_gates_baseline.md).
 
-**MVP shipped (do not re-open as “missing work”):**
+**Already shipped (do not re-open as missing work):**
 
-- Fail: `check_navigation_outside_presentation.sh`, `check_sync_io_in_presentation.sh`
-- Fail (promoted 2026-06-03): `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh`
-- Fail (promoted 2026-06-08): `file_length_lint` / `file_too_long` (native plugin, max 225 lines under `lib/`)
-- `CHECK_SCRIPT_THEMES`, `CHECKLIST_EXPLAIN_THEMES=1`, path-triggered
-  `./bin/router_feature_validate`, `background_sync_coordinator_test.dart` regression
+| ID | Gate | Severity | Note |
+| --- | --- | --- | --- |
+| MVP | `check_navigation_outside_presentation.sh`, `check_sync_io_in_presentation.sh` | fail | Wired 2026-05-20 |
+| MVP→fail | `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh` | fail | Promoted 2026-06-03 |
+| **QG-D02** | `file_length_lint` / `file_too_long` | fail | Promoted 2026-06-08 |
+| **QG-D04** | `check_context_read_watch.sh` | fail | Fail-default 2026-08-04; in `CHECK_SCRIPTS` |
+| **QG-D05** | `check_deferred_heavy_routes.sh` | fail | Fail-default 2026-06-03; in `CHECK_SCRIPTS` |
+| **QG-D07** | `check_lifecycle_observer_dispose.sh` | fail | Fail-default 2026-06-03; in `CHECK_SCRIPTS` |
+| themes | `CHECK_SCRIPT_THEMES` + `CHECKLIST_EXPLAIN_THEMES=1` | meta | Length must match `CHECK_SCRIPTS` |
+| router | path-triggered `./bin/router_feature_validate` | auto | Skip: `CHECKLIST_SKIP_ROUTER_VALIDATE=1` |
 
 ---
 
@@ -20,25 +25,21 @@ blocking merge of the four new gates. Source plan:
 | --- | --- |
 | **ID** | Stable backlog key for issues/plans |
 | **Unblock** | Measurable done-criteria before implementation starts |
-| **Decision** | `defer` = later; `reject` = do not pursue as written |
+| **Decision** | `ADR-deferred` = parked with owner; `reject` = do not pursue as written; `open (warn)` = shipped inventory, checklist wiring still optional |
 
-When an item ships, remove its row here and note the change in
-[`docs/changes/`](../changes/README.md) or a dated change note.
+When an item ships to fail-in-checklist, move it into the shipped table above and
+delete its open-backlog row. Note the change in [`docs/changes/`](../changes/README.md).
 
 ---
 
-## Backlog
+## Open backlog
 
-| ID | Theme | Proposed gate / tool | Decision | Why deferred | Unblock criteria |
+| ID | Theme | Proposed gate / tool | Decision | Why open | Unblock criteria |
 | --- | --- | --- | --- | --- | --- |
 | **QG-D01** | State / rebuild | `bloc_lint` (custom analyzer) | **ADR-deferred** | Overlaps [`check_cubit_isclosed.sh`](../validation_scripts.md); needs curated rule set + CI budget. Non-blocking for Engineering scorecard. | Owner: [`docs/adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md) § follow-up; document which `bloc_lint` rules complement existing gates before promotion. |
-| **QG-D02** | File size | `file_length_lint` (native plugin) | **promoted (fail)** | Shipped 2026-06-08: plugin enabled in `analysis_options.yaml`, `file_too_long: error`, `max_lines: 225`, 0 violations on `lib/`; `./tool/run_file_length_lint.sh`. | Split oversized files into `*.part.dart`; do not raise `max_lines` to hide violations; change note [`../changes/2026-06-08_file_length_lint_qg-d02.md`](../changes/2026-06-08_file_length_lint_qg-d02.md). |
-| **QG-D03** | Rebuild | `check_bloc_rebuild_scoping.sh` | **promoted (warn)** | Inventory scanner shipped 2026-08-04 (report-only): default `CHECK_BLOC_REBUILD_SCOPING_MODE=warn`; presentation non-demo; `*_demo/**` excluded; fixtures `tool/fixtures/bloc_rebuild_scoping/`; harness fixtures; **not** in `CHECK_SCRIPTS`/checklist. PR0 inventory: 2 non-demo candidates (`scapes_page`, `production_readiness_page`) classified intentional full-state / inventory residual. | Flip to checklist fail only after FP classification + promotion criteria; change note [`../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md`](../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md). |
-| **QG-D04** | Rebuild / context | `check_context_read_watch.sh` (presentation) | **promoted (fail)** | Shipped 2026-07-09 warn; fail-default 2026-08-04 after remeasure precision (0 unsuppressed non-demo presentation hits). Default `CHECK_CONTEXT_READ_WATCH_MODE=fail`; demo exclusion; fixtures + harness triad. Rollback: env `CHECK_CONTEXT_READ_WATCH_MODE=warn`. | Keep fixtures under `tool/fixtures/context_read_watch/`; change note [`../changes/2026-08-04_context_read_watch_qg-d04_fail.md`](../changes/2026-08-04_context_read_watch_qg-d04_fail.md). |
-| **QG-D05** | Navigation / perf | `check_deferred_heavy_routes.sh` | **promoted (fail)** | Shipped 2026-06-03 warn; flipped 2026-06-03: default `CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail` (0 violations on `apps/mobile/lib/app/router`). | Revert to warn only if a second deferred route file is added intentionally; keep fixtures under `tool/fixtures/deferred_heavy_routes/`. |
+| **QG-D03** | Rebuild | `check_bloc_rebuild_scoping.sh` | **open (warn)** | Inventory scanner shipped 2026-08-04 (report-only). Default `CHECK_BLOC_REBUILD_SCOPING_MODE=warn`; presentation non-demo; `*_demo/**` excluded; fixtures `tool/fixtures/bloc_rebuild_scoping/`; **not** in `CHECK_SCRIPTS`. PR0: 2 non-demo candidates classified intentional / residual. | Flip to checklist fail only after FP classification + promotion criteria; change note [`../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md`](../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md). |
+| **QG-D08** | Checklist UX | `CHECK_THEME` env filter | **ADR-deferred** | Needs subset runner tests so partial runs do not skip required fail gates. Non-blocking for Engineering scorecard. Agent speed win once safe. | Owner: [`docs/adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md) § quality-gate promotion follow-up; spec `CHECK_THEME=navigation ./bin/checklist` + safety test before promotion. |
 | **QG-D06** | Startup | `check_startup_work_in_build.sh` | **reject** | Overlaps `check_side_effects_build.sh`; duplicate signals for this repo. | Revisit only if side-effects script misses a class of startup-in-build violations with evidence. |
-| **QG-D07** | Lifecycle | `check_lifecycle_observer_dispose.sh` | **promoted (fail)** | Shipped 2026-06-03 warn; flipped 2026-06-03: default `CHECK_LIFECYCLE_OBSERVER_MODE=fail` (0 violations on `lib/`). | Revert to warn only when adding a new observer site without dispose yet; fixtures under `tool/fixtures/lifecycle_observer_dispose/`. |
-| **QG-D08** | Checklist UX | `CHECK_THEME` env filter | **ADR-deferred** | Needs subset runner tests so partial runs do not skip required fail gates. Non-blocking for Engineering scorecard. | Owner: [`docs/adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md) § quality-gate promotion follow-up; spec `CHECK_THEME=navigation ./bin/checklist` + safety test before promotion. |
 | **QG-D10** | Blocking IO | `check_sync_io_in_lib.sh` (entire `lib/`) | **reject** | Data layer **legitimately** uses `existsSync` / `*Sync` in Hive and file stores; presentation-only gate is the correct boundary. | Revisit only if data layer moves sync IO off hot paths **and** presentation gate is insufficient. |
 
 ---
@@ -56,7 +57,8 @@ When an item ships, remove its row here and note the change in
 | Topic | Current behavior | Follow-up |
 | --- | --- | --- |
 | Router validate without git | `should_run_router_feature_validate_auto` returns run when `HAS_GIT_REPO≠1` (conservative: cannot diff → may run validate). | Document in validation_scripts; optional tighten to skip when no changed-file list. |
-| Codex plan review (May 2026) | Three delegate runs aborted; no external review merged. | Optional re-run for deferred IDs only; not required for MVP closure. |
+| Parallel static checks | `CHECK_SCRIPTS` (~82) run with `CHECKLIST_JOBS` (default CPU count, capped at 8). Prefer path auto-skip inside expensive scripts over dropping fail gates. | Expand per-script auto-skip only with fixture proof; do not thin CI. |
+| Codex plan review (May 2026) | Three delegate runs aborted; no external review merged. | Optional re-run for open IDs only; not required for MVP closure. |
 
 ---
 
