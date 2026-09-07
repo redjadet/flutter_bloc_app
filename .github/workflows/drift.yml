@@ -43,6 +43,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           install-ripgrep: 'true'
+          install-rust: 'true'
 
       - name: Run delivery checklist
         run: ./bin/checklist
@@ -62,6 +63,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           install-ripgrep: 'true'
+          install-rust: 'true'
 
       - name: Run upgrade + validate workflow
         run: ./bin/upgrade_validate_all
