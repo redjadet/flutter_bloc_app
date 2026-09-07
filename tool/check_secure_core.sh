@@ -20,11 +20,18 @@ if [[ -z "$EXPECTED_RUSTC" ]]; then
   echo "Rust channel missing from $CRATE_DIR/rust-toolchain.toml" >&2
   exit 1
 fi
-ACTUAL_RUSTC="$(rustc --version | awk '{print $2}')"
-if [[ "$ACTUAL_RUSTC" != "$EXPECTED_RUSTC" ]]; then
-  echo "rustc $ACTUAL_RUSTC != required $EXPECTED_RUSTC" >&2
+# Prefer the pinned toolchain (+channel), not ambient default rustc on PATH.
+# Drift/CI must install 1.98.1 via setup-flutter-workspace install-rust=true.
+if ! ACTUAL_RUSTC="$(rustc "+${EXPECTED_RUSTC}" --version 2>/dev/null | awk '{print $2}')"; then
+  echo "rustc +${EXPECTED_RUSTC} not available; install Rust ${EXPECTED_RUSTC} (see packages/secure_core_bridge/README.md)" >&2
   exit 1
 fi
+if [[ "$ACTUAL_RUSTC" != "$EXPECTED_RUSTC" ]]; then
+  echo "rustc +${EXPECTED_RUSTC} resolved to $ACTUAL_RUSTC != required $EXPECTED_RUSTC" >&2
+  exit 1
+fi
+# Ensure subsequent cargo/rustc in this process prefer the pin when no override is set.
+export RUSTUP_TOOLCHAIN="$EXPECTED_RUSTC"
 
 cd "$ROOT"
 dart run packages/secure_core_bridge/tool/generate_bindings.dart --check

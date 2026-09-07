@@ -21,6 +21,28 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-07 - Opaque checklist failure hid rustc pin miss
+
+- What went wrong:
+  Drift nightly failed with only `Best practices validation failed` while every
+  printed check looked green. Parallel static checks set `VALIDATION_FAILED`
+  without naming the failing script. Real cause: ambient `rustc 1.98.0` vs pin
+  `1.98.1` because Drift had not yet installed Rust (#794 later fixed install).
+- How it was fixed:
+  Re-run Drift on current main (install-rust) → green. Hardened
+  `check_secure_core` to resolve `rustc +<channel>` and print failed script
+  paths from `run_parallel_static_checks`.
+- Pattern:
+  Parallel checklist failures with no failing-script attribution look like
+  phantom red; always dump which `CHECK_SCRIPTS` entry set status≠0.
+- Preventive rule:
+  When checklist ends with generic best-practices failure, search logs for
+  lines without ✅/`|ok`/`pass` (e.g. `rustc … != required`) and confirm
+  Drift/CI `install-rust: true` before chasing app code.
+- Evidence or affected files:
+  `tool/delivery_checklist.sh`; `tool/check_secure_core.sh`; Drift run
+  34094771166 (fail) vs 34138682808 (pass); PR #811.
+
 ### 2026-09-07 - `on Exception` misses Firebase JS Errors on web
 
 - What went wrong:
