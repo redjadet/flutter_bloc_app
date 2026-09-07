@@ -253,12 +253,21 @@ run_parallel_static_checks() {
   exec 9>&-
   exec 9<&-
 
+  local -a failed_scripts=()
   for ((i = 0; i < total_checks; i++)); do
     cat "$tmp_dir/check_${i}.log"
     if [ "$(cat "$tmp_dir/check_${i}.status")" -ne 0 ]; then
       static_failed=1
+      failed_scripts+=("${CHECK_SCRIPTS[$i]}")
     fi
   done
+
+  if [ "$static_failed" -ne 0 ]; then
+    echo "❌ Static checks failed (${#failed_scripts[@]}):"
+    for script in "${failed_scripts[@]}"; do
+      echo "  - $script"
+    done
+  fi
 
   return "$static_failed"
 }
