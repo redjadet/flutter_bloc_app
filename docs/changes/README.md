@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-09-07_best_areas_for_ai_agents.md`](2026-09-07_best_areas_for_ai_agents.md): Ten high-value AI-agent work areas with task-fit boundaries, human controls, and acceptance evidence.
+- [`2026-09-07_critical_human_skills.md`](2026-09-07_critical_human_skills.md): English guide for decomposition, communication, design, review, debugging, security, product judgment, production accountability, and agent supervision.
 - [`2026-09-07_checklist_quality_gates_honesty.md`](2026-09-07_checklist_quality_gates_honesty.md): Re-sync checklist gate docs with live `CHECK_SCRIPTS`; open-only deferred backlog; scorecard honesty guards.
 - [`2026-09-04_keychain_this_device_only.md`](2026-09-04_keychain_this_device_only.md): Apple Keychain `first_unlock_this_device` + no iCloud sync for secure storage defaults.
 - [`2026-09-04_social_feed_persistence_early_gate.md`](2026-09-04_social_feed_persistence_early_gate.md): Run and inventory Social Feed Hive-persistence regressions before coverage.

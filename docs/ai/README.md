@@ -4,6 +4,7 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 
 | File | Purpose |
 | --- | --- |
+| [best_areas_for_ai_agents.md](best_areas_for_ai_agents.md) | High-value agent work areas, boundaries, and acceptance evidence |
 | [skill_routing.md](skill_routing.md) | Which skill to invoke (repo canon over vendor text) |
 | [ai_failure_risks.md](ai_failure_risks.md) | Pre-Flight risk register + minimum proof |
 | [agent_operating_manual.md](agent_operating_manual.md) | T1/T2 coding discipline router |

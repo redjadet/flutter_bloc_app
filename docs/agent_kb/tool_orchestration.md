@@ -2,7 +2,8 @@
 
 Back: [Agent Knowledge Base](../agent_knowledge_base.md)
 
-See also: [`agent_environment_setup.md`](../agent_environment_setup.md)
+See also: [`agent_environment_setup.md`](../agent_environment_setup.md),
+[`best_areas_for_ai_agents.md`](../ai/best_areas_for_ai_agents.md)
 
 Use capabilities as an execution system, not decoration.
 

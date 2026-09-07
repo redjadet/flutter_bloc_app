@@ -71,6 +71,7 @@ For medium- and high-risk work, retain the teach-back in PR or task evidence.
 
 | Manual theme | Canonical owner |
 | --- | --- |
+| Human skills / best AI-agent work areas | [`engineering/critical_human_skills.md`](../engineering/critical_human_skills.md); [`ai/best_areas_for_ai_agents.md`](best_areas_for_ai_agents.md) |
 | Mission / engineering mindset | This doc § Mission; [`agent_knowledge_base.md`](../agent_knowledge_base.md) Core Beliefs |
 | Project context / platforms / existing code | [`agent_project_context.md`](../agent_project_context.md), [`tech_stack.md`](../tech_stack.md), [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) |
 | Simplicity / readability / useful comments / resilient design | This doc §§ Engineering judgment loop and Readable code and useful comments; [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md) |
