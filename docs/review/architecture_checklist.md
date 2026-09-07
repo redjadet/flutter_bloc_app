@@ -8,9 +8,10 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 
 ## Layering
 
-- Domain contains pure Dart contracts/models only.
+- Domain contains pure Dart contracts, models, and reusable business policies.
 - Data implements domain contracts and owns SDK, HTTP, persistence, DTOs, and
-  sync.
+  sync orchestration. Reusable pure business decisions live in domain policies;
+  data invokes them on every I/O path that can violate the invariant.
 - Presentation owns Cubit/BLoC, pages, widgets, route-level user flow, and
   visible state. **MVVM applies here only:** View = `pages/`/`widgets/`; ViewModel
   = `presentation/cubit/` — **presentation state management only** (see
@@ -61,6 +62,12 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
   `tool/check_domain_map_bags.sh`).
 
 ## Proof
+
+Before accepting a boundary-sensitive feature, verify the protected rule,
+single responsible owner, material partial-failure states, and enforcement
+radius from
+[`reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md)
+§ Decision-first feature frame.
 
 Minimum proof is the path-specific lane in
 [`validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).

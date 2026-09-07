@@ -18,6 +18,11 @@ This repo does not require a use-case class for every repository method.
 Use cases live under `apps/mobile/lib/features/<feature>/domain/use_cases/` only when they
 remove orchestration from Cubit without pulling data concerns into domain.
 
+“Cache merge” here means reading/writing external or persisted shapes and
+orchestrating order, retry, and recovery. A reusable business decision about
+which domain value may win belongs in a pure domain policy; the data repository
+invokes it on every pull, replay, or write path that can violate the invariant.
+
 ## Repository Contracts
 
 - Contracts live in `domain/` and speak domain language.

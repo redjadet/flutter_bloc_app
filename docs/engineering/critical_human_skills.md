@@ -23,6 +23,34 @@ technology. Strong work records:
 Separate observed facts from inference. Never invent metrics, validation output,
 production behavior, or individual ownership.
 
+## Uncertainty containment standard
+
+Reduce uncertainty at the earliest stable boundary, before an unclear rule,
+owner, failure state, or assumption spreads through callers and layers. Before
+implementation or approval, make four answers inspectable:
+
+| Question | Required answer |
+| --- | --- |
+| Which rule is protected? | State the user or business invariant in domain language, plus an example that would violate it. |
+| Where does responsibility belong? | Name the lowest stable owner: domain decision, data/adapter I/O, presentation flow, app composition, or shared infrastructure. |
+| What can fail halfway? | Describe committed and uncommitted effects, state left behind, retry/idempotency behavior, cleanup or compensation, and recovery signal. |
+| Which paths must enforce the assumption? | Identify every entry point, replay path, callback, migration, or adapter that can violate the assumption; enforce it through the narrowest shared contract, type, parser, policy, state machine, persistence constraint, or deterministic guard. |
+
+A check inside one function is insufficient when another caller, replay path,
+background callback, migration, or adapter can bypass it. Keep enforcement near
+the boundary that owns the invariant, then prove both the rule and bypass paths.
+Use [Reduce-Surprise Patterns](../architecture/reduce_surprise_patterns.md) for
+feature implementation and review.
+
+This standard makes the project:
+
+- **Readable:** responsibility, data flow, invariant, and failure state are easy
+  to locate without reconstructing the original conversation.
+- **Testable:** important decisions have stable seams and falsifiable examples;
+  tests assert contracts rather than mirror implementation.
+- **Reliable:** partial completion, concurrency, retry, recovery, and detection
+  behavior are designed before the happy path hides them.
+
 ## 1. Problem decomposition
 
 - Frame work as an outcome, not a file list or technology migration.
@@ -49,6 +77,8 @@ production behavior, or individual ownership.
 
 - Start from constraints: scale, latency, consistency, privacy, offline behavior,
   supported platforms, team ownership, delivery horizon, and failure tolerance.
+- Name the protected invariant and its owner before choosing components. Keep
+  pure reusable decisions separate from I/O and workflow orchestration.
 - Define boundaries, data and control flow, source of truth, lifecycle, trust
   boundaries, and operational signals before selecting components.
 - Check normal, degraded, recovery, migration, and rollback paths. Architecture
@@ -180,6 +210,8 @@ production behavior, or individual ownership.
 
 Before calling work complete, answer:
 
+- Can another engineer name the protected rule, its owner, every partial-failure
+  state, and the boundaries that enforce its assumptions?
 - Can another engineer state the problem, chosen design, key trade-off, and
   failure model without the original conversation?
 - Does proof map to acceptance criteria and highest risks?

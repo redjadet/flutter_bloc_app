@@ -13,15 +13,17 @@ Many app flows must remain usable when the network is slow, unavailable, or
 temporarily inconsistent. The UI should not block common user actions on remote
 latency, and user-generated data must not be lost when sync fails.
 
-Local persistence, sync queues, retry behavior, and remote merge policy need one
-shared model so features do not invent incompatible offline behavior.
+Local persistence, sync queues, retry behavior, and consistent application of
+domain merge policy need one shared model so features do not invent incompatible
+offline behavior.
 
 ## Decision Drivers
 
 - Preserve user data before remote writes.
 - Keep feature UI responsive while sync runs in the background.
 - Make retry, queue inspection, and telemetry consistent across features.
-- Keep offline-first implementation inside the data layer.
+- Keep offline-first I/O and sync orchestration inside the data layer; keep
+  reusable pure merge decisions in domain policies that data invokes.
 - Support Hive schema migrations explicitly when stored shapes change.
 - Keep remote merge behavior conservative so stale remote data cannot overwrite
   newer local changes.
@@ -47,9 +49,11 @@ Presentation -> Domain <- Data
                          Data -> local store + remote adapter + sync queue
 ```
 
-Presentation can show pending or sync status, but queueing, replay,
-deduplication, and merge policy stay in repositories and shared sync
-infrastructure.
+Presentation can show pending or sync status. Repositories and shared sync
+infrastructure own queueing, replay, deduplication, I/O ordering, retry, and
+policy invocation. Reusable pure decisions about whether local, remote, or
+pending domain state may win live in domain policies and are applied by every
+relevant repository path.
 
 Offline-first is the default for user-generated or business-critical local
 state. Read-only demos and low-value caches can stay cache-first or online-first
@@ -78,8 +82,8 @@ when the owning feature doc makes that trade-off explicit.
 
 - Entities often need sync metadata such as change IDs, idempotency keys,
   synchronized flags, and timestamps.
-- Repositories must handle merge policy, retry idempotency, malformed stored
-  operations, and per-user queue scope.
+- Repositories must invoke merge policy consistently and handle retry
+  idempotency, malformed stored operations, and per-user queue scope.
 - Tests need local store, queue, and replay coverage instead of only happy-path
   remote mocks.
 - Local cache retention policy becomes part of feature ownership.
