@@ -64,12 +64,13 @@ array_entry_count() {
   local path="$2"
 
   awk -v array_name="$array_name" '
+    BEGIN { count = 0; in_array = 0 }
     $0 == array_name "=(" { in_array = 1; next }
-    in_array && /^\)/ { print count; exit }
+    in_array && /^\)/ { print count + 0; exit }
     in_array && /^[[:space:]]*"[^"]+"[[:space:]]*$/ { count++ }
     END {
       if (!in_array) {
-        print count
+        print count + 0
       }
     }
   ' "$path"
