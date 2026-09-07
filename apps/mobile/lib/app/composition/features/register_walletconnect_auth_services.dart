@@ -17,8 +17,17 @@ void registerWalletConnectAuthServices() {
   );
 
   registerLazySingletonIfAbsent<WalletConnectAuthRepository>(() {
-    // Try to get Firebase services if available
+    // Web release skips Firebase bootstrap, but the JS SDK can still load.
+    // Firebase.app() then throws a raw JS Error (not a Dart Exception). The
+    // previous `on Exception` miss left that Error uncaught, cleared the
+    // HTML splash after WebLaunchSplash, and left a blank Flutter view on
+    // GitHub Pages — looking like a stuck load.
     try {
+      if (Firebase.apps.isEmpty) {
+        return _createMockWalletConnectAuthRepository(
+          walletConnectService: getIt<WalletConnectService>(),
+        );
+      }
       final app = Firebase.app();
       final auth = FirebaseAuth.instanceFor(app: app);
       final firestore = FirebaseFirestore.instanceFor(app: app);
@@ -27,9 +36,7 @@ void registerWalletConnectAuthServices() {
         firebaseAuth: auth,
         firestore: firestore,
       );
-    } on Exception {
-      // If Firebase is not available, create a mock implementation
-      // This allows the feature to work in tests or when Firebase is not initialized
+    } on Object {
       return _createMockWalletConnectAuthRepository(
         walletConnectService: getIt<WalletConnectService>(),
       );

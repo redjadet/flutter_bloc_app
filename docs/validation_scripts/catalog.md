@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **112** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **82** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **113** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **83** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -46,6 +46,12 @@ below.
   Default run always executes fixture self-test (fallback + bare + approved
   factories) before the production scan. Supports `--self-test` / `--paths`.
   Included in `./bin/checklist`.
+- **`check_firebase_app_object_catch.sh`**: Fails when `Firebase.app()` sits in a
+  `try` whose catches are only `Exception` / `*Exception` without `on Object`.
+  On web/dart2js a missing default app can throw a raw JS `Error`, which is not
+  a Dart `Exception` (blank GitHub Pages after splash, 2026-09-07). Default run
+  always executes fixture self-test before the production scan. Supports
+  `--self-test` / `--paths`. Included in `./bin/checklist`.
 - **`check_feature_folder_contract.sh`**: Enforces feature folder shape:
   cubit/state under `presentation/cubit/` (or legacy `cubits/`); bans
   `application/`, `infrastructure/`, `viewmodels/`, `providers/` top-level

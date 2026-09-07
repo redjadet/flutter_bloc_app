@@ -33,7 +33,11 @@ void main() {
 
       registerWalletConnectAuthServices();
 
+      // Must resolve without throwing even when Firebase.app() would throw a
+      // raw JS Error (web release / no default app). Route factories resolve
+      // this at MyApp create time.
       final repo = getIt<WalletConnectAuthRepository>();
+      expect(repo, isA<WalletConnectAuthRepository>());
 
       // The mock repo validates wallet address format.
       Object? caught;

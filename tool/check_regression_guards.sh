@@ -64,6 +64,7 @@ ALL_TESTS=(
   "test/shared/http/retry_interceptor_test.dart"
   "test/shared/http/telemetry_interceptor_test.dart"
   "test/app/composition/register_http_services_test.dart"
+  "test/app/composition/register_walletconnect_auth_services_test.dart"
   "test/core/supabase/edge_then_tables_test.dart"
   "test/shared/inherited_widget_lifecycle_regression_test.dart"
   "test/shared/widgets/sync_status_banner_test.dart"
@@ -195,6 +196,12 @@ select_regression_guard_tests() {
       test/app/auth/*)
         add_test_once out_ref "test/app/presentation/cubit/app_auth_cubit_test.dart"
         add_test_once out_ref "test/app/auth/session_lifecycle_coordinator_test.dart"
+        ;;
+      lib/app/composition/features/register_walletconnect_auth_services.dart|\
+      test/app/composition/register_walletconnect_auth_services_test.dart|\
+      tool/check_firebase_app_object_catch.sh|\
+      tool/fixtures/firebase_app_object_catch/*)
+        add_test_once out_ref "test/app/composition/register_walletconnect_auth_services_test.dart"
         ;;
       packages/app_shared_flutter/lib/src/media/*|\
       lib/app/l10n_adapters/*|\

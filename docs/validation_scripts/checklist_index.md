@@ -68,6 +68,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_modal_bloc_provider.sh`
 - `check_lifecycle_error_handling.sh`
 - `check_mutation_success_after_guard.sh`
+- `check_firebase_app_object_catch.sh`
 - `check_feature_brief_linked.sh`
 - `check_feature_modularity_leaks.sh`
 - `check_memory_pressure_centralized.sh`
