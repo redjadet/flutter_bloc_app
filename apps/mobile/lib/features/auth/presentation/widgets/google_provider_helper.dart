@@ -6,14 +6,12 @@ import 'package:flutter/foundation.dart';
 firebase_ui_google.GoogleProvider? maybeCreateGoogleProvider([
   FirebaseApp? app,
 ]) {
-  app ??= Firebase.app();
-  if (Firebase.apps.isEmpty) {
-    return null;
-  }
-
   try {
-    final FirebaseApp app = Firebase.app();
-    final FirebaseOptions options = app.options;
+    if (Firebase.apps.isEmpty && app == null) {
+      return null;
+    }
+    final FirebaseApp resolved = app ?? Firebase.app();
+    final FirebaseOptions options = resolved.options;
     final TargetPlatform platform = defaultTargetPlatform;
     if (platform != TargetPlatform.android && platform != TargetPlatform.iOS) {
       return null;
@@ -35,9 +33,7 @@ firebase_ui_google.GoogleProvider? maybeCreateGoogleProvider([
       clientId: resolvedClientId,
       iOSPreferPlist: preferPlist,
     );
-  } on FirebaseException {
-    return null;
-  } on Exception {
+  } on Object {
     return null;
   }
 }

@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-07_web_startup_firebase_js_error.md`](2026-09-07_web_startup_firebase_js_error.md): WalletConnect `Firebase.app()` JS Error escaped `on Exception` and blanked web startup; static `on Object` guard.
 - [`2026-09-07_best_areas_for_ai_agents.md`](2026-09-07_best_areas_for_ai_agents.md): Ten high-value AI-agent work areas with task-fit boundaries, human controls, and acceptance evidence.
 - [`2026-09-07_critical_human_skills.md`](2026-09-07_critical_human_skills.md): English guide for decomposition, communication, design, review, debugging, security, product judgment, production accountability, and agent supervision.
 - [`2026-09-07_checklist_quality_gates_honesty.md`](2026-09-07_checklist_quality_gates_honesty.md): Re-sync checklist gate docs with live `CHECK_SCRIPTS`; open-only deferred backlog; scorecard honesty guards.

@@ -21,6 +21,26 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-07 - `on Exception` misses Firebase JS Errors on web
+
+- What went wrong:
+  WalletConnect DI called `Firebase.app()` when web bootstrap skipped Firebase;
+  dart2js threw a raw JS `Error`, and `on Exception` did not catch it. Route
+  factories resolve the repo at `MyApp` create, so the uncaught error blanked
+  GitHub Pages after splash.
+- How it was fixed:
+  Guard with `Firebase.apps.isEmpty` and catch `on Object`, falling back to the
+  mock repository. Added static checklist guard + regression unit wiring.
+- Pattern:
+  Optional Firebase on web + narrow Dart catch around `Firebase.app()`.
+- Preventive rule:
+  Never catch only `Exception` around `Firebase.app()` / plugin calls on web
+  (or check `Firebase.apps` first). Prefer `on Object` for optional seams.
+- Evidence or affected files:
+  `apps/mobile/lib/app/composition/features/register_walletconnect_auth_services.dart`;
+  `tool/check_firebase_app_object_catch.sh`;
+  `docs/changes/2026-09-07_web_startup_firebase_js_error.md`.
+
 ### 2026-09-04 - Hive mutation durability needs an early gate
 
 - What went wrong:

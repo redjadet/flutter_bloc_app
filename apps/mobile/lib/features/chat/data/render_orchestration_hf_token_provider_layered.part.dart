@@ -177,7 +177,7 @@ class LayeredRenderOrchestrationHfTokenProvider
         'LayeredRenderOrchestrationHfTokenProvider: Callable failed (${e.code})',
       );
       return null;
-    } on Exception catch (e) {
+    } on Object catch (e) {
       AppLogger.info(
         'LayeredRenderOrchestrationHfTokenProvider: Callable error ($e)',
       );

@@ -1087,6 +1087,10 @@ should_run_regression_guards_before_coverage() {
       lib/features/social_feed_demo/*|\
       test/features/social_feed_demo/*|\
       tool/check_mutation_success_after_guard.sh|\
+      tool/check_firebase_app_object_catch.sh|\
+      tool/fixtures/firebase_app_object_catch/*|\
+      lib/app/composition/features/register_walletconnect_auth_services.dart|\
+      test/app/composition/register_walletconnect_auth_services_test.dart|\
       tool/check_regression_guards.sh)
         return 0
         ;;
@@ -1642,6 +1646,7 @@ CHECK_MESSAGES=(
   "Checking modal routes wrap BlocProvider.value when sheets need cubit access..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
   "Checking mutation success after request-id guard supersession (no false failure after write)..."
+  "Checking Firebase.app() catches include on Object (web JS Error safe)..."
   "Checking feature brief/change note is linked for feature Dart changes..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
   "Checking centralized memory-pressure handling..."
@@ -1727,6 +1732,7 @@ CHECK_SCRIPTS=(
   "tool/check_modal_bloc_provider.sh"
   "tool/check_lifecycle_error_handling.sh"
   "tool/check_mutation_success_after_guard.sh"
+  "tool/check_firebase_app_object_catch.sh"
   "tool/check_feature_brief_linked.sh"
   "tool/check_feature_modularity_leaks.sh"
   "tool/check_memory_pressure_centralized.sh"
@@ -1809,6 +1815,7 @@ CHECK_SCRIPT_THEMES=(
   "ui"
   "ui"
   "state-mgmt"
+  "async"
   "async"
   "async"
   "architecture"

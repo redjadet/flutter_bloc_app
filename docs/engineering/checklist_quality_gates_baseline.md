@@ -54,7 +54,7 @@ Allowlist gate `check_deferred_heavy_routes.sh` is **fail** in `CHECK_SCRIPTS`
 ## Checklist metadata
 
 - `CHECK_SCRIPT_THEMES` length **must equal** `CHECK_SCRIPTS` / `CHECK_MESSAGES`
-  (currently 82 each; `validate_checklist_configuration()` enforces match)
+  (currently 83 each; `validate_checklist_configuration()` enforces match)
 - Validated in `validate_checklist_configuration()` at checklist start (tool `*.dart` via `dart compile kernel`, not `dart analyze`, to avoid analyzer-plugin hangs on excluded `tool/**` paths)
 - `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script
 
