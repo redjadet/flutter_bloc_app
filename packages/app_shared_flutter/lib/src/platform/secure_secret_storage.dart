@@ -158,19 +158,36 @@ class FlutterSecureSecretStorage implements SecretStorage {
       return null;
     }
 
-    await _storage.delete(key: key);
-    await _legacyMigrationStorage.delete(key: key);
-    await _storage.write(key: key, value: legacy);
+    try {
+      await _storage.delete(key: key);
+      await _storage.write(key: key, value: legacy);
 
-    final String? verify = await _storage.read(key: key);
-    if (verify == legacy) {
+      final String? verify = await _storage.read(key: key);
+      if (verify == legacy) {
+        await _legacyMigrationStorage.delete(key: key);
+        return legacy;
+      }
+    } on PlatformException catch (_) {
+      AppLogger.warning(
+        'FlutterSecureSecretStorage: legacy Keychain rewrite for "$key" '
+        'failed; keeping legacy item for a later retry and returning legacy '
+        'value for this read to avoid secret rotation.',
+      );
+      return legacy;
+    } on MissingPluginException catch (_) {
+      AppLogger.warning(
+        'FlutterSecureSecretStorage: legacy Keychain rewrite for "$key" '
+        'unavailable; keeping legacy item for a later retry and returning '
+        'legacy value for this read to avoid secret rotation.',
+      );
       return legacy;
     }
 
     AppLogger.warning(
       'FlutterSecureSecretStorage: legacy Keychain value for "$key" could not '
-      'be verified under hardened accessibility; returning legacy value for '
-      'this read to avoid secret rotation.',
+      'be verified under hardened accessibility; keeping legacy item for a '
+      'later retry and returning legacy value for this read to avoid secret '
+      'rotation.',
     );
     return legacy;
   }
