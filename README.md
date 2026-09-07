@@ -11,6 +11,7 @@ commands instead of relying on generic architecture statements.
 | Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
 | Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
 | Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
+| Develop critical human engineering skills | [Critical human skills](docs/engineering/critical_human_skills.md) |
 | Work with an AI agent | [AGENTS.md](AGENTS.md) |
 
 ## Platform and toolchain
@@ -174,6 +175,7 @@ For a fast technical review, read these first:
 | Security | [docs/SECURITY.md](docs/SECURITY.md), [docs/security_and_secrets.md](docs/security_and_secrets.md) |
 | Deploy / lifecycle | [docs/deployment.md](docs/deployment.md), [docs/engineering/REPOSITORY_LIFECYCLE.md](docs/engineering/REPOSITORY_LIFECYCLE.md) |
 | Interview walk (~30 min) | [docs/interview_showcase.md](docs/interview_showcase.md) |
+| Critical human skills | [docs/engineering/critical_human_skills.md](docs/engineering/critical_human_skills.md) |
 | AI agents | [AGENTS.md](AGENTS.md) → [docs/agent_knowledge_base.md](docs/agent_knowledge_base.md) |
 
 ## Scope
