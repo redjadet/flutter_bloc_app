@@ -153,9 +153,9 @@ below.
 - **`check_ai_generated_code_smells.sh`**: High-signal AI-code smell scan: secret-looking literals, swallowed exceptions, obvious SQL string interpolation, and risky Supabase Edge `verify_jwt = false`. Uses `check-ignore: <reason>` allowlist and fixtures under `tool/fixtures/ai_generated_code_smells/`.
   - **Limitation (intentional)**: `verify_jwt = false` is enforced via TOML section parsing only (`[functions.<name>]`). It does not detect equivalent behavior in deploy flags/scripts/docs/MCP payloads unless those surfaces are added explicitly.
 
-### Quality theme gates (checklist MVP + promoted warn gates)
+### Quality theme gates (checklist MVP + promoted fail gates)
 
-Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/cubit-subscription fail gates plus warn-first route/lifecycle gates. Theme labels align with `CHECK_SCRIPT_THEMES` in `tool/delivery_checklist.sh` (use `CHECKLIST_EXPLAIN_THEMES=1` to print mapping).
+Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/cubit-subscription fail gates plus fail route/lifecycle/context-read gates. Theme labels align with `CHECK_SCRIPT_THEMES` in `tool/delivery_checklist.sh` (use `CHECKLIST_EXPLAIN_THEMES=1` to print mapping).
 
 | Theme (representative) | Existing coverage | New / wired in MVP |
 | --- | --- | --- |
@@ -186,10 +186,11 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 
 Baseline counts: [`docs/engineering/checklist_quality_gates_baseline.md`](../engineering/checklist_quality_gates_baseline.md).
 
-**Deferred / not in MVP:** [`docs/engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md)
-(`bloc_lint`, checklist wiring of rebuild scoping, startup-in-build,
-`CHECK_THEME` filter; lib-wide sync-io **rejected**). QG-D04 is **fail**;
-QG-D03 inventory is **promoted (warn)** but not in `CHECK_SCRIPTS`.
+**Open deferred backlog:** [`docs/engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md)
+(`bloc_lint` ADR-deferred, checklist wiring of rebuild scoping still open,
+`CHECK_THEME` filter ADR-deferred; startup-in-build + lib-wide sync-io
+**rejected**). QG-D04 / QG-D05 / QG-D07 are **fail** in `CHECK_SCRIPTS`.
+QG-D03 inventory remains **warn-only** (not checklist-wired).
 
 ### Integration testing
 

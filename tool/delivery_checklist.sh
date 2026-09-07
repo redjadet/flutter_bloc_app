@@ -749,6 +749,7 @@ is_docs_only_change_set() {
       .markdownlintignore|\
       .markdownlint-cli2ignore|\
       docs/*|\
+      ai/*|\
       tool/agent_host_templates/*|\
       README|README.*|\
       CHANGELOG|CHANGELOG.*|\
@@ -837,6 +838,7 @@ is_checklist_fast_compatible_path() {
     .markdownlintignore|\
     .markdownlint-cli2ignore|\
     docs/*|\
+    ai/*|\
     llms.txt|\
     tasks/*.md|\
     README|README.*|\

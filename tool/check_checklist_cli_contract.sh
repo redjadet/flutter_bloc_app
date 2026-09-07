@@ -19,13 +19,14 @@ cd "$repo_root"
 
 tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/checklist-cli-contract.XXXXXX")"
 scope_fixture="tool/agent_tool_router_scope_fixture.tmp"
+ai_route_fixture="ai/checklist_route_fixture.tmp"
 mix_route_fixture="apps/mobile/lib/app/theme/checklist_route_fixture.tmp"
 todo_route_fixture="apps/mobile/lib/features/todo_list/presentation/widgets/checklist_route_fixture.tmp"
 action_route_fixture="apps/mobile/lib/features/profile/presentation/checklist_route_fixture.tmp"
 regression_route_fixture="apps/mobile/lib/features/social_feed_demo/presentation/checklist_route_fixture.tmp"
 arb_route_fixture="apps/mobile/lib/l10n/checklist_route_fixture.arb"
 android_route_fixture="apps/mobile/android/checklist_route_fixture.tmp"
-trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture" "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture" "$arb_route_fixture" "$android_route_fixture"' EXIT
+trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture" "$ai_route_fixture" "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regression_route_fixture" "$arb_route_fixture" "$android_route_fixture"' EXIT
 
 run_ok() {
   local name="$1"
@@ -79,11 +80,31 @@ assert_contains delivery_help "$tmp_dir/delivery_help.out" "--mode <full|fast>"
 run_ok print_changed ./bin/checklist-fast --print-changed
 assert_contains print_changed "$tmp_dir/print_changed.out" "changed_files|"
 
+# AI discovery snapshots stay on the checklist-fast docs/harness allowlist.
+if ! awk '
+  BEGIN { in_fn = 0; found = 0 }
+  /^is_checklist_fast_compatible_path\(\)/ { in_fn = 1 }
+  in_fn && /ai\/\*/ { found = 1 }
+  in_fn && /^}/ { exit }
+  END { exit found ? 0 : 1 }
+' tool/delivery_checklist.sh; then
+  echo "❌ checklist-fast allowlist missing ai/* (AI snapshot refresh must stay fast-path compatible)" >&2
+  exit 1
+fi
+
 run_ok explain_no_reuse ./bin/checklist-fast --explain --print-changed --no-reuse
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|mode|fast"
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|allow_reuse|0"
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "changed_files|"
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|auto_route|coverage|"
+
+printf 'route fixture\n' >"$ai_route_fixture"
+run_ok explain_ai_snapshot_path ./bin/checklist-fast --explain --print-changed --no-reuse
+assert_contains explain_ai_snapshot_path "$tmp_dir/explain_ai_snapshot_path.out" \
+  "changed_files|path|$ai_route_fixture"
+assert_contains explain_ai_snapshot_path "$tmp_dir/explain_ai_snapshot_path.out" \
+  "explain|mode|fast"
+rm -f "$ai_route_fixture"
 
 printf 'route fixture\n' >"$mix_route_fixture"
 printf 'route fixture\n' >"$todo_route_fixture"

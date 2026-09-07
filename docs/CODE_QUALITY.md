@@ -34,7 +34,7 @@ Source of truth for gates and guardrails:
 - `./bin/checklist`
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)
-- Checklist quality-theme gates (May 2026 MVP): [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026); baseline [`engineering/checklist_quality_gates_baseline.md`](engineering/checklist_quality_gates_baseline.md); deferred backlog [`engineering/checklist_quality_gates_deferred.md`](engineering/checklist_quality_gates_deferred.md)
+- Checklist quality-theme gates (May 2026 MVP + promoted fail gates): [`validation_scripts/catalog.md`](validation_scripts/catalog.md) (Quality theme gates); baseline [`engineering/checklist_quality_gates_baseline.md`](engineering/checklist_quality_gates_baseline.md); deferred backlog [`engineering/checklist_quality_gates_deferred.md`](engineering/checklist_quality_gates_deferred.md)
 
 ## Scope and Inputs
 
