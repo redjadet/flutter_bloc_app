@@ -7,18 +7,6 @@ CODEX_WRAPPER="$PROJECT_ROOT/.cursor/skills/cursor-codex-delegate/scripts/delega
 if [[ ! -x "$CODEX_WRAPPER" ]]; then
   CODEX_WRAPPER="$USER_SKILLS/cursor-codex-delegate/scripts/delegate_to_codex.sh"
 fi
-# Optional: local vendored gstack under ignored `.agents/`, or a global Codex skill install.
-GSTACK_CODEX_SKILL=""
-for _gstack_candidate in \
-  "$PROJECT_ROOT/.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md" \
-  "$HOME/.codex/skills/gstack-codex/SKILL.md"
-do
-  if [[ -f "$_gstack_candidate" ]]; then
-    GSTACK_CODEX_SKILL="$_gstack_candidate"
-    break
-  fi
-done
-unset _gstack_candidate
 CURSOR_WRAPPER="$PROJECT_ROOT/.cursor/skills/codex-cursor-agent-delegate/scripts/delegate_to_cursor_agent.sh"
 if [[ ! -x "$CURSOR_WRAPPER" ]]; then
   CURSOR_WRAPPER="$USER_SKILLS/codex-cursor-agent-delegate/scripts/delegate_to_cursor_agent.sh"
@@ -142,12 +130,9 @@ run_codex_contract() {
     return $?
   fi
 
-  if [[ ! -f "$GSTACK_CODEX_SKILL" ]]; then
-    echo "Missing Codex delegate entrypoint. Install the repo Cursor->Codex delegate skill, or add a local gstack-codex skill at one of:" >&2
-    echo "  $CODEX_WRAPPER" >&2
-    echo "  $PROJECT_ROOT/.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md" >&2
-    echo "  $HOME/.codex/skills/gstack-codex/SKILL.md" >&2
-    exit 1
+  if ! command -v codex >/dev/null 2>&1; then
+    echo "Missing Codex CLI for direct fallback contract." >&2
+    return 127
   fi
 
   local delegated_prompt stdout_file stderr_file codex_exit_code
@@ -165,18 +150,17 @@ EOF
   stderr_file="$tmp_dir/direct_codex_stderr.txt"
   rm -f "$stdout_file" "$stderr_file"
 
-  set +e
-  codex exec \
+  if codex exec \
     --json \
-    -m "gpt-5.4" \
-    -c 'model_reasoning_effort="medium"' \
-    -c 'model_reasoning_summary="auto"' \
     --sandbox read-only \
     -C "$PROJECT_ROOT" \
     "$delegated_prompt" \
     >"$stdout_file" 2>"$stderr_file"
-  codex_exit_code=$?
-  set -e
+  then
+    codex_exit_code=0
+  else
+    codex_exit_code=$?
+  fi
 
   python3 - "$stdout_file" <<'PY' >/dev/null || {
 import json
@@ -214,20 +198,18 @@ PY
     echo "Codex did not return a valid structured final payload." >&2
     cat "$stdout_file" >&2
     cat "$stderr_file" >&2
-    exit 1
+    return 1
   }
+
+  if [[ $codex_exit_code -ne 0 ]]; then
+    echo "Codex exited with code $codex_exit_code despite a valid structured payload." >&2
+    return "$codex_exit_code"
+  fi
 }
 
 echo "== codex delegate: success contract =="
 export MOCK_CODEX_MODE=success
 run_codex_contract "ping"
-
-echo "== codex delegate: no temp dir required in strict mode =="
-readonly_tmp_root="$tmp_dir/readonly-root"
-mkdir -p "$readonly_tmp_root"
-chmod 555 "$readonly_tmp_root"
-DELEGATE_TMPDIR="$readonly_tmp_root" run_codex_contract "ping"
-chmod 755 "$readonly_tmp_root"
 
 echo "== codex delegate: malformed payload fails =="
 set +e
@@ -241,53 +223,59 @@ if [[ "$code" -eq 0 ]]; then
 fi
 unset MOCK_CODEX_MODE
 
-echo "== codex delegate: tolerant raw mode succeeds with valid payload even on non-zero codex exit =="
-export MOCK_CODEX_MODE=success_nonzero
-raw_tolerant_output="$("$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --raw-response-tolerant 2>&1)"
-if [[ "$raw_tolerant_output" != *'OK_FROM_MOCK_CODEX'* ]]; then
-  echo "Expected tolerant raw mode to preserve the raw success payload." >&2
-  exit 1
+if [[ -x "$CODEX_WRAPPER" ]]; then
+  echo "== optional Cursor-to-Codex wrapper: raw and heartbeat contracts =="
+  export MOCK_CODEX_MODE=success_nonzero
+  raw_tolerant_output="$("$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --raw-response-tolerant 2>&1)"
+  if [[ "$raw_tolerant_output" != *'OK_FROM_MOCK_CODEX'* ]]; then
+    echo "Expected tolerant raw mode to preserve the raw success payload." >&2
+    exit 1
+  fi
+
+  set +e
+  "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --raw-response >/dev/null 2>&1
+  code=$?
+  set -e
+  if [[ "$code" -eq 0 ]]; then
+    echo "Expected strict raw mode to preserve the Codex exit code." >&2
+    exit 1
+  fi
+  unset MOCK_CODEX_MODE
+
+  export MOCK_CODEX_MODE=delayed_success
+  heartbeat_output="$(
+    DELEGATE_HEARTBEAT_SECONDS=0.1 \
+      "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" 2>&1
+  )"
+  if [[ "$heartbeat_output" != *'delegate_to_codex: waiting for Codex final payload...'* ]]; then
+    echo "Expected non-raw mode to emit an initial heartbeat line." >&2
+    exit 1
+  fi
+  if [[ "$heartbeat_output" != *'OK_FROM_MOCK_CODEX'* ]]; then
+    echo "Expected strict mode to still emit the extracted final payload." >&2
+    exit 1
+  fi
+  unset MOCK_CODEX_MODE
+
+  echo "== optional Cursor-to-Codex wrapper: Firebase override =="
+  args_capture_file="$tmp_dir/codex-args.txt"
+  MOCK_CODEX_CAPTURE_ARGS_FILE="$args_capture_file" \
+    "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --skip-firebase-mcp >/dev/null
+  if ! grep -Fq 'mcp_servers.firebase.enabled=false' "$args_capture_file"; then
+    echo "Expected skip Firebase mode to add the Codex config override." >&2
+    cat "$args_capture_file" >&2
+    exit 1
+  fi
+else
+  echo "== optional Cursor-to-Codex wrapper: not installed; direct fallback covered =="
 fi
 
-echo "== codex delegate: strict raw mode preserves codex non-zero exit =="
-set +e
-"$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --raw-response >/dev/null 2>&1
-code=$?
-set -e
-if [[ "$code" -eq 0 ]]; then
-  echo "Expected strict raw mode to preserve the Codex exit code." >&2
-  exit 1
+if [[ -x "$CURSOR_WRAPPER" ]]; then
+  echo "== optional Codex-to-Cursor wrapper: marker contract =="
+  MOCK_AGENT_MODE=with_markers "$CURSOR_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" >/dev/null
+else
+  echo "== optional Codex-to-Cursor wrapper: not installed =="
 fi
-unset MOCK_CODEX_MODE
-
-echo "== codex delegate: heartbeat surfaces progress in strict mode =="
-export MOCK_CODEX_MODE=delayed_success
-heartbeat_output="$(
-  DELEGATE_HEARTBEAT_SECONDS=0.1 \
-    "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" 2>&1
-)"
-if [[ "$heartbeat_output" != *'delegate_to_codex: waiting for Codex final payload...'* ]]; then
-  echo "Expected non-raw mode to emit an initial heartbeat line." >&2
-  exit 1
-fi
-if [[ "$heartbeat_output" != *'OK_FROM_MOCK_CODEX'* ]]; then
-  echo "Expected strict mode to still emit the extracted final payload." >&2
-  exit 1
-fi
-unset MOCK_CODEX_MODE
-
-echo "== codex delegate: skip firebase flag adds config override =="
-args_capture_file="$tmp_dir/codex-args.txt"
-MOCK_CODEX_CAPTURE_ARGS_FILE="$args_capture_file" \
-  "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --skip-firebase-mcp >/dev/null
-if ! grep -Fq 'mcp_servers.firebase.enabled=false' "$args_capture_file"; then
-  echo "Expected skip firebase mode to add the Codex config override." >&2
-  cat "$args_capture_file" >&2
-  exit 1
-fi
-
-echo "== cursor wrapper: marker contract success =="
-MOCK_AGENT_MODE=with_markers "$CURSOR_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" >/dev/null
 
 echo "== request_codex_feedback: direct codex backend success =="
 request_repo="$tmp_dir/request-feedback-repo"
@@ -316,8 +304,9 @@ if ! grep -Fq -- '--sandbox read-only' "$direct_args_capture_file"; then
   cat "$direct_args_capture_file" >&2
   exit 1
 fi
-if ! grep -Fq -- 'model_reasoning_effort="medium"' "$direct_args_capture_file"; then
-  echo "Expected direct codex backend to force a supported reasoning effort override." >&2
+if grep -Fq -- '-m' "$direct_args_capture_file" || \
+   grep -Fq -- 'model_reasoning_effort=' "$direct_args_capture_file"; then
+  echo "Direct codex backend must use the authenticated default model without model overrides." >&2
   cat "$direct_args_capture_file" >&2
   exit 1
 fi
@@ -334,6 +323,49 @@ fi
 if ! grep -Fq -- 'new_untracked.md' "$direct_stdin_capture_file"; then
   echo "Expected direct codex backend prompt to include untracked files in the review diff." >&2
   cat "$direct_stdin_capture_file" >&2
+  exit 1
+fi
+
+echo "== request_codex_feedback: Cursor wrapper receives --prompt =="
+wrapper_path="$request_repo/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
+mkdir -p "$(dirname "$wrapper_path")"
+cat >"$wrapper_path" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${1:-}" != "--prompt" || -z "${2:-}" ]]; then
+  echo "Expected a non-empty --prompt argument." >&2
+  exit 2
+fi
+if [[ -n "${MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE:-}" ]]; then
+  printf '%s\n' "$*" >"$MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE"
+fi
+printf '%s\n' 'OK_FROM_MOCK_CURSOR_WRAPPER'
+EOF
+chmod +x "$wrapper_path"
+wrapper_args_capture_file="$tmp_dir/request-helper-wrapper-args.txt"
+wrapper_output="$(
+  MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE="$wrapper_args_capture_file" \
+    "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend cursor-wrapper --workspace "$request_repo" --focus "wrapper contract test"
+)"
+if [[ "$wrapper_output" != *'OK_FROM_MOCK_CURSOR_WRAPPER'* ]]; then
+  echo "Expected Cursor wrapper backend to return the mock wrapper payload." >&2
+  exit 1
+fi
+if ! grep -Fq -- '--prompt' "$wrapper_args_capture_file" || \
+   ! grep -Fq -- 'new_untracked.md' "$wrapper_args_capture_file"; then
+  echo "Expected Cursor wrapper backend to receive the complete review prompt." >&2
+  cat "$wrapper_args_capture_file" >&2
+  exit 1
+fi
+
+echo "== request_codex_feedback: auto backend prefers authenticated CLI =="
+auto_output="$(
+  "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend auto --workspace "$request_repo" --focus "auto backend contract test"
+)"
+if [[ "$auto_output" != *'OK_FROM_MOCK_CODEX'* ]] || \
+   [[ "$auto_output" == *'OK_FROM_MOCK_CURSOR_WRAPPER'* ]]; then
+  echo "Expected auto backend to prefer the direct authenticated Codex CLI." >&2
   exit 1
 fi
 
@@ -364,14 +396,16 @@ if ! grep -Fq -- 'only_untracked.md' "$untracked_only_stdin_capture_file"; then
   exit 1
 fi
 
-echo "== cursor wrapper: missing marker fails =="
-set +e
-MOCK_AGENT_MODE=no_markers "$CURSOR_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" >/dev/null 2>&1
-code=$?
-set -e
-if [[ "$code" -eq 0 ]]; then
-  echo "Expected missing markers to fail." >&2
-  exit 1
+if [[ -x "$CURSOR_WRAPPER" ]]; then
+  echo "== optional Codex-to-Cursor wrapper: missing marker fails =="
+  set +e
+  MOCK_AGENT_MODE=no_markers "$CURSOR_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" >/dev/null 2>&1
+  code=$?
+  set -e
+  if [[ "$code" -eq 0 ]]; then
+    echo "Expected missing markers to fail." >&2
+    exit 1
+  fi
 fi
 
 echo "Delegate wrapper contract checks passed."

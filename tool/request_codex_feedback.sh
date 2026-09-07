@@ -7,8 +7,8 @@ Usage: request_codex_feedback.sh [options]
 
 Review the current git diff with the repo-managed cross-host review flow.
 Default behavior:
-  - prefers the Cursor->Codex delegate wrapper when available
-  - falls back to direct `codex exec` otherwise
+  - uses direct `codex exec` with the authenticated default model
+  - uses the Cursor->Codex delegate wrapper only with --backend cursor-wrapper
   - reviews staged diff first, then unstaged/untracked diff
 
 Options:
@@ -17,7 +17,8 @@ Options:
   --staged            Review staged changes only.
   --unstaged          Review unstaged and untracked changes only.
   --profile NAME      fast or balanced. Default: balanced.
-  --backend NAME      auto, cursor-wrapper, or codex-cli. Default: auto.
+  --backend NAME      auto, cursor-wrapper, or codex-cli. Wrapper requires a
+                      model configuration compatible with current auth. Default: auto.
   --raw-response      Print backend output without final extraction.
   --workspace PATH    Repo/workspace root. Default: current repository root.
   -h, --help          Show this help.
@@ -285,16 +286,18 @@ resolve_backend() {
     return 0
   fi
 
+  if command -v codex >/dev/null 2>&1; then
+    printf '%s\n' "codex-cli"
+    return 0
+  fi
+
   if resolve_wrapper >/dev/null 2>&1; then
     printf '%s\n' "cursor-wrapper"
     return 0
   fi
 
-  command -v codex >/dev/null 2>&1 || {
-    echo "No Cursor delegate wrapper found and codex is not installed." >&2
-    exit 127
-  }
-  printf '%s\n' "codex-cli"
+  echo "Codex is not installed and no Cursor delegate wrapper was found." >&2
+  exit 127
 }
 
 run_cursor_wrapper() {
@@ -302,6 +305,7 @@ run_cursor_wrapper() {
   wrapper="$(resolve_wrapper)"
   cmd=(
     "$wrapper"
+    "--prompt" "$prompt_text"
     "--workspace" "$workspace"
     "--profile" "$profile"
     "--skip-firebase-mcp"
@@ -309,11 +313,11 @@ run_cursor_wrapper() {
   if [[ "$raw_response" == "true" ]]; then
     cmd+=("--raw-response")
   fi
-  printf '%s\n' "$prompt_text" | "${cmd[@]}"
+  "${cmd[@]}"
 }
 
 run_direct_codex() {
-  local schema_file output_file raw_file reasoning_effort
+  local schema_file output_file raw_file
   command -v python3 >/dev/null 2>&1 || {
     echo "Direct codex backend requires python3." >&2
     return 127
@@ -340,17 +344,10 @@ run_direct_codex() {
 }
 EOF
 
-  reasoning_effort="medium"
-  if [[ "$profile" == "fast" ]]; then
-    reasoning_effort="low"
-  fi
-
   cmd=(
     codex exec
     -C "$workspace"
     --sandbox read-only
-    -c "model_reasoning_effort=\"$reasoning_effort\""
-    -c 'model_reasoning_summary="auto"'
     -c 'mcp_servers.firebase.enabled=false'
     --output-schema "$schema_file"
     -o "$output_file"

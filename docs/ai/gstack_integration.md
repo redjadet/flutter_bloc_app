@@ -115,9 +115,12 @@ For every AI agent in this repo:
 - If the user wants a fast Codex second opinion on the current diff or against a
   named base branch, stay in repo-native flow and use
   `./tool/request_codex_feedback.sh` (or `/codex-feedback` in Cursor) unless
-  they explicitly ask for gstack `/codex`. That helper now adds a lightweight
-  stderr heartbeat in non-raw mode and skips Firebase MCP for the delegate run
-  only, so Cursor does not mistake quiet Codex calls for a hang.
+  they explicitly ask for gstack `/codex`. The helper defaults to direct
+  `codex exec` using the authenticated default model; use the optional Cursor
+  delegate only with `--backend cursor-wrapper` after its model configuration is
+  confirmed compatible with current authentication. That delegate receives the
+  full review payload through `--prompt`. Both paths skip Firebase MCP for this
+  review only.
 - Do not skip directly to `/ship` just because code is present; use `/review`
   or `/qa` first when those stages are still missing.
 
