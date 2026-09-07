@@ -59,7 +59,7 @@ dependencies:
   design_system:
     path: ../../packages/design_system
   device_info_plus: ^13.2.0
-  dio: ^5.11.0
+  dio: ^5.11.1
   equatable: ^2.1.0
   event_bus: ^2.0.1
   fancy_shimmer_image: ^2.0.3
@@ -99,7 +99,7 @@ dependencies:
   go_router: ^18.0.1
   google_fonts: ^8.2.1
   google_maps_flutter: ^2.18.0
-  google_maps_flutter_ios_sdk10: ^2.18.10
+  google_maps_flutter_ios_sdk10: ^2.18.11
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   ilkersevim_async_lifecycle: ^0.1.5
@@ -120,7 +120,7 @@ dependencies:
   intl: ^0.20.2
   json_annotation: ^4.12.0
   local_auth: ^3.0.2
-  logger: ^2.7.0
+  logger: ^2.8.0
   markdown: ^7.3.1
   material_ui: ^1.1.1
   meta: ^1.16.0
@@ -130,8 +130,8 @@ dependencies:
   package_info_plus: ^10.2.1
   path: ^1.9.1
   path_provider: ^2.1.6
-  pdfrx: ^2.5.0
-  permission_handler: ^13.0.1
+  pdfrx: ^2.6.1
+  permission_handler: ^13.0.2
   provider: ^6.1.5
   responsive_framework: ^1.5.1
   retrofit: ^4.10.0
@@ -178,7 +178,7 @@ dev_dependencies:
     path: ../../custom_lints/mix_lint
   mock_exceptions: ^0.8.2
   mocktail: ^1.0.5
-  retrofit_generator: ^10.2.10
+  retrofit_generator: ^10.2.11
   very_good_analysis: ^11.0.0
   video_player_platform_interface: ^6.9.0
 
