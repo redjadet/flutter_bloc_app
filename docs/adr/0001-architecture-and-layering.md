@@ -35,9 +35,10 @@ The architecture must support:
 
 Use feature-based Clean Architecture with three feature layers:
 
-- **Domain**: pure Dart contracts, models, and value objects.
+- **Domain**: pure Dart contracts, models, value objects, and reusable business
+  policies such as merge/eligibility decisions.
 - **Data**: implementations of domain contracts, including storage, HTTP/SDK
-  adapters, offline-first composition, and merge policies.
+  adapters, offline-first composition, and application of domain merge policies.
 - **Presentation**: pages, widgets, Cubits/BLoCs, and route-specific workflow
   orchestration.
 
@@ -75,7 +76,8 @@ may stay compact, but code still follows the same ownership boundaries.
 - Feature delivery follows a repeatable path: domain contract, data
   implementation, Cubit/BLoC, widgets, DI, route, tests.
 - Offline-first repositories fit in the data layer without leaking queue or
-  merge policy into widgets.
+  merge behavior into widgets; reusable pure merge decisions remain testable in
+  domain policies.
 
 ### Costs
 

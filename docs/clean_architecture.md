@@ -36,9 +36,11 @@ Use this model when placing code:
   provides app-scope state.
 - **Presentation** owns widgets, pages, and **Cubit/BLoC state management**
   (`presentation/cubit/`) for route- and app-scoped user flows.
-- **Domain** owns repository/service contracts and pure models.
-- **Data** implements domain contracts and owns storage, HTTP/SDKs, sync, and
-  merge policies.
+- **Domain** owns repository/service contracts, pure models, and reusable pure
+  business policies.
+- **Data** implements domain contracts and owns storage, HTTP/SDKs, and
+  sync/merge orchestration. Pure reusable business decisions, including merge
+  eligibility, live in domain policies that data invokes.
 - **Workspace packages** hold reusable infrastructure and utilities that should not be
   owned by a single feature (`packages/*`).
 
@@ -53,7 +55,14 @@ the current DAG.
 ## Layer Responsibilities
 
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `apps/mobile/lib/features/counter/domain/counter_repository.dart`, `apps/mobile/lib/features/remote_config/domain/remote_config_service.dart`, `apps/mobile/lib/features/deeplink/domain/deep_link_parser.dart`.
-- **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `apps/mobile/lib/features/supabase_auth/data/supabase_auth_repository_impl.dart` (Supabase Auth SDK → domain `AuthUser`), `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
+- **Data** — Adapters that implement domain contracts and coordinate platforms,
+  caching, persistence, retry, and sync. Data applies domain policies at every
+  relevant I/O path; it does not duplicate reusable business decisions.
+  Examples: `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`
+  (Hive + optional remote), `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart`
+  (Firebase Remote Config + Hive cache), `apps/mobile/lib/features/supabase_auth/data/supabase_auth_repository_impl.dart`
+  (Supabase Auth SDK → domain `AuthUser`), `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart`
+  (App Links listener).
 - **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`, `counter/presentation/cubit/counter_cubit.dart`). Remaining legacy root-level cubits are listed in [`architecture/reference_features.md`](architecture/reference_features.md).
 - **Shared cross-cutting** — Reusable infrastructure lives in packages (`packages/storage`, `packages/networking`, `packages/design_system`, `packages/utilities`, `packages/app_shared_flutter`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`engineering/SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md) for detailed documentation of shared utilities.
 - **Dependency injection** — The app shell **registers** services via
@@ -156,9 +165,11 @@ Exact gold and legacy status: [`architecture/reference_features.md`](architectur
   remain). Avoid putting business logic in widgets;
   keep `build()` pure.
 - For persistence or timers, rely on shared abstractions (`HiveService`, `SharedPreferencesMigrationService`, `TimerService`, `NetworkStatusService`) to keep layers consistent and testable.
-- Keep offline-first logic in the **data layer**; presentation can show pending
-  state, but queueing, replay, and conflict resolution stay in repositories and
-  shared sync infrastructure.
+- Keep offline-first I/O and orchestration in the **data layer**; presentation
+  can show pending state, while repositories and shared sync infrastructure own
+  queueing, replay, ordering, persistence, retry, and policy invocation. Put a
+  reusable pure conflict/eligibility decision in **domain** and invoke it from
+  every data path that can merge or overwrite state.
 - Add tests per layer: pure unit tests for domain/data, `bloc_test` for cubits, widget/golden tests for UI; run `./bin/checklist` before shipping.
 
 ## AI-Friendly Architecture Rules
@@ -178,6 +189,10 @@ Review questions before accepting generated feature/refactor code:
 - Centralize GoRouter ownership in presentation/app routing; no raw
   `context.go` / route strings in reusable widgets.
 - Prefer explicit DI, small public APIs, immutable state, behavior-contract tests.
+- Before implementation, answer the protected-rule, owner, partial-failure, and
+  enforcement-radius questions in
+  [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md)
+  § Decision-first feature frame.
 
 ## Review and validation
 

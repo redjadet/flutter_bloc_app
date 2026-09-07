@@ -1,6 +1,8 @@
 # Reduce-Surprise Patterns (Agent Guide)
 
-Canonical semantic-quality guide for this repo. Folder/import gates live in
+Canonical semantic-quality guide for this repo. Reduce uncertainty at the
+earliest stable boundary, before an ambiguous rule, owner, failure state, or
+assumption spreads through layers. Folder/import gates live in
 [`feature_structure_contract.md`](feature_structure_contract.md) and
 [`check_clean_architecture_imports.sh`](../../tool/check_clean_architecture_imports.sh);
 this doc closes **semantic** gaps (DTO boundaries, invalid states, decisions,
@@ -22,6 +24,22 @@ Also load [`use_case_dto_policy.md`](use_case_dto_policy.md),
 [`reference_features.md`](reference_features.md) (semantic grades), and
 [`bloc_standards.md`](../bloc_standards.md).
 
+## Decision-first feature frame
+
+Answer before selecting a pattern or copying an exemplar:
+
+| Question | Decision required | Proof shape |
+| --- | --- | --- |
+| Which rule is protected? | Name the user/business invariant in domain terms and one violating example. | Pure rule test or behavior-level acceptance test. |
+| Where does responsibility belong? | Place pure reusable decisions in domain; I/O, ordering, retry, persistence, and sync orchestration in data; visible flow in Cubit/BLoC; composition in app shell. | Reviewer can trace one owner and dependency direction. |
+| What can fail halfway? | List effects before each `await` or persistence boundary; define state after failure, retry/idempotency, cleanup/compensation, and recovery signal. | Failure-injection test at each material boundary. |
+| Which paths must enforce the assumption? | Find every entry point, replay path, callback, migration, and adapter that can violate the invariant. Enforce at the narrowest shared boundary, not only one caller. | Bypass/adversarial tests plus type, parser, policy, state-machine, schema, or script guard. |
+
+Readable code makes owner, invariant, data flow, and failure state discoverable.
+Testable code exposes stable seams that can disprove the invariant. Reliable
+code defines partial completion and recovery before the happy path. Cleverness
+that weakens any of those properties is a regression.
+
 ## Pattern → repo mapping
 
 | Pattern | Meaning | Repo canon |
@@ -30,7 +48,7 @@ Also load [`use_case_dto_policy.md`](use_case_dto_policy.md),
 | P2 Domain naming | Types name business concepts | [`clean_architecture.md`](../clean_architecture.md) |
 | P3 Boundaries | DTOs/adapters at system edges | [`use_case_dto_policy.md`](use_case_dto_policy.md), AP-11 |
 | P4 Invalid states | Sealed unions; one status channel | [`bloc/cubit_file_template.md`](../bloc/cubit_file_template.md), AP-13/14 |
-| P5 Decisions | Pure domain rules, no I/O | [`calculator`](reference_features.md) domain, AP-16 |
+| P5 Decisions | Pure domain rules, no I/O; data orchestrates and applies them at every relevant boundary | [`calculator`](reference_features.md) domain, AP-16 |
 | P6 Errors | Typed failures → l10n | [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md), AP-15 |
 | P7 Reviewable diffs | One pattern, one feature, ≤400 LOC | [`../testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) |
 
@@ -60,7 +78,10 @@ Numbered flow:
    [`use_case_dto_policy.md`](use_case_dto_policy.md) § DTOs And Mappers
    (Dart 3.13 primary constructors; leave `@freezed` Cubit state alone).
 2. **Loading / ready / error visible?** → `@freezed sealed class` state (see `remote_config`, `deeplink`).
-3. **Merge, eligibility, validation rule?** → `domain/` pure function + unit tests (no repository mocks).
+3. **Merge, eligibility, validation rule?** → `domain/` pure function + unit
+   tests (no repository mocks). Data repositories still own I/O, ordering,
+   retry, persistence, and invoking that policy on pull, replay, and concurrent
+   write paths.
 4. **Failure surfaces in UI?** → Feature enum, `AppError`, or sealed failure — never `e.toString()` in state.
 
 ## Gold exemplars by pattern
@@ -87,6 +108,13 @@ Numbered flow:
 See [`../flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) AP-11…AP-17.
 
 ## Pre-ship checklist (agents)
+
+- Protected rule and violating example are explicit.
+- One stable owner exists for each decision; orchestration does not duplicate it.
+- Every material partial-failure state has retry, cleanup/compensation, and a
+  detection signal.
+- Cross-boundary assumptions are enforced on all entry, replay, callback, and
+  migration paths; one caller guard is not treated as system-wide proof.
 
 Run from repo root on touched feature paths:
 
