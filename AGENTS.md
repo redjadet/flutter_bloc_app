@@ -17,7 +17,7 @@ linked owner docs contain all rules, commands, and details.
 - Data and reliability: [`offline-first`](docs/offline_first/adoption_guide.md), [`reliability`](docs/reliability_error_handling_performance.md), [`observability`](docs/observability.md).
 - Testing and quality: [`testing`](docs/testing_overview.md), [`validation routing`](docs/engineering/validation_routing_fast_vs_full.md), [`quick reference`](docs/agents_quick_reference.md), [`code quality`](docs/CODE_QUALITY.md), [`engineering scorecard`](docs/engineering/engineering_quality_scorecard.md).
 - Review and delivery: [`review playbook`](docs/review/code_review_playbook.md), [`automated-change review`](docs/ai_code_review_protocol.md), [`version-control workflow`](docs/git_and_branching_strategy.md), [`changes`](docs/changes/README.md).
-- Agent system: [`knowledge base`](docs/agent_knowledge_base.md), [`failure risks`](docs/ai/ai_failure_risks.md), [`harness scorecard`](docs/ai/harness_scorecard.md), [`harness maintenance`](docs/ai/harness_auto_maintenance.md), [`host notes`](docs/agent_host_notes.md).
+- Agent system: [`best work areas`](docs/ai/best_areas_for_ai_agents.md), [`knowledge base`](docs/agent_knowledge_base.md), [`failure risks`](docs/ai/ai_failure_risks.md), [`harness scorecard`](docs/ai/harness_scorecard.md), [`harness maintenance`](docs/ai/harness_auto_maintenance.md), [`host notes`](docs/agent_host_notes.md).
 
 ## Finish
 
