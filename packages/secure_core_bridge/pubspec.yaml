@@ -16,8 +16,8 @@ dependencies:
   native_toolchain_rust: ^1.0.6
 
 dev_dependencies:
-  # ffigen 21 requires code_assets ^1.1 but conflicts with workspace solver when
-  # paired with code_assets 2.x; keep generator optional. Bindings checked in.
-  ffigen: ^19.1.0
+  # Generator only; bindings are checked in. Gate runs package-cwd dart test
+  # (workspace-root dart test can miss native assets after ffigen regenerate).
+  ffigen: ^21.0.0
   lints: ^6.1.0
   test: ^1.31.1
