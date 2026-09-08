@@ -21,6 +21,29 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-08 - Keychain migration PRs chained incomplete dual-store fixes
+
+- What went wrong:
+  Bots reopened similar Keychain secret-preservation PRs (#789 → #791 → #796 →
+  #817). Each fix closed one gap but left another: hardened-empty migration
+  (#791), delete-after-verify (#796), then legacy-wins when both stores
+  populated (#817). Earlier PRs were proper for their stated scope, not wrong,
+  but incomplete against the dual-accessibility coexistence model.
+- How it was fixed:
+  Land #817 (legacy peek before hardened read) + document the full invariant in
+  `docs/security/storage_rules.md` with explicit do-not-reopen guidance.
+- Pattern:
+  Accessibility-filtered Keychain stores can both be non-empty after partial
+  upgrade paths; “fallback when primary empty” is not enough.
+- Preventive rule:
+  Do not open another Apple Keychain legacy-migration PR for the same class
+  unless a new failing test or device repro exceeds the #817 coexistence
+  regression. Prefer extending that test over a new bot PR.
+- Evidence or affected files:
+  `packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`;
+  `apps/mobile/test/secure_secret_storage_test.dart`; PRs #788–#817;
+  `docs/changes/2026-09-08_keychain_legacy_priority.md`.
+
 ### 2026-09-07 - Opaque checklist failure hid rustc pin miss
 
 - What went wrong:

@@ -323,7 +323,9 @@ can still flag keys in **old commits**. If keys were ever pushed:
   `KeychainAccessibility.first_unlock_this_device` and
   `synchronizable: false` for iOS and macOS. Values **without**
   `ThisDeviceOnly` can copy into encrypted backups and restore onto another
-  device; library defaults use migrate-capable `unlocked`. Details:
+  device; library defaults use migrate-capable `unlocked`. Read-time migration
+  prefers a pending legacy item over hardened storage until rewrite verifies
+  (#791 / #796 / #817). Details:
   [`security/storage_rules.md`](security/storage_rules.md).
 - **Apple debug (iOS simulator + macOS desktop, non-web)**: Keychain is not
   reliable without entitlements; the app uses in-memory secret storage and a

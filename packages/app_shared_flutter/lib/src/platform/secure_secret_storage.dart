@@ -121,14 +121,19 @@ class FlutterSecureSecretStorage implements SecretStorage {
   @override
   Future<Result<String?>> readResult(String key) async {
     try {
-      final String? value = await _storage.read(key: key);
-      if (value != null && value.isNotEmpty) {
-        return Success<String?>(value);
-      }
+      // When a legacy Keychain item still exists, migration is incomplete.
+      // Prefer it over hardened storage so an interim rotated secret (e.g.
+      // after #788 accessibility change before legacy migration) cannot win.
       if (_enableLegacyKeychainMigration && _shouldMigrateAppleKeychain()) {
-        final String? migrated = await _readAndMigrateLegacyKeychainValue(key);
-        return Success<String?>(migrated);
+        final String? legacyPeek = await _legacyMigrationStorage.read(key: key);
+        if (legacyPeek != null && legacyPeek.isNotEmpty) {
+          final String? migrated = await _readAndMigrateLegacyKeychainValue(
+            key,
+          );
+          return Success<String?>(migrated);
+        }
       }
+      final String? value = await _storage.read(key: key);
       return Success<String?>(value);
     } on PlatformException catch (error, stackTrace) {
       AppLogger.error(
