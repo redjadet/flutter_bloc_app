@@ -75,7 +75,7 @@ Full principles and examples: [`solid_principles.md`](architecture/solid_princip
 
 ## Quality Metrics and Gates
 
-- File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
+- File size policy: keep files under 225 LOC; extract widgets/helpers as needed.
 - Coverage thresholds: [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
   (CI filtered rollup + team target); artifact refreshed by
   `tool/update_coverage_summary.dart`.
