@@ -100,6 +100,35 @@ void main() {
       expect(find.text('New todo'), findsOneWidget);
     });
 
+    testWidgets('title Next action moves focus to description', (tester) async {
+      await _pumpDialog(
+        tester,
+        open: (ctx) async {
+          await showTodoEditorDialog(context: ctx);
+        },
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      final Finder titleField = find.byType(TextField).first;
+      final Finder descriptionField = find.byType(TextField).at(1);
+
+      expect(
+        tester.widget<TextField>(titleField).textInputAction,
+        TextInputAction.next,
+      );
+
+      await tester.enterText(titleField, 'Buy milk');
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pumpAndSettle();
+
+      final FocusNode? descriptionFocus = tester
+          .widget<TextField>(descriptionField)
+          .focusNode;
+      expect(descriptionFocus?.hasFocus, isTrue);
+    });
+
     testWidgets('iOS dialog requests keyboard focus for the title field', (
       tester,
     ) async {
@@ -125,6 +154,38 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('New todo'), findsNothing);
+    });
+
+    testWidgets('iOS title Next action moves focus to description', (
+      tester,
+    ) async {
+      await _pumpDialog(
+        tester,
+        platform: TargetPlatform.iOS,
+        open: (ctx) async {
+          await showTodoEditorDialog(context: ctx);
+        },
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      final Finder titleField = find.byType(CupertinoTextField).first;
+      final Finder descriptionField = find.byType(CupertinoTextField).at(1);
+
+      expect(
+        tester.widget<CupertinoTextField>(titleField).textInputAction,
+        TextInputAction.next,
+      );
+
+      await tester.enterText(titleField, 'Buy milk');
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pumpAndSettle();
+
+      final FocusNode? descriptionFocus = tester
+          .widget<CupertinoTextField>(descriptionField)
+          .focusNode;
+      expect(descriptionFocus?.hasFocus, isTrue);
     });
   });
 }

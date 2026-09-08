@@ -43,7 +43,8 @@ Widget buildTodoEditorDialogContent({
             placeholder: l10n.todoListTitlePlaceholder,
             isCupertino: isCupertino,
             onChanged: onTitleChanged,
-            autofocus: true,
+            textInputAction: TextInputAction.next,
+            onSubmitted: (_) => descriptionFocusNode?.requestFocus(),
           ),
           SizedBox(height: context.responsiveGapS),
           buildTodoTextField(
@@ -53,6 +54,7 @@ Widget buildTodoEditorDialogContent({
             placeholder: l10n.todoListDescriptionPlaceholder,
             isCupertino: isCupertino,
             onChanged: onDescriptionChanged,
+            textInputAction: TextInputAction.newline,
             maxLines: context.isDesktop
                 ? 4
                 : context.isTabletOrLarger
