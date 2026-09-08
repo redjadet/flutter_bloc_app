@@ -36,7 +36,8 @@ not a replacement for `pubspec.yaml`.
 | Consumer | `secure_messaging_demo` feature — [`features/secure_messaging_demo.md`](features/secure_messaging_demo.md) |
 | Gate | `tool/check_secure_core.sh` in `./bin/checklist`; CI `install-rust: true` |
 | Linux | Host CI / package tests only — **not** a first-class product desktop target |
-| Architecture | [`architecture/rust_ffi_secure_core_bridge.md`](architecture/rust_ffi_secure_core_bridge.md) |
+| Why Rust | Narrow, reusable crypto core with explicit byte/key ownership; not a blanket Dart replacement or measured speed claim |
+| Architecture and decision boundary | [`architecture/rust_ffi_secure_core_bridge.md`](architecture/rust_ffi_secure_core_bridge.md) |
 
 ## Supported platforms
 
