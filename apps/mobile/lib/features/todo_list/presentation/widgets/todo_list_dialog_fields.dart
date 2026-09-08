@@ -10,9 +10,11 @@ Widget buildTodoTextField({
   required String placeholder,
   required bool isCupertino,
   ValueChanged<String>? onChanged,
+  ValueChanged<String>? onSubmitted,
   bool autofocus = false,
   int maxLines = 1,
   FocusNode? focusNode,
+  TextInputAction? textInputAction,
 }) {
   final textField = PlatformAdaptive.textField(
     context: context,
@@ -21,6 +23,8 @@ Widget buildTodoTextField({
     placeholder: placeholder,
     hintText: placeholder,
     onChanged: onChanged,
+    onSubmitted: onSubmitted,
+    textInputAction: textInputAction,
     autofocus: autofocus,
     maxLines: maxLines,
     padding: isCupertino ? EdgeInsets.all(context.responsiveGapS) : null,
@@ -34,9 +38,7 @@ Widget buildTodoTextField({
 
   if (isCupertino) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: context.responsiveGapXS,
-      ),
+      padding: EdgeInsets.symmetric(vertical: context.responsiveGapXS),
       child: textField,
     );
   }
@@ -87,9 +89,7 @@ Widget buildTodoCompletionCheckbox({
 
   if (isCupertino) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: context.responsiveGapXS,
-      ),
+      padding: EdgeInsets.symmetric(vertical: context.responsiveGapXS),
       child: Row(
         children: [
           Checkbox.adaptive(

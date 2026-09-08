@@ -252,6 +252,27 @@ void main() {
       expect(field.keyboardType, TextInputType.emailAddress);
     });
 
+    testWidgets('textField respects textInputAction parameter', (tester) async {
+      final controller = TextEditingController();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => PlatformAdaptiveInputs.textField(
+                context: context,
+                controller: controller,
+                textInputAction: TextInputAction.next,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final TextField field = tester.widget(find.byType(TextField));
+      expect(field.textInputAction, TextInputAction.next);
+    });
+
     testWidgets('textField respects obscureText parameter', (tester) async {
       final controller = TextEditingController();
 
