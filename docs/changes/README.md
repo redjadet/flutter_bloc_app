@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-08_keychain_legacy_priority.md`](2026-09-08_keychain_legacy_priority.md): Prefer pending legacy Keychain item over hardened interim secret (#817); closes dual-store gap after #791/#796.
 - [`2026-09-07_web_startup_firebase_js_error.md`](2026-09-07_web_startup_firebase_js_error.md): WalletConnect `Firebase.app()` JS Error escaped `on Exception` and blanked web startup; static `on Object` guard.
 - [`2026-09-07_best_areas_for_ai_agents.md`](2026-09-07_best_areas_for_ai_agents.md): Ten high-value AI-agent work areas with task-fit boundaries, human controls, and acceptance evidence.
 - [`2026-09-07_critical_human_skills.md`](2026-09-07_critical_human_skills.md): English guide for decomposition, communication, design, review, debugging, security, product judgment, production accountability, and agent supervision.

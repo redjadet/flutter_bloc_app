@@ -21,6 +21,8 @@ unless product intent says otherwise.
 
 ## Upgrade note
 
-Existing Keychain items keep the accessibility set at write time. Re-login or
-regenerate persisted secrets on devices that still hold migrate-capable
-entries if you need the new attribute in place.
+Existing Keychain items keep the accessibility set at write time. Follow-up
+read-time migration lands in #791 / #796 / #817: legacy `unlocked` items are
+preferred until rewritten and verified under
+`first_unlock_this_device` (see [`storage_rules.md`](../security/storage_rules.md)).
+Do not regenerate Hive keys solely to upgrade accessibility.

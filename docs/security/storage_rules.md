@@ -29,10 +29,19 @@ Where persistent data lives and how plugin-backed storage failures are handled.
   session tokens and Hive encryption keys stay **device-bound** and off
   iCloud Keychain sync. Prefer another `…_this_device` / `passcode` value
   only when the secret’s access window requires it.
-- **Existing Keychain items:** accessibility is fixed at write time.
-  Items written under the old migrate-capable default keep that attribute
-  until deleted and rewritten (re-login / regenerate Hive key on a device
-  that still has the old entry if you need to upgrade in place).
+- **Legacy Apple Keychain migration (complete as of #817):** accessibility is
+  fixed at write time. On iOS/macOS, `readResult` peeks the legacy `unlocked`
+  envelope first when migration is enabled. If a legacy item exists, that value
+  wins and is rewritten under hardened options; legacy is deleted only after
+  hardened verify (#791, #796, #817). Do **not** prefer a non-empty hardened
+  value while a legacy item remains — devices that rotated a Hive key into
+  hardened storage after #788 and before migration (#791) can hold both, and
+  hardened-first reads wipe encrypted local data.
+- **Do not reopen Keychain migration PRs** for the same dual-store class
+  (#789/#791/#796/#817) unless a **new failing test** or device repro proves a
+  remaining gap beyond
+  `legacy Keychain value wins when hardened store holds interim rotated secret`
+  in `apps/mobile/test/secure_secret_storage_test.dart`.
 - **Tests:** mock `SecretStorage` or exercise `readResult` with injected storage (see `test/secure_secret_storage_test.dart`).
 
 ## Hive
