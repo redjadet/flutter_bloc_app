@@ -41,6 +41,21 @@ SecureMessagingDemoPage
 - Web: `unavailable` (stub; no fake success)
 - Security banner: process-ephemeral key; ciphertext dies on restart
 
+## Why Rust here
+
+Rust is used for a specific boundary, not as a replacement for Flutter or Dart.
+Flutter remains responsible for UI, Cubit state, navigation, validation, and
+error presentation. Rust owns the authenticated-encryption core and its native
+buffers; the raw AES key never crosses into Dart.
+
+This choice demonstrates one reusable native implementation for Android, iOS,
+and macOS, with a small C ABI and package build hook that CI can verify. It also
+keeps a future hardware-backed key provider behind the same domain repository
+contract. The trade-offs are extra toolchain/build complexity, FFI ownership
+rules, no web implementation, and synchronous-call frame risk. Full rationale,
+alternatives, and research sources:
+[`rust_ffi_secure_core_bridge.md`](../architecture/rust_ffi_secure_core_bridge.md).
+
 ## Envelope (native)
 
 `format-version | 12-byte nonce | ciphertext | 16-byte tag`
@@ -81,7 +96,8 @@ Selective CI map: `tool/integration_selective_map.json` → `secure_messaging_de
 ## Explicit non-goals
 
 Production keystore/enclave, sessions, messaging protocol, fuzz/Miri (optional later),
-Linux/Windows product support.
+Linux/Windows product support, or proof that Rust is faster than Dart for this
+workload.
 
 ## Security limitations
 
