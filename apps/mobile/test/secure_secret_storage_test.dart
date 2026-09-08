@@ -264,64 +264,106 @@ void main() {
       expect(await storage.read('hive_encryption_key'), 'legacy-secret');
     });
 
-    test(
-      'failed migration rewrite keeps legacy item for later reads',
-      () async {
-        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    test('legacy Keychain value wins when hardened store holds interim rotated secret', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
-        final Map<String, String> hardenedStore = <String, String>{};
-        final Map<String, String> legacyStore = <String, String>{
-          'hive_encryption_key': 'legacy-secret',
-        };
-        var hardenedWriteAttempts = 0;
+      final Map<String, String> hardenedStore = <String, String>{
+        'hive_encryption_key': 'rotated-interim-secret',
+      };
+      final Map<String, String> legacyStore = <String, String>{
+        'hive_encryption_key': 'legacy-secret',
+      };
 
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(channel, (MethodCall call) async {
-              final String? accessibility = _iosAccessibilityFromCall(call);
-              final Map<String, String> store = accessibility == 'unlocked'
-                  ? legacyStore
-                  : hardenedStore;
-              switch (call.method) {
-                case 'read':
-                  return store[call.arguments['key'] as String?] ??
-                      call.arguments['defaultValue'];
-                case 'write':
-                  if (accessibility != 'unlocked') {
-                    hardenedWriteAttempts += 1;
-                    if (hardenedWriteAttempts == 1) {
-                      throw PlatformException(code: 'write_failed');
-                    }
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            final String? accessibility = _iosAccessibilityFromCall(call);
+            final Map<String, String> store = accessibility == 'unlocked'
+                ? legacyStore
+                : hardenedStore;
+            switch (call.method) {
+              case 'read':
+                return store[call.arguments['key'] as String?] ??
+                    call.arguments['defaultValue'];
+              case 'write':
+                store[call.arguments['key'] as String] =
+                    call.arguments['value'] as String;
+                return null;
+              case 'delete':
+                store.remove(call.arguments['key'] as String);
+                return null;
+              default:
+                throw PlatformException(
+                  code: 'unhandled',
+                  message: call.method,
+                );
+            }
+          });
+
+      final storage = FlutterSecureSecretStorage(
+        storage: FlutterSecureSecretStorage.createDefaultFlutterSecureStorage(),
+        legacyMigrationStorage:
+            FlutterSecureSecretStorage.createLegacyMigrationFlutterSecureStorage(),
+      );
+
+      expect(await storage.read('hive_encryption_key'), 'legacy-secret');
+      expect(legacyStore.containsKey('hive_encryption_key'), isFalse);
+      expect(hardenedStore['hive_encryption_key'], 'legacy-secret');
+    });
+
+    test('failed migration rewrite keeps legacy item for later reads', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final Map<String, String> hardenedStore = <String, String>{};
+      final Map<String, String> legacyStore = <String, String>{
+        'hive_encryption_key': 'legacy-secret',
+      };
+      var hardenedWriteAttempts = 0;
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            final String? accessibility = _iosAccessibilityFromCall(call);
+            final Map<String, String> store = accessibility == 'unlocked'
+                ? legacyStore
+                : hardenedStore;
+            switch (call.method) {
+              case 'read':
+                return store[call.arguments['key'] as String?] ??
+                    call.arguments['defaultValue'];
+              case 'write':
+                if (accessibility != 'unlocked') {
+                  hardenedWriteAttempts += 1;
+                  if (hardenedWriteAttempts == 1) {
+                    throw PlatformException(code: 'write_failed');
                   }
-                  store[call.arguments['key'] as String] =
-                      call.arguments['value'] as String;
-                  return null;
-                case 'delete':
-                  store.remove(call.arguments['key'] as String);
-                  return null;
-                default:
-                  throw PlatformException(
-                    code: 'unhandled',
-                    message: call.method,
-                  );
-              }
-            });
+                }
+                store[call.arguments['key'] as String] =
+                    call.arguments['value'] as String;
+                return null;
+              case 'delete':
+                store.remove(call.arguments['key'] as String);
+                return null;
+              default:
+                throw PlatformException(
+                  code: 'unhandled',
+                  message: call.method,
+                );
+            }
+          });
 
-        final storage = FlutterSecureSecretStorage(
-          storage:
-              FlutterSecureSecretStorage.createDefaultFlutterSecureStorage(),
-          legacyMigrationStorage:
-              FlutterSecureSecretStorage.createLegacyMigrationFlutterSecureStorage(),
-        );
+      final storage = FlutterSecureSecretStorage(
+        storage: FlutterSecureSecretStorage.createDefaultFlutterSecureStorage(),
+        legacyMigrationStorage:
+            FlutterSecureSecretStorage.createLegacyMigrationFlutterSecureStorage(),
+      );
 
-        expect(await storage.read('hive_encryption_key'), 'legacy-secret');
-        expect(legacyStore['hive_encryption_key'], 'legacy-secret');
-        expect(hardenedStore.containsKey('hive_encryption_key'), isFalse);
+      expect(await storage.read('hive_encryption_key'), 'legacy-secret');
+      expect(legacyStore['hive_encryption_key'], 'legacy-secret');
+      expect(hardenedStore.containsKey('hive_encryption_key'), isFalse);
 
-        expect(await storage.read('hive_encryption_key'), 'legacy-secret');
-        expect(legacyStore.containsKey('hive_encryption_key'), isFalse);
-        expect(hardenedStore['hive_encryption_key'], 'legacy-secret');
-      },
-    );
+      expect(await storage.read('hive_encryption_key'), 'legacy-secret');
+      expect(legacyStore.containsKey('hive_encryption_key'), isFalse);
+      expect(hardenedStore['hive_encryption_key'], 'legacy-secret');
+    });
 
     test('write and delete swallow platform errors', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
