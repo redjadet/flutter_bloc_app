@@ -5,6 +5,7 @@ Operational quality, delivery controls, and technical maintenance. Start with
 
 | Need | Read |
 | --- | --- |
+| BuildContext scope and lifetime | [build_context_deep_dive.md](build_context_deep_dive.md) |
 | Critical human engineering skills | [critical_human_skills.md](critical_human_skills.md) |
 | Validation lane | [validation_routing_fast_vs_full.md](validation_routing_fast_vs_full.md) |
 | Engineering proof | [engineering_quality_scorecard.md](engineering_quality_scorecard.md) |
