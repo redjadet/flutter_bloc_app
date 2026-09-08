@@ -9,7 +9,7 @@ commands and owner docs, not another cold-start checklist.
 | --- | --- |
 | iOS simulator / CocoaPods embed | `flutter build ios --simulator --debug`; `tool/check_ios_pod_framework_embed.sh --require-built-app` |
 | Apple Keychain `-34018` / corrupted Hive box | [`apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md); `bash tool/check_apple_debug_hive_storage.sh`; cold-restart simulator |
-| Apple Keychain legacy vs hardened dual-store | Settled in #817 — prefer legacy until migrate verifies; do not reopen same class without new failing test ([`storage_rules.md`](../security/storage_rules.md)) |
+| Apple Keychain legacy vs hardened dual-store | Settled in #817 — prefer legacy until migrate verifies; do not reopen same class without new failing test ([`storage_rules.md`](../security/storage_rules.md)); Cursor automation skip paste: [`cursor_automation_keychain_skip.md`](cursor_automation_keychain_skip.md) |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Existing-code graph (optional lead) | `./tool/refresh_code_review_graph.sh --status-only` / `--if-needed`; contract `bash tool/check_code_review_graph_contract.sh`; [`code_review_graph.md`](../ai/code_review_graph.md); maps/`rg` remain default |
 | PR / CI / issue evidence | [`github_mcp_guide.md`](../ai/github_mcp_guide.md); `gh pr view` / checks |
