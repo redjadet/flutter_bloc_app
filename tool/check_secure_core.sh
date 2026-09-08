@@ -42,7 +42,10 @@ cargo check --locked
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test --locked
 
-cd "$ROOT"
-dart test packages/secure_core_bridge
+# Run from the package directory. After ffigen 21+, regenerating bindings leaves
+# workspace-root `dart test packages/secure_core_bridge` without native assets
+# ("Available native assets: ."); package-cwd `dart test` rebuilds hooks correctly.
+cd "$ROOT/packages/secure_core_bridge"
+dart test
 
 echo "check_secure_core|ok"

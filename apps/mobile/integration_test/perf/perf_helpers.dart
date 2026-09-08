@@ -75,10 +75,7 @@ Finder findDialogCheckbox() {
 Finder findDialogButtonByText(String text) =>
     findAdaptiveButtonByText(text, scope: findDialog());
 
-Future<T> timelineTask<T>(
-  String name,
-  Future<T> Function() body,
-) async {
+Future<T> timelineTask<T>(String name, Future<T> Function() body) async {
   final dev.TimelineTask task = dev.TimelineTask()..start(name);
   try {
     return await body();
@@ -90,6 +87,7 @@ Future<T> timelineTask<T>(
 Finder findScrollTarget(WidgetTester tester) {
   final List<Finder> candidates = <Finder>[
     find.byType(ListView),
+    find.byType(GridView),
     find.byType(CustomScrollView),
     find.byType(Scrollable),
   ];
@@ -101,30 +99,29 @@ Finder findScrollTarget(WidgetTester tester) {
   throw TestFailure('findScrollTarget: no scrollable widget on screen');
 }
 
-/// Waits until a list or scrollable is mounted, then returns [findScrollTarget].
+/// Waits until a list, grid, or scrollable is mounted, then returns it.
 ///
-/// [timeout] is the total budget across all scrollable candidates, not per
-/// candidate.
+/// [timeout] is a single shared budget. Candidates are polled together each
+/// pump step so a missing [ListView] cannot consume the whole window before
+/// [GridView] / [Scrollable] are considered (scapes grid flows).
 Future<Finder> awaitScrollTarget(
   WidgetTester tester, {
   Duration timeout = const Duration(seconds: 10),
+  Duration step = const Duration(milliseconds: 100),
 }) async {
   final List<Finder> candidates = <Finder>[
     find.byType(ListView),
+    find.byType(GridView),
     find.byType(CustomScrollView),
     find.byType(Scrollable),
   ];
   final Stopwatch stopwatch = Stopwatch()..start();
-  for (final Finder candidate in candidates) {
-    final Duration remaining = timeout - stopwatch.elapsed;
-    if (remaining <= Duration.zero) {
-      break;
-    }
-    try {
-      await pumpUntilFound(tester, candidate, timeout: remaining);
-      return candidate.first;
-    } on TestFailure {
-      continue;
+  while (stopwatch.elapsed < timeout) {
+    await tester.pump(step);
+    for (final Finder candidate in candidates) {
+      if (tester.any(candidate)) {
+        return candidate.first;
+      }
     }
   }
   throw TestFailure('awaitScrollTarget: no scrollable widget within timeout');

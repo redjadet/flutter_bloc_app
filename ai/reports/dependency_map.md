@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-07T10:23:11Z"
-  git_head: "960faec4f31a057b34237dea7ad37b9d826bcc03"
+  generated_at: "2026-09-08T09:59:40Z"
+  git_head: "9a2889ee1b46ff63027b4826c3c08bbe0c05f774"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -28,7 +28,7 @@ ai_snapshot:
 | native_platform_showcase | 3516 | yes |
 | iot_demo | 3180 | yes |
 | iot | 3092 | yes |
-| auth | 2402 | yes |
+| auth | 2398 | yes |
 | example | 2392 | yes |
 | realtime_market | 2131 | yes |
 | graphql_demo | 1980 | yes |
