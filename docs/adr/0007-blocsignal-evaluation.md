@@ -7,6 +7,7 @@
 | Scope | Presentation state management |
 | Source docs | [State Management Choice](../architecture/state_management_choice.md), [BLoC Standards](../bloc_standards.md), [Clean Architecture](../clean_architecture.md), [ADR 0001](0001-architecture-and-layering.md), [ADR 0004](0004-type-safe-cubit-access.md) |
 | External | [blocsignal.dev](https://blocsignal.dev), [`bloc_signals`](https://pub.dev/packages/bloc_signals), [`bloc_signals_flutter`](https://pub.dev/packages/bloc_signals_flutter) |
+| Independent review | Codex CLI (`gpt-5.6-sol`, read-only) 2026-09-09 — **REJECT**, confidence 92/100; evidence below, not ADR circularity |
 
 ## Context
 
@@ -64,6 +65,28 @@ adoption for this codebase.
 | New features only on BlocSignal | Splits the portfolio demo’s state story; weakens “one way” agent guidance. |
 | Adopt signals only for local UI | Ephemeral UI already uses widget state; Fine-grained rebuilds already use selectors. Extra primitive without a proven hotspot. |
 | Stay on flutter_bloc (chosen) | Matches ADR 0001/0004 investment; Cubit-first already minimizes ceremony; Dart 3.13 primary constructors already reduce boilerplate. |
+| Bounded Search Cubit pilot | Codex steelman: `restartable()` might replace timer/`RequestIdGuard` mechanics in `search_cubit.dart`. Still rejected now — no unresolved hotspot; pilot still costs a second provider/test/observer path and agent rules. |
+
+## Independent Codex review (decision authority)
+
+Prompt asked Codex to treat this ADR as hypothesis only and re-decide from live
+repo evidence. Codex verdict: **REJECT** (keep `flutter_bloc` only).
+
+Evidence Codex cited (re-checkable):
+
+| Signal | Finding |
+| --- | --- |
+| Cubit / test / helper inventory | ~62 Cubit files; ~38 `bloc_test` suites; dozens of `CubitExceptionHandler` and selector/`buildWhen` call sites; `flutter_bloc` + `bloc_test` in `apps/mobile/pubspec.yaml` |
+| Rebuild proof | Todo selector isolation test + physical-device remeasure (~119 FPS, no observed jank) in `docs/changes/2026-08-10_todo_list_rebuild_remeasure.md` |
+| Concurrency without streams transformers | Search Cubit already uses `TimerService`, `RequestIdGuard`, lifecycle helpers |
+| Package maturity | `bloc_signals*` very new / low adoption vs mature `bloc_test`; recent provider lifecycle / generic-erasure fixes |
+| Layering risk | Official `CubitSignalMixin` examples attach state to repositories — conflicts with presentation-only state ownership |
+
+Codex confidence **92/100**. Mind-change gates align with Review Triggers below
+(plus sustained pub maturity and tooling parity).
+
+**Final decision (after Codex):** do **not** add BlocSignal packages. Steal
+transferable practices only.
 
 ## Consequences
 
@@ -96,11 +119,17 @@ Transferable practices **without** adopting BlocSignal:
 
 1. Prefer Cubit over Bloc unless event policy is required (already policy; this
    repo is Cubit-heavy).
-2. Prefer selectors / `buildWhen` for fine-grained rebuilds (already ADR 0004).
+2. Prefer selectors / `buildWhen` for fine-grained rebuilds; keep rebuild-count
+   regression tests (already ADR 0004).
 3. Use primary constructors to cut ceremony on Cubits and DTOs where Freezed is
    not required.
 4. Keep state machines in presentation; never hang them on repositories via
    mixins.
+5. Make concurrency policy explicit (debounce, latest-wins, droppable,
+   sequential, coalesced) via current `TimerService` / `RequestIdGuard` /
+   in-flight helpers — not a second state package.
+6. Benchmark state-propagation claims only after separating build/layout/raster
+   bottlenecks.
 
 ## Review Triggers
 
@@ -115,12 +144,13 @@ Re-open this ADR only when **all** of the following are true:
 
 ## Verification
 
-Inventory at decision time (worktree on `origin/main`):
+Inventory at decision time (Codex + agent, worktree from `origin/main`):
 
-- Cubit subclasses under `apps/mobile/lib`: on the order of sixty; classic
-  `extends Bloc<` feature classes: none observed in the same sweep.
-- Presentation access helpers and `bloc_test` suites: substantial existing
-  investment (see ADR 0004 and `apps/mobile/test`).
+- Cubit subclasses under `apps/mobile/lib`: ~62; classic `extends Bloc<`
+  feature classes: none observed in the same sweep.
+- ~38 `bloc_test` suites; substantial selector/`CubitExceptionHandler` use
+  (see ADR 0004 and `apps/mobile/test`).
+- Independent Codex **REJECT** recorded in metadata table above.
 
 Commands for future re-checks:
 
