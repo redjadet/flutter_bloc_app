@@ -73,6 +73,15 @@
         "lib/features/social_feed_demo/data/hive_social_feed_mutation_queue_json.part.dart",
         "lib/features/social_feed_demo/data/social_feed_mutation_dto.dart"
       ]
+    },
+    {
+      "name": "notes_demo:notes",
+      "spec": "notes_demo:v1{notes:list<note_map{id,title,body,createdAtMs,updatedAtMs}>}",
+      "inputs": [
+        "lib/features/notes_demo/data/hive_notes_repository.dart",
+        "lib/features/notes_demo/data/note_dto.dart",
+        "lib/features/notes_demo/domain/note.dart"
+      ]
     }
   ]
 }

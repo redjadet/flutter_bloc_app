@@ -23,6 +23,7 @@ import 'package:flutter_bloc_app/app/composition/features/register_in_app_purcha
 import 'package:flutter_bloc_app/app/composition/features/register_iot_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_native_platform_showcase_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_notes_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_online_therapy_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_playlearn_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_production_readiness_services.dart';
@@ -42,6 +43,7 @@ import 'package:flutter_bloc_app/app/composition/features/register_timer_network
 import 'package:flutter_bloc_app/app/composition/features/register_todo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_utility_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_walletconnect_auth_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_weather_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_websocket_services.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';

@@ -170,6 +170,8 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenCaseStudyDemo: () => context.pushNamed(AppRoutes.caseStudyDemo),
         onOpenIapDemo: () => context.pushNamed(AppRoutes.iapDemo),
         onOpenAiDecisionDemo: () => context.pushNamed(AppRoutes.aiDecisionDemo),
+        onOpenWeatherDemo: () => context.pushNamed(AppRoutes.weatherDemo),
+        onOpenNotesDemo: () => context.pushNamed(AppRoutes.notesDemo),
         onOpenEventBusDemo: () => context.pushNamed(AppRoutes.eventBusDemo),
         onOpenSocialFeedDemo: () => context.pushNamed(AppRoutes.socialFeedDemo),
         onOpenSecureMessagingDemo: () =>

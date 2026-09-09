@@ -31,6 +31,8 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenCaseStudyDemo,
     required this.onOpenIapDemo,
     required this.onOpenAiDecisionDemo,
+    required this.onOpenWeatherDemo,
+    required this.onOpenNotesDemo,
     required this.onOpenEventBusDemo,
     required this.onOpenSocialFeedDemo,
     required this.onOpenSecureMessagingDemo,
@@ -74,6 +76,8 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenCaseStudyDemo;
   final VoidCallback onOpenIapDemo;
   final VoidCallback onOpenAiDecisionDemo;
+  final VoidCallback onOpenWeatherDemo;
+  final VoidCallback onOpenNotesDemo;
   final VoidCallback onOpenEventBusDemo;
   final VoidCallback onOpenSocialFeedDemo;
   final VoidCallback onOpenSecureMessagingDemo;
@@ -115,6 +119,8 @@ class ExamplePageBody extends StatelessWidget {
     onOpenCaseStudyDemo: onOpenCaseStudyDemo,
     onOpenIapDemo: onOpenIapDemo,
     onOpenAiDecisionDemo: onOpenAiDecisionDemo,
+    onOpenWeatherDemo: onOpenWeatherDemo,
+    onOpenNotesDemo: onOpenNotesDemo,
     onOpenEventBusDemo: onOpenEventBusDemo,
     onOpenSocialFeedDemo: onOpenSocialFeedDemo,
     onOpenSecureMessagingDemo: onOpenSecureMessagingDemo,

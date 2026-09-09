@@ -4402,7 +4402,7 @@
   "@productionReadinessNativeShowcaseLink": {
     "description": "Link to native platform showcase demo"
   },
-"exampleSocialFeedDemoButton": "Social feed demo",
+  "exampleSocialFeedDemoButton": "Social feed demo",
   "@exampleSocialFeedDemoButton": {
     "description": "Example hub button for social feed Flutter judgment guidance demo"
   },
@@ -4429,26 +4429,34 @@
   "socialFeedDemoStaleCache": "Cached data ({minutes} min old)",
   "@socialFeedDemoStaleCache": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoPendingCount": "{count, plural, =1{1 pending action} other{{count} pending actions}}",
   "@socialFeedDemoPendingCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoNeedsAttentionCount": "{count, plural, =1{1 needs attention} other{{count} need attention}}",
   "@socialFeedDemoNeedsAttentionCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoReconnecting": "Reconnecting realtime…",
   "socialFeedDemoNewPosts": "{count, plural, =1{1 new post} other{{count} new posts}}",
   "@socialFeedDemoNewPosts": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoScenarioTitle": "Scenario controls (simulated)",
@@ -4458,7 +4466,9 @@
   "socialFeedDemoResetBody": "Clears cache and queue for {viewer} only.",
   "@socialFeedDemoResetBody": {
     "placeholders": {
-      "viewer": { "type": "String" }
+      "viewer": {
+        "type": "String"
+      }
     }
   },
   "socialFeedDemoCancel": "Cancel",
@@ -4469,7 +4479,6 @@
   "socialFeedDemoSignalStep3": "Name layers and enforce them",
   "socialFeedDemoSignalStep4": "Attack hard problems independently",
   "socialFeedDemoSignalStep5": "End on failure states",
-
   "exampleSecureMessagingDemoButton": "Secure messaging demo",
   "@exampleSecureMessagingDemoButton": {
     "description": "Example hub button for secure messaging Rust FFI demo"
@@ -4538,5 +4547,33 @@
   "secureMessagingDemoErrorMismatch": "Recovered plaintext did not match",
   "@secureMessagingDemoErrorMismatch": {
     "description": "Round-trip mismatch"
-  }
+  },
+  "exampleWeatherDemoButton": "Weather Demo",
+  "exampleNotesDemoButton": "Notes Demo",
+  "weatherDemoTitle": "Weather",
+  "weatherDemoCityLabel": "City",
+  "weatherDemoCityHint": "e.g. Berlin",
+  "weatherDemoSearchButton": "Search",
+  "weatherDemoIdleHint": "Search for a city to see live weather.",
+  "weatherDemoRetryButton": "Retry",
+  "weatherDemoWindLabel": "Wind: {speed} km/h",
+  "@weatherDemoWindLabel": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDemoHourlyTitle": "Next hours",
+  "weatherDemoAttribution": "Weather data by Open-Meteo.com",
+  "notesDemoTitle": "Notes",
+  "notesDemoEmpty": "No notes yet.",
+  "notesDemoCreateButton": "Create note",
+  "notesDemoCreateTitle": "New note",
+  "notesDemoEditTitle": "Edit note",
+  "notesDemoTitleLabel": "Title",
+  "notesDemoBodyLabel": "Body",
+  "notesDemoCancelButton": "Cancel",
+  "notesDemoSaveButton": "Save",
+  "notesDemoNoBody": "(No body)"
 }

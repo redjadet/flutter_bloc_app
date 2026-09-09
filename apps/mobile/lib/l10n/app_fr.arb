@@ -1660,12 +1660,12 @@
   "exampleFirebaseFunctionsButton": "Tester Firebase Functions",
   "firebaseFunctionsTestTitle": "Firebase Functions",
   "firebaseFunctionsCallButton": "Appeler helloWorld",
-    "firebaseFunctionsTokenCallButton": "Appeler issueRenderChatDemoHfReadToken",
+  "firebaseFunctionsTokenCallButton": "Appeler issueRenderChatDemoHfReadToken",
   "firebaseFunctionsAuthRequired": "Connectez-vous pour appeler la fonction de jeton.",
   "firebaseFunctionsSafeError": "Échec de l'appel (détails masqués).",
   "firebaseFunctionsGenericError": "Échec de l'appel.",
   "firebaseFunctionsMalformedResponse": "L'appel a renvoyé une charge inattendue.",
-"firebaseFunctionsResultLabel": "Résultat",
+  "firebaseFunctionsResultLabel": "Résultat",
   "firebaseUnavailableMessage": "Firebase n’est pas initialisé.",
   "fcmDemoPageTitle": "FCM Demo",
   "fcmDemoPermissionLabel": "Permission",
@@ -2551,14 +2551,14 @@
   "productionReadinessCrashlyticsLabel": "Crashlytics",
   "productionReadinessCrashlyticsActive": "Disponible (Firebase initialisé)",
   "productionReadinessCrashlyticsUnavailable": "Indisponible (simulé / pas de Firebase)",
-    "productionReadinessCrashlyticsEmitNonFatalButton": "Émettre un non-fatal de test",
+  "productionReadinessCrashlyticsEmitNonFatalButton": "Émettre un non-fatal de test",
   "productionReadinessCrashlyticsNonFatalStatusLabel": "Statut non-fatal de test",
   "productionReadinessCrashlyticsNonFatalIdle": "Inactif",
   "productionReadinessCrashlyticsNonFatalRecording": "Enregistrement…",
   "productionReadinessCrashlyticsNonFatalRecordedLocal": "Enregistré localement (simulé)",
   "productionReadinessCrashlyticsNonFatalRecordedFirebase": "Enregistré dans Crashlytics",
   "productionReadinessCrashlyticsNonFatalFailed": "Échec de l'enregistrement",
-"productionReadinessFcmLabel": "Notifications push (FCM)",
+  "productionReadinessFcmLabel": "Notifications push (FCM)",
   "productionReadinessFcmModeLabel": "Mode FCM",
   "productionReadinessFcmModeLive": "En direct",
   "productionReadinessFcmModeSimulated": "Simulé",
@@ -2577,7 +2577,7 @@
   "productionReadinessKillSwitchBanner": "Le kill-switch de release est désactivé. Les démos peuvent être off en production.",
   "productionReadinessSettingsLink": "Ouvrir les réglages",
   "productionReadinessNativeShowcaseLink": "Vitrine plateforme native",
-"exampleSocialFeedDemoButton": "Social feed demo",
+  "exampleSocialFeedDemoButton": "Social feed demo",
   "@exampleSocialFeedDemoButton": {
     "description": "Example hub button for social feed Flutter judgment guidance demo"
   },
@@ -2604,26 +2604,34 @@
   "socialFeedDemoStaleCache": "Cached data ({minutes} min old)",
   "@socialFeedDemoStaleCache": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoPendingCount": "{count, plural, =1{1 pending action} other{{count} pending actions}}",
   "@socialFeedDemoPendingCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoNeedsAttentionCount": "{count, plural, =1{1 needs attention} other{{count} need attention}}",
   "@socialFeedDemoNeedsAttentionCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoReconnecting": "Reconnecting realtime…",
   "socialFeedDemoNewPosts": "{count, plural, =1{1 new post} other{{count} new posts}}",
   "@socialFeedDemoNewPosts": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoScenarioTitle": "Scenario controls (simulated)",
@@ -2633,7 +2641,9 @@
   "socialFeedDemoResetBody": "Clears cache and queue for {viewer} only.",
   "@socialFeedDemoResetBody": {
     "placeholders": {
-      "viewer": { "type": "String" }
+      "viewer": {
+        "type": "String"
+      }
     }
   },
   "socialFeedDemoCancel": "Cancel",
@@ -2644,7 +2654,6 @@
   "socialFeedDemoSignalStep3": "Name layers and enforce them",
   "socialFeedDemoSignalStep4": "Attack hard problems independently",
   "socialFeedDemoSignalStep5": "End on failure states",
-
   "exampleSecureMessagingDemoButton": "Secure messaging demo",
   "@exampleSecureMessagingDemoButton": {
     "description": "Example hub button for secure messaging Rust FFI demo"
@@ -2713,5 +2722,33 @@
   "secureMessagingDemoErrorMismatch": "Recovered plaintext did not match",
   "@secureMessagingDemoErrorMismatch": {
     "description": "Round-trip mismatch"
-  }
+  },
+  "exampleWeatherDemoButton": "Démo météo",
+  "exampleNotesDemoButton": "Démo notes",
+  "weatherDemoTitle": "Météo",
+  "weatherDemoCityLabel": "Ville",
+  "weatherDemoCityHint": "ex. Berlin",
+  "weatherDemoSearchButton": "Rechercher",
+  "weatherDemoIdleHint": "Recherchez une ville pour la météo.",
+  "weatherDemoRetryButton": "Réessayer",
+  "weatherDemoWindLabel": "Vent : {speed} km/h",
+  "@weatherDemoWindLabel": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDemoHourlyTitle": "Prochaines heures",
+  "weatherDemoAttribution": "Données météo par Open-Meteo.com",
+  "notesDemoTitle": "Notes",
+  "notesDemoEmpty": "Aucune note.",
+  "notesDemoCreateButton": "Créer une note",
+  "notesDemoCreateTitle": "Nouvelle note",
+  "notesDemoEditTitle": "Modifier la note",
+  "notesDemoTitleLabel": "Titre",
+  "notesDemoBodyLabel": "Corps",
+  "notesDemoCancelButton": "Annuler",
+  "notesDemoSaveButton": "Enregistrer",
+  "notesDemoNoBody": "(Pas de corps)"
 }

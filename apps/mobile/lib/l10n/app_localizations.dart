@@ -6792,6 +6792,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recovered plaintext did not match'**
   String get secureMessagingDemoErrorMismatch;
+
+  /// No description provided for @exampleWeatherDemoButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather Demo'**
+  String get exampleWeatherDemoButton;
+
+  /// No description provided for @exampleNotesDemoButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes Demo'**
+  String get exampleNotesDemoButton;
+
+  /// No description provided for @weatherDemoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get weatherDemoTitle;
+
+  /// No description provided for @weatherDemoCityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get weatherDemoCityLabel;
+
+  /// No description provided for @weatherDemoCityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Berlin'**
+  String get weatherDemoCityHint;
+
+  /// No description provided for @weatherDemoSearchButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get weatherDemoSearchButton;
+
+  /// No description provided for @weatherDemoIdleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a city to see live weather.'**
+  String get weatherDemoIdleHint;
+
+  /// No description provided for @weatherDemoRetryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get weatherDemoRetryButton;
+
+  /// No description provided for @weatherDemoWindLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind: {speed} km/h'**
+  String weatherDemoWindLabel(String speed);
+
+  /// No description provided for @weatherDemoHourlyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Next hours'**
+  String get weatherDemoHourlyTitle;
+
+  /// No description provided for @weatherDemoAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather data by Open-Meteo.com'**
+  String get weatherDemoAttribution;
+
+  /// No description provided for @notesDemoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesDemoTitle;
+
+  /// No description provided for @notesDemoEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet.'**
+  String get notesDemoEmpty;
+
+  /// No description provided for @notesDemoCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create note'**
+  String get notesDemoCreateButton;
+
+  /// No description provided for @notesDemoCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New note'**
+  String get notesDemoCreateTitle;
+
+  /// No description provided for @notesDemoEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit note'**
+  String get notesDemoEditTitle;
+
+  /// No description provided for @notesDemoTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get notesDemoTitleLabel;
+
+  /// No description provided for @notesDemoBodyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Body'**
+  String get notesDemoBodyLabel;
+
+  /// No description provided for @notesDemoCancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get notesDemoCancelButton;
+
+  /// No description provided for @notesDemoSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get notesDemoSaveButton;
+
+  /// No description provided for @notesDemoNoBody.
+  ///
+  /// In en, this message translates to:
+  /// **'(No body)'**
+  String get notesDemoNoBody;
 }
 
 class _AppLocalizationsDelegate

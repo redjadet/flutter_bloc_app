@@ -3762,4 +3762,69 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get secureMessagingDemoErrorMismatch =>
       'Recovered plaintext did not match';
+
+  @override
+  String get exampleWeatherDemoButton => 'عرض الطقس';
+
+  @override
+  String get exampleNotesDemoButton => 'عرض الملاحظات';
+
+  @override
+  String get weatherDemoTitle => 'الطقس';
+
+  @override
+  String get weatherDemoCityLabel => 'المدينة';
+
+  @override
+  String get weatherDemoCityHint => 'مثل برلين';
+
+  @override
+  String get weatherDemoSearchButton => 'بحث';
+
+  @override
+  String get weatherDemoIdleHint => 'ابحث عن مدينة لعرض الطقس.';
+
+  @override
+  String get weatherDemoRetryButton => 'إعادة المحاولة';
+
+  @override
+  String weatherDemoWindLabel(String speed) {
+    return 'الرياح: $speed كم/س';
+  }
+
+  @override
+  String get weatherDemoHourlyTitle => 'الساعات القادمة';
+
+  @override
+  String get weatherDemoAttribution => 'بيانات الطقس من Open-Meteo.com';
+
+  @override
+  String get notesDemoTitle => 'ملاحظات';
+
+  @override
+  String get notesDemoEmpty => 'لا توجد ملاحظات بعد.';
+
+  @override
+  String get notesDemoCreateButton => 'إنشاء ملاحظة';
+
+  @override
+  String get notesDemoCreateTitle => 'ملاحظة جديدة';
+
+  @override
+  String get notesDemoEditTitle => 'تعديل الملاحظة';
+
+  @override
+  String get notesDemoTitleLabel => 'العنوان';
+
+  @override
+  String get notesDemoBodyLabel => 'النص';
+
+  @override
+  String get notesDemoCancelButton => 'إلغاء';
+
+  @override
+  String get notesDemoSaveButton => 'حفظ';
+
+  @override
+  String get notesDemoNoBody => '(بدون نص)';
 }

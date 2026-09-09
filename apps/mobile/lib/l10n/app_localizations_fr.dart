@@ -3790,4 +3790,69 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get secureMessagingDemoErrorMismatch =>
       'Recovered plaintext did not match';
+
+  @override
+  String get exampleWeatherDemoButton => 'Démo météo';
+
+  @override
+  String get exampleNotesDemoButton => 'Démo notes';
+
+  @override
+  String get weatherDemoTitle => 'Météo';
+
+  @override
+  String get weatherDemoCityLabel => 'Ville';
+
+  @override
+  String get weatherDemoCityHint => 'ex. Berlin';
+
+  @override
+  String get weatherDemoSearchButton => 'Rechercher';
+
+  @override
+  String get weatherDemoIdleHint => 'Recherchez une ville pour la météo.';
+
+  @override
+  String get weatherDemoRetryButton => 'Réessayer';
+
+  @override
+  String weatherDemoWindLabel(String speed) {
+    return 'Vent : $speed km/h';
+  }
+
+  @override
+  String get weatherDemoHourlyTitle => 'Prochaines heures';
+
+  @override
+  String get weatherDemoAttribution => 'Données météo par Open-Meteo.com';
+
+  @override
+  String get notesDemoTitle => 'Notes';
+
+  @override
+  String get notesDemoEmpty => 'Aucune note.';
+
+  @override
+  String get notesDemoCreateButton => 'Créer une note';
+
+  @override
+  String get notesDemoCreateTitle => 'Nouvelle note';
+
+  @override
+  String get notesDemoEditTitle => 'Modifier la note';
+
+  @override
+  String get notesDemoTitleLabel => 'Titre';
+
+  @override
+  String get notesDemoBodyLabel => 'Corps';
+
+  @override
+  String get notesDemoCancelButton => 'Annuler';
+
+  @override
+  String get notesDemoSaveButton => 'Enregistrer';
+
+  @override
+  String get notesDemoNoBody => '(Pas de corps)';
 }

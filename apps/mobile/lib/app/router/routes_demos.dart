@@ -54,6 +54,7 @@ import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.d
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/native_platform_showcase.dart';
+import 'package:flutter_bloc_app/features/notes_demo/notes_demo.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
@@ -61,6 +62,7 @@ import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabular
 import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/social_feed_demo.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/weather_demo/weather_demo.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
@@ -107,6 +109,8 @@ class const DemoRouteFactory({
   required final FlutterInAppPurchaseRepository Function()
   createFlutterInAppPurchaseRepository,
   required final AiDecisionRepository aiDecisionRepository,
+  required final WeatherRepository weatherRepository,
+  required final NotesRepository notesRepository,
   required final LoadNativePlatformShowcaseUseCase
   loadNativePlatformShowcaseUseCase,
   required final WatchNativeShowcaseTelemetryUseCase
@@ -142,18 +146,15 @@ class const DemoRouteFactory({
     initialModel: SecretConfig.huggingfaceModel,
   );
 
-  ChatSyncStatusCubit _createChatSyncStatusCubit() => ChatSyncStatusCubit(
-    pendingRepository: pendingSyncRepository,
-  );
+  ChatSyncStatusCubit _createChatSyncStatusCubit() =>
+      ChatSyncStatusCubit(pendingRepository: pendingSyncRepository);
 
-  Widget _chatGate({
-    required GoRouterState state,
-    required Widget child,
-  }) => _withChatSupabaseSessionGate(
-    state: state,
-    availability: backendAvailability,
-    child: child,
-  );
+  Widget _chatGate({required GoRouterState state, required Widget child}) =>
+      _withChatSupabaseSessionGate(
+        state: state,
+        availability: backendAvailability,
+        child: child,
+      );
 
   Widget _withChatSupabaseSessionGate({
     required GoRouterState state,

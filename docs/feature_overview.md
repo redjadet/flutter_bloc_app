@@ -129,3 +129,13 @@ See [Architecture Details](architecture_details.md) and
 - [Google Maps Integration](integrations/google_maps_integration.md)
 - [Native Platform Showcase](../apps/mobile/lib/features/native_platform_showcase/README.md) (feature README; brief: [2026-06-08](changes/2026-06-08_native_platform_showcase_feature_brief.md))
 - [Secure messaging demo](features/secure_messaging_demo.md) (Rust FFI; brief: [2026-09-06](changes/2026-09-06_secure_messaging_demo_rust_core.md))
+
+## Weather demo
+
+- Route: `/weather-demo` (`AppRoutes.weatherDemo`)
+- Module: `apps/mobile/lib/features/weather_demo/`
+
+## Notes demo
+
+- Route: `/notes-demo` (`AppRoutes.notesDemo`)
+- Module: `apps/mobile/lib/features/notes_demo/`
