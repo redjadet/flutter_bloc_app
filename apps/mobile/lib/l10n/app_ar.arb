@@ -625,12 +625,12 @@
   "exampleFirebaseFunctionsButton": "اختبار وظائف Firebase",
   "firebaseFunctionsTestTitle": "وظائف Firebase",
   "firebaseFunctionsCallButton": "اتصل بـ helloWorld",
-    "firebaseFunctionsTokenCallButton": "استدعاء issueRenderChatDemoHfReadToken",
+  "firebaseFunctionsTokenCallButton": "استدعاء issueRenderChatDemoHfReadToken",
   "firebaseFunctionsAuthRequired": "سجّل الدخول لاستدعاء دالة الرمز.",
   "firebaseFunctionsSafeError": "فشل الاستدعاء (التفاصيل مخفية).",
   "firebaseFunctionsGenericError": "فشل الاستدعاء.",
   "firebaseFunctionsMalformedResponse": "أعاد الاستدعاء حمولة غير متوقعة.",
-"firebaseFunctionsResultLabel": "نتيجة",
+  "firebaseFunctionsResultLabel": "نتيجة",
   "firebaseUnavailableMessage": "لم تتم تهيئة Firebase.",
   "fcmDemoPageTitle": "عرض FCM",
   "fcmDemoPermissionLabel": "إذن",
@@ -3655,14 +3655,14 @@
   "productionReadinessCrashlyticsLabel": "Crashlytics",
   "productionReadinessCrashlyticsActive": "متاح (تم تهيئة Firebase)",
   "productionReadinessCrashlyticsUnavailable": "غير متاح (محاكاة / لا Firebase)",
-    "productionReadinessCrashlyticsEmitNonFatalButton": "إرسال غير قاتل اختباري",
+  "productionReadinessCrashlyticsEmitNonFatalButton": "إرسال غير قاتل اختباري",
   "productionReadinessCrashlyticsNonFatalStatusLabel": "حالة غير قاتل اختباري",
   "productionReadinessCrashlyticsNonFatalIdle": "خامل",
   "productionReadinessCrashlyticsNonFatalRecording": "جارٍ التسجيل…",
   "productionReadinessCrashlyticsNonFatalRecordedLocal": "سُجّل محليًا (محاكاة)",
   "productionReadinessCrashlyticsNonFatalRecordedFirebase": "سُجّل في Crashlytics",
   "productionReadinessCrashlyticsNonFatalFailed": "فشل التسجيل",
-"productionReadinessFcmLabel": "إشعارات الدفع (FCM)",
+  "productionReadinessFcmLabel": "إشعارات الدفع (FCM)",
   "productionReadinessFcmModeLabel": "وضع FCM",
   "productionReadinessFcmModeLive": "مباشر",
   "productionReadinessFcmModeSimulated": "محاكاة",
@@ -3681,7 +3681,7 @@
   "productionReadinessKillSwitchBanner": "مفتاح إيقاف الإصدار معطّل. قد تكون ميزات العرض غير مفعّلة في الإنتاج.",
   "productionReadinessSettingsLink": "فتح الإعدادات",
   "productionReadinessNativeShowcaseLink": "عرض المنصة الأصلية",
-"exampleSocialFeedDemoButton": "Social feed demo",
+  "exampleSocialFeedDemoButton": "Social feed demo",
   "@exampleSocialFeedDemoButton": {
     "description": "Example hub button for social feed Flutter judgment guidance demo"
   },
@@ -3708,26 +3708,34 @@
   "socialFeedDemoStaleCache": "Cached data ({minutes} min old)",
   "@socialFeedDemoStaleCache": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoPendingCount": "{count, plural, =1{1 pending action} other{{count} pending actions}}",
   "@socialFeedDemoPendingCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoNeedsAttentionCount": "{count, plural, =1{1 needs attention} other{{count} need attention}}",
   "@socialFeedDemoNeedsAttentionCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoReconnecting": "Reconnecting realtime…",
   "socialFeedDemoNewPosts": "{count, plural, =1{1 new post} other{{count} new posts}}",
   "@socialFeedDemoNewPosts": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoScenarioTitle": "Scenario controls (simulated)",
@@ -3737,7 +3745,9 @@
   "socialFeedDemoResetBody": "Clears cache and queue for {viewer} only.",
   "@socialFeedDemoResetBody": {
     "placeholders": {
-      "viewer": { "type": "String" }
+      "viewer": {
+        "type": "String"
+      }
     }
   },
   "socialFeedDemoCancel": "Cancel",
@@ -3748,7 +3758,6 @@
   "socialFeedDemoSignalStep3": "Name layers and enforce them",
   "socialFeedDemoSignalStep4": "Attack hard problems independently",
   "socialFeedDemoSignalStep5": "End on failure states",
-
   "exampleSecureMessagingDemoButton": "Secure messaging demo",
   "@exampleSecureMessagingDemoButton": {
     "description": "Example hub button for secure messaging Rust FFI demo"
@@ -3817,5 +3826,33 @@
   "secureMessagingDemoErrorMismatch": "Recovered plaintext did not match",
   "@secureMessagingDemoErrorMismatch": {
     "description": "Round-trip mismatch"
-  }
+  },
+  "exampleWeatherDemoButton": "عرض الطقس",
+  "exampleNotesDemoButton": "عرض الملاحظات",
+  "weatherDemoTitle": "الطقس",
+  "weatherDemoCityLabel": "المدينة",
+  "weatherDemoCityHint": "مثل برلين",
+  "weatherDemoSearchButton": "بحث",
+  "weatherDemoIdleHint": "ابحث عن مدينة لعرض الطقس.",
+  "weatherDemoRetryButton": "إعادة المحاولة",
+  "weatherDemoWindLabel": "الرياح: {speed} كم/س",
+  "@weatherDemoWindLabel": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDemoHourlyTitle": "الساعات القادمة",
+  "weatherDemoAttribution": "بيانات الطقس من Open-Meteo.com",
+  "notesDemoTitle": "ملاحظات",
+  "notesDemoEmpty": "لا توجد ملاحظات بعد.",
+  "notesDemoCreateButton": "إنشاء ملاحظة",
+  "notesDemoCreateTitle": "ملاحظة جديدة",
+  "notesDemoEditTitle": "تعديل الملاحظة",
+  "notesDemoTitleLabel": "العنوان",
+  "notesDemoBodyLabel": "النص",
+  "notesDemoCancelButton": "إلغاء",
+  "notesDemoSaveButton": "حفظ",
+  "notesDemoNoBody": "(بدون نص)"
 }

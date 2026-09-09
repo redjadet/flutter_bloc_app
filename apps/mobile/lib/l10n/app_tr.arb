@@ -1740,12 +1740,12 @@
   "exampleFirebaseFunctionsButton": "Firebase Functions testi",
   "firebaseFunctionsTestTitle": "Firebase Functions",
   "firebaseFunctionsCallButton": "helloWorld çağır",
-    "firebaseFunctionsTokenCallButton": "issueRenderChatDemoHfReadToken çağır",
+  "firebaseFunctionsTokenCallButton": "issueRenderChatDemoHfReadToken çağır",
   "firebaseFunctionsAuthRequired": "Jeton fonksiyonunu çağırmak için oturum açın.",
   "firebaseFunctionsSafeError": "Callable başarısız (ayrıntılar gizli).",
   "firebaseFunctionsGenericError": "Callable başarısız.",
   "firebaseFunctionsMalformedResponse": "Callable beklenmeyen bir yanıt döndürdü.",
-"firebaseFunctionsResultLabel": "Sonuç",
+  "firebaseFunctionsResultLabel": "Sonuç",
   "firebaseUnavailableMessage": "Firebase başlatılmadı.",
   "fcmDemoPageTitle": "FCM Demo",
   "fcmDemoPermissionLabel": "Permission",
@@ -2632,14 +2632,14 @@
   "productionReadinessCrashlyticsLabel": "Crashlytics",
   "productionReadinessCrashlyticsActive": "Kullanılabilir (Firebase başlatıldı)",
   "productionReadinessCrashlyticsUnavailable": "Kullanılamıyor (simüle / Firebase yok)",
-    "productionReadinessCrashlyticsEmitNonFatalButton": "Test non-fatal gönder",
+  "productionReadinessCrashlyticsEmitNonFatalButton": "Test non-fatal gönder",
   "productionReadinessCrashlyticsNonFatalStatusLabel": "Test non-fatal durumu",
   "productionReadinessCrashlyticsNonFatalIdle": "Boşta",
   "productionReadinessCrashlyticsNonFatalRecording": "Kaydediliyor…",
   "productionReadinessCrashlyticsNonFatalRecordedLocal": "Yerel kaydedildi (simüle)",
   "productionReadinessCrashlyticsNonFatalRecordedFirebase": "Crashlytics'e kaydedildi",
   "productionReadinessCrashlyticsNonFatalFailed": "Kayıt başarısız",
-"productionReadinessFcmLabel": "Anlık bildirimler (FCM)",
+  "productionReadinessFcmLabel": "Anlık bildirimler (FCM)",
   "productionReadinessFcmModeLabel": "FCM modu",
   "productionReadinessFcmModeLive": "Canlı",
   "productionReadinessFcmModeSimulated": "Simüle",
@@ -2658,7 +2658,7 @@
   "productionReadinessKillSwitchBanner": "Sürüm kill-switch kapalı. Üretimde demo özellikleri kapalı olabilir.",
   "productionReadinessSettingsLink": "Ayarları aç",
   "productionReadinessNativeShowcaseLink": "Yerel platform vitrini",
-"exampleSocialFeedDemoButton": "Sosyal akış demosu",
+  "exampleSocialFeedDemoButton": "Sosyal akış demosu",
   "@exampleSocialFeedDemoButton": {
     "description": "Sosyal akış demosu düğmesi"
   },
@@ -2685,26 +2685,34 @@
   "socialFeedDemoStaleCache": "Önbellek verisi ({minutes} dk)",
   "@socialFeedDemoStaleCache": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoPendingCount": "{count, plural, =1{1 bekleyen işlem} other{{count} bekleyen işlem}}",
   "@socialFeedDemoPendingCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoNeedsAttentionCount": "{count, plural, =1{1 dikkat gerektiriyor} other{{count} dikkat gerektiriyor}}",
   "@socialFeedDemoNeedsAttentionCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoReconnecting": "Gerçek zamanlı yeniden bağlanıyor…",
   "socialFeedDemoNewPosts": "{count, plural, =1{1 yeni gönderi} other{{count} yeni gönderi}}",
   "@socialFeedDemoNewPosts": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "socialFeedDemoScenarioTitle": "Senaryo kontrolleri (simüle)",
@@ -2714,7 +2722,9 @@
   "socialFeedDemoResetBody": "Yalnızca {viewer} için önbellek ve kuyruğu temizler.",
   "@socialFeedDemoResetBody": {
     "placeholders": {
-      "viewer": { "type": "String" }
+      "viewer": {
+        "type": "String"
+      }
     }
   },
   "socialFeedDemoCancel": "İptal",
@@ -2725,7 +2735,6 @@
   "socialFeedDemoSignalStep3": "Katmanları adlandır ve uygula",
   "socialFeedDemoSignalStep4": "Zor problemleri bağımsız çöz",
   "socialFeedDemoSignalStep5": "Hata durumlarıyla bitir",
-
   "exampleSecureMessagingDemoButton": "Güvenli mesajlaşma demosu",
   "@exampleSecureMessagingDemoButton": {
     "description": "Example hub button for secure messaging Rust FFI demo"
@@ -2794,5 +2803,33 @@
   "secureMessagingDemoErrorMismatch": "Kurtarılan düz metin eşleşmedi",
   "@secureMessagingDemoErrorMismatch": {
     "description": "Round-trip mismatch"
-  }
+  },
+  "exampleWeatherDemoButton": "Hava Demo",
+  "exampleNotesDemoButton": "Notlar Demo",
+  "weatherDemoTitle": "Hava",
+  "weatherDemoCityLabel": "Şehir",
+  "weatherDemoCityHint": "örn. Berlin",
+  "weatherDemoSearchButton": "Ara",
+  "weatherDemoIdleHint": "Canlı hava için bir şehir arayın.",
+  "weatherDemoRetryButton": "Yeniden dene",
+  "weatherDemoWindLabel": "Rüzgar: {speed} km/s",
+  "@weatherDemoWindLabel": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherDemoHourlyTitle": "Sonraki saatler",
+  "weatherDemoAttribution": "Hava verisi Open-Meteo.com",
+  "notesDemoTitle": "Notlar",
+  "notesDemoEmpty": "Henüz not yok.",
+  "notesDemoCreateButton": "Not oluştur",
+  "notesDemoCreateTitle": "Yeni not",
+  "notesDemoEditTitle": "Notu düzenle",
+  "notesDemoTitleLabel": "Başlık",
+  "notesDemoBodyLabel": "İçerik",
+  "notesDemoCancelButton": "İptal",
+  "notesDemoSaveButton": "Kaydet",
+  "notesDemoNoBody": "(İçerik yok)"
 }

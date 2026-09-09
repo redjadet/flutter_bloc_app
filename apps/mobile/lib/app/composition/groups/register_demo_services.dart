@@ -10,6 +10,8 @@ Future<void> registerDemoServices() async {
   registerInAppPurchaseDemoServices();
   registerStaffAppDemoServices();
   registerAiDecisionDemoServices();
+  registerWeatherDemoServices();
+  registerNotesDemoServices();
   registerEventBusDemoServices();
   registerNativePlatformShowcaseServices();
   registerOnlineTherapyDemoServices();

@@ -126,16 +126,16 @@ class AppRoutes {
 
   static const caseStudyDemoHistory = 'case-study-demo-history';
   static const caseStudyDemoHistoryPath = '/case-study-demo/history';
-
   static const caseStudyDemoHistoryDetail = 'case-study-demo-history-detail';
   static const caseStudyDemoHistoryDetailPath = '/case-study-demo/history/:id';
-
   static const staffAppDemo = 'staff-app-demo';
   static const staffAppDemoPath = '/staff-app-demo';
-
   static const aiDecisionDemo = 'ai-decision-demo';
   static const aiDecisionDemoPath = '/ai-decision-demo';
-
+  static const weatherDemo = 'weather-demo';
+  static const weatherDemoPath = '/weather-demo';
+  static const notesDemo = 'notes-demo';
+  static const notesDemoPath = '/notes-demo';
   static const eventBusDemo = 'event-bus-demo';
   static const eventBusDemoPath = '/event-bus-demo';
   static const socialFeedDemo = 'social-feed-demo';
@@ -146,31 +146,22 @@ class AppRoutes {
   static const nativePlatformShowcasePath = '/native-platform-showcase';
   static const staffAppDemoDashboard = 'staff-app-demo-dashboard';
   static const staffAppDemoDashboardPath = '/staff-app-demo/dashboard';
-
   static const staffAppDemoTimeclock = 'staff-app-demo-timeclock';
   static const staffAppDemoTimeclockPath = '/staff-app-demo/timeclock';
-
   static const staffAppDemoMessages = 'staff-app-demo-messages';
   static const staffAppDemoMessagesPath = '/staff-app-demo/messages';
-
   static const staffAppDemoContent = 'staff-app-demo-content';
   static const staffAppDemoContentPath = '/staff-app-demo/content';
-
   static const staffAppDemoForms = 'staff-app-demo-forms';
   static const staffAppDemoFormsPath = '/staff-app-demo/forms';
-
   static const staffAppDemoProof = 'staff-app-demo-proof';
   static const staffAppDemoProofPath = '/staff-app-demo/proof';
-
   static const staffAppDemoAdmin = 'staff-app-demo-admin';
   static const staffAppDemoAdminPath = '/staff-app-demo/admin';
-
   static const onlineTherapyDemo = 'online-therapy-demo';
   static const onlineTherapyDemoPath = '/online-therapy-demo';
-
   static const onlineTherapyDemoControls = 'online-therapy-demo-controls';
   static const onlineTherapyDemoControlsPath = '/online-therapy-demo/controls';
-
   static const onlineTherapyDemoClient = 'online-therapy-demo-client';
   static const onlineTherapyDemoClientPath = '/online-therapy-demo/client';
   static const onlineTherapyDemoClientTherapists =

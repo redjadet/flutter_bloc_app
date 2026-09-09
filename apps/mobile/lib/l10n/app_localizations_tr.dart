@@ -3752,4 +3752,69 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get secureMessagingDemoErrorMismatch =>
       'Kurtarılan düz metin eşleşmedi';
+
+  @override
+  String get exampleWeatherDemoButton => 'Hava Demo';
+
+  @override
+  String get exampleNotesDemoButton => 'Notlar Demo';
+
+  @override
+  String get weatherDemoTitle => 'Hava';
+
+  @override
+  String get weatherDemoCityLabel => 'Şehir';
+
+  @override
+  String get weatherDemoCityHint => 'örn. Berlin';
+
+  @override
+  String get weatherDemoSearchButton => 'Ara';
+
+  @override
+  String get weatherDemoIdleHint => 'Canlı hava için bir şehir arayın.';
+
+  @override
+  String get weatherDemoRetryButton => 'Yeniden dene';
+
+  @override
+  String weatherDemoWindLabel(String speed) {
+    return 'Rüzgar: $speed km/s';
+  }
+
+  @override
+  String get weatherDemoHourlyTitle => 'Sonraki saatler';
+
+  @override
+  String get weatherDemoAttribution => 'Hava verisi Open-Meteo.com';
+
+  @override
+  String get notesDemoTitle => 'Notlar';
+
+  @override
+  String get notesDemoEmpty => 'Henüz not yok.';
+
+  @override
+  String get notesDemoCreateButton => 'Not oluştur';
+
+  @override
+  String get notesDemoCreateTitle => 'Yeni not';
+
+  @override
+  String get notesDemoEditTitle => 'Notu düzenle';
+
+  @override
+  String get notesDemoTitleLabel => 'Başlık';
+
+  @override
+  String get notesDemoBodyLabel => 'İçerik';
+
+  @override
+  String get notesDemoCancelButton => 'İptal';
+
+  @override
+  String get notesDemoSaveButton => 'Kaydet';
+
+  @override
+  String get notesDemoNoBody => '(İçerik yok)';
 }

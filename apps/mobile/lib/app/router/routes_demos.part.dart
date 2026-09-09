@@ -96,10 +96,8 @@ List<RouteBase> createDemoRoutesHead(DemoRouteFactory factory) => <RouteBase>[
     builder: (context, state) {
       final l10n = context.l10n;
       return const LobbyPage().routeScoped(
-        create: () => LobbyCubit(
-          repository: factory.demoBalanceRepository,
-          l10n: l10n,
-        ),
+        create: () =>
+            LobbyCubit(repository: factory.demoBalanceRepository, l10n: l10n),
         init: (cubit) => cubit.loadBalance(),
       );
     },
@@ -211,6 +209,19 @@ List<RouteBase> createDemoRoutesTail(DemoRouteFactory factory) => <RouteBase>[
     create: (_, _) => AiDecisionCubit(repository: factory.aiDecisionRepository),
     init: (cubit) => cubit.loadQueue(),
     child: const AiDecisionDemoPage(),
+  ),
+  RouteScopedPage.routeWithCubit<WeatherCubit>(
+    path: AppRoutes.weatherDemoPath,
+    name: AppRoutes.weatherDemo,
+    create: (_, _) => WeatherCubit(repository: factory.weatherRepository),
+    child: const WeatherDemoPage(),
+  ),
+  RouteScopedPage.routeWithCubit<NotesCubit>(
+    path: AppRoutes.notesDemoPath,
+    name: AppRoutes.notesDemo,
+    create: (_, _) => NotesCubit(repository: factory.notesRepository),
+    init: (cubit) => cubit.start(),
+    child: const NotesDemoPage(),
   ),
   createEventBusDemoRoute(factory),
   createSocialFeedDemoRoute(factory),

@@ -44,6 +44,8 @@ void main() {
                 onOpenCaseStudyDemo: () {},
                 onOpenIapDemo: () {},
                 onOpenAiDecisionDemo: () {},
+                onOpenWeatherDemo: () {},
+                onOpenNotesDemo: () {},
                 onOpenOnlineTherapyDemo: () {
                   tapped = true;
                 },

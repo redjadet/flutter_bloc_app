@@ -25,6 +25,8 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required this.onOpenCaseStudyDemo,
     required this.onOpenIapDemo,
     required this.onOpenAiDecisionDemo,
+    required this.onOpenWeatherDemo,
+    required this.onOpenNotesDemo,
     required this.onOpenEventBusDemo,
     required this.onOpenSocialFeedDemo,
     required this.onOpenSecureMessagingDemo,
@@ -67,6 +69,8 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final VoidCallback onOpenCaseStudyDemo;
   final VoidCallback onOpenIapDemo;
   final VoidCallback onOpenAiDecisionDemo;
+  final VoidCallback onOpenWeatherDemo;
+  final VoidCallback onOpenNotesDemo;
   final VoidCallback onOpenEventBusDemo;
   final VoidCallback onOpenSocialFeedDemo;
   final VoidCallback onOpenSecureMessagingDemo;
@@ -270,6 +274,22 @@ class _ExamplePageBodyContent extends StatelessWidget {
             icon: Icons.rule_outlined,
             label: 'AI Decision Workbench',
             key: const ValueKey('example-ai-decision-demo-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenWeatherDemo,
+            icon: Icons.wb_sunny_outlined,
+            label: l10n.exampleWeatherDemoButton,
+            key: const ValueKey('example-weather-demo-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenNotesDemo,
+            icon: Icons.note_alt_outlined,
+            label: l10n.exampleNotesDemoButton,
+            key: const ValueKey('example-notes-demo-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

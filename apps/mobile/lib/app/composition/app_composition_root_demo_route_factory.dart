@@ -40,6 +40,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/native_platform_showcase.dart';
+import 'package:flutter_bloc_app/features/notes_demo/domain/notes_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/audit_repository.dart';
@@ -68,6 +69,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/weather_demo/domain/weather_repository.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart' show PendingSyncRepository;
 import 'package:utilities/utilities.dart'
@@ -124,6 +126,8 @@ DemoRouteFactory resolveDemoRouteFactory({
     createFlutterInAppPurchaseRepository: () =>
         getIt<FlutterInAppPurchaseRepository>(),
     aiDecisionRepository: getIt<AiDecisionRepository>(),
+    weatherRepository: getIt<WeatherRepository>(),
+    notesRepository: getIt<NotesRepository>(),
     loadNativePlatformShowcaseUseCase:
         getIt<LoadNativePlatformShowcaseUseCase>(),
     watchNativeShowcaseTelemetryUseCase:
