@@ -8,8 +8,10 @@ Rationale for the app-state decision accepted by
 ## Decision
 
 Use Cubit by default. Use BLoC when explicit events, event transforms, or event
-auditability add value. Do not add Riverpod or another state-management system
-without an accepted ADR.
+auditability add value. Do not add Riverpod, BlocSignal (`bloc_signals` /
+`bloc_signals_flutter`), or another state-management system without an accepted
+ADR. See [`ADR 0007`](../adr/0007-blocsignal-evaluation.md) for the BlocSignal
+evaluation.
 
 Reasons:
 
@@ -23,6 +25,12 @@ Reasons:
 This is a consistency decision, not a claim that BLoC is universally superior.
 Riverpod may fit smaller apps, provider-heavy dependency graphs, or teams already
 standardized on it; those conditions do not outweigh migration cost here.
+
+BlocSignal offers BLoC-shaped APIs on a synchronous signals foundation (fine
+rebuild granularity, streamless concurrency transformers, primary-constructor
+friendly ceremony). That does not outweigh this repo’s Cubit-first stack,
+type-safe helpers, and `bloc_test` investment. Steal the *practices* below;
+do not steal the package stack.
 
 ## Placement
 
@@ -57,6 +65,15 @@ Use BLoC when events themselves matter:
 
 Do not choose BLoC only to create ceremony. Do not choose Cubit when hidden
 concurrency policy would make behavior ambiguous.
+
+## Practices aligned with BlocSignal claims (without adopting it)
+
+| Claim / practice | Repo equivalent |
+| --- | --- |
+| Low ceremony from one cubit to many | Cubit default; almost all features use Cubit, not Bloc |
+| Dart 3.13 primary constructors | [`CODE_QUALITY.md`](../CODE_QUALITY.md) for DTOs and optional Cubit shortening; Freezed state stays generated |
+| Fine-grained rebuilds | `TypeSafeBlocSelector` / `buildWhen` (ADR 0004) |
+| Avoid state hanging on data types | Never put Cubit/Bloc (or signal mixins) on repositories — presentation only |
 
 ## Required state properties
 
@@ -121,3 +138,4 @@ Minimum review:
 - [`architecture/feature_structure_contract.md`](feature_structure_contract.md)
 - [`compile_time_safety.md`](compile_time_safety.md)
 - [`testing_overview.md`](../testing_overview.md)
+- [`ADR 0007 — BlocSignal evaluation`](../adr/0007-blocsignal-evaluation.md)

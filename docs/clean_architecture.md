@@ -89,8 +89,10 @@ the current DAG.
   (`fromBootstrap`) so each resolve re-reads live backend flags after deferred
   Firebase/Supabase bootstrap — not a stable singleton.
 
-  Do not adopt Riverpod, `injectable`, or BlocSignal as a DI container for this
-  app; keep constructor + `flutter_bloc` tree scope + GetIt composition.
+  Do not adopt Riverpod or `injectable` as DI for this app. Do not adopt
+  BlocSignal (`bloc_signals` / `bloc_signals_flutter`) as DI **or** as a second
+  state-management stack — keep constructor injection + `flutter_bloc` tree
+  scope + GetIt composition ([ADR 0007](adr/0007-blocsignal-evaluation.md)).
 
 ## How Dependencies Flow
 

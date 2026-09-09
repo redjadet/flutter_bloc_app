@@ -18,8 +18,8 @@ only** — under `apps/mobile/lib/features/*/presentation/cubit/` or app-scope p
 | UI-only ephemeral toggles | Local widget state, if no business rule or shared state is involved |
 
 Default to `Cubit` in this repo unless a row above proves `Bloc` is the better
-fit. Do not introduce Riverpod, Provider, or ad hoc service-locator state for
-new feature state.
+fit. Do not introduce Riverpod, Provider, BlocSignal, or ad hoc service-locator
+state for new feature state ([ADR 0007](adr/0007-blocsignal-evaluation.md)).
 
 ## State Shape
 
