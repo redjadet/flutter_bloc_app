@@ -4,6 +4,14 @@ Human judgment remains accountable for problem choice, product intent, risk
 acceptance, and production outcomes. AI agents can accelerate exploration,
 implementation, and verification; they do not replace these responsibilities.
 
+**Implementation typing is getting cheap. Judgment is getting scarce.** Agents
+can generate large diffs while coffee cools; that volume is not a productivity
+signal. Prefer the smallest surface that solves the validated problem—including
+negative code (work you never ship) and deletion of generated surplus. Every
+line carries cost: understand, test, secure, upgrade, debug, migrate, observe,
+refactor, or delete. Fundamentals matter more for evaluation, not less: you
+cannot reject a bad concurrency or transaction boundary you do not understand.
+
 Use this guide to make critical engineering skills observable in briefs, design
 records, reviews, tests, and operational evidence. It synthesizes the practices;
 linked owner documents remain authoritative for detailed repository rules.
@@ -79,6 +87,11 @@ This standard makes the project:
   supported platforms, team ownership, delivery horizon, and failure tolerance.
 - Name the protected invariant and its owner before choosing components. Keep
   pure reusable decisions separate from I/O and workflow orchestration.
+- Spend design time destroying boxes as well as drawing them. Default question:
+  can an existing query, path, or adapter absorb this change without a new
+  service, datastore, queue, cache, or abstraction? Assume it can until evidence
+  justifies new surface. Adding or rejecting technology demonstrates judgment
+  only when tied to validated need, trade-offs, and proof.
 - Define boundaries, data and control flow, source of truth, lifecycle, trust
   boundaries, and operational signals before selecting components.
 - Check normal, degraded, recovery, migration, and rollback paths. Architecture
@@ -142,9 +155,13 @@ This standard makes the project:
 
 - Compare at least the current approach, the smallest change, and a credible
   alternative. Include “do nothing” when delay is viable.
+- When agents produce many plausible designs, scarcity is **rejection**, not
+  invention. Kill options that solve scale you do not have, add undemonstrated
+  abstractions, or expand blast radius without user value.
 - Evaluate user value, correctness, security, complexity, cost, delivery time,
-  reversibility, operational burden, and future constraints. Weight criteria;
-  a technology feature list is not analysis.
+  reversibility, operational burden, and carrying cost of new surface area.
+  Weight criteria; a technology feature list is not analysis. Prefer fewer
+  services, endpoints, dependencies, and lines when outcomes match.
 - Record chosen option, rejected option, accepted cost, proof, decision owner,
   revisit trigger, and exit path. Avoid “it depends” without a decision boundary.
 - Use an [ADR](../adr/README.md) for lasting cross-cutting decisions and
@@ -168,6 +185,10 @@ This standard makes the project:
 
 - Connect work to a user segment, problem, desired behavior change, and business
   constraint. Ask what value increases and what cost or risk decreases.
+- Cheap generation removes the old brake of “implementation is expensive.” Do
+  not let agent speed turn every idea into shipped surface. Discovery and
+  assumption tests earn the right to consume code; hours saved on typing should
+  be reinvested upstream (clarify problem) and downstream (verify and delete).
 - Define a hypothesis, success signal, guardrails, and ship/iterate/stop decision
   before optimizing implementation. Separate available telemetry from metrics
   that would require future instrumentation.
@@ -195,16 +216,34 @@ This standard makes the project:
 
 - Human coordinator owns goal, scope, product decisions, risk class, task graph,
   and final verdict. Agent output remains untrusted until inspected and verified.
+- Lead with intent, not syntax: constraints, invariants, expected behavior,
+  failure boundaries, performance and security rules, data ownership, and
+  acceptance criteria. After generation, interrogate: why this shape, which
+  failure cases, idempotency under concurrency, timeout/retry behavior, assumed
+  scale, query or I/O cost, then simplify or delete.
 - Delegate only bounded work with inputs, output contract, write boundary, and
   proof. Use independent review for high-risk work; do not let one agent both
   invent and waive its acceptance criteria.
 - Parallelize independent discovery or validation. Serialize conflicting edits,
   shared design decisions, migrations, and final integration.
 - Inspect artifacts and raw evidence, reconcile contradictions, stop duplicate or
-  low-value work, and keep one accountable owner for final integration. Rules:
-  [AI Agent Governance](../ai/governance.md) and
+  low-value work, and keep one accountable owner for final integration. Knowing
+  when the architecture is sufficient—and stopping further generation—is part of
+  supervision. Rules: [AI Agent Governance](../ai/governance.md) and
   [Tool Orchestration](../agent_kb/tool_orchestration.md). Task-fit guidance:
   [Best Areas for AI Agents](../ai/best_areas_for_ai_agents.md).
+
+## 13. Restraint, rejection, and deletion
+
+- Treat “lines written,” “files touched,” and “tickets closed” as weak signals.
+  A day spent thinking that deletes surplus or avoids a new subsystem can be
+  higher-leverage than a large additive PR.
+- When reviewing agent output, prefer selection among options over celebration of
+  volume: which of several generated implementations would you ship, and what
+  would you remove first? Valuable prompts include “simplify” and “delete this.”
+- Keep deep reading and debugging skills sharp so rejection stays grounded in
+  runtime truth, not vibe. Generating an app and engineering a reliable system
+  remain different problems.
 
 ## Practical self-review
 
@@ -214,7 +253,11 @@ Before calling work complete, answer:
   state, and the boundaries that enforce its assumptions?
 - Can another engineer state the problem, chosen design, key trade-off, and
   failure model without the original conversation?
+- Is this the smallest honest surface for the outcome—or did generation add
+  boxes, deps, or lines that should have been rejected?
 - Does proof map to acceptance criteria and highest risks?
 - Are product, security, and production decisions owned by named humans or roles?
 - Are uncertainty, limitations, rollback, and revisit triggers explicit?
 - Did agent assistance improve evidence quality without weakening human accountability?
+- Would production prefer fewer moving parts here even if the additive diff looked
+  more “productive”?

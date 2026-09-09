@@ -17,7 +17,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Architecture map | [`architecture.md`](architecture.md) → [`clean_architecture.md`](clean_architecture.md) |
 | Add or change a feature | [`feature_implementation_guide.md`](feature_implementation_guide.md), [`architecture/reference_features.md`](architecture/reference_features.md) |
 | Find implementation ownership | [`CODEMAP.md`](../CODEMAP.md) |
-| Develop critical human engineering skills | [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) |
+| Develop critical human engineering skills | [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) — judgment, restraint, and least-surface delivery when agents make typing cheap |
 | Review a change | [`review/code_review_playbook.md`](review/code_review_playbook.md) |
 | Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
 | Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); overview [`ai-workflow.md`](ai-workflow.md) |
@@ -76,7 +76,7 @@ root when an existing category applies.
 ### Workflow and quality
 
 - [`new_developer_guide.md`](new_developer_guide.md)
-- [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) — problem decomposition, communication, design, review, debugging, security, product judgment, production accountability, and agent supervision
+- [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) — problem decomposition, communication, design, review, debugging, security, product judgment, production accountability, agent supervision, and restraint/deletion when implementation is cheap
 - [`git_and_branching_strategy.md`](git_and_branching_strategy.md) — human and AI Git, branch, PR, and worktree workflow
 - [`agent_knowledge_base.md`](agent_knowledge_base.md)
 - [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) — bounded tasks where agents add value, with human controls and acceptance evidence

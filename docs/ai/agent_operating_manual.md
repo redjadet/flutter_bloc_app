@@ -18,10 +18,10 @@ Use this loop for implementation, refactoring, and review:
 2. **Choose clarity.** Prefer direct, unsurprising code, meaningful names, small functions, and obvious structure over cleverness.
 3. **Justify abstractions.** Add indirection only for demonstrated reuse, variation, test seams, or external dependencies—not imagined needs.
 4. **Design failure paths.** Define relevant invalid, absent/null, dependency-failure, cancellation, race, stale-result, retry, and partial-completion behavior; test important paths.
-5. **Refactor deliberately.** Within the write-set, remove duplication, misleading names, oversized responsibilities, and accidental complexity exposed by the change.
+5. **Refactor deliberately.** Within the write-set, remove duplication, misleading names, oversized responsibilities, and accidental complexity exposed by the change. Prefer deleting surplus introduced by the change over adding parallel structure; preserve pre-existing and user-owned work.
 6. **Understand reuse.** Read copied/generated code and package contracts; verify them against current behavior and pinned APIs.
 7. **Communicate decisions.** Record context, assumptions, trade-offs, rejected simpler options, and requirement changes where maintainers will find them; comments explain why.
-8. **Recheck.** Ask: “Is this clear, necessary, simple, resilient, and understandable six months from now?” Inspect diff and proof before reporting.
+8. **Recheck.** Ask: “Is this clear, necessary, simple, resilient, and understandable six months from now?” Inspect diff and proof before reporting. Volume of generated code is not evidence of progress.
 
 ## Readable code and useful comments
 
