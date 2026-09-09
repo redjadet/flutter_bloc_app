@@ -43,6 +43,18 @@ fi
 echo "fixtures|validate_task_trackers|help"
 bash tool/validate_task_trackers.sh --help >/dev/null
 
+echo "fixtures|check_aidlc_artifacts|help"
+bash tool/check_aidlc_artifacts.sh --help >/dev/null
+
+echo "fixtures|scaffold_aidlc_run|help"
+bash tool/scaffold_aidlc_run.sh --help >/dev/null
+
+echo "fixtures|check_aidlc_artifacts|self_test"
+bash tool/check_aidlc_artifacts.sh --self-test >/dev/null
+
+echo "fixtures|scaffold_aidlc_run|dry_run_lite"
+bash tool/scaffold_aidlc_run.sh --host cursor --mode lite --slug harness-dry --dry-run >/dev/null
+
 echo "fixtures|check_docs_gardening|help"
 bash tool/check_docs_gardening.sh --help >/dev/null
 

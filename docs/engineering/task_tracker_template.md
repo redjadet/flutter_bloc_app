@@ -97,3 +97,14 @@ What proved it worked? Provide the key outputs (pass/fail) and any important not
 
 - `./bin/checklist-fast`: PASS
 - Residual risk: note what remains, if any
+
+## AIDLC (optional)
+
+For T1 Lite / T2 full lifecycle control, add `## AIDLC` with schema version `1`.
+Owner: [`../ai/aidlc_workflow.md`](../ai/aidlc_workflow.md). Exact YAML:
+[`aidlc_artifact_contract.md`](aidlc_artifact_contract.md).
+
+- T1: Lite YAML in this tracker only (`run_status`, `current_stage`, structured
+  `extensions`, machine-readable `gate_events`).
+- T2: `mode: full` + `run_id` pointing at `tasks/<host>/aidlc/<run-id>/`.
+- Omit this section for T0 / non-AIDLC work (tracker validation stays compatible).

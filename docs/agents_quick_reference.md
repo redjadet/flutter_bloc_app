@@ -36,6 +36,7 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 | Engineering max-score claim | [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md); `bash tool/check_engineering_quality_scorecard_gate.sh`; `bash tool/update_engineering_quality_badge.sh --check`; `./bin/agent-maintain closeout` |
 | Agent-memory / memory-compounding drift | `./tool/check_agent_memory_compounding.sh`; `./tool/agent_memory_auto_maintain.sh --if-changed --verify` |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
+| AIDLC lifecycle (T1/T2) | [`ai/aidlc_workflow.md`](ai/aidlc_workflow.md); skill `agents-aidlc-workflow`; schemas [`engineering/aidlc_artifact_contract.md`](engineering/aidlc_artifact_contract.md); `bash tool/scaffold_aidlc_run.sh --help`; `bash tool/check_aidlc_artifacts.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
 | Host-template sync | `./tool/sync_agent_assets.sh --dry-run` / `--apply`; after template edits: `./bin/agent-maintain after-host-edit` |
 | Agent host maintain | [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md); `./bin/agent-maintain help`; `/agent-maintain` |

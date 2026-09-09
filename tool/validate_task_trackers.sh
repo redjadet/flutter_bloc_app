@@ -168,6 +168,12 @@ for file in "${targets[@]}"; do
       section_non_empty "$file" "$heading"
     fi
   done
+
+  if grep -qF "## AIDLC" "$file"; then
+    if ! bash "$repo_root/tool/check_aidlc_artifacts.sh" --paths "$file"; then
+      fail "$file AIDLC section failed tool/check_aidlc_artifacts.sh"
+    fi
+  fi
 done
 
 if [[ "$failures" -ne 0 ]]; then

@@ -10,6 +10,9 @@ description: >-
 
 Use for non-trivial feature/fix, validation routing, completion before done/commit.
 
+**Lifecycle:** phase-gated / AIDLC / resume active run → `agents-aidlc-workflow`
+(owner `docs/ai/aidlc_workflow.md`); this skill stays the finish-gate loop.
+
 **Start:** `AGENTS.md` + **context ladder** (`docs/ai/context_loading.md`).
 
 **Operating discipline:** `docs/ai/agent_operating_manual.md` (T1/T2; pointer-only).

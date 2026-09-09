@@ -86,6 +86,16 @@ Typical path:
 
 Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when docs materially change validation guidance, delivery policy, or repo-wide operating rules (incl [`AGENTS.md`](../../AGENTS.md)).
 
+### AIDLC lifecycle artifacts
+
+When `## AIDLC` exists on a tracker or `tasks/*/aidlc/**` is in scope (after
+Slice B tools land):
+
+- `bash tool/check_aidlc_artifacts.sh` (or `--self-test` / harness fixtures)
+- Keep non-AIDLC trackers passing via conditional validation
+- Pre-host-apply: `AGENT_MAINTAIN_PLAN_ONLY=1` closeout; post-apply: full checklist
+  (AIDLC + [`AGENTS.md`](../../AGENTS.md) / operating-policy changes are full-path triggers)
+
 ## Routing Matrix (path triggers)
 
 Routing source of truth. If host prompt/helper script disagrees, this doc wins.

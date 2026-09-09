@@ -260,6 +260,15 @@ scope_has_design_md_edits() {
   return 1
 }
 
+discover_aidlc_runs() {
+  # Log-only; never scaffolds. Exit 0 even when none found.
+  bash "$PROJECT_ROOT/tool/check_aidlc_artifacts.sh" --discover || true
+}
+
+has_aidlc_artifacts_present() {
+  bash "$PROJECT_ROOT/tool/check_aidlc_artifacts.sh" --discover --quiet
+}
+
 collect_changed_doc_paths() {
   local path
   while IFS= read -r path; do
@@ -405,7 +414,13 @@ cmd_engineering_maintain() {
     return 0
   fi
   run_stage bash "$PROJECT_ROOT/tool/update_engineering_quality_badge.sh"
-  run_stage bash "$PROJECT_ROOT/tool/check_engineering_quality_scorecard_gate.sh"
+  # Measured coverage proofs need lcov; docs/tooling-only scopes skip like checklist.
+  local -a gate_args=()
+  if [[ ! -f "$PROJECT_ROOT/coverage/lcov.info" ]]; then
+    log "hint|engineering-coverage|coverage/lcov.info missing; using --skip-coverage-proof"
+    gate_args+=(--skip-coverage-proof)
+  fi
+  run_stage bash "$PROJECT_ROOT/tool/check_engineering_quality_scorecard_gate.sh" "${gate_args[@]}"
 }
 
 cmd_memory() {
@@ -485,6 +500,7 @@ cmd_preflight() {
   run_stage bash "$PROJECT_ROOT/tool/agent_session_bootstrap.sh" "$@"
   run_drift_check 0
   run_stage bash "$PROJECT_ROOT/tool/validate_task_trackers.sh"
+  discover_aidlc_runs
   if scope_has_harness_edits; then
     log "scope|harness|yes"
     log "hint|harness-maintain|./bin/agent-maintain harness-maintain before max-score claim; closeout runs when scoped"
@@ -612,6 +628,17 @@ cmd_auto() {
   log "auto_action|docs-sync|./bin/agent-maintain docs-sync"
 
   cmd_preflight
+  if has_aidlc_artifacts_present; then
+    log "scope|aidlc|yes"
+    log "auto_action|aidlc-artifacts|bash tool/check_aidlc_artifacts.sh"
+    if [[ "${AGENT_MAINTAIN_PLAN_ONLY:-}" == "1" ]]; then
+      log "plan|aidlc-artifacts|bash tool/check_aidlc_artifacts.sh"
+    else
+      run_stage bash "$PROJECT_ROOT/tool/check_aidlc_artifacts.sh"
+    fi
+  else
+    log "scope|aidlc|no"
+  fi
   cmd_docs_sync
 
   if (( host_templates )); then

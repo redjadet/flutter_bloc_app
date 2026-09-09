@@ -49,7 +49,8 @@ Git paths (staged, unstaged, untracked, deleted) matching:
 | Change | Agent action |
 | --- | --- |
 | New validation script | Update `docs/validation_scripts/` catalog + checklist index; add risk register detection row if recurring |
-| New host skill | Register in `tool/agent_asset_lib.sh`, [`ai/skill_routing.md`](skill_routing.md), run `after-host-edit` |
+| AIDLC workflow / artifact contract / validator | Keep single owner [`aidlc_workflow.md`](aidlc_workflow.md); schemas in [`../engineering/aidlc_artifact_contract.md`](../engineering/aidlc_artifact_contract.md); `bash tool/check_aidlc_artifacts.sh`; fixtures via `tool/run_harness_fixtures.sh` |
+| New host skill | Register in `tool/agent_asset_lib.sh`, [`ai/skill_routing.md`](skill_routing.md), run `after-host-edit` (R3-gated; use PLAN_ONLY closeout until authorized) |
 | New architecture/BLoC policy | Update contract + [`reference_features.md`](../architecture/reference_features.md) + scorecard gate needles |
 | Scorecard area or README badge below 10 | Add missing owner doc, script, synced skill, or README badge update; extend `check_harness_scorecard_gate.sh` |
 | Repeated agent mistake | Follow [Update Rule](ai_failure_risks.md#update-rule): script, fixture, doc, or skill |

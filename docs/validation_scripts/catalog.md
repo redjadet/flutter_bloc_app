@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **113** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **114** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **83** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -116,6 +116,7 @@ below.
   `test/flutter_test_config.dart`). Fails the checklist on `RenderFlex` /
   `RenderParagraph` overflow errors that can otherwise slip into manual web QA.
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
+- **`check_aidlc_artifacts.sh`**: Validates AIDLC Lite tracker YAML and T2 run bundles (schema v1, extensions, gate_events, active-run rule); `--self-test` runs `tool/fixtures/aidlc_artifacts`.
 - **`check_ai_snapshot_freshness.sh`**: Active `ai/` discovery snapshots — forbidden legacy paths, required `ai_snapshot` frontmatter, resolvable `canon_links`. Refresh via the staged, lock-protected, rollback-safe `bash tool/refresh_ai_reports.sh`; verify refresh idempotency and malformed-frontmatter safety with `bash tool/refresh_ai_reports.sh --self-test`. See [`ai_snapshot_freshness.md`](ai_snapshot_freshness.md).
 - **`check_agent_scorecard_freshness.sh`**: Rejects a generated agent scorecard summary whose source fingerprint no longer matches the active or archived event inputs. Refresh with `./tool/build_agent_scorecard_summary.sh`; enforced by `./bin/agent-maintain closeout`. See [`agent_scorecard_freshness.md`](agent_scorecard_freshness.md).
 - **`check_repomix_contract.sh`**: Repomix onboarding/feature pack smoke — forbidden secrets/generated paths, token budgets. See [`docs/ai/repomix_profiles.md`](../ai/repomix_profiles.md).

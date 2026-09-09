@@ -9,6 +9,7 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 | [ai_failure_risks.md](ai_failure_risks.md) | Pre-Flight risk register + minimum proof |
 | [agent_operating_manual.md](agent_operating_manual.md) | T1/T2 coding discipline router |
 | [governance.md](governance.md) | Roles, handoffs, stop conditions |
+| [aidlc_workflow.md](aidlc_workflow.md) | Repo-native AIDLC stages, gates, activation |
 | [context_loading.md](context_loading.md) | Context ladder |
 | [harness_scorecard.md](harness_scorecard.md) | Harness quality scorecard |
 | [harness_auto_maintenance.md](harness_auto_maintenance.md) | Keep harness score honest (`agent-maintain harness-maintain`) |

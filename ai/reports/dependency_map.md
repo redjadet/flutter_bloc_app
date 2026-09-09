@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-08T09:59:40Z"
-  git_head: "9a2889ee1b46ff63027b4826c3c08bbe0c05f774"
+  generated_at: "2026-09-09T13:54:59Z"
+  git_head: "076b1a0def49cf1d71b47df00af45c52140ab03e"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -20,7 +20,7 @@ ai_snapshot:
 | --- | ---: | --- |
 | chat | 6627 | yes |
 | staff_app_demo | 5538 | yes |
-| todo_list | 5517 | yes |
+| todo_list | 5518 | yes |
 | social_feed_demo | 5372 | yes |
 | online_therapy_demo | 5136 | yes |
 | case_study_demo | 4713 | yes |
@@ -28,8 +28,8 @@ ai_snapshot:
 | native_platform_showcase | 3516 | yes |
 | iot_demo | 3180 | yes |
 | iot | 3092 | yes |
+| example | 2422 | yes |
 | auth | 2398 | yes |
-| example | 2392 | yes |
 | realtime_market | 2131 | yes |
 | graphql_demo | 1980 | yes |
 | chart | 1971 | yes |
@@ -46,15 +46,17 @@ ai_snapshot:
 | search | 1090 | yes |
 | camera_gallery | 1023 | yes |
 | library_demo | 1018 | yes |
+| production_readiness | 972 | yes |
 | scapes | 946 | yes |
-| production_readiness | 939 | yes |
 | websocket | 875 | yes |
 | fcm_demo | 810 | yes |
 | secure_messaging_demo | 758 | yes |
 | genui_demo | 712 | yes |
 | playlearn | 607 | yes |
 | deeplink | 547 | yes |
+| weather_demo | 541 | yes |
 | certificate_pinning_demo | 496 | yes |
+| notes_demo | 452 | yes |
 | event_bus_demo | 302 | yes |
 <!-- refresh_ai_reports:feature_metrics:end -->
 

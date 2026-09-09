@@ -369,6 +369,7 @@ validate_checklist_configuration() {
     "tool/check_checklist_cli_contract.sh"
     "tool/check_macos_debug_web_guard.sh"
     "tool/validate_task_trackers.sh"
+    "tool/check_aidlc_artifacts.sh"
     "tool/run_harness_fixtures.sh"
     "tool/agent_session_bootstrap.sh"
     "tool/check_widget_identity.sh"
@@ -459,6 +460,7 @@ validate_docs_only_dependencies() {
     "tool/check_ai_snapshot_freshness.sh"
     "tool/check_checklist_cli_contract.sh"
     "tool/validate_task_trackers.sh"
+    "tool/check_aidlc_artifacts.sh"
     "tool/run_harness_fixtures.sh"
     "tool/agent_session_bootstrap.sh"
   )
@@ -1007,6 +1009,30 @@ should_run_agent_asset_drift_check() {
   return 1
 }
 
+should_run_aidlc_artifacts_check() {
+  if [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      tasks/*/todo.md|\
+      tasks/*/aidlc/*|\
+      docs/ai/aidlc_workflow.md|\
+      docs/engineering/aidlc_artifact_contract.md|\
+      tool/check_aidlc_artifacts.sh|\
+      tool/scaffold_aidlc_run.sh|\
+      tool/fixtures/aidlc_artifacts/*|\
+      tool/agent_host_templates/shared/skills/agents-aidlc-workflow/*)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 should_run_flutter_analyze_auto() {
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return 0
@@ -1371,6 +1397,14 @@ run_harness_docs_checks() {
   if ! bash "$WORKSPACE_ROOT/tool/validate_task_trackers.sh"; then
     echo "❌ Task tracker contract failed; update tasks/*/todo.md to match the canonical template."
     return 1
+  fi
+
+  if should_run_aidlc_artifacts_check; then
+    echo "🧭 Validating AIDLC artifacts (path-triggered)..."
+    if ! bash "$WORKSPACE_ROOT/tool/check_aidlc_artifacts.sh"; then
+      echo "❌ AIDLC artifact contract failed; see docs/engineering/aidlc_artifact_contract.md."
+      return 1
+    fi
   fi
 
   if ! bash "$WORKSPACE_ROOT/tool/run_harness_fixtures.sh"; then
