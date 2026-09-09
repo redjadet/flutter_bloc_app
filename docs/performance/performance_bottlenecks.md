@@ -42,7 +42,7 @@
 A Flutter frame is not a screenshot. It is an end-to-end pipeline that turns
 an input or state change into pixels:
 
-```
+```text
 input/state -> frame schedule (vsync) -> build -> layout -> paint -> compositing/layer tree -> raster -> GPU/display
 ```
 
@@ -55,8 +55,10 @@ a 60 Hz target, not a universal Flutter interval.
 - **Build:** Reconfigures only dirty widget/element regions where possible. Keep
   `build()` pure and cheap: no heavy computation, blocking I/O, or synchronous
   large JSON conversion.
-- **Layout:** Parents pass constraints down; children return sizes up
-  (“constraints down, sizes up”).
+- **Layout:** **Constraints go down. Sizes go up. Parents set positions.**
+  Parents pass `BoxConstraints` down; children return sizes up; parents place
+  children. Detail:
+  [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md).
 - **Paint:** Produces drawing commands.
 - **Compositing:** Combines those commands into a layer tree.
 - **Raster:** The engine/raster thread draws that layer tree for the GPU and

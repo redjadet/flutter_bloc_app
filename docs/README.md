@@ -69,6 +69,7 @@ root when an existing category applies.
 - [`feature_overview.md`](feature_overview.md)
 - [`modularity.md`](modularity.md)
 - [`design_system.md`](design_system.md)
+- [`architecture/flutter_layout_constraints.md`](architecture/flutter_layout_constraints.md) — *Constraints go down. Sizes go up. Parents set positions.*
 - [`universal_links/README.md`](universal_links/README.md)
 - [`adr/README.md`](adr/README.md) - accepted architecture decision records and ADR lifecycle guidance
 

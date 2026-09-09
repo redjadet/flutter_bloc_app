@@ -77,6 +77,8 @@ stream.listen((data) {
 
 **Purpose**: Detects Row + Icon + Text without Flexible/Expanded/IconLabelRow to avoid RenderFlex overflow on narrow widths.
 
+**Contract**: `Row` does not shrink non-flex children — constraints stay loose on the main axis, so unbounded-feeling text sizes go up until they overflow. See [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md).
+
 **What it checks**:
 
 - In `lib/`, any `Row(` block (55-line window) that contains both `Icon(` and `Text(` but does **not** contain `Flexible(`, `Expanded(`, or `IconLabelRow(`

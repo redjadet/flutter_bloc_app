@@ -79,6 +79,10 @@ For overflow-prone action bars or narrow widths:
 - Set size with `tester.view.physicalSize` and `tester.view.devicePixelRatio`;
   reset them in `addTearDown`.
 - Run [`tool/check_action_bar_layout.sh`](../../tool/check_action_bar_layout.sh) when changing horizontal CTAs.
+- Treat yellow/black stripes and `RenderFlex overflowed` as **constraint-contract**
+  failures (*constraints down / sizes up / parents position*) — see
+  [`flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md).
+  Use `layout_overflow_expectations.dart` when asserting no overflow.
 
 See [`test/shared/widgets/action_bar_layout_regression_test.dart`](../../apps/mobile/test/shared/widgets/action_bar_layout_regression_test.dart)
 for the current pattern. Do **not** add viewport setup to every widget test until

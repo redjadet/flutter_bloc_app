@@ -16,11 +16,12 @@ Architecture contracts and reference implementations. Start with the root
 | Offline-first placement and merge rules | [`../offline_first/README.md`](../offline_first/README.md) |
 | Accepted architecture decisions | [`../adr/README.md`](../adr/README.md) |
 | Visual and component contracts | [`../../DESIGN.md`](../../DESIGN.md), [`../design_system.md`](../design_system.md) |
+| Flutter layout / overflow contract | [flutter_layout_constraints.md](flutter_layout_constraints.md) — *Constraints go down. Sizes go up. Parents set positions.* |
 | Lazy loading flow | [architecture_lazy_loading_and_flow.md](architecture_lazy_loading_and_flow.md) |
 | App init and feature control | [app_initialization_and_feature_control.md](app_initialization_and_feature_control.md) |
 | Compile-time safety | [compile_time_safety.md](compile_time_safety.md) |
 | Historical Freezed migration inventory | [freezed_usage_analysis.md](freezed_usage_analysis.md) |
-| Advanced rendering | [custom_painter_and_render_object.md](custom_painter_and_render_object.md) |
+| Advanced rendering | [custom_painter_and_render_object.md](custom_painter_and_render_object.md) (pair with [flutter_layout_constraints.md](flutter_layout_constraints.md)) |
 
 Keep cross-cutting architectural canon at `docs/` root only when it is a
 high-traffic entry document. Put focused contracts in this folder.

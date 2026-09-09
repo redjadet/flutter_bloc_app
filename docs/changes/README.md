@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-09_flutter_layout_constraints_contract.md`](2026-09-09_flutter_layout_constraints_contract.md): Canonical *Constraints go down. Sizes go up. Parents set positions.* doc + `_ResponsiveBody` uses parent max width.
 - [`2026-09-08_todo_dialog_keyboard_focus_next.md`](2026-09-08_todo_dialog_keyboard_focus_next.md): Todo editor keyboard Next advances title → description via PlatformAdaptive `textInputAction`.
 - [`2026-09-08_keychain_legacy_priority.md`](2026-09-08_keychain_legacy_priority.md): Prefer pending legacy Keychain item over hardened interim secret (#817); closes dual-store gap after #791/#796.
 - [`2026-09-07_web_startup_firebase_js_error.md`](2026-09-07_web_startup_firebase_js_error.md): WalletConnect `Firebase.app()` JS Error escaped `on Exception` and blanked web startup; static `on Object` guard.
