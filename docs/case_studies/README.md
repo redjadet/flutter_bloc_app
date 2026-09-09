@@ -35,4 +35,7 @@ of duplicating their narratives.
 | [Social Feed offline ownership](engineering/social_feed_offline_ownership.md) | Newest local intent versus stale remote/replay state |
 | [Todo measurement-gated performance](engineering/todo_measurement_gated_performance.md) | Selector isolation backed by production-path measurement |
 
+Interview synthesis that ties widget fundamentals to these stories:
+[flutter_fundamentals_and_production_practices.md](../engineering/flutter_fundamentals_and_production_practices.md).
+
 For the repo-level navigation hub, see [docs index](../README.md).

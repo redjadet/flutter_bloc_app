@@ -24,6 +24,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Choose high-value AI-agent work | [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) |
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
+| Flutter fundamentals + production Q&A | [`engineering/flutter_fundamentals_and_production_practices.md`](engineering/flutter_fundamentals_and_production_practices.md) — widgets/state, offline, perf, structure, crash triage with this-repo stories |
 
 ## Browse by folder
 
@@ -76,6 +77,7 @@ root when an existing category applies.
 ### Workflow and quality
 
 - [`new_developer_guide.md`](new_developer_guide.md)
+- [`engineering/flutter_fundamentals_and_production_practices.md`](engineering/flutter_fundamentals_and_production_practices.md) — Stateless/Stateful, widget tree, setState vs Cubit/BLoC/Provider/Riverpod, hot reload/restart; offline, performance, team structure, unreproducible crashes with repo stories
 - [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) — problem decomposition, communication, design, review, debugging, security, product judgment, production accountability, agent supervision, and restraint/deletion when implementation is cheap
 - [`git_and_branching_strategy.md`](git_and_branching_strategy.md) — human and AI Git, branch, PR, and worktree workflow
 - [`agent_knowledge_base.md`](agent_knowledge_base.md)

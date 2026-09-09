@@ -304,6 +304,7 @@ See [observability.md](observability.md) § Sentry + Crashlytics and § Product 
 | --- | --- |
 | Native platform showcase (MethodChannel, FFI, layered ports) | [`apps/mobile/lib/features/native_platform_showcase/README.md`](../apps/mobile/lib/features/native_platform_showcase/README.md), [2026-06-08 brief](changes/2026-06-08_native_platform_showcase_feature_brief.md) |
 | Case studies | [case_studies/README.md](case_studies/README.md) |
+| Fundamentals Q&A (widgets, offline, perf, crashes) | [engineering/flutter_fundamentals_and_production_practices.md](engineering/flutter_fundamentals_and_production_practices.md) |
 | Online therapy | [online_therapy_demo/README.md](online_therapy_demo/README.md) |
 | Realtime market | [features/realtime_market.md](features/realtime_market.md) |
 | Social feed demo (simulated judgment guidance) | [features/social_feed_demo.md](features/social_feed_demo.md), Example → Social feed demo |
