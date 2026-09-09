@@ -22,7 +22,6 @@ Widget buildTodoItemActions({
 
   if (isCompactLayout) {
     return PopupMenuButton<TodoItemOverflowAction>(
-      tooltip: '',
       onSelected: (action) {
         if (action == TodoItemOverflowAction.edit) {
           onEdit();

@@ -23,6 +23,21 @@
 - Issue: Swapping entire button subtree when `isLoading` toggled caused extra layout churn.
 - Resolution: Use `AnimatedSwitcher` and keyed children for smoother transitions.
 
+### Status-region AnimatedSwitcher (loading / error / content)
+
+- Prefer a keyed `AnimatedSwitcher` (≈200 ms) for page or section shells that
+  swap loading ↔ error ↔ content, same pattern as `CommonLoadingButton`.
+  Proof: `apps/mobile/lib/features/production_readiness/presentation/pages/production_readiness_page.dart`.
+- Widget tests: if `pumpAndSettle` hangs on the indicator ticker or switcher,
+  use `pump()` then `pump(const Duration(milliseconds: 200))` — do not remove
+  the switcher to “fix” the test.
+
+### Intrinsic layout cost
+
+- `IntrinsicHeight` / `IntrinsicWidth` force extra layout passes. Fine sparingly
+  outside lists; avoid inside scrolling lists. See
+  [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md).
+
 ### Map View Rebuilds
 
 - File: `apps/mobile/lib/features/google_maps/presentation/widgets/map_sample_map_view.dart`

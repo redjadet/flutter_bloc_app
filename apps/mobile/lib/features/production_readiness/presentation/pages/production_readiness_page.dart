@@ -25,122 +25,155 @@ class ProductionReadinessPage extends StatelessWidget {
       title: l10n.productionReadinessPageTitle,
       body: BlocBuilder<ProductionReadinessCubit, ProductionReadinessState>(
         builder: (context, state) {
+          final Widget child;
           if (state.status == ProductionReadinessStatus.loading ||
               state.status == ProductionReadinessStatus.initial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.status == ProductionReadinessStatus.error) {
-            return Center(
-              child: Text(
+            child = const Center(
+              key: ValueKey<String>('loading'),
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.status == ProductionReadinessStatus.error) {
+            child = Center(
+              key: const ValueKey<String>('error'),
+              child: SelectableText(
                 state.errorMessage ?? l10n.productionReadinessPageTitle,
               ),
             );
-          }
-          return SingleChildScrollView(
-            key: const ValueKey('production-readiness-list'),
-            padding: EdgeInsets.all(context.responsiveGapM),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                if (state.errorMessage case final String errorMessage)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: context.responsiveGapM),
-                    child: CommonCard(
-                      key: const ValueKey('production-readiness-error-banner'),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.error_outline,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                        title: Text(errorMessage),
-                      ),
-                    ),
-                  ),
-                if (!state.releaseFlagEnabled)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: context.responsiveGapM),
-                    child: CommonCard(
-                      key: const ValueKey('production-readiness-kill-switch'),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.warning_amber_rounded,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                        title: Text(l10n.productionReadinessKillSwitchBanner),
-                      ),
-                    ),
-                  ),
-                _StatusCard(
-                  key: const ValueKey('production-readiness-mode-card'),
-                  title: l10n.productionReadinessModeLabel,
-                  value: state.mode == ProductionReadinessMode.live
-                      ? l10n.productionReadinessModeLive
-                      : l10n.productionReadinessModeSimulated,
-                ),
-                SizedBox(height: context.responsiveGapM),
-                _CrashlyticsCard(
-                  key: const ValueKey('production-readiness-crashlytics-card'),
-                  state: state,
-                ),
-                SizedBox(height: context.responsiveGapM),
-                _FcmCard(
-                  key: const ValueKey('production-readiness-fcm-card'),
-                  state: state,
-                  showSimulatedButton: showSimulatedNotificationButton,
-                ),
-                SizedBox(height: context.responsiveGapM),
-                _FrameTimingCard(
-                  key: const ValueKey('production-readiness-frame-card'),
-                  state: state,
-                ),
-                SizedBox(height: context.responsiveGapM),
-                _ConsentCard(
-                  key: const ValueKey('production-readiness-consent-card'),
-                  enabled: state.analyticsConsentEnabled,
-                  onChanged: (value) => context
-                      .read<ProductionReadinessCubit>()
-                      .setAnalyticsConsent(enabled: value),
-                ),
-                SizedBox(height: context.responsiveGapS),
-                Text(
-                  '${l10n.productionReadinessEventCountLabel}: ${state.localEventCount}',
-                  key: const ValueKey('production-readiness-event-count'),
-                ),
-                SizedBox(height: context.responsiveGapM),
-                _ReleaseFlagCard(
-                  key: const ValueKey('production-readiness-release-card'),
-                  state: state,
-                  onRefresh: () => context
-                      .read<ProductionReadinessCubit>()
-                      .refreshReleaseFlag(),
-                ),
-                SizedBox(height: context.responsiveGapL),
-                Wrap(
-                  spacing: context.responsiveGapS,
-                  runSpacing: context.responsiveGapS,
+          } else {
+            child = KeyedSubtree(
+              key: const ValueKey<String>('content'),
+              child: SingleChildScrollView(
+                key: const ValueKey('production-readiness-list'),
+                padding: EdgeInsets.all(context.responsiveGapM),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    KeyedSubtree(
-                      key: const ValueKey('production-readiness-settings-link'),
-                      child: PlatformAdaptive.textButton(
-                        context: context,
-                        onPressed: () => context.push(AppRoutes.settingsPath),
-                        child: Text(l10n.productionReadinessSettingsLink),
+                    if (state.errorMessage case final String errorMessage)
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: context.responsiveGapM,
+                        ),
+                        child: CommonCard(
+                          key: const ValueKey(
+                            'production-readiness-error-banner',
+                          ),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.error_outline,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            title: SelectableText(errorMessage),
+                          ),
+                        ),
                       ),
+                    if (!state.releaseFlagEnabled)
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: context.responsiveGapM,
+                        ),
+                        child: CommonCard(
+                          key: const ValueKey(
+                            'production-readiness-kill-switch',
+                          ),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.warning_amber_rounded,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            title: Text(
+                              l10n.productionReadinessKillSwitchBanner,
+                            ),
+                          ),
+                        ),
+                      ),
+                    _StatusCard(
+                      key: const ValueKey('production-readiness-mode-card'),
+                      title: l10n.productionReadinessModeLabel,
+                      value: state.mode == ProductionReadinessMode.live
+                          ? l10n.productionReadinessModeLive
+                          : l10n.productionReadinessModeSimulated,
                     ),
-                    KeyedSubtree(
+                    SizedBox(height: context.responsiveGapM),
+                    _CrashlyticsCard(
                       key: const ValueKey(
-                        'production-readiness-native-showcase-link',
+                        'production-readiness-crashlytics-card',
                       ),
-                      child: PlatformAdaptive.textButton(
-                        context: context,
-                        onPressed: () =>
-                            context.pushNamed(AppRoutes.nativePlatformShowcase),
-                        child: Text(l10n.productionReadinessNativeShowcaseLink),
-                      ),
+                      state: state,
+                    ),
+                    SizedBox(height: context.responsiveGapM),
+                    _FcmCard(
+                      key: const ValueKey('production-readiness-fcm-card'),
+                      state: state,
+                      showSimulatedButton: showSimulatedNotificationButton,
+                    ),
+                    SizedBox(height: context.responsiveGapM),
+                    _FrameTimingCard(
+                      key: const ValueKey('production-readiness-frame-card'),
+                      state: state,
+                    ),
+                    SizedBox(height: context.responsiveGapM),
+                    _ConsentCard(
+                      key: const ValueKey('production-readiness-consent-card'),
+                      enabled: state.analyticsConsentEnabled,
+                      onChanged: (value) => context
+                          .read<ProductionReadinessCubit>()
+                          .setAnalyticsConsent(enabled: value),
+                    ),
+                    SizedBox(height: context.responsiveGapS),
+                    Text(
+                      '${l10n.productionReadinessEventCountLabel}: ${state.localEventCount}',
+                      key: const ValueKey('production-readiness-event-count'),
+                    ),
+                    SizedBox(height: context.responsiveGapM),
+                    _ReleaseFlagCard(
+                      key: const ValueKey('production-readiness-release-card'),
+                      state: state,
+                      onRefresh: () => context
+                          .read<ProductionReadinessCubit>()
+                          .refreshReleaseFlag(),
+                    ),
+                    SizedBox(height: context.responsiveGapL),
+                    Wrap(
+                      spacing: context.responsiveGapS,
+                      runSpacing: context.responsiveGapS,
+                      children: <Widget>[
+                        KeyedSubtree(
+                          key: const ValueKey(
+                            'production-readiness-settings-link',
+                          ),
+                          child: PlatformAdaptive.textButton(
+                            context: context,
+                            onPressed: () =>
+                                context.push(AppRoutes.settingsPath),
+                            child: Text(l10n.productionReadinessSettingsLink),
+                          ),
+                        ),
+                        KeyedSubtree(
+                          key: const ValueKey(
+                            'production-readiness-native-showcase-link',
+                          ),
+                          child: PlatformAdaptive.textButton(
+                            context: context,
+                            onPressed: () => context.pushNamed(
+                              AppRoutes.nativePlatformShowcase,
+                            ),
+                            child: Text(
+                              l10n.productionReadinessNativeShowcaseLink,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
+            );
+          }
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: KeyedSubtree(
+              key: ValueKey<ProductionReadinessStatus>(state.status),
+              child: child,
             ),
           );
         },

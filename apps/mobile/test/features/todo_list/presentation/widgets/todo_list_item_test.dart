@@ -29,6 +29,7 @@ void main() {
       VoidCallback? onDeleteWithoutConfirmation,
     }) {
       return MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         home: MediaQuery(
           data: MediaQueryData(size: size),
           child: Scaffold(
@@ -313,6 +314,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: ThemeData(splashFactory: NoSplash.splashFactory),
           home: MediaQuery(
             data: const MediaQueryData(size: Size(1920, 1080)),
             child: Scaffold(

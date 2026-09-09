@@ -33,7 +33,7 @@ class _RemoteConfigTestValueRow extends StatelessWidget {
         ? context.l10n.settingsRemoteConfigTestValueEmpty
         : testValue;
 
-    return Text(
+    return SelectableText(
       '${context.l10n.settingsRemoteConfigTestValueLabel}: $resolvedValue',
       style: style,
     );

@@ -71,6 +71,10 @@ on narrow widths.
 | Equal dual CTAs | `ResponsiveDualCtaRow` | Wide: `Expanded` forces equal widths; narrow: column stretch |
 | Long lists | `ListView.builder` / slivers | Viewport gets bounded extent from parent; avoid nested `shrinkWrap` |
 
+Avoid `IntrinsicHeight` / `IntrinsicWidth` in lists or long flex children —
+extra layout passes. Reviewed exception:
+`apps/mobile/lib/features/example/presentation/widgets/markdown_editor/markdown_preview.dart`.
+
 Guards: `tool/check_row_text_overflow.sh`, `tool/check_row_action_overflow.sh`,
 `tool/check_flutter_layout_overflows.sh`, `tool/check_perf_shrinkwrap_lists.sh`.
 
