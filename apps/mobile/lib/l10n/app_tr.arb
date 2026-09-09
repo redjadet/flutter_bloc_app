@@ -2729,12 +2729,6 @@
   },
   "socialFeedDemoCancel": "İptal",
   "socialFeedDemoConfirm": "Sıfırla",
-  "socialFeedDemoSeniorSignalTitle": "Kıdemli sinyal",
-  "socialFeedDemoSignalStep1": "Tasarım öncesi kapsamı netleştir",
-  "socialFeedDemoSignalStep2": "Önce veri modelini sabitle",
-  "socialFeedDemoSignalStep3": "Katmanları adlandır ve uygula",
-  "socialFeedDemoSignalStep4": "Zor problemleri bağımsız çöz",
-  "socialFeedDemoSignalStep5": "Hata durumlarıyla bitir",
   "exampleSecureMessagingDemoButton": "Güvenli mesajlaşma demosu",
   "@exampleSecureMessagingDemoButton": {
     "description": "Example hub button for secure messaging Rust FFI demo"

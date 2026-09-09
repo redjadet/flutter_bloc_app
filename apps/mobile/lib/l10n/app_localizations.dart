@@ -6661,42 +6661,6 @@ abstract class AppLocalizations {
   /// **'Reset'**
   String get socialFeedDemoConfirm;
 
-  /// No description provided for @socialFeedDemoSeniorSignalTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Senior signal'**
-  String get socialFeedDemoSeniorSignalTitle;
-
-  /// No description provided for @socialFeedDemoSignalStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Clarify scope before design'**
-  String get socialFeedDemoSignalStep1;
-
-  /// No description provided for @socialFeedDemoSignalStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Nail the data model first'**
-  String get socialFeedDemoSignalStep2;
-
-  /// No description provided for @socialFeedDemoSignalStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Name layers and enforce them'**
-  String get socialFeedDemoSignalStep3;
-
-  /// No description provided for @socialFeedDemoSignalStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Attack hard problems independently'**
-  String get socialFeedDemoSignalStep4;
-
-  /// No description provided for @socialFeedDemoSignalStep5.
-  ///
-  /// In en, this message translates to:
-  /// **'End on failure states'**
-  String get socialFeedDemoSignalStep5;
-
   /// Example hub button for secure messaging Rust FFI demo
   ///
   /// In en, this message translates to:

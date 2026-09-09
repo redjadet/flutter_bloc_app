@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_comment.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/domain/social_feed_page.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_scenario_controls.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   Future<SocialFeedCubit> readyCubit() async {
@@ -48,7 +48,7 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('compact width hides senior signal side panel', (
+  testWidgets('compact width hides scenario side panel', (
     WidgetTester tester,
   ) async {
     final SocialFeedCubit cubit = await readyCubit();
@@ -57,26 +57,18 @@ void main() {
 
     expect(find.byKey(const ValueKey('social-feed-list')), findsOneWidget);
     expect(
-      find.byKey(const ValueKey('social-feed-senior-signal-panel')),
-      findsNothing,
-    );
-    expect(
       find.byKey(const ValueKey('social-feed-scenario-controls')),
       findsNothing,
     );
   });
 
-  testWidgets('wide width shows senior signal side panel', (
+  testWidgets('wide width shows scenario side panel', (
     WidgetTester tester,
   ) async {
     final SocialFeedCubit cubit = await readyCubit();
     addTearDown(cubit.close);
     await pumpBody(tester, cubit: cubit, size: const Size(1280, 900));
 
-    expect(
-      find.byKey(const ValueKey('social-feed-senior-signal-panel')),
-      findsOneWidget,
-    );
     expect(
       find.byKey(const ValueKey('social-feed-scenario-controls')),
       findsOneWidget,
