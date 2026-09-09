@@ -3681,24 +3681,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get socialFeedDemoConfirm => 'Sıfırla';
 
   @override
-  String get socialFeedDemoSeniorSignalTitle => 'Kıdemli sinyal';
-
-  @override
-  String get socialFeedDemoSignalStep1 => 'Tasarım öncesi kapsamı netleştir';
-
-  @override
-  String get socialFeedDemoSignalStep2 => 'Önce veri modelini sabitle';
-
-  @override
-  String get socialFeedDemoSignalStep3 => 'Katmanları adlandır ve uygula';
-
-  @override
-  String get socialFeedDemoSignalStep4 => 'Zor problemleri bağımsız çöz';
-
-  @override
-  String get socialFeedDemoSignalStep5 => 'Hata durumlarıyla bitir';
-
-  @override
   String get exampleSecureMessagingDemoButton => 'Güvenli mesajlaşma demosu';
 
   @override

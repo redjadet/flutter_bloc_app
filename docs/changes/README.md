@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-09_social_feed_remove_senior_signal_ui.md`](2026-09-09_social_feed_remove_senior_signal_ui.md): Remove social-feed demo senior-signal side panel + unused l10n; keep scenario controls.
 - [`2026-09-09_aidlc_workflow.md`](2026-09-09_aidlc_workflow.md): Repo-native AIDLC lifecycle owner, artifact contract, scaffold/check, shared skill, maintain hooks.
 - [`2026-09-09_flutter_forgotten_widgets.md`](2026-09-09_flutter_forgotten_widgets.md): SDK widget chooser + SelectableText/Tooltip/AnimatedSwitcher polish from Stackademic “forgotten widgets” article.
 - [`2026-09-09_blocsignal_evaluation.md`](2026-09-09_blocsignal_evaluation.md): Evaluate BlocSignal; stay on flutter_bloc; ADR 0007 + transferable Cubit/selector/primary-ctor practices.

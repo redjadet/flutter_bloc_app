@@ -10,7 +10,6 @@ import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_new_posts_banner.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_post_item.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_scenario_controls.dart';
-import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_senior_signal_panel.dart';
 import 'package:flutter_bloc_app/features/social_feed_demo/presentation/widgets/social_feed_status_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
@@ -86,11 +85,7 @@ class _ReadyBody extends StatelessWidget {
           flex: 2,
           child: ListView(
             padding: const EdgeInsets.all(12),
-            children: const <Widget>[
-              SocialFeedSeniorSignalPanel(),
-              SizedBox(height: 12),
-              SocialFeedScenarioControls(),
-            ],
+            children: const <Widget>[SocialFeedScenarioControls()],
           ),
         ),
       ],

@@ -3669,24 +3669,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get socialFeedDemoConfirm => 'Reset';
 
   @override
-  String get socialFeedDemoSeniorSignalTitle => 'Senior signal';
-
-  @override
-  String get socialFeedDemoSignalStep1 => 'Clarify scope before design';
-
-  @override
-  String get socialFeedDemoSignalStep2 => 'Nail the data model first';
-
-  @override
-  String get socialFeedDemoSignalStep3 => 'Name layers and enforce them';
-
-  @override
-  String get socialFeedDemoSignalStep4 => 'Attack hard problems independently';
-
-  @override
-  String get socialFeedDemoSignalStep5 => 'End on failure states';
-
-  @override
   String get exampleSecureMessagingDemoButton => 'Secure messaging demo';
 
   @override

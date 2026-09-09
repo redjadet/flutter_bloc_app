@@ -3752,12 +3752,6 @@
   },
   "socialFeedDemoCancel": "Cancel",
   "socialFeedDemoConfirm": "Reset",
-  "socialFeedDemoSeniorSignalTitle": "Senior signal",
-  "socialFeedDemoSignalStep1": "Clarify scope before design",
-  "socialFeedDemoSignalStep2": "Nail the data model first",
-  "socialFeedDemoSignalStep3": "Name layers and enforce them",
-  "socialFeedDemoSignalStep4": "Attack hard problems independently",
-  "socialFeedDemoSignalStep5": "End on failure states",
   "exampleSecureMessagingDemoButton": "Secure messaging demo",
   "@exampleSecureMessagingDemoButton": {
     "description": "Example hub button for secure messaging Rust FFI demo"
