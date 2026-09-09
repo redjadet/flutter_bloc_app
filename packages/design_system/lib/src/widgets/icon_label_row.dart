@@ -2,9 +2,12 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../responsive.dart';
 
-/// A compact row of an optional icon, gap, and a single-line ellipsed label.
-/// Use for buttons and toolbar items to avoid RenderFlex overflow on narrow
-/// widths.
+/// Compact icon + single-line ellipsed label.
+///
+/// `Row` does not shrink non-flex children (constraints stay loose on the
+/// main axis). Wrapping [Text] in [Flexible] passes a finite max width
+/// down so the label can ellipsize instead of overflowing. Prefer this over
+/// raw `Row(Icon, Text)`. See `docs/architecture/flutter_layout_constraints.md`.
 class IconLabelRow extends StatelessWidget {
   const IconLabelRow({
     required this.label,

@@ -16,6 +16,9 @@ Review contract for shared Flutter UI. Runtime APIs and examples live in
 
 ## Layout chooser
 
+Mental model: **Constraints go down. Sizes go up. Parents set positions.**
+Detail: [`flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md).
+
 | Need | Preferred tool |
 | --- | --- |
 | App/page width and standard padding | `CommonPageLayout`, responsive context helpers |

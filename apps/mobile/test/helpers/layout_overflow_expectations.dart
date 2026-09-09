@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Captures [FlutterError] details during a widget test (e.g. RenderFlex overflow).
+/// Captures layout-contract failures during a widget test.
+///
+/// Typical strings: `RenderFlex overflowed`, `overflowed by`. These mean a
+/// child reported a size larger than the constraints its parent passed down.
+/// See `docs/architecture/flutter_layout_constraints.md`.
 ({List<FlutterErrorDetails> errors, void Function() dispose})
 startLayoutOverflowCapture() {
   final List<FlutterErrorDetails> errors = <FlutterErrorDetails>[];

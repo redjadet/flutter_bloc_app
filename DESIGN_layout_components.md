@@ -7,6 +7,11 @@ horizontal card padding and 16px vertical card padding. Use responsive helpers
 and existing breakpoints: mobile below 800px, tablet from 800px, desktop from
 1200px.
 
+Flutter layout follows **Constraints go down. Sizes go up. Parents set
+positions.** Prefer flex/scroll/wrap over fixed page heights when content
+reflows. Repo contract:
+[`docs/architecture/flutter_layout_constraints.md`](docs/architecture/flutter_layout_constraints.md).
+
 Operational screens should be quiet and scannable: grouped controls, stable
 row heights, predictable page padding, and no nested cards. Mobile is not a
 squeezed desktop; rows and panels may stack while preserving touch targets and

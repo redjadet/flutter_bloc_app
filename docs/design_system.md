@@ -34,6 +34,17 @@ stay under `apps/mobile/lib/app/`.
 | Components | `packages/design_system/` | Design system primitives (buttons, inputs, chips). |
 | Widgets | `apps/mobile/lib/app/widgets/` | App composites; shared widgets from `design_system` use compatibility barrels. `CommonSearchField` stays app-local (l10n). |
 
+### Layout constraints (Flutter contract)
+
+Overflow and “unbounded height” bugs are constraint-contract failures, not
+random UI noise. Mental model (official Flutter):
+
+> **Constraints go down. Sizes go up. Parents set positions.**
+
+Canonical map, error → fix table, and repo helpers:
+[`architecture/flutter_layout_constraints.md`](architecture/flutter_layout_constraints.md).
+Upstream: [Understanding constraints](https://docs.flutter.dev/ui/layout/constraints).
+
 ### Page shell (`CommonPageLayout`)
 
 Default wrapper for feature screens (`apps/mobile/lib/app/widgets/common_page_layout.dart`).
@@ -188,6 +199,9 @@ Do not read `MediaQuery` for layout that only needs **local** constraints — us
 
 - Fixed `width` / `height` on **page shells**, lists, or text blocks that should
   reflow (use `Expanded`, `Flexible`, `Wrap`, scroll views).
+- Nesting a scrollable (`ListView` / `GridView`) under a `Column` without giving
+  the scrollable a **finite** max height (`Expanded`, `SizedBox`, or slivers) —
+  that is the classic “unbounded height” failure of the constraint contract.
 - Hard-coded font sizes / line heights without theme or responsive helpers.
 - `Positioned` layouts without scroll/reflow fallback on small height or large
   text scale.
@@ -264,6 +278,11 @@ Skill: `flutter-cross-platform-modern`. Pitfall table: `agents-common-pitfalls`.
 
 ### Horizontal action layout (overflow)
 
+`Row` passes **loose/unbounded** main-axis constraints to non-flex children
+(sizes go up without a shrink step). Intrinsic-width buttons and text therefore
+overflow when the parent width is tight. Bound children so constraints remain
+finite on the way down:
+
 | Pattern | Widget | When |
 | ------- | ------ | ---- |
 | Icon + label in a row | [`IconLabelRow`](../packages/design_system/lib/src/widgets/icon_label_row.dart) | Any `Row` with `Icon` + `Text` (enforced by `tool/check_row_text_overflow.sh`) |
@@ -273,6 +292,7 @@ Skill: `flutter-cross-platform-modern`. Pitfall table: `agents-common-pitfalls`.
 | Dialog actions | `AlertDialog.actions` + `PlatformAdaptive.dialogAction` | Framework handles overflow |
 
 Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Widget regressions: `tool/check_action_bar_layout.sh`.
+Contract detail: [`architecture/flutter_layout_constraints.md`](architecture/flutter_layout_constraints.md).
 
 ### DESIGN.md CLI workflow
 

@@ -6,8 +6,14 @@ import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_app_bar.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// A reusable page layout widget that provides consistent structure
-/// across the app with responsive design and common AppBar pattern.
+/// Reusable page shell: Scaffold + optional responsive body.
+///
+/// Layout contract (*constraints down / sizes up / parents position*):
+/// Scaffold body receives bounded viewport constraints; when
+/// [useResponsiveBody] is true, [_ResponsiveBody] passes a finite
+/// [BoxConstraints.maxWidth] down via [ConstrainedBox] and places the
+/// child with [Align] (parent sets position). See
+/// `docs/architecture/flutter_layout_constraints.md`.
 class CommonPageLayout extends StatelessWidget {
   const new({
     required this.body,
@@ -126,7 +132,10 @@ class CommonPageLayout extends StatelessWidget {
   }
 }
 
-/// Responsive body wrapper that applies consistent padding and constraints
+/// Applies page padding and a finite max width from **incoming** constraints.
+///
+/// Uses [LayoutBuilder] so max width respects the parent box (not only screen
+/// breakpoints). [Align] places the child; the child reports size upward.
 class _ResponsiveBody extends StatelessWidget {
   const new({required this.child});
 
@@ -143,11 +152,15 @@ class _ResponsiveBody extends StatelessWidget {
         context.pageHorizontalPadding,
         context.pageVerticalPadding + bottomInset,
       );
+      final double contentCap = context.contentMaxWidth;
+      final double maxWidth = constraints.maxWidth.isFinite
+          ? math.min(constraints.maxWidth, contentCap)
+          : contentCap;
 
       return Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
+          constraints: BoxConstraints(maxWidth: maxWidth),
           child: AnimatedPadding(
             duration: const Duration(milliseconds: 180),
             curve: Curves.easeOut,

@@ -80,7 +80,9 @@ class MarkdownRenderObject extends RenderBox {
       textSize.width + _padding.horizontal,
     );
 
-    // Handle unbounded height (inside scroll view)
+    // Constraints go down: scroll parents often pass unbounded maxHeight.
+    // Size goes up from text metrics when height is unbounded; otherwise
+    // clamp to the finite max the parent allowed.
     final double height = constraints.maxHeight.isFinite
         ? constraints.constrainHeight(textSize.height + _padding.vertical)
         : textSize.height + _padding.vertical;

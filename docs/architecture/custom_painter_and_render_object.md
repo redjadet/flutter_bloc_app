@@ -28,4 +28,5 @@ you need layout + paint control.
 ## Related
 
 - [`design_system.md`](../design_system.md) — tokens / Mix for surrounding chrome
+- [`flutter_layout_constraints.md`](flutter_layout_constraints.md) — constraints/size/position contract for `performLayout`
 - [`bloc_standards.md`](../bloc_standards.md) — state ownership

@@ -2,6 +2,11 @@ import 'package:material_ui/material_ui.dart';
 
 /// Shared action-row layouts for narrow widths.
 ///
+/// Intrinsic-width buttons in a bare [Row] size upward without a shrink step,
+/// so they overflow when parent width is tight (*constraints down / sizes up*).
+/// These helpers either wrap ([OverflowBar]) or force equal widths ([Expanded]).
+/// Detail: `docs/architecture/flutter_layout_constraints.md`.
+///
 /// **Static guard (`tool/check_row_action_overflow.sh`):**
 /// - Call sites (e.g. auth, booking) use [ResponsiveDualCtaRow] / [ResponsiveActionOverflowBar]
 ///   so they often have **no** raw `Row(` + buttons — the script still scans them but only
@@ -64,9 +69,10 @@ class ResponsiveDualCtaRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Screen width, not parent max width: fixed-width columns (e.g. auth
-        // logged-out body) can be <360dp while the device is still wide enough
-        // for a single Row + Expanded row.
+        // Viewport width (MediaQuery), not [constraints.maxWidth]: a nested
+        // fixed-width column can be <[stackBreakpoint] while the device is
+        // still wide enough for equal Expanded CTAs. Parent still sets
+        // position after children report size.
         final double layoutWidth = MediaQuery.sizeOf(context).width;
         if (layoutWidth < stackBreakpoint) {
           final List<Widget> children = <Widget>[
