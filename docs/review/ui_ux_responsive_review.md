@@ -28,6 +28,9 @@ Detail: [`flutter_layout_constraints.md`](../architecture/flutter_layout_constra
 | Flexible text beside controls | `Expanded` / `Flexible` |
 | Bounded readable desktop content | `ConstrainedBox` / repo content-width helper |
 | Platform chrome | `PlatformAdaptive.*` |
+| Copyable diagnostic / support strings | `SelectableText` |
+| Icon-only affordance | `Tooltip` / non-empty `IconButton.tooltip` |
+| Loading ↔ content / error status region | Keyed `AnimatedSwitcher` (or `Skeletonizer`) |
 
 Fixed sizes remain valid for icons, borders, tokenized controls, and minimum tap
 targets. Fixed heights remain invalid for dynamic text, full forms, lists, and

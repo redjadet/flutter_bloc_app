@@ -155,6 +155,25 @@ width/height when constraints can change.
 
 Full review checklist: [`ui_ux_responsive_review.md`](review/ui_ux_responsive_review.md).
 
+### SDK widget chooser (prefer shipped widgets)
+
+Before writing a custom layout/interaction, check whether Flutter already ships
+the behavior. Repo posture for common “forgotten” widgets:
+
+| Need | Prefer | Notes |
+| --- | --- | --- |
+| Chips / tags that may wrap | `Wrap` | Already the chip/batch pattern above |
+| Copyable IDs, tokens, errors, diagnostics | `SelectableText` | See settings `app_info_section.dart`, remote-config diagnostics |
+| Icon-only control meaning | `Tooltip` / `IconButton.tooltip` / Material menu default | Do not blank `tooltip: ''` without a reason |
+| Fixed media shape | `AspectRatio` | Video tiles / image cards; avoid hand-rolled `width * 9/16` |
+| Loading ↔ content / error swap | Keyed `AnimatedSwitcher` (or `Skeletonizer` where counter does) | Status region; see production readiness + `CommonLoadingButton` |
+| Parent-local responsive branch | `LayoutBuilder` | Not screen `MediaQuery` for nested panes |
+| Swipe-to-delete | `Dismissible` | Todo list is the reference |
+
+Do **not** introduce `ValueListenableBuilder` / `ValueNotifier` for feature UI
+toggles. Ephemeral local UI → `setState`; feature state → Cubit
+([`bloc_standards.md`](bloc_standards.md)).
+
 ### When to use `LayoutBuilder`
 
 Use when **branching or sizing depends on the parent’s max constraints** (not

@@ -139,14 +139,14 @@ class _SecureMessagingDemoBodyState extends State<SecureMessagingDemoBody> {
             l10n.secureMessagingDemoSuccessLabel,
             key: const ValueKey('secure-messaging-demo-success'),
           ),
-          Text(
+          SelectableText(
             recovered,
             key: const ValueKey('secure-messaging-demo-recovered'),
           ),
         ],
         if (widget.failureMessage case final String failureMessage) ...[
           SizedBox(height: context.responsiveGapM),
-          Text(
+          SelectableText(
             failureMessage,
             key: const ValueKey('secure-messaging-demo-failure'),
             style: TextStyle(color: Theme.of(context).colorScheme.error),

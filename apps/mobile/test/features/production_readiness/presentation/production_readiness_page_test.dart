@@ -30,6 +30,7 @@ void main() {
           textScaler: TextScaler.linear(textScale),
         ),
         child: MaterialApp(
+          theme: ThemeData(splashFactory: NoSplash.splashFactory),
           locale: locale,
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             AppLocalizations.delegate,
