@@ -20,6 +20,7 @@ then update the ADR or supersede it.
 | [0004](0004-type-safe-cubit-access.md) | Accepted | Presentation state access | Prefer shared type-safe BLoC/Cubit access helpers and selectors for routine presentation code. |
 | [0005](0005-interview-showcase-scope.md) | Accepted | Portfolio curation | Frozen interview spine, doc-only Mixpanel/Sentry/Patrol until second consumer; consent-gated Firebase Analytics allowed per ADR 0006; PR smoke aligned to spine; Melos keeps modular-monolith boundaries. |
 | [0006](0006-production-readiness-demo.md) | Accepted | Production ownership demo | Dual-mode `/production-readiness` walkthrough: consent-gated Firebase Analytics, RC kill-switch, safe FCM simulation, FrameTiming budgets, credential-free release dry-run. |
+| [0007](0007-blocsignal-evaluation.md) | Accepted | Presentation state management | Evaluate BlocSignal; stay on `flutter_bloc` Cubit/BLoC; no dual stack or repository state mixins without a superseding ADR. |
 
 ## When To Add Or Update An ADR
 

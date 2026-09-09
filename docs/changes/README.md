@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-09_blocsignal_evaluation.md`](2026-09-09_blocsignal_evaluation.md): Evaluate BlocSignal; stay on flutter_bloc; ADR 0007 + transferable Cubit/selector/primary-ctor practices.
 - [`2026-09-09_least_code_human_judgment.md`](2026-09-09_least_code_human_judgment.md): Human skills + agent acceptance — judgment, rejection, deletion when implementation typing is cheap.
 - [`2026-09-09_flutter_layout_constraints_contract.md`](2026-09-09_flutter_layout_constraints_contract.md): Canonical *Constraints go down. Sizes go up. Parents set positions.* doc + `_ResponsiveBody` uses parent max width.
 - [`2026-09-08_todo_dialog_keyboard_focus_next.md`](2026-09-08_todo_dialog_keyboard_focus_next.md): Todo editor keyboard Next advances title → description via PlatformAdaptive `textInputAction`.

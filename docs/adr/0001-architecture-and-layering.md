@@ -62,6 +62,7 @@ may stay compact, but code still follows the same ownership boundaries.
 | --- | --- |
 | Flat feature folders | Simpler at first, but business logic, UI, and data access become harder to test and reason about independently. |
 | Riverpod-only architecture | Combines DI and state management, but this repo already optimizes around explicit Cubit/BLoC flows and separate DI. See [State Management Choice](../architecture/state_management_choice.md). |
+| BlocSignal (`bloc_signals`) | BLoC rigor with signals-speed sync propagation, but migration would discard ADR 0004 helpers and `bloc_test` investment; rejected in [ADR 0007](0007-blocsignal-evaluation.md). |
 | MVC/MVVM without BLoC | Familiar patterns, but they do not give this repo the same explicit state transitions, selectors, and bloc-test surface. |
 | Widget-level service locator lookups | Convenient, but hides dependencies and makes UI tests more fragile. Widgets should use Cubits/BLoCs or explicit constructor inputs. |
 
