@@ -260,6 +260,9 @@ Testing detail lives in:
 
 ## What to read next
 
+- [Critical human engineering skills](engineering/critical_human_skills.md) —
+  human judgment, restraint, and least-surface delivery when agents make typing
+  cheap
 - [AGENTS.md](../AGENTS.md) — thin agent/human map (skills + validation pointers)
 - [Case studies](case_studies/README.md)
 - [Feature Overview](feature_overview.md)

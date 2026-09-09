@@ -3,10 +3,14 @@
 AI agents create most value on bounded work with accessible repository context,
 repeatable transformations, and objective verification. Humans remain
 accountable for product intent, architecture direction, risk acceptance,
-production authorization, and final approval.
+production authorization, and final approval. Agent speed makes **rejection and
+deletion** part of human value: prefer the smallest verified surface over the
+largest generated one.
 
 This guide defines where agents fit well in this repository. It links existing
-owner documents instead of replacing their detailed procedures.
+owner documents instead of replacing their detailed procedures. Complementary
+human skills (including restraint and deletion judgment):
+[Critical Human Engineering Skills](../engineering/critical_human_skills.md).
 
 ## Good-fit contract
 
@@ -191,5 +195,8 @@ Before accepting agent output:
 - Task matched one of these bounded areas; human-owned decisions stayed human-owned.
 - Agent used current repository owners and identified exceptions before bulk work.
 - Diff remains reviewable and reversible; no unrelated cleanup entered scope.
+- Surface area is the smallest honest fit: unnecessary services, abstractions,
+  deps, and generated surplus introduced by the proposed change were rejected or
+  removed before merge; pre-existing and user-owned work remains preserved.
 - Verification can disprove the result and was independently inspected.
 - Limitations, skipped checks, compatibility risk, and follow-up ownership are explicit.
