@@ -260,6 +260,9 @@ Testing detail lives in:
 
 ## What to read next
 
+- [Flutter fundamentals and production practices](engineering/flutter_fundamentals_and_production_practices.md) —
+  widgets/state, hot reload, offline, performance, structure, crash triage with
+  this-repo stories
 - [Critical human engineering skills](engineering/critical_human_skills.md) —
   human judgment, restraint, and least-surface delivery when agents make typing
   cheap

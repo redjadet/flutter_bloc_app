@@ -7,6 +7,7 @@ Operational quality, delivery controls, and technical maintenance. Start with
 | --- | --- |
 | BuildContext scope and lifetime | [build_context_deep_dive.md](build_context_deep_dive.md) |
 | Critical human engineering skills | [critical_human_skills.md](critical_human_skills.md) — judgment, restraint, least surface when agents make typing cheap |
+| Widget/state fundamentals + production stories | [flutter_fundamentals_and_production_practices.md](flutter_fundamentals_and_production_practices.md) — Stateless/Stateful, widget tree, setState vs Cubit/BLoC, hot reload/restart; offline, perf, team structure, unreproducible crashes with repo evidence |
 | Validation lane | [validation_routing_fast_vs_full.md](validation_routing_fast_vs_full.md) |
 | Engineering proof | [engineering_quality_scorecard.md](engineering_quality_scorecard.md) |
 | Lint posture | [linter_rules_review.md](linter_rules_review.md) |
