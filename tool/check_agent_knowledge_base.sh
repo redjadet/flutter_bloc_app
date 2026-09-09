@@ -272,6 +272,7 @@ if [ -f "AGENTS.md" ]; then
   require_not_contains "AGENTS.md" "tasks/cursor"
   require_contains "AGENTS.md" "operator_preferences_durable.md"
   require_contains "AGENTS.md" "docs/ai/skill_routing.md"
+  require_contains "AGENTS.md" "docs/ai/aidlc_workflow.md"
 else
   echo "AGENTS.md not present; skipping local injected-map size/link checks."
 fi
@@ -333,6 +334,7 @@ require_validation_docs_contains "check_agent_knowledge_base.sh"
 require_validation_docs_contains "check_design_md.sh"
 require_validation_docs_contains "memory-compounding"
 require_validation_docs_contains "closed-loop invariants"
+require_validation_docs_contains "check_aidlc_artifacts.sh"
 
 require_all_contains \
   "AGENTS.md" \
@@ -617,18 +619,27 @@ if [ -d "tool/agent_host_templates" ]; then
 
   require_contains "tool/agent_asset_lib.sh" "agents-skill-routing/SKILL.md"
   require_contains "tool/agent_asset_lib.sh" "agents-regression-capture/SKILL.md"
+  require_contains "tool/agent_asset_lib.sh" "agents-aidlc-workflow/SKILL.md"
+  require_contains "tool/agent_asset_lib.sh" "flutter-bloc-app-aidlc-workflow/SKILL.md"
   require_contains "tool/agent_asset_lib.sh" "managed_cursor_project_files"
   require_contains "tool/agent_asset_lib.sh" ".cursor/rules/agent-execution.mdc"
 
+  require_file "docs/ai/aidlc_workflow.md"
+  require_file "docs/engineering/aidlc_artifact_contract.md"
+  require_file "tool/agent_host_templates/shared/skills/agents-aidlc-workflow/SKILL.md"
+
   require_all_contains \
     "docs/ai/skill_routing.md" \
-    "agents-regression-capture"
+    "agents-regression-capture" \
+    "agents-aidlc-workflow" \
+    "aidlc_workflow.md"
 
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-skill-routing/SKILL.md" \
     "docs/ai/skill_routing.md" \
     "agents-quick-reference" \
     "agents-delivery-workflow" \
+    "agents-aidlc-workflow" \
     "agents-canonical-rules" \
     "./bin/agent-maintain find" \
     "./bin/agent-maintain tools --intent"
@@ -636,7 +647,8 @@ if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "docs/ai/context_loading.md" \
     "skill_routing.md" \
-    "agents-skill-routing"
+    "agents-skill-routing" \
+    "aidlc_workflow.md"
 
   require_all_contains \
     "docs/agents_quick_reference.md" \

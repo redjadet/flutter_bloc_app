@@ -19,6 +19,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | --- | --- |
 | Non-trivial work | [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight + [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) + [`agent_project_context.md`](../agent_project_context.md) + `agents-common-pitfalls` |
 | T1/T2 coding | [`agent_operating_manual.md`](agent_operating_manual.md) |
+| T1/T2 AIDLC, phase gates, or active lifecycle run | [`aidlc_workflow.md`](aidlc_workflow.md) + [`../engineering/aidlc_artifact_contract.md`](../engineering/aidlc_artifact_contract.md); load after core routing only |
 | Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
 | Commands / validation choice | Tool-router output, then matching [`agents_quick_reference.md`](../agents_quick_reference.md) row |
 | PR / CI evidence | [`github_mcp_guide.md`](github_mcp_guide.md) |

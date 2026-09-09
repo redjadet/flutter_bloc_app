@@ -36,15 +36,20 @@ you are finishing an explicit host-environment task. Prefer `preflight` + scoped
 
 `closeout` / `auto` runs:
 
-1. `preflight` (bootstrap + intent/path tool routes + drift warn + trackers)
-2. **`docs-sync`** when validation tooling or markdown docs are in scope (see below)
-3. **`after-host-edit`** only when `tool/agent_host_templates/**` is in git scope (sync `--apply` + strict drift + `kb`) — **not** on every task
-4. **`kb`** only when agent-map paths changed **and** templates were not in scope
-5. **`harness-maintain`** when harness paths are in scope (see
+1. `preflight` (bootstrap + intent/path tool routes + drift warn + trackers +
+   AIDLC run discovery log — never creates a run)
+2. **AIDLC artifact validation** when any host tracker/`aidlc/` run exists
+   (`bash tool/check_aidlc_artifacts.sh`). No active run is a valid outcome for
+   T0 / non-AIDLC tasks (`scope|aidlc|no`). Active runs are validated, not forced
+   complete.
+3. **`docs-sync`** when validation tooling or markdown docs are in scope (see below)
+4. **`after-host-edit`** only when `tool/agent_host_templates/**` is in git scope (sync `--apply` + strict drift + `kb`) — **not** on every task
+5. **`kb`** only when agent-map paths changed **and** templates were not in scope
+6. **`harness-maintain`** when harness paths are in scope (see
    [`harness_auto_maintenance.md`](../ai/harness_auto_maintenance.md)) — runs even
    when `docs-sync` skipped the scorecard gate (for example `.cursor/rules/**`
    only)
-6. **Scorecard freshness** — `check_agent_scorecard_freshness.sh` rejects a
+7. **Scorecard freshness** — `check_agent_scorecard_freshness.sh` rejects a
    summary that no longer matches active or archived event inputs; regenerate
    with `./tool/build_agent_scorecard_summary.sh`. If that regen is the **only**
    git change (`scorecard-summary.json` / `.md`), commit and push directly to

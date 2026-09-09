@@ -20,7 +20,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Develop critical human engineering skills | [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) — judgment, restraint, and least-surface delivery when agents make typing cheap |
 | Review a change | [`review/code_review_playbook.md`](review/code_review_playbook.md) |
 | Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
-| Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); overview [`ai-workflow.md`](ai-workflow.md) |
+| Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); AIDLC [`ai/aidlc_workflow.md`](ai/aidlc_workflow.md); overview [`ai-workflow.md`](ai-workflow.md) |
 | Choose high-value AI-agent work | [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) |
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |

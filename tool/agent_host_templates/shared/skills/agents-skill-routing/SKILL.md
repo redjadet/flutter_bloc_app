@@ -12,7 +12,8 @@ description: >-
 
 Repo canon and full task table: [`docs/ai/skill_routing.md`](../../../../../docs/ai/skill_routing.md).
 Core routes: `agents-quick-reference`, `agents-delivery-workflow`,
-`agents-canonical-rules` (+ matching child).
+`agents-canonical-rules` (+ matching child). Lifecycle / AIDLC / resume run:
+`agents-aidlc-workflow` (owner [`docs/ai/aidlc_workflow.md`](../../../../../docs/ai/aidlc_workflow.md)).
 
 For non-trivial work, select one matching skill before edits or broad commands;
 read only its `SKILL.md`, then follow repo validation. Tool or owner unknown:

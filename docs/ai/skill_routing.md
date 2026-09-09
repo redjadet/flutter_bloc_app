@@ -31,6 +31,7 @@ Use global search/install only on explicit host-skill work:
 | --- | --- |
 | Pre-flight / common mistakes | `agents-common-pitfalls`; owner [`ai_failure_risks.md`](ai_failure_risks.md) |
 | Cold start / commands / validation chooser | `agents-quick-reference` |
+| AIDLC / lifecycle / phase-gated delivery / resume lifecycle run | `agents-aidlc-workflow`; owner [`aidlc_workflow.md`](aidlc_workflow.md). Host sync apply may be pending — follow owner doc + this skill source under `tool/agent_host_templates/` until applied |
 | Non-trivial delivery / finish gate | `agents-delivery-workflow` |
 | Non-trivial coding | `agents-delivery-workflow`; [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Plan / delegation reminders | `agents-meta-behavior` (**Cursor template**; Codex: same canon via [`agent_knowledge_base.md`](../agent_knowledge_base.md) + multi-agent hub) |
@@ -57,7 +58,7 @@ not weaken repository safety or validation requirements.
 
 | Kind | Where | Examples |
 | --- | --- | --- |
-| Shared (Codex + Cursor) | `tool/agent_host_templates/shared/skills/` | `agents-quick-reference`, `agents-delivery-workflow`, `agents-feature-delivery`, `gh-watch-merge-pr`, … |
+| Shared (Codex + Cursor) | `tool/agent_host_templates/shared/skills/` | `agents-quick-reference`, `agents-delivery-workflow`, `agents-aidlc-workflow`, `agents-feature-delivery`, `gh-watch-merge-pr`, … |
 | Cursor-only templates | `tool/agent_host_templates/cursor/skills/` | `agents-meta-behavior`, `agents-global-skills-setup`, `agents-cursor-integration` |
 | Global / vendor | `~/.cursor/skills`, `~/.codex/skills`, `~/.agents/skills` | `type-safe-bloc-access`, `gh-fix-ci`, process skills (`brainstorming`, …) |
 

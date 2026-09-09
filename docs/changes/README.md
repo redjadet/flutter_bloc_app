@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-09_aidlc_workflow.md`](2026-09-09_aidlc_workflow.md): Repo-native AIDLC lifecycle owner, artifact contract, scaffold/check, shared skill, maintain hooks.
 - [`2026-09-09_flutter_forgotten_widgets.md`](2026-09-09_flutter_forgotten_widgets.md): SDK widget chooser + SelectableText/Tooltip/AnimatedSwitcher polish from Stackademic “forgotten widgets” article.
 - [`2026-09-09_blocsignal_evaluation.md`](2026-09-09_blocsignal_evaluation.md): Evaluate BlocSignal; stay on flutter_bloc; ADR 0007 + transferable Cubit/selector/primary-ctor practices.
 - [`2026-09-09_flutter_fundamentals_and_production_practices.md`](2026-09-09_flutter_fundamentals_and_production_practices.md): Interview/onboarding synthesis — widgets/state, hot reload, offline, perf, structure, crash triage with this-repo stories.

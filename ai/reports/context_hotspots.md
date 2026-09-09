@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-08T09:59:40Z"
-  git_head: "9a2889ee1b46ff63027b4826c3c08bbe0c05f774"
+  generated_at: "2026-09-09T13:54:59Z"
+  git_head: "076b1a0def49cf1d71b47df00af45c52140ab03e"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -19,8 +19,8 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 1 | 459 | `walletconnect_auth/presentation/pages/walletconnect_auth_page_impl.part.dart` | walletconnect_auth |
 | 2 | 427 | `social_feed_demo/presentation/cubit/social_feed_cubit_helpers.part.dart` | social_feed_demo |
 | 3 | 419 | `todo_list/data/offline_first_todo_repository_impl.part.dart` | todo_list |
-| 4 | 394 | `ai_decision_demo/presentation/pages/ai_decision_demo_page.part.dart` | ai_decision_demo |
-| 5 | 381 | `example/presentation/widgets/example_page_body_content.part.dart` | example |
+| 4 | 401 | `example/presentation/widgets/example_page_body_content.part.dart` | example |
+| 5 | 394 | `ai_decision_demo/presentation/pages/ai_decision_demo_page.part.dart` | ai_decision_demo |
 | 6 | 359 | `online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | online_therapy_demo |
 | 7 | 355 | `camera_gallery/presentation/pages/camera_gallery_page.part.dart` | camera_gallery |
 | 8 | 326 | `social_feed_demo/data/offline_first_social_feed_repository_sync.part.dart` | social_feed_demo |
@@ -37,7 +37,7 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 19 | 225 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
 | 20 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
 
-**Total feature Dart (non-generated):** ~82210 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~83267 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

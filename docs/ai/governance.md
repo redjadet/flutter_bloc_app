@@ -14,6 +14,21 @@ Roles, handoffs, and stop conditions. Map entry: [`AGENTS.md`](../../AGENTS.md).
 
 One session may hold multiple roles; declare role in PR description.
 
+## AIDLC stage ownership
+
+Lifecycle semantics: [`aidlc_workflow.md`](aidlc_workflow.md). Artifacts:
+[`../engineering/aidlc_artifact_contract.md`](../engineering/aidlc_artifact_contract.md).
+
+| Concern | Owner |
+| --- | --- |
+| Stage / artifact quality | Planner then Implementer; Documenter for canon docs |
+| `approve` event | Reviewer (or Implementer self-review on T1/T2 low only) |
+| `continue` event | Per AIDLC continuation matrix (human for medium+) |
+| Invalidation / resume | Actor who owns the changed gate; record `invalidate`/`resume` |
+| Operation stage | Explicit user authorization for the concrete op |
+
+`approve` never implies `continue`, Git, deploy, or cloud authority.
+
 ## Human verdict by risk
 
 Classify risk before implementation and record the resulting verdict in the PR
