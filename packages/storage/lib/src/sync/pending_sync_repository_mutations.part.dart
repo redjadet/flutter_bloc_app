@@ -4,10 +4,9 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
   Future<void> markCompletedBody(String operationId) async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.markCompleted',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await box.delete(operationId);
-      },
+      }),
     );
   }
 
@@ -18,8 +17,7 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
   }) async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.markFailed',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         final dynamic stored = box.get(operationId);
         if (stored is! Map<dynamic, dynamic>) {
           await box.delete(operationId);
@@ -36,17 +34,16 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
           retryCount: retryCount ?? (existing.retryCount + 1),
         );
         await box.put(operationId, updated.toJson());
-      },
+      }),
     );
   }
 
   Future<void> clearBody() async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.clear',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await box.clear();
-      },
+      }),
     );
   }
 
@@ -61,8 +58,7 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
     // be removed (returning 0 would leave another user's ops on device).
     return StorageGuard.run<int>(
       logContext: 'PendingSyncRepository.clearEntityTypes',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         final _PendingOperationsReadResult readResult = _readOperations(
           box.toMap(),
         );
@@ -72,7 +68,7 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
             .toList(growable: false);
         await _deleteKeys(box, keysToDelete);
         return keysToDelete.length;
-      },
+      }),
     );
   }
 
@@ -81,8 +77,7 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
     required Duration maxAge,
   }) async => StorageGuard.run<int>(
     logContext: 'PendingSyncRepository.prune',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final DateTime cutoff = DateTime.now().toUtc().subtract(maxAge);
       final _PendingOperationsReadResult readResult = _readOperations(
         box.toMap(),
@@ -99,7 +94,7 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
       ];
       await _deleteKeys(box, keysToDelete);
       return keysToDelete.length;
-    },
+    }),
     fallback: () => 0,
   );
 }

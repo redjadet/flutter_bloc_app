@@ -16,6 +16,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_remote_fetch_failure_fallback.sh`
 - `check_material_buttons.sh`
 - `check_no_hive_openbox.sh`
+- `check_hive_getbox_rmw.sh`
 - `check_raw_timer.sh`
 - `check_raw_future_delayed.sh`
 - `check_direct_getit.sh`
@@ -74,6 +75,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_memory_pressure_centralized.sh`
 - `check_macos_debug_web_guard.sh`
 - `check_apple_debug_hive_storage.sh`
+- `check_keychain_dual_store_symmetry.sh`
 - `check_ios_pod_framework_embed.sh`
 - `check_agent_knowledge_base.sh`
 - `check_harness_scorecard_gate.sh`

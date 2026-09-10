@@ -1,0 +1,25 @@
+# Known Hive getBox() + write outside runWithBox (lost-update debt).
+# Entries are path#method signatures — new unsafe methods in debt files still fail.
+# Remove a signature when that method migrates to runWithBox (#834 / Codex review).
+# High-traffic todo + pending_sync migrated 2026-09-10; remaining: caches + IoT.
+apps/mobile/lib/features/chart/data/chart_demo_cache_repository.dart#writeTrendingCounts
+apps/mobile/lib/features/chat/data/chat_local_data_source.dart#save
+apps/mobile/lib/features/counter/data/hive_counter_repository.dart#save
+apps/mobile/lib/features/graphql_demo/data/graphql_demo_cache_repository.dart#clear
+apps/mobile/lib/features/graphql_demo/data/graphql_demo_cache_repository.dart#writeContinents
+apps/mobile/lib/features/graphql_demo/data/graphql_demo_cache_repository.dart#writeCountries
+apps/mobile/lib/features/igaming_demo/data/hive_demo_balance_repository.dart#setBalance
+apps/mobile/lib/features/iot_demo/data/persistent_iot_demo_repository_storage.part.dart#addDeviceImpl
+apps/mobile/lib/features/iot_demo/data/persistent_iot_demo_repository_storage.part.dart#connectImpl
+apps/mobile/lib/features/iot_demo/data/persistent_iot_demo_repository_storage.part.dart#disconnectImpl
+apps/mobile/lib/features/iot_demo/data/persistent_iot_demo_repository_storage.part.dart#replaceDevicesImpl
+apps/mobile/lib/features/iot_demo/data/persistent_iot_demo_repository_storage.part.dart#sendCommandImpl
+apps/mobile/lib/features/profile/data/profile_cache_repository.dart#clearProfile
+apps/mobile/lib/features/profile/data/profile_cache_repository.dart#saveProfile
+apps/mobile/lib/features/realtime_market/data/realtime_market_local_data_source.dart#saveSnapshot
+apps/mobile/lib/features/remote_config/data/remote_config_cache_repository.dart#clear
+apps/mobile/lib/features/remote_config/data/remote_config_cache_repository.dart#saveSnapshot
+apps/mobile/lib/features/search/data/hive_search_cache_repository.dart#clearCache
+apps/mobile/lib/features/search/data/hive_search_cache_repository.dart#saveCachedResults
+apps/mobile/lib/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart#clearOpenEntry
+apps/mobile/lib/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart#saveOpenEntry

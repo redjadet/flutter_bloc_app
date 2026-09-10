@@ -71,6 +71,9 @@ ALL_TESTS=(
   "../../packages/networking/test/sync/background_sync_coordinator_test.dart"
   "test/shared/widgets/row_overflow_regression_test.dart"
   "test/shared/widgets/action_bar_layout_regression_test.dart"
+  "test/secure_secret_storage_test.dart"
+  "test/features/notes_demo/data/hive_notes_repository_test.dart"
+  "test/features/todo_list/data/hive_todo_repository_test.dart"
   "test/features/counter/data/offline_first_counter_repository_test.dart"
   "test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
@@ -203,6 +206,22 @@ select_regression_guard_tests() {
       tool/fixtures/firebase_app_object_catch/*)
         add_test_once out_ref "test/app/composition/register_walletconnect_auth_services_test.dart"
         ;;
+      packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart|\
+      packages/app_shared_flutter/lib/src/platform/*|\
+      test/secure_secret_storage_test.dart|\
+      tool/check_keychain_dual_store_symmetry.sh|\
+      tool/check_apple_debug_hive_storage.sh|\
+      docs/security/storage_rules.md)
+        add_test_once out_ref "test/secure_secret_storage_test.dart"
+        ;;
+      lib/features/notes_demo/*|\
+      test/features/notes_demo/*|\
+      tool/check_hive_getbox_rmw.sh|\
+      tool/check_hive_getbox_rmw.py|\
+      tool/fixtures/hive_getbox_rmw/*)
+        add_test_once out_ref "test/features/notes_demo/data/hive_notes_repository_test.dart"
+        add_test_once out_ref "test/features/todo_list/data/hive_todo_repository_test.dart"
+        ;;
       packages/app_shared_flutter/lib/src/media/*|\
       lib/app/l10n_adapters/*|\
       lib/app/sync/*|\
@@ -246,11 +265,16 @@ select_regression_guard_tests() {
       test/features/websocket/*)
         add_test_once out_ref "test/features/websocket/data/echo_websocket_repository_test.dart"
         ;;
+      lib/features/todo_list/data/hive_todo_repository.dart|\
+      test/features/todo_list/data/hive_todo_repository_test.dart)
+        add_test_once out_ref "test/features/todo_list/data/hive_todo_repository_test.dart"
+        ;;
       lib/features/todo_list/*|\
       test/features/todo_list/*)
         add_test_once out_ref "test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart"
         add_test_once out_ref "test/features/todo_list/data/offline_first_todo_repository_test.dart"
         add_test_once out_ref "test/features/todo_list/data/realtime_database_todo_repository_test.dart"
+        add_test_once out_ref "test/features/todo_list/data/hive_todo_repository_test.dart"
         add_test_once out_ref "test/features/todo_list/presentation/pages/todo_list_page_test.dart"
         ;;
       lib/features/iot_demo/*|\

@@ -104,6 +104,25 @@ void main() {
       expect(result.first.id, 'a');
     });
 
+    test('concurrent save and delete do not lose updates', () async {
+      final TodoItem keep = _todoItem(id: 'keep', title: 'Keep');
+      final TodoItem remove = _todoItem(id: 'remove', title: 'Remove');
+      await repository.save(keep);
+      await repository.save(remove);
+
+      await Future.wait<void>(<Future<void>>[
+        repository.save(
+          keep.copyWith(title: 'Updated', updatedAt: DateTime.utc(2024, 1, 5)),
+        ),
+        repository.delete('remove'),
+      ]);
+
+      final List<TodoItem> items = await repository.fetchAll();
+      expect(items, hasLength(1));
+      expect(items.single.id, 'keep');
+      expect(items.single.title, 'Updated');
+    });
+
     test('watchAll emits updates when items change', () async {
       final TodoItem item = _todoItem(id: 'a', title: 'Watch');
 

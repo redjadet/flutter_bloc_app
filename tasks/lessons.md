@@ -21,6 +21,38 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-10 - Keychain delete resurrection + Hive getBox RMW
+
+- What went wrong:
+  #817 made reads prefer legacy Keychain items, but `delete` only cleared
+  hardened storage — clears could resurrect via legacy peek (#834). Separately,
+  `HiveNotesRepository` (and many siblings) did `await getBox()` then RMW;
+  `getBox()` releases the per-box mutex immediately so concurrent save/delete
+  could drop updates.
+- How it was fixed:
+  Delete also removes legacy items; notes mutations use `runWithBox`. Hardened
+  early catch with `tool/check_keychain_dual_store_symmetry.sh`,
+  `tool/check_hive_getbox_rmw.sh` (+ per-method allowlisted debt), checklist
+  wiring, and regression-guard routing for the two test files. Codex terra
+  medium review: detect `_save*` helpers, per-method allowlist, independent
+  Keychain deletes + hardened-fail legacy-clear test. Follow-up: migrate
+  high-traffic todo + pending_sync off allowlist; detect `_deleteKeys`; document
+  Known limitations in `docs/security/storage_rules.md`.
+- Pattern:
+  Dual-store / dual-path APIs need symmetric clear; mutex helpers that return a
+  resource after unlock are footguns for RMW; file-level allowlists hide new
+  debt in the same files.
+- Preventive rule:
+  When adding dual Keychain envelopes, every clear path must touch both
+  independently. Hive list mutations must stay inside `runWithBox`; do not grow
+  the getBox RMW allowlist — shrink `path#method` entries when touching debt
+  (prefer todo / pending_sync / IoT / counter first).
+- Evidence or affected files:
+  PR #834; `secure_secret_storage.dart`; `hive_notes_repository.dart`;
+  `hive_todo_repository.dart`; `pending_sync_repository*.dart`;
+  `tool/check_keychain_dual_store_symmetry.sh`; `tool/check_hive_getbox_rmw.*`;
+  `docs/security/storage_rules.md`.
+
 ### 2026-09-08 - Keychain migration PRs chained incomplete dual-store fixes
 
 - What went wrong:

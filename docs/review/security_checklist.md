@@ -50,6 +50,10 @@ Primary protocol: [`ai_code_review_protocol.md`](../ai_code_review_protocol.md)
   `first_unlock_this_device`) and keep `synchronizable: false` unless iCloud
   Keychain sync is an intentional product requirement. See
   [`security/storage_rules.md`](../security/storage_rules.md).
+- Apple dual-store Keychain: if `readResult` peeks legacy, `delete` must clear
+  legacy too (resurrection). Run
+  `bash tool/check_keychain_dual_store_symmetry.sh` when touching
+  `secure_secret_storage.dart`.
 - Offline-first queues do not replay destructive actions without idempotency.
 - Apple debug Hive paths follow
   [`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).

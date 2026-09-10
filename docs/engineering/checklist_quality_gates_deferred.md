@@ -57,7 +57,7 @@ delete its open-backlog row. Note the change in [`docs/changes/`](../changes/REA
 | Topic | Current behavior | Follow-up |
 | --- | --- | --- |
 | Router validate without git | `should_run_router_feature_validate_auto` returns run when `HAS_GIT_REPO≠1` (conservative: cannot diff → may run validate). | Document in validation_scripts; optional tighten to skip when no changed-file list. |
-| Parallel static checks | `CHECK_SCRIPTS` (~82) run with `CHECKLIST_JOBS` (default CPU count, capped at 8). Prefer path auto-skip inside expensive scripts over dropping fail gates. | Expand per-script auto-skip only with fixture proof; do not thin CI. |
+| Parallel static checks | `CHECK_SCRIPTS` (~85) run with `CHECKLIST_JOBS` (default CPU count, capped at 8). Prefer path auto-skip inside expensive scripts over dropping fail gates. | Expand per-script auto-skip only with fixture proof; do not thin CI. |
 | Codex plan review (May 2026) | Three delegate runs aborted; no external review merged. | Optional re-run for open IDs only; not required for MVP closure. |
 
 ---
