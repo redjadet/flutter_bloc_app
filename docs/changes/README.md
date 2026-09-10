@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-10_flutter_3_47_3_pin.md`](2026-09-10_flutter_3_47_3_pin.md): Pin Flutter `3.47.2` → `3.47.3` and Dart `3.13.2` → `3.13.3`; refresh `pubspec.lock` on new SDK.
 - [`2026-09-09_social_feed_remove_senior_signal_ui.md`](2026-09-09_social_feed_remove_senior_signal_ui.md): Remove social-feed demo senior-signal side panel + unused l10n; keep scenario controls.
 - [`2026-09-09_aidlc_workflow.md`](2026-09-09_aidlc_workflow.md): Repo-native AIDLC lifecycle owner, artifact contract, scaffold/check, shared skill, maintain hooks.
 - [`2026-09-09_flutter_forgotten_widgets.md`](2026-09-09_flutter_forgotten_widgets.md): SDK widget chooser + SelectableText/Tooltip/AnimatedSwitcher polish from Stackademic “forgotten widgets” article.
