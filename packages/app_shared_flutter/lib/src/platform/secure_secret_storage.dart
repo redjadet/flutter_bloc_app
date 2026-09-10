@@ -214,6 +214,17 @@ class FlutterSecureSecretStorage implements SecretStorage {
   Future<void> delete(String key) async {
     try {
       await _storage.delete(key: key);
+      if (_enableLegacyKeychainMigration && _shouldMigrateAppleKeychain()) {
+        try {
+          await _legacyMigrationStorage.delete(key: key);
+        } on PlatformException catch (error, stackTrace) {
+          AppLogger.error(
+            'FlutterSecureSecretStorage.delete failed for legacy key "$key"',
+            error,
+            stackTrace,
+          );
+        } on MissingPluginException catch (_) {}
+      }
     } on PlatformException catch (error, stackTrace) {
       AppLogger.error(
         'FlutterSecureSecretStorage.delete failed for key "$key"',

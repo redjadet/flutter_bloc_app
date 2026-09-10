@@ -310,6 +310,54 @@ void main() {
       expect(hardenedStore['hive_encryption_key'], 'legacy-secret');
     });
 
+    test('delete clears legacy Keychain item so read does not resurrect secret', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final Map<String, String> hardenedStore = <String, String>{
+        'hive_encryption_key': 'hardened-secret',
+      };
+      final Map<String, String> legacyStore = <String, String>{
+        'hive_encryption_key': 'legacy-secret',
+      };
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            final String? accessibility = _iosAccessibilityFromCall(call);
+            final Map<String, String> store = accessibility == 'unlocked'
+                ? legacyStore
+                : hardenedStore;
+            switch (call.method) {
+              case 'read':
+                return store[call.arguments['key'] as String?] ??
+                    call.arguments['defaultValue'];
+              case 'write':
+                store[call.arguments['key'] as String] =
+                    call.arguments['value'] as String;
+                return null;
+              case 'delete':
+                store.remove(call.arguments['key'] as String);
+                return null;
+              default:
+                throw PlatformException(
+                  code: 'unhandled',
+                  message: call.method,
+                );
+            }
+          });
+
+      final storage = FlutterSecureSecretStorage(
+        storage: FlutterSecureSecretStorage.createDefaultFlutterSecureStorage(),
+        legacyMigrationStorage:
+            FlutterSecureSecretStorage.createLegacyMigrationFlutterSecureStorage(),
+      );
+
+      await storage.delete('hive_encryption_key');
+
+      expect(hardenedStore.containsKey('hive_encryption_key'), isFalse);
+      expect(legacyStore.containsKey('hive_encryption_key'), isFalse);
+      expect(await storage.read('hive_encryption_key'), isNull);
+    });
+
     test('failed migration rewrite keeps legacy item for later reads', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 

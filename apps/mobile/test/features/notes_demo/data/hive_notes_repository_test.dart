@@ -79,6 +79,23 @@ void main() {
       expect(iterator.current.single.title, 'Hello');
     });
 
+    test('concurrent save and delete do not lose updates', () async {
+      final Note keep = _note(id: 'keep', title: 'Keep');
+      final Note remove = _note(id: 'remove', title: 'Remove');
+      await repository.save(keep);
+      await repository.save(remove);
+
+      await Future.wait<void>(<Future<void>>[
+        repository.save(keep.copyWith(title: 'Updated')),
+        repository.delete('remove'),
+      ]);
+
+      final List<Note> notes = await repository.fetchAll();
+      expect(notes, hasLength(1));
+      expect(notes.single.id, 'keep');
+      expect(notes.single.title, 'Updated');
+    });
+
     test('ignores corrupt entries in box', () async {
       await hiveService.openBoxAndRun<void>(
         'notes_demo',
