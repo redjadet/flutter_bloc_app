@@ -31,10 +31,7 @@ class HiveNotesRepository extends HiveRepositoryBase
   @override
   Future<List<Note>> fetchAll() => StorageGuard.run<List<Note>>(
     logContext: 'HiveNotesRepository.fetchAll',
-    action: () async {
-      final Box<dynamic> box = await getBox();
-      return _loadFromBox(box);
-    },
+    action: () async => runWithBox((box) async => _loadFromBox(box)),
     fallback: () async => const <Note>[],
   );
 
@@ -52,8 +49,7 @@ class HiveNotesRepository extends HiveRepositoryBase
   @override
   Future<void> save(Note note) => StorageGuard.run<void>(
     logContext: 'HiveNotesRepository.save',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () async => runWithBox((box) async {
       final List<Note> existing = _loadFromBox(box);
       final List<Note> updated = List<Note>.from(existing);
       final int index = updated.indexWhere((item) => item.id == note.id);
@@ -63,20 +59,19 @@ class HiveNotesRepository extends HiveRepositoryBase
         updated[index] = note;
       }
       await _save(box, updated);
-    },
+    }),
   );
 
   @override
   Future<void> delete(String id) => StorageGuard.run<void>(
     logContext: 'HiveNotesRepository.delete',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () async => runWithBox((box) async {
       final List<Note> existing = _loadFromBox(box);
       final List<Note> updated = existing
           .where((item) => item.id != id)
           .toList(growable: false);
       await _save(box, updated);
-    },
+    }),
   );
 
   List<Note> _loadFromBox(Box<dynamic> box) {
