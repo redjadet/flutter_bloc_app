@@ -58,8 +58,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
   Future<SyncOperation> enqueue(SyncOperation operation) async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.enqueue',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         final _PendingOperationsReadResult readResult = _readOperations(
           box.toMap(),
         );
@@ -87,7 +86,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
         await _deleteKeys(box, duplicateKeys);
         await box.put(operation.id, operation.toJson());
         StreamControllerSafeEmit.safeAdd(_enqueuedController, null);
-      },
+      }),
     );
     return operation;
   }
@@ -117,8 +116,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
     String? supabaseUserIdFilter,
   }) async => StorageGuard.run<List<SyncOperation>>(
     logContext: 'PendingSyncRepository.getPendingOperations',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final _PendingOperationsReadResult readResult = _readOperations(
         box.toMap(),
       );
@@ -141,7 +139,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
           ? ready.take(limit).toList(growable: false)
           : ready.toList(growable: false);
       return pending;
-    },
+    }),
     fallback: () => const <SyncOperation>[],
   );
 

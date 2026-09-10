@@ -49,6 +49,10 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 
 - `package:flutter` in feature domain.
 - `Hive.openBox` outside shared storage abstractions.
+- `await getBox()` then write/`_save*`/`_deleteKeys` outside `runWithBox` on
+  `HiveRepositoryBase` subclasses (lost updates under the per-box mutex; see
+  #834 / `tool/check_hive_getbox_rmw.sh`; Known limitations in
+  [`security/storage_rules.md`](../security/storage_rules.md)).
 - Raw SDK/client calls from Cubit/BLoC or widgets.
 - Repository construction inside widgets.
 - Business filtering, grouping, counting, lookup-by-id, or default workflow

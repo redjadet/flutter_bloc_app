@@ -212,19 +212,10 @@ class FlutterSecureSecretStorage implements SecretStorage {
 
   @override
   Future<void> delete(String key) async {
+    // Clear hardened and legacy envelopes independently so a failure on either
+    // store cannot leave a resurrectable legacy item after an explicit clear.
     try {
       await _storage.delete(key: key);
-      if (_enableLegacyKeychainMigration && _shouldMigrateAppleKeychain()) {
-        try {
-          await _legacyMigrationStorage.delete(key: key);
-        } on PlatformException catch (error, stackTrace) {
-          AppLogger.error(
-            'FlutterSecureSecretStorage.delete failed for legacy key "$key"',
-            error,
-            stackTrace,
-          );
-        } on MissingPluginException catch (_) {}
-      }
     } on PlatformException catch (error, stackTrace) {
       AppLogger.error(
         'FlutterSecureSecretStorage.delete failed for key "$key"',
@@ -232,6 +223,18 @@ class FlutterSecureSecretStorage implements SecretStorage {
         stackTrace,
       );
     } on MissingPluginException catch (_) {}
+
+    if (_enableLegacyKeychainMigration && _shouldMigrateAppleKeychain()) {
+      try {
+        await _legacyMigrationStorage.delete(key: key);
+      } on PlatformException catch (error, stackTrace) {
+        AppLogger.error(
+          'FlutterSecureSecretStorage.delete failed for legacy key "$key"',
+          error,
+          stackTrace,
+        );
+      } on MissingPluginException catch (_) {}
+    }
   }
 
   @override

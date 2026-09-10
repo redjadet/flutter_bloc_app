@@ -38,10 +38,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   @override
   Future<List<TodoItem>> fetchAll() => StorageGuard.run<List<TodoItem>>(
     logContext: 'HiveTodoRepository.fetchAll',
-    action: () async {
-      final Box<dynamic> box = await getBox();
-      return await _loadFromBox(box);
-    },
+    action: () => runWithBox((box) async => await _loadFromBox(box)),
     fallback: () => const <TodoItem>[],
   );
 
@@ -61,47 +58,43 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   @override
   Future<void> save(TodoItem item) => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.save',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final List<TodoItem> existing = await _loadFromBox(box);
       final List<TodoItem> updated = _applyItem(existing, item);
       await _save(box, updated);
-    },
+    }),
   );
 
   @override
   Future<void> delete(String id) => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.delete',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final List<TodoItem> existing = await _loadFromBox(box);
       final List<TodoItem> updated = existing
           .where((item) => item.id != id)
           .toList(growable: false);
       await _save(box, updated);
-    },
+    }),
   );
 
   @override
   Future<void> clearCompleted() => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.clearCompleted',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final List<TodoItem> existing = await _loadFromBox(box);
       final List<TodoItem> updated = existing
           .where((item) => !item.isCompleted)
           .toList(growable: false);
       await _save(box, updated);
-    },
+    }),
   );
 
   /// Wipes every stored todo. Used on Firebase sign-out / account switch.
   Future<void> clearAllLocalData() => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.clearAllLocalData',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       await _save(box, const <TodoItem>[]);
-    },
+    }),
   );
 
   Future<List<TodoItem>> _loadFromBox(Box<dynamic> box) =>

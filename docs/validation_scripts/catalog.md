@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **114** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **83** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **116** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **85** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -62,6 +62,14 @@ below.
   inject via constructors/cubits). Demo-only folders (`*_demo`) excluded.
   Default run executes an embedded `--self-test` then the production scan.
 - **`check_no_hive_openbox.sh`**: Prevents direct `Hive.openBox` usage (should use `HiveService`/`HiveRepositoryBase`)
+- **`check_hive_getbox_rmw.sh`**: Fails when `await getBox()` is followed by box
+  writes / `_save*` / `_deleteKeys` outside `runWithBox` (per-box mutex ends when
+  `getBox` returns — lost-update class from #834). Debt allowlist is
+  **per-method** (`path#method` in
+  `tool/fixtures/hive_getbox_rmw/allowlist.txt`); new methods in debt files
+  still fail; stale signatures fail. Todo + pending_sync migrated off allowlist.
+  Fixture self-test included. Known limitations:
+  [`security/storage_rules.md`](../security/storage_rules.md).
 - **`check_unvalidated_base_url_parse.sh`**: Prevents `Uri.parse(...)` directly on dynamic `baseUrl`-like values without validation helper
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
@@ -100,6 +108,10 @@ below.
   stable `_appleDebugFallbackKey`, iOS debug tests). Prevents Keychain -34018 and
   `Recovering corrupted box.` regressions. See
   [`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).
+- **`check_keychain_dual_store_symmetry.sh`**: Requires legacy Keychain peek on
+  read, legacy delete on clear, coexistence + delete-resurrection regression
+  tests, and living-doc delete symmetry in
+  [`security/storage_rules.md`](../security/storage_rules.md) (#817/#834).
 - **`check_ios_pod_framework_embed.sh`**: After an iOS simulator build,
   verifies `Runner.app/Frameworks` contains every CocoaPods framework from
   `Pods-Runner-frameworks-Debug-input-files.xcfilelist` and every

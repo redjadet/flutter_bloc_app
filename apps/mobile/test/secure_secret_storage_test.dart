@@ -358,6 +358,63 @@ void main() {
       expect(await storage.read('hive_encryption_key'), isNull);
     });
 
+    test('delete still clears legacy when hardened delete fails', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final Map<String, String> hardenedStore = <String, String>{
+        'hive_encryption_key': 'hardened-secret',
+      };
+      final Map<String, String> legacyStore = <String, String>{
+        'hive_encryption_key': 'legacy-secret',
+      };
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            final String? accessibility = _iosAccessibilityFromCall(call);
+            final Map<String, String> store = accessibility == 'unlocked'
+                ? legacyStore
+                : hardenedStore;
+            switch (call.method) {
+              case 'read':
+                return store[call.arguments['key'] as String?] ??
+                    call.arguments['defaultValue'];
+              case 'write':
+                store[call.arguments['key'] as String] =
+                    call.arguments['value'] as String;
+                return null;
+              case 'delete':
+                if (accessibility != 'unlocked') {
+                  throw PlatformException(
+                    code: 'KeychainError',
+                    message: 'hardened delete failed',
+                  );
+                }
+                store.remove(call.arguments['key'] as String);
+                return null;
+              default:
+                throw PlatformException(
+                  code: 'unhandled',
+                  message: call.method,
+                );
+            }
+          });
+
+      final storage = FlutterSecureSecretStorage(
+        storage: FlutterSecureSecretStorage.createDefaultFlutterSecureStorage(),
+        legacyMigrationStorage:
+            FlutterSecureSecretStorage.createLegacyMigrationFlutterSecureStorage(),
+      );
+
+      await storage.delete('hive_encryption_key');
+
+      expect(legacyStore.containsKey('hive_encryption_key'), isFalse);
+      // Hardened delete failed — that store may still hold a value. Legacy must
+      // still be cleared so a later legacy-first peek cannot resurrect a secret
+      // the caller intended to remove from the migration envelope.
+      expect(hardenedStore['hive_encryption_key'], 'hardened-secret');
+      expect(await storage.read('hive_encryption_key'), 'hardened-secret');
+    });
+
     test('failed migration rewrite keeps legacy item for later reads', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 

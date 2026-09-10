@@ -43,6 +43,29 @@ void main() {
     expect(pending.first.id, equals(operation.id));
   });
 
+  test('concurrent enqueue keeps both distinct operations', () async {
+    final SyncOperation first = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 1},
+      idempotencyKey: 'concurrent-a',
+    );
+    final SyncOperation second = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 2},
+      idempotencyKey: 'concurrent-b',
+    );
+
+    await Future.wait<SyncOperation>(<Future<SyncOperation>>[
+      repository.enqueue(first),
+      repository.enqueue(second),
+    ]);
+
+    final List<SyncOperation> pending = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    );
+    expect(pending.map((op) => op.id).toSet(), <String>{first.id, second.id});
+  });
+
   test('enqueue dedupes by entityType + idempotencyKey (+ user scope when present)', () async {
     final SyncOperation op1 = SyncOperation.create(
       entityType: 'counter',
