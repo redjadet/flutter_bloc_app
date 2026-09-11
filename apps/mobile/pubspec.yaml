@@ -45,7 +45,7 @@ dependencies:
   apple_maps_flutter: ^1.4.0
   auth:
     path: ../../packages/auth
-  cached_network_image: ^3.4.1
+  cached_network_image: ^4.0.0
   cloud_firestore: ^6.9.0
   cloud_functions: ^6.4.0
   collection: ^1.19.1

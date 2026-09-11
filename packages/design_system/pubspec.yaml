@@ -10,7 +10,7 @@ environment:
 dependencies:
   app_shared_flutter:
     path: ../app_shared_flutter
-  cached_network_image: ^3.4.1
+  cached_network_image: ^4.0.0
   core:
     path: ../core
   cupertino_ui: ^1.0.2
