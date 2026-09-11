@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-11_macos_guest_signin_timeout_fallback.md`](2026-09-11_macos_guest_signin_timeout_fallback.md): Timeout stalled Firebase anonymous sign-in on macOS debug → local guest; unblocks desktop IT.
 - [`2026-09-11_senior_engineering_judgment_guidance.md`](2026-09-11_senior_engineering_judgment_guidance.md): Repair P1–P7 ownership/decision boundaries in reduce-surprise + review/Git docs; honest AP-11 warn labeling; September disposition audit.
 - [`2026-09-10_keychain_hive_rmw_early_catch.md`](2026-09-10_keychain_hive_rmw_early_catch.md): Static guards for Keychain dual-store delete + Hive getBox RMW; per-method allowlist after Codex terra review.
 - [`2026-09-10_keychain_delete_legacy_and_notes_mutex.md`](2026-09-10_keychain_delete_legacy_and_notes_mutex.md): Clear legacy Keychain on delete; serialize Hive notes RMW under `runWithBox` (#834).

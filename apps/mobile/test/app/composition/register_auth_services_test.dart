@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auth/auth.dart' as core_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -301,6 +303,41 @@ void main() {
         final repository = getIt<feature_auth.AuthRepository>();
         await repository.signInAnonymously();
 
+        expect(repository.currentUser?.id, 'macos-debug-local-guest');
+        expect(repository.currentUser?.isAnonymous, isTrue);
+      },
+    );
+
+    test(
+      'macOS debug fallback uses local guest when anonymous sign-in stalls',
+      () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+        final Duration previousTimeout =
+            DebugKeychainGuestAuthRepository.signInAnonymouslyTimeout;
+        DebugKeychainGuestAuthRepository.signInAnonymouslyTimeout =
+            const Duration(milliseconds: 50);
+        addTearDown(() {
+          DebugKeychainGuestAuthRepository.signInAnonymouslyTimeout =
+              previousTimeout;
+        });
+
+        final firebaseAuth = _MockFirebaseAuth();
+        when(() => firebaseAuth.currentUser).thenReturn(null);
+        when(() => firebaseAuth.authStateChanges())
+            .thenAnswer((_) => const Stream<User?>.empty());
+        when(() => firebaseAuth.signInAnonymously())
+            .thenAnswer((_) => Completer<UserCredential>().future);
+        getIt.registerSingleton<FirebaseAuth>(firebaseAuth);
+
+        registerAuthServices();
+
+        final repository = getIt<feature_auth.AuthRepository>();
+        await repository.signInAnonymously();
+
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<DebugKeychainGuestAuthRepository>(),
+        );
         expect(repository.currentUser?.id, 'macos-debug-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);
       },

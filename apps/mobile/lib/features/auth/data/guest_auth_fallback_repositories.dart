@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dar
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 
 /// Debug Firebase auth wrapper that falls back to a local guest on Keychain
-/// entitlement failures (macOS / iOS simulator).
+/// entitlement failures (macOS / iOS simulator) or anonymous-sign-in stalls.
 class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
   new({required super.firebaseAuth}) {
     _firebaseSubscription = super.authStateChanges.listen(
@@ -28,6 +28,11 @@ class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
       },
     );
   }
+
+  /// Bound anonymous Firebase sign-in so macOS IT cannot hang forever when the
+  /// plugin never returns (Keychain / network stall without an exception).
+  @visibleForTesting
+  static Duration signInAnonymouslyTimeout = const Duration(seconds: 15);
 
   final StreamController<AuthUser?> _authStateController =
       StreamController<AuthUser?>.broadcast();
@@ -49,16 +54,26 @@ class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
     yield* _authStateController.stream;
   }
 
+  void _activateLocalGuest() {
+    _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
+    _authStateController.add(_localGuest);
+  }
+
   @override
   Future<void> signInAnonymously() async {
     try {
-      await super.signInAnonymously();
+      await super.signInAnonymously().timeout(signInAnonymouslyTimeout);
+    } on TimeoutException catch (error) {
+      AppLogger.warning(
+        'DebugKeychainGuestAuthRepository signInAnonymously timed out; '
+        'using local guest ($error)',
+      );
+      _activateLocalGuest();
     } on Exception catch (error) {
       if (!_looksLikeKeychainEntitlementError(error)) {
         rethrow;
       }
-      _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
-      _authStateController.add(_localGuest);
+      _activateLocalGuest();
     }
   }
 
