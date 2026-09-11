@@ -88,7 +88,7 @@ dependencies:
     sdk: flutter
   flutter_reactive_ble: ^5.5.0
   flutter_screenutil: ^5.9.3
-  flutter_secure_storage: ^11.0.0
+  flutter_secure_storage: ^11.1.0
   flutter_svg: ^2.3.0
   flutter_tts: ^4.2.5
   freezed_annotation: ^3.1.0
@@ -122,7 +122,7 @@ dependencies:
   local_auth: ^3.0.2
   logger: ^2.8.0
   markdown: ^7.3.1
-  material_ui: ^1.1.1
+  material_ui: ^1.2.0
   meta: ^1.16.0
   mix: ^2.1.0
   networking:

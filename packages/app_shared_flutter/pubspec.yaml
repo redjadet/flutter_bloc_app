@@ -12,10 +12,10 @@ dependencies:
     path: ../core
   flutter:
     sdk: flutter
-  flutter_secure_storage: ^11.0.0
+  flutter_secure_storage: ^11.1.0
   freezed_annotation: ^3.1.0
   logger: ^2.8.0
-  material_ui: ^1.1.1
+  material_ui: ^1.2.0
 dev_dependencies:
   ilkersevim_json_isolate: ^0.1.4
   build_runner: ^2.16.1
