@@ -39,12 +39,16 @@ offline sync, routing, dependency/DI changes, and broad shared infrastructure.
 
 Before reading implementation, capture:
 
-- Intended user outcome and non-goals.
+- Intended user outcome and non-goals (one primary user/risk story).
 - Changed paths, base branch, and whether unrelated changes exist.
-- Acceptance criteria, known constraints, and rollback/recovery path.
+- Whether behavior change and opportunistic refactoring are separated; if
+  inseparable, explicit justification in the PR body.
+- Acceptance criteria, known constraints, and rollback/recovery impact.
 - Risk classification: low, medium, or high.
 - Required validation lane from
   [`../engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).
+- Size is a review **prompt**, not a merge gate; coherence and reversibility
+  decide split.
 
 For non-trivial feature work, require a feature brief with executable test rows;
 use [`../architecture/feature_structure_contract.md`](../architecture/feature_structure_contract.md)
@@ -179,13 +183,16 @@ For risk acceptance, record owner, rationale, mitigation, and revisit trigger.
 
 Before approval, reviewer can answer yes to all:
 
-- Requested outcome and boundaries understood.
-- Diff has no unrelated changes or each exception is justified.
+- Requested outcome and boundaries understood; diff tells one coherent story.
+- Diff has no unrelated changes or each exception is justified (including
+  inseparable refactor).
+- Rollback/reversibility impact is clear for risky changes.
 - Layering, state, security, UI, and performance checks relevant to paths ran.
 - Tests prove behavior and failure paths, not only implementation details.
 - Validation is fresh, scope-matched, and independently inspected.
 - Findings have disposition; accepted risks have owner and revisit trigger.
 - Final decision and residual risks are recorded.
+- LOC/size alone did not decide approve/split.
 
 ## Related
 

@@ -129,15 +129,20 @@ obtain same-turn user approval before any force-push or other remote rewrite.
 
 ## Pull request contract
 
-Open one PR against `main` after the branch has a focused, reviewable diff.
-Use a draft PR for early feedback; mark it ready only when the acceptance
-criteria and validation evidence are complete.
+Open one PR against `main` after the branch has a focused, reviewable,
+reversible diff with one primary user/risk outcome. Prefer splitting unrelated
+rename/cleanup from behavior changes unless inseparable and justified in the PR
+body. Diff size is a review prompt, not a universal LOC gate — see
+[Code Review Playbook](review/code_review_playbook.md). Use a draft PR for early
+feedback; mark it ready only when the acceptance criteria and validation
+evidence are complete.
 
 PR description includes:
 
-- Goal and boundaries.
+- Goal and boundaries (coherent diff story).
 - User-visible or operational impact.
 - Files or systems intentionally excluded.
+- Behavior vs refactor separation, or justification when combined.
 - Validation commands and exact results; state `Tests: N/A — reason` only when
   behavior cannot change.
 - Migration, rollback, security, or follow-up notes when applicable.
@@ -191,8 +196,10 @@ operational boundaries:
    non-trivial work, and state the intended write-set before edits.
 2. Inspect `git status`, branch, and relevant upstream state before editing. Do
    not overwrite existing uncommitted changes.
-3. Keep edits surgical. Do not change Flutter or Dart SDK sources to solve an
-   application issue.
+3. Keep edits surgical and reviewable: one coherent outcome per branch/PR;
+   separate opportunistic cleanup unless justified. Do not change Flutter or
+   Dart SDK sources to solve an application issue. Do not use a numeric LOC
+   limit as the sole split or merge rule.
 4. Run the repository-selected validation lane and report executed proof,
    failures, blockers, and residual risk.
 5. Treat every Git state mutation as approval-gated, including stage/unstage,

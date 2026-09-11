@@ -45,6 +45,19 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - Generated code, l10n, Hive schema fingerprints, or migrations are updated
   when their annotations or stored shapes change.
 
+## Semantic Judgment
+
+- Names at risky boundaries expose domain role and predicate meaning (types,
+  commands, failures, eligibility predicates).
+- External/storage shapes stay in DTO/mapper containment; tiny internal-only
+  maps may skip a mapper when it adds churn without safety
+  ([`use_case_dto_policy.md`](../architecture/use_case_dto_policy.md)).
+- One pure policy owner for reusable decisions; every write, replay, and bypass
+  path that can violate the rule invokes it.
+- Policy proof is behavior-level / pure unit tests without repository mocks.
+- Enforcement radius is stated; proof is behavior/adversarial coverage, not a
+  single caller guard.
+
 ## Forbidden Patterns
 
 - `package:flutter` in feature domain.
