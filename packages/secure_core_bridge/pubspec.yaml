@@ -13,7 +13,7 @@ dependencies:
   code_assets: ^2.0.0
   ffi: ^2.2.0
   hooks: ^2.2.0
-  native_toolchain_rust: ^1.0.6
+  native_toolchain_rust: ^1.0.7
 
 dev_dependencies:
   # Generator only; bindings are checked in. Gate runs package-cwd dart test
