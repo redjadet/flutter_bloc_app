@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   # Aligned with native_toolchain_rust 1.0.6 (code_assets ^1.2.1, hooks ^2.1.0).
-  code_assets: ^1.2.1
+  code_assets: ^2.0.0
   ffi: ^2.2.0
   hooks: ^2.2.0
   native_toolchain_rust: ^1.0.6
@@ -18,6 +18,6 @@ dependencies:
 dev_dependencies:
   # Generator only; bindings are checked in. Gate runs package-cwd dart test
   # (workspace-root dart test can miss native assets after ffigen regenerate).
-  ffigen: ^21.0.0
+  ffigen: ^22.0.0
   lints: ^6.1.0
   test: ^1.31.1
