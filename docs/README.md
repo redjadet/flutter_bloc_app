@@ -65,7 +65,7 @@ root when an existing category applies.
 - [`bloc_standards.md`](bloc_standards.md) — deterministic Cubit/BLoC rules for AI agents
 - [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) — feature folder and placement contract
 - [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) — use-case, DTO, mapper, and error-boundary policy
-- [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) — semantic patterns (DTO, sealed state, errors)
+- [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) — semantic judgment spine (guard clauses, naming, DTO boundaries, state shape, pure decisions, typed errors, reviewable diffs)
 - [`architecture/reference_features.md`](architecture/reference_features.md) — gold layouts + semantic grades
 - [`feature_overview.md`](feature_overview.md)
 - [`modularity.md`](modularity.md)

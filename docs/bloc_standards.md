@@ -27,16 +27,36 @@ state for new feature state ([ADR 0007](adr/0007-blocsignal-evaluation.md)).
   otherwise. Hand-written DTO and plain domain **field bags** (no union) use
   Dart 3.13 primary constructors so fields are not duplicated
   ([`CODE_QUALITY.md`](CODE_QUALITY.md)).
-- Prefer one immutable state object with `status`, data, and error fields for
-  simple flows.
-- Use Freezed unions for workflows with materially different states, such as
-  idle/loading/loaded/error with different required fields.
 - Keep derived booleans/getters on the state model when they remove repeated UI
   branching.
 - State fields expose domain models or presentation view data, not data-layer
   DTOs.
 - Loading, empty, success, error, retry, and offline/pending states must be
   explicit when the UI can show them.
+
+Choose the shape from reachable combinations, not taste:
+
+| Situation | Prefer | Why |
+| --- | --- | --- |
+| One object cannot express contradictory combinations (same fields always valid together) | Simple immutable status record (`status` + shared fields) | Sealed unions add noise without removing invalid states |
+| Statuses need different required fields or mutually exclusive payloads | Freezed/sealed union | Makes impossible combinations unrepresentable (e.g. `ready(data)` vs `success` + nullable data) |
+| UI can show loading / empty / ready / error / offline | Explicit variants or status values matching visible UI | Callers must not rediscover invariants with null checks |
+
+Exemplars: `remote_config_state`, `deep_link_state`, `profile_state`.
+Anti-pattern: `ViewStatus.success` + nullable payload.
+
+## Control Flow
+
+- Exit invalid preconditions early with guard clauses; keep the normal path
+  shallow and unindented.
+- Prefer early returns for missing IDs, closed cubits before work, unauthorized
+  callers, and other business/precondition failures **before** effects.
+- Keep nesting when it expresses real hierarchy: exhaustive `switch`,
+  grammar/tree parsers, or genuine state trees. Do not flatten those only to
+  satisfy an “always return early” slogan.
+- Do **not** confuse guard clauses with async lifecycle guards (`isClosed`,
+  `RequestIdGuard` / request freshness). Lifecycle checks stay required for
+  stale completion safety and are separate from business precondition exits.
 
 ## Cubit And Bloc Responsibilities
 

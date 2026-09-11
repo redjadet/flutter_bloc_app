@@ -1,13 +1,20 @@
 # Cubit File Template
 
 Copy-paste starting point for new feature Cubits. Canon:
-[`bloc_standards.md`](../bloc_standards.md), [`review/bloc_checklist.md`](../review/bloc_checklist.md),
-[`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) § P4.
+[`bloc_standards.md`](../bloc_standards.md) (§ State Shape, § Control Flow),
+[`review/bloc_checklist.md`](../review/bloc_checklist.md),
+[`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md)
+§ P4.
 
 Place files under `apps/mobile/lib/features/<feature>/presentation/cubit/` only (singular
 `cubit/`, not `cubits/`).
 
 ## State (`<feature>_state.dart`)
+
+Use a sealed/Freezed union when statuses need different required fields or
+mutually exclusive payloads (see [`bloc_standards.md`](../bloc_standards.md)
+§ State Shape). A simple status record is enough when one object cannot express
+invalid combinations. Example below is the sealed case:
 
 ```dart
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,12 +26,13 @@ class <Feature>State with _$<Feature>State {
   const factory <Feature>State.initial() = _Initial;
   const factory <Feature>State.loading() = _Loading;
   const factory <Feature>State.success({required <DomainModel> data}) = _Success;
-  const factory <Feature>State.failure({required String message}) = _Failure;
+  const factory <Feature>State.failure({required <Feature>Failure failure}) =
+      _Failure;
 }
 ```
 
-Use domain models in state — never DTOs. Prefer sealed unions over many
-booleans.
+Use domain models in state — never DTOs. Prefer typed failures over raw strings
+or `Object?`.
 
 ## Cubit (`<feature>_cubit.dart`)
 
@@ -44,7 +52,8 @@ class <Feature>Cubit({required final <Feature>Repository _repository})
       emit(<Feature>State.success(data: data));
     } catch (error, stackTrace) {
       if (isClosed) return;
-      emit(<Feature>State.failure(message: error.toString()));
+      // Map to a typed <Feature>Failure / AppError — never error.toString().
+      emit(<Feature>State.failure(failure: <mapToTypedFailure>(error)));
     }
   }
 
@@ -57,7 +66,7 @@ class <Feature>Cubit({required final <Feature>Repository _repository})
 ```
 
 Wire async through existing `CubitExceptionHandler` patterns when the feature
-already uses them.
+already uses them. Map user copy through l10n in presentation (P6).
 
 ## Test (`test/features/<feature>/presentation/<feature>_cubit_test.dart`)
 
