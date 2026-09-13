@@ -73,6 +73,20 @@ void main() {
       expect(devices.length, 1);
     });
 
+    test('concurrent addDevice calls keep both devices', () async {
+      await Future.wait<void>(<Future<void>>[
+        repository.addDevice(
+          const IotDevice(id: 'a', name: 'Device A', type: IotDeviceType.light),
+        ),
+        repository.addDevice(
+          const IotDevice(id: 'b', name: 'Device B', type: IotDeviceType.plug),
+        ),
+      ]);
+
+      final List<IotDevice> devices = await repository.watchDevices().first;
+      expect(devices.map((d) => d.id), unorderedEquals(<String>['a', 'b']));
+    });
+
     test('addDevice throws for empty id', () async {
       const device = IotDevice(
         id: '',

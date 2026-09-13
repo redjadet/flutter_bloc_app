@@ -21,6 +21,25 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-13 - Hive RMW: counter + IoT off allowlist
+
+- What went wrong:
+  Counter `save` and IoT storage mutations still used `await getBox()` then
+  write — allowlisted debt after #834 early catch.
+- How it was fixed:
+  Wrap mutations in `runWithBox`; IoT `connectImpl` releases the mutex during
+  connect delay; shrink allowlist; concurrent unit tests.
+- Pattern:
+  Prefer `runWithBox` for every Hive RMW; hold lock only for the mutation, not
+  artificial delays.
+- Preventive rule:
+  Do not grow `tool/fixtures/hive_getbox_rmw/allowlist.txt`; shrink when
+  touching allowlisted methods. See `docs/security/storage_rules.md`.
+- Evidence or affected files:
+  `hive_counter_repository.dart`,
+  `persistent_iot_demo_repository_storage.part.dart`, allowlist,
+  `docs/changes/2026-09-13_hive_rmw_counter_iot.md`.
+
 ### 2026-09-10 - Keychain delete resurrection + Hive getBox RMW
 
 - What went wrong:

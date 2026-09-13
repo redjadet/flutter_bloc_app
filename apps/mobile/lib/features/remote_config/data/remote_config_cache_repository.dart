@@ -52,8 +52,7 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
 
   Future<void> saveSnapshot(RemoteConfigSnapshot snapshot) => StorageGuard.run(
     logContext: 'RemoteConfigCacheRepository.saveSnapshot',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       await box.put(_snapshotKey, <String, dynamic>{
         _valuesKey: Map<String, dynamic>.from(snapshot.values),
         _lastFetchedKey: snapshot.lastFetchedAt?.toIso8601String(),
@@ -61,15 +60,14 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
         _dataSourceKey: snapshot.dataSource,
         _lastSyncedKey: snapshot.lastSyncedAt?.toIso8601String(),
       });
-    },
+    }),
   );
 
   Future<void> clear() => StorageGuard.run(
     logContext: 'RemoteConfigCacheRepository.clear',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       await safeDeleteKey(box, _snapshotKey);
-    },
+    }),
   );
 
   Map<String, dynamic> _mapValues(dynamic rawValues) {

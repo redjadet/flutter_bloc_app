@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_view_models.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   const GraphqlContinent europe = GraphqlContinent(code: 'EU', name: 'Europe');
@@ -58,15 +58,19 @@ void main() {
         isLoading: false,
         hasError: true,
         countries: const <GraphqlCountry>[france],
-        errorType: GraphqlDemoErrorType.network,
-        errorMessage: 'oops',
+        lastError: const NetworkError(
+          message: 'oops',
+          kind: NetworkErrorKind.offline,
+        ),
       );
       final GraphqlBodyData b = GraphqlBodyData(
         isLoading: false,
         hasError: true,
         countries: const <GraphqlCountry>[france],
-        errorType: GraphqlDemoErrorType.network,
-        errorMessage: 'oops',
+        lastError: const NetworkError(
+          message: 'oops',
+          kind: NetworkErrorKind.offline,
+        ),
       );
 
       expect(a, equals(b));
@@ -77,15 +81,19 @@ void main() {
         isLoading: false,
         hasError: true,
         countries: const <GraphqlCountry>[france],
-        errorType: GraphqlDemoErrorType.network,
-        errorMessage: 'oops',
+        lastError: const NetworkError(
+          message: 'oops',
+          kind: NetworkErrorKind.offline,
+        ),
       );
       final GraphqlBodyData differentError = GraphqlBodyData(
         isLoading: false,
         hasError: true,
         countries: const <GraphqlCountry>[france],
-        errorType: GraphqlDemoErrorType.data,
-        errorMessage: 'oops',
+        lastError: const StorageError(
+          message: 'oops',
+          kind: StorageErrorKind.read,
+        ),
       );
       final GraphqlBodyData differentCountries = GraphqlBodyData(
         isLoading: false,
@@ -93,8 +101,10 @@ void main() {
         countries: const <GraphqlCountry>[
           GraphqlCountry(code: 'DE', name: 'Germany', continent: europe),
         ],
-        errorType: GraphqlDemoErrorType.network,
-        errorMessage: 'oops',
+        lastError: const NetworkError(
+          message: 'oops',
+          kind: NetworkErrorKind.offline,
+        ),
       );
 
       expect(base, isNot(equals(differentError)));

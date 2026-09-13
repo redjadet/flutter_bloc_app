@@ -77,6 +77,37 @@ void main() {
       expect(loaded, isEmpty);
     });
 
+    test('concurrent saves keep a complete conversation list', () async {
+      final ChatConversation a = ChatConversation(
+        id: 'a',
+        createdAt: DateTime.utc(2024, 3, 1),
+        updatedAt: DateTime.utc(2024, 3, 1),
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'A'),
+        ],
+      );
+      final ChatConversation b = ChatConversation(
+        id: 'b',
+        createdAt: DateTime.utc(2024, 3, 2),
+        updatedAt: DateTime.utc(2024, 3, 2),
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'B'),
+        ],
+      );
+
+      await Future.wait<void>(<Future<void>>[
+        dataSource.save(<ChatConversation>[a]),
+        dataSource.save(<ChatConversation>[a, b]),
+      ]);
+
+      final List<ChatConversation> loaded = await dataSource.load();
+      // Last writer wins under the mutex; result is one complete list write.
+      expect(
+        loaded.map((c) => c.id).toList(),
+        anyOf(equals(<String>['a']), equals(<String>['a', 'b'])),
+      );
+    });
+
     test(
       'returns empty list when stored iterable contains malformed item',
       () async {

@@ -11,6 +11,7 @@ decision is [ADR 0002](../adr/0002-offline-first-data.md).
 | Hive schema changes | [hive_schema_migrations.md](hive_schema_migrations.md) |
 | Supabase migrations | [supabase_migrations.md](supabase_migrations.md) |
 | Feature examples | [counter.md](counter.md), [chat.md](chat.md), [profile.md](profile.md) |
+| Local-only exceptions | [notes_demo.md](notes_demo.md) |
 | Historical audit evidence | [ANALYSIS_AND_IMPROVEMENTS.md](ANALYSIS_AND_IMPROVEMENTS.md) |
 
 Daily invariants come from the adoption and don't-overwrite guides. Feature

@@ -7,6 +7,16 @@ that.
 
 ## Index
 
+- [`2026-09-13_hive_rmw_allowlist_cleared.md`](2026-09-13_hive_rmw_allowlist_cleared.md): Clear remaining Hive getBox RMW allowlist (chart/GraphQL/iGaming/realtime/remote_config/staff).
+- [`2026-09-13_error_model_graphql_todo.md`](2026-09-13_error_model_graphql_todo.md): Collapse graphql_demo + todo_list dual error channels toward AppError.
+- [`2026-09-13_folder_contract_test_mirror.md`](2026-09-13_folder_contract_test_mirror.md): Mirror chat/scapes/settings cubit tests under presentation/cubit/; refresh June audit.
+- [`2026-09-13_notes_demo_offline_first_exception.md`](2026-09-13_notes_demo_offline_first_exception.md): Document notes_demo local-only offline-first exception.
+- [`2026-09-13_hive_rmw_profile_search.md`](2026-09-13_hive_rmw_profile_search.md): Profile + search cache Hive getBox RMW → `runWithBox`; REC-008 honesty (AP-04 done).
+- [`2026-09-13_hive_rmw_chat_local_ds.md`](2026-09-13_hive_rmw_chat_local_ds.md): Chat local DS Hive getBox RMW → `runWithBox` (Wave 3 slice).
+- [`2026-09-13_walletconnect_auth_unskip_tests.md`](2026-09-13_walletconnect_auth_unskip_tests.md): Unskip WalletConnect auth Firestore mock tests with valid addresses + get() stubs.
+- [`2026-09-13_offline_first_chat_profile_merge_guard.md`](2026-09-13_offline_first_chat_profile_merge_guard.md): Wire chat+profile into offline-first remote-merge CI guard; document search/chart exception.
+- [`2026-09-13_domain_wire_leaks_app_root.md`](2026-09-13_domain_wire_leaks_app_root.md): Point AP-11 warn scan at Melos `apps/mobile` domain tree; refresh AI snapshots.
+- [`2026-09-13_hive_rmw_counter_iot.md`](2026-09-13_hive_rmw_counter_iot.md): Counter + IoT Hive getBox RMW → `runWithBox`; shrink allowlist.
 - [`2026-09-11_macos_guest_signin_timeout_fallback.md`](2026-09-11_macos_guest_signin_timeout_fallback.md): Timeout stalled Firebase anonymous sign-in on macOS debug → local guest; unblocks desktop IT.
 - [`2026-09-11_senior_engineering_judgment_guidance.md`](2026-09-11_senior_engineering_judgment_guidance.md): Repair P1–P7 ownership/decision boundaries in reduce-surprise + review/Git docs; honest AP-11 warn labeling; September disposition audit.
 - [`2026-09-10_keychain_hive_rmw_early_catch.md`](2026-09-10_keychain_hive_rmw_early_catch.md): Static guards for Keychain dual-store delete + Hive getBox RMW; per-method allowlist after Codex terra review.

@@ -126,8 +126,7 @@ class HiveCounterRepository extends HiveRepositoryBase
   @override
   Future<void> save(CounterSnapshot snapshot) => StorageGuard.run<void>(
     logContext: 'HiveCounterRepository.save',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final CounterSnapshot normalized =
           HiveCounterRepositoryHelpers.normalizeSnapshot(
             snapshot,
@@ -159,7 +158,7 @@ class HiveCounterRepository extends HiveRepositoryBase
       await box.put(_keyUserId, normalized.userId ?? _localUserId);
 
       _watchHelper.emitSnapshot(normalized);
-    },
+    }),
   );
 
   @override

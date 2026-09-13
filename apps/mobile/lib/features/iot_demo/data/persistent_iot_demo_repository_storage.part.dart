@@ -81,14 +81,13 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
     }
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.addDevice',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         final List<IotDevice> devices = await _loadDevices(box);
         if (devices.any((d) => d.id == device.id)) return;
         final List<IotDevice> updated = List<IotDevice>.from(devices)
           ..add(device);
         await _saveDevices(box, updated);
-      },
+      }),
     );
   }
 
@@ -97,10 +96,9 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
   Future<void> replaceDevicesImpl(List<IotDevice> devices) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.replaceDevices',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await _saveDevices(box, List<IotDevice>.unmodifiable(devices));
-      },
+      }),
     );
   }
 
@@ -111,30 +109,35 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.connect',
       action: () async {
-        final Box<dynamic> box = await getBox();
-        List<IotDevice> devices = await _loadDevices(box);
-        final int i = _indexOf(devices, deviceId);
-        if (i < 0) return;
-        devices = List<IotDevice>.from(devices);
-        devices[i] = devices[i].copyWith(
-          connectionState: IotConnectionState.connecting,
-          lastSeen: DateTime.now(),
-        );
-        await _saveDevices(box, devices);
+        // Hold the per-box mutex only for each RMW; release during connect delay.
+        final bool started = await runWithBox((box) async {
+          final List<IotDevice> devices = await _loadDevices(box);
+          final int i = _indexOf(devices, deviceId);
+          if (i < 0) return false;
+          final List<IotDevice> updated = List<IotDevice>.from(devices);
+          updated[i] = updated[i].copyWith(
+            connectionState: IotConnectionState.connecting,
+            lastSeen: DateTime.now(),
+          );
+          await _saveDevices(box, updated);
+          return true;
+        });
+        if (!started) return;
         await _delay(PersistentIotDemoRepository._connectDelay);
-        devices = await _loadDevices(box);
-        final int idx = _indexOf(devices, deviceId);
-        if (idx >= 0) {
+        await runWithBox((box) async {
+          final List<IotDevice> devices = await _loadDevices(box);
+          final int idx = _indexOf(devices, deviceId);
+          if (idx < 0) return;
           if (devices[idx].connectionState != IotConnectionState.connecting) {
             return;
           }
-          devices = List<IotDevice>.from(devices);
-          devices[idx] = devices[idx].copyWith(
+          final List<IotDevice> updated = List<IotDevice>.from(devices);
+          updated[idx] = updated[idx].copyWith(
             connectionState: IotConnectionState.connected,
             lastSeen: DateTime.now(),
           );
-          await _saveDevices(box, devices);
-        }
+          await _saveDevices(box, updated);
+        });
       },
     );
   }
@@ -142,8 +145,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
   Future<void> disconnectImpl(String deviceId) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.disconnect',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         final List<IotDevice> devices = await _loadDevices(box);
         final int i = _indexOf(devices, deviceId);
         if (i < 0) return;
@@ -152,7 +154,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
           connectionState: IotConnectionState.disconnected,
         );
         await _saveDevices(box, updated);
-      },
+      }),
     );
   }
 
@@ -162,8 +164,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
   ) async {
     await StorageGuard.run<void>(
       logContext: 'PersistentIotDemoRepository.sendCommand',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         final List<IotDevice> devices = await _loadDevices(box);
         final int i = _indexOf(devices, deviceId);
         if (i < 0) return;
@@ -192,7 +193,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
         final List<IotDevice> list = List<IotDevice>.from(devices);
         list[i] = updated.copyWith(lastSeen: DateTime.now());
         await _saveDevices(box, list);
-      },
+      }),
     );
   }
 }

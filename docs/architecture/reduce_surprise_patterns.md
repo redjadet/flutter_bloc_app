@@ -157,8 +157,8 @@ bash tool/check_clean_architecture_imports.sh
 bash tool/check_feature_modularity_leaks.sh   # boundary/import PRs
 ```
 
-Optional warn-only: `bash tool/check_domain_wire_leaks.sh` (stale root today;
-repair is a separate tool follow-up).
+Optional warn-only: `bash tool/check_domain_wire_leaks.sh` (scans
+`apps/mobile/lib/features/*/domain`; still warn-only / not a fail gate).
 
 ## PR discipline (P7)
 

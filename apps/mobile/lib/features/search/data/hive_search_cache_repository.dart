@@ -55,16 +55,17 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
           if (query.isEmpty) {
             return;
           }
-          final Box<dynamic> box = await getBox();
-          final String normalizedQuery = _normalizeQuery(query);
-          final String key = '$_keyPrefix$normalizedQuery';
+          await runWithBox((box) async {
+            final String normalizedQuery = _normalizeQuery(query);
+            final String key = '$_keyPrefix$normalizedQuery';
 
-          final List<Map<String, dynamic>> serialized = results
-              .map((r) => SearchResultDto.fromDomain(r).toJson())
-              .toList(growable: false);
-          await box.put(key, serialized);
+            final List<Map<String, dynamic>> serialized = results
+                .map((r) => SearchResultDto.fromDomain(r).toJson())
+                .toList(growable: false);
+            await box.put(key, serialized);
 
-          await _addToRecentQueries(box, normalizedQuery);
+            await _addToRecentQueries(box, normalizedQuery);
+          });
         },
       );
 
@@ -88,8 +89,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
   @override
   Future<void> clearCache() => StorageGuard.run<void>(
     logContext: 'HiveSearchCacheRepository.clearCache',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final List<String> keys = box.keys
           .whereType<String>()
           .where((k) => k.startsWith(_keyPrefix))
@@ -98,7 +98,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
         await safeDeleteKey(box, key);
       }
       await safeDeleteKey(box, _keyRecentQueries);
-    },
+    }),
   );
 
   Future<void> _addToRecentQueries(Box<dynamic> box, String query) async {

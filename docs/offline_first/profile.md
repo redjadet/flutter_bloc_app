@@ -33,7 +33,10 @@ This document captures the offline-first plan for the Profile feature so enginee
   - If no cache and online, fetches remote → caches → returns.
   - If offline and no cache, throws an error so the UI can show an error state.
   - `processOperation`: no-op (read-only).
-  - `pullRemote`: refreshes cache when online.
+  - `pullRemote`: refreshes cache when online (remote is source of truth for
+    this read-only cache). On remote load failure, keep existing cache —
+    guarded by `pullRemote does not overwrite local when remote load fails`
+    in `tool/check_offline_first_remote_merge.sh`.
 
 ## UI Integration
 

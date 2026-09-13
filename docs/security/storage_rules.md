@@ -67,10 +67,10 @@ Where persistent data lives and how plugin-backed storage failures are handled.
 ### Known limitations (Hive getBox RMW)
 
 - **Remaining allowlist debt** (shrink-only; see
-  `tool/fixtures/hive_getbox_rmw/allowlist.txt`): demo caches (chart, GraphQL,
-  search, remote config, profile, realtime market), chat local DS, counter,
-  iGaming balance, staff timeclock, **IoT demo storage** (`_save*` helpers).
-  High-traffic **todo** + **pending_sync** migrated off the list (2026-09-10).
+  `tool/fixtures/hive_getbox_rmw/allowlist.txt`): **none** as of 2026-09-13
+  (todo, pending_sync, counter, IoT, chat, profile, search, chart, GraphQL,
+  iGaming, realtime market, remote config, staff timeclock all use
+  `runWithBox` for formerly allowlisted mutations).
 - **Out of detector scope:** long-lived `watch*` streams that `await getBox()`
   once then hold the box for `box.watch()` (read/listen only; mutations must
   still use `runWithBox`).

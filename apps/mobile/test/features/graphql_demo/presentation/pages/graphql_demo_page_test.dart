@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:utilities/utilities.dart';
 
 class _StubGraphqlDemoRepository implements GraphqlDemoRepository {
   @override
@@ -81,7 +82,10 @@ void main() {
       tester,
     ) async {
       cubit.emitState(
-        const GraphqlDemoState(status: ViewStatus.error, errorMessage: 'error'),
+        const GraphqlDemoState(
+          status: ViewStatus.error,
+          lastError: UnknownError(message: 'error'),
+        ),
       );
 
       await pumpPage(tester);

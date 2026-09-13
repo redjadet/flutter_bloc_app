@@ -43,11 +43,10 @@ class HiveDemoBalanceRepository extends HiveRepositoryBase
   @override
   Future<void> setBalance(DemoBalance balance) => StorageGuard.run<void>(
     logContext: 'HiveDemoBalanceRepository.setBalance',
-    action: () async {
+    action: () => runWithBox((box) async {
       final int safe = balance.amountUnits < 0 ? 0 : balance.amountUnits;
-      final Box<dynamic> box = await getBox();
       await box.put(_keyAmountUnits, safe);
-    },
+    }),
     fallback: () {},
   );
 

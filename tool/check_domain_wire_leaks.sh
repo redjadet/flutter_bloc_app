@@ -5,12 +5,17 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/workspace_paths.sh"
+cd "$WORKSPACE_ROOT"
 
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/check_helpers.sh"
 
-echo "🔍 Checking domain wire leaks (warn-only)..."
+DOMAIN_GLOB="${APP_ROOT}/lib/features/*/domain"
+
+echo "🔍 Checking domain wire leaks (warn-only) under ${DOMAIN_GLOB}..."
 
 hits=0
 while IFS= read -r line; do
@@ -18,13 +23,14 @@ while IFS= read -r line; do
   echo "⚠️  $line"
   hits=$((hits + 1))
 done < <(
-  rg -n "fromJson|toJson" lib/features/*/domain -g '*.dart' 2>/dev/null || true
+  # Live Melos app shell: apps/mobile/lib/features/*/domain (not stale repo-root lib/).
+  rg -n "fromJson|toJson" ${DOMAIN_GLOB} -g '*.dart' 2>/dev/null || true
 )
 
 if [[ "$hits" -eq 0 ]]; then
-  echo "✅ ok|domain-wire-leaks|violations=0"
+  echo "✅ ok|domain-wire-leaks|violations=0|root=${APP_ROOT}/lib/features"
   exit 0
 fi
 
-echo "⚠️  warn|domain-wire-leaks|violations=$hits"
+echo "⚠️  warn|domain-wire-leaks|violations=$hits|root=${APP_ROOT}/lib/features"
 exit 0

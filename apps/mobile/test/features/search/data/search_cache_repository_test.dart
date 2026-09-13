@@ -173,6 +173,25 @@ void main() {
       expect(await repository.loadRecentQueries(), isEmpty);
     });
 
+    test(
+      'concurrent saveCachedResults keeps both queries in recent list',
+      () async {
+        const List<SearchResult> results = [
+          SearchResult(id: '1', imageUrl: 'https://example.com/1.jpg'),
+        ];
+
+        await Future.wait<void>(<Future<void>>[
+          repository.saveCachedResults('dogs', results),
+          repository.saveCachedResults('cats', results),
+        ]);
+
+        expect(await repository.loadCachedResults('dogs'), isNotNull);
+        expect(await repository.loadCachedResults('cats'), isNotNull);
+        final List<String> recent = await repository.loadRecentQueries();
+        expect(recent.toSet(), equals(<String>{'dogs', 'cats'}));
+      },
+    );
+
     test('schema cleanup deletes malformed cached result entries', () async {
       final Box<dynamic> box = await hiveService.openBox('search_cache');
       await box.put('query_dogs', 123); // malformed (not string/list/map)

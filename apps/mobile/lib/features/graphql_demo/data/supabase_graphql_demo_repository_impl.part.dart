@@ -24,10 +24,7 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
         'SupabaseGraphqlDemoRepository edge continents failed '
         '(${error.runtimeType})',
       );
-      _logJwtMismatchDiagnostics(
-        error: error,
-        accessToken: _readAccessToken(),
-      );
+      _logJwtMismatchDiagnostics(error: error, accessToken: _readAccessToken());
       AppLogger.error(
         'SupabaseGraphqlDemoRepository._tryFetchContinentsFromEdge',
         error,
@@ -65,10 +62,7 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
         'SupabaseGraphqlDemoRepository edge countries failed '
         '(${error.runtimeType})',
       );
-      _logJwtMismatchDiagnostics(
-        error: error,
-        accessToken: _readAccessToken(),
-      );
+      _logJwtMismatchDiagnostics(error: error, accessToken: _readAccessToken());
       AppLogger.error(
         'SupabaseGraphqlDemoRepository._tryFetchCountriesFromEdge',
         error,

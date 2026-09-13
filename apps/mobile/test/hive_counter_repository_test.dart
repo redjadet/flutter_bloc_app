@@ -96,6 +96,31 @@ void main() {
     expect(loaded.userId, 'test_user');
   });
 
+  test('concurrent saves do not lose the last write', () async {
+    final DateTime firstChanged = DateTime(2024, 4, 1, 8);
+    final DateTime secondChanged = DateTime(2024, 4, 1, 9);
+    await Future.wait<void>(<Future<void>>[
+      repository.save(
+        CounterSnapshot(count: 1, lastChanged: firstChanged, userId: 'a'),
+      ),
+      repository.save(
+        CounterSnapshot(count: 2, lastChanged: secondChanged, userId: 'b'),
+      ),
+    ]);
+
+    final CounterSnapshot loaded = await repository.load();
+    // Both writes completed under the per-box mutex; final state is one of them.
+    expect(loaded.count, anyOf(1, 2));
+    expect(loaded.userId, anyOf('a', 'b'));
+    if (loaded.count == 1) {
+      expect(loaded.lastChanged, firstChanged);
+      expect(loaded.userId, 'a');
+    } else {
+      expect(loaded.lastChanged, secondChanged);
+      expect(loaded.userId, 'b');
+    }
+  });
+
   test('schema migrate coerces legacy stored primitives', () async {
     await hiveService.openBoxAndRun<void>(
       'counter',

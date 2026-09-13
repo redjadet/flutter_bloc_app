@@ -67,25 +67,23 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
   @override
   Future<void> saveProfile(ProfileUser user) => StorageGuard.run<void>(
     logContext: 'HiveProfileCacheRepository.saveProfile',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       final Map<String, dynamic> payload = _profileToJson(user);
       await box.put(_profileKey, payload);
       await box.put(
         _lastSyncedKey,
         _lastSyncedAtToStorageString(DateTime.now()),
       );
-    },
+    }),
   );
 
   @override
   Future<void> clearProfile() => StorageGuard.run<void>(
     logContext: 'HiveProfileCacheRepository.clearProfile',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () => runWithBox((box) async {
       await safeDeleteKey(box, _profileKey);
       await safeDeleteKey(box, _lastSyncedKey);
-    },
+    }),
   );
 
   @override

@@ -64,13 +64,8 @@ void main() {
         const GraphqlDemoState(status: ViewStatus.loading),
         isA<GraphqlDemoState>()
             .having((s) => s.status, 'status', ViewStatus.error)
-            .having((s) => s.errorMessage, 'errorMessage', 'error')
-            .having(
-              (s) => s.errorType,
-              'errorType',
-              GraphqlDemoErrorType.unknown,
-            )
-            .having((s) => s.lastError, 'lastError', isA<UnknownError>()),
+            .having((s) => s.lastError, 'lastError', isA<UnknownError>())
+            .having((s) => s.lastError?.message, 'lastError.message', 'error'),
       ],
     );
 
@@ -103,14 +98,9 @@ void main() {
         ),
         isA<GraphqlDemoState>()
             .having((s) => s.status, 'status', ViewStatus.error)
-            .having((s) => s.errorMessage, 'errorMessage', 'error')
-            .having(
-              (s) => s.errorType,
-              'errorType',
-              GraphqlDemoErrorType.unknown,
-            )
             .having((s) => s.activeContinentCode, 'activeContinentCode', 'AF')
-            .having((s) => s.lastError, 'lastError', isA<UnknownError>()),
+            .having((s) => s.lastError, 'lastError', isA<UnknownError>())
+            .having((s) => s.lastError?.message, 'lastError.message', 'error'),
       ],
     );
 

@@ -395,5 +395,44 @@ void main() {
           .getPendingOperations(now: DateTime.now().toUtc());
       expect(pending, isEmpty);
     });
+
+    test(
+      'pullRemote does not overwrite local when remote load fails',
+      () async {
+        // Chat has no remote pull channel; pullRemote is a no-op. Guard that a
+        // coordinator-triggered pull cannot wipe local history (empty-remote class).
+        final ChatConversation conversation = ChatConversation(
+          id: 'c-local',
+          createdAt: DateTime.utc(2024, 1, 1),
+          updatedAt: DateTime.utc(2024, 1, 1),
+          messages: const <ChatMessage>[
+            ChatMessage(
+              author: ChatAuthor.user,
+              text: 'Keep me',
+              clientMessageId: 'm-local',
+              synchronized: false,
+            ),
+          ],
+          synchronized: false,
+        );
+        await localDataSource.save(<ChatConversation>[conversation]);
+
+        final OfflineFirstChatRepository repository =
+            OfflineFirstChatRepository(
+              remoteRepository: _FakeRemoteChatRepository(shouldFail: true),
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              syncOperationFactory: syncOperationFactory,
+              localConversationUpdater: localConversationUpdater,
+            );
+
+        await repository.pullRemote();
+
+        final List<ChatConversation> after = await localDataSource.load();
+        expect(after, hasLength(1));
+        expect(after.first.id, 'c-local');
+        expect(after.first.messages.single.text, 'Keep me');
+      },
+    );
   });
 }

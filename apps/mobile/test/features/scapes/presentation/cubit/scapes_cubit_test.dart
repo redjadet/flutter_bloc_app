@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_helpers.dart' show FakeTimerService;
+import '../../../../test_helpers.dart' show FakeTimerService;
 
 /// Stub that returns completed future so .then() runs in same turn when used in
 /// timer callback.

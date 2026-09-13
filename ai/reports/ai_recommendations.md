@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-09T13:54:59Z"
-  git_head: "076b1a0def49cf1d71b47df00af45c52140ab03e"
+  generated_at: "2026-09-13T12:53:48Z"
+  git_head: "ec5a144efa4770dfcd45cdcb04fb20fb8956c658"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -22,7 +22,7 @@ Prioritized actions from discovery (2026-05-21). Each item links evidence; imple
 | REC-005 | P1 | ~~Add missing feature barrels~~ **done** (PR #239) | ARCH-003 | S |
 | REC-006 | P2 | Pilot CONTEXT_MAP loads ≤8 files for `counter`, `chat`, `auth` | [CONTEXT_MAP.md](../CONTEXT_MAP.md) | S |
 | REC-007 | P2 | Curate `docs/domain/domain_glossary.md` from language v1 report | [domain_glossary.md](../../docs/domain/domain_glossary.md) | M |
-| REC-008 | P2 | Consolidate chat remote failure mappers | [anti_patterns.md](anti_patterns.md) AP-04, ARCH-008 | M |
+| REC-008 | P2 | ~~Consolidate chat remote failure mappers~~ **done** (`chat_remote_failure_mapper.dart` barrel; AP-04) | [anti_patterns.md](anti_patterns.md) AP-04, ARCH-008 | M |
 | REC-009 | P3 | ~~Script or checklist to refresh `ai/reports` after feature adds~~ **done** | `tool/refresh_ai_reports.sh` | M |
 | REC-010 | P3 | ~~Phase 5: mechanical Feature Brief guard~~ **done** | `tool/check_feature_brief_linked.sh` | L |
 

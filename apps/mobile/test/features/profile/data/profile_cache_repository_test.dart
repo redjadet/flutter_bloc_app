@@ -126,6 +126,37 @@ void main() {
       expect(metadata.lastSyncedAt, isNull);
     });
 
+    test('concurrent saveProfile keeps one complete profile write', () async {
+      const ProfileUser a = ProfileUser(
+        name: 'Alice',
+        location: 'NYC',
+        avatarUrl: 'https://example.com/a.png',
+        galleryImages: <ProfileImage>[],
+      );
+      const ProfileUser b = ProfileUser(
+        name: 'Bob',
+        location: 'LA',
+        avatarUrl: 'https://example.com/b.png',
+        galleryImages: <ProfileImage>[
+          ProfileImage(url: 'https://example.com/g.png', aspectRatio: 1.0),
+        ],
+      );
+
+      await Future.wait<void>(<Future<void>>[
+        repository.saveProfile(a),
+        repository.saveProfile(b),
+      ]);
+
+      final ProfileUser? loaded = await repository.loadProfile();
+      expect(loaded, isNotNull);
+      expect(loaded!.name, anyOf(equals('Alice'), equals('Bob')));
+      if (loaded.name == 'Bob') {
+        expect(loaded.galleryImages, hasLength(1));
+      } else {
+        expect(loaded.galleryImages, isEmpty);
+      }
+    });
+
     test(
       'loadMetadata treats lastSyncedAt without timezone as UTC instant',
       () async {
