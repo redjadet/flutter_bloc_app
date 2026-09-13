@@ -280,7 +280,7 @@ as bool,
 /// @nodoc
 mixin _$GraphqlBodyData {
 
- bool get isLoading; bool get hasError; List<GraphqlCountry> get countries; GraphqlDemoErrorType? get errorType; String? get errorMessage; AppError? get lastError;
+ bool get isLoading; bool get hasError; List<GraphqlCountry> get countries; AppError? get lastError;
 /// Create a copy of GraphqlBodyData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -291,16 +291,16 @@ $GraphqlBodyDataCopyWith<GraphqlBodyData> get copyWith => _$GraphqlBodyDataCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other.countries, countries)&&(identical(other.errorType, errorType) || other.errorType == errorType)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastError, lastError) || other.lastError == lastError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other.countries, countries)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(countries),errorType,errorMessage,lastError);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(countries),lastError);
 
 @override
 String toString() {
-  return 'GraphqlBodyData(isLoading: $isLoading, hasError: $hasError, countries: $countries, errorType: $errorType, errorMessage: $errorMessage, lastError: $lastError)';
+  return 'GraphqlBodyData(isLoading: $isLoading, hasError: $hasError, countries: $countries, lastError: $lastError)';
 }
 
 
@@ -311,7 +311,7 @@ abstract mixin class $GraphqlBodyDataCopyWith<$Res>  {
   factory $GraphqlBodyDataCopyWith(GraphqlBodyData value, $Res Function(GraphqlBodyData) _then) = _$GraphqlBodyDataCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool hasError, List<GraphqlCountry> countries, GraphqlDemoErrorType? errorType, String? errorMessage, AppError? lastError
+ bool isLoading, bool hasError, List<GraphqlCountry> countries, AppError? lastError
 });
 
 
@@ -328,14 +328,12 @@ class _$GraphqlBodyDataCopyWithImpl<$Res>
 
 /// Create a copy of GraphqlBodyData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? countries = null,Object? errorType = freezed,Object? errorMessage = freezed,Object? lastError = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? countries = null,Object? lastError = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,countries: null == countries ? _self.countries : countries // ignore: cast_nullable_to_non_nullable
-as List<GraphqlCountry>,errorType: freezed == errorType ? _self.errorType : errorType // ignore: cast_nullable_to_non_nullable
-as GraphqlDemoErrorType?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as List<GraphqlCountry>,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
 as AppError?,
   ));
 }
@@ -418,10 +416,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<GraphqlCountry> countries,  GraphqlDemoErrorType? errorType,  String? errorMessage,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<GraphqlCountry> countries,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GraphqlBodyData() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_that.errorMessage,_that.lastError);case _:
+return $default(_that.isLoading,_that.hasError,_that.countries,_that.lastError);case _:
   return orElse();
 
 }
@@ -439,10 +437,10 @@ return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<GraphqlCountry> countries,  GraphqlDemoErrorType? errorType,  String? errorMessage,  AppError? lastError)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<GraphqlCountry> countries,  AppError? lastError)  $default,) {final _that = this;
 switch (_that) {
 case _GraphqlBodyData():
-return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_that.errorMessage,_that.lastError);case _:
+return $default(_that.isLoading,_that.hasError,_that.countries,_that.lastError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -459,10 +457,10 @@ return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  List<GraphqlCountry> countries,  GraphqlDemoErrorType? errorType,  String? errorMessage,  AppError? lastError)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  List<GraphqlCountry> countries,  AppError? lastError)?  $default,) {final _that = this;
 switch (_that) {
 case _GraphqlBodyData() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_that.errorMessage,_that.lastError);case _:
+return $default(_that.isLoading,_that.hasError,_that.countries,_that.lastError);case _:
   return null;
 
 }
@@ -474,7 +472,7 @@ return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_
 
 
 class _GraphqlBodyData implements GraphqlBodyData {
-  const _GraphqlBodyData({required this.isLoading, required this.hasError, required  List<GraphqlCountry> countries, required this.errorType, required this.errorMessage, this.lastError}): _countries = countries;
+  const _GraphqlBodyData({required this.isLoading, required this.hasError, required  List<GraphqlCountry> countries, this.lastError}): _countries = countries;
   
 
 @override final  bool isLoading;
@@ -486,8 +484,6 @@ class _GraphqlBodyData implements GraphqlBodyData {
   return EqualUnmodifiableListView(_countries);
 }
 
-@override final  GraphqlDemoErrorType? errorType;
-@override final  String? errorMessage;
 @override final  AppError? lastError;
 
 /// Create a copy of GraphqlBodyData
@@ -500,16 +496,16 @@ _$GraphqlBodyDataCopyWith<_GraphqlBodyData> get copyWith => __$GraphqlBodyDataCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other._countries, _countries)&&(identical(other.errorType, errorType) || other.errorType == errorType)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastError, lastError) || other.lastError == lastError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other._countries, _countries)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(_countries),errorType,errorMessage,lastError);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(_countries),lastError);
 
 @override
 String toString() {
-  return 'GraphqlBodyData(isLoading: $isLoading, hasError: $hasError, countries: $countries, errorType: $errorType, errorMessage: $errorMessage, lastError: $lastError)';
+  return 'GraphqlBodyData(isLoading: $isLoading, hasError: $hasError, countries: $countries, lastError: $lastError)';
 }
 
 
@@ -520,7 +516,7 @@ abstract mixin class _$GraphqlBodyDataCopyWith<$Res> implements $GraphqlBodyData
   factory _$GraphqlBodyDataCopyWith(_GraphqlBodyData value, $Res Function(_GraphqlBodyData) _then) = __$GraphqlBodyDataCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool hasError, List<GraphqlCountry> countries, GraphqlDemoErrorType? errorType, String? errorMessage, AppError? lastError
+ bool isLoading, bool hasError, List<GraphqlCountry> countries, AppError? lastError
 });
 
 
@@ -537,14 +533,12 @@ class __$GraphqlBodyDataCopyWithImpl<$Res>
 
 /// Create a copy of GraphqlBodyData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? countries = null,Object? errorType = freezed,Object? errorMessage = freezed,Object? lastError = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? countries = null,Object? lastError = freezed,}) {
   return _then(_GraphqlBodyData(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,countries: null == countries ? _self._countries : countries // ignore: cast_nullable_to_non_nullable
-as List<GraphqlCountry>,errorType: freezed == errorType ? _self.errorType : errorType // ignore: cast_nullable_to_non_nullable
-as GraphqlDemoErrorType?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as List<GraphqlCountry>,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
 as AppError?,
   ));
 }

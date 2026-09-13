@@ -139,3 +139,4 @@ See [Architecture Details](architecture_details.md) and
 
 - Route: `/notes-demo` (`AppRoutes.notesDemo`)
 - Module: `apps/mobile/lib/features/notes_demo/`
+- Offline-first: **local-only exception** — [notes_demo.md](offline_first/notes_demo.md)

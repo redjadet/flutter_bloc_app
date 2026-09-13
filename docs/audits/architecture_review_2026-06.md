@@ -91,9 +91,9 @@ No standalone performance PR in this program.
 
 ## 6. Onboarding / quick start
 
-**Agents:** ~8/10 (`AGENTS.md`, `CODEMAP.md`, `docs/ai/context_loading.md`).
+**Agents:** ~8/10 ([`AGENTS.md`](../../AGENTS.md), [`CODEMAP.md`](../../CODEMAP.md), [`ai/context_loading.md`](../ai/context_loading.md)).
 
-**Humans:** improved from ~6/10 with **`docs/quick_start.md`** (~15 min path) and
+**Humans:** improved from ~6/10 with **[`quick_start.md`](../quick_start.md)** (~15 min path) and
 README link. Full onboarding remains [`docs/new_developer_guide.md`](../new_developer_guide.md).
 
 ---
@@ -111,8 +111,14 @@ When touching a legacy feature that warns on folder contract:
 
 **Pilot completed (2026-06):** `counter`, `deeplink`.
 
-**Still legacy (examples):** `chat`, `scapes`, `settings/presentation/cubits/`,
-`staff_app_demo` flow subfolders, `playlearn`, `graphql_demo`.
+**Lib cubit roots (2026-06-27):** `chat`, `scapes`, and `settings` cubits live under
+`presentation/cubit/` (see
+[`2026-06-27_legacy-cubit-folder-migration.md`](../changes/2026-06-27_legacy-cubit-folder-migration.md)).
+`check_feature_folder_contract.sh` allowlist is empty for those features.
+Test mirroring under `test/features/*/presentation/cubit/` completed 2026-09-13.
+
+**Still legacy (examples):** `staff_app_demo` flow subfolders, `playlearn`,
+`graphql_demo` (where still applicable).
 
 **Strict gate for new code:** `bash tool/check_feature_folder_contract.sh --strict`.
 
@@ -198,7 +204,7 @@ await CubitExceptionHandler.executeAsync(
 | 5 | Counter + deeplink under `presentation/cubit/`; contract root warnings drop from 24 to 20 | Yes |
 | 6 | `CubitErrorHandler` removed; `chat_cubit` uses subscription mixin | Yes |
 | 7 | FirebaseAuthRepository + CallCubit + TherapistHomeCubit tests | Yes |
-| 8 | `docs/quick_start.md` + README link | Yes |
+| 8 | [`quick_start.md`](../quick_start.md) + README link | Yes |
 | 9 | `./bin/checklist` green on clean tree for final closeout | Run at ship time |
 
 **Proof commands (narrow lane):**

@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/data/wallet_user_pr
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_auth_repository_impl.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_service.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -20,11 +21,54 @@ class MockDocumentReference extends Mock
 
 class MockWalletConnectService extends Mock implements WalletConnectService {}
 
+/// Valid Ethereum-style address used by upsert / profile read tests.
+const String _kLinkedWallet = '0xabcdef1234567890123456789012345678901234';
+
 void main() {
   late MockFirebaseFirestore mockFirestore;
   late MockCollectionReference mockUsersCollection;
   late MockWalletConnectService mockWalletConnectService;
   final List<({String docId, Map<String, dynamic> data})> recordedWrites = [];
+
+  /// Stubs `users/{test-uid}` with [linkedData] for get() and records set() writes.
+  MockDocumentReference stubLinkedUserDoc({
+    required Map<String, dynamic> linkedData,
+  }) {
+    final MockDocumentReference mockDocRef = MockDocumentReference();
+    when(() => mockDocRef.get()).thenAnswer(
+      (_) async => _FakeDocumentSnapshot(exists: true, data: linkedData),
+    );
+    when(() => mockDocRef.get(any())).thenAnswer(
+      (_) async => _FakeDocumentSnapshot(exists: true, data: linkedData),
+    );
+    when(() => mockDocRef.id).thenReturn('test-uid');
+    when(() => mockDocRef.set(any(), any())).thenAnswer((i) {
+      recordedWrites.add((
+        docId: 'test-uid',
+        data: Map<String, dynamic>.from(
+          i.positionalArguments[0] as Map<String, dynamic>,
+        ),
+      ));
+      return Future<void>.value();
+    });
+    when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
+      final docId = invocation.positionalArguments[0] as String;
+      if (docId == 'test-uid') return mockDocRef;
+      final ref = MockDocumentReference();
+      when(() => ref.id).thenReturn(docId);
+      when(() => ref.set(any(), any())).thenAnswer((i) {
+        final data = i.positionalArguments[0] as Map<String, dynamic>;
+        recordedWrites.add((
+          docId: docId,
+          data: Map<String, dynamic>.from(data),
+        ));
+        return Future<void>.value();
+      });
+      return ref;
+    });
+    when(() => mockUsersCollection.doc('test-uid')).thenReturn(mockDocRef);
+    return mockDocRef;
+  }
 
   setUp(() {
     mockFirestore = MockFirebaseFirestore();
@@ -33,7 +77,6 @@ void main() {
     recordedWrites.clear();
 
     when(() => mockFirestore.collection(any())).thenReturn(mockUsersCollection);
-    // when(doc(any())) is set per test so upsert/getWalletUserProfile can stub doc('test-uid') with get()
   });
 
   group('WalletConnectAuthRepositoryImpl', () {
@@ -102,43 +145,12 @@ void main() {
             signedIn: true,
             mockUser: MockUser(uid: 'test-uid'),
           );
-          final mockDocRef = MockDocumentReference();
-          when(() => mockDocRef.get()).thenAnswer(
-            (_) async => _FakeDocumentSnapshot(
-              exists: true,
-              data: {
-                'walletAddress': '0xabc123',
-                'walletAddressNormalized': '0xabc123',
-              },
-            ),
+          stubLinkedUserDoc(
+            linkedData: <String, dynamic>{
+              'walletAddress': _kLinkedWallet,
+              'walletAddressNormalized': _kLinkedWallet,
+            },
           );
-          when(() => mockDocRef.id).thenReturn('test-uid');
-          when(() => mockDocRef.set(any(), any())).thenAnswer((i) {
-            recordedWrites.add((
-              docId: 'test-uid',
-              data: Map<String, dynamic>.from(
-                i.positionalArguments[0] as Map<String, dynamic>,
-              ),
-            ));
-            return Future<void>.value();
-          });
-          when(() => mockUsersCollection.doc('test-uid'))
-              .thenReturn(mockDocRef);
-          when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
-            final docId = invocation.positionalArguments[0] as String;
-            if (docId == 'test-uid') return mockDocRef;
-            final ref = MockDocumentReference();
-            when(() => ref.id).thenReturn(docId);
-            when(() => ref.set(any(), any())).thenAnswer((i) {
-              final data = i.positionalArguments[0] as Map<String, dynamic>;
-              recordedWrites.add((
-                docId: docId,
-                data: Map<String, dynamic>.from(data),
-              ));
-              return Future<void>.value();
-            });
-            return ref;
-          });
 
           final repository = WalletConnectAuthRepositoryImpl(
             walletConnectService: mockWalletConnectService,
@@ -147,7 +159,7 @@ void main() {
           );
 
           await AppLogger.silenceAsync(() async {
-            await repository.upsertWalletUserProfile('0xabc123');
+            await repository.upsertWalletUserProfile(_kLinkedWallet);
           });
 
           expect(recordedWrites, hasLength(1));
@@ -169,7 +181,6 @@ void main() {
             isEmpty,
           );
         },
-        skip: 'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
       );
       test(
         'writes provided profile to users/{uid} when profile is not null',
@@ -178,45 +189,12 @@ void main() {
             signedIn: true,
             mockUser: MockUser(uid: 'test-uid'),
           );
-          final mockDocRef = MockDocumentReference();
-          when(() => mockDocRef.get()).thenAnswer(
-            (_) async => _FakeDocumentSnapshot(
-              exists: true,
-              data: {
-                'walletAddress': '0xwallet',
-                'walletAddressNormalized': '0xwallet',
-              },
-            ),
+          stubLinkedUserDoc(
+            linkedData: <String, dynamic>{
+              'walletAddress': _kLinkedWallet,
+              'walletAddressNormalized': _kLinkedWallet,
+            },
           );
-          when(() => mockDocRef.id).thenReturn('test-uid');
-          when(() => mockDocRef.set(any(), any())).thenAnswer((i) {
-            recordedWrites.add((
-              docId: 'test-uid',
-              data: Map<String, dynamic>.from(
-                i.positionalArguments[0] as Map<String, dynamic>,
-              ),
-            ));
-            return Future<void>.value();
-          });
-          when(() => mockUsersCollection.doc('test-uid'))
-              .thenReturn(mockDocRef);
-          when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
-            final docId = invocation.positionalArguments[0] as String;
-            if (docId == 'test-uid') return mockDocRef;
-            final ref = MockDocumentReference();
-            when(() => ref.id).thenReturn(docId);
-            when(() => ref.set(any(), any())).thenAnswer((i) {
-              final data = i.positionalArguments[0] as Map<String, dynamic>;
-              recordedWrites.add((
-                docId: docId,
-                data: Map<String, dynamic>.from(data),
-              ));
-              return Future<void>.value();
-            });
-            return ref;
-          });
-          when(() => mockUsersCollection.doc('test-uid'))
-              .thenReturn(mockDocRef);
 
           final repository = WalletConnectAuthRepositoryImpl(
             walletConnectService: mockWalletConnectService,
@@ -224,23 +202,32 @@ void main() {
             firestore: mockFirestore,
           );
 
+          const WalletUserProfile profile = WalletUserProfile(
+            balanceOffChain: 10.0,
+            balanceOnChain: 20.0,
+            rewards: 3.0,
+          );
+
           await AppLogger.silenceAsync(() async {
-            await repository.upsertWalletUserProfile('0xabc123');
+            await repository.upsertWalletUserProfile(
+              _kLinkedWallet,
+              profile: profile,
+            );
           });
 
           expect(recordedWrites, hasLength(1));
           expect(recordedWrites.first.docId, 'test-uid');
           expect(
             recordedWrites.first.data[WalletUserProfileFields.balanceOffChain],
-            0.0,
+            10.0,
           );
           expect(
             recordedWrites.first.data[WalletUserProfileFields.balanceOnChain],
-            0.0,
+            20.0,
           );
           expect(
             recordedWrites.first.data[WalletUserProfileFields.rewards],
-            0.0,
+            3.0,
           );
           expect(
             recordedWrites.first.data[WalletUserProfileFields.lastClaim],
@@ -251,7 +238,6 @@ void main() {
             isEmpty,
           );
         },
-        skip: 'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
       );
     });
 
@@ -283,70 +269,29 @@ void main() {
         );
 
         final result = await AppLogger.silenceAsync(() async {
-          return repository.getWalletUserProfile('0xmissing');
-        });
-
-        expect(result, isNull);
-      });
-
-      test('returns null when linked wallet does not match', () async {
-        final auth = MockFirebaseAuth(
-          signedIn: true,
-          mockUser: MockUser(uid: 'test-uid'),
-        );
-        final mockDocRef = MockDocumentReference();
-        when(() => mockDocRef.get()).thenAnswer(
-          (_) async => _FakeDocumentSnapshot(
-            exists: true,
-            data: {
-              'walletAddress': '0xother',
-              'walletAddressNormalized': '0xother',
-            },
-          ),
-        );
-        when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
-          final docId = invocation.positionalArguments[0] as String;
-          if (docId == 'test-uid') return mockDocRef;
-          final ref = MockDocumentReference();
-          when(() => ref.id).thenReturn(docId);
-          when(() => ref.set(any(), any()))
-              .thenAnswer((_) => Future<void>.value());
-          return ref;
-        });
-        when(() => mockUsersCollection.doc('test-uid')).thenReturn(mockDocRef);
-
-        final repository = WalletConnectAuthRepositoryImpl(
-          walletConnectService: mockWalletConnectService,
-          firebaseAuth: auth,
-          firestore: mockFirestore,
-        );
-
-        final result = await AppLogger.silenceAsync(() async {
-          return repository.getWalletUserProfile('0xrequested');
+          return repository.getWalletUserProfile(_kLinkedWallet);
         });
 
         expect(result, isNull);
       });
 
       test(
-        'returns profile from users/{uid} when document exists',
+        'returns null when requested wallet is not linked to current user',
         () async {
           final auth = MockFirebaseAuth(
             signedIn: true,
             mockUser: MockUser(uid: 'test-uid'),
           );
-          final data = <String, dynamic>{
-            'walletAddress': '0xexists',
-            'walletAddressNormalized': '0xexists',
-            WalletUserProfileFields.balanceOffChain: 1.0,
-            WalletUserProfileFields.balanceOnChain: 2.0,
-            WalletUserProfileFields.rewards: 0.5,
-            WalletUserProfileFields.lastClaim: null,
-            WalletUserProfileFields.nfts: <Map<String, dynamic>>[],
-          };
           final mockDocRef = MockDocumentReference();
-          when(() => mockDocRef.get(any())).thenAnswer(
-            (_) async => _FakeDocumentSnapshot(exists: true, data: data),
+          when(() => mockDocRef.get()).thenAnswer(
+            (_) async => _FakeDocumentSnapshot(
+              exists: true,
+              data: {
+                'walletAddress': '0xother012345678901234567890123456789012',
+                'walletAddressNormalized':
+                    '0xother012345678901234567890123456789012',
+              },
+            ),
           );
           when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
             final docId = invocation.positionalArguments[0] as String;
@@ -367,17 +312,45 @@ void main() {
           );
 
           final result = await AppLogger.silenceAsync(() async {
-            return repository.getWalletUserProfile('0xexists');
+            return repository.getWalletUserProfile(_kLinkedWallet);
           });
 
-          expect(result, isNotNull);
-          expect(result!.balanceOffChain, 1.0);
-          expect(result.balanceOnChain, 2.0);
-          expect(result.rewards, 0.5);
-          expect(result.nfts, isEmpty);
+          expect(result, isNull);
         },
-        skip: 'getLinkedWalletAddress() needs doc("test-uid").get() snapshot; mock precedence TBD',
       );
+
+      test('returns profile from users/{uid} when document exists', () async {
+        final auth = MockFirebaseAuth(
+          signedIn: true,
+          mockUser: MockUser(uid: 'test-uid'),
+        );
+        final data = <String, dynamic>{
+          'walletAddress': _kLinkedWallet,
+          'walletAddressNormalized': _kLinkedWallet,
+          WalletUserProfileFields.balanceOffChain: 1.0,
+          WalletUserProfileFields.balanceOnChain: 2.0,
+          WalletUserProfileFields.rewards: 0.5,
+          WalletUserProfileFields.lastClaim: null,
+          WalletUserProfileFields.nfts: <Map<String, dynamic>>[],
+        };
+        stubLinkedUserDoc(linkedData: data);
+
+        final repository = WalletConnectAuthRepositoryImpl(
+          walletConnectService: mockWalletConnectService,
+          firebaseAuth: auth,
+          firestore: mockFirestore,
+        );
+
+        final result = await AppLogger.silenceAsync(() async {
+          return repository.getWalletUserProfile(_kLinkedWallet);
+        });
+
+        expect(result, isNotNull);
+        expect(result!.balanceOffChain, 1.0);
+        expect(result.balanceOnChain, 2.0);
+        expect(result.rewards, 0.5);
+        expect(result.nfts, isEmpty);
+      });
     });
   });
 }

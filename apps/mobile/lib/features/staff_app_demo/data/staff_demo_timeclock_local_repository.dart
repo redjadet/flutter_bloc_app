@@ -48,15 +48,14 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
   }) async {
     await StorageGuard.run<void>(
       logContext: 'HiveStaffDemoTimeclockLocalStore.saveOpenEntry',
-      action: () async {
-        final box = await getBox();
+      action: () => runWithBox((box) async {
         await box.put(_openEntryKey(userId), <String, dynamic>{
           'entryId': snapshot.entryId,
           'clockInAtMs': snapshot.clockInAtUtc.millisecondsSinceEpoch,
           'shiftId': snapshot.shiftId,
           'siteId': snapshot.siteId,
         });
-      },
+      }),
     );
   }
 
@@ -64,10 +63,9 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
   Future<void> clearOpenEntry({required String userId}) async {
     await StorageGuard.run<void>(
       logContext: 'HiveStaffDemoTimeclockLocalStore.clearOpenEntry',
-      action: () async {
-        final box = await getBox();
+      action: () => runWithBox((box) async {
         await box.delete(_openEntryKey(userId));
-      },
+      }),
     );
   }
 }

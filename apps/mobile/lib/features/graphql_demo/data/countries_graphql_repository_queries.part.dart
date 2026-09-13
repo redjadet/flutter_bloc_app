@@ -45,14 +45,12 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
     }
   }
 
-  GraphqlDemoException _malformedPayload(
-    String payload, {
-    Object? cause,
-  }) => GraphqlDemoException(
-    'Malformed GraphQL $payload payload',
-    cause: cause,
-    type: GraphqlDemoErrorType.data,
-  );
+  GraphqlDemoException _malformedPayload(String payload, {Object? cause}) =>
+      GraphqlDemoException(
+        'Malformed GraphQL $payload payload',
+        cause: cause,
+        type: GraphqlDemoErrorType.data,
+      );
 
   String? normalizedContinentCode(String? code) {
     if (code == null) {

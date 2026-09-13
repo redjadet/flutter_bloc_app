@@ -256,26 +256,30 @@ void main() {
       expect(repository.getProfile, throwsA(isA<Exception>()));
     });
 
-    test('pullRemote propagates remote failure and keeps cache', () async {
-      await cacheRepository.saveProfile(cachedUser);
-      final _StubProfileRepository remote = _StubProfileRepository(
-        onGetProfile: () async {
-          throw Exception('network');
-        },
-      );
+    test(
+      'pullRemote does not overwrite local when remote load fails',
+      () async {
+        await cacheRepository.saveProfile(cachedUser);
+        final _StubProfileRepository remote = _StubProfileRepository(
+          onGetProfile: () async {
+            throw Exception('network');
+          },
+        );
 
-      final OfflineFirstProfileRepository repository =
-          OfflineFirstProfileRepository(
-            remoteRepository: remote,
-            cacheRepository: cacheRepository,
-            networkStatusService: networkStatus,
-            registry: registry,
-          );
+        final OfflineFirstProfileRepository repository =
+            OfflineFirstProfileRepository(
+              remoteRepository: remote,
+              cacheRepository: cacheRepository,
+              networkStatusService: networkStatus,
+              registry: registry,
+            );
 
-      await expectLater(repository.pullRemote(), throwsA(isA<Exception>()));
-      final ProfileUser? cached = await cacheRepository.loadProfile();
-      expect(cached!.name, cachedUser.name);
-    });
+        await expectLater(repository.pullRemote(), throwsA(isA<Exception>()));
+        final ProfileUser? cached = await cacheRepository.loadProfile();
+        expect(cached!.name, cachedUser.name);
+        expect(cached.location, cachedUser.location);
+      },
+    );
 
     test('pullRemote propagates cache save failure', () async {
       final _StubProfileRepository remote = _StubProfileRepository(

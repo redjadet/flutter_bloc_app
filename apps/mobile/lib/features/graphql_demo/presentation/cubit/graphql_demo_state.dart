@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:utilities/utilities.dart';
 
@@ -14,8 +13,6 @@ abstract class GraphqlDemoState with _$GraphqlDemoState {
     @Default(<GraphqlCountry>[]) List<GraphqlCountry> countries,
     @Default(<GraphqlContinent>[]) List<GraphqlContinent> continents,
     String? activeContinentCode,
-    String? errorMessage,
-    GraphqlDemoErrorType? errorType,
     AppError? lastError,
     @Default(GraphqlDataSource.unknown) GraphqlDataSource dataSource,
   }) = _GraphqlDemoState;
@@ -23,7 +20,5 @@ abstract class GraphqlDemoState with _$GraphqlDemoState {
   const new _();
 
   bool get isLoading => status.isLoading;
-  bool get hasError =>
-      status.isError &&
-      (errorMessage != null || errorType != null || lastError != null);
+  bool get hasError => status.isError && lastError != null;
 }

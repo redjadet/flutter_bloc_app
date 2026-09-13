@@ -62,15 +62,14 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
   Future<void> writeTrendingCounts(List<ChartPoint> points) async {
     await StorageGuard.run<void>(
       logContext: 'ChartDemoCacheRepository.writeTrendingCounts',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await box.put(_trendingKey, <String, dynamic>{
           _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
           _itemsKey: points
               .map((point) => ChartPointDto.fromDomain(point).toJson())
               .toList(),
         });
-      },
+      }),
     );
   }
 

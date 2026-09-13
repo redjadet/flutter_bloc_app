@@ -20,7 +20,9 @@ COUNTER_TEST="test/features/counter/data/offline_first_counter_repository_test.d
 TODO_TEST="test/features/todo_list/data/offline_first_todo_repository_test.dart"
 IOT_TEST="test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
 SOCIAL_FEED_TEST="test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart"
-GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
+CHAT_TEST="test/features/chat/data/offline_first_chat_repository_test.dart"
+PROFILE_TEST="test/features/profile/data/offline_first_profile_repository_test.dart"
+GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
 SOCIAL_FEED_PERSISTENCE_REGRESSIONS=(
   "dispatch retains queued like when viewer-like persist fails"
   "dispatch retains queued comment when comment-thread persist fails"
@@ -77,6 +79,10 @@ should_run_remote_merge_guard_auto() {
       apps/mobile/lib/features/iot_demo/data/*|\
       lib/features/social_feed_demo/data/*|\
       apps/mobile/lib/features/social_feed_demo/data/*|\
+      lib/features/chat/data/*|\
+      apps/mobile/lib/features/chat/data/*|\
+      lib/features/profile/data/*|\
+      apps/mobile/lib/features/profile/data/*|\
       test/features/counter/data/*|\
       apps/mobile/test/features/counter/data/*|\
       test/features/todo_list/data/*|\
@@ -85,6 +91,10 @@ should_run_remote_merge_guard_auto() {
       apps/mobile/test/features/iot_demo/data/*|\
       test/features/social_feed_demo/data/*|\
       apps/mobile/test/features/social_feed_demo/data/*|\
+      test/features/chat/data/*|\
+      apps/mobile/test/features/chat/data/*|\
+      test/features/profile/data/*|\
+      apps/mobile/test/features/profile/data/*|\
       tool/check_offline_first_remote_merge.sh|\
       docs/offline_first/*|\
       docs/engineering/offline_first_flutter_architecture_with_conflict_resolution.md|\
@@ -106,29 +116,32 @@ select_remote_merge_tests() {
   local needs_todo=0
   local needs_iot=0
   local needs_social_feed=0
+  local needs_chat=0
+  local needs_profile=0
   local needs_all=0
 
   out_ref=()
 
   if [ -n "${CI:-}" ]; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
     return 0
   fi
 
   if ! command -v git >/dev/null 2>&1 || ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
     return 0
   fi
 
   collect_changed_files changed_files
   if [ "${#changed_files[@]}" -eq 0 ]; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
     return 0
   fi
 
   for file in "${changed_files[@]}"; do
     case "$file" in
       lib/shared/sync/*|\
+      apps/mobile/lib/app/sync/*|\
       tool/check_offline_first_remote_merge.sh|\
       docs/offline_first/*|\
       docs/engineering/offline_first_flutter_architecture_with_conflict_resolution.md|\
@@ -137,27 +150,52 @@ select_remote_merge_tests() {
         needs_all=1
         ;;
       lib/features/counter/data/*|\
-      test/features/counter/data/*)
+      apps/mobile/lib/features/counter/data/*|\
+      test/features/counter/data/*|\
+      apps/mobile/test/features/counter/data/*)
         needs_counter=1
         ;;
       lib/features/todo_list/data/*|\
+      apps/mobile/lib/features/todo_list/data/*|\
       lib/features/todo_list/domain/todo_merge_policy.dart|\
-      test/features/todo_list/data/*)
+      apps/mobile/lib/features/todo_list/domain/todo_merge_policy.dart|\
+      test/features/todo_list/data/*|\
+      apps/mobile/test/features/todo_list/data/*)
         needs_todo=1
         ;;
       lib/features/iot_demo/data/*|\
-      test/features/iot_demo/data/*)
+      apps/mobile/lib/features/iot_demo/data/*|\
+      test/features/iot_demo/data/*|\
+      apps/mobile/test/features/iot_demo/data/*)
         needs_iot=1
         ;;
       lib/features/social_feed_demo/data/*|\
-      test/features/social_feed_demo/data/*)
+      apps/mobile/lib/features/social_feed_demo/data/*|\
+      test/features/social_feed_demo/data/*|\
+      apps/mobile/test/features/social_feed_demo/data/*)
         needs_social_feed=1
+        ;;
+      lib/features/chat/data/*|\
+      apps/mobile/lib/features/chat/data/*|\
+      test/features/chat/data/*|\
+      apps/mobile/test/features/chat/data/*)
+        needs_chat=1
+        ;;
+      lib/features/profile/data/*|\
+      apps/mobile/lib/features/profile/data/*|\
+      test/features/profile/data/*|\
+      apps/mobile/test/features/profile/data/*)
+        needs_profile=1
         ;;
     esac
   done
 
-  if [ "$needs_all" -eq 1 ] || { [ "$needs_counter" -eq 0 ] && [ "$needs_todo" -eq 0 ] && [ "$needs_iot" -eq 0 ] && [ "$needs_social_feed" -eq 0 ]; }; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST")
+  if [ "$needs_all" -eq 1 ] || {
+    [ "$needs_counter" -eq 0 ] && [ "$needs_todo" -eq 0 ] &&
+      [ "$needs_iot" -eq 0 ] && [ "$needs_social_feed" -eq 0 ] &&
+      [ "$needs_chat" -eq 0 ] && [ "$needs_profile" -eq 0 ]
+  }; then
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
     return 0
   fi
 
@@ -172,6 +210,12 @@ select_remote_merge_tests() {
   fi
   if [ "$needs_social_feed" -eq 1 ]; then
     out_ref+=("$SOCIAL_FEED_TEST")
+  fi
+  if [ "$needs_chat" -eq 1 ]; then
+    out_ref+=("$CHAT_TEST")
+  fi
+  if [ "$needs_profile" -eq 1 ]; then
+    out_ref+=("$PROFILE_TEST")
   fi
 }
 

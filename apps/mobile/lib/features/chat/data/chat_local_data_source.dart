@@ -35,8 +35,7 @@ class ChatLocalDataSource extends HiveRepositoryBase
   Future<void> save(List<ChatConversation> conversations) =>
       StorageGuard.run<void>(
         logContext: 'ChatLocalDataSource.save',
-        action: () async {
-          final Box<dynamic> box = await getBox();
+        action: () => runWithBox((box) async {
           if (conversations.isEmpty) {
             await safeDeleteKey(box, _keyConversations);
             return;
@@ -46,7 +45,7 @@ class ChatLocalDataSource extends HiveRepositoryBase
               .map((c) => ChatConversationDto.fromDomain(c).toJson())
               .toList(growable: false);
           await box.put(_keyConversations, serialized);
-        },
+        }),
       );
 
   Future<List<ChatConversation>> _parseStored(dynamic raw) async {

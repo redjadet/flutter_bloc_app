@@ -2,18 +2,19 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:meta/meta.dart';
+import 'package:utilities/utilities.dart';
 
 /// Loading / error projection for ViewStatusSwitcher. Ignores selection.
 @immutable
 class const TodoListLifecycleData({
   required final bool isLoading,
   required final bool hasError,
-  required final String? errorMessage,
+  required final AppError? lastError,
 }) {
   factory fromState(TodoListState state) => TodoListLifecycleData(
     isLoading: state.isLoading,
     hasError: state.hasError,
-    errorMessage: state.errorMessage,
+    lastError: state.lastError,
   );
 
   @override
@@ -22,10 +23,10 @@ class const TodoListLifecycleData({
       other is TodoListLifecycleData &&
           other.isLoading == isLoading &&
           other.hasError == hasError &&
-          other.errorMessage == errorMessage;
+          other.lastError == lastError;
 
   @override
-  int get hashCode => Object.hash(isLoading, hasError, errorMessage);
+  int get hashCode => Object.hash(isLoading, hasError, lastError);
 }
 
 /// List / filter / sort inputs. Equality ignores selection so selection-only

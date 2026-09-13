@@ -35,10 +35,8 @@ abstract class TodoListState with _$TodoListState {
 
   const new _();
 
-  String? get errorMessage => lastError?.message;
-
   bool get isLoading => status.isLoading;
-  bool get hasError => status.isError;
+  bool get hasError => status.isError && lastError != null;
   bool get hasItems => items.isNotEmpty;
 
   List<TodoItem> get filteredItems {

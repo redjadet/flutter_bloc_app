@@ -30,7 +30,12 @@ class _TodoListBodyState extends State<_TodoListBody> {
         isError: (data) => data.hasError,
         loadingBuilder: (_) => const CommonLoadingWidget(),
         errorBuilder: (context, data) => CommonErrorView(
-          message: data.errorMessage ?? context.l10n.todoListLoadError,
+          message: data.lastError == null
+              ? context.l10n.todoListLoadError
+              : NetworkErrorMapper.getErrorMessage(
+                  data.lastError,
+                  l10n: context.l10n,
+                ),
           onRetry: () => context.cubit<TodoListCubit>().loadInitial(),
         ),
         builder: (context, _) =>

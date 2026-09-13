@@ -1,6 +1,7 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_error_localizer.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -38,44 +39,11 @@ class GraphqlBody extends StatelessWidget {
   }
 }
 
-/// Builds error message for GraphQL demo based on error type.
+/// Builds error message for GraphQL demo from typed `lastError`.
 String buildGraphqlErrorMessage(
   AppLocalizations l10n,
   GraphqlBodyData bodyData,
-) => _getErrorMessageFromType(l10n, bodyData.errorType, bodyData.errorMessage);
-
-String _getErrorMessageFromType(
-  AppLocalizations l10n,
-  GraphqlDemoErrorType? errorType,
-  String? errorMessage,
-) => _resolveErrorMessage(l10n, errorType, errorMessage);
-
-String _resolveErrorMessage(
-  AppLocalizations l10n,
-  GraphqlDemoErrorType? errorType,
-  String? errorMessage,
-) => _getMessageForErrorType(l10n, errorType, errorMessage);
-
-String _getMessageForErrorType(
-  AppLocalizations l10n,
-  GraphqlDemoErrorType? errorType,
-  String? errorMessage,
-) {
-  switch (errorType) {
-    case GraphqlDemoErrorType.network:
-      return l10n.graphqlSampleNetworkError;
-    case GraphqlDemoErrorType.invalidRequest:
-      return l10n.graphqlSampleInvalidRequestError;
-    case GraphqlDemoErrorType.server:
-      return l10n.graphqlSampleServerError;
-    case GraphqlDemoErrorType.data:
-      return l10n.graphqlSampleDataError;
-    case GraphqlDemoErrorType.unknown:
-    case null:
-      break;
-  }
-  return errorMessage ?? l10n.graphqlSampleGenericError;
-}
+) => graphqlDemoErrorMessage(l10n, bodyData.lastError);
 
 /// Builds the error widget for GraphQL demo.
 Widget buildGraphqlErrorWidget(

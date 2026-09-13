@@ -51,13 +51,12 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
   Future<void> writeContinents(List<GraphqlContinent> continents) async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.writeContinents',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await box.put(_continentsKey, <String, dynamic>{
           _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
           _itemsKey: continents.map(_continentToJson).toList(),
         });
-      },
+      }),
     );
   }
 
@@ -100,13 +99,12 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
   }) async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.writeCountries',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await box.put(_countriesKey(continentCode), <String, dynamic>{
           _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
           _itemsKey: countries.map(_countryToJson).toList(),
         });
-      },
+      }),
     );
   }
 
@@ -120,10 +118,9 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
   Future<void> clear() async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.clear',
-      action: () async {
-        final Box<dynamic> box = await getBox();
+      action: () => runWithBox((box) async {
         await box.clear();
-      },
+      }),
     );
   }
 

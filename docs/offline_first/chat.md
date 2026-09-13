@@ -32,7 +32,10 @@ This document defines how the chat feature uses the shared offline-first stack. 
     - **Important**: Persist user message locally BEFORE attempting remote call to prevent data loss if sync fails.
     - Send pending message to remote, persist server response, mark local message `synchronized: true`, stamp `lastSyncedAt`.
     - If user message doesn't exist locally yet, create conversation and add user message first, then attempt remote call.
-  - `pullRemote`: refresh conversations/messages list and merge into local when remote is newer.
+  - `pullRemote`: **intentional no-op today** (push-only sync). There is no
+    remote conversation list channel to merge. Guarded regression:
+    `pullRemote does not overwrite local when remote load fails` asserts local
+    history survives `pullRemote`. Do not treat empty remote as clear.
   - Register in `SyncableRepositoryRegistry`.
 - `sendMessage`: persist the user bubble immediately, attempt the remote call. On **retryable** remote failures, enqueue the `SyncOperation` and throw `ChatOfflineEnqueuedException`. On **`ChatRemoteFailureException` with `retryable == false`** (auth, rate limit, invalid payload, missing config), **do not enqueue**—rethrow so the cubit can show the right copy. The cubit treats offline enqueue as a non-error pending state.
 

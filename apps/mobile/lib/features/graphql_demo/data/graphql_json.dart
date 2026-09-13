@@ -17,10 +17,7 @@ String _jsonValueKind(Object? value) {
   return value.runtimeType.toString();
 }
 
-String requireGraphqlString(
-  Map<String, dynamic> json,
-  String key,
-) {
+String requireGraphqlString(Map<String, dynamic> json, String key) {
   final Object? value = json[key];
   if (value is! String || value.isEmpty) {
     _badGraphql(key, value);
@@ -28,10 +25,7 @@ String requireGraphqlString(
   return value;
 }
 
-String? optionalGraphqlString(
-  Map<String, dynamic> json,
-  String key,
-) {
+String? optionalGraphqlString(Map<String, dynamic> json, String key) {
   final Object? value = json[key];
   if (value == null) {
     return null;
@@ -42,10 +36,7 @@ String? optionalGraphqlString(
   return value;
 }
 
-Map<String, dynamic> requireGraphqlMap(
-  Map<String, dynamic> json,
-  String key,
-) {
+Map<String, dynamic> requireGraphqlMap(Map<String, dynamic> json, String key) {
   final Object? value = json[key];
   if (value is! Map) {
     _badGraphql(key, value);

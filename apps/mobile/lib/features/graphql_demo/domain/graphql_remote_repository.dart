@@ -12,7 +12,5 @@ abstract class GraphqlRemoteRepository {
 
   Future<List<GraphqlContinent>> fetchContinents();
 
-  Future<List<GraphqlCountry>> fetchCountries({
-    String? continentCode,
-  });
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode});
 }

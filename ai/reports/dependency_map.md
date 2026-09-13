@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-09T13:54:59Z"
-  git_head: "076b1a0def49cf1d71b47df00af45c52140ab03e"
+  generated_at: "2026-09-13T12:53:48Z"
+  git_head: "ec5a144efa4770dfcd45cdcb04fb20fb8956c658"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -20,16 +20,16 @@ ai_snapshot:
 | --- | ---: | --- |
 | chat | 6627 | yes |
 | staff_app_demo | 5538 | yes |
-| todo_list | 5518 | yes |
-| social_feed_demo | 5372 | yes |
+| todo_list | 5511 | yes |
+| social_feed_demo | 5328 | yes |
 | online_therapy_demo | 5136 | yes |
 | case_study_demo | 4713 | yes |
-| counter | 4446 | yes |
+| counter | 4445 | yes |
 | native_platform_showcase | 3516 | yes |
-| iot_demo | 3180 | yes |
+| iot_demo | 3179 | yes |
 | iot | 3092 | yes |
 | example | 2422 | yes |
-| auth | 2398 | yes |
+| auth | 2413 | yes |
 | realtime_market | 2131 | yes |
 | graphql_demo | 1980 | yes |
 | chart | 1971 | yes |
@@ -56,7 +56,7 @@ ai_snapshot:
 | deeplink | 547 | yes |
 | weather_demo | 541 | yes |
 | certificate_pinning_demo | 496 | yes |
-| notes_demo | 452 | yes |
+| notes_demo | 447 | yes |
 | event_bus_demo | 302 | yes |
 <!-- refresh_ai_reports:feature_metrics:end -->
 

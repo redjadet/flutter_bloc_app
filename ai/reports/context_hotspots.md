@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-09T13:54:59Z"
-  git_head: "076b1a0def49cf1d71b47df00af45c52140ab03e"
+  generated_at: "2026-09-13T12:53:48Z"
+  git_head: "ec5a144efa4770dfcd45cdcb04fb20fb8956c658"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -37,7 +37,7 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 19 | 225 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
 | 20 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
 
-**Total feature Dart (non-generated):** ~83267 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~83224 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

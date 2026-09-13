@@ -651,7 +651,7 @@ void main() {
       await cubit.loadInitial();
 
       expect(cubit.state.status, ViewStatus.error);
-      expect(cubit.state.errorMessage, isNotNull);
+      expect(cubit.state.lastError, isNotNull);
     });
 
     test('reorderItems handles empty filtered items', () {

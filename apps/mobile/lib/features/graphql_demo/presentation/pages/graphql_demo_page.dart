@@ -77,8 +77,6 @@ class GraphqlDemoPage extends StatelessWidget {
                       isLoading: state.isLoading,
                       hasError: state.hasError,
                       countries: state.countries,
-                      errorType: state.errorType,
-                      errorMessage: state.errorMessage,
                       lastError: state.lastError,
                     ),
                     isLoading: (data) =>

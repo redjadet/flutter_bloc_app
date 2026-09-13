@@ -1,7 +1,1 @@
-enum GraphqlDataSource {
-  remote,
-  supabaseEdge,
-  supabaseTables,
-  cache,
-  unknown,
-}
+enum GraphqlDataSource { remote, supabaseEdge, supabaseTables, cache, unknown }

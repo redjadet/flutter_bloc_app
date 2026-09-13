@@ -2,9 +2,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Maps [PostgrestException] to [GraphqlDemoErrorType] for domain error handling.
-GraphqlDemoErrorType graphqlDemoErrorTypeFromPostgrest(
-  PostgrestException e,
-) {
+GraphqlDemoErrorType graphqlDemoErrorTypeFromPostgrest(PostgrestException e) {
   final String? code = e.code;
   final int? status = code != null ? int.tryParse(code) : null;
   if (status == 401 || status == 403) {
@@ -17,10 +15,9 @@ GraphqlDemoErrorType graphqlDemoErrorTypeFromPostgrest(
 }
 
 /// Maps [PostgrestException] to [GraphqlDemoException] for use in repositories.
-GraphqlDemoException graphqlDemoExceptionFromPostgrest(
-  PostgrestException e,
-) => GraphqlDemoException(
-  e.message,
-  cause: e,
-  type: graphqlDemoErrorTypeFromPostgrest(e),
-);
+GraphqlDemoException graphqlDemoExceptionFromPostgrest(PostgrestException e) =>
+    GraphqlDemoException(
+      e.message,
+      cause: e,
+      type: graphqlDemoErrorTypeFromPostgrest(e),
+    );

@@ -45,9 +45,11 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       onError: (message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         _emitError(
-          message: message,
-          type: GraphqlDemoErrorType.unknown,
-          lastError: latestError,
+          latestError ??
+              graphqlDemoAppErrorFromType(
+                GraphqlDemoErrorType.unknown,
+                message,
+              ),
         );
       },
       logContext: 'GraphqlDemoCubit.loadInitial',
@@ -55,11 +57,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         GraphqlDemoException: (error, stackTrace) {
           if (isClosed || !_loadGuard.isCurrent(requestId)) return;
           final GraphqlDemoException exception = error as GraphqlDemoException;
-          _emitError(
-            message: exception.message,
-            type: exception.type,
-            lastError: graphqlDemoAppErrorFromException(exception),
-          );
+          _emitError(graphqlDemoAppErrorFromException(exception));
         },
       },
     );
@@ -106,9 +104,11 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       onError: (message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         _emitError(
-          message: message,
-          type: GraphqlDemoErrorType.unknown,
-          lastError: latestError,
+          latestError ??
+              graphqlDemoAppErrorFromType(
+                GraphqlDemoErrorType.unknown,
+                message,
+              ),
         );
       },
       logContext: 'GraphqlDemoCubit.selectContinent',
@@ -116,11 +116,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         GraphqlDemoException: (error, stackTrace) {
           if (isClosed || !_loadGuard.isCurrent(requestId)) return;
           final GraphqlDemoException exception = error as GraphqlDemoException;
-          _emitError(
-            message: exception.message,
-            type: exception.type,
-            lastError: graphqlDemoAppErrorFromException(exception),
-          );
+          _emitError(graphqlDemoAppErrorFromException(exception));
         },
       },
     );
@@ -134,8 +130,6 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     emit(
       state.copyWith(
         status: ViewStatus.loading,
-        errorMessage: null,
-        errorType: null,
         lastError: null,
         activeContinentCode: shouldUpdateActiveContinent
             ? activeContinentCode
@@ -166,27 +160,14 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         activeContinentCode: shouldUpdateActiveContinent
             ? activeContinentCode
             : state.activeContinentCode,
-        errorMessage: null,
-        errorType: null,
         lastError: null,
         dataSource: source ?? state.dataSource,
       ),
     );
   }
 
-  void _emitError({
-    required String? message,
-    required GraphqlDemoErrorType? type,
-    AppError? lastError,
-  }) {
+  void _emitError(AppError error) {
     if (isClosed) return;
-    emit(
-      state.copyWith(
-        status: ViewStatus.error,
-        errorMessage: message,
-        errorType: type,
-        lastError: lastError ?? graphqlDemoAppErrorFromType(type, message),
-      ),
-    );
+    emit(state.copyWith(status: ViewStatus.error, lastError: error));
   }
 }
