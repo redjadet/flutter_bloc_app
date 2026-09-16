@@ -9,8 +9,8 @@ import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
@@ -53,12 +53,12 @@ class CounterPage extends StatefulWidget {
   State<CounterPage> createState() => _CounterPageState();
 }
 
-class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
+class _CounterPageState extends State<CounterPage>
+    with WidgetsBindingObserver, EnsureSyncStartedMixin {
   late final ConfettiController _confettiController;
   late final _CounterPageListenerDelegate _listenerDelegate;
   DateTime? _lastFlushTime;
   bool _isCannotGoBelowZeroSnackBarVisible = false;
-  bool _didEnsureSyncStarted = false;
   TimerDisposable? _snackBarHideTimerHandle;
 
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
@@ -79,16 +79,6 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   void _markCannotGoBelowZeroSnackBarHidden() {
     if (!mounted) return;
     setState(() => _isCannotGoBelowZeroSnackBarVisible = false);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) {
-      return;
-    }
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
   }
 
   @override

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
-import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
@@ -20,18 +20,12 @@ class ChatSyncBanner extends StatefulWidget {
   State<ChatSyncBanner> createState() => _ChatSyncBannerState();
 }
 
-class _ChatSyncBannerState extends State<ChatSyncBanner> {
+class _ChatSyncBannerState extends State<ChatSyncBanner>
+    with EnsureSyncStartedMixin {
   bool _isManualSyncing = false;
-  bool _didEnsureSyncStarted = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) {
-      return;
-    }
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
+  void onSyncEnsureStarted() {
     if (CubitHelpers.isCubitAvailable<ChatSyncStatusCubit, ChatSyncStatusState>(
       context,
     )) {

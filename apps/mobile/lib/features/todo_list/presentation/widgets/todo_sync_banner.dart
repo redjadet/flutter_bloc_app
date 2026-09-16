@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
-import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
@@ -21,17 +21,8 @@ class TodoSyncBanner extends StatefulWidget {
   State<TodoSyncBanner> createState() => _TodoSyncBannerState();
 }
 
-class _TodoSyncBannerState extends State<TodoSyncBanner> {
-  bool _didEnsureSyncStarted = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) return;
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
-  }
-
+class _TodoSyncBannerState extends State<TodoSyncBanner>
+    with EnsureSyncStartedMixin {
   @override
   Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
