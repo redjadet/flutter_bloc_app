@@ -89,10 +89,10 @@ void main() {
 
         final ChatLocalConversationState state = await updater
             .ensureUserMessagePersisted(payload);
-        expect((await history.load()).map((c) => c.id), containsAll(<String>[
-          'c-other',
-          'c1',
-        ]));
+        expect(
+          (await history.load()).map((c) => c.id),
+          containsAll(<String>['c-other', 'c1']),
+        );
 
         await history.save(<ChatConversation>[
           (await history.load()).firstWhere((c) => c.id == 'c1'),
@@ -102,10 +102,7 @@ void main() {
           state: state,
           payload: payload,
           result: ChatResult(
-            reply: const ChatMessage(
-              author: ChatAuthor.assistant,
-              text: 'Hi!',
-            ),
+            reply: const ChatMessage(author: ChatAuthor.assistant, text: 'Hi!'),
             pastUserInputs: const <String>['Hello'],
             generatedResponses: const <String>['Hi!'],
           ),
@@ -151,10 +148,7 @@ void main() {
           state: state,
           payload: payload,
           result: ChatResult(
-            reply: const ChatMessage(
-              author: ChatAuthor.assistant,
-              text: 'Hi!',
-            ),
+            reply: const ChatMessage(author: ChatAuthor.assistant, text: 'Hi!'),
             pastUserInputs: const <String>['Hello'],
             generatedResponses: const <String>['Hi!'],
           ),
@@ -164,6 +158,50 @@ void main() {
         expect(afterRemote.messages, hasLength(3));
         expect(afterRemote.messages[1].text, 'Follow up');
         expect(afterRemote.messages.last.text, 'Hi!');
+      },
+    );
+
+    test(
+      'applyTerminalSyncFailure preserves fresh conversation state',
+      () async {
+        final ChatSyncPayload payload = ChatSyncPayload(
+          conversationId: 'c1',
+          prompt: 'Hello',
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          model: 'demo',
+          clientMessageId: 'm1',
+          createdAt: DateTime.utc(2024, 1, 1),
+        );
+        final ChatLocalConversationState state = await updater
+            .ensureUserMessagePersisted(payload);
+        final ChatConversation beforeFailure = (await history.load()).single;
+        await history.save(<ChatConversation>[
+          beforeFailure.copyWith(
+            messages: <ChatMessage>[
+              ...beforeFailure.messages,
+              const ChatMessage(
+                author: ChatAuthor.user,
+                text: 'Follow up',
+                clientMessageId: 'm2',
+              ),
+            ],
+          ),
+        ]);
+
+        await updater.applyTerminalSyncFailure(
+          state: state,
+          payload: payload,
+          failureCode: 'auth_required',
+        );
+
+        final ChatConversation afterFailure = (await history.load()).single;
+        expect(afterFailure.messages, hasLength(2));
+        expect(
+          afterFailure.messages[0].terminalSyncFailureCode,
+          'auth_required',
+        );
+        expect(afterFailure.messages[1].text, 'Follow up');
       },
     );
   });

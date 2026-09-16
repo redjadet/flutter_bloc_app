@@ -21,13 +21,19 @@ TODO_TEST="test/features/todo_list/data/offline_first_todo_repository_test.dart"
 IOT_TEST="test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
 SOCIAL_FEED_TEST="test/features/social_feed_demo/data/offline_first_social_feed_repository_test.dart"
 CHAT_TEST="test/features/chat/data/offline_first_chat_repository_test.dart"
+CHAT_UPDATER_TEST="test/features/chat/data/chat_local_conversation_updater_test.dart"
 PROFILE_TEST="test/features/profile/data/offline_first_profile_repository_test.dart"
-GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
+GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$CHAT_UPDATER_TEST" "$PROFILE_TEST")
 SOCIAL_FEED_PERSISTENCE_REGRESSIONS=(
   "dispatch retains queued like when viewer-like persist fails"
   "dispatch retains queued comment when comment-thread persist fails"
   "online like queues when viewer-like persist fails"
   "online comment queues when comment-thread persist fails"
+)
+CHAT_LOCAL_CONVERSATION_UPDATER_REGRESSIONS=(
+  "applyRemoteResult does not restore conversations deleted during sync"
+  "applyRemoteResult merges assistant reply into fresh conversation state"
+  "applyTerminalSyncFailure preserves fresh conversation state"
 )
 
 collect_changed_files() {
@@ -123,18 +129,18 @@ select_remote_merge_tests() {
   out_ref=()
 
   if [ -n "${CI:-}" ]; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$CHAT_UPDATER_TEST" "$PROFILE_TEST")
     return 0
   fi
 
   if ! command -v git >/dev/null 2>&1 || ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$CHAT_UPDATER_TEST" "$PROFILE_TEST")
     return 0
   fi
 
   collect_changed_files changed_files
   if [ "${#changed_files[@]}" -eq 0 ]; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$CHAT_UPDATER_TEST" "$PROFILE_TEST")
     return 0
   fi
 
@@ -195,7 +201,7 @@ select_remote_merge_tests() {
       [ "$needs_iot" -eq 0 ] && [ "$needs_social_feed" -eq 0 ] &&
       [ "$needs_chat" -eq 0 ] && [ "$needs_profile" -eq 0 ]
   }; then
-    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$PROFILE_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST" "$SOCIAL_FEED_TEST" "$CHAT_TEST" "$CHAT_UPDATER_TEST" "$PROFILE_TEST")
     return 0
   fi
 
@@ -213,6 +219,7 @@ select_remote_merge_tests() {
   fi
   if [ "$needs_chat" -eq 1 ]; then
     out_ref+=("$CHAT_TEST")
+    out_ref+=("$CHAT_UPDATER_TEST")
   fi
   if [ "$needs_profile" -eq 1 ]; then
     out_ref+=("$PROFILE_TEST")
@@ -286,11 +293,29 @@ validate_social_feed_persistence_regressions() {
   return "$failed"
 }
 
+validate_chat_local_conversation_updater_regressions() {
+  local regression_name
+  local failed=0
+
+  for regression_name in "${CHAT_LOCAL_CONVERSATION_UPDATER_REGRESSIONS[@]}"; do
+    if ! grep -Fq "$regression_name" "$CHAT_UPDATER_TEST"; then
+      echo "ERROR: Chat local-conversation regression is missing from $CHAT_UPDATER_TEST: $regression_name" >&2
+      failed=1
+    fi
+  done
+
+  return "$failed"
+}
+
 if ! validate_guard_inventory; then
   exit 1
 fi
 
 if ! validate_social_feed_persistence_regressions; then
+  exit 1
+fi
+
+if ! validate_chat_local_conversation_updater_regressions; then
   exit 1
 fi
 
