@@ -76,7 +76,19 @@ class ChatLocalConversationUpdater {
     required ChatSyncPayload payload,
     required ChatResult result,
   }) async {
-    final List<ChatMessage> messages = List<ChatMessage>.from(state.messages);
+    final List<ChatConversation> freshExisting = await _localDataSource.load();
+    final int freshIndex = freshExisting.indexWhere(
+      (c) => c.id == payload.conversationId,
+    );
+    if (freshIndex < 0) {
+      // Conversation removed while sync was in flight; do not resurrect.
+      return;
+    }
+
+    final ChatConversation conversation = freshExisting[freshIndex];
+    final List<ChatMessage> messages = List<ChatMessage>.from(
+      conversation.messages,
+    );
     for (int i = 0; i < messages.length; i++) {
       final ChatMessage message = messages[i];
       if (message.clientMessageId == payload.clientMessageId) {
@@ -101,7 +113,7 @@ class ChatLocalConversationUpdater {
       ),
     );
 
-    final ChatConversation updated = state.conversation.copyWith(
+    final ChatConversation updated = conversation.copyWith(
       messages: messages,
       pastUserInputs: result.pastUserInputs,
       generatedResponses: result.generatedResponses,
@@ -112,9 +124,9 @@ class ChatLocalConversationUpdater {
     );
 
     final List<ChatConversation> merged = _mergeConversationIntoList(
-      state.existing,
+      freshExisting,
       updated,
-      state.index,
+      freshIndex,
     );
 
     await _localDataSource.save(merged);
@@ -127,7 +139,18 @@ class ChatLocalConversationUpdater {
     required ChatSyncPayload payload,
     required String failureCode,
   }) async {
-    final List<ChatMessage> messages = List<ChatMessage>.from(state.messages);
+    final List<ChatConversation> freshExisting = await _localDataSource.load();
+    final int freshIndex = freshExisting.indexWhere(
+      (c) => c.id == payload.conversationId,
+    );
+    if (freshIndex < 0) {
+      return;
+    }
+
+    final ChatConversation conversation = freshExisting[freshIndex];
+    final List<ChatMessage> messages = List<ChatMessage>.from(
+      conversation.messages,
+    );
     bool found = false;
     for (int i = 0; i < messages.length; i++) {
       final ChatMessage message = messages[i];
@@ -149,16 +172,16 @@ class ChatLocalConversationUpdater {
       return;
     }
 
-    final ChatConversation updated = state.conversation.copyWith(
+    final ChatConversation updated = conversation.copyWith(
       messages: messages,
       updatedAt: state.now,
       synchronized: false,
     );
 
     final List<ChatConversation> merged = _mergeConversationIntoList(
-      state.existing,
+      freshExisting,
       updated,
-      state.index,
+      freshIndex,
     );
 
     await _localDataSource.save(merged);
