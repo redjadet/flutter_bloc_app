@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-16_sync_now_trailing_button.md`](2026-09-16_sync_now_trailing_button.md): Shared `SyncNowTrailingButton` for chat/profile sync banners.
 - [`2026-09-16_network_sync_banner_ensure_mixin.md`](2026-09-16_network_sync_banner_ensure_mixin.md): Shared `NetworkSyncBanner` + `EnsureSyncStartedMixin` for sync UI.
 - [`2026-09-16_clean_code_ai_era_guidance.md`](2026-09-16_clean_code_ai_era_guidance.md): Clean code as AI/incident infrastructure—read before edit; small units; why comments; review with tests.
 - [`2026-09-16_chat_sync_fresh_local_merge.md`](2026-09-16_chat_sync_fresh_local_merge.md): Re-read chat history before terminal sync writes; run Chat updater TOCTOU regressions in the existing offline-first merge guard.

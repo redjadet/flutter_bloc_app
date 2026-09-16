@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:design_system/design_system.dart';
+import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
+import 'package:flutter_bloc_app/app/sync/sync_now_trailing_button.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
@@ -22,31 +22,12 @@ class ChatSyncBanner extends StatefulWidget {
 
 class _ChatSyncBannerState extends State<ChatSyncBanner>
     with EnsureSyncStartedMixin {
-  bool _isManualSyncing = false;
-
   @override
   void onSyncEnsureStarted() {
     if (CubitHelpers.isCubitAvailable<ChatSyncStatusCubit, ChatSyncStatusState>(
       context,
     )) {
       unawaited(context.cubit<ChatSyncStatusCubit>().refresh());
-    }
-  }
-
-  Future<void> _handleSyncNow(BuildContext context) async {
-    if (_isManualSyncing) {
-      return;
-    }
-    setState(() => _isManualSyncing = true);
-    try {
-      final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
-      await syncCubit.flush();
-    } on Object catch (error, stackTrace) {
-      AppLogger.error('ChatSyncBanner.handleSyncNow failed', error, stackTrace);
-    } finally {
-      if (mounted) {
-        setState(() => _isManualSyncing = false);
-      }
     }
   }
 
@@ -95,23 +76,9 @@ class _ChatSyncBannerState extends State<ChatSyncBanner>
               final bool canManualSync =
                   !isOffline && pendingCount > 0 && !isSyncing;
               final Widget? trailing = pendingCount > 0
-                  ? Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: PlatformAdaptive.textButton(
-                        context: context,
-                        onPressed: canManualSync && !_isManualSyncing
-                            ? () => _handleSyncNow(context)
-                            : null,
-                        child: _isManualSyncing
-                            ? SizedBox(
-                                height: context.responsiveGapM,
-                                width: context.responsiveGapM,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(context.l10n.syncStatusSyncNowButton),
-                      ),
+                  ? SyncNowTrailingButton(
+                      enabled: canManualSync,
+                      logLabel: 'ChatSyncBanner',
                     )
                   : null;
               return Padding(
