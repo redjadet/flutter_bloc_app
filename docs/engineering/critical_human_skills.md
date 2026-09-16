@@ -104,9 +104,14 @@ This standard makes the project:
 ## 4. Code review
 
 - Establish intended outcome, scope, risk, and required proof before judging the
-  diff. Read relevant contracts, callers, tests, and failure paths.
+  diff. Read relevant contracts, callers, tests, and failure paths—not the diff
+  alone.
 - Review in risk order: correctness, data/security, architecture, async state,
   operations, tests, then maintainability and style.
+- Review readability with tests: oversized or opaque units raise AI change cost
+  and risk, and slow human incident response. Prefer focused units and “why”
+  comments over dead code ([CODE_QUALITY](../CODE_QUALITY.md) § Clean code in the
+  AI era).
 - Findings must include location, impact, evidence, requested correction, and
   verification. Distinguish blockers from optional improvements.
 - Re-run the narrowest honest checks independently. Human reviewers own approval,

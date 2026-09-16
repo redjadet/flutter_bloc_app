@@ -75,12 +75,38 @@ Full principles and examples: [`solid_principles.md`](architecture/solid_princip
 
 ## Quality Metrics and Gates
 
-- File size policy: keep files under 225 LOC; extract widgets/helpers as needed.
+- File size policy: keep files under 225 LOC; extract widgets/helpers as needed
+  (QG-D02 / `./tool/run_file_length_lint.sh`). Oversized files also raise AI
+  context cost—see [Clean code in the AI era](#clean-code-in-the-ai-era).
 - Coverage thresholds: [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
   (CI filtered rollup + team target); artifact refreshed by
   `tool/update_coverage_summary.dart`.
 - Static analysis and formatting: run `./bin/checklist`.
 - Guardrails: see [`validation_scripts.md`](validation_scripts.md) for the full automated checks list.
+
+## Clean code in the AI era
+
+Readable structure is agent and incident infrastructure, not only style.
+
+- Agents must read current code before editing. Large, messy files consume more
+  context tokens, increase cost, and make models more likely to miss duplicated
+  logic or invent incorrect assumptions.
+- Better models cannot replace team-specific knowledge: why a feature flag
+  exists, which edge case protects a customer, or why an odd branch must remain.
+  Clear structure, names, and **why** comments preserve that knowledge in the
+  repo—not in chat history or dead code.
+- During production incidents, humans—not AI—remain responsible. Readable code
+  makes debugging and review faster and safer.
+
+**Practice:** keep files and functions small and focused, use explicit names,
+document why, remove dead code, and review readability alongside tests. Clean
+code reduces AI costs, change risk, and outage recovery time.
+
+Agent operating rules:
+[`ai/agent_operating_manual.md`](ai/agent_operating_manual.md) § Readable code
+and useful comments. Review:
+[`ai_code_review_protocol.md`](ai_code_review_protocol.md);
+[`review/code_review_playbook.md`](review/code_review_playbook.md).
 
 ## Best-Practice Expectations (Summary)
 

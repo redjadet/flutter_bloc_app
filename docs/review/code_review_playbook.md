@@ -57,9 +57,10 @@ and [`../testing/matrix_required_by_change.md`](../testing/matrix_required_by_ch
 ### 2. Read context before diff
 
 Start with [`../../AGENTS.md`](../../AGENTS.md), then load only relevant owner
-docs through [`../ai/context_loading.md`](../ai/context_loading.md). Read the
-current implementation, adjacent tests, and caller/callee seams before
-commenting. For AI-authored changes, also apply
+docs through [`../ai/context_loading.md`](../ai/context_loading.md). **Read the
+current implementation**, adjacent tests, and caller/callee seams before
+commenting or approving edits—do not review from the diff alone. For
+AI-authored changes, also apply
 [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md).
 
 Questions to answer:
@@ -89,8 +90,10 @@ a behavioral defect.
 6. Performance and reliability — apply
    [`performance_checklist.md`](performance_checklist.md): rebuild scope, list
    identity, repeated I/O, cancellation, cache bounds, large-data behavior.
-7. Tests and operations — tests assert contracts and edge cases; logs/errors
-   preserve stable, non-sensitive recovery signals.
+7. Tests, readability, and operations — tests assert contracts and edge cases;
+   names, focused units, and “why” comments make the next change safe (see
+   [`../CODE_QUALITY.md`](../CODE_QUALITY.md) § Clean code in the AI era);
+   logs/errors preserve stable, non-sensitive recovery signals.
 
 ### 4. Write actionable findings
 
