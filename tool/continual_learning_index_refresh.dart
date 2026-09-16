@@ -55,9 +55,7 @@ Future<void> main(List<String> args) async {
       }
     }
 
-    indexState.transcripts.removeWhere(
-      (key, _) => key.contains('/subagents/'),
-    );
+    indexState.transcripts.removeWhere((key, _) => key.contains('/subagents/'));
 
     await _writeIndexAtomic(indexFile, indexState);
 

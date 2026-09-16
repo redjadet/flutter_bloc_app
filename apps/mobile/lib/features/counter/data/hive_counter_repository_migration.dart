@@ -91,9 +91,8 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     if (timestampMs == null) {
       return null;
     }
-    return HiveCounterRepositoryHelpers.parseTimestamp(
-      timestampMs,
-    )?.millisecondsSinceEpoch;
+    return HiveCounterRepositoryHelpers.parseTimestamp(timestampMs)
+        ?.millisecondsSinceEpoch;
   }
 
   bool? _coerceBool(dynamic raw) => switch (raw) {

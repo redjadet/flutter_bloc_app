@@ -7,9 +7,7 @@ abstract interface class TherapistRepository {
     String? language,
   });
 
-  Future<TherapistProfile> getTherapist({
-    required String therapistId,
-  });
+  Future<TherapistProfile> getTherapist({required String therapistId});
 
   Future<List<AvailabilitySlot>> listAvailability({
     required String therapistId,

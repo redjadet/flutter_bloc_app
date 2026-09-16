@@ -34,12 +34,7 @@ mixin _CaseStudyHistoryDetailCubitActions
         ),
       );
     } else {
-      emit(
-        state.copyWith(
-          clearTransientError: true,
-          clearErrorMessage: true,
-        ),
-      );
+      emit(state.copyWith(clearTransientError: true, clearErrorMessage: true));
     }
 
     await CubitExceptionHandler.executeAsync<_DetailLoadResult>(
@@ -131,12 +126,7 @@ mixin _CaseStudyHistoryDetailCubitActions
       return true;
     } on Object catch (error) {
       if (isClosed) return false;
-      emit(
-        state.copyWith(
-          isDeleting: false,
-          transientError: error,
-        ),
-      );
+      emit(state.copyWith(isDeleting: false, transientError: error));
       return false;
     }
   }

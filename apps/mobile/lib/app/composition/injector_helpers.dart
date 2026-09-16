@@ -64,11 +64,7 @@ T? createRemoteRepositoryOrNull<T>({
     }
     return factory();
   } on Object catch (error, stackTrace) {
-    AppLogger.error(
-      'Creating remote $context failed',
-      error,
-      stackTrace,
-    );
+    AppLogger.error('Creating remote $context failed', error, stackTrace);
     return null;
   }
   // coverage:ignore-end

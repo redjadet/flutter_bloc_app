@@ -1,9 +1,7 @@
 part of 'online_therapy_fake_api.dart';
 
 extension OnlineTherapyFakeApiCallsAdmin on OnlineTherapyFakeApi {
-  Future<CallSession> createCallSession({
-    required String appointmentId,
-  }) async {
+  Future<CallSession> createCallSession({required String appointmentId}) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
     final appt = _appointments.firstWhere((a) => a.id == appointmentId);

@@ -109,9 +109,7 @@ void registerSearchEmptyResultsIntegrationFlow() {
 
       // Enter a query unlikely to have results
       final Finder searchField = find
-          .byWidgetPredicate(
-            (w) => w is TextField || w is CupertinoTextField,
-          )
+          .byWidgetPredicate((w) => w is TextField || w is CupertinoTextField)
           .first;
       await tester.enterText(searchField, 'zzzz-not-found-query');
       await pumpUntilFound(
@@ -152,11 +150,7 @@ void registerSettingsThemePersistenceIntegrationFlow() {
       // tapping a partially-obscured locale chip.
       await tester.ensureVisible(find.text('Español'));
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(
-        tester,
-        find.text('Español'),
-        scrollIntoView: false,
-      );
+      await tapAndPump(tester, find.text('Español'), scrollIntoView: false);
       await pumpUntilFound(tester, find.text('Configuración'));
 
       // Navigate back to home (Material + Cupertino)

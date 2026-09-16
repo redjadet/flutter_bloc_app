@@ -30,10 +30,7 @@ Future<void> _scrollDestinationIntoView(
   }
 }
 
-Future<bool> _tapHitTestable(
-  WidgetTester tester,
-  Finder destination,
-) async {
+Future<bool> _tapHitTestable(WidgetTester tester, Finder destination) async {
   final Finder hittable = destination.hitTestable();
   if (!tester.any(hittable)) {
     return false;
@@ -148,10 +145,7 @@ Future<void> _dismissModalSheet(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Finder _findAdaptiveButtonByText(
-  String text, {
-  Finder? scope,
-}) => find
+Finder _findAdaptiveButtonByText(String text, {Finder? scope}) => find
     .ancestor(
       of: scope == null
           ? find.text(text)

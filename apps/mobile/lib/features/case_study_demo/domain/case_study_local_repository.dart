@@ -11,15 +11,9 @@ abstract class CaseStudyLocalRepository {
 
   Future<List<CaseStudyRecord>> loadRecords(String userId);
 
-  Future<CaseStudyRecord?> getRecord(
-    String userId,
-    String recordId,
-  );
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId);
 
-  Future<void> saveRecords(
-    String userId,
-    List<CaseStudyRecord> records,
-  );
+  Future<void> saveRecords(String userId, List<CaseStudyRecord> records);
 
   /// Ensures storage schema; v1 clears box on mismatch.
   Future<void> ensureReady();

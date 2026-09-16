@@ -1,9 +1,6 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 
-bool isUnexpectedIntegrationLog(
-  AppLogEntry entry, {
-  required bool isWeb,
-}) {
+bool isUnexpectedIntegrationLog(AppLogEntry entry, {required bool isWeb}) {
   final bool isWarnOrError =
       entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
   if (!isWarnOrError) {
@@ -12,10 +9,7 @@ bool isUnexpectedIntegrationLog(
   return !isIgnoredIntegrationLog(entry, isWeb: isWeb);
 }
 
-bool isIgnoredIntegrationLog(
-  AppLogEntry entry, {
-  required bool isWeb,
-}) {
+bool isIgnoredIntegrationLog(AppLogEntry entry, {required bool isWeb}) {
   // iOS integration runs occasionally surface transient Remote Config
   // cancellation from the plugin while the app is tearing down / relaunching
   // between flows. Treat this specific case as noise so it doesn't fail the

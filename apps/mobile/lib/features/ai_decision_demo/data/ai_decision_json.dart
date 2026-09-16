@@ -20,10 +20,7 @@ String _jsonValueKind(Object? value) {
   return value.runtimeType.toString();
 }
 
-String requireAiDecisionString(
-  Map<String, dynamic> json,
-  String key,
-) {
+String requireAiDecisionString(Map<String, dynamic> json, String key) {
   final Object? value = json[key];
   if (value is! String || value.isEmpty) {
     _badAiDecision(key, value);
@@ -31,10 +28,7 @@ String requireAiDecisionString(
   return value;
 }
 
-String? optionalAiDecisionString(
-  Map<String, dynamic> json,
-  String key,
-) {
+String? optionalAiDecisionString(Map<String, dynamic> json, String key) {
   final Object? value = json[key];
   if (value == null) {
     return null;
@@ -45,10 +39,7 @@ String? optionalAiDecisionString(
   return value;
 }
 
-double requireAiDecisionNumAsDouble(
-  Map<String, dynamic> json,
-  String key,
-) {
+double requireAiDecisionNumAsDouble(Map<String, dynamic> json, String key) {
   final Object? value = json[key];
   if (value is! num) {
     _badAiDecision(key, value);

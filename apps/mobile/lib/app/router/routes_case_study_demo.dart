@@ -74,38 +74,35 @@ class const CaseStudyDemoRouteFactory({
     (draft) => draft.isComplete ? null : AppRoutes.caseStudyDemoRecordPath,
   );
 
-  Widget _buildShell(
-    BuildContext context,
-    GoRouterState state,
-    Widget child,
-  ) => AppRouteAuthGate(
-    policy: AppRoutePolicies.caseStudyDemo,
-    getCurrentUser: () => authRepository.currentUser,
-    authStateChanges: authRepository.authStateChanges,
-    authPath: AppRoutes.authPath,
-    child: CaseStudySupabaseAuthGate(
-      isSupabaseInitialized: remoteAuth.isConfigured,
-      getCurrentUser: () => remoteAuth.currentUser,
-      authStateChanges: remoteAuth.authStateChanges,
-      fallbackPath: AppRoutes.authPath,
-      supabaseAuthPath: AppRoutes.supabaseAuthPath,
-      redirectReturnPath: state.uri.toString(),
-      child: child.routeScoped(
-        create: () => CaseStudySessionCubit(
-          authRepository: authRepository,
-          localRepository: localRepository,
-          videoRepository: videoRepository,
-          uploadRepository: uploadRepository,
-          clipStore: clipStore,
-          remoteDeleteRepository: remoteDeleteRepository,
-          remoteBackendAuth: remoteAuth,
-          remoteRepository: remoteRepository,
-          timerService: timerService,
+  Widget _buildShell(BuildContext context, GoRouterState state, Widget child) =>
+      AppRouteAuthGate(
+        policy: AppRoutePolicies.caseStudyDemo,
+        getCurrentUser: () => authRepository.currentUser,
+        authStateChanges: authRepository.authStateChanges,
+        authPath: AppRoutes.authPath,
+        child: CaseStudySupabaseAuthGate(
+          isSupabaseInitialized: remoteAuth.isConfigured,
+          getCurrentUser: () => remoteAuth.currentUser,
+          authStateChanges: remoteAuth.authStateChanges,
+          fallbackPath: AppRoutes.authPath,
+          supabaseAuthPath: AppRoutes.supabaseAuthPath,
+          redirectReturnPath: state.uri.toString(),
+          child: child.routeScoped(
+            create: () => CaseStudySessionCubit(
+              authRepository: authRepository,
+              localRepository: localRepository,
+              videoRepository: videoRepository,
+              uploadRepository: uploadRepository,
+              clipStore: clipStore,
+              remoteDeleteRepository: remoteDeleteRepository,
+              remoteBackendAuth: remoteAuth,
+              remoteRepository: remoteRepository,
+              timerService: timerService,
+            ),
+            init: (cubit) => cubit.hydrate(),
+          ),
         ),
-        init: (cubit) => cubit.hydrate(),
-      ),
-    ),
-  );
+      );
 
   CaseStudyHistoryCubit _createHistoryCubit() => CaseStudyHistoryCubit(
     authRepository: authRepository,

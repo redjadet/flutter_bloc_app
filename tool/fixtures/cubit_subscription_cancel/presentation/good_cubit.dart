@@ -3,8 +3,8 @@ import 'dart:async';
 class GoodCubit {
   StreamSubscription<int>? _subscription;
 
-  void start(final Stream<int> stream) {
-    _subscription = stream.listen((final _) {});
+  void start(Stream<int> stream) {
+    _subscription = stream.listen((_) {});
   }
 
   Future<void> close() async {

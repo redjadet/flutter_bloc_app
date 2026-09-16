@@ -9,9 +9,9 @@ class GoodContextReadWatchPage extends StatelessWidget {
   const GoodContextReadWatchPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocBuilder<_GoodCounterCubit, int>(
-      builder: (final context, final count) => Text('$count'),
+      builder: (context, count) => Text('$count'),
     );
   }
 }

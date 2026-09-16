@@ -41,9 +41,7 @@ abstract final class StaffDemoInboxFirestoreMap {
   ///
   /// Returns null only when [data] is null. Malformed/missing optional fields
   /// become null on the model (presentation defaults blank strings).
-  static StaffDemoInboxMessage? messageFromData(
-    Map<String, dynamic>? data,
-  ) {
+  static StaffDemoInboxMessage? messageFromData(Map<String, dynamic>? data) {
     if (data == null) {
       return null;
     }

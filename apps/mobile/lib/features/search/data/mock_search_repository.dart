@@ -22,10 +22,8 @@ class MockSearchRepository implements SearchRepository {
 
     return List.generate(
       12,
-      (index) => SearchResult(
-        id: 'dog_$index',
-        imageUrl: _resolveImageUrl(index),
-      ),
+      (index) =>
+          SearchResult(id: 'dog_$index', imageUrl: _resolveImageUrl(index)),
     );
   }
 

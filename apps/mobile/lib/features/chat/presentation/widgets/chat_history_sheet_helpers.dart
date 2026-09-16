@@ -5,9 +5,7 @@ import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:material_ui/material_ui.dart';
 
-Future<bool> showClearHistoryDialog(
-  BuildContext context,
-) async {
+Future<bool> showClearHistoryDialog(BuildContext context) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
   return await showAdaptiveDialog<bool>(

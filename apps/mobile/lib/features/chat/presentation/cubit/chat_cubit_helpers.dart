@@ -56,10 +56,8 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   List<ChatConversation> _replaceConversation(
     ChatConversation conversation, {
     List<ChatConversation>? history,
-  }) => replaceChatConversation(
-    conversation,
-    history: history ?? _state.history,
-  );
+  }) =>
+      replaceChatConversation(conversation, history: history ?? _state.history);
 
   List<ChatConversation> _sortHistory(
     List<ChatConversation> conversations, {
@@ -112,11 +110,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         }
         final ChatState current = _state;
         if (current.failure != null) {
-          emitState(
-            current.copyWith(
-              failure: null,
-            ),
-          );
+          emitState(current.copyWith(failure: null));
         }
       },
       onError: (message) {

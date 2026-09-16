@@ -146,10 +146,7 @@ extension _OnlineTherapyMessagingViewStateBuild
                       .map(
                         (c) => DropdownMenuItem<String>(
                           value: c.id,
-                          child: Text(
-                            c.id,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          child: Text(c.id, overflow: TextOverflow.ellipsis),
                         ),
                       )
                       .toList(growable: false),

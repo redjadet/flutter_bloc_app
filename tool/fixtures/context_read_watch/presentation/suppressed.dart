@@ -9,7 +9,7 @@ class SuppressedContextReadWatchPage extends StatelessWidget {
   const SuppressedContextReadWatchPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     // check-ignore: fixture documents intentional suppression for QG-D04
     final count = context.watch<_SuppressedCounterCubit>().state;
     return Text('$count');

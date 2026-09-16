@@ -9,7 +9,7 @@ class BadContextReadWatchPage extends StatelessWidget {
   const BadContextReadWatchPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final count = context.watch<_BadCounterCubit>().state;
     return Text('$count');
   }

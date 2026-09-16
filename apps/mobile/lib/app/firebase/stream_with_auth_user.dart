@@ -11,8 +11,6 @@ Stream<T> streamWithAuthUser<T>({
   required String logContext,
   required Stream<T> Function(User user) streamPerUser,
 }) =>
-    Stream.fromFuture(
-          waitForAuthUser(auth),
-        )
+    Stream.fromFuture(waitForAuthUser(auth))
         .asyncExpand(streamPerUser)
         .handleError(AppLogger.streamErrorHandler(logContext));

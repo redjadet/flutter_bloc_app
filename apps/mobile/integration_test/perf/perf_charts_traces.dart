@@ -15,9 +15,6 @@ part 'perf_charts_traces_impl.part.dart';
 Future<void> captureChartModeIsolationTraces({
   required IntegrationTestWidgetsFlutterBinding binding,
   required WidgetTester tester,
-}) => _captureChartModeIsolationTracesImpl(
-  binding: binding,
-  tester: tester,
-);
+}) => _captureChartModeIsolationTracesImpl(binding: binding, tester: tester);
 
 Map<String, dynamic> chartModeIsolationMeta() => _chartModeIsolationMetaImpl();

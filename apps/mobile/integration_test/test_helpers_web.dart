@@ -107,9 +107,7 @@ Future<void> overrideNetworkAndSync() async {
   }
 
   getIt
-    ..registerLazySingleton<NetworkStatusService>(
-      FakeNetworkStatusService.new,
-    )
+    ..registerLazySingleton<NetworkStatusService>(FakeNetworkStatusService.new)
     ..registerLazySingleton<BackgroundSyncCoordinator>(
       FakeBackgroundSyncCoordinator.new,
     )

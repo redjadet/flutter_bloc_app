@@ -1,3 +1,3 @@
 import 'dart:io';
 
-bool badSync(final String path) => File(path).existsSync();
+bool badSync(String path) => File(path).existsSync();

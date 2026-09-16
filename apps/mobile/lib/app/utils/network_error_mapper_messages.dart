@@ -53,10 +53,7 @@ String? _getHeuristicMessage(
   }
 
   if (_containsServiceUnavailableHint(errorString)) {
-    return _networkMessage(
-      NetworkErrorKind.serviceUnavailable,
-      l10n: l10n,
-    );
+    return _networkMessage(NetworkErrorKind.serviceUnavailable, l10n: l10n);
   }
 
   if (errorString.contains('server')) {
@@ -66,24 +63,19 @@ String? _getHeuristicMessage(
   return null;
 }
 
-String? _getMessageForStatusCode(
-  int statusCode, {
-  AppLocalizations? l10n,
-}) => switch (statusCode) {
-  401 => _authMessage(AuthErrorKind.unauthorized, l10n: l10n),
-  403 => _authMessage(AuthErrorKind.forbidden, l10n: l10n),
-  404 => _notFoundMessage(l10n: l10n),
-  408 => _networkMessage(NetworkErrorKind.timeout, l10n: l10n),
-  429 => _networkMessage(NetworkErrorKind.rateLimited, l10n: l10n),
-  503 => _networkMessage(
-    NetworkErrorKind.serviceUnavailable,
-    l10n: l10n,
-  ),
-  500 || 502 || 504 => _networkMessage(NetworkErrorKind.server, l10n: l10n),
-  >= 400 && < 500 => _networkMessage(NetworkErrorKind.client, l10n: l10n),
-  >= 500 => _networkMessage(NetworkErrorKind.server, l10n: l10n),
-  _ => null,
-};
+String? _getMessageForStatusCode(int statusCode, {AppLocalizations? l10n}) =>
+    switch (statusCode) {
+      401 => _authMessage(AuthErrorKind.unauthorized, l10n: l10n),
+      403 => _authMessage(AuthErrorKind.forbidden, l10n: l10n),
+      404 => _notFoundMessage(l10n: l10n),
+      408 => _networkMessage(NetworkErrorKind.timeout, l10n: l10n),
+      429 => _networkMessage(NetworkErrorKind.rateLimited, l10n: l10n),
+      503 => _networkMessage(NetworkErrorKind.serviceUnavailable, l10n: l10n),
+      500 || 502 || 504 => _networkMessage(NetworkErrorKind.server, l10n: l10n),
+      >= 400 && < 500 => _networkMessage(NetworkErrorKind.client, l10n: l10n),
+      >= 500 => _networkMessage(NetworkErrorKind.server, l10n: l10n),
+      _ => null,
+    };
 
 String? _networkMessage(
   NetworkErrorKind kind, {
@@ -111,16 +103,15 @@ String? _networkMessage(
   NetworkErrorKind.unknown => null,
 };
 
-String _authMessage(
-  AuthErrorKind kind, {
-  AppLocalizations? l10n,
-}) => switch (kind) {
-  AuthErrorKind.unauthorized || AuthErrorKind.tokenExpired =>
-    l10n?.errorUnauthorized ?? 'Authentication required. Please sign in again.',
-  AuthErrorKind.forbidden =>
-    l10n?.errorForbidden ??
-        "Access denied. You don't have permission for this action.",
-};
+String _authMessage(AuthErrorKind kind, {AppLocalizations? l10n}) =>
+    switch (kind) {
+      AuthErrorKind.unauthorized || AuthErrorKind.tokenExpired =>
+        l10n?.errorUnauthorized ??
+            'Authentication required. Please sign in again.',
+      AuthErrorKind.forbidden =>
+        l10n?.errorForbidden ??
+            "Access denied. You don't have permission for this action.",
+    };
 
 String _notFoundMessage({AppLocalizations? l10n}) =>
     l10n?.errorNotFound ?? 'The requested resource was not found.';

@@ -168,10 +168,7 @@ extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
     }
   }
 
-  String idempotencyKeyFor(
-    String? clientMessageId,
-    String? conversationId,
-  ) {
+  String idempotencyKeyFor(String? clientMessageId, String? conversationId) {
     final String? a = clientMessageId?.trim();
     if (a != null && a.isNotEmpty) {
       return a;

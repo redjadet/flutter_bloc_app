@@ -25,19 +25,15 @@ abstract final class CertificatePinningConfigFactory {
       const String.fromEnvironment('CERT_PINNING_HASH_KIND'),
     );
 
-    final CertificatePinningConfig config =
-        CertificatePinningConfig(
-          mode: mode,
-          pinHashKind: pinHashKind,
-          allowedHosts: hosts,
-          sha256PinsByHost: pins,
-          realProbeUrl: probe.isEmpty ? null : probe,
-          // ignore: avoid_redundant_argument_values -- CERT_PINNING_VERBOSE dart-define
-          enableVerboseLogging: verbose,
-        )..validate(
-          isProdRelease: isProd && isReleaseMode,
-          isWeb: kIsWeb,
-        );
+    final CertificatePinningConfig config = CertificatePinningConfig(
+      mode: mode,
+      pinHashKind: pinHashKind,
+      allowedHosts: hosts,
+      sha256PinsByHost: pins,
+      realProbeUrl: probe.isEmpty ? null : probe,
+      // ignore: avoid_redundant_argument_values -- CERT_PINNING_VERBOSE dart-define
+      enableVerboseLogging: verbose,
+    )..validate(isProdRelease: isProd && isReleaseMode, isWeb: kIsWeb);
     return config;
   }
 

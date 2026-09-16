@@ -43,9 +43,7 @@ extension SimulatedSocialFeedRemotePersist
     }
     _posts = <SocialFeedPost>[
       for (final SocialFeedPost post in _posts)
-        post.copyWith(
-          commentCount: _commentsByPostId[post.id]?.length ?? 0,
-        ),
+        post.copyWith(commentCount: _commentsByPostId[post.id]?.length ?? 0),
     ];
   }
 }

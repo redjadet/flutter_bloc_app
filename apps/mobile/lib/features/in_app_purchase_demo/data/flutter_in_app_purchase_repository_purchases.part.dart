@@ -9,10 +9,7 @@ extension _FlutterInAppPurchaseRepositoryPurchases
     );
   }
 
-  void onPurchaseStreamErrorImpl(
-    Object error,
-    StackTrace stackTrace,
-  ) {
+  void onPurchaseStreamErrorImpl(Object error, StackTrace stackTrace) {
     AppLogger.error(
       'FlutterInAppPurchaseRepository.purchaseStream',
       error,
@@ -29,9 +26,7 @@ extension _FlutterInAppPurchaseRepositoryPurchases
     );
   }
 
-  Future<void> onPurchaseUpdatesImpl(
-    List<PurchaseDetails> purchases,
-  ) async {
+  Future<void> onPurchaseUpdatesImpl(List<PurchaseDetails> purchases) async {
     for (final purchase in purchases) {
       final String productId = purchase.productID;
       switch (purchase.status) {
@@ -87,18 +82,13 @@ extension _FlutterInAppPurchaseRepositoryPurchases
     return _entitlements;
   }
 
-  static bool matchesProductIdImpl(
-    IapPurchaseResult r,
-    String id,
-  ) => r.when(
+  static bool matchesProductIdImpl(IapPurchaseResult r, String id) => r.when(
     success: (productId, message) => productId == id,
     cancelled: (productId, message) => productId == id,
     pending: (productId, message) => productId == id,
     failure: (productId, message) => productId == id,
   );
 
-  static bool isTerminalImpl(IapPurchaseResult r) => r.maybeWhen(
-    pending: (productId, message) => false,
-    orElse: () => true,
-  );
+  static bool isTerminalImpl(IapPurchaseResult r) =>
+      r.maybeWhen(pending: (productId, message) => false, orElse: () => true);
 }

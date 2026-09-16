@@ -13,6 +13,5 @@ import 'package:flutter_bloc_app/features/chart/presentation/pages/chart_page.da
 ///
 /// This function is called after the deferred library is loaded.
 /// It creates a [ChartPage] with the chart repository from DI.
-Widget buildChartPage({required ChartRepository repository}) => ChartPage(
-  repository: repository,
-);
+Widget buildChartPage({required ChartRepository repository}) =>
+    ChartPage(repository: repository);

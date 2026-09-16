@@ -125,24 +125,21 @@ void registerStaffAppDemoServices() {
   );
 
   registerLazySingletonIfAbsent<StaffDemoContentRepository>(
-    () => _withFirestoreOrFallback<StaffDemoContentRepository>(
-      (firestore) {
-        FirebaseStorage? storage;
-        try {
-          if (Firebase.apps.isNotEmpty) {
-            final app = Firebase.app();
-            storage = FirebaseStorage.instanceFor(app: app);
-          }
-        } on Object {
-          storage = null;
+    () => _withFirestoreOrFallback<StaffDemoContentRepository>((firestore) {
+      FirebaseStorage? storage;
+      try {
+        if (Firebase.apps.isNotEmpty) {
+          final app = Firebase.app();
+          storage = FirebaseStorage.instanceFor(app: app);
         }
-        return FirestoreStaffDemoContentRepository(
-          firestore: firestore,
-          storage: storage,
-        );
-      },
-      fallback: () => NoOpStaffDemoContentRepository(),
-    ),
+      } on Object {
+        storage = null;
+      }
+      return FirestoreStaffDemoContentRepository(
+        firestore: firestore,
+        storage: storage,
+      );
+    }, fallback: () => NoOpStaffDemoContentRepository()),
   );
 
   registerLazySingletonIfAbsent<StaffDemoFormsRepository>(

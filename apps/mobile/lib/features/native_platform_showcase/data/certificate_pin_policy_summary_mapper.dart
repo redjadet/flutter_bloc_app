@@ -10,9 +10,8 @@ abstract final class CertificatePinPolicySummaryMapper {
     required bool canOpenMutableDemo,
   }) {
     final int hosts = config.allowedHosts.length;
-    final int totalPins = List<Set<String>>.from(
-      config.sha256PinsByHost.values,
-    ).fold<int>(0, (sum, pins) => sum + pins.length);
+    final int totalPins = List<Set<String>>.from(config.sha256PinsByHost.values)
+        .fold<int>(0, (sum, pins) => sum + pins.length);
     return CertificatePinPolicySummary(
       modeName: config.mode.name,
       pinHashKindName: config.pinHashKind.name,

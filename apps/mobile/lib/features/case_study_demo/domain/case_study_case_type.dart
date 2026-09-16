@@ -1,10 +1,5 @@
 /// Clinical case category for the dentist case-study demo.
-enum CaseStudyCaseType {
-  implant,
-  ortho,
-  cosmetic,
-  general,
-}
+enum CaseStudyCaseType { implant, ortho, cosmetic, general }
 
 extension CaseStudyCaseTypeX on CaseStudyCaseType {
   String get storageName => name;

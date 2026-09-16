@@ -9,10 +9,7 @@ Failure? failureFromCameraGalleryResult(CameraGalleryResult result) =>
           failureFromCameraGalleryErrorKey(errorKey, message: message),
     );
 
-Failure? failureFromCameraGalleryErrorKey(
-  String errorKey, {
-  String? message,
-}) {
+Failure? failureFromCameraGalleryErrorKey(String errorKey, {String? message}) {
   return switch (errorKey) {
     CameraGalleryErrorKeys.permissionDenied => PermissionFailure(
       PermissionFailureReason.denied,

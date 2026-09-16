@@ -22,5 +22,5 @@ class _GoodObserverPageState extends State<GoodObserverPage>
   }
 
   @override
-  Widget build(final BuildContext context) => const SizedBox.shrink();
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }
