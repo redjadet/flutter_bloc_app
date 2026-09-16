@@ -1,17 +1,9 @@
-import 'dart:async';
-
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
-import 'package:go_router/go_router.dart';
-import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
+import 'package:flutter_bloc_app/app/auth/optional_supabase_auth_gate.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Gate that shows [child] when either Supabase is not configured (local-only
-/// mode) or Supabase is initialized and [getCurrentUser] returns a non-null
-/// user; otherwise redirects to Supabase auth.
-///
-/// Dependencies are injected so the widget is DI-free and reusable.
-class CaseStudySupabaseAuthGate extends StatefulWidget {
+/// Case study demo wrapper around [OptionalSupabaseAuthGate].
+class CaseStudySupabaseAuthGate extends StatelessWidget {
   const new({
     required this.isSupabaseInitialized,
     required this.getCurrentUser,
@@ -38,89 +30,15 @@ class CaseStudySupabaseAuthGate extends StatefulWidget {
   final Widget child;
 
   @override
-  State<CaseStudySupabaseAuthGate> createState() =>
-      _CaseStudySupabaseAuthGateState();
-}
-
-class _CaseStudySupabaseAuthGateState extends State<CaseStudySupabaseAuthGate> {
-  final DisposableBag _disposables = DisposableBag();
-  bool _allowed = false;
-  // ignore: cancel_subscriptions - Lifecycle is centralized via DisposableBag.
-  StreamSubscription<AuthUser?>? _authStateSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _subscribeToAuthStateChanges();
-    WidgetsBinding.instance.addPostFrameCallback(_checkAndRedirect);
-  }
-
-  @override
-  void didUpdateWidget(covariant CaseStudySupabaseAuthGate oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.authStateChanges != widget.authStateChanges) {
-      final StreamSubscription<AuthUser?>? previousSubscription =
-          _authStateSubscription;
-      _authStateSubscription = null;
-      _disposables.untrackSubscription(previousSubscription);
-      unawaited(previousSubscription?.cancel());
-      _subscribeToAuthStateChanges();
-    }
-  }
-
-  void _subscribeToAuthStateChanges() {
-    _authStateSubscription = _disposables.trackSubscription(
-      widget.authStateChanges.listen(
-        (_) => _checkAndRedirect(null),
-        onError: (Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'CaseStudySupabaseAuthGate: auth state listener failed',
-            error,
-            stackTrace,
-          );
-        },
-        cancelOnError: false,
-      ),
-    );
-  }
-
-  void _checkAndRedirect(_) {
-    if (!mounted) return;
-    try {
-      if (!widget.isSupabaseInitialized) {
-        if (mounted && !_allowed) setState(() => _allowed = true);
-        return;
-      }
-      if (widget.getCurrentUser() == null) {
-        final encoded = Uri.encodeComponent(widget.redirectReturnPath);
-        context.go('${widget.supabaseAuthPath}?redirect=$encoded');
-        return;
-      }
-      if (!mounted || _allowed) return;
-      setState(() => _allowed = true);
-    } on Object catch (error, stackTrace) {
-      if (!mounted) return;
-      AppLogger.error(
-        'CaseStudySupabaseAuthGate: auth check failed, redirecting to fallback',
-        error,
-        stackTrace,
-      );
-      context.go(widget.fallbackPath);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (!_allowed) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-    return widget.child;
-  }
-
-  @override
-  void dispose() {
-    _authStateSubscription = null;
-    unawaited(_disposables.dispose());
-    super.dispose();
+    return OptionalSupabaseAuthGate(
+      isSupabaseInitialized: isSupabaseInitialized,
+      getCurrentUser: getCurrentUser,
+      authStateChanges: authStateChanges,
+      fallbackPath: fallbackPath,
+      supabaseAuthPath: supabaseAuthPath,
+      redirectReturnPath: redirectReturnPath,
+      child: child,
+    );
   }
 }
