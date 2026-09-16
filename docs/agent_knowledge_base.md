@@ -17,6 +17,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
 | Harness beats model choice. | Optimize prompts, evaluators, tests, runtime checks, and feedback loops before blaming the model. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
+| Clean code is agent infrastructure. | Small focused units, explicit names, “why” comments, no dead code—cut context cost and change risk. See [`ai/agent_operating_manual.md`](ai/agent_operating_manual.md) § Readable code; [`CODE_QUALITY.md`](CODE_QUALITY.md) § Clean code in the AI era. |
 | Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
 | Safety before autonomy. | Complete reversible repo-local work end-to-end, but human approval and destructive-action protection always take precedence. |
 | Session harness beats willpower. | Protect context, memory, orchestration, and recovery; switch strategy when session state degrades. |
@@ -30,6 +31,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Draft treated as ship | Draft until review; smallest change in Clean Architecture / Cubit/BLoC / DI / GoRouter seams |
 | Re-prompt loops | After 2 “almost right” cycles: read owning code/docs, patch manually, add fixture/test/script |
 | Full rewrites | Micro-edit failing lines; do not regenerate whole files/widgets |
+| Opaque mega-files | Read seams first; split before large edits; honor file-length gate (225 LOC) |
 | Late validation | Narrowest lane early — [`agents_quick_reference.md`](agents_quick_reference.md) |
 | Local-only correctness | Align architecture before local fixes |
 | Screen-shaped changes | Feature/domain boundary + contracts first; no giant cubits or cross-feature leakage |
@@ -108,7 +110,7 @@ Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Befo
 
 ## System Of Record Layout
 
-Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, invariants, host notes). Hub mechanics: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers: [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md).
+Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, invariants, host notes). Hub mechanics: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers: `../tasks/codex/todo.md`, `../tasks/cursor/todo.md`.
 
 ## Multi-Agent Hub
 

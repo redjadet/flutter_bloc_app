@@ -8,8 +8,8 @@ owners. Other agent docs link here; do not duplicate this list.
 1. [`AGENTS.md`](../../AGENTS.md) — repository entry map.
 2. [`skill_routing.md`](skill_routing.md) — `agents-skill-routing`; select one
    skill. Tool/validation: `./bin/agent-maintain tools --intent "<goal>" --paths <files>`.
-3. Task evidence — targeted code/tests inside the declared task boundary. Load
-   another feature/package only when evidence or requested scope crosses that
+3. Task evidence — **read** targeted code/tests inside the declared task
+   boundary **before** editing. Load another feature/package only when evidence or requested scope crosses that
    boundary. Use [`CODEMAP.md`](../../CODEMAP.md) or
    [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) when structure is unclear.
 

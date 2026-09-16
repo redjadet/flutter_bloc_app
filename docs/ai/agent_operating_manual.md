@@ -25,28 +25,25 @@ Use this loop for implementation, refactoring, and review:
 
 ## Readable code and useful comments
 
-Make the normal path understandable to human and AI maintainers through precise
-names, small cohesive units, explicit data flow, and unsurprising control flow.
-Do not use comments to rescue avoidable complexity; rename or extract first
-when that makes intent clear.
+Clean code matters more with AI maintainers. Agents must **read code before
+changing it**. Large, messy files burn context tokens, raise cost, and make
+models miss duplication or invent wrong assumptions. Better models do not
+replace team knowledge (feature-flag intent, customer edge cases, odd but
+required branches)—structure, names, and **why** comments preserve it. In
+incidents, humans—not AI—own recovery; readable code speeds debug and review.
 
-Add a concise comment or Dart doc comment when important context remains hidden
-from the code itself:
+Keep files/functions small and focused (≤225 LOC under `lib/`;
+[`CODE_QUALITY.md`](../CODE_QUALITY.md)), use explicit names, document why,
+delete dead code, and review readability with tests. Prefer rename/extract over
+comments that rescue avoidable complexity; make the normal path obvious through
+precise names, cohesive units, explicit data flow, and unsurprising control flow.
 
-- explain **why** a choice exists, including product rules, rejected simpler
-  options, compatibility workarounds, or external constraints;
-- state invariants, ordering requirements, units, ownership, lifecycle,
-  concurrency, retry, cache, security, or offline assumptions that a future
-  change could violate;
-- document public or reusable contracts when the signature cannot express
-  preconditions, side effects, failure behavior, or caller responsibilities;
-- describe a non-obvious algorithm at its decision boundary, not every line.
-
-Comments must stay next to the governed code, use project terms, and change or
-disappear with the behavior they describe. Never narrate obvious syntax, repeat
-the implementation, preserve dead code, add author/tool commentary, or leave an
-ownerless `TODO`. If removing a comment makes behavior unclear, either improve
-the code or retain the smallest comment that preserves the missing context.
+Add a concise comment or Dart doc when important context stays hidden: **why** a
+choice exists; invariants/ordering/lifecycle/concurrency/retry/cache/security/
+offline; public contracts the signature cannot express; non-obvious algorithms at
+decision boundaries (not every line). Comments stay next to governed code, use
+project terms, and change with behavior. Never narrate syntax, preserve dead
+code, add AI/tool commentary, or leave ownerless `TODO`s.
 
 ## Understanding loop
 
@@ -74,7 +71,7 @@ For medium- and high-risk work, retain the teach-back in PR or task evidence.
 | Human skills / best AI-agent work areas | [`engineering/critical_human_skills.md`](../engineering/critical_human_skills.md); [`ai/best_areas_for_ai_agents.md`](best_areas_for_ai_agents.md) |
 | Mission / engineering mindset | This doc § Mission; [`agent_knowledge_base.md`](../agent_knowledge_base.md) Core Beliefs |
 | Project context / platforms / existing code | [`agent_project_context.md`](../agent_project_context.md), [`tech_stack.md`](../tech_stack.md), [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) |
-| Simplicity / readability / useful comments / resilient design | This doc §§ Engineering judgment loop and Readable code and useful comments; [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md) |
+| Simplicity / readability / useful comments / resilient design | This doc §§ Engineering judgment loop and Readable code and useful comments; [`CODE_QUALITY.md`](../CODE_QUALITY.md) § Clean code in the AI era; [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md) |
 | Flutter widgets / composition | [`DESIGN.md`](../../DESIGN.md), [`design_system.md`](../design_system.md) |
 | flutter_bloc / state | [`bloc_standards.md`](../bloc_standards.md), [`review/bloc_checklist.md`](../review/bloc_checklist.md) |
 | Architecture layers | [`clean_architecture.md`](../clean_architecture.md), [`architecture/feature_structure_contract.md`](../architecture/feature_structure_contract.md) |

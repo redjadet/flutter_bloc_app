@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-16_clean_code_ai_era_guidance.md`](2026-09-16_clean_code_ai_era_guidance.md): Clean code as AI/incident infrastructure—read before edit; small units; why comments; review with tests.
 - [`2026-09-16_chat_sync_fresh_local_merge.md`](2026-09-16_chat_sync_fresh_local_merge.md): Re-read chat history before terminal sync writes; run Chat updater TOCTOU regressions in the existing offline-first merge guard.
 - [`2026-09-16_format_skip_fixture_parse.md`](2026-09-16_format_skip_fixture_parse.md): Quiet `./bin/format` — omit `tool/fixtures/**` + `third_party/**`; fix fixture param modifiers; local `bloc_codegen` analysis_options.
 - [`2026-09-16_flutter_3_47_4_pin.md`](2026-09-16_flutter_3_47_4_pin.md): Pin Flutter `3.47.3` → `3.47.4` (Dart `3.13.3` unchanged); refresh `pubspec.lock` on new SDK.
