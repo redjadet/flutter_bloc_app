@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-16_flutter_3_47_4_pin.md`](2026-09-16_flutter_3_47_4_pin.md): Pin Flutter `3.47.3` → `3.47.4` (Dart `3.13.3` unchanged); refresh `pubspec.lock` on new SDK.
 - [`2026-09-13_hive_rmw_allowlist_cleared.md`](2026-09-13_hive_rmw_allowlist_cleared.md): Clear remaining Hive getBox RMW allowlist (chart/GraphQL/iGaming/realtime/remote_config/staff).
 - [`2026-09-13_error_model_graphql_todo.md`](2026-09-13_error_model_graphql_todo.md): Collapse graphql_demo + todo_list dual error channels toward AppError.
 - [`2026-09-13_folder_contract_test_mirror.md`](2026-09-13_folder_contract_test_mirror.md): Mirror chat/scapes/settings cubit tests under presentation/cubit/; refresh June audit.
