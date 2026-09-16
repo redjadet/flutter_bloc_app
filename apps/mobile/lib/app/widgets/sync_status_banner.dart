@@ -4,8 +4,8 @@ import 'package:design_system/design_system.dart'
     show AppMessage, PlatformAdaptive;
 import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
@@ -21,19 +21,8 @@ class SyncStatusBanner extends StatefulWidget {
   State<SyncStatusBanner> createState() => _SyncStatusBannerState();
 }
 
-class _SyncStatusBannerState extends State<SyncStatusBanner> {
-  bool _didEnsureSyncStarted = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) {
-      return;
-    }
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
-  }
-
+class _SyncStatusBannerState extends State<SyncStatusBanner>
+    with EnsureSyncStartedMixin {
   @override
   Widget build(BuildContext context) {
     if (context.tryCubit<SyncStatusCubit>() == null) {

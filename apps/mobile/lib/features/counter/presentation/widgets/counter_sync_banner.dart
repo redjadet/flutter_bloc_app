@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
+import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
-import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -22,17 +22,8 @@ class CounterSyncBanner extends StatefulWidget {
   State<CounterSyncBanner> createState() => _CounterSyncBannerState();
 }
 
-class _CounterSyncBannerState extends State<CounterSyncBanner> {
-  bool _didEnsureSyncStarted = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) return;
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
-  }
-
+class _CounterSyncBannerState extends State<CounterSyncBanner>
+    with EnsureSyncStartedMixin {
   @override
   Widget build(BuildContext context) =>
       _CounterSyncBannerBody(l10n: widget.l10n);

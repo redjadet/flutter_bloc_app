@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
@@ -14,19 +14,8 @@ class SyncDiagnosticsSection extends StatefulWidget {
   State<SyncDiagnosticsSection> createState() => _SyncDiagnosticsSectionState();
 }
 
-class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
-  bool _didEnsureSyncStarted = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) {
-      return;
-    }
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
-  }
-
+class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection>
+    with EnsureSyncStartedMixin {
   @override
   Widget build(BuildContext context) {
     final double gap = context.responsiveGapS;
