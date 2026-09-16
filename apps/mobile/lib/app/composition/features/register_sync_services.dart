@@ -18,28 +18,25 @@ void registerSyncServices() {
     () => PendingSyncRepository(hiveService: getIt<HiveService>()),
     dispose: (repository) => repository.dispose(),
   );
-  registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(
-    () {
-      final IotDemoRealtimeSubscription realtime =
-          getIt<IotDemoRealtimeSubscription>();
-      return BackgroundSyncCoordinator(
-        repository: getIt<PendingSyncRepository>(),
-        networkStatusService: getIt<NetworkStatusService>(),
-        timerService: getIt<TimerService>(),
-        registry: getIt<SyncableRepositoryRegistry>(),
-        getSyncSupabaseUserId: () =>
-            getIt<SupabaseAuthRepository>().currentUser?.id,
-        getSharedSyncAuthUserId: () {
-          if (!getIt.isRegistered<FirebaseAuth>()) {
-            return null;
-          }
-          return getIt<FirebaseAuth>().currentUser?.uid;
-        },
-        startIotDemoRealtimeSubscription: (onSyncRequested) =>
-            realtime.start(onSyncRequested),
-        stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),
-      );
-    },
-    dispose: (coordinator) => coordinator.dispose(),
-  );
+  registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(() {
+    final IotDemoRealtimeSubscription realtime =
+        getIt<IotDemoRealtimeSubscription>();
+    return BackgroundSyncCoordinator(
+      repository: getIt<PendingSyncRepository>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      timerService: getIt<TimerService>(),
+      registry: getIt<SyncableRepositoryRegistry>(),
+      getSyncSupabaseUserId: () =>
+          getIt<SupabaseAuthRepository>().currentUser?.id,
+      getSharedSyncAuthUserId: () {
+        if (!getIt.isRegistered<FirebaseAuth>()) {
+          return null;
+        }
+        return getIt<FirebaseAuth>().currentUser?.uid;
+      },
+      startIotDemoRealtimeSubscription: (onSyncRequested) =>
+          realtime.start(onSyncRequested),
+      stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),
+    );
+  }, dispose: (coordinator) => coordinator.dispose());
 }

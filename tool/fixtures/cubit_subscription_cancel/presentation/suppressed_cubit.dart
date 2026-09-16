@@ -1,6 +1,6 @@
 class SuppressedCubit {
-  void start(final Stream<int> stream) {
+  void start(Stream<int> stream) {
     // check-ignore: fixture documents warn-only suppression
-    stream.listen((final _) {});
+    stream.listen((_) {});
   }
 }

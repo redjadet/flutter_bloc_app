@@ -57,12 +57,8 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
               hostHandle: state.hostHandle,
             ),
           ),
-          error: (state) => emit(
-            state.copyWith(
-              message: message,
-              isSending: false,
-            ),
-          ),
+          error: (state) =>
+              emit(state.copyWith(message: message, isSending: false)),
         );
       },
     );

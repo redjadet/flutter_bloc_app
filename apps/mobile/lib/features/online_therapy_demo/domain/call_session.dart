@@ -1,14 +1,6 @@
-enum CallProvider {
-  jitsi,
-  simulated,
-}
+enum CallProvider { jitsi, simulated }
 
-enum CallJoinStatus {
-  idle,
-  preparing,
-  connected,
-  failed,
-}
+enum CallJoinStatus { idle, preparing, connected, failed }
 
 class const CallSession({
   required final String id,

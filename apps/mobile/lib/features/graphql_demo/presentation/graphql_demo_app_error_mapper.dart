@@ -1,9 +1,7 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:utilities/utilities.dart';
 
-AppError graphqlDemoAppErrorFromException(
-  GraphqlDemoException exception,
-) {
+AppError graphqlDemoAppErrorFromException(GraphqlDemoException exception) {
   return graphqlDemoAppErrorFromType(
     exception.type,
     exception.message,

@@ -29,9 +29,7 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
         final int generation = ++_authTransitionGeneration;
         _authTransitionChain = _authTransitionChain
             .catchError((Object _) {})
-            .then(
-              (_) => _handleAuthUserChanged(user, generation: generation),
-            );
+            .then((_) => _handleAuthUserChanged(user, generation: generation));
       },
       onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(

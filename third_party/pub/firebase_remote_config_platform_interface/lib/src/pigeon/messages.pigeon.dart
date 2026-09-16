@@ -61,10 +61,7 @@ class RemoteConfigPigeonSettings {
   int minimumFetchIntervalSeconds;
 
   List<Object?> _toList() {
-    return <Object?>[
-      fetchTimeoutSeconds,
-      minimumFetchIntervalSeconds,
-    ];
+    return <Object?>[fetchTimeoutSeconds, minimumFetchIntervalSeconds];
   }
 
   Object encode() {

@@ -39,9 +39,10 @@ extension SimulatedSocialFeedRemoteMutations
     if (base == null) {
       throw const SocialFeedUnknownFailure();
     }
-    final SocialFeedPost projected = _project(viewer, base).copyWith(
-      serverRevision: base.serverRevision + 1,
-    );
+    final SocialFeedPost projected = _project(
+      viewer,
+      base,
+    ).copyWith(serverRevision: base.serverRevision + 1);
     _replace(base.copyWith(serverRevision: base.serverRevision + 1));
     _mutationAckCache.putIfAbsent(
       viewer.id,
@@ -79,10 +80,7 @@ extension SimulatedSocialFeedRemoteMutations
       throw const SocialFeedUnknownFailure();
     }
     final List<SocialFeedComment> thread =
-        _commentsByPostId.putIfAbsent(
-          postId,
-          () => <SocialFeedComment>[],
-        )..add(
+        _commentsByPostId.putIfAbsent(postId, () => <SocialFeedComment>[])..add(
           SocialFeedComment(
             id: mutationId,
             postId: postId,

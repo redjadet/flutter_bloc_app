@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
 
-void navigateBad(final GoRouter router) {
+void navigateBad(GoRouter router) {
   router.go('/bad');
 }

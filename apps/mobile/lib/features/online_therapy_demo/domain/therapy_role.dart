@@ -1,5 +1,1 @@
-enum TherapyRole {
-  client,
-  therapist,
-  admin,
-}
+enum TherapyRole { client, therapist, admin }

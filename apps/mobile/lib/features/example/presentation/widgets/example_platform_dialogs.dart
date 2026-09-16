@@ -117,9 +117,8 @@ Widget _buildInfoRow({
       Expanded(
         child: Text(
           label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
       SizedBox(width: context.responsiveGapM),

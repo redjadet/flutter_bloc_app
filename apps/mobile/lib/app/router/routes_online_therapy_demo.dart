@@ -55,10 +55,8 @@ class const OnlineTherapyDemoRouteFactory({
   }
 
   RouteBase createRoute() => ShellRoute(
-    builder: (context, state, child) => OnlineTherapyDemoScope(
-      deps: _deps,
-      child: child,
-    ),
+    builder: (context, state, child) =>
+        OnlineTherapyDemoScope(deps: _deps, child: child),
     routes: <RouteBase>[
       GoRoute(
         path: AppRoutes.onlineTherapyDemoPath,

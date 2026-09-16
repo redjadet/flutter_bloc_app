@@ -5,9 +5,7 @@ import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_co
 import 'package:secure_core_bridge/secure_core_bridge.dart';
 
 void registerSecureMessagingDemoServices() {
-  registerLazySingletonIfAbsent<SecureCoreNativeApi>(
-    createSecureCoreNativeApi,
-  );
+  registerLazySingletonIfAbsent<SecureCoreNativeApi>(createSecureCoreNativeApi);
   registerLazySingletonIfAbsent<SecureCoreRepository>(
     () => FfiSecureCoreRepository(getIt<SecureCoreNativeApi>()),
   );

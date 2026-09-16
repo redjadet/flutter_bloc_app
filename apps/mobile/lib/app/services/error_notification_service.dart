@@ -18,10 +18,7 @@ abstract class ErrorNotificationService {
 
 class SnackbarErrorNotificationService implements ErrorNotificationService {
   @override
-  Future<void> showSnackBar(
-    BuildContext context,
-    String message,
-  ) async {
+  Future<void> showSnackBar(BuildContext context, String message) async {
     if (!context.mounted) {
       ContextUtils.logNotMounted(
         'SnackbarErrorNotificationService.showSnackBar',

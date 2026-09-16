@@ -49,9 +49,8 @@ class const AuxiliaryRouteFactory({
       name: AppRoutes.websocket,
       builder: (_, _) => DeferredPage(
         loadLibrary: websocket_page.loadLibrary,
-        builder: (context) => websocket_page.buildWebsocketPage(
-          repository: websocketRepository,
-        ),
+        builder: (context) =>
+            websocket_page.buildWebsocketPage(repository: websocketRepository),
       ),
     ),
     RouteScopedPage.route(
@@ -77,10 +76,8 @@ class const AuxiliaryRouteFactory({
     RouteScopedPage.route(
       path: AppRoutes.searchPath,
       name: AppRoutes.search,
-      builder: (_, _) => SearchPage(
-        repository: searchRepository,
-        timerService: timerService,
-      ),
+      builder: (_, _) =>
+          SearchPage(repository: searchRepository, timerService: timerService),
     ),
     RouteScopedPage.routeWithCubit<TodoListCubit>(
       path: AppRoutes.todoListPath,

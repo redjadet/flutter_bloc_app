@@ -11,7 +11,5 @@ void registerIgamingDemoServices() {
   registerLazySingletonIfAbsent<DemoBalanceRepository>(
     () => HiveDemoBalanceRepository(hiveService: getIt<HiveService>()),
   );
-  registerLazySingletonIfAbsent<DemoGameRepository>(
-    DemoGameRepositoryImpl.new,
-  );
+  registerLazySingletonIfAbsent<DemoGameRepository>(DemoGameRepositoryImpl.new);
 }

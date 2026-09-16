@@ -134,9 +134,7 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
   ) {
     final colorScheme = theme.colorScheme;
     final TextStyle titleStyle =
-        theme.textTheme.titleMedium?.copyWith(
-          color: colorScheme.onSurface,
-        ) ??
+        theme.textTheme.titleMedium?.copyWith(color: colorScheme.onSurface) ??
         TextStyle(
           color: colorScheme.onSurface,
           fontSize: 17,
@@ -215,10 +213,7 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
     );
   }
 
-  void handleOverflowSelection(
-    BuildContext context,
-    OverflowAction action,
-  ) {
+  void handleOverflowSelection(BuildContext context, OverflowAction action) {
     if (_counterPageOverflowItems.isEmpty) {
       return;
     }
@@ -229,14 +224,9 @@ extension _CounterPageAppBarUi on CounterPageAppBar {
     navigateToOverflowItem(context, item);
   }
 
-  void navigateToOverflowItem(
-    BuildContext context,
-    OverflowItem item,
-  ) {
+  void navigateToOverflowItem(BuildContext context, OverflowItem item) {
     if (!context.mounted) {
-      ContextUtils.logNotMounted(
-        'CounterPageAppBar._navigateToOverflowItem',
-      );
+      ContextUtils.logNotMounted('CounterPageAppBar._navigateToOverflowItem');
       return;
     }
     unawaited(context.pushNamed(item.routeName));

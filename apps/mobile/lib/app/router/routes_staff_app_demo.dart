@@ -55,29 +55,26 @@ class const StaffAppDemoRouteFactory({
   required final StaffDemoProofPhotoPicker photoPicker,
   required final StaffDemoTimeEntriesRepository timeEntriesRepository,
 }) {
-  Widget _buildShell(
-    BuildContext context,
-    GoRouterState state,
-    Widget child,
-  ) => AppRouteAuthGate(
-    policy: AppRoutePolicies.staffAppDemo,
-    getCurrentUser: () => authRepository.currentUser,
-    authStateChanges: authRepository.authStateChanges,
-    authPath: AppRoutes.authPath,
-    child: StaffAppDemoShellPage(child: child)
-        .routeScoped(
-          create: () => StaffDemoSitesCubit(repository: siteRepository),
-          init: (cubit) => cubit.load(),
-        )
-        .routeScoped(
-          create: () => StaffDemoSessionCubit(
-            authRepository: authRepository,
-            profileRepository: profileRepository,
-            pushTokenRepository: pushTokenRepository,
-          ),
-          init: (cubit) => cubit.hydrate(),
-        ),
-  );
+  Widget _buildShell(BuildContext context, GoRouterState state, Widget child) =>
+      AppRouteAuthGate(
+        policy: AppRoutePolicies.staffAppDemo,
+        getCurrentUser: () => authRepository.currentUser,
+        authStateChanges: authRepository.authStateChanges,
+        authPath: AppRoutes.authPath,
+        child: StaffAppDemoShellPage(child: child)
+            .routeScoped(
+              create: () => StaffDemoSitesCubit(repository: siteRepository),
+              init: (cubit) => cubit.load(),
+            )
+            .routeScoped(
+              create: () => StaffDemoSessionCubit(
+                authRepository: authRepository,
+                profileRepository: profileRepository,
+                pushTokenRepository: pushTokenRepository,
+              ),
+              init: (cubit) => cubit.hydrate(),
+            ),
+      );
 
   ShellRoute createShellRoute() => ShellRoute(
     builder: _buildShell,
@@ -145,9 +142,8 @@ class const StaffAppDemoRouteFactory({
       RouteScopedPage.routeWithCubit<StaffDemoAdminCubit>(
         path: AppRoutes.staffAppDemoAdminPath,
         name: AppRoutes.staffAppDemoAdmin,
-        create: (_, _) => StaffDemoAdminCubit(
-          timeEntriesRepository: timeEntriesRepository,
-        ),
+        create: (_, _) =>
+            StaffDemoAdminCubit(timeEntriesRepository: timeEntriesRepository),
         init: (cubit) => cubit.load(),
         child: const StaffAppDemoAdminPage(),
       ),

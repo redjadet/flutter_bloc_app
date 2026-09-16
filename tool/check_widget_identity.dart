@@ -65,16 +65,13 @@ void _scanFile(
     final line = lines[i];
 
     // Builder-based lists.
-    if (_containsAny(
-      line,
-      const [
-        'ListView.builder(',
-        'ListView.separated(',
-        'GridView.builder(',
-        'SliverChildBuilderDelegate(',
-        'ReorderableListView.builder(',
-      ],
-    )) {
+    if (_containsAny(line, const [
+      'ListView.builder(',
+      'ListView.separated(',
+      'GridView.builder(',
+      'SliverChildBuilderDelegate(',
+      'ReorderableListView.builder(',
+    ])) {
       if (_isSuppressed(lines, i)) continue;
 
       final block = _extractParenBlock(lines, i);
@@ -180,10 +177,7 @@ void _scanFile(
   }
 }
 
-Future<List<File>> _resolveScanFiles(
-  Directory root,
-  List<String> args,
-) async {
+Future<List<File>> _resolveScanFiles(Directory root, List<String> args) async {
   final scanRoots = args.isEmpty
       ? <FileSystemEntity>[
           Directory('${root.path}${Platform.pathSeparator}lib'),
@@ -218,9 +212,7 @@ Future<List<File>> _resolveScanFiles(
   return files;
 }
 
-Set<String> _findLocalStateOwnerWidgets(
-  Map<String, List<String>> fileLines,
-) {
+Set<String> _findLocalStateOwnerWidgets(Map<String, List<String>> fileLines) {
   final owners = <String>{};
 
   for (final lines in fileLines.values) {
@@ -290,10 +282,7 @@ _TextBlock? _extractParenBlock(List<String> lines, int startLine) {
   return null;
 }
 
-_TextBlock? _extractChildrenListBlock(
-  List<String> lines,
-  int startLine,
-) {
+_TextBlock? _extractChildrenListBlock(List<String> lines, int startLine) {
   final buffer = StringBuffer();
   var open = 0;
   var seenList = false;
@@ -516,10 +505,7 @@ _ReturnCall? _extractConstructorCallFromExpression(String expression) {
   final callText = _extractConstructorCallText(afterReturn);
   if (callText == null) return null;
 
-  return _ReturnCall(
-    constructorName: name,
-    callText: callText,
-  );
+  return _ReturnCall(constructorName: name, callText: callText);
 }
 
 String? _extractConstructorCallText(String text) {
@@ -547,10 +533,7 @@ String? _firstConstructorName(String expr) {
   return noConst.substring(0, openIdx).trim();
 }
 
-String? _extractNamedArgExpression(
-  String blockText,
-  String argName,
-) {
+String? _extractNamedArgExpression(String blockText, String argName) {
   final idx = blockText.indexOf('$argName:');
   if (idx < 0) return null;
   final after = blockText.substring(idx + '$argName:'.length);
@@ -582,10 +565,7 @@ class _ChildEntry {
 }
 
 class _ReturnCall {
-  const _ReturnCall({
-    required this.constructorName,
-    required this.callText,
-  });
+  const _ReturnCall({required this.constructorName, required this.callText});
 
   final String constructorName;
   final String callText;

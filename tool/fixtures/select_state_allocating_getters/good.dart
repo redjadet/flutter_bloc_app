@@ -5,16 +5,16 @@ class GoodState {
 }
 
 class GoodContext {
-  T selectState<C, S, T>({required final T Function(S state) selector}) =>
+  T selectState<C, S, T>({required T Function(S state) selector}) =>
       throw UnimplementedError();
 }
 
 class EvenItemsViewData {
   const EvenItemsViewData(this.items);
 
-  factory EvenItemsViewData.fromState(final GoodState state) {
+  factory EvenItemsViewData.fromState(GoodState state) {
     final items = <int>[
-      for (final item in state.items)
+      for (item in state.items)
         if (item.isEven) item,
     ];
     return EvenItemsViewData(List<int>.unmodifiable(items));
@@ -23,7 +23,7 @@ class EvenItemsViewData {
   final List<int> items;
 }
 
-void build(final GoodContext context) {
+void build(GoodContext context) {
   context.selectState<Object, GoodState, EvenItemsViewData>(
     selector: EvenItemsViewData.fromState,
   );

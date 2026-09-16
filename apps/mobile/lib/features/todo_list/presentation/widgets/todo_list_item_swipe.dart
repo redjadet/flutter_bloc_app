@@ -13,9 +13,7 @@ Widget buildTodoSwipeBackground({
   color: color,
   elevation: 0,
   margin: EdgeInsets.zero,
-  padding: EdgeInsets.symmetric(
-    horizontal: context.responsiveHorizontalGapL,
-  ),
+  padding: EdgeInsets.symmetric(horizontal: context.responsiveHorizontalGapL),
   child: Align(
     alignment: alignment,
     child: Row(

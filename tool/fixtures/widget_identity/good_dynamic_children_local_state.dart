@@ -17,7 +17,7 @@ class _FixtureSearchRowState extends State<FixtureSearchRow> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TextField(focusNode: _focusNode);
   }
 }
@@ -28,7 +28,7 @@ class FixturePanel extends StatelessWidget {
   final List<Widget> trailing;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(
       children: [
         FixtureSearchRow(key: ValueKey('fixture-search-row')),

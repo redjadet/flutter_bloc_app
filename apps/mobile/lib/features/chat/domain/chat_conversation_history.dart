@@ -35,9 +35,7 @@ List<ChatConversation> replaceChatConversation(
   required List<ChatConversation> history,
 }) {
   final List<ChatConversation> updated = List<ChatConversation>.from(history);
-  final int index = updated.indexWhere(
-    (c) => c.id == conversation.id,
-  );
+  final int index = updated.indexWhere((c) => c.id == conversation.id);
 
   if (index >= 0) {
     if (conversation.hasContent) {

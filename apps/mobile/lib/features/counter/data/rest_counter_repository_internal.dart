@@ -58,10 +58,7 @@ Future<Response<T>> _restCounterRepositorySendRequest<T>({
   required RestCounterRepository repository,
   required String operation,
   required Future<Response<T>> Function() request,
-  required CounterError Function({
-    Object? originalError,
-    String? message,
-  })
+  required CounterError Function({Object? originalError, String? message})
   errorFactory,
   CounterError Function(Response<T> response)? onHttpFailure,
 }) => NetworkGuard.executeDio<T, CounterError>(
@@ -84,10 +81,7 @@ Future<Response<T>> _restCounterRepositorySendRequest<T>({
 Map<String, String> _headers(
   RestCounterRepository repository, {
   Map<String, String>? overrides,
-}) => {
-  ...repository._defaultHeaders,
-  ...?overrides,
-};
+}) => {...repository._defaultHeaders, ...?overrides};
 
 bool _isSuccess(int statusCode) => statusCode >= 200 && statusCode < 300;
 
@@ -153,10 +147,7 @@ CounterSnapshot _parseSnapshot(String body) {
   }
 }
 
-void _logHttpError<T>(
-  String operation,
-  Response<T> response,
-) {
+void _logHttpError<T>(String operation, Response<T> response) {
   AppLogger.error(
     'RestCounterRepository.$operation non-success: ${_statusCodeLabel(response)}',
     'Response body omitted for privacy',

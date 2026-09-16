@@ -13,9 +13,7 @@ List<firebase_ui.AuthProvider> buildAuthProviders({
         override ?? firebase_ui.FirebaseUIAuth.providersFor(auth.app),
       );
 
-  if (!providers.any(
-    (provider) => provider is firebase_ui.EmailAuthProvider,
-  )) {
+  if (!providers.any((provider) => provider is firebase_ui.EmailAuthProvider)) {
     providers.insert(0, firebase_ui.EmailAuthProvider());
   }
 

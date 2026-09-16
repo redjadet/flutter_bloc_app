@@ -120,9 +120,7 @@ void main(List<String> args) {
   final bool enforceThreshold = args.contains('--enforce-threshold');
   if (enforceThreshold) {
     final double threshold =
-        double.tryParse(
-          Platform.environment['COVERAGE_THRESHOLD'] ?? '75',
-        ) ??
+        double.tryParse(Platform.environment['COVERAGE_THRESHOLD'] ?? '75') ??
         80;
     if (coverage.totalPercentage + 1e-9 < threshold) {
       stderr.writeln(
@@ -281,37 +279,25 @@ class _Coverage {
         'are excluded from these totals.',
       )
       ..writeln()
-      ..writeln(
-        "Files that don't require tests are also excluded:",
-      )
+      ..writeln("Files that don't require tests are also excluded:")
       ..writeln()
-      ..writeln(
-        '- Mock repositories (test utilities themselves)',
-      )
+      ..writeln('- Mock repositories (test utilities themselves)')
       ..writeln(
         '- Simple data classes (Freezed classes, simple Equatable classes)',
       )
-      ..writeln(
-        '- Configuration files (files with only constants)',
-      )
+      ..writeln('- Configuration files (files with only constants)')
       ..writeln(
         '- Deferred route wrappers and generated platform bootstrap files',
       )
-      ..writeln(
-        '- Debug utilities (performance profiler files)',
-      )
-      ..writeln(
-        '- Background isolate entrypoints and no-op adapters',
-      )
+      ..writeln('- Debug utilities (performance profiler files)')
+      ..writeln('- Background isolate entrypoints and no-op adapters')
       ..writeln(
         '- Platform-specific widgets (map widgets requiring native testing)',
       )
       ..writeln(
         '- StoreKit / in-app purchase adapters (device-backed integration only)',
       )
-      ..writeln(
-        '- Staff demo Firestore adapters (contract/integration suites)',
-      )
+      ..writeln('- Staff demo Firestore adapters (contract/integration suites)')
       ..writeln(
         '- Online therapy / staff / iGaming / case-study demo page shells '
         '(integration/device-backed flows)',
@@ -321,12 +307,8 @@ class _Coverage {
         'FCM demo cubit, GenUI agent, markdown RenderObject '
         '(device-backed or custom-render surfaces)',
       )
-      ..writeln(
-        '- Part files (`.part.dart`, tested via parent library)',
-      )
-      ..writeln(
-        '- Files with `// coverage:ignore-file` comment',
-      )
+      ..writeln('- Part files (`.part.dart`, tested via parent library)')
+      ..writeln('- Files with `// coverage:ignore-file` comment')
       ..writeln()
       ..writeln(
         'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.',

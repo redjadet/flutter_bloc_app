@@ -31,12 +31,9 @@ class BootstrapCoordinator {
   static Future<void> Function() initializePlatform = PlatformInit.initialize;
 
   @visibleForTesting
-  static Future<void> Function({
-    required bool allowAssetFallback,
-  })
-  loadSecrets = ({
-    required allowAssetFallback,
-  }) => SecretConfig.load(allowAssetFallback: allowAssetFallback);
+  static Future<void> Function({required bool allowAssetFallback}) loadSecrets =
+      ({required allowAssetFallback}) =>
+          SecretConfig.load(allowAssetFallback: allowAssetFallback);
 
   @visibleForTesting
   static Future<void> Function() loadAppVersion =
@@ -141,9 +138,8 @@ class BootstrapCoordinator {
   static void resetForTest() {
     ensureBindingInitialized = WidgetsFlutterBinding.ensureInitialized;
     initializePlatform = PlatformInit.initialize;
-    loadSecrets = ({
-      required allowAssetFallback,
-    }) => SecretConfig.load(allowAssetFallback: allowAssetFallback);
+    loadSecrets = ({required allowAssetFallback}) =>
+        SecretConfig.load(allowAssetFallback: allowAssetFallback);
     loadAppVersion = AppVersionService.loadAppVersion;
     initializeFirebase = FirebaseBootstrapService.initializeFirebase;
     configureFirebaseUi = FirebaseBootstrapService.configureFirebaseUI;

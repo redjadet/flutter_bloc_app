@@ -10,34 +10,21 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
     required double lhs,
     required double rhs,
     required CalculatorOperation operation,
-  }) => calculator.applyOperation(
-    lhs: lhs,
-    rhs: rhs,
-    operation: operation,
-  );
+  }) => calculator.applyOperation(lhs: lhs, rhs: rhs, operation: operation);
 
   String _format(double value) => formatDisplay(calculator, value);
 
-  double _resolveAccumulator(
-    CalculatorState current,
-    double currentValue,
-  ) {
+  double _resolveAccumulator(CalculatorState current, double currentValue) {
     if ((current.accumulator, current.operation) case (final lhs?, final op?)) {
       if (!current.replaceInput) {
-        return _applyOperation(
-          lhs: lhs,
-          rhs: currentValue,
-          operation: op,
-        );
+        return _applyOperation(lhs: lhs, rhs: currentValue, operation: op);
       }
     }
     return current.accumulator ?? currentValue;
   }
 
-  String _pendingHistory(
-    double accumulator,
-    CalculatorOperation operation,
-  ) => '${_format(accumulator)}${operationSymbol(operation)}';
+  String _pendingHistory(double accumulator, CalculatorOperation operation) =>
+      '${_format(accumulator)}${operationSymbol(operation)}';
 
   String _composeHistory({
     required CalculatorState current,
@@ -95,20 +82,18 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
     );
   }
 
-  CalculatorState _errorState(
-    CalculatorState current,
-    CalculatorError error,
-  ) => current.copyWith(
-    display: '0',
-    accumulator: null,
-    operation: null,
-    replaceInput: true,
-    lastOperand: null,
-    lastOperation: null,
-    settledAmount: 0,
-    history: '',
-    error: error,
-  );
+  CalculatorState _errorState(CalculatorState current, CalculatorError error) =>
+      current.copyWith(
+        display: '0',
+        accumulator: null,
+        operation: null,
+        replaceInput: true,
+        lastOperand: null,
+        lastOperation: null,
+        settledAmount: 0,
+        history: '',
+        error: error,
+      );
 
   CalculatorState _clearErrorState(CalculatorState current) => current.copyWith(
     display: '0',

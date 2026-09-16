@@ -17,10 +17,7 @@ abstract class IotDemoRepository {
   Future<void> disconnect(String deviceId);
 
   /// Sends [command] to the device with [deviceId].
-  Future<void> sendCommand(
-    String deviceId,
-    IotDeviceCommand command,
-  );
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command);
 
   /// Adds a new device. Writes to local storage and remote (Supabase) when
   /// available.

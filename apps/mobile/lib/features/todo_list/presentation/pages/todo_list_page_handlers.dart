@@ -32,10 +32,7 @@ Future<void> _handleAddTodo(BuildContext context) async {
   );
 }
 
-Future<void> _handleEditTodo(
-  BuildContext context,
-  TodoItem item,
-) async {
+Future<void> _handleEditTodo(BuildContext context, TodoItem item) async {
   final TodoEditorResult? result = await showTodoEditorDialog(
     context: context,
     existing: item,
@@ -56,10 +53,7 @@ Future<void> _handleEditTodo(
   );
 }
 
-Future<void> _handleDeleteTodo(
-  BuildContext context,
-  TodoItem item,
-) async {
+Future<void> _handleDeleteTodo(BuildContext context, TodoItem item) async {
   final bool? shouldDelete = await showTodoDeleteConfirmDialog(
     context: context,
     title: item.title,
@@ -103,23 +97,20 @@ Future<void> _handleDeleteWithUndo(
     // the snackbar may already have been removed (auto-dismiss or Undo), in
     // which case ScaffoldMessenger's queue is empty and close() throws.
     unawaited(
-      Future<void>.delayed(
-        const Duration(seconds: 2),
-        () {
-          if (!context.mounted) {
-            return;
+      Future<void>.delayed(const Duration(seconds: 2), () {
+        if (!context.mounted) {
+          return;
+        }
+        try {
+          snackBarController.close();
+          // ScaffoldMessenger throws StateError when queue is empty (snackbar
+          // already removed); not a programming error.
+        } catch (error) {
+          if (error is! StateError) {
+            rethrow;
           }
-          try {
-            snackBarController.close();
-            // ScaffoldMessenger throws StateError when queue is empty (snackbar
-            // already removed); not a programming error.
-          } catch (error) {
-            if (error is! StateError) {
-              rethrow;
-            }
-          }
-        },
-      ),
+        }
+      }),
     );
   }
 }

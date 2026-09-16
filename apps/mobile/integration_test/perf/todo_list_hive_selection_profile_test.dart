@@ -21,9 +21,7 @@ void main() {
 
   registerIntegrationHarness();
 
-  testWidgets('todo list selection profile on Hive ≥100', (
-    tester,
-  ) async {
+  testWidgets('todo list selection profile on Hive ≥100', (tester) async {
     await configureIntegrationTestDependencies();
     addTearDown(tearDownIntegrationTestDependencies);
 
@@ -38,50 +36,47 @@ void main() {
 
     await launchTestApp(tester);
 
-    await binding.traceAction(
-      () async {
-        await timelineTask('perf.todo.hive.open', () async {
-          await openExampleDestination(tester, 'Todo List Demo');
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 8));
-        });
+    await binding.traceAction(() async {
+      await timelineTask('perf.todo.hive.open', () async {
+        await openExampleDestination(tester, 'Todo List Demo');
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 8));
+      });
 
-        final Finder firstCheckbox = find.byType(Checkbox).first;
-        await pumpUntilFound(tester, firstCheckbox);
+      final Finder firstCheckbox = find.byType(Checkbox).first;
+      await pumpUntilFound(tester, firstCheckbox);
 
-        await timelineTask('perf.todo.hive.select_one', () async {
+      await timelineTask('perf.todo.hive.select_one', () async {
+        await tapAndPump(tester, firstCheckbox);
+        await tester.pump(const Duration(milliseconds: 50));
+      });
+
+      await timelineTask('perf.todo.hive.deselect_one', () async {
+        await tapAndPump(tester, firstCheckbox);
+        await tester.pump(const Duration(milliseconds: 50));
+      });
+
+      await timelineTask('perf.todo.hive.select_toggle_burst', () async {
+        for (int i = 0; i < 8; i++) {
           await tapAndPump(tester, firstCheckbox);
-          await tester.pump(const Duration(milliseconds: 50));
-        });
+          await tester.pump(const Duration(milliseconds: 32));
+        }
+      });
 
-        await timelineTask('perf.todo.hive.deselect_one', () async {
-          await tapAndPump(tester, firstCheckbox);
-          await tester.pump(const Duration(milliseconds: 50));
-        });
+      await timelineTask('perf.todo.hive.scroll', () async {
+        final Finder scrollTarget = findScrollTarget(tester);
+        for (int i = 0; i < 4; i++) {
+          await tester.fling(
+            scrollTarget,
+            const Offset(0, -700),
+            1600,
+            warnIfMissed: false,
+          );
+          await tester.pump(const Duration(milliseconds: 250));
+        }
+      });
 
-        await timelineTask('perf.todo.hive.select_toggle_burst', () async {
-          for (int i = 0; i < 8; i++) {
-            await tapAndPump(tester, firstCheckbox);
-            await tester.pump(const Duration(milliseconds: 32));
-          }
-        });
-
-        await timelineTask('perf.todo.hive.scroll', () async {
-          final Finder scrollTarget = findScrollTarget(tester);
-          for (int i = 0; i < 4; i++) {
-            await tester.fling(
-              scrollTarget,
-              const Offset(0, -700),
-              1600,
-              warnIfMissed: false,
-            );
-            await tester.pump(const Duration(milliseconds: 250));
-          }
-        });
-
-        await pumpSettleWithin(tester, timeout: const Duration(seconds: 5));
-      },
-      reportKey: 'todo_list_hive_selection_profile',
-    );
+      await pumpSettleWithin(tester, timeout: const Duration(seconds: 5));
+    }, reportKey: 'todo_list_hive_selection_profile');
 
     // Emit for tool/capture_perf_trace.sh scraper.
     // ignore: avoid_print

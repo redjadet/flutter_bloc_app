@@ -287,9 +287,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     _onConfigUpdatedStream ??= _eventChannelConfigUpdated
-        .receiveBroadcastStream(<String, dynamic>{
-          'appName': app.name,
-        })
+        .receiveBroadcastStream(<String, dynamic>{'appName': app.name})
         .map((event) {
           final updatedKeys = Set<String>.from(event);
           return RemoteConfigUpdate(updatedKeys);

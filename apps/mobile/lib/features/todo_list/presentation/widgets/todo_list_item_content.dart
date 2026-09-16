@@ -18,11 +18,7 @@ Widget buildTodoItemContent({
   final int descriptionMaxLines = density.isCompact ? 1 : 2;
   final double verticalGap =
       context.responsiveGapXS /
-      density.resolve(
-        regular: 2,
-        compact: 3,
-        phoneLandscape: 4,
-      );
+      density.resolve(regular: 2, compact: 3, phoneLandscape: 4);
   final double dueDateIconScale = density.resolve(
     regular: 0.7,
     compact: 0.6,

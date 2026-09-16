@@ -67,11 +67,7 @@ extension _IotDemoCubitDevices on IotDemoCubit {
           );
         },
         onError: (Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'IotDemoCubit watchDevices error',
-            error,
-            stackTrace,
-          );
+          AppLogger.error('IotDemoCubit watchDevices error', error, stackTrace);
           if (isClosed || requestId != _devicesWatchRequestId) return;
           emitIotState(
             IotDemoState.error(

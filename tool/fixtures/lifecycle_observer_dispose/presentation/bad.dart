@@ -16,5 +16,5 @@ class _BadObserverPageState extends State<BadObserverPage>
   }
 
   @override
-  Widget build(final BuildContext context) => const SizedBox.shrink();
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

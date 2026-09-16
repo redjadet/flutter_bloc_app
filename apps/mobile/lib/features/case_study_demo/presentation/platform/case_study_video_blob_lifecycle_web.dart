@@ -13,10 +13,7 @@ void registerCaseStudyVideoBlobUrl({
 }) {
   releaseCaseStudyVideoBlobForPath(caseStudyPath);
   final JSArrayBuffer data = Uint8List.fromList(bytes).buffer.toJS;
-  final Blob blob = Blob(
-    [data].toJS,
-    BlobPropertyBag(type: mimeType),
-  );
+  final Blob blob = Blob([data].toJS, BlobPropertyBag(type: mimeType));
   final String blobUrl = URL.createObjectURL(blob);
   _blobUrlByCaseStudyPath[caseStudyPath] = blobUrl;
 }

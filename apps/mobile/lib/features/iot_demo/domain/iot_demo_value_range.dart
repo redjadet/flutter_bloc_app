@@ -7,8 +7,5 @@ const double iotDemoValueMax = 50;
 const int iotDemoDeviceNameMaxLength = 255;
 
 /// Clamps [value] to [min]–[max] and rounds to 2 decimal places.
-double iotDemoClampAndRound(
-  double value,
-  double min,
-  double max,
-) => (value.clamp(min, max) * 100).round() / 100;
+double iotDemoClampAndRound(double value, double min, double max) =>
+    (value.clamp(min, max) * 100).round() / 100;

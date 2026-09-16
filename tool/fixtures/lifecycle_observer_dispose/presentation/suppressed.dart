@@ -17,5 +17,5 @@ class _SuppressedObserverPageState extends State<SuppressedObserverPage>
   }
 
   @override
-  Widget build(final BuildContext context) => const SizedBox.shrink();
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

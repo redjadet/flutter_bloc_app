@@ -63,11 +63,7 @@ Future<void> main(List<String> args) async {
 
     final score = approxTokens * (1.0 + (proxy / 10.0));
 
-    final row = <String, Object?>{
-      ...s,
-      'proxy': proxy,
-      'score': score,
-    };
+    final row = <String, Object?>{...s, 'proxy': proxy, 'score': score};
 
     if (origin == 'pluginCache') {
       vendorRanked.add(row);

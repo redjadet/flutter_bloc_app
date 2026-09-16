@@ -9,10 +9,10 @@ class GoodBlocRebuildScopingPage extends StatelessWidget {
   const GoodBlocRebuildScopingPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocBuilder<_GoodRebuildCubit, int>(
-      buildWhen: (final prev, final next) => prev != next,
-      builder: (final context, final count) => Text('$count'),
+      buildWhen: (prev, next) => prev != next,
+      builder: (context, count) => Text('$count'),
     );
   }
 }

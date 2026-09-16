@@ -1,5 +1,1 @@
-enum NativeInteropStatus {
-  success,
-  unavailable,
-  failed,
-}
+enum NativeInteropStatus { success, unavailable, failed }

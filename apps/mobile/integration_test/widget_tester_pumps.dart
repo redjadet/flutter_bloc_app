@@ -44,11 +44,7 @@ Future<void> pumpSettleWithin(
   Duration timeout = const Duration(seconds: 3),
 }) async {
   try {
-    await tester.pumpAndSettle(
-      step,
-      EnginePhase.sendSemanticsUpdate,
-      timeout,
-    );
+    await tester.pumpAndSettle(step, EnginePhase.sendSemanticsUpdate, timeout);
   } catch (error) {
     // `pumpAndSettle` times out by throwing a `FlutterError` (an `Error`, not an
     // `Exception`). Some callers treat `pumpSettleWithin` as best-effort cleanup

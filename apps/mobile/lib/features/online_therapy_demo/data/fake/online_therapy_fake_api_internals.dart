@@ -25,10 +25,7 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
     return completer.future;
   }
 
-  TherapyUser _userForRole(
-    TherapyRole role, {
-    required String email,
-  }) {
+  TherapyUser _userForRole(TherapyRole role, {required String email}) {
     final String normalized = email.trim().isEmpty
         ? 'user@example.com'
         : email.trim();
@@ -60,10 +57,7 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
   TherapyUser _requireCurrentUser() =>
       _currentUser ?? (throw StateError('Not authenticated'));
 
-  void _requireRole(
-    TherapyUser user, {
-    required List<TherapyRole> allowed,
-  }) {
+  void _requireRole(TherapyUser user, {required List<TherapyRole> allowed}) {
     if (!allowed.contains(user.role)) {
       throw StateError('Not allowed');
     }

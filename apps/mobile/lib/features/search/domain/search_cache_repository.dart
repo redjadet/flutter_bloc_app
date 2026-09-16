@@ -9,10 +9,7 @@ abstract class SearchCacheRepository {
   Future<List<SearchResult>?> loadCachedResults(String query);
 
   /// Saves search results for a query.
-  Future<void> saveCachedResults(
-    String query,
-    List<SearchResult> results,
-  );
+  Future<void> saveCachedResults(String query, List<SearchResult> results);
 
   /// Loads recent search queries (most recent first).
   Future<List<String>> loadRecentQueries();

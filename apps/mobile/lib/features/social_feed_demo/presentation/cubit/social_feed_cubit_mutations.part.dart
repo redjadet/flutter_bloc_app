@@ -101,10 +101,7 @@ mixin _SocialFeedCubitMutations
           .toList();
       final Map<String, List<SocialFeedComment>> pendingMap =
           Map<String, List<SocialFeedComment>>.from(d.pendingCommentsByPostId);
-      pendingMap[postId] = <SocialFeedComment>[
-        ...?pendingMap[postId],
-        pending,
-      ];
+      pendingMap[postId] = <SocialFeedComment>[...?pendingMap[postId], pending];
       return d.copyWith(
         posts: posts,
         pendingCommentsByPostId: pendingMap,

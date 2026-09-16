@@ -19,42 +19,37 @@ void main() {
       await configureIntegrationTestDependencies();
       await launchTestApp(tester);
 
-      await binding.traceAction(
-        () async {
-          await timelineTask('perf.social_feed.open', () async {
-            await openExampleDestination(tester, 'Social feed demo');
-            await pumpUntilFound(
-              tester,
-              find.byKey(const ValueKey('social-feed-list')),
-            );
-            await pumpUntilFound(
-              tester,
-              find.byKey(const ValueKey('social-feed-post-post-060')),
-            );
-          });
+      await binding.traceAction(() async {
+        await timelineTask('perf.social_feed.open', () async {
+          await openExampleDestination(tester, 'Social feed demo');
+          await pumpUntilFound(
+            tester,
+            find.byKey(const ValueKey('social-feed-list')),
+          );
+          await pumpUntilFound(
+            tester,
+            find.byKey(const ValueKey('social-feed-post-post-060')),
+          );
+        });
 
-          await timelineTask('perf.social_feed.scroll.long', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 6; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -900),
-                1800,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 250));
-            }
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
-        },
-        reportKey: 'social_feed_scroll_trace',
-      );
+        await timelineTask('perf.social_feed.scroll.long', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 6; i++) {
+            await tester.fling(
+              scrollTarget,
+              const Offset(0, -900),
+              1800,
+              warnIfMissed: false,
+            );
+            await tester.pump(const Duration(milliseconds: 250));
+          }
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
+      }, reportKey: 'social_feed_scroll_trace');
 
       // Host-side tooling extracts this marker from `flutter test` logs.
       // ignore: avoid_print
-      print(
-        '__PERF_REPORT_DATA__=${jsonEncode(binding.reportData)}',
-      );
+      print('__PERF_REPORT_DATA__=${jsonEncode(binding.reportData)}');
 
       await tearDownIntegrationTestDependencies();
     });

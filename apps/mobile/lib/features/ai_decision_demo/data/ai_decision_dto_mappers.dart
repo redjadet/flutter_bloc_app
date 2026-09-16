@@ -34,9 +34,7 @@ AiDecisionRiskSignal mapAiDecisionRiskSignal(Map<String, dynamic> json) {
   );
 }
 
-AiDecisionActionRecord mapAiDecisionActionRecord(
-  Map<String, dynamic> json,
-) {
+AiDecisionActionRecord mapAiDecisionActionRecord(Map<String, dynamic> json) {
   final String actionType = _stringOf(json['action_type']).isNotEmpty
       ? _stringOf(json['action_type'])
       : _stringOf(json['type']);
@@ -101,14 +99,13 @@ AiDecisionBandThresholds mapAiDecisionBandThresholds(
   selected: json['selected'],
 );
 
-AiDecisionSimilarCase mapAiDecisionSimilarCase(
-  Map<String, dynamic> json,
-) => AiDecisionSimilarCase(
-  used: json['used'] == true,
-  caseId: _optionalString(json['case_id']),
-  label: _optionalString(json['label']),
-  similarity: json['similarity'],
-);
+AiDecisionSimilarCase mapAiDecisionSimilarCase(Map<String, dynamic> json) =>
+    AiDecisionSimilarCase(
+      used: json['used'] == true,
+      caseId: _optionalString(json['case_id']),
+      label: _optionalString(json['label']),
+      similarity: json['similarity'],
+    );
 
 String _stringOf(Object? value) => value?.toString() ?? '';
 

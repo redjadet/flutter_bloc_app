@@ -22,11 +22,7 @@ ChatRemoteFailureException mapDirectChatException(ChatException error) {
   }
 
   if (lower.contains('http 401') || lower.contains('authentication failed')) {
-    return _directRemoteFailure(
-      error,
-      code: 'auth_required',
-      retryable: false,
-    );
+    return _directRemoteFailure(error, code: 'auth_required', retryable: false);
   }
 
   if (lower.contains('http 403')) {

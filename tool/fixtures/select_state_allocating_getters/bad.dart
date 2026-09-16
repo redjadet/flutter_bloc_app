@@ -4,16 +4,16 @@ class BadState {
   final List<int> items;
 
   List<int> get evenItems =>
-      items.where((final item) => item.isEven).toList(growable: false);
+      items.where((item) => item.isEven).toList(growable: false);
 }
 
 class BadContext {
-  T selectState<C, S, T>({required final T Function(S state) selector}) =>
+  T selectState<C, S, T>({required T Function(S state) selector}) =>
       throw UnimplementedError();
 }
 
-void build(final BadContext context) {
+void build(BadContext context) {
   context.selectState<Object, BadState, List<int>>(
-    selector: (final state) => state.evenItems,
+    selector: (state) => state.evenItems,
   );
 }

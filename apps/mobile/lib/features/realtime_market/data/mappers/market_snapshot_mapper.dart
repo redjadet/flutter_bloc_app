@@ -12,9 +12,8 @@ abstract final class MarketSnapshotMapper {
       return null;
     }
     try {
-      return MarketSnapshotDto.fromJson(
-        Map<dynamic, dynamic>.from(value),
-      ).toDomain();
+      return MarketSnapshotDto.fromJson(Map<dynamic, dynamic>.from(value))
+          .toDomain();
     } on Exception {
       return null;
     }

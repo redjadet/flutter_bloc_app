@@ -20,9 +20,7 @@ mixin _MockBleRepositoryGatt on _MockBleRepositoryBase {
     return Success<List<BleService>>(profile.services);
   }
 
-  Future<Result<List<int>>> readCharacteristic(
-    BleCharacteristicRef ref,
-  ) async {
+  Future<Result<List<int>>> readCharacteristic(BleCharacteristicRef ref) async {
     final BleCharacteristic? characteristic = _findCharacteristic(ref);
     if (characteristic == null || !characteristic.canRead) {
       return FailureResult<List<int>>(characteristicNotFoundFailure());

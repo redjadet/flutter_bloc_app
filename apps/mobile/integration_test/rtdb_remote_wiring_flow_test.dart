@@ -106,9 +106,7 @@ void main() {
 
       final Future<void> todoWatchProof = todo
           .watchAll()
-          .firstWhere(
-            (items) => items.any((item) => item.id == todoId),
-          )
+          .firstWhere((items) => items.any((item) => item.id == todoId))
           .timeout(
             const Duration(seconds: 8),
             onTimeout: () => throw TestFailure(

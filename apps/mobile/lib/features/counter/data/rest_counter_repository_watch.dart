@@ -10,18 +10,12 @@ Stream<CounterSnapshot> _restCounterRepositoryWatch(
       multi.add(repository._latestSnapshot);
     }
     final StreamSubscription<CounterSnapshot> subscription = sourceStream
-        .listen(
-          multi.add,
-          onError: multi.addError,
-        );
+        .listen(multi.add, onError: multi.addError);
     multi.onCancel = subscription.cancel;
   });
 }
 
-void _emitSnapshot(
-  RestCounterRepository repository,
-  CounterSnapshot snapshot,
-) {
+void _emitSnapshot(RestCounterRepository repository, CounterSnapshot snapshot) {
   final CounterSnapshot normalized = _storeSnapshot(repository, snapshot);
   if (!repository._watchController.isClosed) {
     repository._watchController.add(normalized);

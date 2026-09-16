@@ -62,12 +62,7 @@ mixin IotBleCubitGatt on IotBleCubitCore {
               if (isClosed) {
                 return;
               }
-              emit(
-                state.copyWith(
-                  lastReadValue: value,
-                  isSubscribed: true,
-                ),
-              );
+              emit(state.copyWith(lastReadValue: value, isSubscribed: true));
               appendLog(BleLogKind.notify, 'Notify ${value.length} bytes');
             },
             onError: (Object error, StackTrace stackTrace) {
