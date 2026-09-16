@@ -78,9 +78,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             'Chat: sendMessage success transportUsed=${result.transportUsed}',
           );
           if (result.transportUsed == ChatRemotePath.renderOrchestration) {
-            logRenderOrchestrationIfDebug(
-              'cubit_sendMessage_render_success',
-            );
+            logRenderOrchestrationIfDebug('cubit_sendMessage_render_success');
           }
         }
         final DateTime replyTimestamp = DateTime.now();

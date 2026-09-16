@@ -17,9 +17,7 @@ void printPerformanceReport({
   if (rebuildCounts.isNotEmpty) {
     AppLogger.info('Widget Rebuild Statistics:');
     final sorted = rebuildCounts.entries.toList()
-      ..sort(
-        (a, b) => b.value.rebuildCount.compareTo(a.value.rebuildCount),
-      );
+      ..sort((a, b) => b.value.rebuildCount.compareTo(a.value.rebuildCount));
 
     for (final entry in sorted) {
       final info = entry.value;

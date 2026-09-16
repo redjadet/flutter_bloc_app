@@ -117,26 +117,22 @@ void _scheduleSetValueSyncImpl(
     OfflineFirstIotDemoRepository.setValueSyncDebounce,
     () {
       r._timerHandles.unregister(timer);
-      unawaited(
-        () async {
-          try {
-            await _enqueueSetValueCommandImpl(
-              r,
-              deviceId,
-              value,
-              supabaseUserId: userId,
-            );
-          } finally {
-            r._pendingSetValueByDevice.remove(pendingKey);
-          }
-        }(),
-      );
+      unawaited(() async {
+        try {
+          await _enqueueSetValueCommandImpl(
+            r,
+            deviceId,
+            value,
+            supabaseUserId: userId,
+          );
+        } finally {
+          r._pendingSetValueByDevice.remove(pendingKey);
+        }
+      }());
     },
   );
   r._timerHandles.register(timer);
-  r._pendingSetValueByDevice[pendingKey] = IotDemoPendingSetValue(
-    timer: timer,
-  );
+  r._pendingSetValueByDevice[pendingKey] = IotDemoPendingSetValue(timer: timer);
 }
 
 Future<void> _enqueueSetValueCommandImpl(
@@ -145,15 +141,10 @@ Future<void> _enqueueSetValueCommandImpl(
   double value, {
   required String supabaseUserId,
 }) {
-  return _enqueueCommandImpl(
-    r,
-    deviceId,
-    <String, dynamic>{
-      'kind': 'setValue',
-      'value': value,
-    },
-    supabaseUserId: supabaseUserId,
-  );
+  return _enqueueCommandImpl(r, deviceId, <String, dynamic>{
+    'kind': 'setValue',
+    'value': value,
+  }, supabaseUserId: supabaseUserId);
 }
 
 Future<void> _enqueueCommandImpl(

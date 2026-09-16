@@ -39,15 +39,9 @@ AppError _getAppErrorFromDio(DioException error) {
     case DioExceptionType.connectionTimeout:
     case DioExceptionType.sendTimeout:
     case DioExceptionType.receiveTimeout:
-      return _networkError(
-        kind: NetworkErrorKind.timeout,
-        cause: error,
-      );
+      return _networkError(kind: NetworkErrorKind.timeout, cause: error);
     case DioExceptionType.connectionError:
-      return _networkError(
-        kind: NetworkErrorKind.offline,
-        cause: error,
-      );
+      return _networkError(kind: NetworkErrorKind.offline, cause: error);
     default:
       break;
   }
@@ -59,36 +53,21 @@ AppError _getAppErrorFromDio(DioException error) {
   return const UnknownError(message: 'Something went wrong.');
 }
 
-AppError _getAppErrorFromStringHeuristics(
-  dynamic error,
-  String errorString,
-) {
+AppError _getAppErrorFromStringHeuristics(dynamic error, String errorString) {
   if (_containsNetworkHint(errorString)) {
-    return _networkError(
-      kind: NetworkErrorKind.offline,
-      cause: error,
-    );
+    return _networkError(kind: NetworkErrorKind.offline, cause: error);
   }
 
   if (_containsTimeoutHint(errorString)) {
-    return _networkError(
-      kind: NetworkErrorKind.timeout,
-      cause: error,
-    );
+    return _networkError(kind: NetworkErrorKind.timeout, cause: error);
   }
 
   if (_containsUnauthorizedHint(errorString)) {
-    return _authError(
-      kind: AuthErrorKind.unauthorized,
-      cause: error,
-    );
+    return _authError(kind: AuthErrorKind.unauthorized, cause: error);
   }
 
   if (_containsForbiddenHint(errorString)) {
-    return _authError(
-      kind: AuthErrorKind.forbidden,
-      cause: error,
-    );
+    return _authError(kind: AuthErrorKind.forbidden, cause: error);
   }
 
   if (_containsNotFoundHint(errorString)) {
@@ -100,10 +79,7 @@ AppError _getAppErrorFromStringHeuristics(
   }
 
   if (_containsRateLimitHint(errorString)) {
-    return _networkError(
-      kind: NetworkErrorKind.rateLimited,
-      cause: error,
-    );
+    return _networkError(kind: NetworkErrorKind.rateLimited, cause: error);
   }
 
   if (_containsServiceUnavailableHint(errorString)) {
@@ -125,21 +101,13 @@ AppError _getAppErrorFromStringHeuristics(
   }
 
   if (errorString.contains('server')) {
-    return _networkError(
-      kind: NetworkErrorKind.server,
-      cause: error,
-    );
+    return _networkError(kind: NetworkErrorKind.server, cause: error);
   }
 
-  return const UnknownError(
-    message: 'Something went wrong. Please try again.',
-  );
+  return const UnknownError(message: 'Something went wrong. Please try again.');
 }
 
-String _getErrorMessage(
-  dynamic error, {
-  AppLocalizations? l10n,
-}) {
+String _getErrorMessage(dynamic error, {AppLocalizations? l10n}) {
   if (error is HttpRequestFailure) {
     return _getHttpRequestFailureMessage(error, l10n: l10n);
   }
@@ -212,13 +180,6 @@ NetworkError _networkError({
   );
 }
 
-AuthError _authError({
-  required AuthErrorKind kind,
-  required Object? cause,
-}) {
-  return AuthError(
-    message: _authMessage(kind),
-    kind: kind,
-    cause: cause,
-  );
+AuthError _authError({required AuthErrorKind kind, required Object? cause}) {
+  return AuthError(message: _authMessage(kind), kind: kind, cause: cause);
 }

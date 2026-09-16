@@ -102,9 +102,7 @@ class RemoteConfig
   Future<bool> fetchAndActivate() async => remote_config_interop
       .fetchAndActivate(jsObject)
       .toDart
-      .then(
-        (value) => value.toDart,
-      );
+      .then((value) => value.toDart);
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
@@ -244,11 +242,7 @@ enum RemoteConfigFetchStatus {
 }
 
 /// Defines levels of Remote Config logging.
-enum RemoteConfigLogLevel {
-  debug,
-  error,
-  silent,
-}
+enum RemoteConfigLogLevel { debug, error, silent }
 
 class RemoteConfigUpdatePayload
     extends JsObjectWrapper<remote_config_interop.ConfigUpdateJsImpl> {

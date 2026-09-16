@@ -17,10 +17,8 @@ class const MyApp({
 
 class _MyAppState extends State<MyApp> {
   @override
-  Widget build(BuildContext context) => AppScope(
-    router: widget.router,
-    dependencies: widget.dependencies,
-  );
+  Widget build(BuildContext context) =>
+      AppScope(router: widget.router, dependencies: widget.dependencies);
 
   @override
   void dispose() {

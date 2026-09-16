@@ -9,9 +9,7 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
     await _pickAndCommit(_video.pickVideoFromGallery);
   }
 
-  Future<void> _pickAndCommit(
-    Future<MediaPickResult> Function() pick,
-  ) async {
+  Future<void> _pickAndCommit(Future<MediaPickResult> Function() pick) async {
     final String? userId = _requireUserId();
     if (userId == null) return;
     final int requestId = _pickGuard.next();
@@ -79,11 +77,7 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
       if (isClosed || !_commitGuard.isCurrent(commitId)) {
         return;
       }
-      emit(
-        state.copyWith(
-          pickErrorKey: MediaPickErrorKeys.generic,
-        ),
-      );
+      emit(state.copyWith(pickErrorKey: MediaPickErrorKeys.generic));
     }
   }
 

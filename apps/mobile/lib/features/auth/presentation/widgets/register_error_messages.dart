@@ -10,14 +10,12 @@ String? fullNameErrorText(
   null => null,
 };
 
-String? emailErrorText(
-  AppLocalizations l10n,
-  RegisterEmailError? error,
-) => switch (error) {
-  RegisterEmailError.empty => l10n.registerEmailEmptyError,
-  RegisterEmailError.invalid => l10n.registerEmailInvalidError,
-  null => null,
-};
+String? emailErrorText(AppLocalizations l10n, RegisterEmailError? error) =>
+    switch (error) {
+      RegisterEmailError.empty => l10n.registerEmailEmptyError,
+      RegisterEmailError.invalid => l10n.registerEmailInvalidError,
+      null => null,
+    };
 
 String? passwordErrorText(
   AppLocalizations l10n,
@@ -41,11 +39,9 @@ String? confirmPasswordErrorText(
   null => null,
 };
 
-String? phoneErrorText(
-  AppLocalizations l10n,
-  RegisterPhoneError? error,
-) => switch (error) {
-  RegisterPhoneError.empty => l10n.registerPhoneEmptyError,
-  RegisterPhoneError.invalid => l10n.registerPhoneInvalidError,
-  null => null,
-};
+String? phoneErrorText(AppLocalizations l10n, RegisterPhoneError? error) =>
+    switch (error) {
+      RegisterPhoneError.empty => l10n.registerPhoneEmptyError,
+      RegisterPhoneError.invalid => l10n.registerPhoneInvalidError,
+      null => null,
+    };

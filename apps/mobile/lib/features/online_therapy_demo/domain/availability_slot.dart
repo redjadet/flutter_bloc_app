@@ -1,7 +1,4 @@
-enum AvailabilitySlotStatus {
-  available,
-  booked,
-}
+enum AvailabilitySlotStatus { available, booked }
 
 class const AvailabilitySlot({
   required final String id,

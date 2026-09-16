@@ -84,9 +84,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     final List<ChatConversation> history = List<ChatConversation>.from(
       state.history,
     );
-    final int index = history.indexWhere(
-      (c) => c.id == conversationId,
-    );
+    final int index = history.indexWhere((c) => c.id == conversationId);
     if (index < 0) {
       return;
     }

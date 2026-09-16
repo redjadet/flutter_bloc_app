@@ -178,16 +178,15 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
           if (initialDate != null)
             PlatformAdaptive.textButton(
               context: context,
-              onPressed: () => Navigator.of(context).pop(
-                const _DatePickerResult.cleared(),
-              ),
+              onPressed: () =>
+                  Navigator.of(context).pop(const _DatePickerResult.cleared()),
               child: Text(clearLabel),
             ),
           PlatformAdaptive.textButton(
             context: context,
-            onPressed: () => Navigator.of(context).pop(
-              _DatePickerResult.confirmed(selected),
-            ),
+            onPressed: () =>
+                Navigator.of(context)
+                    .pop(_DatePickerResult.confirmed(selected)),
             child: Text(saveLabel),
           ),
         ];

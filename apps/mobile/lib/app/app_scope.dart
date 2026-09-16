@@ -79,9 +79,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
       _backgroundTrimHandle?.dispose();
       _backgroundTrimHandle = _timerService.runOnce(
         const Duration(milliseconds: 750),
-        () => unawaited(
-          _memoryService.trim(AppMemoryTrimLevel.background),
-        ),
+        () => unawaited(_memoryService.trim(AppMemoryTrimLevel.background)),
       );
     }
   }
@@ -121,9 +119,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
         create: () => ThemeCubit(repository: _deps.themeRepository),
         init: (cubit) => cubit.loadInitial(),
       ),
-      BlocProvider(
-        create: (_) => _deps.createRemoteConfigCubit(),
-      ),
+      BlocProvider(create: (_) => _deps.createRemoteConfigCubit()),
       BlocProvider.value(value: _appAuthCubit),
     ],
     child: _AppAuthSessionListener(
@@ -162,10 +158,8 @@ class const _AppAuthSessionListener({
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppAuthCubit, AppAuthState>(
-      listenWhen: (previous, current) => current.maybeMap(
-        sessionExpired: (_) => true,
-        orElse: () => false,
-      ),
+      listenWhen: (previous, current) =>
+          current.maybeMap(sessionExpired: (_) => true, orElse: () => false),
       listener: (context, state) {
         state.maybeMap(
           sessionExpired: (_) {

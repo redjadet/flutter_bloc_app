@@ -29,228 +29,207 @@ void main() {
       // NOTE: We intentionally rely on the `reportKey` output written by
       // `traceAction()` into `binding.reportData` so the host runner can persist
       // the results without needing device filesystem access.
-      await binding.traceAction(
-        () async {
-          await timelineTask('perf.todo.open', () async {
-            await openExampleDestination(tester, 'Todo List Demo');
-          });
-          final Finder addTodoButton = findAdaptiveButtonByText('Add todo');
-          await pumpUntilFound(tester, addTodoButton);
+      await binding.traceAction(() async {
+        await timelineTask('perf.todo.open', () async {
+          await openExampleDestination(tester, 'Todo List Demo');
+        });
+        final Finder addTodoButton = findAdaptiveButtonByText('Add todo');
+        await pumpUntilFound(tester, addTodoButton);
 
-          await timelineTask('perf.todo.open_add_dialog', () async {
-            await tapAndPump(tester, addTodoButton);
-          });
-          final Finder saveButton = findDialogButtonByText('Save');
-          await pumpUntilFound(tester, saveButton);
+        await timelineTask('perf.todo.open_add_dialog', () async {
+          await tapAndPump(tester, addTodoButton);
+        });
+        final Finder saveButton = findDialogButtonByText('Save');
+        await pumpUntilFound(tester, saveButton);
 
-          final Finder titleField = findDialogTextField();
-          await timelineTask('perf.todo.fill_and_save', () async {
-            await tester.ensureVisible(titleField);
-            await tester.enterText(titleField, 'Perf trace todo 0');
-            await tester.pump(const Duration(milliseconds: 100));
-            await tapAndPump(tester, findDialogCheckbox());
-            await tapAndPump(tester, saveButton);
-            await pumpUntilAbsent(tester, findDialog());
-            await pumpUntilFound(tester, find.text('Perf trace todo 0'));
-          });
+        final Finder titleField = findDialogTextField();
+        await timelineTask('perf.todo.fill_and_save', () async {
+          await tester.ensureVisible(titleField);
+          await tester.enterText(titleField, 'Perf trace todo 0');
+          await tester.pump(const Duration(milliseconds: 100));
+          await tapAndPump(tester, findDialogCheckbox());
+          await tapAndPump(tester, saveButton);
+          await pumpUntilAbsent(tester, findDialog());
+          await pumpUntilFound(tester, find.text('Perf trace todo 0'));
+        });
 
-          // Longer scroll sequence to better surface list/raster jank.
-          await timelineTask('perf.todo.scroll.long', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 4; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -700),
-                1600,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 300));
-            }
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 5));
-        },
-        reportKey: 'todo_list_add_trace',
-      );
-
-      await binding.traceAction(
-        () async {
-          await timelineTask('perf.todo.zoom.prep', () async {
-            await restartTestApp(tester);
-            await openExampleDestination(tester, 'Todo List Demo');
-            await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
-          });
-
-          await timelineTask('perf.todo.zoom.scroll', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 6; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -900),
-                1900,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 200));
-            }
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
-        },
-        reportKey: 'todo_list_scroll_zoom_trace',
-      );
-
-      await binding.traceAction(
-        () async {
-          await restartTestApp(tester);
-
-          await timelineTask('perf.chat.open', () async {
-            await openExampleDestination(tester, 'Chat List Demo');
-            await pumpUntilFound(tester, find.text('Conversation history'));
-          });
-
-          // Longer scroll sequence to better surface list/raster jank.
-          await timelineTask('perf.chat.scroll.long', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 6; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -900),
-                1800,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 250));
-            }
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
-        },
-        reportKey: 'chat_list_scroll_trace',
-      );
-
-      await binding.traceAction(
-        () async {
-          await timelineTask('perf.chat.zoom.prep', () async {
-            await restartTestApp(tester);
-            await openExampleDestination(tester, 'Chat List Demo');
-            await pumpUntilFound(tester, find.text('Conversation history'));
-            await pumpSettleWithin(tester);
-          });
-
-          await timelineTask('perf.chat.zoom.scroll', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 10; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -700),
-                2000,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 160));
-            }
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
-        },
-        reportKey: 'chat_list_scroll_zoom_trace',
-      );
-
-      await binding.traceAction(
-        () async {
-          await timelineTask('perf.scapes.open', () async {
-            await restartTestApp(tester);
-            await openExampleDestination(tester, 'Scapes Demo');
-            await pumpUntilFound(tester, find.text('Library / Scapes'));
-            await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
-          });
-
-          await timelineTask('perf.scapes.scroll.long', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 10; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -900),
-                2000,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 220));
-            }
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
-        },
-        reportKey: 'scapes_grid_scroll_trace',
-      );
-
-      await binding.traceAction(
-        () async {
-          await restartTestApp(tester);
-
-          await timelineTask('perf.charts.open', () async {
-            await openOverflowDestination(tester, 'Open charts');
-            await pumpUntilFound(tester, find.text('Bitcoin Price (USD)'));
-          });
-
-          // Scroll through the chart screen to capture UI/raster work.
-          await timelineTask('perf.charts.scroll.long', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 5; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -800),
-                1700,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 250));
-            }
-          });
-
-          // Pull-to-refresh style fling (downwards) to include overscroll/refresh work.
-          await timelineTask('perf.charts.refresh.gesture', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
+        // Longer scroll sequence to better surface list/raster jank.
+        await timelineTask('perf.todo.scroll.long', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 4; i++) {
             await tester.fling(
               scrollTarget,
-              const Offset(0, 500),
-              1100,
+              const Offset(0, -700),
+              1600,
               warnIfMissed: false,
             );
-            await tester.pump(const Duration(milliseconds: 500));
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
-        },
-        reportKey: 'charts_scroll_refresh_trace',
-      );
+            await tester.pump(const Duration(milliseconds: 300));
+          }
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 5));
+      }, reportKey: 'todo_list_add_trace');
 
-      await binding.traceAction(
-        () async {
-          await timelineTask('perf.charts.zoom.prep', () async {
-            await restartTestApp(tester);
-            await openOverflowDestination(tester, 'Open charts');
-            await pumpUntilFound(tester, find.text('Bitcoin Price (USD)'));
-            await pumpSettleWithin(tester);
-          });
+      await binding.traceAction(() async {
+        await timelineTask('perf.todo.zoom.prep', () async {
+          await restartTestApp(tester);
+          await openExampleDestination(tester, 'Todo List Demo');
+          await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
+        });
 
-          await timelineTask('perf.charts.zoom.scroll', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
-            for (int i = 0; i < 8; i++) {
-              await tester.fling(
-                scrollTarget,
-                const Offset(0, -650),
-                2100,
-                warnIfMissed: false,
-              );
-              await tester.pump(const Duration(milliseconds: 180));
-            }
-          });
-
-          await timelineTask('perf.charts.zoom.refresh', () async {
-            final Finder scrollTarget = await awaitScrollTarget(tester);
+        await timelineTask('perf.todo.zoom.scroll', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 6; i++) {
             await tester.fling(
               scrollTarget,
-              const Offset(0, 520),
-              1200,
+              const Offset(0, -900),
+              1900,
               warnIfMissed: false,
             );
-            await tester.pump(const Duration(milliseconds: 650));
-          });
-          await pumpSettleWithin(tester, timeout: const Duration(seconds: 5));
-        },
-        reportKey: 'charts_scroll_refresh_zoom_trace',
-      );
+            await tester.pump(const Duration(milliseconds: 200));
+          }
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
+      }, reportKey: 'todo_list_scroll_zoom_trace');
+
+      await binding.traceAction(() async {
+        await restartTestApp(tester);
+
+        await timelineTask('perf.chat.open', () async {
+          await openExampleDestination(tester, 'Chat List Demo');
+          await pumpUntilFound(tester, find.text('Conversation history'));
+        });
+
+        // Longer scroll sequence to better surface list/raster jank.
+        await timelineTask('perf.chat.scroll.long', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 6; i++) {
+            await tester.fling(
+              scrollTarget,
+              const Offset(0, -900),
+              1800,
+              warnIfMissed: false,
+            );
+            await tester.pump(const Duration(milliseconds: 250));
+          }
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
+      }, reportKey: 'chat_list_scroll_trace');
+
+      await binding.traceAction(() async {
+        await timelineTask('perf.chat.zoom.prep', () async {
+          await restartTestApp(tester);
+          await openExampleDestination(tester, 'Chat List Demo');
+          await pumpUntilFound(tester, find.text('Conversation history'));
+          await pumpSettleWithin(tester);
+        });
+
+        await timelineTask('perf.chat.zoom.scroll', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 10; i++) {
+            await tester.fling(
+              scrollTarget,
+              const Offset(0, -700),
+              2000,
+              warnIfMissed: false,
+            );
+            await tester.pump(const Duration(milliseconds: 160));
+          }
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
+      }, reportKey: 'chat_list_scroll_zoom_trace');
+
+      await binding.traceAction(() async {
+        await timelineTask('perf.scapes.open', () async {
+          await restartTestApp(tester);
+          await openExampleDestination(tester, 'Scapes Demo');
+          await pumpUntilFound(tester, find.text('Library / Scapes'));
+          await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
+        });
+
+        await timelineTask('perf.scapes.scroll.long', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 10; i++) {
+            await tester.fling(
+              scrollTarget,
+              const Offset(0, -900),
+              2000,
+              warnIfMissed: false,
+            );
+            await tester.pump(const Duration(milliseconds: 220));
+          }
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
+      }, reportKey: 'scapes_grid_scroll_trace');
+
+      await binding.traceAction(() async {
+        await restartTestApp(tester);
+
+        await timelineTask('perf.charts.open', () async {
+          await openOverflowDestination(tester, 'Open charts');
+          await pumpUntilFound(tester, find.text('Bitcoin Price (USD)'));
+        });
+
+        // Scroll through the chart screen to capture UI/raster work.
+        await timelineTask('perf.charts.scroll.long', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 5; i++) {
+            await tester.fling(
+              scrollTarget,
+              const Offset(0, -800),
+              1700,
+              warnIfMissed: false,
+            );
+            await tester.pump(const Duration(milliseconds: 250));
+          }
+        });
+
+        // Pull-to-refresh style fling (downwards) to include overscroll/refresh work.
+        await timelineTask('perf.charts.refresh.gesture', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          await tester.fling(
+            scrollTarget,
+            const Offset(0, 500),
+            1100,
+            warnIfMissed: false,
+          );
+          await tester.pump(const Duration(milliseconds: 500));
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
+      }, reportKey: 'charts_scroll_refresh_trace');
+
+      await binding.traceAction(() async {
+        await timelineTask('perf.charts.zoom.prep', () async {
+          await restartTestApp(tester);
+          await openOverflowDestination(tester, 'Open charts');
+          await pumpUntilFound(tester, find.text('Bitcoin Price (USD)'));
+          await pumpSettleWithin(tester);
+        });
+
+        await timelineTask('perf.charts.zoom.scroll', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          for (int i = 0; i < 8; i++) {
+            await tester.fling(
+              scrollTarget,
+              const Offset(0, -650),
+              2100,
+              warnIfMissed: false,
+            );
+            await tester.pump(const Duration(milliseconds: 180));
+          }
+        });
+
+        await timelineTask('perf.charts.zoom.refresh', () async {
+          final Finder scrollTarget = await awaitScrollTarget(tester);
+          await tester.fling(
+            scrollTarget,
+            const Offset(0, 520),
+            1200,
+            warnIfMissed: false,
+          );
+          await tester.pump(const Duration(milliseconds: 650));
+        });
+        await pumpSettleWithin(tester, timeout: const Duration(seconds: 5));
+      }, reportKey: 'charts_scroll_refresh_zoom_trace');
 
       await captureChartModeIsolationTraces(binding: binding, tester: tester);
 
@@ -281,9 +260,7 @@ void main() {
       //
       // Keep this marker stable; it is parsed by `tool/capture_perf_trace.sh`.
       // ignore: avoid_print
-      print(
-        '__PERF_REPORT_DATA__=${jsonEncode(binding.reportData)}',
-      );
+      print('__PERF_REPORT_DATA__=${jsonEncode(binding.reportData)}');
 
       await tearDownIntegrationTestDependencies();
     });

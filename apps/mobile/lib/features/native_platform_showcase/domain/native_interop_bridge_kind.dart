@@ -1,5 +1,1 @@
-enum NativeInteropBridgeKind {
-  swift,
-  kotlin,
-  cpp,
-}
+enum NativeInteropBridgeKind { swift, kotlin, cpp }

@@ -27,10 +27,7 @@ PlatformShowcaseData mapShowcase(AppPlatformKind platform) {
         if (platformDetail == null) {
           throw StateError('Missing platform detail for $kind on $platform');
         }
-        return NativeCapability(
-          kind: kind,
-          platformDetail: platformDetail,
-        );
+        return NativeCapability(kind: kind, platformDetail: platformDetail);
       })
       .toList(growable: false);
   return PlatformShowcaseData(

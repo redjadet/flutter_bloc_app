@@ -2,10 +2,7 @@ part of 'todo_list_cubit.dart';
 
 /// Mixin extension for CRUD operations on TodoListCubit.
 mixin _TodoListCubitCrud on _TodoListCubitMethods {
-  Future<void> saveItem(
-    TodoItem item, {
-    required String logContext,
-  }) async {
+  Future<void> saveItem(TodoItem item, {required String logContext}) async {
     if (isClosed) return;
     final TodoListState previousState = state;
     final bool itemExists = state.items.any(

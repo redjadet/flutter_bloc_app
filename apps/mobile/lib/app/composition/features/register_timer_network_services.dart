@@ -10,9 +10,7 @@ import 'package:networking/networking.dart';
 void registerTimerNetworkServices() {
   registerLazySingletonIfAbsent<TimerService>(DefaultTimerService.new);
   registerLazySingletonIfAbsent<NetworkStatusService>(
-    () => ConnectivityNetworkStatusService(
-      timerService: getIt<TimerService>(),
-    ),
+    () => ConnectivityNetworkStatusService(timerService: getIt<TimerService>()),
     dispose: (service) => service.dispose(),
   );
 }

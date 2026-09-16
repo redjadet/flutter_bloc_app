@@ -209,10 +209,7 @@ class Vendor {
   /// Returns the current CI [Vendor] or [null] if no CI vendor detected (e.g. not running on CI).
   static Vendor? get current {
     if (IS_CODEBUILD) {
-      return Vendor._(
-        'AWS CodeBuild',
-        false,
-      );
+      return Vendor._('AWS CodeBuild', false);
     }
 
     if (IS_APPVEYOR) {
@@ -223,10 +220,7 @@ class Vendor {
     }
 
     if (IS_APPCIRCLE) {
-      return Vendor._(
-        'Appcircle',
-        false,
-      );
+      return Vendor._('Appcircle', false);
     }
 
     if (IS_AZURE_PIPELINES) {
@@ -237,10 +231,7 @@ class Vendor {
     }
 
     if (IS_BAMBOO) {
-      return Vendor._(
-        'Bamboo',
-        false,
-      );
+      return Vendor._('Bamboo', false);
     }
 
     if (IS_BITBUCKET) {
@@ -301,10 +292,7 @@ class Vendor {
     }
 
     if (IS_CODESHIP) {
-      return Vendor._(
-        'Codeship',
-        false,
-      );
+      return Vendor._('Codeship', false);
     }
 
     if (IS_DRONE) {
@@ -315,10 +303,7 @@ class Vendor {
     }
 
     if (IS_EAS) {
-      return Vendor._(
-        'Expo Application Services',
-        false,
-      );
+      return Vendor._('Expo Application Services', false);
     }
 
     if (IS_GITHUB_ACTIONS) {
@@ -336,17 +321,11 @@ class Vendor {
     }
 
     if (IS_GOCD) {
-      return Vendor._(
-        'GoCD',
-        false,
-      );
+      return Vendor._('GoCD', false);
     }
 
     if (IS_HUDSON) {
-      return Vendor._(
-        'Hudson',
-        false,
-      );
+      return Vendor._('Hudson', false);
     }
 
     if (IS_JENKINS) {
@@ -365,10 +344,7 @@ class Vendor {
     }
 
     if (IS_MAGNUM) {
-      return Vendor._(
-        'Magnum CI',
-        false,
-      );
+      return Vendor._('Magnum CI', false);
     }
 
     if (IS_NETLIFY) {
@@ -428,24 +404,15 @@ class Vendor {
     }
 
     if (IS_STRIDER) {
-      return Vendor._(
-        'Strider CD',
-        false,
-      );
+      return Vendor._('Strider CD', false);
     }
 
     if (IS_TASKCLUSTER) {
-      return Vendor._(
-        'TaskCluster',
-        false,
-      );
+      return Vendor._('TaskCluster', false);
     }
 
     if (IS_TEAMCITY) {
-      return Vendor._(
-        'TeamCity',
-        false,
-      );
+      return Vendor._('TeamCity', false);
     }
 
     if (IS_TRAVIS) {
@@ -456,24 +423,15 @@ class Vendor {
     }
 
     if (IS_VERCEL) {
-      return Vendor._(
-        'Vercel',
-        false,
-      );
+      return Vendor._('Vercel', false);
     }
 
     if (IS_APPCENTER) {
-      return Vendor._(
-        'Visual Studio App Center',
-        false,
-      );
+      return Vendor._('Visual Studio App Center', false);
     }
 
     if (IS_DSARI) {
-      return Vendor._(
-        'dsari',
-        false,
-      );
+      return Vendor._('dsari', false);
     }
 
     return null;

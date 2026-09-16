@@ -30,9 +30,7 @@ List<Widget>? _buildTodoListAppBarActions(
     actionWidgets.add(
       PopupMenuButton<_BatchMenuAction>(
         icon: const Icon(Icons.more_vert),
-        tooltip: context.l10n.todoListItemsSelected(
-          barData.selectedCount,
-        ),
+        tooltip: context.l10n.todoListItemsSelected(barData.selectedCount),
         onSelected: (action) async {
           final cubit = context.cubit<TodoListCubit>();
           switch (action) {
@@ -68,9 +66,7 @@ List<Widget>? _buildTodoListAppBarActions(
             value: _BatchMenuAction.delete,
             child: Text(
               context.l10n.todoListBatchDelete,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
         ],

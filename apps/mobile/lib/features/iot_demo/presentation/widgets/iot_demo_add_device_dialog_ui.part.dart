@@ -122,9 +122,8 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
                 SizedBox(height: context.responsiveGapXS),
                 Text(
                   err,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: Theme.of(context).colorScheme.error),
                 ),
               ],
               SizedBox(height: context.responsiveGapM),

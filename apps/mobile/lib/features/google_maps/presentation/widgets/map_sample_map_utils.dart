@@ -43,16 +43,15 @@ amap.CameraUpdate appleCameraUpdateForLocation(MapLocation location) =>
       ),
     );
 
-amap.CameraUpdate appleCameraUpdateForPosition(
-  gmaps.CameraPosition position,
-) => amap.CameraUpdate.newCameraPosition(
-  amap.CameraPosition(
-    target: amap.LatLng(
-      position.target.latitude,
-      position.target.longitude,
-    ),
-    zoom: position.zoom,
-    pitch: position.tilt,
-    heading: position.bearing,
-  ),
-);
+amap.CameraUpdate appleCameraUpdateForPosition(gmaps.CameraPosition position) =>
+    amap.CameraUpdate.newCameraPosition(
+      amap.CameraPosition(
+        target: amap.LatLng(
+          position.target.latitude,
+          position.target.longitude,
+        ),
+        zoom: position.zoom,
+        pitch: position.tilt,
+        heading: position.bearing,
+      ),
+    );

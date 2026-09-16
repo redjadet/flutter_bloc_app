@@ -108,12 +108,7 @@ class FirebaseCrashlyticsBootstrap {
     required bool fatal,
     required String reason,
   }) {
-    return recordCrash(
-      exception,
-      stack,
-      fatal: fatal,
-      reason: reason,
-    );
+    return recordCrash(exception, stack, fatal: fatal, reason: reason);
   }
 
   @visibleForTesting

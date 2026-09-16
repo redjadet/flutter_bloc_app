@@ -19,9 +19,7 @@ Future<void> applyIotDemoSyncOperation(
   final String? deviceId = stringFromDynamicTrimmed(payload['deviceId']);
   final String? action = stringFromDynamicTrimmed(payload['action']);
   if (deviceId == null || deviceId.isEmpty || action == null) {
-    AppLogger.warning(
-      'applyIotDemoSyncOperation: missing deviceId or action',
-    );
+    AppLogger.warning('applyIotDemoSyncOperation: missing deviceId or action');
     return;
   }
   try {
@@ -62,11 +60,7 @@ Future<void> applyIotDemoSyncOperation(
           name: name,
           type: type,
           toggledOn: toggledOn,
-          value: iotDemoClampAndRound(
-            value,
-            iotDemoValueMin,
-            iotDemoValueMax,
-          ),
+          value: iotDemoClampAndRound(value, iotDemoValueMin, iotDemoValueMax),
         );
         await remote.addDevice(toAdd);
         break;
@@ -83,16 +77,10 @@ Future<void> applyIotDemoSyncOperation(
         }
         break;
       default:
-        AppLogger.warning(
-          'applyIotDemoSyncOperation: unknown action $action',
-        );
+        AppLogger.warning('applyIotDemoSyncOperation: unknown action $action');
     }
   } on Object catch (error, stackTrace) {
-    AppLogger.error(
-      'applyIotDemoSyncOperation',
-      error,
-      stackTrace,
-    );
+    AppLogger.error('applyIotDemoSyncOperation', error, stackTrace);
     rethrow;
   }
 }
@@ -112,10 +100,7 @@ IotDeviceCommand? _payloadToCommand(Map<String, dynamic> payload) {
     'toggle' => const IotDeviceCommand.toggle(),
     'setValue' => IotDeviceCommand.setValue(
       iotDemoClampAndRound(
-        doubleFromDynamic(
-          payload['value'],
-          iotDemoValueMin,
-        ),
+        doubleFromDynamic(payload['value'], iotDemoValueMin),
         iotDemoValueMin,
         iotDemoValueMax,
       ),

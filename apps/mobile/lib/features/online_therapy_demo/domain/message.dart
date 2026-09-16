@@ -1,8 +1,4 @@
-enum MessageDeliveryStatus {
-  queued,
-  sent,
-  failed,
-}
+enum MessageDeliveryStatus { queued, sent, failed }
 
 class const Message({
   required final String id,

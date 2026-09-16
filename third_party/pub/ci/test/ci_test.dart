@@ -21,24 +21,20 @@ import 'package:ci/ci.dart' as ci;
 import 'package:test/test.dart';
 
 void main() {
-  group(
-    'test on github actions',
-    () {
-      test('[isCI] returns true if running on GH actions', () {
-        expect(ci.isCI, isTrue);
-      });
+  group('test on github actions', () {
+    test('[isCI] returns true if running on GH actions', () {
+      expect(ci.isCI, isTrue);
+    });
 
-      test('generated vendor flags correctly return true/false', () {
-        expect(ci.Vendor.IS_GITHUB_ACTIONS, isTrue);
-        expect(ci.Vendor.IS_CIRRUS, isFalse);
-      });
+    test('generated vendor flags correctly return true/false', () {
+      expect(ci.Vendor.IS_GITHUB_ACTIONS, isTrue);
+      expect(ci.Vendor.IS_CIRRUS, isFalse);
+    });
 
-      test('generated current vendor should return GitHub', () {
-        expect(ci.currentVendor, isNotNull);
-        expect(ci.Vendor.current, isNotNull);
-        expect(ci.currentVendor?.name, equals('GitHub Actions'));
-      });
-    },
-    skip: !Platform.environment.containsKey('GITHUB_ACTIONS'),
-  );
+    test('generated current vendor should return GitHub', () {
+      expect(ci.currentVendor, isNotNull);
+      expect(ci.Vendor.current, isNotNull);
+      expect(ci.currentVendor?.name, equals('GitHub Actions'));
+    });
+  }, skip: !Platform.environment.containsKey('GITHUB_ACTIONS'));
 }

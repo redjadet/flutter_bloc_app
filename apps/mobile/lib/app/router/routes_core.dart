@@ -155,10 +155,8 @@ class const CoreRouteFactory({
     GoRoute(
       path: AppRoutes.scapesPath,
       name: AppRoutes.scapes,
-      builder: (context, state) => ScapesPage(
-        repository: scapesRepository,
-        timerService: timerService,
-      ),
+      builder: (context, state) =>
+          ScapesPage(repository: scapesRepository, timerService: timerService),
     ),
     GoRoute(
       path: AppRoutes.markdownEditorPath,
@@ -183,9 +181,8 @@ class const CoreRouteFactory({
       name: AppRoutes.charts,
       builder: (context, state) => DeferredPage(
         loadLibrary: chart_page.loadLibrary,
-        builder: (context) => chart_page.buildChartPage(
-          repository: chartRepository,
-        ),
+        builder: (context) =>
+            chart_page.buildChartPage(repository: chartRepository),
       ),
     ),
     ..._coreRoutesSettingsAndProfile(this),

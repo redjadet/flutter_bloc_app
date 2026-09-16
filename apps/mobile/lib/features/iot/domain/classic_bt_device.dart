@@ -4,15 +4,12 @@ class const ClassicBtDevice({
   required final String name,
   final bool isConnected = false,
 }) {
-  ClassicBtDevice copyWith({
-    String? id,
-    String? name,
-    bool? isConnected,
-  }) => ClassicBtDevice(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    isConnected: isConnected ?? this.isConnected,
-  );
+  ClassicBtDevice copyWith({String? id, String? name, bool? isConnected}) =>
+      ClassicBtDevice(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        isConnected: isConnected ?? this.isConnected,
+      );
 }
 
 enum ClassicBtMessageDirection { incoming, outgoing }

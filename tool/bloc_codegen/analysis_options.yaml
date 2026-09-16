@@ -1,0 +1,5 @@
+# Standalone tool package — do not include workspace analysis_options
+# (that pulls package:very_good_analysis, not a dep of this package).
+analyzer:
+  exclude:
+    - build/**

@@ -151,11 +151,7 @@ void registerSettingsIntegrationFlow() {
       // tapping a partially-obscured locale chip.
       await tester.ensureVisible(find.text('Español'));
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(
-        tester,
-        find.text('Español'),
-        scrollIntoView: false,
-      );
+      await tapAndPump(tester, find.text('Español'), scrollIntoView: false);
       await pumpUntilFound(tester, find.text('Configuración'));
 
       app = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -283,10 +279,7 @@ void registerSocialFeedDemoIntegrationFlow() {
           const ValueKey('social-feed-scenario-button'),
         );
         await tester.ensureVisible(scenarioButton);
-        await pumpUntilFound(
-          tester,
-          scenarioButton.hitTestable(),
-        );
+        await pumpUntilFound(tester, scenarioButton.hitTestable());
         await tapAndPump(tester, scenarioButton, scrollIntoView: false);
         await pumpUntilFound(tester, scenarioControls);
       }

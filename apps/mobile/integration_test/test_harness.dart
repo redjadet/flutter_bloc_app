@@ -247,10 +247,7 @@ Future<void> restartTestApp(
   bool requireAuth = false,
 }) async {
   await tester.pumpWidget(const SizedBox.shrink());
-  await pumpSettleWithin(
-    tester,
-    timeout: const Duration(seconds: 4),
-  );
+  await pumpSettleWithin(tester, timeout: const Duration(seconds: 4));
   await launchTestApp(tester, requireAuth: requireAuth);
 }
 
@@ -258,10 +255,7 @@ Future<void> _postTestCleanupPumps(WidgetTester tester) async {
   // Keep cleanup lightweight. Avoid unmounting the whole widget tree here since
   // the integration device runner manages app lifecycle (install/launch/kill).
   try {
-    await pumpSettleWithin(
-      tester,
-      timeout: const Duration(seconds: 2),
-    );
+    await pumpSettleWithin(tester, timeout: const Duration(seconds: 2));
   } on TestFailure {
     // Best-effort: leave the app as-is but give pending callbacks a tiny
     // window to flush, so teardown doesn't hang.

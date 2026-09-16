@@ -43,17 +43,12 @@ Future<void> _signInAnonymously({
       if (repository == null) {
         if (!context.mounted) return;
         ErrorHandling.clearSnackBars(context);
-        ErrorHandling.showErrorSnackBar(
-          context,
-          l10n.anonymousSignInFailed,
-        );
+        ErrorHandling.showErrorSnackBar(context, l10n.anonymousSignInFailed);
         return;
       }
       await repository.signInAnonymously();
       if (!context.mounted) {
-        ContextUtils.logNotMounted(
-          'SignInPage.signInAnonymously.noFirebase',
-        );
+        ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
         return;
       }
       context.go(postAuthPath());

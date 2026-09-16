@@ -137,10 +137,9 @@ void staffAppDemoWalkthroughMain() {
         await firestore
             .collection('staffDemoMessageRecipients')
             .doc('${messageId}_$employeeUid')
-            .set(
-              <String, dynamic>{'confirmedAt': FieldValue.serverTimestamp()},
-              SetOptions(merge: true),
-            );
+            .set(<String, dynamic>{
+              'confirmedAt': FieldValue.serverTimestamp(),
+            }, SetOptions(merge: true));
         await firestore.collection('staffDemoShifts').doc(shiftId).set(
           <String, dynamic>{
             'status': 'confirmed',

@@ -26,11 +26,9 @@ void main(List<String> args) async {
   // Always regenerate localization files to ensure they exist before Flutter's
   // build process runs. This prevents issues when Flutter cleans generated files.
   stdout.writeln('Regenerating localization files...');
-  final ProcessResult result = await Process.run(
-    'flutter',
-    ['gen-l10n'],
-    runInShell: true,
-  );
+  final ProcessResult result = await Process.run('flutter', [
+    'gen-l10n',
+  ], runInShell: true);
 
   if (result.exitCode != 0) {
     stderr

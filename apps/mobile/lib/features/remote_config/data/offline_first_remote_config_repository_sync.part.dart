@@ -13,13 +13,10 @@ extension _OfflineFirstRemoteConfigRepositorySync
         AppLogger.debug(
           'OfflineFirstRemoteConfigRepository.$reason skipped (offline)',
         );
-        _telemetry(
-          'remote_config_fetch_skipped',
-          <String, Object?>{
-            'reason': 'offline',
-            'hasCache': _snapshot.hasValues,
-          },
-        );
+        _telemetry('remote_config_fetch_skipped', <String, Object?>{
+          'reason': 'offline',
+          'hasCache': _snapshot.hasValues,
+        });
         return;
       }
     }
@@ -42,13 +39,10 @@ extension _OfflineFirstRemoteConfigRepositorySync
         error,
         stackTrace,
       );
-      _telemetry(
-        'remote_config_fetch_failed',
-        <String, Object?>{
-          'reason': reason,
-          'durationMs': stopwatch.elapsedMilliseconds,
-        },
-      );
+      _telemetry('remote_config_fetch_failed', <String, Object?>{
+        'reason': reason,
+        'durationMs': stopwatch.elapsedMilliseconds,
+      });
       if (!_snapshot.hasValues) {
         rethrow;
       }
@@ -73,15 +67,12 @@ extension _OfflineFirstRemoteConfigRepositorySync
     _loggedPullRemoteSkipInThrottleWindow = true;
     await _cacheRepository.saveSnapshot(nextSnapshot);
     stopwatch.stop();
-    _telemetry(
-      'remote_config_fetch_succeeded',
-      <String, Object?>{
-        'reason': reason,
-        'durationMs': stopwatch.elapsedMilliseconds,
-        'dataSource': nextSnapshot.dataSource ?? 'unknown',
-        'hasValues': nextSnapshot.hasValues,
-      },
-    );
+    _telemetry('remote_config_fetch_succeeded', <String, Object?>{
+      'reason': reason,
+      'durationMs': stopwatch.elapsedMilliseconds,
+      'dataSource': nextSnapshot.dataSource ?? 'unknown',
+      'hasValues': nextSnapshot.hasValues,
+    });
   }
 
   Future<void> _hydrateFromCache() async {
@@ -114,13 +105,10 @@ extension _OfflineFirstRemoteConfigRepositorySync
     AppLogger.debug(
       'OfflineFirstRemoteConfigRepository.pullRemote skipped (recent refresh)',
     );
-    _telemetry(
-      'remote_config_fetch_skipped',
-      <String, Object?>{
-        'reason': 'recent_refresh',
-        'hasCache': _snapshot.hasValues,
-      },
-    );
+    _telemetry('remote_config_fetch_skipped', <String, Object?>{
+      'reason': 'recent_refresh',
+      'hasCache': _snapshot.hasValues,
+    });
   }
 
   Map<String, dynamic> _readTrackedValues() {

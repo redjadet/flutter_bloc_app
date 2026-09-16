@@ -9,10 +9,10 @@ class SuppressedBlocRebuildScopingPage extends StatelessWidget {
   const SuppressedBlocRebuildScopingPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     // check-ignore: fixture documents intentional full-state rebuild for QG-D03
     return BlocBuilder<_SuppressedRebuildCubit, int>(
-      builder: (final context, final count) => Text('$count'),
+      builder: (context, count) => Text('$count'),
     );
   }
 }

@@ -17,10 +17,7 @@ bool reachedDecimalLimit(String buffer, int scale) {
   return decimals >= scale;
 }
 
-String formatDisplay(
-  PaymentCalculator calculator,
-  double value,
-) {
+String formatDisplay(PaymentCalculator calculator, double value) {
   final double rounded = calculator.round(value);
   if (rounded == 0) {
     return '0';

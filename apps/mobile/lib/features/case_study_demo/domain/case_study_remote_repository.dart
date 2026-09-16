@@ -34,9 +34,7 @@ abstract class CaseStudyRemoteRepository {
   Future<List<RemoteCaseStudySummary>> listSubmittedCases();
 
   /// Gets a submitted case with full remote answers.
-  Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required String caseId,
-  });
+  Future<RemoteCaseStudyDetail?> getSubmittedCase({required String caseId});
 
   /// Creates a signed URL for playback from an object key.
   Future<String> createSignedPlaybackUrl({

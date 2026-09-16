@@ -1,5 +1,1 @@
-enum SocialFeedMutationStatus {
-  pending,
-  synced,
-  needsAttention,
-}
+enum SocialFeedMutationStatus { pending, synced, needsAttention }

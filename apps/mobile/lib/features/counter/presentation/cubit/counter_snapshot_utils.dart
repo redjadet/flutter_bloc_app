@@ -43,10 +43,7 @@ bool shouldIgnoreRemoteSnapshot(
   return countsEqual && timestampsEqual && syncMetadataEqual;
 }
 
-bool _isOlderThanCurrentState(
-  CounterState current,
-  CounterSnapshot snapshot,
-) {
+bool _isOlderThanCurrentState(CounterState current, CounterSnapshot snapshot) {
   final DateTime? currentChanged = current.lastChanged;
   if (currentChanged == null) {
     return false;

@@ -78,9 +78,7 @@ mixin _SocialFeedCubitPaging on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
       final List<SocialFeedPost> merged = <SocialFeedPost>[
         for (final SocialFeedPost p in data.posts)
           if (byId[p.id] case final SocialFeedPost latest) latest,
-        ...page.posts.where(
-          (p) => !data.posts.any((e) => e.id == p.id),
-        ),
+        ...page.posts.where((p) => !data.posts.any((e) => e.id == p.id)),
       ];
       final Map<String, List<SocialFeedComment>> pageComments =
           await _commentsForPosts(page.posts);
@@ -88,10 +86,7 @@ mixin _SocialFeedCubitPaging on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
         return;
       }
       final Map<String, List<SocialFeedComment>> mergedComments =
-          _mergeCommentMaps(
-            data.commentsByPostId,
-            pageComments,
-          );
+          _mergeCommentMaps(data.commentsByPostId, pageComments);
       _emitReadyPatch(
         (d) => d.copyWith(
           posts: _postsAlignedToComments(

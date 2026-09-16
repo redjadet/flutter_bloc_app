@@ -33,9 +33,7 @@ extension _OfflineFirstStaffDemoTimeclockRepositorySync
           : <String, dynamic>{'lat': location.lat, 'lng': location.lng},
       'clockOutAccuracyMeters': accuracyMeters,
       // MS-D02: partial flags only — see docs/plans/2026-07-17_maintainability_simplify_deferred.md
-      'flags': <String, dynamic>{
-        'locationInsufficient': locationInsufficient,
-      },
+      'flags': <String, dynamic>{'locationInsufficient': locationInsufficient},
     };
 
     await _pendingSyncRepository.enqueue(

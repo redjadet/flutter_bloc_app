@@ -2,10 +2,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 /// Localized user-facing message for a [MediaPickErrorKeys] value.
-String cameraGalleryErrorMessage(
-  AppLocalizations l10n,
-  String key,
-) {
+String cameraGalleryErrorMessage(AppLocalizations l10n, String key) {
   switch (key) {
     case MediaPickErrorKeys.permissionDenied:
       return l10n.cameraGalleryPermissionDenied;

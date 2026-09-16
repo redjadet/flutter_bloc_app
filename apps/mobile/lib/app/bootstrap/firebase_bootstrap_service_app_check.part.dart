@@ -111,10 +111,7 @@ String _resolveAppCheckDebugToken(String debugTokenEnv) {
   return debugTokenEnv.isEmpty ? 'flutter_bloc_app_debug' : debugTokenEnv;
 }
 
-void _logAppCheckDebugToken(
-  String debugToken,
-  String debugTokenEnv,
-) {
+void _logAppCheckDebugToken(String debugToken, String debugTokenEnv) {
   if (!kDebugMode) {
     return;
   }

@@ -1,5 +1,5 @@
 class BadCubit {
-  void start(final Stream<int> stream) {
-    stream.listen((final _) {});
+  void start(Stream<int> stream) {
+    stream.listen((_) {});
   }
 }

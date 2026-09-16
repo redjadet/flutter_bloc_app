@@ -30,9 +30,7 @@ FirebaseOptions? _resolveFirebaseOptions() {
   }
 }
 
-List<String> _missingFirebaseRequiredConfigFields(
-  FirebaseOptions options,
-) {
+List<String> _missingFirebaseRequiredConfigFields(FirebaseOptions options) {
   final missing = <String>[];
   void addIfMissing(String label, String? value) {
     if (_isPlaceholderFirebaseValue(value)) {
@@ -161,9 +159,7 @@ Future<void> _enableDatabasePersistence() async {
   await done.future;
 }
 
-Future<bool> _initializeConfiguredFirebase(
-  FirebaseOptions options,
-) async {
+Future<bool> _initializeConfiguredFirebase(FirebaseOptions options) async {
   await Firebase.initializeApp(options: options);
   AppLogger.info('Firebase initialized for project: ${options.projectId}');
   // Opt out until app-layer consent is loaded in registerAnalyticsServices.
@@ -192,9 +188,6 @@ Future<void> _disableAnalyticsUntilConsentApplied() async {
   }
 }
 
-void _logFirebaseInitializationFailure(
-  Object error,
-  StackTrace stackTrace,
-) {
+void _logFirebaseInitializationFailure(Object error, StackTrace stackTrace) {
   AppLogger.error('Firebase initialization failed', error, stackTrace);
 }

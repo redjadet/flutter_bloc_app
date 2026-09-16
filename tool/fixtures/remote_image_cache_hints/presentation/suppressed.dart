@@ -6,7 +6,7 @@ class SuppressedImage extends StatelessWidget {
 
   @override
   // check-ignore: fixture documents warn-only suppression
-  Widget build(final BuildContext context) => CachedNetworkImageWidget(
+  Widget build(BuildContext context) => CachedNetworkImageWidget(
     imageUrl: 'https://example.com/x.png',
     width: 48,
     height: 48,

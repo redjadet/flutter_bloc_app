@@ -21,9 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Remote Config Example'),
-      ),
+      appBar: AppBar(title: const Text('Remote Config Example')),
       body: Column(
         children: [
           _ButtonAndText(

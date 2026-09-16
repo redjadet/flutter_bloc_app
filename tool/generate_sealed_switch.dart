@@ -72,9 +72,8 @@ String _generateSwitchHelper(String content, String filePath) {
   }
 
   // Extract sealed class name
-  final sealedMatch = RegExp(
-    r'sealed\s+class\s+(\w+)',
-  ).firstMatch(searchContent);
+  final sealedMatch = RegExp(r'sealed\s+class\s+(\w+)')
+      .firstMatch(searchContent);
   if (sealedMatch == null) {
     throw Exception('No sealed class found in file or part file');
   }
@@ -305,18 +304,13 @@ _Param? _parseParameter(String paramLine, String classContent) {
       // Search in the full content, not just classContent, to find field declarations
       // that might be in a different part of the file
       final type = _extractFieldType(fieldName, classContent);
-      return _Param(
-        name: fieldName,
-        type: type,
-        isRequired: isRequired,
-      );
+      return _Param(name: fieldName, type: type, isRequired: isRequired);
     }
   }
 
   // Handle positional: "Type field" or "final Type field"
-  final typeFieldMatch = RegExp(
-    r'(?:required\s+)?(?:final\s+)?(\S+)\s+(\w+)',
-  ).firstMatch(paramLine);
+  final typeFieldMatch = RegExp(r'(?:required\s+)?(?:final\s+)?(\S+)\s+(\w+)')
+      .firstMatch(paramLine);
   if (typeFieldMatch != null) {
     final type = typeFieldMatch.group(1)!;
     final name = typeFieldMatch.group(2)!;
@@ -336,10 +330,7 @@ String _extractFieldType(String fieldName, String classContent) {
   // Match: "final bool isAwesomeFeatureEnabled;" or "  final bool isAwesomeFeatureEnabled;"
   // Use word boundaries to ensure we match the exact field name
   var pattern = 'final\\s+([A-Za-z][A-Za-z0-9_]*)\\s+$fieldName\\s*;';
-  var match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  var match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return match.group(1)!;
   }
@@ -347,10 +338,7 @@ String _extractFieldType(String fieldName, String classContent) {
   // Pattern 2: "final Type? fieldName;" (nullable simple types)
   // Match: "final String? dataSource;"
   pattern = 'final\\s+([A-Za-z][A-Za-z0-9_]*)\\?\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return '${match.group(1)!}?';
   }
@@ -358,40 +346,28 @@ String _extractFieldType(String fieldName, String classContent) {
   // Pattern 3: "final List<Type> fieldName;" (generic types, non-nullable)
   // Match: "final List<ChatContact> contacts;"
   pattern = 'final\\s+(List<[^>]+>)\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return match.group(1)!;
   }
 
   // Pattern 4: "final List<Type>? fieldName;" (nullable generic)
   pattern = 'final\\s+(List<[^>]+>)\\?\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return '${match.group(1)!}?';
   }
 
   // Pattern 5: "final Set<Type> fieldName;" (Set types)
   pattern = 'final\\s+(Set<[^>]+>)\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return match.group(1)!;
   }
 
   // Pattern 6: "final Map<Type1, Type2> fieldName;" (Map types)
   pattern = 'final\\s+(Map<[^>]+>)\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return match.group(1)!;
   }
@@ -399,40 +375,28 @@ String _extractFieldType(String fieldName, String classContent) {
   // Pattern 7: Complex types with angle brackets (e.g., Future<String>, DateTime)
   // Match: "final DateTime? lastSyncedAt;"
   pattern = 'final\\s+([A-Za-z][A-Za-z0-9_]*<[^>]+>)\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return match.group(1)!;
   }
 
   // Pattern 8: Complex nullable types with angle brackets
   pattern = 'final\\s+([A-Za-z][A-Za-z0-9_]*<[^>]+>)\\?\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return '${match.group(1)!}?';
   }
 
   // Pattern 9: Multi-word types like DateTime (non-nullable)
   pattern = 'final\\s+([A-Z][A-Za-z0-9_]*)\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return match.group(1)!;
   }
 
   // Pattern 10: Multi-word types like DateTime? (nullable)
   pattern = 'final\\s+([A-Z][A-Za-z0-9_]*)\\?\\s+$fieldName\\s*;';
-  match = RegExp(
-    pattern,
-    multiLine: true,
-  ).firstMatch(classContent);
+  match = RegExp(pattern, multiLine: true).firstMatch(classContent);
   if (match != null) {
     return '${match.group(1)!}?';
   }
@@ -475,11 +439,7 @@ String _toCamelCase(String input) {
 }
 
 class _Param {
-  _Param({
-    required this.name,
-    required this.type,
-    this.isRequired = false,
-  });
+  _Param({required this.name, required this.type, this.isRequired = false});
   final String name;
   final String type;
   final bool isRequired;
