@@ -67,17 +67,14 @@ class _SocialFeedDemoPageState extends State<SocialFeedDemoPage> {
             onPressed: () {
               final SocialFeedCubit cubit = context.read<SocialFeedCubit>();
               // check-ignore: side_effects_build - user gesture callback.
-              unawaited(
-                showModalBottomSheet<void>(
-                  context: context,
-                  builder: (sheetContext) =>
-                      BlocProvider<SocialFeedCubit>.value(
-                        value: cubit,
-                        child: const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: SocialFeedScenarioControls(),
-                        ),
-                      ),
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (sheetContext) => BlocProvider<SocialFeedCubit>.value(
+                  value: cubit,
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: SocialFeedScenarioControls(),
+                  ),
                 ),
               );
             },
