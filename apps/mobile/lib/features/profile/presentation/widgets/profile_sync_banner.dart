@@ -1,9 +1,9 @@
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:design_system/design_system.dart';
+import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/ensure_sync_started_mixin.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
+import 'package:flutter_bloc_app/app/sync/sync_now_trailing_button.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
@@ -21,28 +21,6 @@ class ProfileSyncBanner extends StatefulWidget {
 
 class _ProfileSyncBannerState extends State<ProfileSyncBanner>
     with EnsureSyncStartedMixin {
-  bool _isManualSyncing = false;
-
-  Future<void> _handleSyncNow(SyncStatusCubit cubit) async {
-    if (_isManualSyncing) {
-      return;
-    }
-    setState(() => _isManualSyncing = true);
-    try {
-      await cubit.flush();
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'ProfileSyncBanner.handleSyncNow failed',
-        error,
-        stackTrace,
-      );
-    } finally {
-      if (mounted) {
-        setState(() => _isManualSyncing = false);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
@@ -57,7 +35,6 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner>
     >(
       selector: (s) => (s.networkStatus, s.syncStatus),
       builder: (context, pair) {
-        final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
         final bool isOffline = pair.$1 == NetworkStatus.offline;
         final bool isSyncing = pair.$2 == SyncStatus.syncing;
         if (!shouldShowSyncBanner(
@@ -74,21 +51,6 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner>
           isSyncing: isSyncing,
           pendingCount: 0,
         );
-        final bool canManualSync = !isSyncing && !_isManualSyncing;
-        final Widget trailing = Align(
-          alignment: AlignmentDirectional.centerEnd,
-          child: PlatformAdaptive.textButton(
-            context: context,
-            onPressed: canManualSync ? () => _handleSyncNow(syncCubit) : null,
-            child: _isManualSyncing
-                ? SizedBox(
-                    height: context.responsiveGapM,
-                    width: context.responsiveGapM,
-                    child: const CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(l10n.syncStatusSyncNowButton),
-          ),
-        );
         return Padding(
           padding: EdgeInsets.symmetric(
             horizontal: context.responsiveHorizontalGapL,
@@ -98,7 +60,10 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner>
             title: title,
             message: message,
             isError: isOffline,
-            trailing: trailing,
+            trailing: SyncNowTrailingButton(
+              enabled: !isSyncing,
+              logLabel: 'ProfileSyncBanner',
+            ),
           ),
         );
       },
