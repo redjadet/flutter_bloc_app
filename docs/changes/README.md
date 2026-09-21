@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-21_flutter_3_47_5_pin.md`](2026-09-21_flutter_3_47_5_pin.md): Pin Flutter `3.47.4` → `3.47.5` and Dart `3.13.3` → `3.13.4`; refresh `pubspec.lock` on new SDK.
 - [`2026-09-16_sync_now_trailing_button.md`](2026-09-16_sync_now_trailing_button.md): Shared `SyncNowTrailingButton` for chat/profile sync banners.
 - [`2026-09-16_network_sync_banner_ensure_mixin.md`](2026-09-16_network_sync_banner_ensure_mixin.md): Shared `NetworkSyncBanner` + `EnsureSyncStartedMixin` for sync UI.
 - [`2026-09-16_clean_code_ai_era_guidance.md`](2026-09-16_clean_code_ai_era_guidance.md): Clean code as AI/incident infrastructure—read before edit; small units; why comments; review with tests.
