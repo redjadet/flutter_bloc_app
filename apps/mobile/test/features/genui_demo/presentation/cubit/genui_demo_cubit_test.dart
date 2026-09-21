@@ -258,7 +258,19 @@ void main() {
           'isSending',
           true,
         ),
-        // Second: error state is emitted with isSending = false
+        // Second: failure path keeps busy until ownership clears
+        isA<GenUiDemoState>().having(
+          (state) => state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty &&
+                surfaceIds.contains('surface1') &&
+                isSending,
+            orElse: () => false,
+          ),
+          'errorStillSending',
+          true,
+        ),
+        // Third: ownership clear resets isSending
         isA<GenUiDemoState>().having(
           (state) => state.maybeWhen(
             error: (message, surfaceIds, _, isSending) =>
@@ -327,7 +339,19 @@ void main() {
           'isSending',
           true,
         ),
-        // Second: error state is emitted with isSending = false (default)
+        // Second: failure path keeps busy until ownership clears
+        isA<GenUiDemoState>().having(
+          (state) => state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty &&
+                surfaceIds.contains('surface1') &&
+                isSending,
+            orElse: () => false,
+          ),
+          'errorStillSending',
+          true,
+        ),
+        // Third: ownership clear resets isSending
         isA<GenUiDemoState>().having(
           (state) => state.maybeWhen(
             error: (message, surfaceIds, _, isSending) =>
@@ -444,7 +468,19 @@ void main() {
           'readyWithIsSendingTrue',
           true,
         ),
-        // Second: error state is emitted with isSending = false
+        // Second: failure path keeps busy until ownership clears
+        isA<GenUiDemoState>().having(
+          (state) => state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty &&
+                surfaceIds.contains('surface1') &&
+                isSending,
+            orElse: () => false,
+          ),
+          'errorStillSending',
+          true,
+        ),
+        // Third: ownership clear resets isSending
         isA<GenUiDemoState>().having(
           (state) => state.maybeWhen(
             error: (message, surfaceIds, _, isSending) =>
@@ -496,6 +532,93 @@ void main() {
         ),
         isTrue,
       );
+    });
+
+    test(
+      'sendMessage while isSending is ignored (single agent call)',
+      () async {
+        final Completer<void> hang = Completer<void>();
+        final cubit = buildCubit();
+        when(() => mockAgent.sendMessage(any())).thenAnswer((_) => hang.future);
+        // ignore: invalid_use_of_protected_member
+        cubit.emit(
+          GenUiDemoState.ready(
+            surfaceIds: const [],
+            hostHandle: mockHostHandle,
+          ),
+        );
+
+        final Future<void> first = cubit.sendMessage('first');
+        await Future<void>.delayed(Duration.zero);
+        expect(
+          cubit.state.maybeWhen(
+            ready: (_, _, isSending) => isSending,
+            orElse: () => false,
+          ),
+          isTrue,
+        );
+
+        await cubit.sendMessage('second');
+        verify(() => mockAgent.sendMessage(any())).called(1);
+
+        hang.complete();
+        await first;
+        expect(
+          cubit.state.maybeWhen(
+            ready: (_, _, isSending) => !isSending,
+            orElse: () => false,
+          ),
+          isTrue,
+        );
+      },
+    );
+
+    test('pending send survives error stream; second send rejected; '
+        'first completion clears busy only', () async {
+      final Completer<void> hang = Completer<void>();
+      final cubit = buildCubit();
+      when(() => mockAgent.sendMessage(any())).thenAnswer((_) => hang.future);
+
+      await cubit.initialize();
+      await Future<void>.delayed(Duration.zero);
+
+      final Future<void> first = cubit.sendMessage('first');
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        cubit.state.maybeWhen(
+          ready: (_, _, isSending) => isSending,
+          orElse: () => false,
+        ),
+        isTrue,
+      );
+
+      errorsController.add('agent stream error');
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        cubit.state.maybeWhen(
+          error: (message, _, hostHandle, isSending) =>
+              message == 'agent stream error' &&
+              hostHandle != null &&
+              isSending,
+          orElse: () => false,
+        ),
+        isTrue,
+        reason: '_onError must preserve isSending while send owns lock',
+      );
+
+      await cubit.sendMessage('second');
+
+      hang.complete();
+      await first;
+      expect(
+        cubit.state.maybeWhen(
+          error: (_, _, _, isSending) => !isSending,
+          orElse: () => false,
+        ),
+        isTrue,
+        reason: 'first completion alone clears busy after stream error',
+      );
+      verify(() => mockAgent.sendMessage(any())).called(1);
     });
   });
 }

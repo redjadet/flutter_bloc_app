@@ -6,6 +6,9 @@ part of 'genui_demo_cubit.dart';
 extension GenUiDemoCubitHandlers on GenUiDemoCubit {
   Future<void> sendMessage(String text) async {
     if (text.trim().isEmpty) return;
+    if (isClosed) return;
+    // Gate on ownership, not UI flag — `_onError` can drop `isSending` defaults.
+    if (_sendInFlight) return;
     final bool canSend = state.maybeWhen(
       ready: (_, _, _) => true,
       loading: (_, _, _) => true,
@@ -13,8 +16,8 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
       orElse: () => false,
     );
     if (!canSend) return;
-    if (isClosed) return;
 
+    _sendInFlight = true;
     state.mapOrNull(
       ready: (state) {
         if (isClosed) return;
@@ -48,6 +51,7 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
               message: message,
               surfaceIds: state.surfaceIds,
               hostHandle: state.hostHandle,
+              isSending: true,
             ),
           ),
           loading: (state) => emit(
@@ -55,16 +59,21 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
               message: message,
               surfaceIds: state.surfaceIds,
               hostHandle: state.hostHandle,
+              isSending: true,
             ),
           ),
           error: (state) =>
-              emit(state.copyWith(message: message, isSending: false)),
+              emit(state.copyWith(message: message, isSending: true)),
         );
       },
     );
 
-    if (isClosed) return;
+    if (isClosed) {
+      _sendInFlight = false;
+      return;
+    }
 
+    _sendInFlight = false;
     state.mapOrNull(
       ready: (state) {
         if (isClosed) return;
@@ -135,6 +144,8 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
             message: error,
             surfaceIds: state.surfaceIds,
             hostHandle: state.hostHandle,
+            // Preserve busy across stream-driven transitions while send owns lock.
+            isSending: state.isSending,
           ),
         );
       },
@@ -145,6 +156,7 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
             message: error,
             surfaceIds: state.surfaceIds,
             hostHandle: state.hostHandle,
+            isSending: state.isSending,
           ),
         );
       },
