@@ -85,8 +85,8 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
         caseDetail: null,
         decision: preserveDecision ? state.decision : null,
         failure: null,
-        isRunningDecision: selectionChanged ? false : state.isRunningDecision,
-        isSavingAction: selectionChanged ? false : state.isSavingAction,
+        isRunningDecision: !selectionChanged && state.isRunningDecision,
+        isSavingAction: !selectionChanged && state.isSavingAction,
       ),
     );
     try {
