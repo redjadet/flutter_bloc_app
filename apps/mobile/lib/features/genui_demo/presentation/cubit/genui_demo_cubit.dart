@@ -16,6 +16,8 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
   new({required this._agent}) : super(const GenUiDemoState.initial());
 
   final GenUiDemoAgent _agent;
+  // Operation ownership independent of UI `isSending` (error stream can rewrite state).
+  bool _sendInFlight = false;
   // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
   StreamSubscription<GenUiSurfaceEvent>? _surfaceSubscription;
   // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
