@@ -6,8 +6,11 @@ import 'package:networking/networking.dart';
 
 bool _defaultAllowLocalFallback() => false;
 
-/// Picks Supabase Edge first when the user session allows, then optional direct
-/// HF fallback for allowed Edge failures while **online** only.
+/// Picks Supabase Edge first when the user session allows.
+///
+/// While online, direct HF fallback is limited to retryable Edge
+/// `upstream_timeout` and `upstream_unavailable` failures; offline sends and
+/// other Edge failure codes do not fall through.
 class CompositeChatRepository implements ChatRepository {
   new({
     required ChatRepository supabaseRepository,

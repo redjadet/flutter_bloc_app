@@ -5,6 +5,8 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_t
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories.dart';
 
 void registerOnlineTherapyDemoServices() {
+  // Share one fake API instance across repositories so role and network mode
+  // cannot diverge between fake data sources.
   registerLazySingletonIfAbsent<OnlineTherapyFakeApi>(OnlineTherapyFakeApi.new);
 
   registerLazySingletonIfAbsent<TherapyAuthRepository>(

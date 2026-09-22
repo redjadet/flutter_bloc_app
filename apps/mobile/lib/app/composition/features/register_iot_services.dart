@@ -26,6 +26,8 @@ void registerIotServices() {
     () => const UnsupportedBleRepository(),
   );
   final BlePlatformGateway gateway = getIt<BlePlatformGateway>();
+  // Register plugin-backed BLE services only when the platform gateway reports
+  // real BLE support; unsupported hosts receive the no-op permission gateway.
   if (gateway.supportsRealBle) {
     registerLazySingletonIfAbsent<BlePermissionGateway>(
       () => const BlePermissionGatewayImpl(),

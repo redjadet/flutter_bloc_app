@@ -35,7 +35,8 @@ class HiveService with HiveServiceBoxOperations {
     return _mutexFor(boxName).run(action);
   }
 
-  /// Initializes Hive with encryption once.
+  /// Initializes Hive once; concurrent callers await the same in-flight
+  /// initialization.
   Future<void> initialize() async => StorageGuard.run<void>(
     logContext: 'HiveService.initialize',
     action: () async {

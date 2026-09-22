@@ -5,6 +5,8 @@ mixin IotBleCubitScan on IotBleCubitCore {
     if (state.isScanning) {
       return;
     }
+    // Cancel the prior timeout before starting a new scan so its callback
+    // cannot stop the newer scan.
     cancelScanTimeout();
     emit(state.copyWith(isScanning: true, errorCode: null, errorDetail: null));
     appendLog(

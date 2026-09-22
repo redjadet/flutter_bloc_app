@@ -71,6 +71,8 @@ class OnlineTherapyDemoSessionCubit
     final TherapyUser? previousUser = state.user;
     final TherapyRole previousRole = state.role;
     final email = (state.emailDraft ?? '').trim();
+    // Clear the visible user while authenticating the new role; if login
+    // fails, restore the prior role and user together.
     emit(state.copyWith(role: role, isBusy: true, user: null));
     await CubitExceptionHandler.executeAsync(
       operation: () => _auth.login(email: email, role: role),

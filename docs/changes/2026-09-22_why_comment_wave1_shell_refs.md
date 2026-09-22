@@ -38,5 +38,5 @@ High-signal **why** comments (and tightening of existing docs) on:
 ## Deferrals / known limitations
 
 - **Dio `error.message` passthrough** when no status-keyed message exists is documented from source inspection—**no dedicated regression test** asserts raw-message retention or l10n suppression of that path. Separate hardening if product requires stripping library text from `AppError.message`.
-- Wave 2 (on request): chat/IoT/therapy demos, more registrars, `packages/networking` / `packages/storage`.
+- Wave 2 shipped: [`2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md`](2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md) (networking skip — already documented).
 - [`CODEMAP.md`](../../CODEMAP.md) unchanged (no discoverability gap found).

@@ -57,6 +57,8 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
         clientMessageId: changeId,
       );
     } on ChatRemoteFailureException catch (e) {
+      // Non-retryable remote failures are terminal; surface them without
+      // creating a queue entry that cannot succeed on retry.
       if (!e.retryable) {
         rethrow;
       }
@@ -72,6 +74,8 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
       );
       throw const ChatOfflineEnqueuedException();
     } on Exception catch (error, stackTrace) {
+      // Unknown transport exceptions remain queueable because this layer
+      // cannot prove they are terminal.
       await _enqueueFailedSend(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
@@ -140,6 +144,8 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
       );
     } on ChatRemoteFailureException catch (e, st) {
       if (!e.retryable) {
+        // Record terminal failure on the local message, then remove the
+        // operation; retrying a non-retryable request cannot make it valid.
         AppLogger.error(
           'OfflineFirstChatRepository.processOperation dropped non-retryable '
           'remote failure: ${e.code}',
