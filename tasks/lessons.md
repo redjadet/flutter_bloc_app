@@ -21,6 +21,32 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-21 - Cubit ownership: UI busy ≠ invalidate siblings on refresh
+
+- What went wrong:
+  (1) GenUI gated sends on `isSending`; agent error stream rebuilt `error`
+  with default `isSending: false`, so a second send started while the first
+  was still in flight. (2) AiDecision `loadCase` always bumped decision/save
+  guards — including same-case refresh after a successful mutation — so a
+  concurrent sibling mutation could commit remotely but drop its UI reload.
+- How it was fixed:
+  GenUI: `_sendInFlight` ownership independent of UI state; preserve
+  `isSending` across `_onError`. AiDecision: supersede decision/save guards
+  only when `selectedCaseId` changes; same-case refresh keeps sibling
+  ownership. Weather ABA tests use per-invocation completers.
+- Pattern:
+  Busy UI flags are presentation; operation ownership is a separate lock.
+  Invalidate sibling ops on selection/queue change, not on post-mutation
+  reload of the same entity.
+- Preventive rule:
+  Before adding `RequestIdGuard.next()` in a shared reload helper, ask:
+  “Does this path mean a new owner, or only a refresh?” Refresh must not
+  discard in-flight sibling mutations. Cover with reverse-completion tests
+  (same-id concurrent ops + stream-driven state rewrite mid-flight).
+- Evidence or affected files:
+  PR #866; weather / ai_decision / genui cubits + race tests;
+  `docs/changes/2026-09-21_cubit_async_ownership_guards.md`.
+
 ### 2026-09-13 - Hive RMW: counter + IoT off allowlist
 
 - What went wrong:
