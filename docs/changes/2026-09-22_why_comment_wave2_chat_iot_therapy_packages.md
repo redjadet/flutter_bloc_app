@@ -1,6 +1,6 @@
 # Why-comment Wave 2 — chat / IoT / therapy + packages
 
-**Date:** 2026-09-22  
+**Date:** 2026-09-22
 **Scope:** Comments-only maintainability pass (no behavior/signature changes).
 
 ## Canon (do not redefine)
