@@ -27,6 +27,8 @@ Future<void> pullRemoteImpl(OfflineFirstIotDemoRepository r) async {
   if (remote == null || local == null || userId == null) return;
   final Future<void>? inFlight = r._pullRemoteInFlightByUser[userId];
   if (inFlight != null) {
+    // Share only pulls for the same user; an auth switch must not reuse
+    // another user's in-flight fetch.
     return await inFlight;
   }
   final Future<void> future = _doPullRemoteImpl(
@@ -57,6 +59,9 @@ Future<bool> _shouldSkipPullRemoteReplaceImpl({
   required PersistentIotDemoRepository local,
   required String userId,
 }) async {
+  // Do not replace non-empty local state while that user has queued or
+  // debounced writes; callers re-check after fetch to close the in-flight
+  // mutation window.
   final List<SyncOperation> pending = await r._pendingSyncRepository
       .getPendingOperations(supabaseUserIdFilter: userId);
   final bool hasPendingIotOps = pending.any(

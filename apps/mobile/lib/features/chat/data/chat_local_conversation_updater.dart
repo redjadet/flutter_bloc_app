@@ -42,6 +42,8 @@ class ChatLocalConversationUpdater {
     final List<ChatMessage> messages = List<ChatMessage>.from(
       conversation.messages,
     );
+    // A replay may revisit this operation after local persistence; match
+    // clientMessageId to avoid appending a second user bubble.
     final bool hasUserMessage = messages.any(
       (m) => m.clientMessageId == payload.clientMessageId,
     );

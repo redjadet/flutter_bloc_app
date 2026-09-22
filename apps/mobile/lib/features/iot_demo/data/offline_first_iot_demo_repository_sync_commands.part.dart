@@ -104,6 +104,8 @@ void _scheduleSetValueSyncImpl(
   required String deviceId,
   required double value,
 }) {
+  // Coalesce slider updates per user/device and retain the scheduling user ID
+  // so an auth change cannot re-scope the delayed operation.
   final String pendingKey = r._pendingSetValueKey(
     userId: userId,
     deviceId: deviceId,

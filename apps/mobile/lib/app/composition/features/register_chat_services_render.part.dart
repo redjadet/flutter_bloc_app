@@ -1,5 +1,7 @@
 part of 'register_chat_services.dart';
 
+/// Render orchestration is blocked by web no-backend mode, a disabled flag,
+/// an empty endpoint, a missing Firebase user, or a non-HTTPS release endpoint.
 bool _chatRenderOrchestrationRunnable() {
   if (getIt.isRegistered<BackendAvailability>() &&
       getIt<BackendAvailability>().webNoBackendMode) {

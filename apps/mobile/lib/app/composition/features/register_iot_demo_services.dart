@@ -10,9 +10,11 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.da
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:storage/storage.dart';
 
-/// Registers IoT demo services (offline-first, per-Supabase-user local storage).
+/// Stable synthetic user scope that keeps per-user Hive storage available
+/// when Supabase is disabled.
 const String _iotDemoLocalOnlyStorageScope = 'local_only';
 
+/// Registers IoT demo services (offline-first, per-Supabase-user local storage).
 void registerIotDemoServices() {
   registerLazySingletonIfAbsent<IotDemoRealtimeSubscription>(
     IotDemoRealtimeSubscription.new,

@@ -118,6 +118,8 @@ void registerChatServices() {
       localDataSource: getIt<ChatHistoryRepository>(),
     ),
   );
+  // Keep OfflineFirst outermost so queued retries use the same DemoFirst
+  // transport-selection chain as live sends.
   registerLazySingletonIfAbsent<ChatRepository>(
     () => OfflineFirstChatRepository(
       remoteRepository: getIt<DemoFirstChatRepository>(),
