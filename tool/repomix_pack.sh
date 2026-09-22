@@ -100,7 +100,7 @@ case "$profile" in
     ;;
 esac
 
-tmp_config="$(mktemp "${TMPDIR:-/tmp}/repomix.XXXXXX.json")"
+tmp_config="$(mktemp "${TMPDIR:-/tmp}/repomix.json.XXXXXX")"
 write_config_with_output "$base_config" "$tmp_config" "$output_path"
 
 if [[ "$profile" == "feature" ]]; then

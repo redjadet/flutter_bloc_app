@@ -21,6 +21,32 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-22 - Why-comments: evidence-bound claims; BSD mktemp X's at end
+
+- What went wrong:
+  (1) Wave 2 why-comment draft overclaimed tests in the change-note evidence
+  table (Hive concurrent init, IoT `local_only` registrar) and one Hive doc
+  said “encryption” for `initialize()`. (2) `./bin/checklist` failed when
+  `tool/check_regression_guards.sh` called
+  `mktemp …/check_regression_guards.XXXXXX.stderr` — BSD mktemp needs trailing
+  X's, so a literal `….XXXXXX.stderr` could block retries with File exists.
+- How it was fixed:
+  Codex diff review → soften/source-inspect deferrals; rewrite Hive doc.
+  Move mktemp templates to `….stderr.XXXXXX` (and sibling dill/json helpers).
+- Pattern:
+  Why-comments and their evidence tables must match real tests; prefer drop
+  over invent. Shell mktemp on macOS is template-shape sensitive.
+- Preventive rule:
+  Freeze why-comment claims against named tests before edit; after Codex P2,
+  fix evidence rows that cite missing tests. New `mktemp` templates end with
+  `XXXXXX` (no suffix after the X's).
+- Evidence or affected files:
+  `docs/changes/2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md`
+  `tool/check_regression_guards.sh`
+  `tool/delivery_checklist.sh`
+  `tool/repomix_pack.sh`
+  PR #876
+
 ### 2026-09-21 - Cubit ownership: UI busy ≠ invalidate siblings on refresh
 
 - What went wrong:

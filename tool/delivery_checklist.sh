@@ -332,7 +332,7 @@ validate_standalone_dart_syntax() {
   fi
 
   for file in "${files[@]}"; do
-    tmp_dill="$(mktemp "${TMPDIR:-/tmp}/checklist-dart-syntax.XXXXXX.dill")"
+    tmp_dill="$(mktemp "${TMPDIR:-/tmp}/checklist-dart-syntax.dill.XXXXXX")"
     if ! dart compile kernel --output "$tmp_dill" "$file"; then
       rm -f "$tmp_dill"
       return 1

@@ -342,7 +342,9 @@ for test_file in "${tests[@]}"; do
   echo "  • $test_file"
 done
 
-native_assets_stderr="$(mktemp "${TMPDIR:-/tmp}/check_regression_guards.XXXXXX.stderr")"
+# BSD mktemp (macOS) requires X's at end of template; suffix after XXXXXX can
+# leave a literal path and fail with "File exists" on retry.
+native_assets_stderr="$(mktemp "${TMPDIR:-/tmp}/check_regression_guards.stderr.XXXXXX")"
 trap 'rm -f "$native_assets_stderr"' EXIT
 
 rm -rf build/unit_test_assets
