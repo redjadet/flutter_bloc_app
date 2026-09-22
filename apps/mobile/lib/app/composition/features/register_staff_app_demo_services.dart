@@ -38,6 +38,12 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timec
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:storage/storage.dart';
 
+/// Registers staff-app demo repositories as lazy singletons.
+///
+/// Firestore/Storage backends are preferred when Firebase is initialized;
+/// otherwise mock/no-op fallbacks keep the demo navigable offline or without
+/// Firebase. Local timeclock store is always Hive-backed so clock-in works
+/// without remotes. Fallbacks are demo convenience—not production security.
 void registerStaffAppDemoServices() {
   registerLazySingletonIfAbsent<StaffDemoLocationService>(
     StaffDemoLocationService.new,
@@ -176,6 +182,7 @@ T _withFirestoreOrFallback<T>(
   T Function(FirebaseFirestore firestore) builder, {
   required T Function() fallback,
 }) {
+  // Prefer live Firestore; any init/access failure falls back so demo boots.
   try {
     if (Firebase.apps.isEmpty) {
       return fallback();
@@ -188,6 +195,7 @@ T _withFirestoreOrFallback<T>(
   }
 }
 
+/// Same as Firestore fallback, but also requires Storage for proof uploads.
 T _withFirestoreAndStorageOrFallback<T>(
   T Function(FirebaseFirestore firestore, FirebaseStorage storage) builder, {
   required T Function() fallback,

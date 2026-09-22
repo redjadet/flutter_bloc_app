@@ -53,6 +53,7 @@ mixin _SocialFeedCubitPaging on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
       return;
     }
     _loadMoreInFlight = true;
+    // Generation guards append after a concurrent reload/viewer switch.
     final int gen = _generation;
     _emitReadyPatch(
       (d) => d.copyWith(pageStatus: const SocialFeedPageStatus.loading()),

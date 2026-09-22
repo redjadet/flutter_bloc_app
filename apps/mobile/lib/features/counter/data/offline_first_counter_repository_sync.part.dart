@@ -1,6 +1,8 @@
 part of 'offline_first_counter_repository.dart';
 
 extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
+  /// Pushes local pending when ahead of remote; otherwise may adopt remote if
+  /// helpers say remote is newer (`shouldApplyRemote` — two-sided stale protection).
   Future<void> processOperationBody(SyncOperation operation) async {
     final CounterSnapshot snapshot = CounterSnapshotDto.fromJson(
       operation.payload,
@@ -53,6 +55,7 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
   }
 
   Future<void> pullRemoteBody() async {
+    // Session cleanup pauses merges so Firebase tear-down is not raced.
     if (_remoteRepository == null || _remoteMergePausedForSessionCleanup) {
       return;
     }

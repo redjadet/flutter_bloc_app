@@ -6,6 +6,7 @@ mixin _SocialFeedCubitLeases
     if (next.id == viewer.id) {
       return;
     }
+    // New generation closes prior sync/realtime leases for the old viewer.
     ++_generation;
     await _closeLeases();
     if (isClosed) {
@@ -30,6 +31,7 @@ mixin _SocialFeedCubitLeases
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
+        // Drop watches while backgrounded; resume re-acquires leases.
         unawaited(_closeLeases());
     }
   }

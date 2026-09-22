@@ -11,7 +11,8 @@ import 'package:storage/storage.dart';
 /// Offline-first implementation of [ProfileRepository].
 ///
 /// Serves cached profile data when offline and refreshes in the background
-/// when online. Read-only; no pending operations are queued.
+/// when online. Read-only; no pending mutations are queued—remote refresh must
+/// not invent write conflicts, and concurrent callers share one coalesced fetch.
 class OfflineFirstProfileRepository
     implements ProfileRepository, SyncableRepository {
   new({

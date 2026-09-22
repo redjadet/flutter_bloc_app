@@ -4,21 +4,15 @@ import 'package:go_router/go_router.dart';
 
 /// Creates an authentication redirect function for GoRouter.
 ///
-/// **Authentication Redirect Logic:**
-/// 1. Checks if user is logged in via [AuthRepository.currentUser]
-/// 2. Allows deep link navigation to proceed without redirect (for universal links)
-/// 3. Redirects unauthenticated users to `/auth` (except when already on auth page)
-/// 4. Redirects authenticated users away from `/auth` to `/counter` (unless upgrading anonymous account)
-///
-/// **Deep Link Handling:**
-/// Deep links (any route other than `/` or `/counter` or `/auth`) are allowed
-/// to proceed even when the user is not authenticated. This enables universal links
-/// and custom scheme deep links to work seamlessly. Routes that need stronger
-/// protection should enforce it with a route-level auth gate.
-///
-/// **Anonymous Account Upgrading:**
-/// Anonymous users may stay on `/auth` only when `?upgrade=true` is present
-/// (e.g. from Settings). Fresh guest sign-in redirects to `/counter`.
+/// Coarse navigation guard only—not authorization:
+/// 1. Reads auth via [AuthRepository.currentUser].
+/// 2. For unauthenticated users, every matched location except `/`, `/counter`,
+///    and `/auth` proceeds without redirect (predicate is path-only—covers
+///    in-app navigation and external links alike). **Protected destinations
+///    still need `AppRoutePolicies` / route-level auth gates.**
+/// 3. Sends unauthenticated users on `/`, `/counter`, or `/auth` to `/auth`.
+/// 4. Sends authenticated users away from `/auth` to `/counter` unless
+///    anonymous upgrade (`?upgrade=true`) or a safe `redirect` query is set.
 GoRouterRedirect createAuthRedirect(AuthRepository auth) => (context, state) {
   final bool loggedIn = auth.currentUser != null;
   final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
@@ -27,28 +21,21 @@ GoRouterRedirect createAuthRedirect(AuthRepository auth) => (context, state) {
       AppRoutes.authUpgradeQueryValue;
   final String? redirectAfterLogin = state.uri.queryParameters['redirect'];
 
-  // Deep link detection: Allow navigation to any route other than
-  // root paths (/counter, /auth, /) to proceed without authentication.
-  // This enables universal links and custom scheme deep links to work
-  // seamlessly, allowing users to access specific features via links.
+  // Path allowlist for the coarse guard—not a claim about link origin.
   final String currentLocation = state.matchedLocation;
-  final bool isDeepLinkNavigation =
+  final bool isNonRootPath =
       currentLocation != AppRoutes.counterPath &&
       currentLocation != AppRoutes.authPath &&
       currentLocation != '/';
 
-  // Unauthenticated user flow
   if (!loggedIn) {
-    // Allow deep links to proceed (e.g., /chat, /graphql).
-    // Some deep links may still be protected by a route-level auth gate.
-    if (isDeepLinkNavigation) {
-      return null; // Allow navigation to proceed
+    // Non-root paths proceed; route gates may still block protected destinations.
+    if (isNonRootPath) {
+      return null;
     }
-    // Redirect to auth page unless already there
     return loggingIn ? null : AppRoutes.authPath;
   }
 
-  // Authenticated user flow
   if (loggingIn) {
     final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
     if (upgradingAnonymous && upgradeIntent) {
@@ -60,6 +47,5 @@ GoRouterRedirect createAuthRedirect(AuthRepository auth) => (context, state) {
     return AppRoutes.counterPath;
   }
 
-  // No redirect needed - allow navigation to proceed
   return null;
 };

@@ -1,5 +1,10 @@
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 
+/// Declarative auth requirement for a path.
+///
+/// `createAuthRedirect` is a coarse deep-link-friendly guard; this table (and
+/// route-level gates that read it) owns which destinations require a signed-in
+/// user after navigation lands.
 enum RouteAuthRequirement { publicRoute, authenticated }
 
 class const AppRoutePolicy({
@@ -10,6 +15,7 @@ class const AppRoutePolicy({
       requirement == RouteAuthRequirement.authenticated;
 }
 
+/// Known route auth policies used by gates and reviews.
 class AppRoutePolicies {
   new _();
 

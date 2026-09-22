@@ -22,6 +22,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 
+/// App shell that owns lifecycle-tied sync/memory work and provides shared cubits.
+///
+/// Dependencies arrive from the composition root via [AppScopeDependencies]—this
+/// widget must not call `getIt`. Pending resume/trim timers are replaced,
+/// coalescing lifecycle events that arrive within their delay windows (500ms /
+/// 750ms); that does not stop work already started by a fired callback.
 class const AppScope({
   required final GoRouter router,
   required final AppScopeDependencies dependencies,
@@ -64,8 +70,10 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      // Cancel any pending background trim—resume means we need sync, not trim.
       _backgroundTrimHandle?.dispose();
       _backgroundTrimHandle = null;
+      // 500ms debounce: coalesces bursty resume events into one flush.
       _resumeDebounceHandle?.dispose();
       _resumeDebounceHandle = _timerService.runOnce(
         const Duration(milliseconds: 500),
@@ -76,6 +84,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden) {
+      // 750ms delay: avoid trim work on brief background flickers.
       _backgroundTrimHandle?.dispose();
       _backgroundTrimHandle = _timerService.runOnce(
         const Duration(milliseconds: 750),
@@ -86,6 +95,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
 
   @override
   void didHaveMemoryPressure() {
+    // OS pressure wins over scheduled background trim.
     _backgroundTrimHandle?.dispose();
     _backgroundTrimHandle = null;
     unawaited(_memoryService.trim(AppMemoryTrimLevel.pressure));

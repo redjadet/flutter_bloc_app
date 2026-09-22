@@ -75,6 +75,12 @@ import 'package:storage/storage.dart' show PendingSyncRepository;
 import 'package:utilities/utilities.dart'
     show FcmDemoMode, FcmMessagingService, FcmSimulationController;
 
+/// Resolves [DemoRouteFactory] from the composition locator.
+///
+/// Keeps `getIt` at the composition boundary so demo route builders and pages
+/// receive concrete dependencies (and optional overrides for tests) without
+/// resolving infrastructure themselves. Optional registrations stay nullable
+/// so demos degrade when a plugin/service is absent.
 DemoRouteFactory resolveDemoRouteFactory({
   AuthRepository? authRepository,
   TimerService? timerService,

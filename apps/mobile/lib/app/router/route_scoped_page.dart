@@ -4,6 +4,10 @@ import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
 /// go_router 18+ page helpers: stable `NoTransitionPage` keyed by `state.pageKey`.
+///
+/// Cubits created via [withAsyncInit] / [routeWithCubit] are owned for the page
+/// lifetime (disposed when the page leaves the stack)—do not also register them
+/// as app-wide singletons for the same screen.
 abstract final class RouteScopedPage {
   new _();
 
