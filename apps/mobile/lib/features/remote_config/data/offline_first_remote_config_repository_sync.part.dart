@@ -2,6 +2,8 @@ part of 'offline_first_remote_config_repository.dart';
 
 extension _OfflineFirstRemoteConfigRepositorySync
     on OfflineFirstRemoteConfigRepository {
+  /// Cache stays authoritative while offline; online refresh is coalesced so
+  /// concurrent pullRemote/force paths share one fetch.
   Future<void> _refreshFromRemote({
     required String reason,
     bool skipNetworkCheck = false,
@@ -21,6 +23,7 @@ extension _OfflineFirstRemoteConfigRepositorySync
       }
     }
 
+    // Recent successful refresh short-circuits pullRemote thundering herds.
     if (reason == 'pullRemote' && _shouldSkipPullRemoteDueToRecentRefresh()) {
       _maybeLogPullRemoteSkip();
       return;

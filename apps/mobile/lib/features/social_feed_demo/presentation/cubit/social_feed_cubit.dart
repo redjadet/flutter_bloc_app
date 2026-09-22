@@ -53,6 +53,7 @@ class SocialFeedCubit extends _SocialFeedCubitBase
 
   @override
   Future<void> close() async {
+    // Invalidate in-flight load/mutation/paging before tearing down leases.
     ++_generation;
     await _closeLeases();
     return await super.close();
@@ -81,6 +82,7 @@ class _SocialFeedCubitBase extends Cubit<SocialFeedState>
   final DateTime Function() _clock;
   final SocialFeedCommentPolicy _commentPolicy;
 
+  /// Bumped on reload/viewer switch/close so in-flight work ignores stale results.
   int _generation = 0;
   SocialFeedSyncLease? _syncLease;
   SocialFeedRealtimeLease? _realtimeLease;

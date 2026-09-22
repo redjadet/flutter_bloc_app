@@ -2,6 +2,7 @@ part of 'social_feed_cubit.dart';
 
 mixin _SocialFeedCubitLoad on _SocialFeedCubitBase, _SocialFeedCubitHelpers {
   Future<void> load() async {
+    // Capture generation up front; any later bump aborts emits below.
     final int gen = ++_generation;
     final SocialFeedViewer current = viewer;
     emit(SocialFeedState.loading(current));

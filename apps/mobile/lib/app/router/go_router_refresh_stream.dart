@@ -3,25 +3,20 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/widgets.dart';
 
-/// Listenable wrapper around an auth stream for GoRouter refreshes.
+/// Adapts any auth [Stream] into a [ChangeNotifier] for GoRouter refreshes.
 ///
-/// **Why this exists:** GoRouter's `refreshListenable` requires a `ChangeNotifier`,
-/// but Firebase Auth provides a `Stream`. This adapter bridges the gap by listening
-/// to auth state changes and notifying GoRouter to refresh routes (e.g., when user
-/// logs in/out, routes need to update to show/hide protected routes).
+/// GoRouter's `refreshListenable` needs a [Listenable]; repository auth APIs
+/// expose streams. Subscribe once and call [notifyListeners] on each event.
+/// GoRouter does **not** dispose an externally supplied listenable—the owner
+/// (composition root / `MyApp`) must call [dispose] to cancel the subscription
+/// (`unawaited` cancel is intentional; disposal is synchronous).
 ///
-/// **Usage Example:**
 /// ```dart
-/// final authRefresh = GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges());
-/// return GoRouter(
-///   refreshListenable: authRefresh,
-///   routes: routes,
-/// );
+/// final authRefresh = GoRouterRefreshStream(authRepository.authStateChanges);
+/// final router = GoRouter(refreshListenable: authRefresh, routes: routes);
+/// // Later, when tearing down the app graph:
+/// authRefresh.dispose();
 /// ```
-///
-/// **Lifecycle:** Must be disposed when the router is disposed to prevent memory leaks.
-/// The subscription cancellation uses `unawaited()` because disposal is synchronous
-/// and we don't need to wait for the cancellation to complete.
 class GoRouterRefreshStream extends ChangeNotifier {
   new(Stream<dynamic> stream) {
     _subscription = stream.listen(

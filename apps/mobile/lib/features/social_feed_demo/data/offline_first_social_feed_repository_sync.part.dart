@@ -1,5 +1,6 @@
 part of 'offline_first_social_feed_repository.dart';
 
+/// Rebuilds pending UI overlay from the mutation queue (likes + comment drafts).
 Future<SocialFeedPendingSnapshot> _readPendingSnapshotImpl(
   OfflineFirstSocialFeedRepository repo,
   SocialFeedViewer viewer,
@@ -42,6 +43,8 @@ Future<SocialFeedPendingSnapshot> _readPendingSnapshotImpl(
   );
 }
 
+/// Applies queued likes/comments onto a cache/remote page so refresh cannot
+/// erase newer local pending state before replay completes.
 Future<SocialFeedPage> _overlayPendingImpl(
   OfflineFirstSocialFeedRepository repo,
   SocialFeedViewer viewer,
@@ -128,6 +131,10 @@ Future<SocialFeedPost> _optimisticPostImpl(
   );
 }
 
+/// Replays the mutation queue when simulated-online; otherwise returns counts.
+/// Like replay serializes remote applies per viewer (`withLikeApplyLock`) and
+/// rechecks the queue head; comment replay uses `applyComment` without that
+/// lock. Concurrent fetches keep queued UI state via `_overlayPending`.
 Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   OfflineFirstSocialFeedRepository repo,
   SocialFeedViewer viewer,

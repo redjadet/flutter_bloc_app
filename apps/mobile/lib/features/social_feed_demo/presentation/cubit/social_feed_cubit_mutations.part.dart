@@ -12,9 +12,11 @@ mixin _SocialFeedCubitMutations
       return;
     }
     final bool desired = !post.isLikedByMe;
+    // Snapshot generation+viewer: switchViewer/close must drop this result.
     final int generation = _generation;
     final SocialFeedViewer mutationViewer = currentState.data.viewer;
     final String mutationId = 'like-$postId-${_clock().microsecondsSinceEpoch}';
+    // Optimistic UI + pendingPostIds until sync/reject clears them.
     _emitReadyPatch((d) {
       final List<SocialFeedPost> posts = d.posts
           .map(

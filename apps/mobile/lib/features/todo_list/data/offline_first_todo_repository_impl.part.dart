@@ -1,5 +1,7 @@
 part of 'offline_first_todo_repository.dart';
 
+/// Offline-first todos: local Hive is source of truth for UI streams; remote
+/// watch merges through [TodoMergePolicy] and can pause during session cleanup.
 class OfflineFirstTodoRepository
     implements TodoRepository, TodoSyncDiagnosticsPort, SyncableRepository {
   new({
@@ -77,8 +79,8 @@ class OfflineFirstTodoRepository
         if (_remoteMergePausedForSessionCleanup) {
           return;
         }
-        // Merge remote changes into local storage
-        // This will trigger the local watch stream to emit
+        // Merge only when policy says remote wins; track in-flight so cleanup
+        // can wait before wiping local state.
         final Future<void> merge = _mergeRemoteIntoLocal(
           _localRepository,
           remoteItems,

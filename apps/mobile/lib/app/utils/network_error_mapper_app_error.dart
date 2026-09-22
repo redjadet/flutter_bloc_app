@@ -1,5 +1,12 @@
 part of 'network_error_mapper.dart';
 
+/// Maps thrown values to [AppError].
+///
+/// Precedence: already-[AppError] → [HttpRequestFailure] → [DioException]
+/// (HTTP status first, then timeout/offline types, then heuristics) → string
+/// heuristics. Prefer status-keyed messages from [_getMessageForStatusCode];
+/// when absent, Dio's `error.message` may pass through—UI should still prefer
+/// [NetworkErrorMapper.getErrorMessage] with l10n for user-facing text.
 AppError _getAppError(dynamic error) {
   if (error == null) {
     return const UnknownError(message: 'An unknown error occurred');
@@ -24,6 +31,7 @@ AppError _getAppError(dynamic error) {
 }
 
 AppError _getAppErrorFromDio(DioException error) {
+  // Status code wins over DioExceptionType so 401/503 are not mislabeled offline.
   final int? statusCode = error.response?.statusCode;
   if (statusCode != null) {
     return appErrorFromHttpStatus(
@@ -46,6 +54,7 @@ AppError _getAppErrorFromDio(DioException error) {
       break;
   }
 
+  // Fallback may carry library text; not a redaction guarantee.
   final String? msg = error.message;
   if (msg != null && msg.trim().isNotEmpty) {
     return UnknownError(message: msg, cause: error);
