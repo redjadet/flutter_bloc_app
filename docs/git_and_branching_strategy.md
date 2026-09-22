@@ -147,6 +147,28 @@ PR description includes:
   behavior cannot change.
 - Migration, rollback, security, or follow-up notes when applicable.
 
+For consequential behavior or design changes (for example retry, concurrency,
+offline merge, data migration, auth, or recovery), fill the **Decision note**
+section in [`.github/pull_request_template.md`](../.github/pull_request_template.md)
+(or link a durable repo note). State:
+
+- **Must remain true:** the invariant and conditions that make the behavior safe.
+- **Failure modes:** the cases that shaped the design and what happens when they
+  occur, including the recovery path when relevant.
+- **Rejected alternatives:** a tempting simpler approach and why it fails this
+  contract.
+
+Keep the note specific to the changed behavior and supported by the diff,
+tests, or platform contract. For a retry, explain when repeating the operation
+is safe and how a partial success or duplicate request is handled. A teammate
+should be able to use the note during an incident without the author or AI chat.
+Link longer-lived decisions from the owning documentation when a PR description
+alone would be hard to find later.
+
+When the change is not consequential (docs-only, typo, dependency bump without
+behavior change, or mechanical rename), write `N/A — <reason>` in that section
+instead of inventing invariants.
+
 Review the final diff before requesting review. Do not approve, merge, or
 bypass failing checks merely because a local command passed. CI and GitHub PR
 state decide merge readiness; [CI Automation](engineering/ci_automation.md) describes the

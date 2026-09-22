@@ -56,3 +56,4 @@ into several files.
 - User-facing or cross-cutting changes should include doc updates.
 - Validation should be run before requesting review.
 - Behavior-changing PRs include tests that would catch refactor regressions in adjacent flows, or document **Tests: N/A — reason** in the linked feature brief or `docs/changes/` note.
+- Consequential behavior or design changes include a **Decision note** (or `N/A — reason`) per [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § Pull request contract.

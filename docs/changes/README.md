@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-22_pr_decision_handoff_guidance.md`](2026-09-22_pr_decision_handoff_guidance.md): Require concise, evidence-backed PR decision notes (template + contract + review/agent guidance) for consequential changes so teammates can maintain and recover behavior without its author.
 - [`2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md`](2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md): Wave 2 why-comments on chat/IoT/therapy demos + HiveService.
 - [`2026-09-22_why_comment_wave1_shell_refs.md`](2026-09-22_why_comment_wave1_shell_refs.md): Wave 1 why-comments on AppScope/router/sync + reference offline features; links comment canon.
 - [`2026-09-21_cubit_async_ownership_guards.md`](2026-09-21_cubit_async_ownership_guards.md): Weather/AI-decision/GenUI Cubit stale-async ownership guards + race tests.
