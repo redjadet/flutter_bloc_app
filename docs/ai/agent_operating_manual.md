@@ -20,8 +20,8 @@ Use this loop for implementation, refactoring, and review:
 4. **Design failure paths.** Define relevant invalid, absent/null, dependency-failure, cancellation, race, stale-result, retry, and partial-completion behavior; test important paths.
 5. **Refactor deliberately.** Within the write-set, remove duplication, misleading names, oversized responsibilities, and accidental complexity exposed by the change. Prefer deleting surplus introduced by the change over adding parallel structure; preserve pre-existing and user-owned work.
 6. **Understand reuse.** Read copied/generated code and package contracts; verify them against current behavior and pinned APIs.
-7. **Communicate decisions.** Record context, assumptions, trade-offs, rejected simpler options, and requirement changes where maintainers will find them; comments explain why.
-8. **Recheck.** Ask: “Is this clear, necessary, simple, resilient, and understandable six months from now?” Inspect diff and proof before reporting. Volume of generated code is not evidence of progress.
+7. **Communicate decisions.** Record context, assumptions, trade-offs, rejected simpler options, and requirement changes where maintainers will find them; comments explain why. For consequential changes, use the short PR decision note in [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) so recovery does not depend on the author's memory or AI chat.
+8. **Recheck.** Ask: “Could a teammate safely understand, maintain, and recover this without me?” Inspect diff and proof before reporting. Code shipped or generated is not the productivity measure if the team cannot operate it.
 
 ## Readable code and useful comments
 

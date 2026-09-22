@@ -70,6 +70,10 @@ Questions to answer:
 - What existing feature establishes the local convention?
 - Could this change alter platform, accessibility, localization, or persistence
   behavior outside the visible happy path?
+- For consequential behavior, can a teammate find the invariant, relevant
+  failure modes, and rejected alternative in the PR decision note or linked
+  repo documentation without asking the author? Check each claim against the
+  implementation and proof, especially retry and partial-success conditions.
 
 ### 3. Review in risk order
 

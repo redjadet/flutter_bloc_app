@@ -10,7 +10,17 @@
 - Why safe: evidence and commands
 - If wrong: detection signal, blast radius, rollback
 - Owner: person accepting consequence
-- Maintainer understanding: changed invariants and trade-offs
+
+## Decision note
+
+<!-- Required for consequential behavior/design changes (retry, concurrency,
+     offline merge, migration, auth, recovery). Otherwise write
+     `N/A — <reason>` (for example docs-only or dependency bump).
+     Canon: docs/git_and_branching_strategy.md § Pull request contract -->
+
+- Must remain true:
+- Failure modes / recovery:
+- Rejected alternative:
 
 ## Validation
 
