@@ -67,6 +67,22 @@ void main() {
 
       expect(result, 'idle');
     });
+
+    test('matches via runtimeType when Equatable stringify is off', () {
+      EquatableConfig.stringify = false;
+      addTearDown(() {
+        EquatableConfig.stringify = true;
+      });
+
+      final TestIdleState state = const TestIdleState();
+      // Equatable 3.0: non-stringify toString is Object's "Instance of '...'"
+      expect(state.toString(), contains("Instance of"));
+
+      final result = SealedStateMatcher<TestIdleState, String>(state)
+          .caseIdle(() => 'idle')
+          .build();
+      expect(result, 'idle');
+    });
   });
 }
 
@@ -77,22 +93,20 @@ class TestState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Variant names must include Idle/Loading/Navigate/Error so SealedStateMatcher
+// can classify via runtimeType (Equatable 3.0-safe; no toString override).
 class TestIdleState extends TestState {
-  @override
-  String toString() => 'TestIdleState';
+  const TestIdleState();
 }
 
 class TestLoadingState extends TestState {
-  @override
-  String toString() => 'TestLoadingState';
+  const TestLoadingState();
 }
 
 class TestNavigateState extends TestState {
-  @override
-  String toString() => 'TestNavigateState';
+  const TestNavigateState();
 }
 
 class TestErrorState extends TestState {
-  @override
-  String toString() => 'TestErrorState';
+  const TestErrorState();
 }

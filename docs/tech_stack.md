@@ -65,7 +65,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 
 | Concern | Libraries or approach |
 | --- | --- |
-| State management | `flutter_bloc` `^9.1.1`, `equatable` `^2.0.5`, `freezed` `^3.2.3`, `freezed_annotation` `^3.1.0` |
+| State management | `flutter_bloc` `^9.1.1`, `equatable` `^3.0.0` (path shim until `fl_chart` / `firebase_auth_mocks` catch up — [`workarounds.md`](engineering/workarounds.md) §5), `freezed` `^3.2.3`, `freezed_annotation` `^3.1.0` |
 | Dependency injection | `get_it` `^9.0.5` |
 | Routing | `go_router` `^18.0.0` ([migration note](changes/2026-08-31_go_router_18_migration.md)) |
 | Localization | `intl` `^0.20.2`, `flutter_localizations` |

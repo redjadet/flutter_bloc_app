@@ -46,6 +46,7 @@ This project uses automated dependency update monitoring to keep dependencies up
 | `email_validator` | override ^3.0.0 | genui wants ^3; `firebase_ui_auth` wants ^2.1.17 — override keeps the graph solvable |
 | `melos` / `cli_util` / `pub_updater` | 8.3.0 / 0.5.2 / 0.6.0 | Melos 8 needs `cli_util ^0.5`; `flutter_launcher_icons` 0.14.4 (latest) needs `cli_util ^0.4.1`. Renovate holds melos `<7.8.2` for the same reason. |
 | `path_provider_foundation` | 2.6.0 | 2.6.0 is the iOS 26.x simulator FFI crash; pin stays 2.5.1 ([`workarounds.md`](workarounds.md)) |
+| `equatable` (hosted graph) | 3.0.0 via path | Hosted 3.0 drops `EquatableMixin`; `fl_chart` / `firebase_auth_mocks` still need it. Path shim [`third_party/pub/equatable`](../../third_party/pub/equatable) — watch releases; exit criteria in [`workarounds.md`](workarounds.md) §5 |
 | `test` / `test_api` / `test_core` / `material_color_utilities` / `dbus` / `package_config` | patch-ahead | SDK or rdep pins; not independently resolvable |
 
 ### Backup: Dependabot

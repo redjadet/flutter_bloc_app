@@ -65,9 +65,38 @@ and web counter save verified under `--wasm`.
 
 ---
 
-## 5. Other workarounds (template)
+## 5. [Active 2026-09] Equatable 3.0 path shim (`EquatableMixin` removed)
 
-Add new workarounds below (between ## 4 and ## 5) in the same format:
+**Symptom:** Forcing hosted `equatable` 3.0 fails analyze/build:
+`Type 'EquatableMixin' not found` in `fl_chart` and `firebase_auth_mocks`.
+
+**Root cause:** Equatable 3.0 removed `EquatableMixin` (use `with Equatable`).
+`fl_chart` 1.2.0 and `firebase_auth_mocks` 0.15.x still declare `equatable ^2.x`
+and `with EquatableMixin`.
+
+**Current workaround:** Root `dependency_overrides` → path package
+[`third_party/pub/equatable`](../../third_party/pub/equatable) (Equatable 3.0.0
+with a deprecated `typedef EquatableMixin = Equatable`). App/utilities keep
+`equatable: ^3.0.0`. Details: [`changes/2026-09-23_equatable_3_adoption.md`](../changes/2026-09-23_equatable_3_adoption.md).
+
+**Watch / remove when (all must hold):**
+
+1. `fl_chart` release without `EquatableMixin` (track
+   [imaNNeo/fl_chart#2120](https://github.com/imaNNeo/fl_chart/pull/2120)).
+2. `firebase_auth_mocks` release without `EquatableMixin` (or drop the mock
+   package if unused).
+3. Root override can use hosted `equatable: ^3.0.0` (or no override) and
+   `dart pub get` + `./bin/checklist` / charts + auth-mock tests stay green.
+4. Delete `third_party/pub/equatable/` and mark this section **Resolved**.
+
+Until then: do **not** replace the path override with a bare hosted `^3.0.0`
+override — compile will break again.
+
+---
+
+## 6. Other workarounds (template)
+
+Add new workarounds below (between ## 5 and ## 6) in the same format:
 
 - **Title:** Short name of the issue.
 - **Symptom:** What fails (error message, platform, version).

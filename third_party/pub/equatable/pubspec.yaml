@@ -1,0 +1,17 @@
+name: equatable
+description: Equatable 3.0.0 with deprecated EquatableMixin typedef for transitive deps (fl_chart, firebase_auth_mocks).
+version: 3.0.0
+repository: https://github.com/felangel/equatable
+issue_tracker: https://github.com/felangel/equatable/issues
+homepage: https://github.com/felangel/equatable
+documentation: https://github.com/felangel/equatable
+topics: [equality, equals]
+funding: [https://github.com/sponsors/felangel]
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  collection: ^1.0.0
+  meta: ^1.0.0

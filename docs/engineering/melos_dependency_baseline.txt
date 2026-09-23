@@ -15,7 +15,7 @@ dependencies:
 - cupertino_icons 1.0.9
 - device_info_plus 13.2.0 [device_info_plus_platform_interface ffi file flutter flutter_web_plugins meta web win32 win32_registry]
 - dio 5.10.0 [async collection http_parser meta mime path dio_web_adapter]
-- equatable 2.0.8 [collection meta]
+- equatable 3.0.0 [collection meta] (path: third_party/pub/equatable; EquatableMixin typedef shim)
 - event_bus 2.0.1
 - fancy_shimmer_image 2.0.3 [flutter cached_network_image shimmer]
 - ffi 2.2.0
