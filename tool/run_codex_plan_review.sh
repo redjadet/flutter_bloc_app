@@ -13,10 +13,10 @@ Arguments:
   PLAN_FILE       Path to a markdown plan (absolute or relative to cwd).
 
 Delegate options (passed through):
-  --profile fast|balanced   Default: balanced (see delegate_to_codex.sh -h).
+  --profile fast|balanced   Default: balanced (medium reasoning).
   --raw-response            Raw Codex output (debug).
   --raw-response-tolerant   Raw output but tolerate MCP noise.
-  --model NAME              Force Codex model.
+  --model NAME              Override default GPT-6 Sol model.
   -h, --help                Show this help.
 
 Environment:
@@ -87,4 +87,6 @@ export DELEGATE_SKIP_FIREBASE_MCP="${DELEGATE_SKIP_FIREBASE_MCP:-1}"
 } | "$wrapper" \
   --workspace "$repo_root" \
   --skip-firebase-mcp \
+  --profile balanced \
+  --model gpt-6-sol \
   "$@"

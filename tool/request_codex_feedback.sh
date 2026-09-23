@@ -7,7 +7,7 @@ Usage: request_codex_feedback.sh [options]
 
 Review the current git diff with the repo-managed cross-host review flow.
 Default behavior:
-  - uses direct `codex exec` with the authenticated default model
+  - uses GPT-6 Sol with medium reasoning for direct `codex exec`
   - uses the Cursor->Codex delegate wrapper only with --backend cursor-wrapper
   - reviews staged diff first, then unstaged/untracked diff
 
@@ -16,9 +16,9 @@ Options:
   --base BRANCH       Review BRANCH...HEAD instead of local changes.
   --staged            Review staged changes only.
   --unstaged          Review unstaged and untracked changes only.
-  --profile NAME      fast or balanced. Default: balanced.
-  --backend NAME      auto, cursor-wrapper, or codex-cli. Wrapper requires a
-                      model configuration compatible with current auth. Default: auto.
+  --profile NAME      fast or balanced. Default: balanced (medium reasoning).
+  --model NAME        Override default GPT-6 Sol model.
+  --backend NAME      auto, cursor-wrapper, or codex-cli. Default: auto.
   --raw-response      Print backend output without final extraction.
   --workspace PATH    Repo/workspace root. Default: current repository root.
   -h, --help          Show this help.
@@ -36,6 +36,7 @@ focus=""
 diff_mode="auto"
 base_branch=""
 profile="balanced"
+review_model="gpt-6-sol"
 raw_response="false"
 backend="auto"
 
@@ -71,6 +72,14 @@ while [[ $# -gt 0 ]]; do
         exit 2
       }
       profile="$2"
+      shift 2
+      ;;
+    --model)
+      [[ $# -ge 2 && -n "$2" ]] || {
+        echo "Missing value for --model" >&2
+        exit 2
+      }
+      review_model="$2"
       shift 2
       ;;
     --backend)
@@ -308,6 +317,7 @@ run_cursor_wrapper() {
     "--prompt" "$prompt_text"
     "--workspace" "$workspace"
     "--profile" "$profile"
+    "--model" "$review_model"
     "--skip-firebase-mcp"
   )
   if [[ "$raw_response" == "true" ]]; then
@@ -347,6 +357,8 @@ EOF
   cmd=(
     codex exec
     -C "$workspace"
+    -m "$review_model"
+    -c "model_reasoning_effort=\"$review_reasoning_effort\""
     --sandbox read-only
     -c 'mcp_servers.firebase.enabled=false'
     --output-schema "$schema_file"
@@ -386,6 +398,11 @@ if not isinstance(final, str) or not final.strip():
 print(final)
 PY
 }
+
+review_reasoning_effort="medium"
+if [[ "$profile" == "fast" ]]; then
+  review_reasoning_effort="low"
+fi
 
 selected_backend="$(resolve_backend)"
 

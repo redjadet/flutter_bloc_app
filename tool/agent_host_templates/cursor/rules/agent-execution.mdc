@@ -11,6 +11,7 @@ Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AG
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.
 - **Safety:** [`agent_safety_contracts.md`](docs/agent_kb/agent_safety_contracts.md) (`SAFETY-02`); destructive/external side effects need same-turn approval after listing targets, command, effect, and rollback.
 - **Prove:** plan → implement end-to-end → verify → teach back → report proof; narrowest honest validation lane.
+- **Cross-host review:** when user explicitly asks GPT or Codex for review, route diff review through `./tool/request_codex_feedback.sh`; plan review through `./tool/run_codex_plan_review.sh PATH/TO/plan.md`. Defaults: GPT-6 Sol, medium reasoning.
 - **Format:** after any `.dart` change, run `./bin/format` (or `dart format .`) before finish/closeout — not optional.
 - **Host maintain (agents run):** start → `./bin/agent-maintain preflight --intent "<task goal>"`; before finish → `./bin/agent-maintain closeout`; after `tool/agent_host_templates/**` → `./bin/agent-maintain after-host-edit` same turn. Policy: `docs/agent_kb/host_maintenance_automation.md`.
 - **Report:** coding-task closeout follows `SAFETY-REPORT` — What We Learned, Files Changed, Verification, Known limitations, Follow-up Actions, and destructive/external-action statement.
