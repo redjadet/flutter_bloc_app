@@ -18,7 +18,7 @@ snapshots so agents do not open deleted `lib/core` / `lib/shared` locations.
 
 ```bash
 bash tool/check_ai_snapshot_freshness.sh
-bash tool/check_ai_snapshot_freshness.sh --strict-head   # CI optional: source git_head must match HEAD (or HEAD^ for a metadata-only snapshot commit)
+bash tool/check_ai_snapshot_freshness.sh --strict-head   # Optional: needs snapshot git_head in local Git history
 ```
 
 ## Refresh
@@ -32,6 +32,17 @@ The refresh command validates every active snapshot, stages the complete output
 set, and then installs it under a repo-scoped lock. A normal install failure or
 handled interruption rolls back already installed targets, preventing mixed
 snapshot generations.
+
+`--strict-head` treats `git_head` as source provenance. It accepts later commits
+and squash-merged branches when the snapshot's source paths have the same
+content at `HEAD`; it rejects a missing revision or a change under app
+source/tests, packages, relevant maps and owner docs, or report generators.
+It compares committed content only. A shallow checkout
+without the recorded revision cannot prove this condition; the harness fixture
+uses a temporary full-history repository to test both outcomes.
+
+Source unchanged does not prove curated narrative is correct. Agents still
+confirm material claims in current code/tests and owning docs before editing.
 
 ## Related
 
