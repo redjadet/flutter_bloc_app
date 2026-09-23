@@ -25,6 +25,12 @@ Use before non-trivial feature work or cross-layer refactors. Run `bash tool/che
 - Repository: ...
 - State: ...
 
+### Behavior contract (define before implementation)
+- Must remain true: <invariant and owner>
+- Inputs: <valid, boundary, and invalid cases>
+- Failure/recovery: <observable result for dependency failure, denial, or retry>
+- Source of expected results: <user requirement, product rule, or existing contract>
+
 ### Tests (executable contract — RED first)
 
 Write these **before or with** the first implementation commit in this change series. A test-only follow-up needs a one-line reason in `docs/changes/`.
@@ -38,7 +44,9 @@ Write these **before or with** the first implementation commit in this change se
 - [ ] Files: `test/...`
 
 #### Unit (domain / data)
-- [ ] Scenario: <pure logic or repository rule>
+- [ ] Scenario: <pure logic or repository rule> → <expected result from behavior contract>
+- [ ] Adversarial case: <violating, malformed, boundary, or concurrent input> → <expected result>
+- [ ] Generated property / reference check: <invariant + oracle>, or N/A with reason
 - [ ] Files: `test/...`
 
 #### Integration (only if cross-screen / journey)
