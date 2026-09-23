@@ -79,6 +79,11 @@ handlers. Runtime trimming should prefer in-memory caches and bounded image
 caches; persistent offline-first data remains under explicit feature cache
 policies.
 
+Trimming **ends retention** so objects can become unreachable; it does not
+force an immediate GC. Dart heap size is also separate from native/external
+and resident memory — see
+[`../performance/dart_memory_under_the_hood.md`](../performance/dart_memory_under_the_hood.md).
+
 ### ❌ Repositories That Don't Need Dispose
 
 Most repositories **don't need** a `dispose()` method:

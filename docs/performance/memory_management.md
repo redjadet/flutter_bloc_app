@@ -4,6 +4,11 @@ Ownership and lifecycle principles for preventing memory leaks. Prefer
 automation (`memory_lint`, tagged `leak_tracker` tests, checklist) over
 manual review alone.
 
+**Mental model:** Dart’s generational GC frees *unreachable* heap objects
+eventually; it does not end controllers, subscriptions, or native/external
+resources for you. See
+[`dart_memory_under_the_hood.md`](dart_memory_under_the_hood.md).
+
 ## Canon primitives
 
 **Rule:** Every created disposable object's life-cycle must be explicitly ended
@@ -45,10 +50,21 @@ Every `addObserver(this)` needs `removeObserver(this)` in teardown. Enforced by
 ## BuildContext retention
 
 Do not store `BuildContext` in `static` fields. Enforced by
-`memory_static_build_context`.
+`memory_static_build_context`. Also avoid closures or long-lived listeners that
+capture a short-lived `BuildContext` / `State` (manual review — not AST-enforced
+yet). Prefer reading what you need before `await`, then guard with `mounted`.
+
+## Static / global caches
+
+A cache that remains reachable from a static or DI singleton keeps its entries
+alive forever from GC’s point of view. Bound them (TTL / size) and clear on
+memory pressure through `AppMemoryService` (wired from
+`register_app_memory_services.dart`). Do not rely on a `Finalizer` as primary
+cleanup.
 
 ## Related docs
 
+- [`dart_memory_under_the_hood.md`](dart_memory_under_the_hood.md) — heap, GC, lifetimes, DevTools
 - [`memory_testing.md`](memory_testing.md) — leak_tracker tagged suite
 - [`memory_lints.md`](memory_lints.md) — rule IDs
 - [`memory_ci.md`](memory_ci.md) — checklist / CI

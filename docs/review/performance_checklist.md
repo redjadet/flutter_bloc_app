@@ -39,9 +39,14 @@ Primary references:
 
 - **Every created disposable object's life-cycle must be explicitly ended**
   (`dispose` / `close` / cancel / remove listener/observer) on the owning path.
+  GC collects unreachable heap objects only; it does not replace dispose
+  ([`../performance/dart_memory_under_the_hood.md`](../performance/dart_memory_under_the_hood.md)).
 - Streams, timers, and controllers disposed in Cubit `close()` or widget
   dispose.
-- Large caches have bounds or eviction; images use repo sizing conventions.
+- Large caches have bounds or eviction; static caches trim via
+  `AppMemoryService`; images use repo sizing conventions. Do not treat
+  `Finalizer` as primary cleanup.
+- No long-lived closure/static retention of `BuildContext` / `State`.
 - Run lifecycle checks from validation routing when subscriptions or timers
   changed.
 - For ownership/leak gates see [`../performance/memory_checklist.md`](../performance/memory_checklist.md)

@@ -144,6 +144,7 @@ See [`testing_overview.md`](testing_overview.md) for the full testing playbook.
 ## Related Documentation
 
 - [Race Conditions and Bugs Analysis](engineering/race_conditions_and_bugs_analysis.md) – Deep analysis of lifecycle, async, and stream patterns
+- [Dart Memory Under the Hood](performance/dart_memory_under_the_hood.md) – heap, GC, object lifetimes, DevTools
 - [Memory Leaks Analysis](performance/memory_leaks_analysis.md) – StreamController, subscription, and controller disposal patterns
 - [Clean Architecture](clean_architecture.md)
 - [SOLID Principles](architecture/solid_principles.md)

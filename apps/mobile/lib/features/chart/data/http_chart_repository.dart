@@ -18,6 +18,8 @@ class HttpChartRepository extends ChartRepository {
   };
   static const String _acceptHeader = 'application/json';
   static const Duration _cacheDuration = Duration(minutes: 3);
+  // Why static: shared across repository instances for the process; must clear
+  // via [trimMemory] on pressure or GC cannot reclaim the list.
   static List<ChartPoint>? _cached;
   static DateTime? _lastFetched;
 

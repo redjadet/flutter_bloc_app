@@ -9,13 +9,18 @@ import 'package:utilities/utilities.dart';
 
 /// Centralizes app-wide memory trimming using existing cache owners.
 ///
-/// Optional `onChartMemoryTrim` is wired from the composition root (DI) so
+/// Why: Dart GC only frees *unreachable* heap objects; trim ends retention of
+/// image / SVG / feature static caches so they can become eligible. Native and
+/// external memory are separate from Dart heap size — see
+/// `docs/performance/dart_memory_under_the_hood.md`.
+///
+/// Optional `onStaticCacheTrim` is wired from the composition root (DI) so
 /// this library does not depend on feature implementations.
 class AppMemoryService {
   new({
     AppImageCacheManager? imageCacheManager,
     Future<void> Function(AppMemoryTrimLevel level)? onImageCacheTrim,
-    Future<void> Function(AppMemoryTrimLevel level)? onChartMemoryTrim,
+    Future<void> Function(AppMemoryTrimLevel level)? onStaticCacheTrim,
   }) : assert(
          imageCacheManager != null || onImageCacheTrim != null,
          'Provide either imageCacheManager or onImageCacheTrim.',
@@ -24,12 +29,12 @@ class AppMemoryService {
            onImageCacheTrim ??
            imageCacheManager?.onTrim ??
            _missingImageCacheTrim,
-       _onChartMemoryTrim = onChartMemoryTrim ?? _noopChartTrim;
+       _onStaticCacheTrim = onStaticCacheTrim ?? _noopStaticCacheTrim;
 
   final Future<void> Function(AppMemoryTrimLevel level) _onImageCacheTrim;
-  final Future<void> Function(AppMemoryTrimLevel level) _onChartMemoryTrim;
+  final Future<void> Function(AppMemoryTrimLevel level) _onStaticCacheTrim;
 
-  static Future<void> _noopChartTrim(AppMemoryTrimLevel _) async {}
+  static Future<void> _noopStaticCacheTrim(AppMemoryTrimLevel _) async {}
 
   Future<void>? _trimInFlight;
   AppMemoryTrimLevel? _queuedLevel;
@@ -87,7 +92,7 @@ class AppMemoryService {
       'ResilientSvgAssetImage.trimCache',
       () => ResilientSvgAssetImage.trimCache(level: level),
     );
-    await _runSafely('chartMemoryTrim', () => _onChartMemoryTrim(level));
+    await _runSafely('staticCacheTrim', () => _onStaticCacheTrim(level));
     await _runSafely(
       'AppImageCacheManager.onTrim',
       () => _onImageCacheTrim(level),

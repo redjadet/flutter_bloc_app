@@ -6,6 +6,7 @@ for repository-wide reliability rules.
 
 | Need | Read |
 | --- | --- |
+| Heap / GC / object lifetimes | [dart_memory_under_the_hood.md](dart_memory_under_the_hood.md) |
 | Memory ownership | [memory_management.md](memory_management.md) |
 | Leak testing and CI | [memory_testing.md](memory_testing.md), [memory_ci.md](memory_ci.md) |
 | Performance checklist | [`../review/performance_checklist.md`](../review/performance_checklist.md) |

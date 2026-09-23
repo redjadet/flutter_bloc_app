@@ -96,3 +96,16 @@ cd apps/mobile && flutter test \
 ## Triage
 
 See [leak_tracker TROUBLESHOOT](https://github.com/dart-lang/leak_tracker/blob/main/doc/leak_tracking/TROUBLESHOOT.md).
+
+## DevTools (when automation is not enough)
+
+For interactive or production-like investigations, use the
+[DevTools Memory view](https://docs.flutter.dev/tools/devtools/memory):
+
+1. Reproduce mount → use → leave.
+2. Diff heap snapshots before/after the interaction.
+3. Follow retaining paths for objects that should have been released.
+4. Compare Dart heap, external memory, and resident set separately.
+
+Frequent GC or high allocation rate alone is not proof of a leak — see
+[`dart_memory_under_the_hood.md`](dart_memory_under_the_hood.md).

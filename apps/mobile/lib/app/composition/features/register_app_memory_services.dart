@@ -2,6 +2,7 @@ import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
 import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
+import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_formatters.dart';
 import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
 
 const bool _isFlutterTestProcess = bool.fromEnvironment('FLUTTER_TEST');
@@ -19,8 +20,11 @@ void registerAppMemoryServices() {
         ? AppMemoryService(onImageCacheTrim: (level) async {})
         : AppMemoryService(
             imageCacheManager: getIt<AppImageCacheManager>(),
-            onChartMemoryTrim: (level) async {
+            onStaticCacheTrim: (level) async {
+              // Why: static feature caches stay reachable until cleared; trim
+              // ends retention so GC can collect (heap/GC mental model).
               HttpChartRepository.trimMemory(level);
+              CalculatorFormatters.trimMemory(level);
             },
           ),
   );
