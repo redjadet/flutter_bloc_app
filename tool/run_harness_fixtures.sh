@@ -709,8 +709,74 @@ fi
 echo "fixtures|check_ai_snapshot_freshness|current"
 bash tool/check_ai_snapshot_freshness.sh >/dev/null
 
-echo "fixtures|check_ai_snapshot_freshness|strict_current_or_snapshot_parent"
-bash tool/check_ai_snapshot_freshness.sh --strict-head >/dev/null
+echo "fixtures|check_ai_snapshot_freshness|strict_current_sources"
+snapshot_head="$(awk -F'"' '/^[[:space:]]*git_head:/ { print $2; exit }' ai/CONTEXT_MAP.md)"
+if git cat-file -e "${snapshot_head}^{commit}" 2>/dev/null; then
+  bash tool/check_ai_snapshot_freshness.sh --strict-head >/dev/null
+elif [[ "$(git rev-parse --is-shallow-repository)" == "true" ]]; then
+  echo "fixtures|check_ai_snapshot_freshness|strict_skip_shallow_checkout"
+else
+  echo "❌ fixtures failed: snapshot Git commit missing from full checkout" >&2
+  exit 1
+fi
+
+echo "fixtures|check_ai_snapshot_freshness|source_history"
+(
+  set -e
+  snapshot_repo="$(mktemp -d)"
+  trap 'rm -rf "$snapshot_repo"' EXIT
+  mkdir -p "$snapshot_repo/tool/fixtures/harness" "$snapshot_repo/apps/mobile/lib"
+  cp tool/check_ai_snapshot_freshness.sh tool/workspace_paths.sh "$snapshot_repo/tool/"
+  cp tool/fixtures/harness/ai_snapshot_forbidden_patterns.txt \
+    "$snapshot_repo/tool/fixtures/harness/"
+  printf '# Map\n' >"$snapshot_repo/CODEMAP.md"
+  printf 'first\n' >"$snapshot_repo/apps/mobile/lib/example.dart"
+  git -C "$snapshot_repo" init -q
+  git -C "$snapshot_repo" add .
+  git -C "$snapshot_repo" -c user.name=Fixture -c user.email=fixture@example.invalid \
+    commit -qm source
+  base_branch="$(git -C "$snapshot_repo" branch --show-current)"
+  git -C "$snapshot_repo" switch -qc snapshot-source
+  printf '# Branch note\n' >"$snapshot_repo/branch-note.md"
+  git -C "$snapshot_repo" add branch-note.md
+  git -C "$snapshot_repo" -c user.name=Fixture -c user.email=fixture@example.invalid \
+    commit -qm branch-note
+  source_head="$(git -C "$snapshot_repo" rev-parse HEAD)"
+  git -C "$snapshot_repo" switch -q "$base_branch"
+  cat >"$snapshot_repo/snapshot.md" <<EOF
+---
+ai_snapshot:
+  generated_at: "2026-09-23T00:00:00Z"
+  git_head: "$source_head"
+  app_root: "apps/mobile"
+  canon_links:
+    - CODEMAP.md
+---
+# Snapshot
+EOF
+  git -C "$snapshot_repo" add snapshot.md
+  git -C "$snapshot_repo" -c user.name=Fixture -c user.email=fixture@example.invalid \
+    commit -qm snapshot
+  printf '# Guidance\n' >"$snapshot_repo/guidance.md"
+  git -C "$snapshot_repo" add guidance.md
+  git -C "$snapshot_repo" -c user.name=Fixture -c user.email=fixture@example.invalid \
+    commit -qm guidance
+  (cd "$snapshot_repo" && bash tool/check_ai_snapshot_freshness.sh --strict-head --paths snapshot.md) >/dev/null
+  printf 'second\n' >"$snapshot_repo/apps/mobile/lib/example.dart"
+  git -C "$snapshot_repo" add apps/mobile/lib/example.dart
+  git -C "$snapshot_repo" -c user.name=Fixture -c user.email=fixture@example.invalid \
+    commit -qm source-change
+  if (cd "$snapshot_repo" && bash tool/check_ai_snapshot_freshness.sh --strict-head --paths snapshot.md) >/dev/null 2>&1; then
+    echo "❌ fixtures failed: source change did not stale AI snapshot" >&2
+    exit 1
+  fi
+  sed "s/$source_head/0000000000000000000000000000000000000000/" \
+    "$snapshot_repo/snapshot.md" >"$snapshot_repo/snapshot-missing-head.md"
+  if (cd "$snapshot_repo" && bash tool/check_ai_snapshot_freshness.sh --strict-head --paths snapshot-missing-head.md) >/dev/null 2>&1; then
+    echo "❌ fixtures failed: unavailable source commit was accepted" >&2
+    exit 1
+  fi
+)
 
 echo "fixtures|check_ai_change_contract|help"
 bash tool/check_ai_change_contract.sh --help >/dev/null
