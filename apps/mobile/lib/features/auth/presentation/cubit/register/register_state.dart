@@ -93,6 +93,8 @@ abstract class RegisterState with _$RegisterState {
     return null;
   }
 
+  // Stricter than SupabaseAuthCredentialPolicy: register is the primary
+  // app-auth signup path (min 8, letter+digit, no whitespace).
   RegisterPasswordError? _validatePassword() {
     final String value = password.value;
     final String trimmed = value.trim();

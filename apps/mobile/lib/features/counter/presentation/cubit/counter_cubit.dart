@@ -130,10 +130,11 @@ class CounterCubit extends _CounterCubitBase
       isAlive: () => !isClosed,
       onError: (_) {},
       logContext: 'CounterCubit._persistState',
-      onErrorWithDetails: (error, stackTrace) {
+      logErrors: false,
+      onFailure: (failure) {
         _handleError(
-          error,
-          stackTrace ?? StackTrace.current,
+          failure.error,
+          failure.stackTrace ?? StackTrace.current,
           CounterError.save,
           'CounterCubit._persistState failed',
         );

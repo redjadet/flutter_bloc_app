@@ -155,15 +155,16 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
       ),
       isAlive: () => !isClosed,
       onError: (_) {},
-      onErrorWithDetails: (error, stackTrace) {
+      onFailure: (failure) {
         _handleError(
-          error,
-          stackTrace ?? StackTrace.current,
+          failure.error,
+          failure.stackTrace ?? StackTrace.current,
           CounterError.save,
           'CounterCubit._persistState failed',
         );
       },
       logContext: 'CounterCubit._persistState',
+      logErrors: false,
     );
   }
 

@@ -33,13 +33,13 @@ extension on BackgroundSyncCoordinator {
       cancelOnError: false,
     );
 
-    _startIotDemoRealtimeSubscription?.call(_requestImmediateSync);
+    _realtimeSyncTrigger?.start(_requestImmediateSync);
   }
 
   Future<void> _unbindSyncListeners() async {
     _disposeSyncIntervalHandle();
     await _cancelEnqueueSubscription();
-    _stopIotDemoRealtimeSubscription?.call();
+    await _realtimeSyncTrigger?.stop();
     await _cancelNetworkSubscription();
   }
 

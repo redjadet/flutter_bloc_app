@@ -211,6 +211,59 @@ void main() {
       expect(results, everyElement('once'));
       expect(readCalls, 1);
     });
+
+    test(
+      'non-dev: callable override failure falls back to SecretConfig',
+      () async {
+        FlavorManager.current = Flavor.staging;
+        SecretConfig.storage = storage;
+        await storage.write('huggingface_api_key', 'secure-hf');
+        await SecretConfig.load(
+          allowAssetFallback: false,
+          persistToSecureStorage: false,
+        );
+
+        final LayeredRenderOrchestrationHfTokenProvider provider =
+            LayeredRenderOrchestrationHfTokenProvider(
+              runtime: AppRuntimeConfig(
+                flavor: Flavor.staging,
+                skeletonDelay: Duration.zero,
+              ),
+              remoteTokenPort: _FakeRemoteTokenPort(),
+              storage: storage,
+              callableTokenOverride: () async =>
+                  throw StateError('callable unavailable'),
+            );
+
+        expect(await provider.readHfTokenForUpstream(), 'secure-hf');
+      },
+    );
+
+    test(
+      'non-dev: null callable override falls back to SecretConfig',
+      () async {
+        FlavorManager.current = Flavor.staging;
+        SecretConfig.storage = storage;
+        await storage.write('huggingface_api_key', 'secure-hf');
+        await SecretConfig.load(
+          allowAssetFallback: false,
+          persistToSecureStorage: false,
+        );
+
+        final LayeredRenderOrchestrationHfTokenProvider provider =
+            LayeredRenderOrchestrationHfTokenProvider(
+              runtime: AppRuntimeConfig(
+                flavor: Flavor.staging,
+                skeletonDelay: Duration.zero,
+              ),
+              remoteTokenPort: _FakeRemoteTokenPort(),
+              storage: storage,
+              callableTokenOverride: () async => null,
+            );
+
+        expect(await provider.readHfTokenForUpstream(), 'secure-hf');
+      },
+    );
   });
 }
 

@@ -4,6 +4,7 @@ import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_result.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_role.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
@@ -47,7 +48,39 @@ class _GatedStaffProfileRepository implements StaffDemoProfileRepository {
 
 class _NoopStaffPushTokenRepository implements StaffDemoPushTokenRepository {
   @override
-  Future<void> registerTokens({required String userId}) async {}
+  Future<StaffDemoPushTokenResult> registerTokens({
+    required String userId,
+  }) async => const StaffDemoPushTokenSkipped(
+    StaffDemoPushTokenSkipReason.repositoryUnavailable,
+  );
+}
+
+class _RecordingStaffPushTokenRepository
+    implements StaffDemoPushTokenRepository {
+  _RecordingStaffPushTokenRepository(this.result);
+
+  final StaffDemoPushTokenResult result;
+  int callCount = 0;
+  String? lastUserId;
+
+  @override
+  Future<StaffDemoPushTokenResult> registerTokens({
+    required String userId,
+  }) async {
+    callCount += 1;
+    lastUserId = userId;
+    return result;
+  }
+}
+
+class _ThrowingStaffPushTokenRepository
+    implements StaffDemoPushTokenRepository {
+  @override
+  Future<StaffDemoPushTokenResult> registerTokens({
+    required String userId,
+  }) async {
+    throw StateError('messaging unavailable');
+  }
 }
 
 void main() {
@@ -147,7 +180,92 @@ void main() {
         await auth.dispose();
       },
     );
+
+    test(
+      'consumes Failed push-token result without crashing hydrate',
+      () async {
+        final _MutableStaffAuthRepository auth = _MutableStaffAuthRepository(
+          const AuthUser(id: 'user-a', isAnonymous: false),
+        );
+        final StaffDemoProfile profile = StaffDemoProfile(
+          userId: 'user-a',
+          displayName: 'A',
+          email: 'a@example.com',
+          role: StaffDemoRole.employee,
+          phoneE164: null,
+          isActive: true,
+        );
+        final _RecordingStaffPushTokenRepository tokens =
+            _RecordingStaffPushTokenRepository(
+              StaffDemoPushTokenFailed(
+                cause: Exception('register failed'),
+                stackTrace: StackTrace.current,
+              ),
+            );
+
+        final StaffDemoSessionCubit cubit = StaffDemoSessionCubit(
+          authRepository: auth,
+          profileRepository: _ImmediateStaffProfileRepository(profile),
+          pushTokenRepository: tokens,
+        );
+
+        await cubit.hydrate();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(cubit.state.status, StaffDemoSessionStatus.ready);
+        expect(tokens.callCount, 1);
+        expect(tokens.lastUserId, 'user-a');
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
+
+    test(
+      'swallows thrown push-token futures without crashing hydrate',
+      () async {
+        final _MutableStaffAuthRepository auth = _MutableStaffAuthRepository(
+          const AuthUser(id: 'user-a', isAnonymous: false),
+        );
+        final StaffDemoProfile profile = StaffDemoProfile(
+          userId: 'user-a',
+          displayName: 'A',
+          email: 'a@example.com',
+          role: StaffDemoRole.employee,
+          phoneE164: null,
+          isActive: true,
+        );
+
+        final StaffDemoSessionCubit cubit = StaffDemoSessionCubit(
+          authRepository: auth,
+          profileRepository: _ImmediateStaffProfileRepository(profile),
+          pushTokenRepository: _ThrowingStaffPushTokenRepository(),
+        );
+
+        await cubit.hydrate();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(cubit.state.status, StaffDemoSessionStatus.ready);
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
   });
+}
+
+class _ImmediateStaffProfileRepository implements StaffDemoProfileRepository {
+  _ImmediateStaffProfileRepository(this.profile);
+
+  final StaffDemoProfile profile;
+
+  @override
+  Future<StaffDemoProfile?> loadProfile({required String userId}) async =>
+      profile;
+
+  @override
+  Future<List<StaffDemoProfile>> listAssignableStaff() async =>
+      <StaffDemoProfile>[];
 }
 
 /// After [gate] completes, throws (simulates network failure after auth drift).

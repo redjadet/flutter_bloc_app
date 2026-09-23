@@ -131,6 +131,151 @@ Future<SocialFeedPost> _optimisticPostImpl(
   );
 }
 
+/// Offline summary when the scenario is simulated-offline (no replay).
+SocialFeedSyncSummary _offlineQueueSummary(
+  List<SocialFeedMutationDto> queue,
+  List<SocialFeedMutationDto> attention,
+) {
+  return SocialFeedSyncSummary(
+    pendingCount: queue.length,
+    needsAttentionCount: attention.length,
+    pendingPostIds: <String>{
+      for (final SocialFeedMutationDto item in queue) item.postId,
+    },
+    attentionMutations: <SocialFeedAttentionMutation>[
+      for (final SocialFeedMutationDto item in attention)
+        SocialFeedAttentionMutation(
+          mutationId: item.mutationId,
+          postId: item.postId,
+        ),
+    ],
+  );
+}
+
+SocialFeedSyncSummary _onlineQueueSummary({
+  required List<SocialFeedMutationDto> pending,
+  required List<SocialFeedMutationDto> attention,
+  required List<SocialFeedRejectedSync> rejections,
+  required List<SocialFeedDispatchedMutation> dispatched,
+}) {
+  return SocialFeedSyncSummary(
+    pendingCount: pending.length,
+    needsAttentionCount: attention.length,
+    pendingPostIds: <String>{
+      for (final SocialFeedMutationDto item in pending) item.postId,
+    },
+    attentionMutations: <SocialFeedAttentionMutation>[
+      for (final SocialFeedMutationDto item in attention)
+        SocialFeedAttentionMutation(
+          mutationId: item.mutationId,
+          postId: item.postId,
+        ),
+    ],
+    rejections: rejections,
+    dispatchedMutations: dispatched,
+  );
+}
+
+/// Backoff / needs-attention after a transient failure.
+/// Returns `true` when the dispatcher should stop the current pass.
+Future<bool> _deferMutationAfterFailure({
+  required OfflineFirstSocialFeedRepository repo,
+  required SocialFeedViewer viewer,
+  required SocialFeedMutationDto mutation,
+  required DateTime now,
+}) async {
+  final int attempts = mutation.attemptCount + 1;
+  if (attempts >= 5) {
+    await repo._queue.moveToNeedsAttention(viewer, mutation);
+    return false;
+  }
+  final Duration backoff = repo._queue.backoffForAttempt(attempts);
+  await repo._queue.updateMutationAfterFailure(
+    viewer: viewer,
+    mutationId: mutation.mutationId,
+    head: mutation,
+    attemptCount: attempts,
+    nextAttemptAt: now.add(backoff),
+  );
+  return true;
+}
+
+/// Replays one like mutation under the per-viewer apply lock.
+/// Returns whether the mutation was fully dispatched (removed from queue).
+Future<bool> _replayLikeMutation({
+  required OfflineFirstSocialFeedRepository repo,
+  required SocialFeedViewer viewer,
+  required SocialFeedMutationDto head,
+}) async {
+  var likeDispatchCompleted = false;
+  await repo._queue.markLikeMutationDispatched(
+    viewer: viewer,
+    mutationId: head.mutationId,
+  );
+  await repo.withLikeApplyLock(viewer, () async {
+    final List<SocialFeedMutationDto> currentQueue = await repo._queue
+        .readQueue(viewer);
+    final SocialFeedMutationDto? currentHead = currentQueue.isEmpty
+        ? null
+        : currentQueue.first;
+    if (currentHead == null || currentHead.mutationId != head.mutationId) {
+      await repo._queue.removeFromQueue(
+        viewer: viewer,
+        mutationId: head.mutationId,
+      );
+      likeDispatchCompleted = true;
+      return;
+    }
+    final SocialFeedPost updated = await repo._remote.applyLike(
+      viewer: viewer,
+      postId: head.postId,
+      desiredLiked: currentHead.desiredLiked ?? false,
+      mutationId: head.idempotencyKey,
+    );
+    final List<SocialFeedMutationDto> queueAfterApply = await repo._queue
+        .readQueue(viewer);
+    final bool headStillCurrent =
+        queueAfterApply.isNotEmpty &&
+        queueAfterApply.first.mutationId == head.mutationId;
+    var persisted = true;
+    if (headStillCurrent) {
+      persisted = await repo._persistViewerLikes();
+      await repo._patchCachedPost(viewer, updated);
+    }
+    if (persisted) {
+      await repo._queue.removeFromQueue(
+        viewer: viewer,
+        mutationId: head.mutationId,
+      );
+      likeDispatchCompleted = true;
+    }
+  });
+  return likeDispatchCompleted;
+}
+
+/// Replays one comment mutation. Returns whether it was fully dispatched.
+Future<bool> _replayCommentMutation({
+  required OfflineFirstSocialFeedRepository repo,
+  required SocialFeedViewer viewer,
+  required SocialFeedMutationDto head,
+}) async {
+  await repo._remote.applyComment(
+    viewer: viewer,
+    postId: head.postId,
+    body: head.commentBody ?? '',
+    mutationId: head.idempotencyKey,
+  );
+  final bool persisted = await repo._persistCommentThreads();
+  if (!persisted) {
+    return false;
+  }
+  await repo._queue.removeFromQueue(
+    viewer: viewer,
+    mutationId: head.mutationId,
+  );
+  return true;
+}
+
 /// Replays the mutation queue when simulated-online; otherwise returns counts.
 /// Like replay serializes remote applies per viewer (`withLikeApplyLock`) and
 /// rechecks the queue head; comment replay uses `applyComment` without that
@@ -145,20 +290,7 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     final List<SocialFeedMutationDto> a = await repo._queue.readNeedsAttention(
       viewer,
     );
-    return SocialFeedSyncSummary(
-      pendingCount: q.length,
-      needsAttentionCount: a.length,
-      pendingPostIds: <String>{
-        for (final SocialFeedMutationDto item in q) item.postId,
-      },
-      attentionMutations: <SocialFeedAttentionMutation>[
-        for (final SocialFeedMutationDto item in a)
-          SocialFeedAttentionMutation(
-            mutationId: item.mutationId,
-            postId: item.postId,
-          ),
-      ],
-    );
+    return _offlineQueueSummary(q, a);
   }
 
   List<SocialFeedMutationDto> queue = await repo._queue.readQueue(viewer);
@@ -166,22 +298,6 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   final List<SocialFeedRejectedSync> rejections = <SocialFeedRejectedSync>[];
   final List<SocialFeedDispatchedMutation> dispatched =
       <SocialFeedDispatchedMutation>[];
-  Future<bool> deferAfterFailure(SocialFeedMutationDto mutation) async {
-    final int attempts = mutation.attemptCount + 1;
-    if (attempts >= 5) {
-      await repo._queue.moveToNeedsAttention(viewer, mutation);
-      return false;
-    }
-    final Duration backoff = repo._queue.backoffForAttempt(attempts);
-    await repo._queue.updateMutationAfterFailure(
-      viewer: viewer,
-      mutationId: mutation.mutationId,
-      head: mutation,
-      attemptCount: attempts,
-      nextAttemptAt: now.add(backoff),
-    );
-    return true;
-  }
 
   while (queue.isNotEmpty) {
     final SocialFeedMutationDto head = queue.first;
@@ -198,51 +314,12 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
     }
     try {
       if (head.type == 'like') {
-        var likeDispatchCompleted = false;
-        await repo._queue.markLikeMutationDispatched(
+        final bool completed = await _replayLikeMutation(
+          repo: repo,
           viewer: viewer,
-          mutationId: head.mutationId,
+          head: head,
         );
-        await repo.withLikeApplyLock(viewer, () async {
-          final List<SocialFeedMutationDto> currentQueue = await repo._queue
-              .readQueue(viewer);
-          final SocialFeedMutationDto? currentHead = currentQueue.isEmpty
-              ? null
-              : currentQueue.first;
-          if (currentHead == null ||
-              currentHead.mutationId != head.mutationId) {
-            await repo._queue.removeFromQueue(
-              viewer: viewer,
-              mutationId: head.mutationId,
-            );
-            likeDispatchCompleted = true;
-            return;
-          }
-          final SocialFeedPost updated = await repo._remote.applyLike(
-            viewer: viewer,
-            postId: head.postId,
-            desiredLiked: currentHead.desiredLiked ?? false,
-            mutationId: head.idempotencyKey,
-          );
-          final List<SocialFeedMutationDto> queueAfterApply = await repo._queue
-              .readQueue(viewer);
-          final bool headStillCurrent =
-              queueAfterApply.isNotEmpty &&
-              queueAfterApply.first.mutationId == head.mutationId;
-          var persisted = true;
-          if (headStillCurrent) {
-            persisted = await repo._persistViewerLikes();
-            await repo._patchCachedPost(viewer, updated);
-          }
-          if (persisted) {
-            await repo._queue.removeFromQueue(
-              viewer: viewer,
-              mutationId: head.mutationId,
-            );
-            likeDispatchCompleted = true;
-          }
-        });
-        if (likeDispatchCompleted) {
+        if (completed) {
           dispatched.add(
             SocialFeedDispatchedMutation(
               mutationId: head.mutationId,
@@ -250,24 +327,21 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
               wasComment: false,
             ),
           );
-        } else {
-          if (await deferAfterFailure(head)) {
-            break;
-          }
+        } else if (await _deferMutationAfterFailure(
+          repo: repo,
+          viewer: viewer,
+          mutation: head,
+          now: now,
+        )) {
+          break;
         }
       } else if (head.type == 'comment') {
-        await repo._remote.applyComment(
+        final bool completed = await _replayCommentMutation(
+          repo: repo,
           viewer: viewer,
-          postId: head.postId,
-          body: head.commentBody ?? '',
-          mutationId: head.idempotencyKey,
+          head: head,
         );
-        final bool persisted = await repo._persistCommentThreads();
-        if (persisted) {
-          await repo._queue.removeFromQueue(
-            viewer: viewer,
-            mutationId: head.mutationId,
-          );
+        if (completed) {
           dispatched.add(
             SocialFeedDispatchedMutation(
               mutationId: head.mutationId,
@@ -275,24 +349,20 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
               wasComment: true,
             ),
           );
-        } else {
-          if (await deferAfterFailure(head)) {
-            break;
-          }
+        } else if (await _deferMutationAfterFailure(
+          repo: repo,
+          viewer: viewer,
+          mutation: head,
+          now: now,
+        )) {
+          break;
         }
       }
     } on SocialFeedRemoteRejection catch (e) {
-      if (head.type == 'like') {
-        await repo._queue.removeFromQueue(
-          viewer: viewer,
-          mutationId: head.mutationId,
-        );
-      } else {
-        await repo._queue.removeFromQueue(
-          viewer: viewer,
-          mutationId: head.mutationId,
-        );
-      }
+      await repo._queue.removeFromQueue(
+        viewer: viewer,
+        mutationId: head.mutationId,
+      );
       rejections.add(
         SocialFeedRejectedSync(
           postId: head.postId,
@@ -302,7 +372,12 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
         ),
       );
     } on Object {
-      if (await deferAfterFailure(head)) {
+      if (await _deferMutationAfterFailure(
+        repo: repo,
+        viewer: viewer,
+        mutation: head,
+        now: now,
+      )) {
         break;
       }
     }
@@ -314,20 +389,10 @@ Future<SocialFeedSyncSummary> _dispatchQueueImpl(
   );
   final List<SocialFeedMutationDto> attention = await repo._queue
       .readNeedsAttention(viewer);
-  return SocialFeedSyncSummary(
-    pendingCount: pending.length,
-    needsAttentionCount: attention.length,
-    pendingPostIds: <String>{
-      for (final SocialFeedMutationDto item in pending) item.postId,
-    },
-    attentionMutations: <SocialFeedAttentionMutation>[
-      for (final SocialFeedMutationDto item in attention)
-        SocialFeedAttentionMutation(
-          mutationId: item.mutationId,
-          postId: item.postId,
-        ),
-    ],
+  return _onlineQueueSummary(
+    pending: pending,
+    attention: attention,
     rejections: rejections,
-    dispatchedMutations: dispatched,
+    dispatched: dispatched,
   );
 }

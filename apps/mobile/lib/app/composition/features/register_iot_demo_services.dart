@@ -3,11 +3,13 @@ import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
+import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_sync_trigger.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/offline_first_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
 /// Stable synthetic user scope that keeps per-user Hive storage available
@@ -18,6 +20,9 @@ const String _iotDemoLocalOnlyStorageScope = 'local_only';
 void registerIotDemoServices() {
   registerLazySingletonIfAbsent<IotDemoRealtimeSubscription>(
     IotDemoRealtimeSubscription.new,
+  );
+  registerLazySingletonIfAbsent<RealtimeSyncTrigger>(
+    () => IotDemoRealtimeSyncTrigger(getIt<IotDemoRealtimeSubscription>()),
   );
   registerLazySingletonIfAbsent<SupabaseIotDemoRepository>(
     SupabaseIotDemoRepository.new,

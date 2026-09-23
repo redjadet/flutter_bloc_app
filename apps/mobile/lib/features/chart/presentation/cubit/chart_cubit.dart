@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
@@ -11,6 +10,15 @@ import 'package:utilities/utilities.dart';
 
 part 'chart_cubit.freezed.dart';
 part 'chart_state.dart';
+
+/// Explicit chart load workflows (avoids a boolean that hides fetch strategy).
+enum ChartFetchMode {
+  /// Drop points and call [ChartRepository.fetchTrendingCounts].
+  clearThenFetch,
+
+  /// Keep stale points and call [ChartRepository.refreshTrendingCounts].
+  keepStaleRefresh,
+}
 
 class ChartCubit extends Cubit<ChartState> {
   new({required this._repository}) : super(const ChartState());
@@ -42,14 +50,18 @@ class ChartCubit extends Cubit<ChartState> {
         ),
       );
     }
-    await _fetch(resetExistingData: cached.isEmpty);
+    await _fetch(
+      cached.isEmpty
+          ? ChartFetchMode.clearThenFetch
+          : ChartFetchMode.keepStaleRefresh,
+    );
   }
 
   Future<void> refresh() async {
     if (isClosed) {
       return;
     }
-    await _fetch(resetExistingData: false);
+    await _fetch(ChartFetchMode.keepStaleRefresh);
   }
 
   void setZoomEnabled({required bool isEnabled}) {
@@ -62,24 +74,23 @@ class ChartCubit extends Cubit<ChartState> {
     emit(state.copyWith(zoomEnabled: isEnabled));
   }
 
-  Future<void> _fetch({required bool resetExistingData}) async {
+  Future<void> _fetch(ChartFetchMode mode) async {
     if (isClosed) {
       return;
     }
     final int requestId = _fetchGuard.next();
+    final bool clearExisting = mode == ChartFetchMode.clearThenFetch;
 
     emit(
       state.copyWith(
         status: ViewStatus.loading,
         errorMessage: null,
-        points: resetExistingData ? const <ChartPoint>[] : state.points,
+        points: clearExisting ? const <ChartPoint>[] : state.points,
       ),
     );
 
-    AppError? latestError;
-
     await CubitExceptionHandler.executeAsync(
-      operation: resetExistingData
+      operation: clearExisting
           ? _repository.fetchTrendingCounts
           : _repository.refreshTrendingCounts,
       isAlive: () => !isClosed,
@@ -93,20 +104,16 @@ class ChartCubit extends Cubit<ChartState> {
           ),
         );
       },
-      onAppError: (appError) {
-        if (isClosed || !_fetchGuard.isCurrent(requestId)) return;
-        latestError = appError;
-      },
-      onError: (errorMessage) {
+      onError: (_) {},
+      onFailure: (failure) {
         if (isClosed || !_fetchGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,
-            errorMessage: errorMessage,
+            errorMessage: failure.message,
             points: state.points,
             dataSource: ChartDataSource.unknown,
-            lastError:
-                latestError ?? NetworkErrorMapper.getAppError(errorMessage),
+            lastError: failure.appError,
           ),
         );
       },

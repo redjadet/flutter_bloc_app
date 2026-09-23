@@ -107,16 +107,17 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
     error: null,
   );
 
-  bool _ensureEditable({required bool resetForInput}) {
+  /// Clears a prior error so digit/edit input can continue.
+  bool _recoverFromErrorForInput() {
     if (state.error == null) {
       return true;
-    }
-    if (!resetForInput) {
-      return false;
     }
     emit(_clearErrorState(state));
     return true;
   }
+
+  /// Blocks operation/evaluate while an error is showing (no silent clear).
+  bool _requireEditableWithoutRecovery() => state.error == null;
 
   bool _isNonPositiveTotal(double amount) => amount <= 0;
 }

@@ -799,9 +799,12 @@ void main() {
         timerService: timerService,
         registry: registry,
         syncInterval: const Duration(milliseconds: 10),
-        startIotDemoRealtimeSubscription: (callback) {
-          onSyncRequested = callback;
-        },
+        realtimeSyncTrigger: CallbackRealtimeSyncTrigger(
+          start: (callback) {
+            onSyncRequested = callback;
+          },
+          stop: () async {},
+        ),
       );
 
       await coordinator.start();
@@ -815,6 +818,45 @@ void main() {
       expect(pendingCalls, greaterThanOrEqualTo(2));
 
       await coordinator.stop();
+    });
+
+    test('awaits asynchronous realtime stop before completing', () async {
+      final Completer<void> stopGate = Completer<void>();
+      var realtimeStopStarted = false;
+      var realtimeStopCompleted = false;
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+        realtimeSyncTrigger: CallbackRealtimeSyncTrigger(
+          start: (_) {},
+          stop: () async {
+            realtimeStopStarted = true;
+            await stopGate.future;
+            realtimeStopCompleted = true;
+          },
+        ),
+      );
+
+      await coordinator.start();
+
+      var coordinatorStopCompleted = false;
+      final Future<void> stopFuture = coordinator.stop().then((_) {
+        coordinatorStopCompleted = true;
+      });
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
+      expect(realtimeStopStarted, isTrue);
+      expect(realtimeStopCompleted, isFalse);
+      expect(coordinatorStopCompleted, isFalse);
+
+      stopGate.complete();
+      await stopFuture;
+      expect(realtimeStopCompleted, isTrue);
+      expect(coordinatorStopCompleted, isTrue);
     });
 
     test(

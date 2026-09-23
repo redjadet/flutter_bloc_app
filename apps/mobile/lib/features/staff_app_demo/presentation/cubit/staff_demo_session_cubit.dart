@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_result.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
 
 class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
@@ -62,7 +64,7 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
             errorMessage: null,
           ),
         );
-        unawaited(_pushTokenRepository.registerTokens(userId: userId));
+        unawaited(_registerPushTokens(userId: userId));
       },
       onError: (message) {
         if (isClosed) return;
@@ -79,5 +81,33 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
       },
       logContext: 'StaffDemoSessionCubit.hydrate',
     );
+  }
+
+  Future<void> _registerPushTokens({required String userId}) async {
+    try {
+      final StaffDemoPushTokenResult result = await _pushTokenRepository
+          .registerTokens(userId: userId);
+      switch (result) {
+        case StaffDemoPushTokenRegistered():
+          break;
+        case StaffDemoPushTokenSkipped(:final reason):
+          AppLogger.info(
+            'StaffDemoSessionCubit push token registration skipped: $reason',
+          );
+        case StaffDemoPushTokenFailed(:final cause, :final stackTrace):
+          // Boundary log: repository implementations may also log; do not assume.
+          AppLogger.error(
+            'StaffDemoSessionCubit push token registration failed',
+            cause,
+            stackTrace,
+          );
+      }
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'StaffDemoSessionCubit push token registration threw',
+        error,
+        stackTrace,
+      );
+    }
   }
 }

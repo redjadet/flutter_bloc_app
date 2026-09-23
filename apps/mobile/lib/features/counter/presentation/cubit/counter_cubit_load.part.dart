@@ -65,10 +65,11 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
       isAlive: () => !isClosed,
       onError: (_) {},
       logContext: 'CounterCubit.loadInitial',
-      onErrorWithDetails: (error, stackTrace) {
+      logErrors: false,
+      onFailure: (failure) {
         _handleError(
-          error,
-          stackTrace ?? StackTrace.current,
+          failure.error,
+          failure.stackTrace ?? StackTrace.current,
           CounterError.load,
           'CounterCubit.loadInitial failed',
         );

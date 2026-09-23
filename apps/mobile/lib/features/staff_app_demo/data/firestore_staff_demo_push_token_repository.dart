@@ -2,6 +2,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_result.dart';
 
 class FirestoreStaffDemoPushTokenRepository
     implements StaffDemoPushTokenRepository {
@@ -12,32 +13,44 @@ class FirestoreStaffDemoPushTokenRepository
   final FirebaseMessaging _messaging;
 
   @override
-  Future<void> registerTokens({required String userId}) async {
+  Future<StaffDemoPushTokenResult> registerTokens({
+    required String userId,
+  }) async {
     try {
-      final settings = await _messaging.requestPermission();
+      final NotificationSettings settings = await _messaging
+          .requestPermission();
       if (settings.authorizationStatus == AuthorizationStatus.denied ||
           settings.authorizationStatus ==
               AuthorizationStatus.deniedPermanently) {
-        return;
+        return const StaffDemoPushTokenSkipped(
+          StaffDemoPushTokenSkipReason.permissionDenied,
+        );
       }
+
       String? token;
       try {
         token = await _messaging.getToken();
       } on Exception catch (error) {
         // On iOS simulators it is common to see:
         // [firebase_messaging/apns-token-not-set]
-        // before APNs registration completes. Treat as expected noise.
+        // before APNs registration completes. Treat as expected skip.
         if (error.toString().contains(
           '[firebase_messaging/apns-token-not-set]',
         )) {
           AppLogger.info(
             'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not set yet; skipping token registration',
           );
-          return;
+          return const StaffDemoPushTokenSkipped(
+            StaffDemoPushTokenSkipReason.apnsTokenNotSet,
+          );
         }
         rethrow;
       }
-      if (token == null || token.isEmpty) return;
+      if (token == null || token.isEmpty) {
+        return const StaffDemoPushTokenSkipped(
+          StaffDemoPushTokenSkipReason.emptyFcmToken,
+        );
+      }
 
       String? apnsToken;
       try {
@@ -55,12 +68,15 @@ class FirestoreStaffDemoPushTokenRepository
         },
         SetOptions(merge: true),
       );
+
+      return StaffDemoPushTokenRegistered(hasApnsToken: apnsToken != null);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         IntegrationLogMessages.staffDemoPushRegisterFailed,
         error,
         stackTrace,
       );
+      return StaffDemoPushTokenFailed(cause: error, stackTrace: stackTrace);
     }
   }
 }

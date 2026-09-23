@@ -130,8 +130,15 @@ class LayeredRenderOrchestrationHfTokenProvider
   Future<String?> _tryCallableToken() async {
     final Future<String?> Function()? override = _callableTokenOverride;
     if (override != null) {
-      final String? t = (await override())?.trim();
-      return (t == null || t.isEmpty) ? null : t;
+      try {
+        final String? t = (await override())?.trim();
+        return (t == null || t.isEmpty) ? null : t;
+      } on Object catch (e) {
+        AppLogger.info(
+          'LayeredRenderOrchestrationHfTokenProvider: Callable override failed ($e)',
+        );
+        return null;
+      }
     }
     final String callableName = SecretConfig.chatRenderHfReadTokenCallable
         .trim();

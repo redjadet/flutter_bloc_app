@@ -145,4 +145,35 @@ void main() {
       throwsA(isA<SecureCoreMalformedCiphertextFailure>()),
     );
   });
+
+  test('preserves cause for unexpected non-native failures', () async {
+    final FfiSecureCoreRepository repo = FfiSecureCoreRepository(
+      _ThrowingUnexpectedApi(),
+    );
+
+    await expectLater(
+      repo.healthCheck(),
+      throwsA(
+        isA<SecureCoreInternalFailure>().having(
+          (SecureCoreInternalFailure f) => f.cause,
+          'cause',
+          isA<StateError>(),
+        ),
+      ),
+    );
+  });
+}
+
+final class _ThrowingUnexpectedApi implements SecureCoreNativeApi {
+  @override
+  Uint8List encrypt(Uint8List plaintext) => plaintext;
+
+  @override
+  Uint8List decrypt(Uint8List ciphertextEnvelope) => ciphertextEnvelope;
+
+  @override
+  bool healthCheck() => throw StateError('unexpected bridge failure');
+
+  @override
+  String version() => '0.1.0';
 }

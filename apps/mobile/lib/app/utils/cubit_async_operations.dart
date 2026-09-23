@@ -2,82 +2,85 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:utilities/utilities.dart';
 
-/// Utility class for standardized exception handling in cubits.
+/// Normalized failure payload for cubit async helpers.
 ///
-/// This class provides helpers to reduce duplication in exception handling
-/// patterns across cubits, particularly for:
-/// - Logging exceptions consistently
-/// - Handling specific exception types
-/// - Converting exceptions to error messages
+/// Prefer CubitExceptionHandler.executeAsync / handleException with
+/// onFailure so every call site sees the same diagnostic shape (raw error,
+/// message, and AppError).
+final class CubitFailure {
+  const new({
+    required this.error,
+    required this.stackTrace,
+    required this.message,
+    required this.appError,
+  });
+
+  final Object error;
+  final StackTrace? stackTrace;
+  final String message;
+  final AppError appError;
+}
+
+/// Utility class for standardized exception handling in cubits.
 class CubitExceptionHandler {
   new _();
 
   /// Handle an exception with standardized logging and error conversion.
   ///
-  /// This method:
-  /// 1. Logs the exception with the provided context
-  /// 2. Converts the exception to a user-friendly error message
-  /// 3. Calls the appropriate error handler
+  /// Prefer [onFailure]. Optional [onAppError] remains for call sites that only
+  /// need structured [AppError] alongside [onError].
   ///
-  /// Parameters:
-  /// - [error]: The exception that occurred
-  /// - [stackTrace]: The stack trace (if available)
-  /// - [logContext]: Context string for logging (e.g., 'MyCubit.loadData')
-  /// - [onError]: Callback to handle the error (typically emits error state)
-  /// - [specificExceptionHandlers]: Map of specific exception types to custom handlers
-  static void handleException<T extends Exception>(
+  /// Set [logErrors] to false when [onFailure] / [onError] performs its own
+  /// severity-aware logging (e.g. expected auth failures at debug).
+  static void handleException(
     Object error,
     StackTrace? stackTrace,
     String logContext, {
     required void Function(String errorMessage) onError,
+    void Function(CubitFailure failure)? onFailure,
     void Function(AppError appError)? onAppError,
-    Map<Type, void Function(Object error, StackTrace? stackTrace)>?
-    specificExceptionHandlers,
-    void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
+    bool logErrors = true,
   }) {
-    // Handle specific exceptions first if provided
-    if (specificExceptionHandlers != null) {
-      final Type errorType = error.runtimeType;
-      final handler = specificExceptionHandlers[errorType];
-      if (handler != null) {
-        handler(error, stackTrace);
-        return;
-      }
-    }
+    final CubitFailure failure = toFailure(error, stackTrace);
 
-    if (onErrorWithDetails != null) {
-      onErrorWithDetails(error, stackTrace);
+    if (onFailure != null) {
+      if (logErrors) {
+        AppLogger.error(logContext, error, stackTrace);
+      }
+      onFailure(failure);
       return;
     }
 
-    // Log the exception
-    AppLogger.error(logContext, error, stackTrace);
-
-    // Convert to error message
-    final String errorMessage = _extractErrorMessage(error);
-
-    // Map to structured AppError for consumers that opt in.
-    if (onAppError != null) {
-      final AppError appError = error is HttpRequestFailure
-          ? error.toAppError()
-          : NetworkErrorMapper.getAppError(error);
-      onAppError(appError);
+    if (logErrors) {
+      AppLogger.error(logContext, error, stackTrace);
     }
 
-    // Call the error handler
-    onError(errorMessage);
+    if (onAppError != null) {
+      onAppError(failure.appError);
+    }
+
+    onError(failure.message);
   }
 
-  /// Extract a user-friendly error message from an exception.
-  ///
-  /// For [HttpRequestFailure], uses [NetworkErrorMapper] so 401 vs 503 etc.
-  /// are differentiated (e.g. "Service temporarily unavailable" vs "Sign in again").
+  /// Builds a [CubitFailure] without logging (for tests / custom paths).
+  static CubitFailure toFailure(Object error, StackTrace? stackTrace) {
+    final String message = _extractErrorMessage(error);
+    final AppError appError = error is HttpRequestFailure
+        ? error.toAppError()
+        : NetworkErrorMapper.getAppError(error);
+    return CubitFailure(
+      error: error,
+      stackTrace: stackTrace,
+      message: message,
+      appError: appError,
+    );
+  }
+
   static String _extractErrorMessage(Object error) {
     if (error is HttpRequestFailure) {
       return NetworkErrorMapper.getErrorMessage(error);
     }
 
-    // Handle TypeError specially - it doesn't have a message property
     if (error is TypeError) {
       return error.toString();
     }
@@ -87,7 +90,6 @@ class CubitExceptionHandler {
       return fallback;
     }
 
-    // Handle exceptions with a message property
     try {
       final dynamic message = (error as dynamic).message;
       if (message is String && message.isNotEmpty) {
@@ -97,37 +99,19 @@ class CubitExceptionHandler {
       // message property doesn't exist or isn't accessible
     }
 
-    // Fallback to toString
     return fallback;
   }
 
   /// Execute an async operation with standardized exception handling.
-  ///
-  /// This is a convenience method that wraps try-catch with standardized
-  /// exception handling. When [isAlive] is provided, [onSuccess] and [onError]
-  /// are only invoked if [isAlive] returns true (e.g. pass `() => !cubit.isClosed`
-  /// to avoid emitting after the cubit is closed).
-  ///
-  /// Example:
-  /// ```dart
-  /// await CubitExceptionHandler.executeAsync(
-  ///   operation: () => _repository.fetchData(),
-  ///   onSuccess: (data) => emit(state.copyWith(data: data)),
-  ///   onError: (message) => emit(state.copyWith(errorMessage: message)),
-  ///   logContext: 'MyCubit.loadData',
-  ///   isAlive: () => !isClosed,
-  /// );
-  /// ```
   static Future<void> executeAsync<T>({
     required Future<T> Function() operation,
     required void Function(T result) onSuccess,
     required void Function(String errorMessage) onError,
     required String logContext,
     bool Function()? isAlive,
-    Map<Type, void Function(Object error, StackTrace? stackTrace)>?
-    specificExceptionHandlers,
-    void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
+    void Function(CubitFailure failure)? onFailure,
     void Function(AppError appError)? onAppError,
+    bool logErrors = true,
   }) async {
     try {
       final T result = await operation();
@@ -140,38 +124,23 @@ class CubitExceptionHandler {
         stackTrace,
         logContext,
         onError: onError,
-        specificExceptionHandlers: specificExceptionHandlers,
+        onFailure: onFailure,
         onAppError: onAppError,
-        onErrorWithDetails: onErrorWithDetails,
+        logErrors: logErrors,
       );
     }
   }
 
   /// Execute an async operation that returns void with standardized exception handling.
-  ///
-  /// Convenience method for operations that don't return a value.
-  /// When [isAlive] is provided, callbacks are only invoked if [isAlive] returns true.
-  ///
-  /// Example:
-  /// ```dart
-  /// await CubitExceptionHandler.executeAsyncVoid(
-  ///   operation: () => _repository.connect(),
-  ///   onSuccess: () => emit(state.copyWith(isConnected: true)),
-  ///   onError: (message) => emit(state.copyWith(errorMessage: message)),
-  ///   logContext: 'MyCubit.connect',
-  ///   isAlive: () => !isClosed,
-  /// );
-  /// ```
   static Future<void> executeAsyncVoid({
     required Future<void> Function() operation,
     required void Function(String errorMessage) onError,
     required String logContext,
     void Function()? onSuccess,
     bool Function()? isAlive,
-    Map<Type, void Function(Object error, StackTrace? stackTrace)>?
-    specificExceptionHandlers,
-    void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
+    void Function(CubitFailure failure)? onFailure,
     void Function(AppError appError)? onAppError,
+    bool logErrors = true,
   }) async {
     await executeAsync(
       operation: operation,
@@ -179,9 +148,9 @@ class CubitExceptionHandler {
       onError: onError,
       logContext: logContext,
       isAlive: isAlive,
-      specificExceptionHandlers: specificExceptionHandlers,
-      onErrorWithDetails: onErrorWithDetails,
+      onFailure: onFailure,
       onAppError: onAppError,
+      logErrors: logErrors,
     );
   }
 }

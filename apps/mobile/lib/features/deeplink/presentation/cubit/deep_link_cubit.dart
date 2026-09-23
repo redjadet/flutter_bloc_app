@@ -49,7 +49,10 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
           }
         },
         onError: (_) {},
-        onErrorWithDetails: _handleInitializeError,
+        logErrors: false,
+        onFailure: (failure) {
+          _handleInitializeError(failure.error, failure.stackTrace);
+        },
       );
     } finally {
       _isInitializing = false;

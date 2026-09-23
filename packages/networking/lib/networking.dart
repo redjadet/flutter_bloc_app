@@ -29,6 +29,7 @@ export 'src/services/retry_notification_service.dart';
 export 'src/sync/background_sync_coordinator.dart';
 export 'src/sync/background_sync_runner.dart';
 export 'src/sync/fcm_sync_trigger_contract.dart';
+export 'src/sync/realtime_sync_trigger.dart';
 export 'src/sync/sync_auth_pin_scope.dart';
 export 'src/sync/sync_cycle_summary.dart';
 export 'src/sync/sync_job_runner.dart';

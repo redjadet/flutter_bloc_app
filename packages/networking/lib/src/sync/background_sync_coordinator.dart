@@ -8,6 +8,7 @@ import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 import 'package:storage/storage.dart';
 
 import '../services/network_status_service.dart';
+import 'realtime_sync_trigger.dart';
 import 'sync_cycle_summary.dart';
 import 'sync_job_runner.dart';
 import 'sync_schedule_policy.dart';
@@ -46,12 +47,12 @@ class BackgroundSyncCoordinator {
     this._maxHistory = 5,
     this._maxRetryCount = 10,
     this._maxOperationAge = const Duration(days: 30),
-    this._startIotDemoRealtimeSubscription,
-    this._stopIotDemoRealtimeSubscription,
+    RealtimeSyncTrigger? realtimeSyncTrigger,
     SyncJobRunner? syncJobRunner,
     SyncSchedulePolicy? syncSchedulePolicy,
   }) : _repository = repository,
        _telemetry = telemetry ?? _defaultTelemetry,
+       _realtimeSyncTrigger = realtimeSyncTrigger,
        _syncJobRunner =
            syncJobRunner ??
            SyncJobRunner(registry: registry, pendingRepository: repository),
@@ -69,9 +70,7 @@ class BackgroundSyncCoordinator {
   final int _maxHistory;
   final int _maxRetryCount;
   final Duration _maxOperationAge;
-  final void Function(void Function() onSyncRequested)?
-  _startIotDemoRealtimeSubscription;
-  final void Function()? _stopIotDemoRealtimeSubscription;
+  final RealtimeSyncTrigger? _realtimeSyncTrigger;
   final TimerHandleManager _timerHandles = TimerHandleManager();
 
   final StreamController<SyncStatus> _statusController =
