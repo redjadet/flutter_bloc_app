@@ -8,6 +8,8 @@ Usage: run_codex_plan_review.sh PLAN_FILE [delegate options...]
 Concatenate the repo-tracked Codex instructions template with PLAN_FILE and
 pipe the combined prompt to the Cursor->Codex delegate wrapper (same entry
 point style as cross-host diff review, but plan-based instead of git diff).
+Prefer GPT-6 Sol with medium reasoning; retry GPT-5.6 Sol once if the account
+rejects the default model.
 
 Arguments:
   PLAN_FILE       Path to a markdown plan (absolute or relative to cwd).
@@ -16,7 +18,7 @@ Delegate options (passed through):
   --profile fast|balanced   Default: balanced (medium reasoning).
   --raw-response            Raw Codex output (debug).
   --raw-response-tolerant   Raw output but tolerate MCP noise.
-  --model NAME              Override default GPT-6 Sol model.
+  --model NAME              Force a model; disables automatic fallback.
   -h, --help                Show this help.
 
 Environment:
@@ -44,6 +46,7 @@ plan_file="$1"
 shift
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$script_dir/codex_review_model_fallback.sh"
 repo_root="$(git -C "$script_dir" rev-parse --show-toplevel)"
 template="$repo_root/tool/codex_plan_review_template.md"
 
@@ -80,13 +83,26 @@ wrapper="$(resolve_wrapper)" || {
 
 export DELEGATE_SKIP_FIREBASE_MCP="${DELEGATE_SKIP_FIREBASE_MCP:-1}"
 
-{
-  cat "$template"
-  printf '\n---PLAN---\n\n'
-  cat "$plan_resolved"
-} | "$wrapper" \
-  --workspace "$repo_root" \
-  --skip-firebase-mcp \
-  --profile balanced \
-  --model gpt-6-sol \
-  "$@"
+allow_model_fallback="true"
+for option in "$@"; do
+  if [[ "$option" == "--model" || "$option" == "--raw-response" || "$option" == "--raw-response-tolerant" ]]; then
+    allow_model_fallback="false"
+  fi
+done
+
+run_plan_review() {
+  local model="$1"
+  shift
+  {
+    cat "$template"
+    printf '\n---PLAN---\n\n'
+    cat "$plan_resolved"
+  } | "$wrapper" \
+    --workspace "$repo_root" \
+    --skip-firebase-mcp \
+    --profile balanced \
+    --model "$model" \
+    "$@"
+}
+
+codex_review_with_model_fallback "$CODEX_REVIEW_PREFERRED_MODEL" "$allow_model_fallback" run_plan_review "$@"
