@@ -6,6 +6,7 @@ for repository-wide reliability rules.
 
 | Need | Read |
 | --- | --- |
+| **Jank / late frames (cause first)** | [finding_jank_cause.md](finding_jank_cause.md) — `bash tool/triage_jank.sh` |
 | Heap / GC / object lifetimes | [dart_memory_under_the_hood.md](dart_memory_under_the_hood.md) |
 | Memory ownership | [memory_management.md](memory_management.md) |
 | Leak testing and CI | [memory_testing.md](memory_testing.md), [memory_ci.md](memory_ci.md) |

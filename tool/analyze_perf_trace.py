@@ -338,6 +338,90 @@ def frame_metrics(
     }
 
 
+# Span-name substrings → next investigation step when present in top spans.
+_SPAN_HINTS: tuple[tuple[str, str], ...] = (
+    ("BUILD", "UI-side build work — inspect rebuild scope / BlocSelector width"),
+    ("LAYOUT", "UI-side layout — watch Intrinsic* and shrinkWrap in lists"),
+    ("PAINT", "UI-side paint — check unnecessary repaints"),
+    ("Rasterizer", "Raster-side — clips, opacity, shadows, saveLayer, layers"),
+    ("GPURasterizer", "Raster-side — clips, opacity, shadows, saveLayer, layers"),
+    ("Shader", "Raster/shader compilation — warm shaders or simplify effects"),
+    ("Image", "Image decode/cache — size requests; isolate heavy cells"),
+    ("GC", "GC pressure — confirm with DevTools Memory (not alone)"),
+    ("Garbage", "GC pressure — confirm with DevTools Memory (not alone)"),
+    ("json", "Possible main-isolate parse — see compute_isolate_review.md"),
+)
+
+
+def classify_span_hints(span_names: Iterable[str]) -> list[str]:
+    """Map top timeline span names to triage hints (deduped, stable order)."""
+    seen: set[str] = set()
+    out: list[str] = []
+    for name in span_names:
+        upper = name.upper()
+        for needle, hint in _SPAN_HINTS:
+            if needle.upper() in upper and hint not in seen:
+                seen.add(hint)
+                out.append(hint)
+    return out
+
+
+def triage_next_steps(
+    frame: dict[str, Any],
+    *,
+    gate_outcome: str,
+    top_complete: list[dict[str, Any]] | None = None,
+    top_async: list[dict[str, Any]] | None = None,
+) -> list[str]:
+    """Human/agent next steps after frame-budget analysis.
+
+    Automated traces prove *that* frames are late; DevTools profile mode still
+    owns UI vs Raster attribution. See docs/performance/finding_jank_cause.md.
+    """
+    steps: list[str] = []
+    over_16 = int(frame.get("over_16_7ms") or 0)
+    over_8 = int(frame.get("over_8_3ms") or 0)
+    count = int(frame.get("count") or 0)
+
+    if gate_outcome == "fail" or over_16 > 0 or over_8 > 0:
+        steps.append(
+            "Frame-budget pressure detected — jank is a symptom; "
+            "do not change code until UI vs Raster (or limiting span) is identified."
+        )
+        steps.append(
+            "Reproduce the same interaction in profile mode: "
+            "cd apps/mobile && flutter run --profile"
+        )
+        steps.append(
+            "DevTools Performance: select a red frame; compare UI vs Raster; "
+            "then enable BUILD/LAYOUT/PAINT or inspect raster effects."
+        )
+    elif count == 0:
+        steps.append(
+            "No Frame spans found — re-capture with traceAction, or use "
+            "profile-mode DevTools Performance on the slow interaction."
+        )
+    else:
+        steps.append(
+            "No frame-budget miss in this artifact — treat Pipeline* spikes as "
+            "noise unless they coincide with >8.3ms / >16.7ms Frame counts."
+        )
+
+    names: list[str] = []
+    for row in (*(top_complete or ()), *(top_async or ())):
+        name = row.get("name")
+        if isinstance(name, str):
+            names.append(name)
+    for hint in classify_span_hints(names):
+        steps.append(f"Span hint: {hint}")
+
+    steps.append(
+        "Canon: docs/performance/finding_jank_cause.md — "
+        "or bash tool/triage_jank.sh"
+    )
+    return steps
+
+
 def analyze_trace_file(
     path: Path,
     *,
@@ -381,6 +465,11 @@ def main() -> int:
         help="perf budgets JSON (default: tool/perf_budgets.json)",
     )
     ap.add_argument("--json", action="store_true", help="emit JSON instead of text")
+    ap.add_argument(
+        "--triage",
+        action="store_true",
+        help="print next-step cause triage after each trace summary",
+    )
     args = ap.parse_args()
 
     budgets = load_perf_budgets(args.budgets)
@@ -402,6 +491,14 @@ def main() -> int:
         top_async = top_stats(asyncs, min_count=args.min_count, min_max_us=min_max_us, limit=args.limit)
         frame = frame_metrics(complete=complete, asyncs=asyncs)
         gate = evaluate_frame_budget_gate(frame, budgets)
+        top_complete_rows = [s.to_row() for s in top_complete]
+        top_async_rows = [s.to_row() for s in top_async]
+        triage = triage_next_steps(
+            frame,
+            gate_outcome=gate.outcome,
+            top_complete=top_complete_rows,
+            top_async=top_async_rows,
+        )
 
         out["traces"][k] = {
             "timeExtentMicros": trace.get("timeExtentMicros"),
@@ -413,8 +510,9 @@ def main() -> int:
                 "baseline_relative_spread": gate.baseline_relative_spread,
                 "p90_regression_ratio": gate.p90_regression_ratio,
             },
-            "top_complete": [s.to_row() for s in top_complete],
-            "top_async": [s.to_row() for s in top_async],
+            "top_complete": top_complete_rows,
+            "top_async": top_async_rows,
+            "triage": triage,
         }
 
     def gate_exit_code() -> int:
@@ -471,6 +569,12 @@ def main() -> int:
 
         show("Top complete spans (ph='X')", summary["top_complete"])
         show("Top async spans (b/e ids)", summary["top_async"])
+
+        if args.triage or gate.get("outcome") == "fail":
+            print()
+            print("Triage next steps (cause, not patch)")
+            for step in summary.get("triage") or []:
+                print(f"  - {step}")
 
     return gate_exit_code()
 

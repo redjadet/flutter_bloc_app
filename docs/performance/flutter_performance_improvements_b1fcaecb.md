@@ -133,6 +133,10 @@ For any trace we change (or any optimization we attempt), only proceed if we see
 
 then identify the tightest code-level hypothesis and re-capture before/after on the pinned simulator UDID.
 
+Cause triage (UI vs Raster, CPU, GC, images, isolates):
+[`finding_jank_cause.md`](finding_jank_cause.md) — `bash tool/triage_jank.sh` or
+`python3 tool/analyze_perf_trace.py <report> --triage`.
+
 ### Frame budget scope (locked)
 
 Frame budgets apply **only** to Flutter `FrameTiming` samples and async `Frame` timeline spans

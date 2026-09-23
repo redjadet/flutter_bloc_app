@@ -22,6 +22,7 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 | Integration journey / flow | `./bin/integration_tests` |
 | Integration/bootstrap/browser guardrails | `./bin/integration_preflight` (`INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` for browser-only lane) |
 | Runtime error / red screen / active debug bug | DTD `get_runtime_errors` -> fix -> hot reload -> re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); shell: `bash tool/check_runtime_errors.sh` |
+| Scroll / UI jank / frame-budget miss | `bash tool/triage_jank.sh` (optionally `--latest`); profile mode before code change; [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md); capture: `tool/capture_perf_trace.sh` + `python3 tool/analyze_perf_trace.py … --triage` |
 | Pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md); Dart MCP + current official docs; `/package-docs` |
 | UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh`; `./tool/run_mix_lint.sh`; `./tool/run_file_length_lint.sh` |
 | Non-trivial `apps/mobile/lib/features/**` | Fill [`engineering/FEATURE_TEMPLATE.md`](engineering/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |

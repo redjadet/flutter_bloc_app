@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-23_finding_jank_cause.md`](2026-09-23_finding_jank_cause.md): Jank is a symptom — DevTools/profile triage canon + `tool/triage_jank.sh` / analyze `--triage`.
 - [`2026-09-23_dart_memory_under_the_hood.md`](2026-09-23_dart_memory_under_the_hood.md): Heap/GC/lifetime canon + static cache trim for calculator formatters; `onStaticCacheTrim` rename.
 - [`2026-09-23_integration_host_path_recovery.md`](2026-09-23_integration_host_path_recovery.md): Document iOS SPM/DerivedData and Android memory-pressure recovery for local integration runs; AppCheck Package.resolved bump.
 - [`2026-09-23_equatable_3_adoption.md`](2026-09-23_equatable_3_adoption.md): Equatable 3.0 path override + EquatableMixin typedef shim; SealedStateMatcher uses runtimeType.

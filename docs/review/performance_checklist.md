@@ -63,3 +63,9 @@ Primary references:
 Minimum: focused widget/cubit tests for changed states; perf scripts above when
 triggers match. Escalate to `./bin/checklist` for shared infrastructure, sync,
 or cross-feature performance changes.
+
+When the user reports **jank / stutter / missed frames**: do **not** patch from
+intuition. Run `bash tool/triage_jank.sh`, measure in profile mode or
+`tool/capture_perf_trace.sh`, identify UI vs Raster (or the limiting span), then
+one targeted change and remeasure. Canon:
+[`../performance/finding_jank_cause.md`](../performance/finding_jank_cause.md).
