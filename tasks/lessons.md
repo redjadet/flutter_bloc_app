@@ -21,6 +21,33 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-23 - Integration: SPM path alias, DerivedData disk, Android jetsam
+
+- What went wrong:
+  (1) iOS IT failed with missing XCFrameworks under a stale
+  `~/Flutter_SDK/projects/bloc_test_app/...` path after the historical symlink
+  was removed while the checkout lived on Lacie. (2) Xcode then hit
+  `build.db` disk I/O errors on a ~95% full system volume (cascading undefined
+  Flutter symbols). (3) Android AVD reported `adb` ready then vanished when
+  launch and `./bin/integration_tests` ran as separate shells under memory
+  pressure.
+- How it was fixed:
+  Restore path alias + regenerate SourcePackages; move DerivedData to Lacie;
+  chain `--launch && ./bin/integration_tests` in one shell; document in
+  integration runner contract + durable prefs.
+- Pattern:
+  Local integration infra failures often look like test failures but are
+  host path/disk/RAM; prove with build logs before editing product code.
+- Preventive rule:
+  Before first iOS IT on a moved checkout, verify SPM artifact paths resolve;
+  keep DerivedData off a critically full system volume; always chain Android
+  AVD launch with the integration runner in one agent shell.
+- Evidence or affected files:
+  `docs/engineering/integration_runner_contract.md`,
+  `docs/agent_kb/operator_preferences_durable.md`,
+  `docs/changes/2026-09-23_integration_host_path_recovery.md`,
+  `tool/ensure_android_integration_avd.sh`
+
 ### 2026-09-22 - Why-comments: evidence-bound claims; BSD mktemp X's at end
 
 - What went wrong:
