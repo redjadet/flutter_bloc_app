@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/encrypted_payload.dart';
 import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_core_failure.dart';
 import 'package:flutter_bloc_app/features/secure_messaging_demo/domain/secure_core_repository.dart';
@@ -24,8 +25,8 @@ final class FfiSecureCoreRepository implements SecureCoreRepository {
       throw _mapNative(error);
     } on FormatException {
       throw SecureCoreFailures.invalidInput;
-    } on Object {
-      throw SecureCoreFailures.internal;
+    } on Object catch (error, stackTrace) {
+      throw _unexpectedInternal(error, stackTrace, operation: 'encrypt');
     } finally {
       bytes.fillRange(0, bytes.length, 0);
     }
@@ -45,8 +46,8 @@ final class FfiSecureCoreRepository implements SecureCoreRepository {
       throw _mapNative(error);
     } on FormatException {
       throw SecureCoreFailures.malformedCiphertext;
-    } on Object {
-      throw SecureCoreFailures.internal;
+    } on Object catch (error, stackTrace) {
+      throw _unexpectedInternal(error, stackTrace, operation: 'decrypt');
     }
   }
 
@@ -56,8 +57,8 @@ final class FfiSecureCoreRepository implements SecureCoreRepository {
       return _nativeApi.healthCheck();
     } on SecureCoreNativeException catch (error) {
       throw _mapNative(error);
-    } on Object {
-      throw SecureCoreFailures.internal;
+    } on Object catch (error, stackTrace) {
+      throw _unexpectedInternal(error, stackTrace, operation: 'healthCheck');
     }
   }
 
@@ -67,8 +68,8 @@ final class FfiSecureCoreRepository implements SecureCoreRepository {
       return _nativeApi.version();
     } on SecureCoreNativeException catch (error) {
       throw _mapNative(error);
-    } on Object {
-      throw SecureCoreFailures.internal;
+    } on Object catch (error, stackTrace) {
+      throw _unexpectedInternal(error, stackTrace, operation: 'version');
     }
   }
 
@@ -85,5 +86,18 @@ final class FfiSecureCoreRepository implements SecureCoreRepository {
       SecureCoreNativeFailureKind.unavailable => SecureCoreFailures.unavailable,
       SecureCoreNativeFailureKind.internal => SecureCoreFailures.internal,
     };
+  }
+
+  Never _unexpectedInternal(
+    Object error,
+    StackTrace stackTrace, {
+    required String operation,
+  }) {
+    AppLogger.error(
+      'FfiSecureCoreRepository.$operation unexpected failure',
+      error,
+      stackTrace,
+    );
+    throw SecureCoreInternalFailure(cause: error);
   }
 }

@@ -127,58 +127,13 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
 
         unawaited(_persistHistory(finalHistory));
       },
-      onError: (errorMessage) {
-        if (isClosed) {
-          return;
-        }
-        if (!isRequestCurrent(requestId)) {
-          _clearStuckLoading();
-          return;
-        }
-        _emitConversationSnapshot(
-          active: withUser,
-          history: historyAfterUser,
-          isLoading: false,
-          error: errorMessage,
-        );
-      },
+      onError: (_) {},
       logContext: 'ChatCubit.sendMessage',
-      specificExceptionHandlers: {
-        ChatRemoteFailureException: (error, stackTrace) {
-          final ChatRemoteFailureException exception =
-              error as ChatRemoteFailureException;
-          if (isClosed) {
-            return;
-          }
-          if (!isRequestCurrent(requestId)) {
-            _clearStuckLoading();
-            return;
-          }
-          _emitConversationSnapshot(
-            active: withUser,
-            history: historyAfterUser,
-            isLoading: false,
-            error: exception.message,
-            remoteFailureL10nCode: exception.code,
-          );
-        },
-        ChatException: (error, stackTrace) {
-          final ChatException exception = error as ChatException;
-          if (isClosed) {
-            return;
-          }
-          if (!isRequestCurrent(requestId)) {
-            _clearStuckLoading();
-            return;
-          }
-          _emitConversationSnapshot(
-            active: withUser,
-            history: historyAfterUser,
-            isLoading: false,
-            error: exception.message,
-          );
-        },
-        ChatOfflineEnqueuedException: (error, stackTrace) {
+      // Offline enqueue logs at info; other failures use default error logging.
+      logErrors: false,
+      onFailure: (failure) {
+        final Object error = failure.error;
+        if (error is ChatOfflineEnqueuedException) {
           AppLogger.info('Chat message queued for offline sync');
           if (isClosed) {
             return;
@@ -192,7 +147,50 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             history: historyAfterUser,
             isLoading: false,
           );
-        },
+          return;
+        }
+
+        AppLogger.error(
+          'ChatCubit.sendMessage',
+          failure.error,
+          failure.stackTrace,
+        );
+
+        if (isClosed) {
+          return;
+        }
+        if (!isRequestCurrent(requestId)) {
+          _clearStuckLoading();
+          return;
+        }
+
+        if (error is ChatRemoteFailureException) {
+          _emitConversationSnapshot(
+            active: withUser,
+            history: historyAfterUser,
+            isLoading: false,
+            error: error.message,
+            remoteFailureL10nCode: error.code,
+          );
+          return;
+        }
+
+        if (error is ChatException) {
+          _emitConversationSnapshot(
+            active: withUser,
+            history: historyAfterUser,
+            isLoading: false,
+            error: error.message,
+          );
+          return;
+        }
+
+        _emitConversationSnapshot(
+          active: withUser,
+          history: historyAfterUser,
+          isLoading: false,
+          error: failure.message,
+        );
       },
     );
   }

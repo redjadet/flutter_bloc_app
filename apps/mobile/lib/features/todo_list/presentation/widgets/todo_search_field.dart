@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
@@ -19,11 +20,32 @@ class TodoSearchField extends StatefulWidget {
 
 class _TodoSearchFieldState extends State<TodoSearchField> {
   late final TextEditingController _controller;
+  bool _didSyncInitialQuery = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didSyncInitialQuery) {
+      return;
+    }
+    _didSyncInitialQuery = true;
+    _syncControllerToQuery(context.cubit<TodoListCubit>().state.searchQuery);
+  }
+
+  void _syncControllerToQuery(String query) {
+    if (_controller.text == query) {
+      return;
+    }
+    _controller.value = TextEditingValue(
+      text: query,
+      selection: TextSelection.collapsed(offset: query.length),
+    );
   }
 
   @override
@@ -100,17 +122,28 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
       textAlignVertical: TextAlignVertical.center,
     );
 
-    if (!hasMixTheme) {
-      return DecoratedBox(
-        decoration: BoxDecoration(
-          color: colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-          border: Border.all(color: colors.outlineVariant),
-        ),
-        child: textField,
-      );
-    }
+    final Widget fieldShell = !hasMixTheme
+        ? DecoratedBox(
+            decoration: BoxDecoration(
+              color: colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(
+                context.responsiveBorderRadius,
+              ),
+              border: Border.all(color: colors.outlineVariant),
+            ),
+            child: textField,
+          )
+        : Box(style: AppStyles.inputFieldShell, child: textField);
 
-    return Box(style: AppStyles.inputFieldShell, child: textField);
+    // Cubit owns searchQuery; keep the controller in sync with external
+    // changes (restore, clear-filters, programmatic set) so UI cannot drift.
+    return TypeSafeBlocListener<TodoListCubit, TodoListState>(
+      listenWhen: (prev, curr) => prev.searchQuery != curr.searchQuery,
+      listener: (context, state) {
+        _syncControllerToQuery(state.searchQuery);
+        setState(() {});
+      },
+      child: fieldShell,
+    );
   }
 }

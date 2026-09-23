@@ -24,7 +24,15 @@ final class SecureCoreUnavailableFailure extends SecureCoreFailure {
 }
 
 final class SecureCoreInternalFailure extends SecureCoreFailure {
-  const new();
+  const new({this.cause});
+
+  /// Unexpected non-native error (FFI/runtime). Null for mapped native internal.
+  final Object? cause;
+
+  @override
+  String toString() => cause == null
+      ? 'SecureCoreInternalFailure'
+      : 'SecureCoreInternalFailure(cause: $cause)';
 }
 
 final class SecureCoreMismatchFailure extends SecureCoreFailure {

@@ -15,7 +15,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
   final PaymentCalculator calculator;
 
   void inputDigit(String digit) {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
 
@@ -26,7 +26,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
   }
 
   void inputDecimalPoint() {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
 
@@ -45,7 +45,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
   }
 
   void selectOperation(CalculatorOperation operation) {
-    if (!_ensureEditable(resetForInput: false)) {
+    if (!_requireEditableWithoutRecovery()) {
       return;
     }
 
@@ -67,7 +67,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
   }
 
   void evaluate() {
-    if (!_ensureEditable(resetForInput: false)) {
+    if (!_requireEditableWithoutRecovery()) {
       return;
     }
 
@@ -136,21 +136,21 @@ class CalculatorCubit extends Cubit<CalculatorState>
   }
 
   void toggleSign() {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
     emit(toggleSignState(state, calculator));
   }
 
   void applyPercentage() {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
     emit(applyPercentageState(state, calculator));
   }
 
   void backspace() {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
 
@@ -178,28 +178,28 @@ class CalculatorCubit extends Cubit<CalculatorState>
   }
 
   void setTaxRate(double rate) {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
     emit(state.copyWith(taxRate: clampRate(rate)));
   }
 
   void setTipRate(double rate) {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
     emit(state.copyWith(tipRate: clampRate(rate)));
   }
 
   void resetTip() {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
     emit(state.copyWith(tipRate: 0));
   }
 
   void resetTax() {
-    if (!_ensureEditable(resetForInput: true)) {
+    if (!_recoverFromErrorForInput()) {
       return;
     }
     emit(state.copyWith(taxRate: 0));

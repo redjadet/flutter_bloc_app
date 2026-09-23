@@ -19,6 +19,20 @@ bool _shouldMergeRemoteItem({
   return shouldApplyRemote(localItem, remoteItem);
 }
 
+/// Owns abort checks and documents local-vs-remote win rules for one merge pass.
+///
+/// Invariants:
+/// - Newer local `updatedAt` wins over remote.
+/// - Unsynchronized local with a different/missing `changeId` is preserved.
+/// - Abort callback is polled at each await boundary (session cleanup / dispose).
+final class _TodoRemoteMergeSession {
+  new({this._shouldAbort});
+
+  final bool Function()? _shouldAbort;
+
+  bool get isAborted => _shouldAbort?.call() ?? false;
+}
+
 Future<void> _mergeRemoteIntoLocal(
   HiveTodoRepository localRepository,
   List<TodoItem> remoteItems,
@@ -26,12 +40,15 @@ Future<void> _mergeRemoteIntoLocal(
   bool Function(TodoItem? localItem, TodoItem remoteItem) shouldApplyRemote, {
   bool Function()? shouldAbortMerge,
 }) async {
+  final _TodoRemoteMergeSession session = _TodoRemoteMergeSession(
+    shouldAbort: shouldAbortMerge,
+  );
   try {
-    if (shouldAbortMerge?.call() ?? false) {
+    if (session.isAborted) {
       return;
     }
     final List<TodoItem> localItems = await localRepository.fetchAll();
-    if (shouldAbortMerge?.call() ?? false) {
+    if (session.isAborted) {
       return;
     }
     final Map<String, TodoItem> localMap = {
@@ -53,7 +70,7 @@ Future<void> _mergeRemoteIntoLocal(
       // Re-read before save so a local write during the initial fetch cannot be
       // overwritten by a stale remote decision (TOCTOU).
       final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
-      if (shouldAbortMerge?.call() ?? false) {
+      if (session.isAborted) {
         return;
       }
       final Iterable<TodoItem> freshMatches = freshLocalItems.where(
@@ -70,7 +87,7 @@ Future<void> _mergeRemoteIntoLocal(
         continue;
       }
 
-      if (shouldAbortMerge?.call() ?? false) {
+      if (session.isAborted) {
         return;
       }
       await localRepository.save(
@@ -87,7 +104,7 @@ Future<void> _mergeRemoteIntoLocal(
         // Re-read before delete for the same reason as remote saves: a local
         // edit may have made this item pending after the initial snapshot.
         final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
-        if (shouldAbortMerge?.call() ?? false) {
+        if (session.isAborted) {
           return;
         }
         final Iterable<TodoItem> freshMatches = freshLocalItems.where(
@@ -97,7 +114,7 @@ Future<void> _mergeRemoteIntoLocal(
             ? null
             : freshMatches.first;
         if (freshLocalItem != null && freshLocalItem.synchronized) {
-          if (shouldAbortMerge?.call() ?? false) {
+          if (session.isAborted) {
             return;
           }
           await localRepository.delete(localItem.id);

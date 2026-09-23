@@ -107,18 +107,27 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.addDevice(device),
       isAlive: () => !isClosed,
-      onError: (message) => _emitError(IotDemoErrorCode.add, detail: message),
+      onError: (_) {},
       logContext: 'IotDemoCubit.addDevice',
-      specificExceptionHandlers: <Type, void Function(Object, StackTrace?)>{
-        ArgumentError: (error, _) {
-          if (isClosed) return;
-          final String msg =
-              ((error as ArgumentError).message as String?) ?? error.toString();
+      // Validation ArgumentErrors are expected; log only unexpected failures.
+      logErrors: false,
+      onFailure: (failure) {
+        if (isClosed) return;
+        final Object error = failure.error;
+        if (error is ArgumentError) {
+          final String msg = (error.message as String?) ?? error.toString();
           _emitError(
             IotDemoErrorCode.add,
             detail: msg.isNotEmpty ? msg : error.toString(),
           );
-        },
+          return;
+        }
+        AppLogger.error(
+          'IotDemoCubit.addDevice',
+          failure.error,
+          failure.stackTrace,
+        );
+        _emitError(IotDemoErrorCode.add, detail: failure.message);
       },
     );
   }

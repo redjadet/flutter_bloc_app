@@ -26,6 +26,7 @@ Full table: [`validation_scripts/operations_host_skills.md`](../validation_scrip
 
 | Review | Path |
 | --- | --- |
+| Eight code-smell harden pass (2026-09-23) | [eight_code_smells_harden_review_2026-09-23.md](eight_code_smells_harden_review_2026-09-23.md) |
 | Senior engineering judgment guidance (2026-09) | [senior_engineering_judgment_guidance_review_2026-09.md](senior_engineering_judgment_guidance_review_2026-09.md) |
 | Auth / sync / Cubit lifecycle remeasure (2026-08-10) | [auth_sync_lifecycle_reliability_remeasure_review_2026-08-10.md](auth_sync_lifecycle_reliability_remeasure_review_2026-08-10.md) |
 | Clean-code debt closeout (2026-08-05) | [clean_code_debt_closeout_review_2026-08-05.md](clean_code_debt_closeout_review_2026-08-05.md) |

@@ -44,11 +44,12 @@ mixin _SupabaseAuthCubitHandlers
       logContext: logContext,
       isAlive: () => !isClosed,
       onError: (_) {},
-      onErrorWithDetails: (error, stackTrace) {
+      logErrors: false,
+      onFailure: (failure) {
         _emitActionError(
           context: logContext,
-          error: error,
-          stackTrace: stackTrace,
+          error: failure.error,
+          stackTrace: failure.stackTrace,
         );
       },
     );

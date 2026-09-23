@@ -1,3 +1,4 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
@@ -20,7 +21,6 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     if (isClosed) return;
     final int requestId = _loadGuard.next();
     _emitLoading();
-    AppError? latestError;
     await CubitExceptionHandler.executeAsync(
       operation: () async {
         final List<GraphqlContinent> continents = await _repository
@@ -38,28 +38,25 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
-      onAppError: (appError) {
+      onError: (_) {},
+      // Domain GraphqlDemoException was previously handled without AppLogger.error;
+      // keep that so intentional network failures don't trip integration log guards.
+      logErrors: false,
+      onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        latestError = appError;
-      },
-      onError: (message) {
-        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        _emitError(
-          latestError ??
-              graphqlDemoAppErrorFromType(
-                GraphqlDemoErrorType.unknown,
-                message,
-              ),
+        final Object error = failure.error;
+        if (error is GraphqlDemoException) {
+          _emitError(graphqlDemoAppErrorFromException(error));
+          return;
+        }
+        AppLogger.error(
+          'GraphqlDemoCubit.loadInitial',
+          failure.error,
+          failure.stackTrace,
         );
+        _emitError(failure.appError);
       },
       logContext: 'GraphqlDemoCubit.loadInitial',
-      specificExceptionHandlers: {
-        GraphqlDemoException: (error, stackTrace) {
-          if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-          final GraphqlDemoException exception = error as GraphqlDemoException;
-          _emitError(graphqlDemoAppErrorFromException(exception));
-        },
-      },
     );
   }
 
@@ -84,7 +81,6 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       activeContinentCode: continentCode,
       shouldUpdateActiveContinent: true,
     );
-    AppError? latestError;
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.fetchCountries(continentCode: continentCode),
       isAlive: () => !isClosed,
@@ -97,28 +93,23 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
-      onAppError: (appError) {
+      onError: (_) {},
+      logErrors: false,
+      onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        latestError = appError;
-      },
-      onError: (message) {
-        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        _emitError(
-          latestError ??
-              graphqlDemoAppErrorFromType(
-                GraphqlDemoErrorType.unknown,
-                message,
-              ),
+        final Object error = failure.error;
+        if (error is GraphqlDemoException) {
+          _emitError(graphqlDemoAppErrorFromException(error));
+          return;
+        }
+        AppLogger.error(
+          'GraphqlDemoCubit.selectContinent',
+          failure.error,
+          failure.stackTrace,
         );
+        _emitError(failure.appError);
       },
       logContext: 'GraphqlDemoCubit.selectContinent',
-      specificExceptionHandlers: {
-        GraphqlDemoException: (error, stackTrace) {
-          if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-          final GraphqlDemoException exception = error as GraphqlDemoException;
-          _emitError(graphqlDemoAppErrorFromException(exception));
-        },
-      },
     );
   }
 

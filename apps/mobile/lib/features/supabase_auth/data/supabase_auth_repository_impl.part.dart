@@ -13,23 +13,19 @@ extension _SupabaseAuthRepositoryImplPrivate on SupabaseAuthRepositoryImpl {
   }
 }
 
-const int _minimumSupabasePasswordLength = 6;
 const String _genericUnexpectedAuthMessage = 'Authentication request failed.';
-final RegExp _basicEmailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
 void _validateCredentialInputs({
   required String email,
   required String password,
 }) {
-  final String normalizedEmail = email.trim();
-  if (normalizedEmail.isEmpty ||
-      !_basicEmailPattern.hasMatch(normalizedEmail)) {
+  if (!SupabaseAuthCredentialPolicy.isValidEmail(email)) {
     throw const SupabaseAuthException(
       'Please enter a valid email address.',
       code: SupabaseAuthErrorCode.invalidEmail,
     );
   }
-  if (password.length < _minimumSupabasePasswordLength) {
+  if (!SupabaseAuthCredentialPolicy.meetsPasswordLength(password)) {
     throw const SupabaseAuthException(
       'Password must be at least 6 characters.',
       code: SupabaseAuthErrorCode.weakPassword,

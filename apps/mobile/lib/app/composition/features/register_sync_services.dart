@@ -1,15 +1,15 @@
-import 'dart:async';
-
 import 'package:core/core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
-import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
 /// Registers sync registry, pending-sync store, and background coordinator.
+///
+/// Optional [RealtimeSyncTrigger] is registered by features (e.g. IoT demo)
+/// before this runs; this file stays free of feature imports.
 void registerSyncServices() {
   registerLazySingletonIfAbsent<SyncableRepositoryRegistry>(
     SyncableRepositoryRegistry.new,
@@ -19,8 +19,10 @@ void registerSyncServices() {
     dispose: (repository) => repository.dispose(),
   );
   registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(() {
-    final IotDemoRealtimeSubscription realtime =
-        getIt<IotDemoRealtimeSubscription>();
+    final RealtimeSyncTrigger? realtimeTrigger =
+        getIt.isRegistered<RealtimeSyncTrigger>()
+        ? getIt<RealtimeSyncTrigger>()
+        : null;
     return BackgroundSyncCoordinator(
       repository: getIt<PendingSyncRepository>(),
       networkStatusService: getIt<NetworkStatusService>(),
@@ -34,9 +36,7 @@ void registerSyncServices() {
         }
         return getIt<FirebaseAuth>().currentUser?.uid;
       },
-      startIotDemoRealtimeSubscription: (onSyncRequested) =>
-          realtime.start(onSyncRequested),
-      stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),
+      realtimeSyncTrigger: realtimeTrigger,
     );
   }, dispose: (coordinator) => coordinator.dispose());
 }

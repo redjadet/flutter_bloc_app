@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_result.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
@@ -167,7 +168,11 @@ class NoOpStaffDemoFormsRepository implements StaffDemoFormsRepository {
 /// Offline fallback when Firestore is unavailable.
 class NoOpStaffDemoPushTokenRepository implements StaffDemoPushTokenRepository {
   @override
-  Future<void> registerTokens({required String userId}) async {}
+  Future<StaffDemoPushTokenResult> registerTokens({
+    required String userId,
+  }) async => const StaffDemoPushTokenSkipped(
+    StaffDemoPushTokenSkipReason.repositoryUnavailable,
+  );
 }
 
 /// Offline fallback when Firestore is unavailable.

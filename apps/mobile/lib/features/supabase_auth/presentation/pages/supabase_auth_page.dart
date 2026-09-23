@@ -6,6 +6,7 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_credential_policy.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -37,15 +38,10 @@ class _SupabaseAuthPageState extends State<SupabaseAuthPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
 
-  static const int _minPasswordLength = 6;
-
-  bool get _canSubmitCredentials {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-    return email.isNotEmpty &&
-        password.isNotEmpty &&
-        password.length >= _minPasswordLength;
-  }
+  bool get _canSubmitCredentials => SupabaseAuthCredentialPolicy.canSubmit(
+    email: _emailController.text,
+    password: _passwordController.text,
+  );
 
   @override
   void dispose() {
