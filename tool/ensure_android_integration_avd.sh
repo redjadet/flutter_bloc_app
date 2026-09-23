@@ -23,6 +23,9 @@
 #   - Agent/CI shells that kill process groups on command end: chain
 #     `--launch && CHECKLIST_INTEGRATION_DEVICE=emulator-5554 ./bin/integration_tests`
 #     in one command so the emulator stays alive for the suite.
+#   - Under host memory pressure (<~5GB free), the AVD may report adb-ready then
+#     exit (jetsam). Free RAM / shut down Simulator before --launch, and keep
+#     launch + integration_tests in one shell.
 #   - Owner: docs/engineering/integration_runner_contract.md § Android AVD
 
 set -euo pipefail

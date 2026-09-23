@@ -188,6 +188,12 @@ Notes:
 - Agent shells that reap process groups when a command ends: chain
   `tool/ensure_android_integration_avd.sh --launch && … ./bin/integration_tests`
   in **one** shell invocation so the emulator is not killed before tests start.
+- Host memory pressure: when free RAM is below ~5 GB, the emulator may boot,
+  report `adb` ready, then exit (jetsam) before or during Gradle. Free RAM
+  (quit Simulator / heavy apps), prefer headless `-no-window`, and keep the
+  launch + `./bin/integration_tests` chain in one shell. Do not treat a brief
+  `ensure-android-avd|ready` as proof the AVD will survive a separate later
+  command.
 
 ## iOS simulator build prep (proactive)
 
@@ -202,6 +208,15 @@ simulator-build recovery retries), the runner:
 3. Runs `xcodebuild -resolvePackageDependencies` for `Runner.xcworkspace`.
 
 Set `INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP=1` to skip this path.
+
+### Host path / DerivedData recovery (local)
+
+These are host-local; they are not committed.
+
+| Symptom | Likely cause | Recovery |
+| --- | --- | --- |
+| `There is no XCFramework found at '/Users/.../Flutter_SDK/projects/bloc_test_app/...'` while the checkout is on another volume (e.g. Lacie) | Stale SPM `workspace-state.json` absolute paths after a removed path alias | Restore `~/Flutter_SDK/projects/bloc_test_app` → real checkout symlink if that alias was historical; delete `apps/mobile/build/ios/SourcePackages` and re-run `flutter build ios --config-only --simulator` (or the runner’s iOS prep) so artifact paths match the current tree |
+| `accessing build database .../DerivedData/.../build.db: disk I/O error` or cascading `Undefined symbol: _Flutter*` | System volume nearly full; DerivedData I/O fails mid-link | Free space or point `~/Library/Developer/Xcode/DerivedData` at a volume with headroom (e.g. Lacie `XcodeDerivedData`), wipe DerivedData, rebuild |
 
 ## CocoaPods shim (local / CI recovery)
 
