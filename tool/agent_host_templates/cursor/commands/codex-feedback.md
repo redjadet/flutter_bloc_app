@@ -13,5 +13,10 @@ Run repo review helper only for explicit second opinion/cross-host review:
 ./tool/request_codex_feedback.sh --base main
 ```
 
+When user asks GPT or Codex to review a plan, use
+`./tool/run_codex_plan_review.sh PATH/TO/plan.md`. Both helpers default to
+GPT-6 Sol with medium reasoning. Keep review read-only; never put credentials
+or tokens in command arguments, prompts, or tracked configuration.
+
 Important: cross-host only; don’t ask current host to review itself. Adapter
 only; repo script owns contract, fallback, output format.

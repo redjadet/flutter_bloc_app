@@ -304,9 +304,9 @@ if ! grep -Fq -- '--sandbox read-only' "$direct_args_capture_file"; then
   cat "$direct_args_capture_file" >&2
   exit 1
 fi
-if grep -Fq -- '-m' "$direct_args_capture_file" || \
-   grep -Fq -- 'model_reasoning_effort=' "$direct_args_capture_file"; then
-  echo "Direct codex backend must use the authenticated default model without model overrides." >&2
+if ! grep -Fq -- '-m gpt-6-sol' "$direct_args_capture_file" ||
+   ! grep -Fq -- 'model_reasoning_effort="medium"' "$direct_args_capture_file"; then
+  echo "Direct codex backend must default to GPT-6 Sol with medium reasoning." >&2
   cat "$direct_args_capture_file" >&2
   exit 1
 fi
@@ -326,6 +326,16 @@ if ! grep -Fq -- 'new_untracked.md' "$direct_stdin_capture_file"; then
   exit 1
 fi
 
+echo "== request_codex_feedback: explicit fast profile and model =="
+MOCK_CODEX_CAPTURE_ARGS_FILE="$direct_args_capture_file" \
+  "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend codex-cli --workspace "$request_repo" --profile fast --model gpt-6-luna >/dev/null
+if ! grep -Fq -- '-m gpt-6-luna' "$direct_args_capture_file" ||
+   ! grep -Fq -- 'model_reasoning_effort="low"' "$direct_args_capture_file"; then
+  echo "Expected explicit fast profile and model override to reach direct Codex." >&2
+  cat "$direct_args_capture_file" >&2
+  exit 1
+fi
+
 echo "== request_codex_feedback: Cursor wrapper receives --prompt =="
 wrapper_path="$request_repo/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
 mkdir -p "$(dirname "$wrapper_path")"
@@ -333,9 +343,17 @@ cat >"$wrapper_path" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "${1:-}" != "--prompt" || -z "${2:-}" ]]; then
-  echo "Expected a non-empty --prompt argument." >&2
-  exit 2
+if [[ "${1:-}" == "--prompt" ]]; then
+  [[ -n "${2:-}" ]] || {
+    echo "Expected a non-empty --prompt argument." >&2
+    exit 2
+  }
+else
+  stdin_prompt="$(cat)"
+  [[ -n "$stdin_prompt" ]] || {
+    echo "Expected non-empty prompt on stdin." >&2
+    exit 2
+  }
 fi
 if [[ -n "${MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE:-}" ]]; then
   printf '%s\n' "$*" >"$MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE"
@@ -356,6 +374,37 @@ if ! grep -Fq -- '--prompt' "$wrapper_args_capture_file" || \
    ! grep -Fq -- 'new_untracked.md' "$wrapper_args_capture_file"; then
   echo "Expected Cursor wrapper backend to receive the complete review prompt." >&2
   cat "$wrapper_args_capture_file" >&2
+  exit 1
+fi
+
+if ! grep -Fq -- '--model gpt-6-sol' "$wrapper_args_capture_file" ||
+   ! grep -Fq -- '--profile balanced' "$wrapper_args_capture_file"; then
+  echo "Cursor wrapper backend must default to GPT-6 Sol with medium reasoning." >&2
+  cat "$wrapper_args_capture_file" >&2
+  exit 1
+fi
+
+echo "== run_codex_plan_review: default model and explicit override =="
+plan_home="$tmp_dir/plan-home"
+plan_wrapper="$plan_home/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
+mkdir -p "$(dirname "$plan_wrapper")"
+cp "$wrapper_path" "$plan_wrapper"
+plan_file="$tmp_dir/review-plan.md"
+printf '%s\n' '# Review plan fixture' >"$plan_file"
+plan_args_capture_file="$tmp_dir/plan-wrapper-args.txt"
+HOME="$plan_home" MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE="$plan_args_capture_file" \
+  "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" >/dev/null
+if ! grep -Fq -- '--model gpt-6-sol' "$plan_args_capture_file" ||
+   ! grep -Fq -- '--profile balanced' "$plan_args_capture_file"; then
+  echo "Plan review must default to GPT-6 Sol with medium reasoning." >&2
+  cat "$plan_args_capture_file" >&2
+  exit 1
+fi
+HOME="$plan_home" MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE="$plan_args_capture_file" \
+  "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" --model gpt-6-luna --profile fast >/dev/null
+if [[ "$(cat "$plan_args_capture_file")" != *'--model gpt-6-luna --profile fast' ]]; then
+  echo "Plan review must preserve explicit delegate overrides." >&2
+  cat "$plan_args_capture_file" >&2
   exit 1
 fi
 
