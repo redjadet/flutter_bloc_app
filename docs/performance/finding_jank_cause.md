@@ -90,7 +90,7 @@ In DevTools **Performance**, select a slow (red) frame and compare **UI** vs
 
 ### 2. Follow the slow side
 
-**High UI time**
+#### High UI time
 
 1. Inspect the frame timeline for BUILD / LAYOUT / PAINT.
 2. Enable build, layout, or paint tracking for the suspected stage.
@@ -101,7 +101,7 @@ In DevTools **Performance**, select a slow (red) frame and compare **UI** vs
    - `bash tool/check_perf_shrinkwrap_lists.sh`
    - `bash tool/check_side_effects_build.sh`
 
-**High raster time**
+#### High raster time
 
 Inspect effects: clipping, opacity stacks, shadows, `saveLayer`, offscreen
 layers, image-heavy cells without isolation.
