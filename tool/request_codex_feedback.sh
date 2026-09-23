@@ -7,7 +7,7 @@ Usage: request_codex_feedback.sh [options]
 
 Review the current git diff with the repo-managed cross-host review flow.
 Default behavior:
-  - uses GPT-6 Sol with medium reasoning for direct `codex exec`
+  - prefers GPT-6 Sol with medium reasoning; retries GPT-5.6 Sol if unavailable
   - uses the Cursor->Codex delegate wrapper only with --backend cursor-wrapper
   - reviews staged diff first, then unstaged/untracked diff
 
@@ -17,7 +17,7 @@ Options:
   --staged            Review staged changes only.
   --unstaged          Review unstaged and untracked changes only.
   --profile NAME      fast or balanced. Default: balanced (medium reasoning).
-  --model NAME        Override default GPT-6 Sol model.
+  --model NAME        Force a model; disables automatic fallback.
   --backend NAME      auto, cursor-wrapper, or codex-cli. Default: auto.
   --raw-response      Print backend output without final extraction.
   --workspace PATH    Repo/workspace root. Default: current repository root.
@@ -31,12 +31,16 @@ Examples:
 EOF
 }
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$script_dir/codex_review_model_fallback.sh"
+
 workspace=""
 focus=""
 diff_mode="auto"
 base_branch=""
 profile="balanced"
-review_model="gpt-6-sol"
+review_model="$CODEX_REVIEW_PREFERRED_MODEL"
+model_explicit="false"
 raw_response="false"
 backend="auto"
 
@@ -80,6 +84,7 @@ while [[ $# -gt 0 ]]; do
         exit 2
       }
       review_model="$2"
+      model_explicit="true"
       shift 2
       ;;
     --backend)
@@ -310,14 +315,14 @@ resolve_backend() {
 }
 
 run_cursor_wrapper() {
-  local wrapper
+  local wrapper model="$1"
   wrapper="$(resolve_wrapper)"
   cmd=(
     "$wrapper"
     "--prompt" "$prompt_text"
     "--workspace" "$workspace"
     "--profile" "$profile"
-    "--model" "$review_model"
+    "--model" "$model"
     "--skip-firebase-mcp"
   )
   if [[ "$raw_response" == "true" ]]; then
@@ -327,7 +332,7 @@ run_cursor_wrapper() {
 }
 
 run_direct_codex() {
-  local schema_file output_file raw_file
+  local model="$1" schema_file output_file raw_file result
   command -v python3 >/dev/null 2>&1 || {
     echo "Direct codex backend requires python3." >&2
     return 127
@@ -341,7 +346,6 @@ run_direct_codex() {
   schema_file="$(mktemp)"
   output_file="$(mktemp)"
   raw_file="$(mktemp)"
-  trap 'rm -f "$schema_file" "$output_file" "$raw_file"' RETURN
 
   cat >"$schema_file" <<'EOF'
 {
@@ -357,7 +361,7 @@ EOF
   cmd=(
     codex exec
     -C "$workspace"
-    -m "$review_model"
+    -m "$model"
     -c "model_reasoning_effort=\"$review_reasoning_effort\""
     --sandbox read-only
     -c 'mcp_servers.firebase.enabled=false'
@@ -369,18 +373,21 @@ EOF
     cmd+=(--json)
     if ! printf '%s\n' "$prompt_text" | "${cmd[@]}" >"$raw_file"; then
       cat "$raw_file"
+      rm -f "$schema_file" "$output_file" "$raw_file"
       return 1
     fi
     cat "$raw_file"
+    rm -f "$schema_file" "$output_file" "$raw_file"
     return 0
   fi
 
   if ! printf '%s\n' "$prompt_text" | "${cmd[@]}" >"$raw_file"; then
     cat "$raw_file" >&2 || true
+    rm -f "$schema_file" "$output_file" "$raw_file"
     return 1
   fi
 
-  python3 - "$output_file" <<'PY'
+  if python3 - "$output_file" <<'PY'
 import json
 import sys
 path = sys.argv[1]
@@ -397,6 +404,13 @@ if not isinstance(final, str) or not final.strip():
     raise SystemExit("Codex final payload did not contain a non-empty 'final' string.")
 print(final)
 PY
+  then
+    result=0
+  else
+    result=$?
+  fi
+  rm -f "$schema_file" "$output_file" "$raw_file"
+  return "$result"
 }
 
 review_reasoning_effort="medium"
@@ -405,9 +419,13 @@ if [[ "$profile" == "fast" ]]; then
 fi
 
 selected_backend="$(resolve_backend)"
+allow_model_fallback="true"
+if [[ "$model_explicit" == "true" || "$raw_response" == "true" ]]; then
+  allow_model_fallback="false"
+fi
 
 if [[ "$selected_backend" == "cursor-wrapper" ]]; then
-  run_cursor_wrapper
+  codex_review_with_model_fallback "$review_model" "$allow_model_fallback" run_cursor_wrapper
 else
-  run_direct_codex
+  codex_review_with_model_fallback "$review_model" "$allow_model_fallback" run_direct_codex
 fi
