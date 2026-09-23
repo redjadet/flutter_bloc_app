@@ -36,6 +36,20 @@ fi
 if [[ -n "$capture_args_file" ]]; then
   printf '%s\n' "$*" >"$capture_args_file"
 fi
+if [[ -n "${MOCK_CODEX_CAPTURE_ATTEMPTS_FILE:-}" ]]; then
+  printf '%s\n' "$*" >>"$MOCK_CODEX_CAPTURE_ATTEMPTS_FILE"
+fi
+if [[ "$mode" == "unsupported_primary" ]]; then
+  if [[ " $* " == *' -m gpt-6-sol '* ]]; then
+    echo "The gpt-6-sol model is not supported for this account." >&2
+    exit 7
+  fi
+  mode="success"
+fi
+if [[ "$mode" == "transport_failure" ]]; then
+  echo "Codex transport failed." >&2
+  exit 7
+fi
 if [[ -n "$capture_stdin_file" ]]; then
   printf '%s' "$stdin_payload" >"$capture_stdin_file"
 fi
@@ -336,6 +350,40 @@ if ! grep -Fq -- '-m gpt-6-luna' "$direct_args_capture_file" ||
   exit 1
 fi
 
+echo "== request_codex_feedback: unsupported model retries once =="
+direct_attempts_file="$tmp_dir/direct-attempts.txt"
+fallback_output="$(
+  MOCK_CODEX_MODE=unsupported_primary MOCK_CODEX_CAPTURE_ATTEMPTS_FILE="$direct_attempts_file" \
+    "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend codex-cli --workspace "$request_repo"
+)"
+if [[ "$fallback_output" != *'OK_FROM_MOCK_CODEX'* ]] ||
+   [[ "$(wc -l <"$direct_attempts_file")" -ne 2 ]] ||
+   ! sed -n '1p' "$direct_attempts_file" | grep -Fq -- '-m gpt-6-sol' ||
+   ! sed -n '2p' "$direct_attempts_file" | grep -Fq -- '-m gpt-5.6-sol'; then
+  echo "Direct review must retry only an unsupported default model with GPT-5.6 Sol." >&2
+  cat "$direct_attempts_file" >&2
+  exit 1
+fi
+
+echo "== request_codex_feedback: explicit model and unrelated errors do not retry =="
+for mode in unsupported_primary transport_failure; do
+  : >"$direct_attempts_file"
+  args=(--backend codex-cli --workspace "$request_repo")
+  if [[ "$mode" == "unsupported_primary" ]]; then
+    args+=(--model gpt-6-sol)
+  fi
+  if MOCK_CODEX_MODE="$mode" MOCK_CODEX_CAPTURE_ATTEMPTS_FILE="$direct_attempts_file" \
+      "$PROJECT_ROOT/tool/request_codex_feedback.sh" "${args[@]}" >/dev/null 2>&1; then
+    echo "Expected $mode to fail without retry." >&2
+    exit 1
+  fi
+  if [[ "$(wc -l <"$direct_attempts_file")" -ne 1 ]]; then
+    echo "Expected exactly one Codex attempt for $mode." >&2
+    cat "$direct_attempts_file" >&2
+    exit 1
+  fi
+done
+
 echo "== request_codex_feedback: Cursor wrapper receives --prompt =="
 wrapper_path="$request_repo/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
 mkdir -p "$(dirname "$wrapper_path")"
@@ -357,6 +405,23 @@ else
 fi
 if [[ -n "${MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE:-}" ]]; then
   printf '%s\n' "$*" >"$MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE"
+fi
+requested_model=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --model)
+      requested_model="$2"
+      shift 2
+      ;;
+    *) shift ;;
+  esac
+done
+if [[ -n "${MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE:-}" ]]; then
+  printf '%s\n' "$requested_model" >>"$MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE"
+fi
+if [[ "${MOCK_CURSOR_WRAPPER_MODE:-}" == "unsupported_primary" && "$requested_model" == "gpt-6-sol" ]]; then
+  echo "The gpt-6-sol model is not supported for this account." >&2
+  exit 7
 fi
 printf '%s\n' 'OK_FROM_MOCK_CURSOR_WRAPPER'
 EOF
@@ -384,6 +449,20 @@ if ! grep -Fq -- '--model gpt-6-sol' "$wrapper_args_capture_file" ||
   exit 1
 fi
 
+echo "== request_codex_feedback: wrapper fallback =="
+wrapper_attempts_file="$tmp_dir/wrapper-attempts.txt"
+wrapper_fallback_output="$(
+  MOCK_CURSOR_WRAPPER_MODE=unsupported_primary MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE="$wrapper_attempts_file" \
+    "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend cursor-wrapper --workspace "$request_repo"
+)"
+if [[ "$wrapper_fallback_output" != *'OK_FROM_MOCK_CURSOR_WRAPPER'* ]] ||
+   [[ "$(wc -l <"$wrapper_attempts_file")" -ne 2 ]] ||
+   [[ "$(sed -n '2p' "$wrapper_attempts_file")" != "gpt-5.6-sol" ]]; then
+  echo "Cursor wrapper review must retry the unsupported default once." >&2
+  cat "$wrapper_attempts_file" >&2
+  exit 1
+fi
+
 echo "== run_codex_plan_review: default model and explicit override =="
 plan_home="$tmp_dir/plan-home"
 plan_wrapper="$plan_home/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
@@ -400,11 +479,33 @@ if ! grep -Fq -- '--model gpt-6-sol' "$plan_args_capture_file" ||
   cat "$plan_args_capture_file" >&2
   exit 1
 fi
+plan_attempts_file="$tmp_dir/plan-wrapper-attempts.txt"
+HOME="$plan_home" MOCK_CURSOR_WRAPPER_MODE=unsupported_primary \
+  MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE="$plan_attempts_file" \
+  "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" >/dev/null
+if [[ "$(wc -l <"$plan_attempts_file")" -ne 2 ]] ||
+   [[ "$(sed -n '2p' "$plan_attempts_file")" != "gpt-5.6-sol" ]]; then
+  echo "Plan review must retry the unsupported default once." >&2
+  cat "$plan_attempts_file" >&2
+  exit 1
+fi
 HOME="$plan_home" MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE="$plan_args_capture_file" \
   "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" --model gpt-6-luna --profile fast >/dev/null
 if [[ "$(cat "$plan_args_capture_file")" != *'--model gpt-6-luna --profile fast' ]]; then
   echo "Plan review must preserve explicit delegate overrides." >&2
   cat "$plan_args_capture_file" >&2
+  exit 1
+fi
+: >"$plan_attempts_file"
+if HOME="$plan_home" MOCK_CURSOR_WRAPPER_MODE=unsupported_primary \
+    MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE="$plan_attempts_file" \
+    "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" --model gpt-6-sol >/dev/null 2>&1; then
+  echo "Explicit plan model must fail without fallback when unsupported." >&2
+  exit 1
+fi
+if [[ "$(wc -l <"$plan_attempts_file")" -ne 1 ]]; then
+  echo "Explicit plan model must use one attempt." >&2
+  cat "$plan_attempts_file" >&2
   exit 1
 fi
 
