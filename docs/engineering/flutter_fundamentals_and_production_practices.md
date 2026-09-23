@@ -54,7 +54,9 @@ Pipeline we care about in perf work:
 input/state → schedule frame → build → layout → paint → compose → raster
 ```
 
-Repo detail: [`performance/performance_bottlenecks.md`](../performance/performance_bottlenecks.md)
+Repo detail: [`performance/finding_jank_cause.md`](../performance/finding_jank_cause.md)
+(cause triage) and
+[`performance/performance_bottlenecks.md`](../performance/performance_bottlenecks.md)
 (*Constraints go down. Sizes go up. Parents set positions.* also in
 [`architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md)).
 

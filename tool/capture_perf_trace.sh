@@ -77,4 +77,6 @@ print(out_path)
 PY
 
 echo "[capture_perf_trace] Saved: $OUT_JSON"
+echo "[capture_perf_trace] Next: bash tool/triage_jank.sh \"$OUT_JSON\""
+echo "[capture_perf_trace] Canon: docs/performance/finding_jank_cause.md"
 

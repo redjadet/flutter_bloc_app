@@ -113,6 +113,7 @@ Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 | iOS native / CocoaPods embed / simulator build (`ios/**`, `Podfile`, pod frameworks, launch-time dyld errors) | `flutter build ios --simulator --debug` + `tool/check_ios_pod_framework_embed.sh --require-built-app`; `./bin/checklist` also runs the guard opportunistically when a simulator app is already built |
 | Apple debug Hive / secure storage (`packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`, `packages/storage/lib/src/hive/hive_*.dart`, simulator Keychain -34018, `Recovering corrupted box.`) | `bash tool/check_apple_debug_hive_storage.sh` + `cd apps/mobile && flutter test test/secure_secret_storage_test.dart test/shared/storage/hive_key_manager_test.dart`; triage: [`apple_debug_hive_storage.md`](apple_debug_hive_storage.md); `./bin/checklist` includes the guard |
 | Integration journeys / end-to-end flows | `./bin/integration_tests` (plus the narrowest supporting lane) |
+| Reported scroll/UI jank or frame-budget investigation (no code change yet) | `bash tool/triage_jank.sh`; profile-mode DevTools UI vs Raster before edits; owner [`performance/finding_jank_cause.md`](../performance/finding_jank_cause.md); optional `tool/capture_perf_trace.sh` + `python3 tool/analyze_perf_trace.py … --triage` |
 | Backend-adjacent demos/scripts (e.g. `demos/**`, `demos/render_chat_api/**`, Python lanes, `supabase/**`) | `./bin/checklist` |
 
 ## Local Tooling Path

@@ -108,7 +108,9 @@ For crash reporting, structured error codes, and the **doc-only** product analyt
   exceeds the frame budget.
 
 Review with [`review/performance_checklist.md`](review/performance_checklist.md),
-profile with [`performance/performance_bottlenecks.md`](performance/performance_bottlenecks.md),
+diagnose late frames with [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md)
+(`bash tool/triage_jank.sh`), profile guidelines in
+[`performance/performance_bottlenecks.md`](performance/performance_bottlenecks.md),
 and keep isolate thresholds in
 [`performance/compute_isolate_review.md`](performance/compute_isolate_review.md).
 

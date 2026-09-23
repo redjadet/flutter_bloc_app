@@ -44,6 +44,7 @@ Use global search/install only on explicit host-skill work:
 | Checks / regression guards / test routing | `agents-validation-testing` |
 | After non-trivial bug fix | `agents-regression-capture` same turn, then `agents-validation-testing` |
 | Analysis / layout / runtime errors | [`agent_kb/devtools_runtime_errors.md`](../agent_kb/devtools_runtime_errors.md); `systematic-debugging` + matching Dart/Flutter skill |
+| Scroll / UI jank / frame-budget miss | Measure first: `bash tool/triage_jank.sh`; owner [`performance/finding_jank_cause.md`](../performance/finding_jank_cause.md); do not patch from intuition — profile UI vs Raster, then one change + remeasure |
 | Pub dependency / version-sensitive API | [`agent_kb/package_docs_mcp.md`](../agent_kb/package_docs_mcp.md); Dart MCP + current official docs |
 | Supabase schema / migrations | `agents-supabase`; search `ai-safe-supabase-workflow` if available |
 | Figma to code | `agents-figma` / `figma-this-repo` |

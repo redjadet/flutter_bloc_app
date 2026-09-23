@@ -54,57 +54,34 @@
 
 ## Flutter frame pipeline and jank diagnosis
 
-A Flutter frame is not a screenshot. It is an end-to-end pipeline that turns
-an input or state change into pixels:
+**Jank is a symptom.** Full cause map (profile mode, UI vs Raster, CPU / Memory /
+Network / isolates, agent rules):
+[`finding_jank_cause.md`](finding_jank_cause.md). Entry:
+`bash tool/triage_jank.sh`.
+
+A Flutter frame is an end-to-end pipeline, not a screenshot:
 
 ```text
 input/state -> frame schedule (vsync) -> build -> layout -> paint -> compositing/layer tree -> raster -> GPU/display
 ```
 
-The frame budget follows the display refresh rate: about **16.67 ms** at 60 Hz
-and **8.33 ms** at 120 Hz. “Every 16 ms” is therefore only an approximation for
-a 60 Hz target, not a universal Flutter interval.
+Budgets: ≈ **16.7 ms** at 60 Hz, ≈ **8.3 ms** at 120 Hz. UI (build / layout /
+paint) and raster are separate; a fast `build()` alone is not proof of
+smoothness.
 
-### What each stage owns
+| Stage | Owns |
+| --- | --- |
+| Build | Dirty widget/element rebuild — keep `build()` pure and cheap |
+| Layout | **Constraints go down. Sizes go up. Parents set positions.** Detail: [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md) |
+| Paint | Drawing commands |
+| Compositing | Layer tree |
+| Raster | Engine/raster thread → GPU / display |
 
-- **Build:** Reconfigures only dirty widget/element regions where possible. Keep
-  `build()` pure and cheap: no heavy computation, blocking I/O, or synchronous
-  large JSON conversion.
-- **Layout:** **Constraints go down. Sizes go up. Parents set positions.**
-  Parents pass `BoxConstraints` down; children return sizes up; parents place
-  children. Detail:
-  [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md).
-- **Paint:** Produces drawing commands.
-- **Compositing:** Combines those commands into a layer tree.
-- **Raster:** The engine/raster thread draws that layer tree for the GPU and
-  display.
-
-UI work (`build`, layout, and paint) and raster work are separate pipeline
-budgets. Missing either budget produces jank, so a fast `build()` time alone is
-not proof of smoothness.
-
-### Triage by limiting stage
-
-- **UI-bound frames:** Investigate unnecessary rebuilds, large eager lists,
-  intrinsic layout, synchronous CPU work, and excessive layout or paint.
-- **Raster-bound frames:** Investigate `saveLayer`, frequent or complex clips,
-  opacity/shadow stacks, and expensive visual effects. These can be costly even
-  when build time is low.
-
-Measure before changing code. Run on a representative physical device with:
-
-```bash
-flutter run --profile
-```
-
-In DevTools **Performance**, select a red frame and inspect both UI and Raster
-durations, then inspect the build/layout/paint timeline for the limiting stage.
-Choose the intervention from that evidence rather than treating `build()` as the
-sole performance metric.
-
-Further reading: [Flutter architectural overview](https://docs.flutter.dev/resources/architectural-overview),
-[DevTools frame analysis](https://docs.flutter.dev/tools/devtools/performance),
-and [Flutter performance best practices](https://docs.flutter.dev/perf/best-practices).
+Measure before changing code (`flutter run --profile` or
+`tool/capture_perf_trace.sh`). Upstream:
+[architectural overview](https://docs.flutter.dev/resources/architectural-overview),
+[Performance view](https://docs.flutter.dev/tools/devtools/performance),
+[best practices](https://docs.flutter.dev/perf/best-practices).
 
 ## List and scroll performance (guidelines)
 
@@ -125,6 +102,7 @@ and [Flutter performance best practices](https://docs.flutter.dev/perf/best-prac
 
 ## Related Documentation
 
+- [Finding the real cause of jank](finding_jank_cause.md)
 - [Lazy Loading Review](lazy_loading_review.md)
 - [Startup Time Profiling](startup_time_profiling.md)
 - [Bundle Size Monitoring](bundle_size_monitoring.md)
