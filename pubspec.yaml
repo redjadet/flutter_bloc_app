@@ -30,6 +30,9 @@ dependency_overrides:
   dart_style: 3.1.4
   # Resolve email_validator conflict: genui requires ^3.0.0, firebase_ui_auth 3.0.1 requires ^2.1.17
   email_validator: ^3.0.0
+  # Equatable 3.0 + EquatableMixin typedef shim for fl_chart / firebase_auth_mocks.
+  equatable:
+    path: third_party/pub/equatable
   # iOS 26.4 simulator FFI path_provider workaround (see apps/mobile pubspec comments).
   path_provider_foundation: 2.5.1
 

@@ -95,8 +95,9 @@ class SealedStateMatcher<S, R> {
 
   /// Handles the idle state variant.
   SealedStateMatcher<S, R> caseIdle(R Function() handler) {
-    // Runtime check - for compile-time, use switch expressions
-    if (state.toString().contains('Idle')) {
+    // Match on runtimeType name — Equatable 3.0 no longer emits the bare
+    // type name from toString() when stringify is off (uses Object.toString).
+    if (_typeNameContains('Idle')) {
       _idleResult = handler();
     }
     // Builder pattern requires returning 'this' for method chaining
@@ -105,7 +106,7 @@ class SealedStateMatcher<S, R> {
 
   /// Handles the loading state variant.
   SealedStateMatcher<S, R> caseLoading(R Function() handler) {
-    if (state.toString().contains('Loading')) {
+    if (_typeNameContains('Loading')) {
       _loadingResult = handler();
     }
     // Builder pattern requires returning 'this' for method chaining
@@ -116,7 +117,7 @@ class SealedStateMatcher<S, R> {
   SealedStateMatcher<S, R> caseNavigate(
     R Function(Object? target, Object? origin) handler,
   ) {
-    if (state.toString().contains('Navigate')) {
+    if (_typeNameContains('Navigate')) {
       // This is a simplified example - actual implementation would
       // extract target and origin from the state
       _navigateResult = handler(null, null);
@@ -127,7 +128,7 @@ class SealedStateMatcher<S, R> {
 
   /// Handles the error state variant.
   SealedStateMatcher<S, R> caseError(R Function(String message) handler) {
-    if (state.toString().contains('Error')) {
+    if (_typeNameContains('Error')) {
       // This is a simplified example - actual implementation would
       // extract message from the state
       _errorResult = handler('');
@@ -135,6 +136,9 @@ class SealedStateMatcher<S, R> {
     // Builder pattern requires returning 'this' for method chaining
     return this;
   }
+
+  bool _typeNameContains(String token) =>
+      state.runtimeType.toString().contains(token);
 
   /// Builds the result, returning the first non-null handler result.
   ///

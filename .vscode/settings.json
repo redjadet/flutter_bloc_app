@@ -201,6 +201,20 @@
   ],
   "java.import.exclusions": [
     "**/vendor/**",
-    "**/build/**"
-  ]
+    "**/build/**",
+    "**/third_party/**",
+    "**/.dart_tool/**",
+    "**/SourcePackages/**",
+    "**/screengrab/**",
+    "**/node_modules/**"
+  ],
+  "java.project.resourceFilters": [
+    "node_modules",
+    "vendor",
+    "third_party",
+    ".git",
+    "build"
+  ],
+  "java.jdt.ls.java.home": "/Applications/Android Studio.app/Contents/jbr/Contents/Home",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

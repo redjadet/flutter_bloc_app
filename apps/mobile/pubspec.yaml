@@ -60,7 +60,7 @@ dependencies:
     path: ../../packages/design_system
   device_info_plus: ^13.2.0
   dio: ^5.11.1
-  equatable: ^2.1.0
+  equatable: ^3.0.0
   event_bus: ^2.0.1
   fancy_shimmer_image: ^2.0.3
   feature_flags:
