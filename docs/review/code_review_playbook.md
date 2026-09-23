@@ -44,6 +44,8 @@ Before reading implementation, capture:
 - Whether behavior change and opportunistic refactoring are separated; if
   inseparable, explicit justification in the PR body.
 - Acceptance criteria, known constraints, and rollback/recovery impact.
+- Expected behavior from the requirement or domain contract, including an
+  invariant, a boundary/invalid case, and failure behavior before comparing tests.
 - Risk classification: low, medium, or high.
 - Required validation lane from
   [`../engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).
@@ -99,6 +101,12 @@ a behavioral defect.
    [`../CODE_QUALITY.md`](../CODE_QUALITY.md) § Clean code in the AI era);
    logs/errors preserve stable, non-sensitive recovery signals.
 
+Inspect every changed file, including tests, lockfiles, dependencies, CI,
+configuration, and files outside the expected scope. For changed tests, check
+deletions, skips, weaker assertions, and mocks that replace the behavior under
+test. Compare expected results with the independent behavior contract; passing
+tests alone cannot validate a mistaken contract.
+
 ### 4. Write actionable findings
 
 Each finding contains:
@@ -145,6 +153,9 @@ Validation routing, platform-specific gates, and escalation rules remain owned b
 [`../engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).
 If a command is unavailable or a test is flaky, report that fact; do not
 substitute an unrelated green command.
+Before merge, verify required checks ran and passed on the submitted PR head;
+workflow definitions or an earlier green commit are not merge proof. GitHub
+branch protection or rulesets must require those checks to enforce the gate.
 
 ### 6. Resolve and close
 
@@ -196,6 +207,8 @@ Before approval, reviewer can answer yes to all:
 - Rollback/reversibility impact is clear for risky changes.
 - Layering, state, security, UI, and performance checks relevant to paths ran.
 - Tests prove behavior and failure paths, not only implementation details.
+- Changed tests retain meaningful assertions; deleted, skipped, or mocked tests
+  have a reviewed reason.
 - Validation is fresh, scope-matched, and independently inspected.
 - Findings have disposition; accepted risks have owner and revisit trigger.
 - Final decision and residual risks are recorded.

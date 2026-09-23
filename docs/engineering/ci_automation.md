@@ -4,12 +4,18 @@ This repo uses GitHub Actions as the merge gate + drift detector.
 
 ## Required checks (branch protection)
 
-Require these checks on `main`:
+Workflow runs create check results; they enforce a merge gate only when live
+branch protection or a ruleset requires them. Before merge, confirm the checks
+below passed on the submitted PR head and were not skipped. Treat live GitHub
+settings as the enforcement source of truth; this list is the project policy.
 
-- **`CI / build`**: runs `./bin/checklist` (analyze + repo static checks + mix_lint + coverage).
-- **`CI / integration-preflight`**: runs `./bin/integration_preflight` on PRs / merge queue (Ubuntu + Chrome web smoke + unit guards) before slower simulator lanes.
-- **`Dependency Review / dependency-review`**: GitHub dependency review action.
-- **`OSV-Scanner PR Scan / scan-pr`**: vulnerability scan of `pubspec.lock`.
+Require these check contexts on `main` (verified in branch protection on
+2026-09-23; recheck live settings before merge):
+
+- **`build`** (`CI / build`): runs `./bin/checklist` (analyze + repo static checks + mix_lint + coverage).
+- **`integration-preflight`** (`CI / integration-preflight`): runs `./bin/integration_preflight` on PRs / merge queue (Ubuntu + Chrome web smoke + unit guards) before slower simulator lanes.
+- **`dependency-review`** (`Dependency Review / dependency-review`): GitHub dependency review action.
+- **`scan-pr / osv-scan`** (`OSV-Scanner PR Scan`): vulnerability scan of `pubspec.lock`.
 
 Renovate / Dependabot PRs are gated by the same **`CI / build`** check — there is no
 separate duplicate analyze/coverage workflow.
