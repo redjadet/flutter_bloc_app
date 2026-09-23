@@ -35,6 +35,12 @@ Do not add global ignores.
 Timer.periodic, addListener/removeListener, `ChangeNotifier` fields, GetIt
 singleton holding context, closure capture.
 
+**Manual until AST coverage:** a long-lived listener or async closure that
+captures a short-lived `BuildContext` / `State` keeps that object reachable
+even when no `static BuildContext` field exists. Review with
+[`dart_memory_under_the_hood.md`](dart_memory_under_the_hood.md) and
+[`memory_checklist.md`](memory_checklist.md).
+
 ## Examples
 
 ### Bad

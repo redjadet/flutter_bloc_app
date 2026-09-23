@@ -7,21 +7,21 @@ import 'package:utilities/utilities.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('forwards trim level to chart and image callbacks', () async {
-    final List<AppMemoryTrimLevel> chartLevels = <AppMemoryTrimLevel>[];
+  test('forwards trim level to static-cache and image callbacks', () async {
+    final List<AppMemoryTrimLevel> staticLevels = <AppMemoryTrimLevel>[];
     final List<AppMemoryTrimLevel> imageLevels = <AppMemoryTrimLevel>[];
     final AppMemoryService service = AppMemoryService(
       onImageCacheTrim: (AppMemoryTrimLevel level) async {
         imageLevels.add(level);
       },
-      onChartMemoryTrim: (AppMemoryTrimLevel level) async {
-        chartLevels.add(level);
+      onStaticCacheTrim: (AppMemoryTrimLevel level) async {
+        staticLevels.add(level);
       },
     );
 
     await service.trim(AppMemoryTrimLevel.background);
 
-    expect(chartLevels, <AppMemoryTrimLevel>[AppMemoryTrimLevel.background]);
+    expect(staticLevels, <AppMemoryTrimLevel>[AppMemoryTrimLevel.background]);
     expect(imageLevels, <AppMemoryTrimLevel>[AppMemoryTrimLevel.background]);
   });
 
@@ -35,7 +35,7 @@ void main() {
           await allowBackgroundImageTrim.future;
         }
       },
-      onChartMemoryTrim: (_) async {},
+      onStaticCacheTrim: (_) async {},
     );
 
     final Future<void> backgroundTrim = service.trim(

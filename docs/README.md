@@ -116,6 +116,7 @@ root when an existing category applies.
 
 #### Performance / lifecycle
 
+- [`performance/dart_memory_under_the_hood.md`](performance/dart_memory_under_the_hood.md) — heap, GC, object lifetimes, DevTools investigation
 - [`performance/memory_management.md`](performance/memory_management.md) — ownership principles
 - [`performance/memory_testing.md`](performance/memory_testing.md) — leak_tracker tagged suite
 - [`performance/memory_lints.md`](performance/memory_lints.md) — `memory_lint` rule IDs

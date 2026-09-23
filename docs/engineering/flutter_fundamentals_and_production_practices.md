@@ -202,6 +202,10 @@ Layers we use:
 5. **Inventory without false gates** — `tool/check_bloc_rebuild_scoping.sh`
    warns on wide `BlocBuilder`s; does not fail checklist by default
    ([QG-D03](../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md)).
+6. **Memory ownership** — Dart GC frees unreachable heap objects eventually;
+   dispose/cancel still required; investigate with snapshot diffs, not GC
+   frequency alone
+   ([`dart_memory_under_the_hood.md`](../performance/dart_memory_under_the_hood.md)).
 
 **Interview one-liner:** *Prove the expensive frame path, narrow the rebuild
 boundary, keep a regression harness; do not invent a generic cache first.*

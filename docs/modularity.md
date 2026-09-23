@@ -108,7 +108,7 @@ Current invariant: settings has zero imports of `graphql_demo`, `profile`, or
   (Phase 1B inventory before any default-deny CI gate).
 - **No package → app imports:** enforced by `tool/check_feature_modularity_leaks.sh` and
   `tool/check_package_dependency_dag.sh`. Composition must inject feature behavior via DI
-  callbacks from `apps/mobile/lib/app/composition/**` (see `AppMemoryService.onChartMemoryTrim`).
+  callbacks from `apps/mobile/lib/app/composition/**` (see `AppMemoryService.onStaticCacheTrim`).
 - **Domain purity (imports):** same script fails on `^import` lines in
   `apps/mobile/lib/features/*/domain/**` that pull in Flutter, `get_it`, Hive, Supabase client
   libs, Dio, Retrofit, `package:flutter_bloc_app/app/`, `package:flutter_bloc_app/app/composition/`,

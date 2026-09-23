@@ -2,6 +2,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calcul
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:utilities/utilities.dart' show AppMemoryTrimLevel;
 
 void main() {
   group('CalculatorFormatters', () {
@@ -88,6 +89,40 @@ void main() {
           ),
         ),
       );
+    });
+
+    testWidgets('caches per locale and clears on pressure trim', (
+      tester,
+    ) async {
+      CalculatorFormatters.clearCache();
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en', 'US'),
+          localizationsDelegates: const [
+            ...GlobalMaterialLocalizations.delegates,
+          ],
+          supportedLocales: const [Locale('en', 'US'), Locale('de', 'DE')],
+          home: Builder(
+            builder: (context) {
+              final CalculatorFormatters first = CalculatorFormatters.of(
+                context,
+              );
+              final CalculatorFormatters second = CalculatorFormatters.of(
+                context,
+              );
+              expect(identical(first, second), isTrue);
+              expect(CalculatorFormatters.debugCacheSize, 1);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      CalculatorFormatters.trimMemory(AppMemoryTrimLevel.background);
+      expect(CalculatorFormatters.debugCacheSize, 1);
+
+      CalculatorFormatters.trimMemory(AppMemoryTrimLevel.pressure);
+      expect(CalculatorFormatters.debugCacheSize, 0);
     });
   });
 }
