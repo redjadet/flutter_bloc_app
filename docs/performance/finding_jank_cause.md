@@ -73,11 +73,17 @@ cd apps/mobile && flutter run --profile
 
 # Automated symptom capture (simulator OK for regression)
 CHECKLIST_INTEGRATION_DEVICE=<iphone_sim_udid> bash tool/capture_perf_trace.sh
-python3 tool/analyze_perf_trace.py artifacts/perf/perf_report_data_<stamp>.json
+python3 tool/analyze_perf_trace.py artifacts/perf/perf_report_data_<stamp>.json --triage
 ```
 
 Agent entry: `bash tool/triage_jank.sh` (prints this map; analyzes a report when
-given a path or the latest `artifacts/perf/perf_report_data_*.json`).
+given a path or `--latest`).
+
+**Budgets:** interactive frame target is ≈16.7 ms @ 60 Hz / ≈8.3 ms @ 120 Hz.
+Automated gate thresholds live in `tool/perf_budgets.json` (p90 ≤ 8.3 ms, p99 ≤
+16.7 ms). A gate **fail** with zero `>16.7ms` frames still means pressure —
+identify the limiting work before patching. UI vs Raster attribution still
+requires profile-mode DevTools.
 
 In DevTools **Performance**, select a slow (red) frame and compare **UI** vs
 **Raster** durations.

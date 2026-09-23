@@ -12,10 +12,14 @@ attribution.
 ## In
 
 - Canon: [`docs/performance/finding_jank_cause.md`](../performance/finding_jank_cause.md)
-- Entry: `bash tool/triage_jank.sh` (`--latest` / report path)
-- `tool/analyze_perf_trace.py --triage` (also auto-prints triage when gate fails)
-- Hub / checklist / quick-ref / reliability / fundamentals / CODE_QUALITY /
-  operator-pref links; slim pointer from
+- Entry: `bash tool/triage_jank.sh` (`--latest` / report path; exit codes documented)
+- `tool/analyze_perf_trace.py --triage` (auto-prints on gate fail; pressure =
+  gate fail or `>16.7ms`; `report_only` withholds pass/fail claims)
+- Agent hooks: `AGENTS.md`, [`skill_routing.md`](../ai/skill_routing.md),
+  [`validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md),
+  [`ai_code_review_protocol.md`](../ai_code_review_protocol.md), quick-ref /
+  checklist / hubs / operator prefs
+- Slim pointer from
   [`docs/performance/performance_bottlenecks.md`](../performance/performance_bottlenecks.md)
 
 ## Out / not in this change

@@ -272,6 +272,10 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 
 ### Performance
 
+- **Jank cause triage (measure first):** `bash tool/triage_jank.sh` — prints the
+  UI vs Raster cause map; optionally analyzes `perf_report_data_*.json`. Canon:
+  [`performance/finding_jank_cause.md`](../performance/finding_jank_cause.md).
+  Capture: `tool/capture_perf_trace.sh`; analyze: `python3 tool/analyze_perf_trace.py <report> --triage`.
 - **`check_perf_shrinkwrap_lists.sh`**: Flags `shrinkWrap: true` lists/grids in presentation code
 - **`check_perf_nonbuilder_lists.sh`**: Flags likely dynamic `ListView`/`GridView` `children:` construction that eagerly builds rows. Small static/prebuilt section lists may use `children:` when that preserves stable widget identity.
 - **`check_widget_identity.sh`**: Flags common widget identity traps (missing stable `key:` in builder row returns, `ObjectKey` in builder row returns, builder-by-index over prebuilt widget lists, `AnimatedSwitcher` children without explicit keyed identity, and dynamic `children:` lists that instantiate local `TextEditingController`/`FocusNode` owner widgets without keys). Prefer stable domain IDs via `ValueKey('row-$id')`; use `ListView(children: ...)` for static prebuilt widget lists. Suppress only with `// widget_identity:ignore <reason>` on the same or previous line.

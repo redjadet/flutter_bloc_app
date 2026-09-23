@@ -82,6 +82,7 @@ Measure before changing code (`flutter run --profile` or
 [architectural overview](https://docs.flutter.dev/resources/architectural-overview),
 [Performance view](https://docs.flutter.dev/tools/devtools/performance),
 [best practices](https://docs.flutter.dev/perf/best-practices).
+
 ## List and scroll performance (guidelines)
 
 - **Heavy list items:** Wrap list item widgets that do custom paint, many children, or images in `RepaintBoundary` so repaints are isolated and scrolling stays smooth.

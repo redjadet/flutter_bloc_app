@@ -2,6 +2,12 @@
 
 Router: [`../validation_scripts.md`](../validation_scripts.md).
 
+When the user reports **jank / stutter**, do not start with these static scripts
+alone. Run `bash tool/triage_jank.sh` first and follow
+[`../performance/finding_jank_cause.md`](../performance/finding_jank_cause.md)
+(profile mode → UI vs Raster → one change → remeasure). Use the list/repaint
+checks below when the limiting stage matches.
+
 ## Performance Optimization
 
 ### `check_missing_const.sh`

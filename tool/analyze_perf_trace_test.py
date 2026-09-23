@@ -170,6 +170,34 @@ class AnalyzePerfTraceTest(unittest.TestCase):
         self.assertIn("finding_jank_cause.md", joined)
         self.assertTrue(any("Span hint" in s for s in steps))
 
+    def test_triage_ignores_lone_over_8_when_gate_pass(self):
+        frame = {
+            "count": 120,
+            "p90_ms": 5.0,
+            "p99_ms": 7.0,
+            "over_8_3ms": 2,
+            "over_16_7ms": 0,
+        }
+        steps = self.module.triage_next_steps(frame, gate_outcome="pass")
+        joined = "\n".join(steps)
+        self.assertIn("No frame-budget pressure", joined)
+        self.assertNotIn("Frame-budget pressure detected", joined)
+
+    def test_triage_report_only_withholds_pass_fail(self):
+        frame = {
+            "count": 120,
+            "p90_ms": 5.0,
+            "p99_ms": 7.0,
+            "over_8_3ms": 0,
+            "over_16_7ms": 0,
+        }
+        steps = self.module.triage_next_steps(frame, gate_outcome="report_only")
+        joined = "\n".join(steps)
+        self.assertIn("report-only", joined.lower())
+        self.assertIn("recapture", joined.lower())
+        self.assertNotIn("No frame-budget pressure", joined)
+        self.assertNotIn("Frame-budget pressure detected", joined)
+
     def test_cli_triage_flag_prints_section(self):
         script = Path(__file__).with_name("analyze_perf_trace.py")
         result = __import__("subprocess").run(

@@ -377,20 +377,41 @@ def triage_next_steps(
 
     Automated traces prove *that* frames are late; DevTools profile mode still
     owns UI vs Raster attribution. See docs/performance/finding_jank_cause.md.
+
+    Pressure means gate ``fail`` or any true 60Hz miss (``over_16_7ms > 0``).
+    A lone ``over_8_3ms`` count with gate ``pass`` is not treated as jank —
+    repo budgets already use 8.3ms as the p90 ceiling at gate time.
     """
     steps: list[str] = []
     over_16 = int(frame.get("over_16_7ms") or 0)
     over_8 = int(frame.get("over_8_3ms") or 0)
     count = int(frame.get("count") or 0)
+    pressure = gate_outcome == "fail" or over_16 > 0
 
-    if gate_outcome == "fail" or over_16 > 0 or over_8 > 0:
+    if gate_outcome == "report_only":
+        steps.append(
+            "Gate is report-only (baseline variance too high) — "
+            "recapture 3 stable runs before claiming pass/fail or changing code."
+        )
+        steps.append(
+            "Automated gate uses tool/perf_budgets.json "
+            "(p90≤8.3ms, p99≤16.7ms); UI vs Raster still needs profile DevTools."
+        )
+    elif pressure:
         steps.append(
             "Frame-budget pressure detected — jank is a symptom; "
             "do not change code until UI vs Raster (or limiting span) is identified."
         )
+        if gate_outcome == "fail" and over_16 == 0:
+            steps.append(
+                "Gate failed on budget thresholds (often p90>8.3ms) even with "
+                "zero >16.7ms frames — still identify the limiting work before patching."
+            )
         steps.append(
             "Reproduce the same interaction in profile mode: "
-            "cd apps/mobile && flutter run --profile"
+            "cd apps/mobile && flutter run --profile "
+            "(iOS Simulator often cannot run --profile; use a physical device "
+            "for final accept)."
         )
         steps.append(
             "DevTools Performance: select a red frame; compare UI vs Raster; "
@@ -403,8 +424,10 @@ def triage_next_steps(
         )
     else:
         steps.append(
-            "No frame-budget miss in this artifact — treat Pipeline* spikes as "
-            "noise unless they coincide with >8.3ms / >16.7ms Frame counts."
+            "No frame-budget pressure in this artifact "
+            f"(gate={gate_outcome}, >16.7ms={over_16}, >8.3ms={over_8}) — "
+            "treat Pipeline* spikes as noise unless they coincide with gate fail "
+            "or >16.7ms Frame counts."
         )
 
     names: list[str] = []

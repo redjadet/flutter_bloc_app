@@ -51,4 +51,6 @@ Pointers: [`agent_knowledge_base.md`](agent_knowledge_base.md) (traps, finish ga
 
 **Async list builders:** snapshot list at build start; `itemCount` from snapshot; guard stale indexes; header rows (`length + 1`, `index - 1`) highest risk — never index live Cubit/BLoC lists mid-refresh.
 
+**Reported jank / stutter:** do not patch from intuition. Run `bash tool/triage_jank.sh`, measure in profile mode (or analyze a `perf_report_data_*.json` with `--triage`), identify UI vs Raster / limiting span, then one change and remeasure. Canon: [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md); checklist: [`review/performance_checklist.md`](review/performance_checklist.md).
+
 **Hive schema migrations:** shape changes → [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) + manifest, fingerprints, migrator/tests. Review idempotency, failed fingerprint behavior, watch/meta noise, temp-key cleanup, salvage. Generator is manifest-driven.
