@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
@@ -16,6 +18,11 @@ class ProfileHeader extends StatelessWidget {
         : context.isTabletOrLarger
         ? 144.0
         : 128.0;
+    // The source is 800x533. BoxFit.cover fills the circle by its height.
+    final int avatarDecodeHeight = math.min(
+      533,
+      (avatarSize * MediaQuery.devicePixelRatioOf(context)).ceil(),
+    );
 
     // Font sizes - keeping Figma design but scaling responsively
     const baseNameFontSize = 36.0;
@@ -62,6 +69,7 @@ class ProfileHeader extends StatelessWidget {
               'assets/images/profile_avatar.jpg',
               width: avatarSize,
               height: avatarSize,
+              cacheHeight: avatarDecodeHeight,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 final theme = Theme.of(context);
