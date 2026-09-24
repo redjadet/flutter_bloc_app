@@ -7,6 +7,9 @@ that.
 
 ## Index
 
+- [`2026-09-24_authority_phase_3_reliability_observability.md`](2026-09-24_authority_phase_3_reliability_observability.md): Phase 3 — Sentry no-go ADR 0008, sync diagnostics ADR 0009, role/claims defer, sanitized SAFETY-REPORT sample, perf fixture gate; W12 deferred.
+- [`2026-09-24_role_claims_iam_defer.md`](2026-09-24_role_claims_iam_defer.md): AUTH-D03 role/claims IAM spike-or-defer for authority Phase 3.
+- [`2026-09-24_authority_phase_2_platforms_teaching_pack.md`](2026-09-24_authority_phase_2_platforms_teaching_pack.md): Phase 2 native platforms teaching pack + fidelity matrices.
 - [`2026-09-24_authority_phase_0_evidence_baseline.md`](2026-09-24_authority_phase_0_evidence_baseline.md): Phase 0A scorecard/harness/checklist baseline + claim ledger (SHA `77150a6d`).
 - [`2026-09-24_authority_phase_0_1_delivery.md`](2026-09-24_authority_phase_0_1_delivery.md): Phase 0–1 thesis, Archive tags, HITL map, contracts, auth matrix.
 - [`2026-09-24_cubit_failure_migration.md`](2026-09-24_cubit_failure_migration.md): Finish CubitFailure/onFailure migration; optional onError; maps/todo use `failure.appError`.

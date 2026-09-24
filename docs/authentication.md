@@ -161,7 +161,7 @@ delivery; do not implement without the unblock criteria below:
 | --- | --- | --- |
 | [AUTH-D01](#auth-d01-render-fastapi-coordinator-hook) | Render FastAPI coordinator hook | Global `invalidateSession` on persistent Render orchestration 401 after refresh — only if repro + product require it |
 | [AUTH-D02](#auth-d02-registerpage-backend) | `RegisterPage` backend | Keep UI-only; real signup stays FirebaseUI / Supabase |
-| [AUTH-D03](#auth-d03-roleclaims-authorization) | Role/claims authorization | Blocked on ADR (claims source of truth) before role-aware `AppRoutePolicies` |
+| [AUTH-D03](#auth-d03-roleclaims-authorization) | Role/claims authorization | Deferred — [spike note](changes/2026-09-24_role_claims_iam_defer.md); claims source of truth ADR required before role-aware `AppRoutePolicies` |
 | [AUTH-D04](#auth-d04-auth_injection_failed-extra-flag) | `auth_injection_failed` extra | Dio `extra` flag when token injection fails pre-flight — deferred until a caller needs it |
 
 #### AUTH-D01: Render FastAPI coordinator hook
@@ -175,6 +175,8 @@ Keep registration UI-only; real signup stays FirebaseUI / Supabase Auth.
 
 #### AUTH-D03: Role/claims authorization
 
+**Deferred** for this authority window — see
+[`changes/2026-09-24_role_claims_iam_defer.md`](changes/2026-09-24_role_claims_iam_defer.md).
 Blocked on an ADR for claims source of truth before role-aware
 `AppRoutePolicies`.
 
@@ -190,7 +192,7 @@ caller needs to distinguish injection failure from an absent user.
 
 ## Roles/claims (design note)
 
-Role-based access is not implemented yet. This is **[AUTH-D03](#auth-d03-roleclaims-authorization)** — deferred until an ADR exists. Before adding role-restricted routes, decide a source of truth that can be resolved without introducing async router redirects or startup race conditions:
+Role-based access is not implemented yet. This is **[AUTH-D03](#auth-d03-roleclaims-authorization)** — deferred until an ADR exists ([spike note](changes/2026-09-24_role_claims_iam_defer.md)). Before adding role-restricted routes, decide a source of truth that can be resolved without introducing async router redirects or startup race conditions:
 
 - **Firebase custom claims** (authoritative, but requires claim refresh and a safe access path)
 - **Profile field** (app-controlled, but needs persistence + sync semantics)
