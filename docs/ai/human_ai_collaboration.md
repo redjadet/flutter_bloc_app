@@ -16,6 +16,7 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 4. [`aidlc_workflow.md`](aidlc_workflow.md) — approve / continue  
 5. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
 6. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop  
+7. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample SAFETY-REPORT shape (fiction)  
 
 Memory (≤2 clicks from README via this map):
 
@@ -31,7 +32,7 @@ Memory (≤2 clicks from README via this map):
 | Feature implementation (reversible) | Human approves intent | Implement inside agreed write-set | Broaden scope silently | Focused tests + finish gate |
 | Secrets / provider keys | Human | Point at docs | Put keys in Flutter artifacts / commit | [`security_and_secrets.md`](../security_and_secrets.md) |
 | Release / store publish / production deploy | Human | Prepare dry-run evidence | Ship or rotate production secrets | Deployment + dry-run workflow |
-| Production auth / IAM design | Human | Document options | Ship role/claims without spike | Spike note / ADR |
+| Production auth / IAM design | Human | Document options | Ship role/claims without spike | [Spike note](../changes/2026-09-24_role_claims_iam_defer.md) / ADR |
 | Destructive / external side effects | Human same-turn approval | List targets + rollback (SAFETY-02) | Run unapproved | Session log / SAFETY-REPORT |
 | Git push / PR when policy requires human | Human | Draft locally | Push/PR against policy | Branch + PR template |
 | Validation lane choice | Shared | Run narrowest lane | Claim full green without commands | Checklist / scorecard output |
@@ -42,10 +43,10 @@ Memory (≤2 clicks from README via this map):
 | Invariant | Human-only? | Notes |
 | --- | --- | --- |
 | Release / store publishing | Yes | Dry-run ≠ publish |
-| Production deploy / Render dual-target decisions | Yes | Deferred Phase 3+/W12 |
+| Production deploy / Render dual-target decisions | Yes | Deferred **W12** (not Phase 3 deliverable) |
 | Secret rotation & provider API keys | Yes | Never in client artifacts |
 | Architecture forks with high blast radius | Yes | ADR required |
-| Production auth / role-claims IAM | Yes | Defer until product need |
+| Production auth / role-claims IAM | Yes | Defer — [spike note](../changes/2026-09-24_role_claims_iam_defer.md) |
 | Accepting residual security risk | Yes | SAFETY contracts |
 
 ## Composition / DI rule (restated)

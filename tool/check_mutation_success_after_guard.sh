@@ -27,15 +27,15 @@ EOF
 }
 
 collect_staged_lib_dart() {
+  # Bash 3.2 has no `local -n`; fill shared array instead of nameref.
   local file
-  local -n out_ref="$1"
-  out_ref=()
+  _MUTATION_GUARD_STAGED_LIB=()
   while IFS= read -r file; do
     [ -z "$file" ] && continue
     case "$file" in
-      lib/*.dart)
+      lib/*.dart|apps/mobile/lib/*.dart)
         if [ -f "$file" ]; then
-          out_ref+=("$file")
+          _MUTATION_GUARD_STAGED_LIB+=("$file")
         fi
         ;;
     esac
@@ -49,6 +49,7 @@ staged_triggers_full_lib_scan() {
     case "$file" in
       lib/shared/utils/request_id_guard.dart|\
       packages/utilities/lib/src/request_id_guard.dart|\
+      apps/mobile/lib/shared/utils/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh|\
       tool/fixtures/mutation_success_after_guard/*)
         return 0
@@ -64,8 +65,10 @@ staged_has_relevant_changes() {
     [ -z "$file" ] && continue
     case "$file" in
       lib/*.dart|\
+      apps/mobile/lib/*.dart|\
       lib/shared/utils/request_id_guard.dart|\
       packages/utilities/lib/src/request_id_guard.dart|\
+      apps/mobile/lib/shared/utils/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh|\
       tool/fixtures/mutation_success_after_guard/*)
         return 0
@@ -76,22 +79,25 @@ staged_has_relevant_changes() {
 }
 
 resolve_staged_scan_paths() {
-  local -a staged_lib=()
-  collect_staged_lib_dart staged_lib
+  collect_staged_lib_dart
 
   if ! staged_has_relevant_changes; then
     echo "ℹ️  No staged lib/guard paths; skipping mutation-success guard"
     exit 0
   fi
 
-  if staged_triggers_full_lib_scan || [ "${#staged_lib[@]}" -eq 0 ]; then
+  if staged_triggers_full_lib_scan || [ "${#_MUTATION_GUARD_STAGED_LIB[@]}" -eq 0 ]; then
     echo "ℹ️  Staged guard-wide change; scanning lib/"
-    SCAN_PATHS=("lib")
+    if [ -d apps/mobile/lib ]; then
+      SCAN_PATHS=("apps/mobile/lib")
+    else
+      SCAN_PATHS=("lib")
+    fi
     return 0
   fi
 
-  echo "ℹ️  Staged lib Dart files: ${#staged_lib[@]}"
-  SCAN_PATHS=("${staged_lib[@]}")
+  echo "ℹ️  Staged lib Dart files: ${#_MUTATION_GUARD_STAGED_LIB[@]}"
+  SCAN_PATHS=("${_MUTATION_GUARD_STAGED_LIB[@]}")
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

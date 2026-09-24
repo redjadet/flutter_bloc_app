@@ -43,7 +43,13 @@ Post-ship triage loop: [crashlytics_triage_runbook.md](observability/crashlytics
 
 ## Sentry + Crashlytics (plan: dual-stack, single “source of truth”)
 
-Sentry is **not** installed or initialized today. If added, the plan is to run it **alongside Crashlytics** for a period, with an explicit division of responsibilities:
+**Phase 3 decision:** [ADR 0008](adr/0008-sentry-go-no-go.md) — **no-go** for
+shipping Sentry this window. Remain **Crashlytics-first**. The dual-stack plan
+below is **aspirational / not implemented** — do not claim Sentry as shipped.
+
+Sentry is **not** installed or initialized today. If added later (superseding
+ADR 0008), the plan is to run it **alongside Crashlytics** for a period, with
+an explicit division of responsibilities:
 
 - **Crashlytics**: canonical crash reporting for Firebase-enabled builds (fatals, ANR equivalent surfaces, basic crash aggregation).
 - **Sentry**: error monitoring + richer context (breadcrumbs, tracing/performance, release health, device/user segmentation) where it provides clear value.

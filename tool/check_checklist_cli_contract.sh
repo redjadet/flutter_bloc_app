@@ -129,8 +129,15 @@ assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|allow_
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "changed_files|"
 assert_contains explain_no_reuse "$tmp_dir/explain_no_reuse.out" "explain|auto_route|coverage|"
 
+# Fixture routing asserts need worktree changed-file detection (includes
+# untracked fixtures). CI PR mode only diffs merge-base...HEAD and would miss
+# the temp files — unset CI/event vars for these explain runs only.
+# shellcheck disable=SC2086
+checklist_fixture_env=(env -u CI -u GITHUB_EVENT_NAME -u GITHUB_BASE_REF -u GITHUB_REF)
+
 printf 'route fixture\n' >"$ai_route_fixture"
-run_ok explain_ai_snapshot_path ./bin/checklist-fast --explain --print-changed --no-reuse
+run_ok explain_ai_snapshot_path "${checklist_fixture_env[@]}" \
+  ./bin/checklist-fast --explain --print-changed --no-reuse
 assert_contains explain_ai_snapshot_path "$tmp_dir/explain_ai_snapshot_path.out" \
   "changed_files|path|$ai_route_fixture"
 assert_contains explain_ai_snapshot_path "$tmp_dir/explain_ai_snapshot_path.out" \
@@ -141,7 +148,8 @@ printf 'route fixture\n' >"$mix_route_fixture"
 printf 'route fixture\n' >"$todo_route_fixture"
 printf 'route fixture\n' >"$action_route_fixture"
 printf 'route fixture\n' >"$regression_route_fixture"
-run_ok explain_melos_app_path ./bin/checklist-fast --explain --print-changed --no-reuse
+run_ok explain_melos_app_path "${checklist_fixture_env[@]}" \
+  ./bin/checklist-fast --explain --print-changed --no-reuse
 assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
   "changed_files|path|$todo_route_fixture"
 assert_contains explain_melos_app_path "$tmp_dir/explain_melos_app_path.out" \
@@ -157,7 +165,8 @@ rm -f "$mix_route_fixture" "$todo_route_fixture" "$action_route_fixture" "$regre
 # Non-Dart Melos paths must still select analyze/coverage after apps/mobile/ strip.
 printf 'route fixture\n' >"$arb_route_fixture"
 printf 'route fixture\n' >"$android_route_fixture"
-run_ok explain_melos_non_dart ./bin/checklist-fast --explain --print-changed --no-reuse
+run_ok explain_melos_non_dart "${checklist_fixture_env[@]}" \
+  ./bin/checklist-fast --explain --print-changed --no-reuse
 assert_contains explain_melos_non_dart "$tmp_dir/explain_melos_non_dart.out" \
   "changed_files|path|$arb_route_fixture"
 assert_contains explain_melos_non_dart "$tmp_dir/explain_melos_non_dart.out" \
