@@ -7,6 +7,13 @@ linked source-of-truth documents.
 
 For the complete docs index, see [docs index](README.md).
 
+When working with an AI agent, start with the
+[human–AI work loop](engineering/critical_human_skills.md#humanai-work-loop-for-one-change):
+define the user outcome and expected edge cases, supply repo-specific context,
+review the full diff and tests, then verify the result. Use
+[Best Areas for AI Agents](ai/best_areas_for_ai_agents.md) to choose bounded
+agent tasks; keep the agreed behavior in a repository brief or change note.
+
 ## Quickstart (first 30 minutes)
 
 ### Toolchain

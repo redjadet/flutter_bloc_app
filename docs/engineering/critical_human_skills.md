@@ -16,6 +16,44 @@ Use this guide to make critical engineering skills observable in briefs, design
 records, reviews, tests, and operational evidence. It synthesizes the practices;
 linked owner documents remain authoritative for detailed repository rules.
 
+## Human–AI work loop for one change
+
+Use agent speed to spend more time on the user problem and on evidence. A prompt
+starts the work; it is not the durable specification. Keep agreed behavior in
+the [feature brief](FEATURE_TEMPLATE.md), a change note, or the relevant owner
+document so the next developer can work without the chat transcript.
+
+| Stage | Human developer action | Artifact or decision |
+| --- | --- | --- |
+| Before generation | Observe current behavior and confirm a change is worth shipping; name the user, desired outcome, non-goals, protected invariant, and who decides unresolved product choices. Include relevant device, network, accessibility, privacy, and support context that the agent cannot infer from code. | Brief with examples and expected results defined independently of generated code. |
+| Delegate | Point the agent at current owner docs and code. Bound paths and actions. Ask it to inspect first, expose assumptions and options, then make the smallest change that meets the agreed contract. | Scoped request and reviewable plan; human chooses architecture and state/data ownership and resolves materially different interpretations. |
+| While the agent works | Trace the real user journey and look for counterexamples: interrupted network, repeated taps, lifecycle changes, slow responses, denied permissions, and recovery. Decide expected behavior and feed missing facts back into the task. | Risk-ranked examples and decisions, rather than more generated code. |
+| Review the result | Read every changed file and changed test; trace callers and state/data ownership beyond the diff. Challenge clean-looking code, extra abstractions, weakened assertions, and assumptions about users or platforms. | Findings against the [review playbook](../review/code_review_playbook.md), including a reason to keep each new surface. |
+| Verify and hand off | Run proof chosen from the contract and [validation routing](validation_routing_fast_vs_full.md); inspect results and relevant runtime behavior. Record what remains unproven, failure signals, recovery, and the human decision. | Exact evidence and a discoverable [decision note](../git_and_branching_strategy.md) for consequential changes. |
+
+Use this short request card before a non-trivial AI-assisted edit:
+
+```text
+User and outcome:
+Current behavior and source evidence:
+Must remain true (and one violating example):
+Real-world constraints (users, devices, network, accessibility, privacy):
+Expected results for normal, repeated, interrupted, and recovery paths:
+Architecture owner and state/data source of truth:
+Write boundary and non-goals:
+Open product decision and human owner:
+Proof: focused tests, relevant validation commands, manual scenario:
+Agent task: inspect current code and owner docs; list assumptions and options;
+make the smallest in-scope change; report diff, proof, and remaining risks.
+```
+
+Tailor cases to the change. For offline sync, the
+[adoption guide](../offline_first/adoption_guide.md) requires proof that older
+remote data cannot replace newer local state and stale queued replay cannot
+replace newer remote state. For UI work, exercise the actual loading, error,
+repeat-action, and lifecycle paths on relevant form factors. If expected
+behavior is still disputed, settle that decision before accepting code or tests.
+
 ## Shared evidence standard
 
 A skill is demonstrated by a decision and its evidence, not by naming a tool or

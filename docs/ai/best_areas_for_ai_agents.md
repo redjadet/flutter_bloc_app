@@ -11,6 +11,9 @@ This guide defines where agents fit well in this repository. It links existing
 owner documents instead of replacing their detailed procedures. Complementary
 human skills (including restraint and deletion judgment):
 [Critical Human Engineering Skills](../engineering/critical_human_skills.md).
+For a single AI-assisted change, use its
+[human–AI work loop](../engineering/critical_human_skills.md#humanai-work-loop-for-one-change)
+to brief, challenge, review, and verify the result.
 
 ## Good-fit contract
 

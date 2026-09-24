@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-24_human_ai_developer_work_loop.md`](2026-09-24_human_ai_developer_work_loop.md): Human-facing AI work loop, reusable request card, and onboarding link grounded in the Stackademic article.
 - [`2026-09-23_eight_code_smells_harden.md`](2026-09-23_eight_code_smells_harden.md): CubitFailure/onFailure, staff push Result, credential policy, RealtimeSyncTrigger, related smell hardenings.
 - [`2026-09-23_ai_verification_loop.md`](2026-09-23_ai_verification_loop.md): Define behavior before generated code; add adversarial/property proof and full-diff/test/PR-head review prompts.
 - [`2026-09-23_finding_jank_cause.md`](2026-09-23_finding_jank_cause.md): Jank is a symptom — DevTools/profile triage canon + `tool/triage_jank.sh` / analyze `--triage`.
