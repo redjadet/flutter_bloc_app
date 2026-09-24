@@ -28,7 +28,31 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - name: Checkout repository for change scope
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      - name: Determine documentation-only scope
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          docs_only="$(./bin/checklist --print-scope)"
+          case "$docs_only" in
+            docs_only=true|docs_only=false) ;;
+            *) echo "Invalid checklist scope: $docs_only" >&2; exit 1 ;;
+          esac
+          echo "$docs_only" >> "$GITHUB_OUTPUT"
+
   analyze:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
