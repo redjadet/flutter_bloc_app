@@ -25,14 +25,9 @@ Claim honesty: every public score/count above is tied to the dated ledger in
 
 ### HITL visitor landing (first five minutes)
 
-If you are evaluating how humans and AI agents work here:
-
-1. Start at [`AGENTS.md`](AGENTS.md) (map only).
-2. Read the [Collaboration map](docs/ai/human_ai_collaboration.md) — who decides, what agents may do, what requires a human.
-3. Safety contracts: [`docs/agent_kb/agent_safety_contracts.md`](docs/agent_kb/agent_safety_contracts.md).
-4. Lifecycle: [`docs/ai/aidlc_workflow.md`](docs/ai/aidlc_workflow.md).
-5. Finish / proof: [`docs/agent_kb/legibility_and_finish_gate.md`](docs/agent_kb/legibility_and_finish_gate.md).
-6. Human skills + request card: [`docs/engineering/critical_human_skills.md`](docs/engineering/critical_human_skills.md).
+Canonical path (AGENTS → ownership → safety → AIDLC → finish gate → request
+card): [Collaboration map](docs/ai/human_ai_collaboration.md). Do not mirror
+that sequence here.
 
 | Goal | Start here |
 | --- | --- |
