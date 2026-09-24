@@ -17,16 +17,21 @@ See plan Non-goals. Highlights:
 - No first-class Linux/Windows consumer desktop.
 - No full role/claims IAM.
 - No home-screen widgets or background-OS product without Archive swap.
-- No `docs/platforms/*` teaching pack (Phase 2).
 - No FastAPI/Render dual-deploy hardening (Phase 3+/W12).
 - No public ≤15 min architecture tour (Phase 4).
 - No migrate-every-Depth-to-gold; no Hive → Isar/Drift.
 
-## Deferred Phase 2–4 (do not start without a new plan slice)
+## Phase 2 (opened)
+
+Teaching pack shipped under [`platforms/README.md`](platforms/README.md)
+(capability + fidelity matrices, iOS/Android notes, typed stub statuses,
+adaptive chrome pointer). Background OS demo and home-screen widgets remain
+**non-goals** unless Archive swap + ADR.
+
+## Deferred Phase 3–4 (do not start without a new plan slice)
 
 | Phase | Deferred work |
 | --- | --- |
-| 2 | Native capability / fidelity matrices; `docs/platforms/{README,ios,android,native_interop}.md`; typed web/desktop stub failures; adaptive spine UI; background demo only with Archive swap |
 | 3 | Sync diagnostics decision; measured spine perf; Sentry go/no-go; role/claims spike; sanitized AIDLC sample; FastAPI/Render ops (W12) |
 | 4 | Public architecture tour; Contributing Spine-first + HITL expectations; keep `llms.txt` + CODEMAP accurate |
 

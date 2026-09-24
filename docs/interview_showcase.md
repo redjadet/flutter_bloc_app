@@ -13,6 +13,7 @@ authority pillars** (always four — never collapse the narrative):
 Claims cite the Phase 0A ledger:
 [`changes/2026-09-24_authority_phase_0_evidence_baseline.md`](changes/2026-09-24_authority_phase_0_evidence_baseline.md).
 Visitor HITL path: [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md).
+Native teaching pack: [`platforms/README.md`](platforms/README.md).
 Feature tiers (Spine / Depth / Archive): [`feature_overview.md`](feature_overview.md).
 
 For a **mobile SaaS** interview or technical screen, use this doc as a
