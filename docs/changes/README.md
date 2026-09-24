@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-24_authority_phase_4_architecture_tour.md`](2026-09-24_authority_phase_4_architecture_tour.md): Phase 4 — ≤15 min architecture tour, Contributing Spine-first + HITL, llms.txt/CODEMAP links.
 - [`2026-09-24_authority_phase_3_reliability_observability.md`](2026-09-24_authority_phase_3_reliability_observability.md): Phase 3 — Sentry no-go ADR 0008, sync diagnostics ADR 0009, role/claims defer, sanitized SAFETY-REPORT sample, perf fixture gate; W12 deferred.
 - [`2026-09-24_role_claims_iam_defer.md`](2026-09-24_role_claims_iam_defer.md): AUTH-D03 role/claims IAM spike-or-defer for authority Phase 3.
 - [`2026-09-24_authority_phase_2_platforms_teaching_pack.md`](2026-09-24_authority_phase_2_platforms_teaching_pack.md): Phase 2 native platforms teaching pack + fidelity matrices.
