@@ -3,7 +3,7 @@
 **Audience:** Visitors, new developers, and reviewers who need HITL ownership
 without reading the entire agent harness.  
 **Date:** 2026-09-24  
-**Thesis / evidence:** README Authority Thesis;
+**Pillars / evidence:** README [Four pillars](../../README.md#four-pillars);
 [`../changes/2026-09-24_authority_phase_0_evidence_baseline.md`](../changes/2026-09-24_authority_phase_0_evidence_baseline.md).
 
 This is an **index**, not a parallel rule book. Prefer the linked owners.

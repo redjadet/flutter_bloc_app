@@ -1,9 +1,9 @@
 # Platforms teaching pack
 
 **Audience:** Interviewers and engineers learning how this portfolio exercises
-native iOS/Android interop without claiming every host API.  
-**Date:** 2026-09-24  
-**Pillar:** Native iOS & Android interop (Authority Thesis #3).  
+native iOS/Android interop without claiming every host API.
+**Date:** 2026-09-24
+**Pillar:** Native iOS & Android interop (Four pillars #3).
 **Claim ledger:** [`../changes/2026-09-24_authority_phase_0_evidence_baseline.md`](../changes/2026-09-24_authority_phase_0_evidence_baseline.md).
 
 This folder is the **canonical teaching home** for platform fidelity. Runnable
@@ -50,7 +50,7 @@ Statuses come from `NativeInteropStatus` / telemetry / security enums
 | PlatformView banner | Live | Live | Not registered | Placeholder | Not registered |
 
 Contract for telemetry:
-[`../performance/native_event_channel_telemetry.md`](../performance/native_event_channel_telemetry.md).  
+[`../performance/native_event_channel_telemetry.md`](../performance/native_event_channel_telemetry.md).
 Rust FFI (separate demo):
 [`../architecture/rust_ffi_secure_core_bridge.md`](../architecture/rust_ffi_secure_core_bridge.md).
 

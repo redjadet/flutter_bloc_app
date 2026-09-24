@@ -157,17 +157,23 @@ Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.
 
 ## Portfolio reading path
 
-For a fast technical review, read these first:
+Cold-visitor route for the **four pillars** (matches the goal table above):
 
-1. [Interview showcase](docs/interview_showcase.md) — 30-minute spine (§3) plus
-   [§3b 12-minute production ownership](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough);
-   honest shipped-vs-planned boundaries.
-2. [System design showcase](docs/features/system_design_showcase.md) — architecture,
-   operations, security, and proof paths.
-3. [Architecture](docs/architecture.md) and [Modularity](docs/modularity.md) —
-   boundary rules and enforcement scripts.
-4. [Testing overview](docs/testing_overview.md) and
-   [Validation scripts](docs/validation_scripts.md) — how changes are verified.
+1. [Human–AI collaboration map](docs/ai/human_ai_collaboration.md) — HITL
+   ownership without the full agent harness.
+2. [Platforms teaching pack](docs/platforms/README.md) — native capability /
+   fidelity matrices (Live vs Catalog vs Non-goal).
+3. [Architecture tour (≤15 min)](docs/architecture_tour.md) — timed open
+   targets for each pillar.
+
+Optional (interview / deep dive — not the first click):
+
+- [Interview showcase](docs/interview_showcase.md) — 30-minute spine (§3) plus
+  [§3b 12-minute production ownership](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough).
+- [System design showcase](docs/features/system_design_showcase.md) —
+  architecture, operations, security, and proof paths.
+- [Architecture](docs/architecture.md) / [Modularity](docs/modularity.md) /
+  [Testing overview](docs/testing_overview.md) — boundary rules and verification.
 
 ## Documentation
 
