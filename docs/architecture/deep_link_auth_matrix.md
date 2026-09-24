@@ -36,5 +36,10 @@ cd apps/mobile
 flutter test test/app/router/app_route_auth_gate_test.dart test/app/router/auth_redirect_test.dart
 ```
 
+The widget tests exercise `/profile` redirect and public `/settings` with a
+test router. Policy tests check the remaining requirements; they do not mount
+each production route. Verify each policy is wired to its route or shell when
+changing route composition.
+
 Adding a gated route: extend `AppRoutePolicies`, wrap the page with
 `AppRouteAuthGate`, add a matrix row + policy unit test.
