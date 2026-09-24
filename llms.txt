@@ -12,11 +12,14 @@
 - CODEMAP.md
 - docs/ai/repo_map.md
 - docs/agents_quick_reference.md
+- docs/architecture_tour.md (≤15 min four-pillar public tour)
 
 ## Canon vs evidence
 
 - Behavior canon: docs/
 - Dated evidence: ai/reports/ (check generated_at + git_head)
+- Authority scope: docs/authority_scope_register.md
+- HITL map: docs/ai/human_ai_collaboration.md
 
 ## Validation router
 
@@ -24,8 +27,11 @@
 - Full: ./bin/checklist
 - Feature: ./bin/router_feature_validate
 
-- Additional pointers
+## Additional pointers
+
 - docs/agent_knowledge_base.md
 - docs/agent_project_context.md
 - docs/ai_code_review_protocol.md
 - docs/CODE_QUALITY.md (Dart 3.13 primary constructors)
+- docs/contributing/contributing.md (Spine-first + HITL review)
+- docs/platforms/README.md (native teaching pack)

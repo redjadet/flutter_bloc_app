@@ -27,6 +27,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Choose high-value AI-agent work | [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) |
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
+| ≤15 min architecture tour | [`architecture_tour.md`](architecture_tour.md) |
 | Flutter fundamentals + production Q&A | [`engineering/flutter_fundamentals_and_production_practices.md`](engineering/flutter_fundamentals_and_production_practices.md) — widgets/state, offline, perf, structure, crash triage with this-repo stories |
 
 ## Browse by folder

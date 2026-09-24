@@ -24,8 +24,10 @@ Evidence ledger: [`docs/changes/`](docs/changes/README.md).
 | Goal | Start here |
 | --- | --- |
 | Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
+| ≤15 min architecture tour | [Architecture tour](docs/architecture_tour.md) |
 | Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
 | Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
+| Contribute (Spine-first + HITL) | [Contributing](docs/contributing/contributing.md) |
 | Develop critical human engineering skills | [Critical human skills](docs/engineering/critical_human_skills.md) |
 | Work with an AI agent | [AGENTS.md](AGENTS.md), [Collaboration map](docs/ai/human_ai_collaboration.md) |
 
