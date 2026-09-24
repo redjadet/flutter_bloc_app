@@ -131,7 +131,8 @@ cleanup_auto_maintain_fixture() {
 }
 trap cleanup_auto_maintain_fixture EXIT
 printf 'See `docs/agents_quick_reference.md`.\n' >"$fixture_path"
-bash tool/agent_memory_auto_maintain.sh --if-changed >/dev/null
+# --if-changed skips mutation when CI=1; unset for this local-behavior fixture.
+env -u CI bash tool/agent_memory_auto_maintain.sh --if-changed >/dev/null
 grep -qF '[`agents_quick_reference.md`](../agents_quick_reference.md)' "$fixture_path"
 cleanup_auto_maintain_fixture
 trap - EXIT

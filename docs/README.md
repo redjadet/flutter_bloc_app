@@ -23,6 +23,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); AIDLC [`ai/aidlc_workflow.md`](ai/aidlc_workflow.md); overview [`ai-workflow.md`](ai-workflow.md) |
 | Human–AI collaboration map | [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md) |
 | Authority scope / Archive | [`authority_scope_register.md`](authority_scope_register.md), [`feature_overview.md`](feature_overview.md) |
+| Native platforms teaching pack | [`platforms/README.md`](platforms/README.md) |
 | Choose high-value AI-agent work | [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) |
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
@@ -47,6 +48,7 @@ root when an existing category applies.
 | [ai/](ai/README.md) | Coding-agent operations and governance |
 | [contributing/](contributing/README.md) | Contributor guide, FAQ, PR checklist |
 | [offline_first/](offline_first/README.md) | Local-first storage, conflict, and sync guidance |
+| [platforms/](platforms/README.md) | Native capability/fidelity matrices; iOS/Android/interop teaching |
 | [validation_scripts/](validation_scripts/README.md) | Validation catalog, procedures, and targeted guides |
 | [plans/](plans/README.md) / [changes/](changes/README.md) / [audits/](audits/README.md) | Local (gitignored) working plans + shipped changes + historical audits |
 

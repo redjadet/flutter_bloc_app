@@ -1,6 +1,11 @@
 # Native Platform Showcase
 
-Educational demo that explains how Flutter apps integrate with each host platform. The page loads a static capability catalog **and** runs live interop demos:
+Educational demo that explains how Flutter apps integrate with each host platform. The page loads a static capability catalog **and** runs live interop demos.
+
+**Teaching pack** (capability/fidelity matrices, iOS/Android notes, typed stub
+statuses): [`docs/platforms/README.md`](../../../../../docs/platforms/README.md).
+Keep channel contracts and architecture on **this** page; keep OS teaching
+tables in `docs/platforms/`.
 
 | Bridge | Mechanism | Host code |
 | --- | --- | --- |

@@ -15,7 +15,7 @@ collapse the story to “three pillars” or to Flutter-only demos:
 | --- | --- | --- | --- |
 | 1 | **Flutter / Cubit / Clean Architecture** | Feature modules, sealed/explicit state, gated modularity | Engineering **10/10** gate; ~57 Cubits; [`feature_overview.md`](docs/feature_overview.md) Spine tags |
 | 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants in [`offline_first/authority_invariants.md`](docs/offline_first/authority_invariants.md) |
-| 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI (teachable later) | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); Rust FFI secure messaging. Unified `docs/platforms/*` teaching pack is **Phase 2** (not claimed shipped). |
+| 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); teaching pack [`docs/platforms/`](docs/platforms/README.md); Rust FFI secure messaging |
 | 4 | **Human–AI HITL** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
 
 Claim honesty: every public score/count above is tied to the dated ledger in
@@ -110,27 +110,21 @@ Interview / production-ownership walk: see
 
 ## Native Android and iOS engineering
 
-The native showcase is a runnable feature, not a platform-API claim. It keeps
-Flutter-facing contracts behind Clean Architecture ports while exercising
-Android and iOS implementation details directly.
+Runnable showcase behind Clean Architecture ports — not a claim that every host
+API is wrapped. **Teaching pack** (matrices, iOS/Android notes, typed stub
+statuses): [`docs/platforms/README.md`](docs/platforms/README.md). **Feature
+architecture:**
+[`apps/mobile/lib/features/native_platform_showcase/README.md`](apps/mobile/lib/features/native_platform_showcase/README.md).
 
-| Area | Android evidence | iOS evidence | Flutter boundary |
+| Area | Android | iOS | Flutter boundary |
 | --- | --- | --- | --- |
-| Host-language calls | [Kotlin `MethodChannel`](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt) | [Swift `MethodChannel`](apps/mobile/ios/Runner/AppDelegate.swift) | [host-language service](apps/mobile/lib/features/native_platform_showcase/data/method_channel_native_showcase_host_language_service.dart) |
-| High-rate native telemetry | [HandlerThread aggregation and cancellation](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseTelemetryStreamHandler.kt) | [DispatchQueue timers and cancellation](apps/mobile/ios/Runner/NativeShowcaseTelemetryStreamHandler.swift) | [bounded `EventChannel` adapter](apps/mobile/lib/features/native_platform_showcase/data/event_channel_native_showcase_telemetry_service.dart) |
-| C/C++ interop | [CMake native library wiring](apps/mobile/android/app/src/main/cpp/CMakeLists.txt) | [exported Swift FFI symbols](apps/mobile/ios/Runner/NativeShowcaseBridge.swift) | [FFI adapter](apps/mobile/lib/features/native_platform_showcase/data/ffi_native_showcase_native_code_service.dart) |
-| Native UI and system actions | [Android platform-view factory](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseBannerPlatformView.kt) | [UIKit platform view, haptic, and share sheet](apps/mobile/ios/Runner/NativeShowcaseBannerPlatformView.swift) | [showcase feature](apps/mobile/lib/features/native_platform_showcase/) |
-
-The telemetry example samples at 60 Hz, aggregates off the UI thread, emits at
-4 Hz, and tears down native work when Flutter cancels the stream. Focused
-contract, Cubit, and widget coverage lives in
-[`apps/mobile/test/features/native_platform_showcase/`](apps/mobile/test/features/native_platform_showcase/).
+| Host language | [Kotlin](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt) | [Swift](apps/mobile/ios/Runner/AppDelegate.swift) | [host-language service](apps/mobile/lib/features/native_platform_showcase/data/method_channel_native_showcase_host_language_service.dart) |
+| Telemetry | [HandlerThread stream](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseTelemetryStreamHandler.kt) | [DispatchQueue stream](apps/mobile/ios/Runner/NativeShowcaseTelemetryStreamHandler.swift) | [EventChannel adapter](apps/mobile/lib/features/native_platform_showcase/data/event_channel_native_showcase_telemetry_service.dart) |
+| FFI | [CMake](apps/mobile/android/app/src/main/cpp/CMakeLists.txt) | [Swift `@_cdecl`](apps/mobile/ios/Runner/NativeShowcaseBridge.swift) | [FFI adapter](apps/mobile/lib/features/native_platform_showcase/data/ffi_native_showcase_native_code_service.dart) |
+| PlatformView / system UI | [Banner factory](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseBannerPlatformView.kt) | [UiKitView + haptic/share](apps/mobile/ios/Runner/NativeShowcaseBannerPlatformView.swift) | [showcase feature](apps/mobile/lib/features/native_platform_showcase/) |
 
 ```bash
-cd apps/mobile
-flutter test test/features/native_platform_showcase
-flutter build apk --debug --no-pub
-flutter build ios --simulator --debug --no-pub
+cd apps/mobile && flutter test test/features/native_platform_showcase
 ```
 
 ## Why this repo differs
