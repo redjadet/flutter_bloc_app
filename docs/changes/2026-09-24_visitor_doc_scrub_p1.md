@@ -17,17 +17,19 @@ safety meaning unchanged — labels only.
 
 | File | Change |
 | --- | --- |
-| `README.md` | Portfolio path → HITL → platforms → architecture_tour; interview/system-design optional |
-| `docs/ai/human_ai_collaboration.md` | “README Authority Thesis” → README Four pillars |
-| `docs/platforms/README.md` | “Authority Thesis #3” → “Four pillars #3” |
-| `docs/architecture_tour.md` | Minute 0–1 “Thesis” / “README thesis” → Four pillars + `#four-pillars` |
-| `docs/interview_showcase.md` | “authority pillars” → “pillars” |
-| `docs/README.md` | “Authority scope / Archive” → “Scope / Archive” |
-| `docs/feature_overview.md` | “Authority tiers” → “Feature tiers”; link label → Scope register |
-| `docs/offline_first/README.md` | Drop “(authority)” from W3 invariants row label |
-| `llms.txt` | “Authority scope:” → “Scope register:” (hand-maintained companion to CODEMAP) |
-| `docs/plans/visitor_doc_scrub_p1.md` | Local Codex plan (gitignored under `docs/plans/*`) |
+| [`README.md`](../../README.md) | Portfolio path → HITL → platforms → architecture_tour; interview/system-design optional |
+| [`ai/human_ai_collaboration.md`](../ai/human_ai_collaboration.md) | “README Authority Thesis” → README Four pillars |
+| [`platforms/README.md`](../platforms/README.md) | “Authority Thesis #3” → “Four pillars #3” |
+| [`architecture_tour.md`](../architecture_tour.md) | Minute 0–1 “Thesis” / “README thesis” → Four pillars + `#four-pillars` |
+| [`interview_showcase.md`](../interview_showcase.md) | “authority pillars” → “pillars” |
+| [`README.md`](../README.md) | “Authority scope / Archive” → “Scope / Archive” |
+| [`feature_overview.md`](../feature_overview.md) | “Authority tiers” → “Feature tiers”; link label → Scope register |
+| [`offline_first/README.md`](../offline_first/README.md) | Drop “(authority)” from W3 invariants row label |
+| [`llms.txt`](../../llms.txt) | “Authority scope:” → “Scope register:” (hand-maintained companion to CODEMAP) |
 | This note | Evidence |
+
+Codex plan review used a **local** plan under gitignored `docs/plans/` (not
+committed; see `.gitignore` `docs/plans/*`).
 
 ## Non-goals
 
@@ -42,5 +44,5 @@ safety meaning unchanged — labels only.
 - `git diff --check`: pass
 - Forbidden visitor-label scan (README any “authority”; visitor docs for
   Authority Thesis / authority pillars / Authority tiers / Authority scope): pass
-- Codex: `./tool/run_codex_plan_review.sh docs/plans/visitor_doc_scrub_p1.md`
+- Codex: `./tool/run_codex_plan_review.sh` on local gitignored plan
   (GPT-5.6 Sol fallback after GPT-6 Sol unavailable)
