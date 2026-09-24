@@ -44,6 +44,18 @@
 - Issue: Map widget rebuilt on camera and state changes, even when controller updates could be used.
 - Resolution: Controller-driven updates for camera changes; widget rebuilds only on map properties.
 
+### Profile Avatar Decode Size
+
+- File: `apps/mobile/lib/features/profile/presentation/widgets/profile_header.dart`
+- The 800×533 source was decoded at full size for a 128–160 logical-pixel circle.
+- Decode height now follows rendered height × device pixel ratio, capped at the
+  source's 533 pixels. `BoxFit.cover` uses height to fill the circle, so a
+  width-only hint could undersample the cropped image. Source asset and layout
+  remain unchanged.
+- This reduces decoded image-cache pixels on common density/size combinations;
+  it does not establish a frame-time improvement. Keep profile-mode UI/Raster
+  traces as the criterion for any jank claim.
+
 ## Validation Suggestions
 
 - Run `flutter run --profile` and capture frame timings during:
