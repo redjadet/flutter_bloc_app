@@ -13,6 +13,7 @@ Use for narrow low-risk edits where routing/auth/gates unchanged.
 - Optional targeted regression tests
 - **Python only** (`demos/render_chat_api/**`, repo `tool/*.py`): `./tool/check_pyright_python.sh` (Pyright + config guard; bootstraps `demos/render_chat_api/.venv` when missing). For behavior proof, `cd demos/render_chat_api && python -m pytest`. Full gate still includes this script via `./tool/delivery_checklist.sh` / `./bin/checklist`.
 - **Checklist local sanity shortcut**: `./bin/checklist-fast` for clean-tree local sanity or narrow docs/tooling change sets only. It skips app-wide Flutter validation and refuses CI or app/runtime diffs.
+- **CI documentation-only route**: `./bin/checklist --print-scope` detects a nonempty documentation-only PR diff. Required `build` and `integration-preflight` jobs stay present; app setup, tests, and coverage are bypassed for that route. Mixed or uncertain scopes and merge-queue events take full CI.
 
 ## Scoped Router/Auth Path
 

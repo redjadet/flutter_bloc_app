@@ -76,6 +76,37 @@ assert_contains checklist_fast_help "$tmp_dir/checklist_fast_help.out" "--no-reu
 run_ok delivery_help bash tool/delivery_checklist.sh --help
 assert_contains delivery_help "$tmp_dir/delivery_help.out" "Usage: ./bin/checklist"
 assert_contains delivery_help "$tmp_dir/delivery_help.out" "--mode <full|fast>"
+assert_contains delivery_help "$tmp_dir/delivery_help.out" "--print-scope"
+
+# Documentation-only routing must reject executable/configuration changes and
+# unknown scopes before CI omits Flutter setup or integration preflight.
+# shellcheck disable=SC1091
+source tool/checklist_scope.sh
+if ! (CI=true GITHUB_EVENT_NAME=pull_request checklist_docs_only_event_allowed); then
+  echo "❌ Pull-request event must allow docs-only routing" >&2
+  exit 1
+fi
+for event_name in push merge_group workflow_dispatch; do
+  if (CI=true GITHUB_EVENT_NAME="$event_name" checklist_docs_only_event_allowed); then
+    echo "❌ $event_name must keep full CI routing" >&2
+    exit 1
+  fi
+done
+if ! checklist_docs_only_paths docs/README.md .github/pull_request_template.md; then
+  echo "❌ Markdown-only changes must use documentation validation" >&2
+  exit 1
+fi
+for path in docs/toolchain_versions.env docs/engineering/melos_dependency_baseline.txt ai/reports/snapshot.json \
+  .github/workflows/ci.yml apps/mobile/lib/app.dart requirements.txt; do
+  if checklist_docs_only_paths docs/README.md "$path"; then
+    echo "❌ Non-documentation path misrouted: $path" >&2
+    exit 1
+  fi
+done
+if checklist_docs_only_paths; then
+  echo "❌ Empty change scope must use full validation" >&2
+  exit 1
+fi
 
 run_ok print_changed ./bin/checklist-fast --print-changed
 assert_contains print_changed "$tmp_dir/print_changed.out" "changed_files|"
