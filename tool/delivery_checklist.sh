@@ -12,6 +12,8 @@ set -euo pipefail
 WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck disable=SC1091
 source "$WORKSPACE_ROOT/tool/workspace_paths.sh"
+# shellcheck disable=SC1091
+source "$WORKSPACE_ROOT/tool/checklist_scope.sh"
 cd "$WORKSPACE_ROOT"
 
 # shellcheck disable=SC1091
@@ -30,6 +32,7 @@ Options:
   --mode <full|fast>   Override CHECKLIST_MODE.
   --explain            Print mode inputs, changed files, and auto-route decisions.
   --print-changed      Print changed files (git) and exit 0.
+  --print-scope        Print docs-only scope for CI routing and exit 0.
   --no-reuse           Force rerun (sets CHECKLIST_ALLOW_REUSE=0).
 
 Env overrides:
@@ -555,10 +558,11 @@ collect_changed_files_from_ci() {
 
   case "$event_name" in
     pull_request|pull_request_target)
-      # GitHub Actions usually checks out a synthetic merge commit for PRs.
-      # Diff against the base parent when available so CI can recover branch scope
-      # even from a clean checkout with no local git diff.
-      if git rev-parse --verify HEAD^1 >/dev/null 2>&1; then
+      # The default PR merge ref can be compared with its base parent. On a
+      # branch-head checkout, HEAD^1 is only the previous PR commit and can
+      # miss earlier code changes, so use the base-branch fallback below.
+      if [[ "${GITHUB_REF:-}" == refs/pull/*/merge ]] &&
+        git rev-parse --verify HEAD^1 >/dev/null 2>&1; then
         git diff --name-only --diff-filter=ACDMRTUXB HEAD^1..HEAD
         return 0
       fi
@@ -753,28 +757,13 @@ is_docs_only_change_set() {
     return 1
   fi
 
-  local file
-  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
-    case "$file" in
-      *.md|*.mdx|*.txt|*.rst|*.adoc|\
-      .markdownlintignore|\
-      .markdownlint-cli2ignore|\
-      docs/*|\
-      ai/*|\
-      tool/agent_host_templates/*|\
-      README|README.*|\
-      CHANGELOG|CHANGELOG.*|\
-      LICENSE|LICENSE.*|\
-      .gitignore|\
-      .cursor/*)
-        ;;
-      *)
-        return 1
-        ;;
-    esac
-  done
+  # CI's push/merge-group one-parent diff may omit earlier commits in a batch.
+  # Keep those events on the full route until their complete range is known.
+  if ! checklist_docs_only_event_allowed; then
+    return 1
+  fi
 
-  return 0
+  checklist_docs_only_paths "${changed_files[@]}"
 }
 
 is_tooling_only_change_set() {
@@ -1150,6 +1139,7 @@ HAS_GIT_REPO=0
 CHECKLIST_EXPLAIN="${CHECKLIST_EXPLAIN:-0}"
 CHECKLIST_EXPLAIN_THEMES="${CHECKLIST_EXPLAIN_THEMES:-0}"
 CHECKLIST_PRINT_CHANGED="${CHECKLIST_PRINT_CHANGED:-0}"
+CHECKLIST_PRINT_SCOPE="${CHECKLIST_PRINT_SCOPE:-0}"
 CHECKLIST_MODE_FROM_ARG=0
 
 print_auto_route_decision() {
@@ -1201,6 +1191,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --print-changed)
       CHECKLIST_PRINT_CHANGED=1
+      shift
+      ;;
+    --print-scope)
+      CHECKLIST_PRINT_SCOPE=1
       shift
       ;;
     *)
@@ -1308,6 +1302,16 @@ if [ "$CHECKLIST_PRINT_CHANGED" = "1" ]; then
   CHECKLIST_EMIT_SCORECARD=0
   if [ "$CHECKLIST_EXPLAIN" != "1" ]; then
     print_changed_files_summary
+  fi
+  exit 0
+fi
+
+if [ "$CHECKLIST_PRINT_SCOPE" = "1" ]; then
+  CHECKLIST_EMIT_SCORECARD=0
+  if is_docs_only_change_set; then
+    echo "docs_only=true"
+  else
+    echo "docs_only=false"
   fi
   exit 0
 fi

@@ -13,12 +13,33 @@ Require these check contexts on `main` (verified in branch protection on
 2026-09-23; recheck live settings before merge):
 
 - **`build`** (`CI / build`): runs `./bin/checklist` (analyze + repo static checks + mix_lint + coverage).
-- **`integration-preflight`** (`CI / integration-preflight`): runs `./bin/integration_preflight` on PRs / merge queue (Ubuntu + Chrome web smoke + unit guards) before slower simulator lanes.
+- **`integration-preflight`** (`CI / integration-preflight`): runs `./bin/integration_preflight` on code-relevant PRs / merge queue (Ubuntu + Chrome web smoke + unit guards) before slower simulator lanes.
 - **`dependency-review`** (`Dependency Review / dependency-review`): GitHub dependency review action.
 - **`scan-pr / osv-scan`** (`OSV-Scanner PR Scan`): vulnerability scan of `pubspec.lock`.
 
 Renovate / Dependabot PRs are gated by the same **`CI / build`** check — there is no
 separate duplicate analyze/coverage workflow.
+
+## Documentation-only PRs
+
+`CI / changes` uses `./bin/checklist --print-scope` on the PR merge commit.
+`build` still runs `./bin/checklist`, but skips Flutter
+installation and coverage upload when every changed path is documentation.
+The checklist then runs documentation, agent-knowledge, harness, and snapshot
+checks without app analyze/tests/coverage. `integration-preflight` still reports
+a successful required check, with its Flutter/Chrome work bypassed. The
+dependency-review and OSV required checks remain present.
+
+The scope rule accepts Markdown/MDX/reStructuredText/AsciiDoc files and root
+`llms.txt`. Empty, unknown, mixed,
+configuration, workflow, script, dependency, and source diffs use full CI.
+`tool/checklist_scope.sh` owns this rule; `tool/check_checklist_cli_contract.sh`
+tests adversarial path examples. Keep required job names stable, since branch
+protection names `build` and `integration-preflight`.
+CodeQL uses the same scope command and skips its language matrix for
+documentation-only PR diffs; its code scans remain active for all other scopes.
+Push and merge-queue events take the full route: their one-parent diff may omit
+earlier commits in a batch.
 
 ## Shared Flutter setup
 
@@ -53,15 +74,16 @@ Workflow: [`.github/workflows/drift.yml`](../../.github/workflows/drift.yml)
 
 ## Integration preflight on PRs
 
-`CI / integration-preflight` runs automatically on:
+`CI / integration-preflight` runs its integration command on code-relevant:
 
 - `pull_request`
 - `merge_group`
 
 Runner: **`ubuntu-latest`** (not macOS). The job installs Chrome when needed and
 executes `./bin/integration_preflight` (SwiftPM patch syntax/guard, log-filter
-unit test, Chrome web bootstrap smoke). Job **name** stays `integration-preflight`
-so branch protection does not need updating.
+unit test, Chrome web bootstrap smoke). Documentation-only PRs keep the
+required job green without installing Flutter or Chrome. Job
+**name** stays `integration-preflight` so branch protection does not need updating.
 
 ## Manual integration rollout
 
