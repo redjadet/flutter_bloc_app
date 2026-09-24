@@ -1,36 +1,5 @@
 # Flutter BLoC App
 
-Production-style Flutter reference app for a mobile engineering portfolio:
-feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
-CI-backed validation, and a broad set of integration demos. The repo is
-intentionally proof-oriented: claims in the README link to source, docs, or
-commands instead of relying on generic architecture statements.
-
-## Authority Thesis (four pillars)
-
-This repository is a **portfolio authority** on four equal pillars — never
-collapse the story to “three pillars” or to Flutter-only demos:
-
-| # | Pillar | What “good” means here | Evidence (ledger) |
-| --- | --- | --- | --- |
-| 1 | **Flutter / Cubit / Clean Architecture** | Feature modules, sealed/explicit state, gated modularity | Engineering **10/10** gate; ~57 Cubits; [`feature_overview.md`](docs/feature_overview.md) Spine tags |
-| 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants in [`offline_first/authority_invariants.md`](docs/offline_first/authority_invariants.md) |
-| 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); teaching pack [`docs/platforms/`](docs/platforms/README.md); Rust FFI secure messaging |
-| 4 | **Human–AI HITL** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
-
-Scope / Archive: [`docs/authority_scope_register.md`](docs/authority_scope_register.md).
-Evidence ledger: [`docs/changes/`](docs/changes/README.md).
-
-| Goal | Start here |
-| --- | --- |
-| Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
-| ≤15 min architecture tour | [Architecture tour](docs/architecture_tour.md) |
-| Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
-| Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
-| Contribute (Spine-first + HITL) | [Contributing](docs/contributing/contributing.md) |
-| Develop critical human engineering skills | [Critical human skills](docs/engineering/critical_human_skills.md) |
-| Work with an AI agent | [AGENTS.md](AGENTS.md), [Collaboration map](docs/ai/human_ai_collaboration.md) |
-
 ## Platform and toolchain
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.47.5-blue.svg)](https://flutter.dev)
@@ -90,6 +59,37 @@ Evidence ledger: [`docs/changes/`](docs/changes/README.md).
 [![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
+
+Production-style Flutter reference app for a mobile engineering portfolio:
+feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
+CI-backed validation, and a broad set of integration demos. The repo is
+intentionally proof-oriented: claims in the README link to source, docs, or
+commands instead of relying on generic architecture statements.
+
+## Four pillars
+
+This repository is a **portfolio reference** on four equal pillars — never
+collapse the story to “three pillars” or to Flutter-only demos:
+
+| # | Pillar | What “good” means here | Evidence (ledger) |
+| --- | --- | --- | --- |
+| 1 | **Flutter / Cubit / Clean Architecture** | Feature modules, sealed/explicit state, gated modularity | Engineering **10/10** gate; ~57 Cubits; [`feature_overview.md`](docs/feature_overview.md) Spine tags |
+| 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants via [offline-first docs](docs/offline_first/README.md) |
+| 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); teaching pack [`docs/platforms/`](docs/platforms/README.md); Rust FFI secure messaging |
+| 4 | **Human–AI human-in-the-loop (HITL)** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
+
+Scope / Archive: [feature overview](docs/feature_overview.md), [interview showcase](docs/interview_showcase.md).
+Evidence ledger: [`docs/changes/`](docs/changes/README.md).
+
+| Goal | Start here |
+| --- | --- |
+| Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
+| ≤15 min architecture tour | [Architecture tour](docs/architecture_tour.md) |
+| Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
+| Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
+| Contribute (Spine-first + HITL) | [Contributing](docs/contributing/contributing.md) |
+| Develop critical human engineering skills | [Critical human skills](docs/engineering/critical_human_skills.md) |
+| Work with an AI agent | [AGENTS.md](AGENTS.md), [Collaboration map](docs/ai/human_ai_collaboration.md) |
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
 
