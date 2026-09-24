@@ -14,8 +14,8 @@
 | [`docs/platforms/android.md`](../platforms/android.md) | Android host file map |
 | [`docs/platforms/native_interop.md`](../platforms/native_interop.md) | Layering, typed stub statuses, adaptive APIs |
 
-Cross-links: root README thesis + native section, `CODEMAP.md`, `docs/README.md`,
-`authority_scope_register.md`, feature README, `interview_showcase.md`.
+Cross-links: root README thesis + native section, [`CODEMAP.md`](../../CODEMAP.md), [`README.md`](../README.md),
+[`authority_scope_register.md`](../authority_scope_register.md), feature README, [`interview_showcase.md`](../interview_showcase.md).
 
 ## Design-system ↔ code check (this slice)
 
@@ -33,7 +33,7 @@ No DESIGN.md / design_system.md token inventing. Prefer docs→code alignment.
 
 | Near-duplicate | Canonical | Trim |
 | --- | --- | --- |
-| Capability/fidelity tables | `docs/platforms/README.md` | Feature README keeps bridges only |
+| Capability/fidelity tables | [`platforms/README.md`](../platforms/README.md) | Feature README keeps bridges only |
 | Root README native prose + build commands | Teaching pack + short evidence table | Trimmed telemetry essay + extra build cmds from README |
 | Host path lists | ios.md / android.md | Not copied into matrices |
 
