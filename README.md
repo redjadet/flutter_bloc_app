@@ -18,16 +18,8 @@ collapse the story to “three pillars” or to Flutter-only demos:
 | 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); teaching pack [`docs/platforms/`](docs/platforms/README.md); Rust FFI secure messaging |
 | 4 | **Human–AI HITL** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
 
-Claim honesty: every public score/count above is tied to the dated ledger in
-[`docs/changes/2026-09-24_authority_phase_0_evidence_baseline.md`](docs/changes/2026-09-24_authority_phase_0_evidence_baseline.md)
-(SHA `77150a6d…`). Scope / Archive rules:
-[`docs/authority_scope_register.md`](docs/authority_scope_register.md).
-
-### HITL visitor landing (first five minutes)
-
-Canonical path (AGENTS → ownership → safety → AIDLC → finish gate → request
-card): [Collaboration map](docs/ai/human_ai_collaboration.md). Do not mirror
-that sequence here.
+Scope / Archive: [`docs/authority_scope_register.md`](docs/authority_scope_register.md).
+Evidence ledger: [`docs/changes/`](docs/changes/README.md).
 
 | Goal | Start here |
 | --- | --- |

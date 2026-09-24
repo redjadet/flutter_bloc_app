@@ -691,7 +691,8 @@ fi
 if [[ "$command" != list ]]; then
   shift || true
   consume_apply_flags "$@"
-  set -- "${REMAINING_ARGS[@]}"
+  # Bash 3.2 + set -u: empty "${arr[@]}" errors; use ${arr[@]+"${arr[@]}"}.
+  set -- ${REMAINING_ARGS[@]+"${REMAINING_ARGS[@]}"}
 fi
 
 case "$command" in
