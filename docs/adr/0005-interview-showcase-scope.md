@@ -4,9 +4,9 @@
 | --- | --- |
 | Status | Accepted |
 | Date | 2026-05-20 |
-| Amended | 2026-07-31 |
+| Amended | 2026-07-31; **2026-09-24** (Archive / no net-new demos) |
 | Scope | Portfolio / interview curation |
-| Source docs | [interview_showcase.md](../interview_showcase.md), [future_observability.md](../observability.md), [ADR 0006](0006-production-readiness-demo.md) |
+| Source docs | [interview_showcase.md](../interview_showcase.md), [feature_overview.md](../feature_overview.md) (Spine/Depth/Archive), [authority_scope_register.md](../authority_scope_register.md), [future_observability.md](../observability.md), [ADR 0006](0006-production-readiness-demo.md) |
 
 ## Context
 
@@ -34,6 +34,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 4. **Consent-gated Firebase Analytics exception:** A typed product-analytics port with SharedPreferences consent (default off), allowlisted params (`mode`, `source`, `result`, `variant`), in-memory buffer, and Firebase adapter that swallows platform-channel failures is **allowed** for the production-readiness demo. This does **not** authorize Mixpanel/Sentry/Patrol or unscoped event taxonomies. Policy detail: [ADR 0006](0006-production-readiness-demo.md).
 5. **PR smoke alignment:** `registerPrSmokeIntegrationFlows()` includes guest sign-in, counter persistence, chat list, launch/charts/search/settings/todo, and **production readiness (J6)**.
 6. **Workspace packaging does not change the architecture story:** Melos separates reusable capabilities into `packages/*`; `apps/mobile` remains a modular-monolith composed through one app shell.
+7. **No net-new demo modules without Archive replacement (2026-09-24):** Feature catalog tags every module **Spine / Depth / Archive** in [`feature_overview.md`](../feature_overview.md). **Archive** means no new investment unless promoted. Adding a new demo route or feature module requires (a) retiring or promoting an Archive entry, and (b) a change note or ADR plus PR checklist acknowledgment. Depth modules may receive maintenance when touched; they are not a license for unbounded breadth.
 
 ## Alternatives considered
 
@@ -73,6 +74,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 - Spine routes change (GoRouter)
 - Workspace packaging changes the app-shell or feature ownership boundaries
 - Production-readiness dual-mode or consent policy changes (also review ADR 0006)
+- Proposal to add a demo module without Archive replacement (reject or promote first)
 
 ## Verification
 

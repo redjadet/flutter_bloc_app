@@ -4,6 +4,7 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 
 | File | Purpose |
 | --- | --- |
+| [human_ai_collaboration.md](human_ai_collaboration.md) | HITL visitor map: ownership, must-not-alone, security table |
 | [best_areas_for_ai_agents.md](best_areas_for_ai_agents.md) | High-value agent work areas, boundaries, and acceptance evidence |
 | [skill_routing.md](skill_routing.md) | Which skill to invoke (repo canon over vendor text) |
 | [ai_failure_risks.md](ai_failure_risks.md) | Pre-Flight risk register + minimum proof |

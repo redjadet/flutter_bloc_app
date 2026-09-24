@@ -12,9 +12,9 @@ Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
 
 | Feature | Why copy it | P3 | P4 | P5 | P6 | Key paths |
 | --- | --- | --- | --- | --- | --- | --- |
-| `remote_config` | Full stack, offline-first, sealed Freezed state | G | G | G | Y | `apps/mobile/lib/features/remote_config/` |
+| `remote_config` | Full stack, offline-first, sealed Freezed state (not P6 errors) | G | G | G | Y* | `apps/mobile/lib/features/remote_config/` |
 | `profile` | Sealed lifecycle + typed `ProfileFailure` | G | G | G | G | `apps/mobile/lib/features/profile/presentation/cubit/` |
-| `todo_list` | DTO sync boundary, domain merge policy, AppError | G | Y | G | G | `data/todo_item_dto.dart`, `domain/todo_merge_policy.dart` |
+| `todo_list` | DTO sync boundary, domain merge policy, AppError (not P4 states) | G | Y* | G | G | `data/todo_item_dto.dart`, `domain/todo_merge_policy.dart` |
 | `native_platform_showcase` | Platform ports; command `MethodChannel` (incl. nested security showcase), streaming `EventChannel`, FFI; cubit → use cases only | G | G | G | G | `domain/use_cases/`, `data/*_service.dart`, `presentation/widgets/native_security_*` |
 | `secure_messaging_demo` | Rust AES-GCM via workspace FFI package (`secure_core_bridge`); domain repo + sealed failures; Cubit request-gen guards | G | G | G | Y | `domain/`, `data/ffi_secure_core_repository.dart`, `packages/secure_core_bridge/` — see [`rust_ffi_secure_core_bridge.md`](rust_ffi_secure_core_bridge.md) |
 | `deeplink` | Sealed deep-link state | G | G | G | G | `presentation/cubit/deep_link_state.dart` |
@@ -24,6 +24,8 @@ Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
 | `iot_demo` | Cubit + domain/data split | G | Y | G | G | `presentation/cubit/` |
 | `iot` | BLE mappers + phased connection state | G | Y | G | G | `apps/mobile/lib/features/iot/` |
 
+\*Intentional Yellow — see [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) disposition (2026-09-24).
+
 Scaffold output (no runtime code) matches the same shape:
 [`feature_brief_scaffold_example.md`](feature_brief_scaffold_example.md).
 
@@ -31,7 +33,8 @@ Scaffold output (no runtime code) matches the same shape:
 
 | Feature / path | Reason |
 | --- | --- |
-| `ai_decision_demo` (state) | Equatable bag state — copy DTO boundary only until state migrates |
+| `todo_list` presentation state | `ViewStatus` bag (P4 Yellow) — copy DTO/merge only |
+| `remote_config` error taxonomy | P6 Yellow — copy sealed state only |
 | `staff_app_demo` | Legacy demo patterns elsewhere; inbox/timeclock domain Maps removed 2026-08-06 — copy submit validator only, not as a gold layout |
 
 ## Legacy drift

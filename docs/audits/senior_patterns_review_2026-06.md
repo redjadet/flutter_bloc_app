@@ -6,20 +6,29 @@ Evidence for the reduce-surprise program. Import/folder gates:
 
 **Grade key:** G Green · Y Yellow · R Red · — not scored
 
-**Last updated:** 2026-08-06 (staff_app_demo domain Map contracts cleared; P3 G)
+**Last updated:** 2026-09-24 (authority Phase 1A — intentional Yellow disposition)
 
 ## Tier A
 
 | Feature | P3 Boundaries | P4 States | P5 Decisions | P6 Errors | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `remote_config` | G | G | G | Y | Skip code — sealed state reference |
+| `remote_config` | G | G | G | **Y intentional** | Sealed state reference; typed error taxonomy thinner than `ProfileFailure` — **do not copy P6**; promote when a failure-union pass lands |
 | `counter` | Y | G | G | G | Follow-up H — sealed `CounterState` + `CounterViewData`; ViewStatus dual channel removed |
-| `todo_list` | G | Y | G | G | PR-1A sync DTO; PR-3 merge + AppError |
+| `todo_list` | G | **Y intentional** | G | G | Sync DTO + domain merge Green; presentation still `ViewStatus` bag — **do not copy P4**; prefer `profile` sealed state |
 | `native_platform_showcase` | G | G | G | G | Reference only |
 | `iot` | G | Y | G | G | PR-2C-i connection phase sealed |
 | `calculator` | G | G | G | G | Pattern 5 reference |
 | `deeplink` | G | G | G | G | Skip |
 | `profile` | G | G | G | G | PR-2A sealed state + ProfileFailure |
+
+### Intentional Yellow disposition (2026-09-24)
+
+| Yellow | Why kept | Copy instead | Revisit trigger |
+| --- | --- | --- | --- |
+| `remote_config` P6 | Error/skip paths adequate for flag diagnostics; sealing state was the gold lesson | `profile` `ProfileFailure` | Dedicated remote-config failure union PR |
+| `todo_list` P4 | Large presentation surface; DTO/merge already fixed | `profile` / `chat` sealed states | Todo presentation migration wave |
+
+Scorecard honesty: Tier A has **no R**; intentional Y rows are explicit — not silent debt.
 
 ## Tier B (in scope)
 

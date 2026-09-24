@@ -7,6 +7,7 @@ decision is [ADR 0002](../adr/0002-offline-first-data.md).
 | Need | Read |
 | --- | --- |
 | Adopt or review a feature | [adoption_guide.md](adoption_guide.md) |
+| Named W3 invariants (authority) | [authority_invariants.md](authority_invariants.md) |
 | Preserve newer local state | [dont_overwrite_guide.md](dont_overwrite_guide.md) |
 | Hive schema changes | [hive_schema_migrations.md](hive_schema_migrations.md) |
 | Supabase migrations | [supabase_migrations.md](supabase_migrations.md) |
