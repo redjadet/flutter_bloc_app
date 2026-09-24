@@ -15,8 +15,8 @@ extension _ClientBookingCubitHelpers on ClientBookingCubit {
       error,
       stackTrace,
       operation,
-      onError: (message) =>
-          emit(state.copyWith(isBusy: false, errorMessage: message)),
+      onFailure: (failure) =>
+          emit(state.copyWith(isBusy: false, errorMessage: failure.message)),
     );
   }
 }

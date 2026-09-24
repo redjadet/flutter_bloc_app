@@ -25,10 +25,17 @@ final class CubitFailure {
 class CubitExceptionHandler {
   new _();
 
+  static const String _missingCallbackMessage =
+      'CubitExceptionHandler requires onFailure or onError';
+
   /// Handle an exception with standardized logging and error conversion.
   ///
-  /// Prefer [onFailure]. Optional [onAppError] remains for call sites that only
-  /// need structured [AppError] alongside [onError].
+  /// Prefer [onFailure]. Provide [onError] only for legacy string-only call
+  /// sites. At least one of [onFailure] or [onError] is required.
+  ///
+  /// Optional [onAppError] is only invoked on the legacy [onError] path.
+  /// When [onFailure] is set, use [CubitFailure.appError] instead — [onAppError]
+  /// is ignored.
   ///
   /// Set [logErrors] to false when [onFailure] / [onError] performs its own
   /// severity-aware logging (e.g. expected auth failures at debug).
@@ -36,11 +43,13 @@ class CubitExceptionHandler {
     Object error,
     StackTrace? stackTrace,
     String logContext, {
-    required void Function(String errorMessage) onError,
+    void Function(String errorMessage)? onError,
     void Function(CubitFailure failure)? onFailure,
     void Function(AppError appError)? onAppError,
     bool logErrors = true,
   }) {
+    _requireFailureCallback(onFailure: onFailure, onError: onError);
+
     final CubitFailure failure = toFailure(error, stackTrace);
 
     if (onFailure != null) {
@@ -51,6 +60,12 @@ class CubitExceptionHandler {
       return;
     }
 
+    final void Function(String errorMessage)? legacyOnError = onError;
+    if (legacyOnError == null) {
+      // Unreachable after _requireFailureCallback; keeps promotion bang-free.
+      throw StateError(_missingCallbackMessage);
+    }
+
     if (logErrors) {
       AppLogger.error(logContext, error, stackTrace);
     }
@@ -59,7 +74,7 @@ class CubitExceptionHandler {
       onAppError(failure.appError);
     }
 
-    onError(failure.message);
+    legacyOnError(failure.message);
   }
 
   /// Builds a [CubitFailure] without logging (for tests / custom paths).
@@ -103,16 +118,20 @@ class CubitExceptionHandler {
   }
 
   /// Execute an async operation with standardized exception handling.
+  ///
+  /// Prefer [onFailure]. At least one of [onFailure] or [onError] is required.
+  /// The requirement is checked before [operation] runs.
   static Future<void> executeAsync<T>({
     required Future<T> Function() operation,
     required void Function(T result) onSuccess,
-    required void Function(String errorMessage) onError,
     required String logContext,
+    void Function(String errorMessage)? onError,
     bool Function()? isAlive,
     void Function(CubitFailure failure)? onFailure,
     void Function(AppError appError)? onAppError,
     bool logErrors = true,
   }) async {
+    _requireFailureCallback(onFailure: onFailure, onError: onError);
     try {
       final T result = await operation();
       if (isAlive != null && !isAlive()) return;
@@ -131,11 +150,15 @@ class CubitExceptionHandler {
     }
   }
 
-  /// Execute an async operation that returns void with standardized exception handling.
+  /// Execute an async operation that returns void with standardized exception
+  /// handling.
+  ///
+  /// Prefer [onFailure]. At least one of [onFailure] or [onError] is required.
+  /// The requirement is checked before [operation] runs.
   static Future<void> executeAsyncVoid({
     required Future<void> Function() operation,
-    required void Function(String errorMessage) onError,
     required String logContext,
+    void Function(String errorMessage)? onError,
     void Function()? onSuccess,
     bool Function()? isAlive,
     void Function(CubitFailure failure)? onFailure,
@@ -152,5 +175,14 @@ class CubitExceptionHandler {
       onAppError: onAppError,
       logErrors: logErrors,
     );
+  }
+
+  static void _requireFailureCallback({
+    required void Function(CubitFailure failure)? onFailure,
+    required void Function(String errorMessage)? onError,
+  }) {
+    if (onFailure == null && onError == null) {
+      throw StateError(_missingCallbackMessage);
+    }
   }
 }

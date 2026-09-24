@@ -48,7 +48,6 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
             emit(const DeepLinkState.idle());
           }
         },
-        onError: (_) {},
         logErrors: false,
         onFailure: (failure) {
           _handleInitializeError(failure.error, failure.stackTrace);

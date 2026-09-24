@@ -18,6 +18,7 @@ void main() {
       );
       expect(plain.message, contains('boom'));
       expect(plain.stackTrace, isNull);
+      expect(plain.appError, isA<UnknownError>());
     });
 
     test('onFailure short-circuits onError and onAppError', () async {
@@ -45,6 +46,96 @@ void main() {
       expect(onErrorCalls, 0);
       expect(onAppErrorCalls, 0);
     });
+
+    test('onFailure-only succeeds without onError', () async {
+      CubitFailure? captured;
+      await CubitExceptionHandler.executeAsyncVoid(
+        operation: () async => throw Exception('only-failure'),
+        onFailure: (failure) {
+          captured = failure;
+        },
+        logContext: 'CubitExceptionHandlerTest.onFailureOnly',
+        logErrors: false,
+      );
+
+      expect(captured, isNotNull);
+      expect(captured!.message, contains('only-failure'));
+      expect(captured!.appError, isA<UnknownError>());
+    });
+
+    test('onError-only still works for legacy call sites', () async {
+      String? message;
+      await CubitExceptionHandler.executeAsync<int>(
+        operation: () async => throw Exception('legacy'),
+        onSuccess: (_) {},
+        onError: (errorMessage) {
+          message = errorMessage;
+        },
+        logContext: 'CubitExceptionHandlerTest.onErrorOnly',
+        logErrors: false,
+      );
+
+      expect(message, contains('legacy'));
+    });
+
+    test(
+      'neither onFailure nor onError throws StateError before normalize',
+      () {
+        expect(
+          () => CubitExceptionHandler.handleException(
+            Exception('missing'),
+            StackTrace.current,
+            'CubitExceptionHandlerTest.neither',
+            logErrors: false,
+          ),
+          throwsA(
+            isA<StateError>().having(
+              (error) => error.message,
+              'message',
+              contains('requires onFailure or onError'),
+            ),
+          ),
+        );
+      },
+    );
+
+    test(
+      'executeAsync neither callback throws before operation runs',
+      () async {
+        var operationCalls = 0;
+        await expectLater(
+          () => CubitExceptionHandler.executeAsync<int>(
+            operation: () async {
+              operationCalls += 1;
+              return 1;
+            },
+            onSuccess: (_) {},
+            logContext: 'CubitExceptionHandlerTest.executeAsyncNeither',
+            logErrors: false,
+          ),
+          throwsA(isA<StateError>()),
+        );
+        expect(operationCalls, 0);
+      },
+    );
+
+    test(
+      'executeAsyncVoid neither callback throws before operation runs',
+      () async {
+        var operationCalls = 0;
+        await expectLater(
+          () => CubitExceptionHandler.executeAsyncVoid(
+            operation: () async {
+              operationCalls += 1;
+            },
+            logContext: 'CubitExceptionHandlerTest.executeAsyncVoidNeither',
+            logErrors: false,
+          ),
+          throwsA(isA<StateError>()),
+        );
+        expect(operationCalls, 0);
+      },
+    );
 
     test('logErrors:false skips default AppLogger.error path with onError', () {
       // Smoke: handler completes without throwing when logErrors is false.

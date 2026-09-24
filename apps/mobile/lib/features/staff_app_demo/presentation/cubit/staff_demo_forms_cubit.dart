@@ -53,13 +53,13 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoFormsStatus.error,
             knownError: null,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },
@@ -117,13 +117,13 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoFormsStatus.error,
             knownError: null,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

@@ -139,15 +139,15 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       isAlive: () => !isClosed,
       logContext: 'ChatCubit.resetConversation',
       onSuccess: () => persisted = true,
-      onError: (message) {
-        AppLogger.error('Chat reset persistence failed', message);
+      onFailure: (failure) {
+        AppLogger.error('Chat reset persistence failed', failure.message);
         if (isClosed) {
           return;
         }
         final ChatState current = _state;
         emitState(
           current.copyWith(
-            failure: current.failure ?? ChatFailure(message: message),
+            failure: current.failure ?? ChatFailure(message: failure.message),
           ),
         );
       },

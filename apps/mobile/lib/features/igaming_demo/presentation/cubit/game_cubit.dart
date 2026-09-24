@@ -62,9 +62,13 @@ class GameCubit extends Cubit<GameState>
         if (isClosed) return;
         emit(GameState.idle(balance, _defaultStake));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message));
+        emit(
+          GameState.error(
+            _l10n?.igamingDemoErrorLoadBalance ?? failure.message,
+          ),
+        );
       },
       logContext: 'GameCubit.loadBalance',
     );
@@ -155,9 +159,13 @@ class GameCubit extends Cubit<GameState>
           if (isClosed) return;
           emit(GameState.result(roundResult, newBalance, betAmount, indices));
         },
-        onError: (message) {
+        onFailure: (failure) {
           if (isClosed) return;
-          emit(GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message));
+          emit(
+            GameState.error(
+              _l10n?.igamingDemoErrorLoadBalance ?? failure.message,
+            ),
+          );
         },
         logContext: 'GameCubit._resolveRoundAfterSpin',
       ),

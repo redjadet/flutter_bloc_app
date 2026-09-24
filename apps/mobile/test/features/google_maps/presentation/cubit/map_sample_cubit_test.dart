@@ -88,7 +88,11 @@ void main() {
               'errorMessage',
               'Exception: error',
             )
-            .having((state) => state.lastError, 'lastError', isA<AppError>())
+            .having(
+              (state) => state.lastError,
+              'lastError',
+              isA<UnknownError>(),
+            )
             .having((state) => state.locations.isEmpty, 'locations', true),
       ],
     );

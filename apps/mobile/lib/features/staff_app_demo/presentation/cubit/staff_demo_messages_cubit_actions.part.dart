@@ -100,13 +100,13 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoMessagesStatus.error,
             knownError: null,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },
@@ -143,13 +143,13 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoMessagesStatus.error,
             knownError: null,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

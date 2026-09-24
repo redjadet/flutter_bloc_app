@@ -72,14 +72,14 @@ mixin _CaseStudyHistoryDetailCubitActions
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
 
         if (keepVisibleContent && state.record != null) {
           emit(
             state.copyWith(
               status: CaseStudyHistoryDetailStatus.loaded,
-              errorMessage: message,
+              errorMessage: failure.message,
             ),
           );
           return;
@@ -88,7 +88,7 @@ mixin _CaseStudyHistoryDetailCubitActions
         emit(
           state.copyWith(
             status: CaseStudyHistoryDetailStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
             clearRecord: true,
           ),
         );

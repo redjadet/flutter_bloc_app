@@ -24,12 +24,12 @@ class StaffDemoContentCubit extends Cubit<StaffDemoContentState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoContentStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

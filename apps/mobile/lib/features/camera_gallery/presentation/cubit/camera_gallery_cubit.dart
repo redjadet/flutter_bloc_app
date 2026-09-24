@@ -26,7 +26,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
         if (isClosed || recovered == null) return;
         _applyPickResult(recovered);
       },
-      onError: (_) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(

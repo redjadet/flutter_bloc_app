@@ -128,7 +128,6 @@ class CounterCubit extends _CounterCubitBase
         ),
       ),
       isAlive: () => !isClosed,
-      onError: (_) {},
       logContext: 'CounterCubit._persistState',
       logErrors: false,
       onFailure: (failure) {

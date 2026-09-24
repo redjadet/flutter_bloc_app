@@ -127,7 +127,6 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
 
         unawaited(_persistHistory(finalHistory));
       },
-      onError: (_) {},
       logContext: 'ChatCubit.sendMessage',
       // Offline enqueue logs at info; other failures use default error logging.
       logErrors: false,

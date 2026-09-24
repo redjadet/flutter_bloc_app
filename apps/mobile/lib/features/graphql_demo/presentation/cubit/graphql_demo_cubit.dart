@@ -38,7 +38,6 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
-      onError: (_) {},
       // Domain GraphqlDemoException was previously handled without AppLogger.error;
       // keep that so intentional network failures don't trip integration log guards.
       logErrors: false,
@@ -93,7 +92,6 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
-      onError: (_) {},
       logErrors: false,
       onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;

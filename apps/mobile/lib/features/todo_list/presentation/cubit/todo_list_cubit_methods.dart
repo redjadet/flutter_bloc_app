@@ -139,16 +139,9 @@ mixin _TodoListCubitMethods
     if (stopLoadingIfClosed()) return;
     final int requestId = loadRequestIdGuard.next();
     emit(state.copyWith(status: ViewStatus.loading, lastError: null));
-    AppError? latestError;
     await CubitExceptionHandler.executeAsync<List<TodoItem>>(
       operation: repository.fetchAll,
       isAlive: () => !isClosed,
-      onAppError: (appError) {
-        if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
-          return;
-        }
-        latestError = appError;
-      },
       onSuccess: (items) async {
         if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
           return;
@@ -167,15 +160,12 @@ mixin _TodoListCubitMethods
           isLoading = false;
         }
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
           return;
         }
         emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            lastError: latestError ?? UnknownError(message: errorMessage),
-          ),
+          state.copyWith(status: ViewStatus.error, lastError: failure.appError),
         );
         isLoading = false;
       },

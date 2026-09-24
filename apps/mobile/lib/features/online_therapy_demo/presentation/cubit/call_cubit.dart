@@ -103,9 +103,9 @@ class CallCubit extends Cubit<CallState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (!_isRequestStillActive(requestId)) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'CallCubit.refresh',
       isAlive: () => !isClosed,
@@ -134,9 +134,9 @@ class CallCubit extends Cubit<CallState> {
         if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, session: session));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (!_isRequestStillActive(requestId)) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'CallCubit.createSession',
       isAlive: () => !isClosed,
@@ -162,9 +162,9 @@ class CallCubit extends Cubit<CallState> {
         if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, session: updated));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (!_isRequestStillActive(requestId)) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'CallCubit.join',
       isAlive: () => !isClosed,

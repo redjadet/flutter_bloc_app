@@ -43,11 +43,14 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
         if (isClosed) return;
         emit(state.copyWith(permissionState: permission));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         permissionRequestFailed = true;
         emit(
-          state.copyWith(status: FcmDemoStatus.error, errorMessage: message),
+          state.copyWith(
+            status: FcmDemoStatus.error,
+            errorMessage: failure.message,
+          ),
         );
       },
       logContext: 'FcmDemoCubit.initialize.requestPermission',
@@ -92,10 +95,13 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
         }
         _subscribeToStreams();
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
-          state.copyWith(status: FcmDemoStatus.error, errorMessage: message),
+          state.copyWith(
+            status: FcmDemoStatus.error,
+            errorMessage: failure.message,
+          ),
         );
       },
       logContext: 'FcmDemoCubit.initialize.loadInitialData',
