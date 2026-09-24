@@ -60,85 +60,11 @@
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
-Production-style Flutter reference app for a mobile engineering portfolio:
-feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
-CI-backed validation, and a broad set of integration demos. The repo is
-intentionally proof-oriented: claims in the README link to source, docs, or
-commands instead of relying on generic architecture statements.
-
-## Four pillars
-
-This repository is a **portfolio reference** on four equal pillars — never
-collapse the story to “three pillars” or to Flutter-only demos:
-
-| # | Pillar | What “good” means here | Evidence (ledger) |
-| --- | --- | --- | --- |
-| 1 | **Flutter / Cubit / Clean Architecture** | Feature modules, sealed/explicit state, gated modularity | Engineering **10/10** gate; ~57 Cubits; [`feature_overview.md`](docs/feature_overview.md) Spine tags |
-| 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants via [offline-first docs](docs/offline_first/README.md) |
-| 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); teaching pack [`docs/platforms/`](docs/platforms/README.md); Rust FFI secure messaging |
-| 4 | **Human–AI human-in-the-loop (HITL)** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
-
-Scope / Archive: [feature overview](docs/feature_overview.md), [interview showcase](docs/interview_showcase.md).
-Evidence ledger: [`docs/changes/`](docs/changes/README.md).
-
-| Goal | Start here |
-| --- | --- |
-| Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
-| ≤15 min architecture tour | [Architecture tour](docs/architecture_tour.md) |
-| Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
-| Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
-| Contribute (Spine-first + HITL) | [Contributing](docs/contributing/contributing.md) |
-| Develop critical human engineering skills | [Critical human skills](docs/engineering/critical_human_skills.md) |
-| Work with an AI agent | [AGENTS.md](AGENTS.md), [Collaboration map](docs/ai/human_ai_collaboration.md) |
+Production-style Flutter portfolio reference: Clean Architecture, Cubit/BLoC,
+offline-first sync, native iOS/Android interop, and human-in-the-loop (HITL)
+agent workflows. Details live in `docs/` — this README is navigation only.
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
-
-Interview / production-ownership walk: see
-[interview showcase §3b](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough)
-(~12 minutes). General portfolio spine: [§3](docs/interview_showcase.md#3-30-minute-walk-frozen-spine).
-
-## Live app
-
-- [Google Play Store](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
-- [Latest web build](https://redjadet.github.io/flutter_bloc_app/)
-
-## Native Android and iOS engineering
-
-Runnable showcase behind Clean Architecture ports — not a claim that every host
-API is wrapped. **Teaching pack** (matrices, iOS/Android notes, typed stub
-statuses): [`docs/platforms/README.md`](docs/platforms/README.md). **Feature
-architecture:**
-[`apps/mobile/lib/features/native_platform_showcase/README.md`](apps/mobile/lib/features/native_platform_showcase/README.md).
-
-| Area | Android | iOS | Flutter boundary |
-| --- | --- | --- | --- |
-| Host language | [Kotlin](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt) | [Swift](apps/mobile/ios/Runner/AppDelegate.swift) | [host-language service](apps/mobile/lib/features/native_platform_showcase/data/method_channel_native_showcase_host_language_service.dart) |
-| Telemetry | [HandlerThread stream](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseTelemetryStreamHandler.kt) | [DispatchQueue stream](apps/mobile/ios/Runner/NativeShowcaseTelemetryStreamHandler.swift) | [EventChannel adapter](apps/mobile/lib/features/native_platform_showcase/data/event_channel_native_showcase_telemetry_service.dart) |
-| FFI | [CMake](apps/mobile/android/app/src/main/cpp/CMakeLists.txt) | [Swift `@_cdecl`](apps/mobile/ios/Runner/NativeShowcaseBridge.swift) | [FFI adapter](apps/mobile/lib/features/native_platform_showcase/data/ffi_native_showcase_native_code_service.dart) |
-| PlatformView / system UI | [Banner factory](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseBannerPlatformView.kt) | [UiKitView + haptic/share](apps/mobile/ios/Runner/NativeShowcaseBannerPlatformView.swift) | [showcase feature](apps/mobile/lib/features/native_platform_showcase/) |
-
-```bash
-cd apps/mobile && flutter test test/features/native_platform_showcase
-```
-
-## Why this repo differs
-
-Most Flutter repositories document the app. This one also documents how an AI
-agent should safely change it. Agents can locate feature ownership, architecture
-boundaries, conventions, and proof commands with minimal task-specific guidance.
-The workflow stays model-agnostic: Codex, Cursor, Claude Code, Gemini, other AI models (including self-hostable open-weight models like Kimi-K3) and human contributors can use the same repository-owned files, commands, tools, and scripts.
-
-| Need | Repository mechanism |
-| --- | --- |
-| Fast, canonical orientation | [`AGENTS.md`](AGENTS.md), [context ladder](docs/ai/context_loading.md), [`CODEMAP.md`](CODEMAP.md), and [feature catalog](docs/feature_overview.md) |
-| Right tool and validation lane | `./bin/agent-maintain preflight`, `./bin/agent-maintain tools --intent "<goal>" --paths <files>`, and [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md) |
-| Compact repository context | [Repomix profiles](docs/ai/repomix_profiles.md) via `bash tool/repomix_pack.sh onboarding` or `feature <name>` |
-| Current AI discovery maps | `bash tool/refresh_ai_reports.sh` plus `bash tool/check_ai_snapshot_freshness.sh` |
-| Safe incremental delivery | task trackers, `bash tool/check_ai_change_contract.sh`, focused checks, then `./bin/agent-maintain closeout` |
-
-Start an agent task with [`AGENTS.md`](AGENTS.md). Use Dart MCP when available
-for live analysis and runtime inspection; repository scripts remain the
-deterministic fallback and CI contract.
 
 ## Quick start
 
@@ -150,54 +76,69 @@ cd apps/mobile && flutter run -t lib/main_dev.dart
 
 With `tool/direnv/bin` first in `PATH` (via `.envrc` or
 `export PATH="$PWD/tool/direnv/bin:$PATH"`) and an optional gitignored `.env` at
-the repo root (see [`.env.example`](.env.example)), `flutter run` works from the
-repo root and is routed to `apps/mobile`.
+the repo root (see [`.env.example`](.env.example)), `flutter run` from the repo
+root routes to `apps/mobile`.
 
-Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.md). Full setup, flavors, and credentials: [docs/new_developer_guide.md](docs/new_developer_guide.md).
+- Agents: [docs/quick_start.md](docs/quick_start.md)
+- Full setup: [docs/new_developer_guide.md](docs/new_developer_guide.md)
 
-## Portfolio reading path
+## Four pillars
 
-Cold-visitor route for the **four pillars** (matches the goal table above):
+Equal pillars — do not collapse to Flutter-only demos:
 
-1. [Human–AI collaboration map](docs/ai/human_ai_collaboration.md) — HITL
-   ownership without the full agent harness.
-2. [Platforms teaching pack](docs/platforms/README.md) — native capability /
-   fidelity matrices (Live vs Catalog vs Non-goal).
-3. [Architecture tour (≤15 min)](docs/architecture_tour.md) — timed open
-   targets for each pillar.
+1. **Flutter / Cubit / Clean Architecture** —
+   [feature overview](docs/feature_overview.md),
+   [architecture tour](docs/architecture_tour.md)
+2. **Offline-first / reliability** —
+   [adoption guide](docs/offline_first/adoption_guide.md),
+   [offline-first docs](docs/offline_first/README.md)
+3. **Native iOS & Android interop** —
+   [platforms pack](docs/platforms/README.md),
+   [native showcase](apps/mobile/lib/features/native_platform_showcase/README.md)
+4. **Human–AI HITL** —
+   [collaboration map](docs/ai/human_ai_collaboration.md),
+   [AGENTS.md](AGENTS.md)
 
-Optional (interview / deep dive — not the first click):
+Evidence and change notes: [docs/changes/](docs/changes/README.md).
+Interview walk: [interview showcase](docs/interview_showcase.md).
 
-- [Interview showcase](docs/interview_showcase.md) — 30-minute spine (§3) plus
-  [§3b 12-minute production ownership](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough).
-- [System design showcase](docs/features/system_design_showcase.md) —
-  architecture, operations, security, and proof paths.
-- [Architecture](docs/architecture.md) / [Modularity](docs/modularity.md) /
-  [Testing overview](docs/testing_overview.md) — boundary rules and verification.
+| Goal | Start here |
+| --- | --- |
+| Architecture (≤15 min) | [Architecture tour](docs/architecture_tour.md) |
+| Code / docs map | [CODEMAP.md](CODEMAP.md), [docs/README.md](docs/README.md) |
+| Contribute | [Contributing](docs/contributing/contributing.md) |
+| Work with an agent | [AGENTS.md](AGENTS.md), [HITL map](docs/ai/human_ai_collaboration.md) |
+
+## Live app
+
+- [Google Play Store](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
+- [Latest web build](https://redjadet.github.io/flutter_bloc_app/)
+
+## Native Android and iOS engineering
+
+Runnable MethodChannel / EventChannel / PlatformView / FFI showcase behind Clean
+Architecture ports — not a claim that every host API is wrapped.
+
+- Teaching pack: [docs/platforms/README.md](docs/platforms/README.md)
+- Feature: [native_platform_showcase](apps/mobile/lib/features/native_platform_showcase/README.md)
+- Host entrypoints: [Android MainActivity](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt),
+  [iOS AppDelegate](apps/mobile/ios/Runner/AppDelegate.swift)
+
+```bash
+cd apps/mobile && flutter test test/features/native_platform_showcase
+```
 
 ## Documentation
 
-| Topic | Doc |
-| --- | --- |
-| Index | [docs/README.md](docs/README.md) |
-| Entry hubs | [docs/architecture.md](docs/architecture.md), [docs/testing.md](docs/testing.md), [docs/engineering-decisions.md](docs/engineering-decisions.md), [docs/ai-workflow.md](docs/ai-workflow.md) |
-| Quick start (agents) | [docs/quick_start.md](docs/quick_start.md) |
-| Features | [docs/feature_overview.md](docs/feature_overview.md) |
-| Architecture | [docs/architecture.md](docs/architecture.md) → [docs/clean_architecture.md](docs/clean_architecture.md), [docs/architecture_details.md](docs/architecture_details.md) |
-| Plugin failures & storage | [docs/engineering/plugin_failure_mode_strategy.md](docs/engineering/plugin_failure_mode_strategy.md), [docs/security/storage_rules.md](docs/security/storage_rules.md) |
-| ADRs | [docs/adr/README.md](docs/adr/README.md) |
-| Design | [DESIGN.md](DESIGN.md), [docs/design_system.md](docs/design_system.md) |
-| Validation | [docs/validation_scripts.md](docs/validation_scripts.md), [docs/testing_overview.md](docs/testing_overview.md) |
-| Offline-first | [docs/offline_first/adoption_guide.md](docs/offline_first/adoption_guide.md) |
-| Security | [docs/SECURITY.md](docs/SECURITY.md), [docs/security_and_secrets.md](docs/security_and_secrets.md) |
-| Deploy / lifecycle | [docs/deployment.md](docs/deployment.md), [docs/engineering/REPOSITORY_LIFECYCLE.md](docs/engineering/REPOSITORY_LIFECYCLE.md) |
-| Interview walk (~30 min) | [docs/interview_showcase.md](docs/interview_showcase.md) |
-| Critical human skills | [docs/engineering/critical_human_skills.md](docs/engineering/critical_human_skills.md) |
-| AI agents | [AGENTS.md](AGENTS.md) → [docs/agent_knowledge_base.md](docs/agent_knowledge_base.md) |
+Index and hubs — open these instead of expanding this file:
 
-## Scope
-
-This file is the repo entrypoint only. Behavior, commands, and deep dives live in [docs/README.md](docs/README.md).
+- [Documentation index](docs/README.md)
+- [Architecture](docs/architecture.md) · [Testing](docs/testing.md) ·
+  [Engineering decisions](docs/engineering-decisions.md) ·
+  [AI workflow](docs/ai-workflow.md)
+- [Design](DESIGN.md) · [ADRs](docs/adr/README.md) ·
+  [Validation scripts](docs/validation_scripts.md) ·
+  [Security](docs/SECURITY.md) · [Deployment](docs/deployment.md)
 
 ## Screenshots
 
