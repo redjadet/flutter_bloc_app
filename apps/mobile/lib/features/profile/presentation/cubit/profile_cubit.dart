@@ -26,9 +26,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(ProfileState.ready(user));
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        emit(ProfileState.error(ProfileFailure.load(message: errorMessage)));
+        emit(ProfileState.error(ProfileFailure.load(message: failure.message)));
       },
       logContext: 'ProfileCubit.loadProfile',
     );

@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart'
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 import '../../../../test_helpers.dart';
 
@@ -651,7 +652,7 @@ void main() {
       await cubit.loadInitial();
 
       expect(cubit.state.status, ViewStatus.error);
-      expect(cubit.state.lastError, isNotNull);
+      expect(cubit.state.lastError, isA<UnknownError>());
     });
 
     test('reorderItems handles empty filtered items', () {

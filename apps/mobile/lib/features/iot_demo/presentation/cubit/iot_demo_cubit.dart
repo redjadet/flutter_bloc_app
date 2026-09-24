@@ -77,8 +77,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.connect(deviceId),
       isAlive: () => !isClosed,
-      onError: (message) =>
-          _emitError(IotDemoErrorCode.connect, detail: message),
+      onFailure: (failure) =>
+          _emitError(IotDemoErrorCode.connect, detail: failure.message),
       logContext: 'IotDemoCubit.connect',
     );
   }
@@ -87,8 +87,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.disconnect(deviceId),
       isAlive: () => !isClosed,
-      onError: (message) =>
-          _emitError(IotDemoErrorCode.disconnect, detail: message),
+      onFailure: (failure) =>
+          _emitError(IotDemoErrorCode.disconnect, detail: failure.message),
       logContext: 'IotDemoCubit.disconnect',
     );
   }
@@ -97,8 +97,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.sendCommand(deviceId, command),
       isAlive: () => !isClosed,
-      onError: (message) =>
-          _emitError(IotDemoErrorCode.command, detail: message),
+      onFailure: (failure) =>
+          _emitError(IotDemoErrorCode.command, detail: failure.message),
       logContext: 'IotDemoCubit.sendCommand',
     );
   }
@@ -107,7 +107,6 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.addDevice(device),
       isAlive: () => !isClosed,
-      onError: (_) {},
       logContext: 'IotDemoCubit.addDevice',
       // Validation ArgumentErrors are expected; log only unexpected failures.
       logErrors: false,

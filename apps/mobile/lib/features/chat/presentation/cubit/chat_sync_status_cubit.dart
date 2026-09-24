@@ -55,8 +55,10 @@ class ChatSyncStatusCubit extends Cubit<ChatSyncStatusState> {
         emit(state.copyWith(pendingCount: chatPending));
       },
       isAlive: () => !isClosed,
-      onError: (errorMessage) {
-        AppLogger.error('ChatSyncStatusCubit.refresh failed: $errorMessage');
+      onFailure: (failure) {
+        AppLogger.error(
+          'ChatSyncStatusCubit.refresh failed: ${failure.message}',
+        );
       },
       logContext: 'ChatSyncStatusCubit.refresh',
     );

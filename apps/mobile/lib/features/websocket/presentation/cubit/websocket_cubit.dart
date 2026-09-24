@@ -48,13 +48,13 @@ class WebsocketCubit extends Cubit<WebsocketState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: _repository.connect,
       isAlive: () => !isClosed,
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed) return;
         _inFlightSends = 0;
         emit(
           state.copyWith(
             status: WebsocketStatus.error,
-            errorMessage: errorMessage,
+            errorMessage: failure.message,
             isSending: false,
           ),
         );
@@ -71,9 +71,9 @@ class WebsocketCubit extends Cubit<WebsocketState>
       onSuccess: () {
         disconnectSucceeded = true;
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         disconnectSucceeded = false;
-        _emitCommandFailure(errorMessage);
+        _emitCommandFailure(failure.message);
       },
       logContext: 'WebsocketCubit.reconnect.disconnect',
     );
@@ -87,7 +87,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: _repository.disconnect,
       isAlive: () => !isClosed,
-      onError: _emitCommandFailure,
+      onFailure: (failure) => _emitCommandFailure(failure.message),
       logContext: 'WebsocketCubit.disconnect',
     );
   }
@@ -119,13 +119,13 @@ class WebsocketCubit extends Cubit<WebsocketState>
         _decrementInFlightSends();
         emit(state.copyWith(isSending: _inFlightSends > 0));
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed) return;
         _decrementInFlightSends();
         emit(
           state.copyWith(
             isSending: _inFlightSends > 0,
-            errorMessage: errorMessage,
+            errorMessage: failure.message,
           ),
         );
       },
@@ -187,7 +187,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: _repository.disconnect,
       isAlive: () => true,
-      onError: (_) {},
+      onFailure: (failure) {},
       logContext: 'WebsocketCubit.close',
     );
     return await super.close();

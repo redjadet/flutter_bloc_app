@@ -54,12 +54,12 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoTimeclockStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },
@@ -84,12 +84,12 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoTimeclockStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },
@@ -114,12 +114,12 @@ class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoTimeclockStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

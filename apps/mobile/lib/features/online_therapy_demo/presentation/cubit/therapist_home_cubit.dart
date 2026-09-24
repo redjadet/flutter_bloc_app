@@ -41,9 +41,9 @@ class TherapistHomeCubit extends Cubit<TherapistHomeState> {
         if (isClosed) return;
         emit(state.copyWith(isBusy: false, appointments: list));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'TherapistHomeCubit.refresh',
       isAlive: () => !isClosed,

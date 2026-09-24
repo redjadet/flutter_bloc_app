@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-24_cubit_failure_migration.md`](2026-09-24_cubit_failure_migration.md): Finish CubitFailure/onFailure migration; optional onError; maps/todo use `failure.appError`.
 - [`2026-09-24_pr_ci_docs_only_routing.md`](2026-09-24_pr_ci_docs_only_routing.md): Keep required PR checks present while skipping Flutter setup and integration work for documentation-only diffs.
 - [`2026-09-24_profile_avatar_decode_size.md`](2026-09-24_profile_avatar_decode_size.md): Bound profile avatar decode size to rendered physical height while preserving its crop; no unmeasured frame-time claim.
 - [`2026-09-24_human_ai_developer_work_loop.md`](2026-09-24_human_ai_developer_work_loop.md): Human-facing AI work loop, reusable request card, and onboarding link grounded in the Stackademic article.

@@ -98,12 +98,12 @@ mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
       operation: () => Future<void>.error(error, stackTrace),
       isAlive: () => !isClosed,
       onSuccess: (_) {},
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoProofStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

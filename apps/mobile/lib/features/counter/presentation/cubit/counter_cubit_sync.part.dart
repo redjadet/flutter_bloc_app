@@ -11,7 +11,7 @@ mixin _CounterCubitSyncMixin on _CounterCubitBase {
         emit(state.copyData(pendingSyncCount: count));
       },
       isAlive: () => !isClosed,
-      onError: (_) {},
+      onFailure: (failure) {},
       logContext: 'CounterCubit.refreshPendingSyncCount',
     );
   }

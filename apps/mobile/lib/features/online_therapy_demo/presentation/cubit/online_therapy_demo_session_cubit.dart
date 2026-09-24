@@ -80,14 +80,14 @@ class OnlineTherapyDemoSessionCubit
         if (isClosed) return;
         emit(state.copyWith(isBusy: false, user: user));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             role: previousRole,
             isBusy: false,
             user: previousUser,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },
@@ -118,9 +118,9 @@ class OnlineTherapyDemoSessionCubit
         if (isClosed) return;
         emit(state.copyWith(isBusy: false, user: user));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'OnlineTherapyDemoSessionCubit.login',
       isAlive: () => !isClosed,
@@ -136,9 +136,9 @@ class OnlineTherapyDemoSessionCubit
         if (isClosed) return;
         emit(state.copyWith(isBusy: false, user: null));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'OnlineTherapyDemoSessionCubit.logout',
       isAlive: () => !isClosed,

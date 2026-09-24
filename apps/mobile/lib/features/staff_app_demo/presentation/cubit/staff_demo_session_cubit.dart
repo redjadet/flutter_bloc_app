@@ -66,7 +66,7 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
         );
         unawaited(_registerPushTokens(userId: userId));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         if (_authRepository.currentUser?.id != userId) {
           unawaited(hydrate());
@@ -75,7 +75,7 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
         emit(
           state.copyWith(
             status: StaffDemoSessionStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

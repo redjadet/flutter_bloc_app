@@ -32,18 +32,16 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
         manualOrder: updatedManualOrder,
       ),
     );
-    AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.save(item),
       isAlive: () => !isClosed,
-      onAppError: (appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
-            lastError: latestError ?? UnknownError(message: errorMessage),
+            lastError: failure.appError,
           ),
         );
       },
@@ -120,19 +118,17 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
         .where((current) => current.id != item.id)
         .toList(growable: false);
     emitOptimisticUpdate(updatedItems);
-    AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.delete(item.id),
       isAlive: () => !isClosed,
-      onAppError: (appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed) return;
         lastDeletedItem = null;
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
-            lastError: latestError ?? UnknownError(message: errorMessage),
+            lastError: failure.appError,
           ),
         );
       },
@@ -149,18 +145,16 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
         .where((item) => !item.isCompleted)
         .toList(growable: false);
     emitOptimisticUpdate(updatedItems);
-    AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: repository.clearCompleted,
       isAlive: () => !isClosed,
-      onAppError: (appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
-            lastError: latestError ?? UnknownError(message: errorMessage),
+            lastError: failure.appError,
           ),
         );
       },

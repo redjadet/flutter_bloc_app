@@ -24,12 +24,12 @@ class StaffDemoAdminCubit extends Cubit<StaffDemoAdminState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoAdminStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

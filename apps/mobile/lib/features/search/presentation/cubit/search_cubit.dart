@@ -70,13 +70,13 @@ class SearchCubit extends Cubit<SearchState>
           ),
         );
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (!_isRequestActive(requestId, query)) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,
             query: query,
-            error: Exception(errorMessage),
+            error: Exception(failure.message),
           ),
         );
       },
