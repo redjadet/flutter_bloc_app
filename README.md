@@ -74,11 +74,11 @@ collapse the story to “three pillars” or to Flutter-only demos:
 | # | Pillar | What “good” means here | Evidence (ledger) |
 | --- | --- | --- | --- |
 | 1 | **Flutter / Cubit / Clean Architecture** | Feature modules, sealed/explicit state, gated modularity | Engineering **10/10** gate; ~57 Cubits; [`feature_overview.md`](docs/feature_overview.md) Spine tags |
-| 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants in [offline-first invariants](docs/offline_first/authority_invariants.md) |
+| 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants via [offline-first docs](docs/offline_first/README.md) |
 | 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); teaching pack [`docs/platforms/`](docs/platforms/README.md); Rust FFI secure messaging |
 | 4 | **Human–AI human-in-the-loop (HITL)** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
 
-Scope / Archive: [scope register](docs/authority_scope_register.md).
+Scope / Archive: [feature overview](docs/feature_overview.md), [interview showcase](docs/interview_showcase.md).
 Evidence ledger: [`docs/changes/`](docs/changes/README.md).
 
 | Goal | Start here |
