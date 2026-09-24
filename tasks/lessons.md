@@ -21,6 +21,33 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-24 - CubitFailure migrate: named-arg rename + dead onAppError
+
+- What went wrong:
+  (1) Naive auto-rename of `onError` params to `failure.message` also rewrote
+  named-argument keys (`errorMessage:` / `message:` → `failure.message:`), and
+  record-type generics broke call-body extraction. (2) Migrated maps/todo kept
+  `onAppError` + `latestError` beside `onFailure`; `handleException` returns
+  after `onFailure`, so typed `AppError` never applied. (3) Watching CI then
+  merging hit `docs/changes/README.md` index conflicts when `main` moved.
+- How it was fixed:
+  Safer migrator (balance generics; rename with `(?!\s*:)`); use
+  `failure.appError` and drop dead `onAppError`; early
+  `_requireFailureCallback`; rebase/resolve index + force-with-lease before
+  merge.
+- Pattern:
+  Mechanical string rewrites of Dart named params and dual failure callbacks
+  are high-risk; CI-watch merges need a fresh rebase when the changes index
+  is contested.
+- Preventive rule:
+  Prefer `onFailure` + `CubitFailure.appError` only; never pair
+  `onAppError` with `onFailure`. Before `gh pr merge`, rebase onto
+  `origin/main` if the changes README index was touched. Re-validate
+  transformed cubits with analyze/tests, not inventory count alone.
+- Evidence or affected files:
+  PR #891; `cubit_async_operations.dart`; maps/todo cubits; Codex GPT-6 Sol
+  review findings.
+
 ### 2026-09-23 - Integration: SPM path alias, DerivedData disk, Android jetsam
 
 - What went wrong:
