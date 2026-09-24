@@ -3,7 +3,7 @@
 ## 1. Purpose
 
 This repo is a **modular monolith** Flutter reference app positioned on **four
-authority pillars** (always four — never collapse the narrative):
+pillars** (always four — never collapse the narrative):
 
 1. Flutter / Cubit / Clean Architecture  
 2. Offline-first / reliability spine  

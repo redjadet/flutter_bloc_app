@@ -4,7 +4,7 @@ This document is the catalog of user-facing capabilities in the repo. It is not
 an implementation deep dive. Use it to find the owning feature module, route,
 and the next document to read.
 
-## Authority tiers (Spine / Depth / Archive)
+## Feature tiers (Spine / Depth / Archive)
 
 | Tier | Meaning | Investment rule |
 | --- | --- | --- |
@@ -136,7 +136,7 @@ See [Architecture Details](architecture_details.md) and
 
 ## Deep-dive references
 
-- [Authority scope register](authority_scope_register.md)
+- [Scope register](authority_scope_register.md)
 - [Case studies index](case_studies/README.md)
 - [AI Decision Workbench](features/ai_decision_workbench.md)
 - [Authentication](authentication.md)
