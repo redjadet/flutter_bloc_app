@@ -63,7 +63,6 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
         await refreshPendingSyncCount();
       },
       isAlive: () => !isClosed,
-      onError: (_) {},
       logContext: 'CounterCubit.loadInitial',
       logErrors: false,
       onFailure: (failure) {

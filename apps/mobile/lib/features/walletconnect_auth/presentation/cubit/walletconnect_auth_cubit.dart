@@ -144,7 +144,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
         await operation();
       },
       isAlive: () => !isClosed,
-      onError: onError ?? _emitError,
+      onFailure: (failure) => (onError ?? _emitError)(failure.message),
       logContext: logContext,
     );
   }

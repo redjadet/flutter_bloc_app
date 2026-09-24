@@ -43,7 +43,6 @@ mixin _SupabaseAuthCubitHandlers
       },
       logContext: logContext,
       isAlive: () => !isClosed,
-      onError: (_) {},
       logErrors: false,
       onFailure: (failure) {
         _emitActionError(

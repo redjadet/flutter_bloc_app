@@ -104,7 +104,6 @@ class ChartCubit extends Cubit<ChartState> {
           ),
         );
       },
-      onError: (_) {},
       onFailure: (failure) {
         if (isClosed || !_fetchGuard.isCurrent(requestId)) return;
         emit(

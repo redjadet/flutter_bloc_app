@@ -82,9 +82,9 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
         isAlive: () => !isClosed,
         logContext: logContext,
         onSuccess: _emitLoadedState,
-        onError: (message) {
+        onFailure: (failure) {
           if (isClosed) return;
-          emit(RemoteConfigState.error(message));
+          emit(RemoteConfigState.error(failure.message));
         },
       );
     } finally {

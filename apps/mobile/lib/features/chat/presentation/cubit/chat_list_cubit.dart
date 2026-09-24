@@ -22,9 +22,11 @@ class ChatListCubit extends Cubit<ChatListState> {
         if (isClosed) return;
         emit(ChatListState.loaded(contacts: contacts));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(ChatListState.error(failure: ChatFailure(message: message)));
+        emit(
+          ChatListState.error(failure: ChatFailure(message: failure.message)),
+        );
       },
       logContext: 'ChatListCubit.loadChatContacts',
     );
@@ -44,9 +46,11 @@ class ChatListCubit extends Cubit<ChatListState> {
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
       isAlive: () => !isClosed,
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(ChatListState.error(failure: ChatFailure(message: message)));
+        emit(
+          ChatListState.error(failure: ChatFailure(message: failure.message)),
+        );
       },
       logContext: 'ChatListCubit.deleteContact',
     );
@@ -71,9 +75,11 @@ class ChatListCubit extends Cubit<ChatListState> {
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
       isAlive: () => !isClosed,
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(ChatListState.error(failure: ChatFailure(message: message)));
+        emit(
+          ChatListState.error(failure: ChatFailure(message: failure.message)),
+        );
       },
       logContext: 'ChatListCubit.markAsRead',
     );

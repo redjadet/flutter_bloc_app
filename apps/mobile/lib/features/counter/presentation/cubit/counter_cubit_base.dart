@@ -154,7 +154,6 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         ),
       ),
       isAlive: () => !isClosed,
-      onError: (_) {},
       onFailure: (failure) {
         _handleError(
           failure.error,

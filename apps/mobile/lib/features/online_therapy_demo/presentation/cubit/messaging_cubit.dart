@@ -214,9 +214,9 @@ class MessagingCubit extends Cubit<MessagingState> {
       error,
       stackTrace,
       logContext,
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
     );
   }

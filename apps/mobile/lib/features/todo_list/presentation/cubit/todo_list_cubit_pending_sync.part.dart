@@ -13,7 +13,7 @@ mixin _TodoListCubitPendingSync on Cubit<TodoListState> {
         emit(state.copyWith(pendingSyncCount: count));
       },
       isAlive: () => !isClosed,
-      onError: (_) {},
+      onFailure: (failure) {},
       logContext: 'TodoListCubit.refreshPendingSyncCount',
     );
   }

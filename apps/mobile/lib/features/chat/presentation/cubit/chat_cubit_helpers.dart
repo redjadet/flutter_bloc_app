@@ -113,15 +113,15 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
           emitState(current.copyWith(failure: null));
         }
       },
-      onError: (message) {
-        AppLogger.error('Chat history persistence failed', message);
+      onFailure: (failure) {
+        AppLogger.error('Chat history persistence failed', failure.message);
         if (isClosed) {
           return;
         }
         final ChatState current = _state;
         emitState(
           current.copyWith(
-            failure: current.failure ?? ChatFailure(message: message),
+            failure: current.failure ?? ChatFailure(message: failure.message),
           ),
         );
       },

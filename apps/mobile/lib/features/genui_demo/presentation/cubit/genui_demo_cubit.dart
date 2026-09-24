@@ -42,9 +42,9 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
       operation: () => _agent.initialize(),
       isAlive: () => !isClosed,
       logContext: 'GenUiDemoCubit.initialize',
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(GenUiDemoState.error(message: message));
+        emit(GenUiDemoState.error(message: failure.message));
       },
     );
 

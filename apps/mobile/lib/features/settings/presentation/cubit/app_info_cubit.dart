@@ -44,10 +44,13 @@ class AppInfoCubit extends Cubit<AppInfoState> {
           ),
         );
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
-          state.copyWith(status: ViewStatus.error, errorMessage: errorMessage),
+          state.copyWith(
+            status: ViewStatus.error,
+            errorMessage: failure.message,
+          ),
         );
       },
       logContext: 'AppInfoCubit.load',

@@ -1,13 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
-import 'package:utilities/utilities.dart';
 
 class MapSampleCubit extends Cubit<MapSampleState> {
   new({required this._repository}) : super(MapSampleState.initial());
@@ -45,15 +43,9 @@ class MapSampleCubit extends Cubit<MapSampleState> {
         selectedMarkerId: null,
       ),
     );
-    AppError? latestError;
-
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
       isAlive: () => !isClosed && _loadGuard.isCurrent(requestId),
-      onAppError: (appError) {
-        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        latestError = appError;
-      },
       onSuccess: (locations) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
@@ -74,14 +66,13 @@ class MapSampleCubit extends Cubit<MapSampleState> {
           ),
         );
       },
-      onError: (errorMessage) {
+      onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             isLoading: false,
-            errorMessage: errorMessage,
-            lastError:
-                latestError ?? NetworkErrorMapper.getAppError(errorMessage),
+            errorMessage: failure.message,
+            lastError: failure.appError,
             markers: const <gmaps.Marker>{},
             locations: const <MapLocation>[],
             selectedMarkerId: null,

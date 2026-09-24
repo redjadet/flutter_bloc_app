@@ -43,12 +43,12 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
       operation: () => _agent.sendMessage(text),
       isAlive: () => !isClosed,
       logContext: 'GenUiDemoCubit.sendMessage',
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         state.mapOrNull(
           ready: (state) => emit(
             GenUiDemoState.error(
-              message: message,
+              message: failure.message,
               surfaceIds: state.surfaceIds,
               hostHandle: state.hostHandle,
               isSending: true,
@@ -56,14 +56,14 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
           ),
           loading: (state) => emit(
             GenUiDemoState.error(
-              message: message,
+              message: failure.message,
               surfaceIds: state.surfaceIds,
               hostHandle: state.hostHandle,
               isSending: true,
             ),
           ),
           error: (state) =>
-              emit(state.copyWith(message: message, isSending: true)),
+              emit(state.copyWith(message: failure.message, isSending: true)),
         );
       },
     );

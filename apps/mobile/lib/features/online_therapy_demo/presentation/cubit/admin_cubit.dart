@@ -62,9 +62,9 @@ class AdminCubit extends Cubit<AdminState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'AdminCubit.refresh',
       isAlive: () => !isClosed,
@@ -91,9 +91,9 @@ class AdminCubit extends Cubit<AdminState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(state.copyWith(isBusy: false, errorMessage: message));
+        emit(state.copyWith(isBusy: false, errorMessage: failure.message));
       },
       logContext: 'AdminCubit.approve',
       isAlive: () => !isClosed,

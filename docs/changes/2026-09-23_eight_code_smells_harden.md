@@ -23,8 +23,10 @@ hard-to-verify failure paths.
 
 ## Out / not in this change
 
-- Migrating every remaining cubit still on legacy `onError`-only paths
-- Making `onError` optional when `onFailure` is set (API follow-up)
+- ~~Migrating every remaining cubit still on legacy `onError`-only paths~~ →
+  completed in [`2026-09-24_cubit_failure_migration.md`](2026-09-24_cubit_failure_migration.md)
+- ~~Making `onError` optional when `onFailure` is set (API follow-up)~~ →
+  completed in [`2026-09-24_cubit_failure_migration.md`](2026-09-24_cubit_failure_migration.md)
 
 ## Proof
 

@@ -23,9 +23,13 @@ class LobbyCubit extends Cubit<LobbyState> {
         if (isClosed) return;
         emit(LobbyState.ready(balance));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
-        emit(LobbyState.error(_l10n?.igamingDemoErrorLoadBalance ?? message));
+        emit(
+          LobbyState.error(
+            _l10n?.igamingDemoErrorLoadBalance ?? failure.message,
+          ),
+        );
       },
       logContext: 'LobbyCubit.loadBalance',
     );

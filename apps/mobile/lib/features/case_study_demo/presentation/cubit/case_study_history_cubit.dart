@@ -64,12 +64,12 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
           ),
         );
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             status: CaseStudyHistoryStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },

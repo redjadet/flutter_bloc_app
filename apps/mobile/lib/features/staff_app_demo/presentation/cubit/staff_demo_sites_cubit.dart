@@ -44,12 +44,12 @@ class StaffDemoSitesCubit extends Cubit<StaffDemoSitesState> {
         if (isClosed) return;
         emit(state.copyWith(status: StaffDemoSitesStatus.ready, sites: sites));
       },
-      onError: (message) {
+      onFailure: (failure) {
         if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoSitesStatus.error,
-            errorMessage: message,
+            errorMessage: failure.message,
           ),
         );
       },
