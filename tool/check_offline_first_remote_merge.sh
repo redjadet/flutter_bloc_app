@@ -343,6 +343,23 @@ for test_file in "${tests[@]}"; do
   echo "  • $test_file"
 done
 
-flutter test --no-pub "${tests[@]}"
+run_remote_merge_tests() {
+  flutter test --no-pub "${tests[@]}"
+}
+
+# Concurrent flutter test processes can race writing shader assets under
+# build/unit_test_assets (seen as impellerc / ShaderCompilerException). Match
+# check_ui_regressions / check_regression_guards: clean once and retry.
+rm -rf build/unit_test_assets
+if ! run_remote_merge_tests 2> >(tee /tmp/check_offline_first_remote_merge.stderr >&2); then
+  if grep -Eq "build/unit_test_assets|ink_sparkle\\.frag|ShaderCompilerException|impellerc failure" \
+    /tmp/check_offline_first_remote_merge.stderr; then
+    echo "check_offline_first_remote_merge: flutter unit_test_assets/shader write failed; cleaning and retrying once"
+    rm -rf build/unit_test_assets build/native_assets
+    run_remote_merge_tests
+  else
+    exit 1
+  fi
+fi
 
 echo "✅ Offline-first remote-merge regression tests passed"
