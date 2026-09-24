@@ -651,11 +651,16 @@ bash tool/check_tool_dart_async_main_blocking_io.sh --paths \
 echo "fixtures|check_runtime_errors|help"
 bash tool/check_runtime_errors.sh --help >/dev/null
 
-echo "fixtures|check_runtime_errors|self_test"
-bash tool/check_runtime_errors.sh --self-test >/dev/null
+# Docs-only CI skips Flutter setup; self-test needs dart + node on PATH.
+if command -v dart >/dev/null 2>&1 && command -v node >/dev/null 2>&1; then
+  echo "fixtures|check_runtime_errors|self_test"
+  bash tool/check_runtime_errors.sh --self-test >/dev/null
 
-echo "fixtures|check_runtime_errors|skip_no_app"
-bash tool/check_runtime_errors.sh >/dev/null
+  echo "fixtures|check_runtime_errors|skip_no_app"
+  bash tool/check_runtime_errors.sh >/dev/null
+else
+  echo "fixtures|check_runtime_errors|skip_no_dart_or_node"
+fi
 
 echo "fixtures|check_ai_snapshot_freshness|help"
 bash tool/check_ai_snapshot_freshness.sh --help >/dev/null
