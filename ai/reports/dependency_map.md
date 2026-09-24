@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-23T15:21:49Z"
-  git_head: "84443f0cd5d4295441a360e3ab2cbcbdc4026b5d"
+  generated_at: "2026-09-24T13:42:53Z"
+  git_head: "cb935a043a07077910cbaef0dbc0665aa5e0c267"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -18,30 +18,30 @@ ai_snapshot:
 <!-- refresh_ai_reports:feature_metrics:start -->
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
-| chat | 6588 | yes |
-| staff_app_demo | 5532 | yes |
-| todo_list | 5480 | yes |
-| social_feed_demo | 5324 | yes |
+| chat | 6600 | yes |
+| staff_app_demo | 5629 | yes |
+| todo_list | 5514 | yes |
+| social_feed_demo | 5389 | yes |
 | online_therapy_demo | 5089 | yes |
 | case_study_demo | 4592 | yes |
 | counter | 4398 | yes |
 | native_platform_showcase | 3497 | yes |
 | iot | 3075 | yes |
-| iot_demo | 3001 | yes |
+| iot_demo | 3025 | yes |
 | example | 2421 | yes |
-| auth | 2401 | yes |
+| auth | 2403 | yes |
 | realtime_market | 2129 | yes |
-| chart | 1972 | yes |
-| graphql_demo | 1911 | yes |
-| calculator | 1804 | yes |
+| chart | 1978 | yes |
+| graphql_demo | 1900 | yes |
+| calculator | 1805 | yes |
 | walletconnect_auth | 1510 | yes |
-| google_maps | 1452 | yes |
+| google_maps | 1443 | yes |
 | ai_decision_demo | 1440 | yes |
 | in_app_purchase_demo | 1421 | yes |
-| settings | 1342 | yes |
-| profile | 1328 | yes |
-| igaming_demo | 1278 | yes |
-| supabase_auth | 1247 | yes |
+| settings | 1345 | yes |
+| profile | 1336 | yes |
+| igaming_demo | 1290 | yes |
+| supabase_auth | 1262 | yes |
 | remote_config | 1236 | yes |
 | library_demo | 1018 | yes |
 | search | 1015 | yes |
@@ -49,12 +49,12 @@ ai_snapshot:
 | production_readiness | 972 | yes |
 | scapes | 943 | yes |
 | websocket | 875 | yes |
-| fcm_demo | 806 | yes |
-| secure_messaging_demo | 758 | yes |
+| fcm_demo | 812 | yes |
+| secure_messaging_demo | 780 | yes |
 | genui_demo | 722 | yes |
 | playlearn | 607 | yes |
+| deeplink | 549 | yes |
 | weather_demo | 547 | yes |
-| deeplink | 547 | yes |
 | certificate_pinning_demo | 496 | yes |
 | notes_demo | 447 | yes |
 | event_bus_demo | 302 | yes |

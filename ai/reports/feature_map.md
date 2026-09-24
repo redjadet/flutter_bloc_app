@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-23T15:21:49Z"
-  git_head: "84443f0cd5d4295441a360e3ab2cbcbdc4026b5d"
+  generated_at: "2026-09-24T13:42:53Z"
+  git_head: "cb935a043a07077910cbaef0dbc0665aa5e0c267"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -14,7 +14,7 @@ ai_snapshot:
 Per-feature agent context. This curated map is intentionally more selective than the feature directory inventory; use [`docs/feature_overview.md`](../../docs/feature_overview.md) for the complete catalog.
 
 <!-- refresh_ai_reports:feature_inventory:start -->
-**Feature inventory (generated):** 40 directories under `apps/mobile/lib/features` at source HEAD `84443f0cd5d4295441a360e3ab2cbcbdc4026b5d`.
+**Feature inventory (generated):** 40 directories under `apps/mobile/lib/features` at source HEAD `cb935a043a07077910cbaef0dbc0665aa5e0c267`.
 <!-- refresh_ai_reports:feature_inventory:end -->
 
 **Complexity:** `high` = platform/backend/async-heavy or co-located README; `standard` otherwise. Template: [`docs/architecture/complex_feature_readme_template.md`](../../docs/architecture/complex_feature_readme_template.md).

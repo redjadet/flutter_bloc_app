@@ -38,3 +38,8 @@
 
 - [ ] N/A — no resource ownership or lifecycle change
 - [ ] Reviewed [docs/performance/memory_checklist.md](../docs/performance/memory_checklist.md): every created disposable's life-cycle is explicitly ended; attached applicable proof
+
+## Portfolio scope (ADR-0005)
+
+- [ ] N/A — no new demo route / feature module
+- [ ] New demo: Archive tier replaced or promoted; [feature_overview.md](../docs/feature_overview.md) tags updated; change note or ADR linked ([ADR-0005](../docs/adr/0005-interview-showcase-scope.md) § Decision 7)

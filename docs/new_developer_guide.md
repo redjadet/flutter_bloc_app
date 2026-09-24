@@ -14,6 +14,28 @@ review the full diff and tests, then verify the result. Use
 [Best Areas for AI Agents](ai/best_areas_for_ai_agents.md) to choose bounded
 agent tasks; keep the agreed behavior in a repository brief or change note.
 
+## Working with agents
+
+Canonical ownership map:
+[`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md)
+(also linked from the README HITL landing). Finish / proof:
+[`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md).
+
+### Copy-paste request card
+
+```text
+Goal: <user-visible outcome>
+Non-goals: <explicit>
+Write-set: <paths or features>
+Must remain true: <invariant>
+Proof: <commands / tests>
+Human decides: <product/security/release forks>
+Do not: <secrets, Archive breadth, Phase 2 without slice>
+```
+
+Session start: `./bin/agent-maintain preflight --intent "<goal>"`.  
+Before finish: `./bin/agent-maintain closeout` + finish-gate checklist.
+
 ## Quickstart (first 30 minutes)
 
 ### Toolchain

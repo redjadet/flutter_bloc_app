@@ -6,13 +6,36 @@ CI-backed validation, and a broad set of integration demos. The repo is
 intentionally proof-oriented: claims in the README link to source, docs, or
 commands instead of relying on generic architecture statements.
 
+## Authority Thesis (four pillars)
+
+This repository is a **portfolio authority** on four equal pillars — never
+collapse the story to “three pillars” or to Flutter-only demos:
+
+| # | Pillar | What “good” means here | Evidence (ledger) |
+| --- | --- | --- | --- |
+| 1 | **Flutter / Cubit / Clean Architecture** | Feature modules, sealed/explicit state, gated modularity | Engineering **10/10** gate; ~57 Cubits; [`feature_overview.md`](docs/feature_overview.md) Spine tags |
+| 2 | **Offline-first / reliability spine** | Hive + sync honesty; stale remote never wins | [`offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md); W3 invariants in [`offline_first/authority_invariants.md`](docs/offline_first/authority_invariants.md) |
+| 3 | **Native iOS & Android interop** | MethodChannel / EventChannel / PlatformView / FFI (teachable later) | Live [`native_platform_showcase`](apps/mobile/lib/features/native_platform_showcase/); Rust FFI secure messaging. Unified `docs/platforms/*` teaching pack is **Phase 2** (not claimed shipped). |
+| 4 | **Human–AI HITL** | AGENTS ladder, safety contracts, AIDLC, finish gate | [`docs/ai/human_ai_collaboration.md`](docs/ai/human_ai_collaboration.md) |
+
+Claim honesty: every public score/count above is tied to the dated ledger in
+[`docs/changes/2026-09-24_authority_phase_0_evidence_baseline.md`](docs/changes/2026-09-24_authority_phase_0_evidence_baseline.md)
+(SHA `77150a6d…`). Scope / Archive rules:
+[`docs/authority_scope_register.md`](docs/authority_scope_register.md).
+
+### HITL visitor landing (first five minutes)
+
+Canonical path (AGENTS → ownership → safety → AIDLC → finish gate → request
+card): [Collaboration map](docs/ai/human_ai_collaboration.md). Do not mirror
+that sequence here.
+
 | Goal | Start here |
 | --- | --- |
 | Run locally | [Quick start](#quick-start), [developer guide](docs/new_developer_guide.md) |
 | Explore code and docs | [Code map](CODEMAP.md), [documentation index](docs/README.md) |
 | Review portfolio evidence | [Interview showcase](docs/interview_showcase.md) |
 | Develop critical human engineering skills | [Critical human skills](docs/engineering/critical_human_skills.md) |
-| Work with an AI agent | [AGENTS.md](AGENTS.md) |
+| Work with an AI agent | [AGENTS.md](AGENTS.md), [Collaboration map](docs/ai/human_ai_collaboration.md) |
 
 ## Platform and toolchain
 

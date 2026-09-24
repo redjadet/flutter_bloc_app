@@ -257,6 +257,32 @@ void main() {
       expect(AppRoutePolicies.caseStudyDemo.path, AppRoutes.caseStudyDemoPath);
       expect(AppRoutePolicies.caseStudyDemo.requiresAuthentication, isTrue);
     });
+
+    test('staff app demo subtree is marked authenticated', () {
+      expect(AppRoutePolicies.staffAppDemo.path, AppRoutes.staffAppDemoPath);
+      expect(AppRoutePolicies.staffAppDemo.requiresAuthentication, isTrue);
+    });
+
+    test('deep-link auth matrix policies match documented requirements', () {
+      // Matrix: docs/architecture/deep_link_auth_matrix.md
+      const public = <AppRoutePolicy>[AppRoutePolicies.settings];
+      const authenticated = <AppRoutePolicy>[
+        AppRoutePolicies.profile,
+        AppRoutePolicies.manageAccount,
+        AppRoutePolicies.walletconnectAuth,
+        AppRoutePolicies.caseStudyDemo,
+        AppRoutePolicies.staffAppDemo,
+        AppRoutePolicies.onlineTherapyDemoAdmin,
+        AppRoutePolicies.onlineTherapyDemoAdminVerification,
+        AppRoutePolicies.onlineTherapyDemoAdminAudit,
+      ];
+      for (final policy in public) {
+        expect(policy.requiresAuthentication, isFalse, reason: policy.path);
+      }
+      for (final policy in authenticated) {
+        expect(policy.requiresAuthentication, isTrue, reason: policy.path);
+      }
+    });
   });
 }
 

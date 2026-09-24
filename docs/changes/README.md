@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-09-24_authority_phase_0_evidence_baseline.md`](2026-09-24_authority_phase_0_evidence_baseline.md): Phase 0A scorecard/harness/checklist baseline + claim ledger (SHA `77150a6d`).
+- [`2026-09-24_authority_phase_0_1_delivery.md`](2026-09-24_authority_phase_0_1_delivery.md): Phase 0–1 thesis, Archive tags, HITL map, contracts, auth matrix.
 - [`2026-09-24_cubit_failure_migration.md`](2026-09-24_cubit_failure_migration.md): Finish CubitFailure/onFailure migration; optional onError; maps/todo use `failure.appError`.
 - [`2026-09-24_pr_ci_docs_only_routing.md`](2026-09-24_pr_ci_docs_only_routing.md): Keep required PR checks present while skipping Flutter setup and integration work for documentation-only diffs.
 - [`2026-09-24_profile_avatar_decode_size.md`](2026-09-24_profile_avatar_decode_size.md): Bound profile avatar decode size to rendered physical height while preserving its crop; no unmeasured frame-time claim.

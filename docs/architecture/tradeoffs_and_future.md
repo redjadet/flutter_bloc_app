@@ -38,9 +38,12 @@ would raise the bar further.
 
 ### Auth & security
 
-- **Deep links to non-root routes can bypass auth redirects.** `GoRouter`
-  `redirect` runs at the router level; deep links that land on nested routes
-  may skip it. Page-level guards are needed for stricter access control.
+- **Deep-link auth is route-gated (updated 2026-09-24).** Coarse
+  `createAuthRedirect` plus **route-level** `AppRouteAuthGate` /
+  `AppRoutePolicies` cover authenticated destinations. Matrix + tests:
+  [`deep_link_auth_matrix.md`](deep_link_auth_matrix.md). Remaining gap is
+  **role/claims** authorization (still deferred), not unsigned deep links to
+  known gated paths.
 - **No role/claims-based authorization.** Auth distinguishes authenticated vs
   anonymous only. Role or claims-based guards are deferred until multi-role
   requirements emerge.
@@ -91,8 +94,6 @@ would raise the bar further.
 
 - **Role/claims-based auth and per-route authorization guards** — required
   before multi-role features ship.
-- **Route-level auth checks for deep links** — prevent authenticated-only
-  screens from being reachable via direct links without auth.
 - **Expand token injection** beyond the shared Dio client so third-party SDKs
   also receive valid tokens when needed.
 

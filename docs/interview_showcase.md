@@ -2,14 +2,25 @@
 
 ## 1. Purpose
 
-This repo is a **modular monolith** Flutter reference app: Clean Architecture,
-Cubit-first state, offline-first sync, typed routing, and broad demo surface
-area. For a **mobile SaaS** interview or technical screen, use this doc as a
+This repo is a **modular monolith** Flutter reference app positioned on **four
+authority pillars** (always four — never collapse the narrative):
+
+1. Flutter / Cubit / Clean Architecture  
+2. Offline-first / reliability spine  
+3. Native iOS & Android interop  
+4. Human–AI HITL collaboration  
+
+Claims cite the Phase 0A ledger:
+[`changes/2026-09-24_authority_phase_0_evidence_baseline.md`](changes/2026-09-24_authority_phase_0_evidence_baseline.md).
+Visitor HITL path: [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md).
+Feature tiers (Spine / Depth / Archive): [`feature_overview.md`](feature_overview.md).
+
+For a **mobile SaaS** interview or technical screen, use this doc as a
 **30-minute walkthrough**. It is not a tour of every demo route.
 
-Positioning: one codebase with **33+ feature modules** and shared
-infrastructure. The spine features prove delivery depth; the remaining modules
-are **depth branches** for follow-up questions.
+Positioning: one codebase with **~40 feature modules** and shared
+infrastructure. The spine features prove delivery depth; Depth modules answer
+follow-ups; Archive modules are frozen unless promoted ([ADR-0005](adr/0005-interview-showcase-scope.md)).
 
 ## 2. Prerequisites
 
