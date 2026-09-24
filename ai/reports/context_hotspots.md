@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-23T15:21:49Z"
-  git_head: "84443f0cd5d4295441a360e3ab2cbcbdc4026b5d"
+  generated_at: "2026-09-24T13:23:18Z"
+  git_head: "77150a6dac41c063e0c8e4fa4e1be361ec8516ee"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -20,10 +20,10 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 2 | 427 | `social_feed_demo/presentation/cubit/social_feed_cubit_helpers.part.dart` | social_feed_demo |
 | 3 | 421 | `todo_list/data/offline_first_todo_repository_impl.part.dart` | todo_list |
 | 4 | 401 | `example/presentation/widgets/example_page_body_content.part.dart` | example |
-| 5 | 394 | `ai_decision_demo/presentation/pages/ai_decision_demo_page.part.dart` | ai_decision_demo |
-| 6 | 359 | `online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | online_therapy_demo |
-| 7 | 355 | `camera_gallery/presentation/pages/camera_gallery_page.part.dart` | camera_gallery |
-| 8 | 333 | `social_feed_demo/data/offline_first_social_feed_repository_sync.part.dart` | social_feed_demo |
+| 5 | 398 | `social_feed_demo/data/offline_first_social_feed_repository_sync.part.dart` | social_feed_demo |
+| 6 | 394 | `ai_decision_demo/presentation/pages/ai_decision_demo_page.part.dart` | ai_decision_demo |
+| 7 | 359 | `online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | online_therapy_demo |
+| 8 | 355 | `camera_gallery/presentation/pages/camera_gallery_page.part.dart` | camera_gallery |
 | 9 | 318 | `igaming_demo/presentation/pages/game_page_sections.part.dart` | igaming_demo |
 | 10 | 304 | `online_therapy_demo/data/fake/online_therapy_fake_api_impl.part.dart` | online_therapy_demo |
 | 11 | 303 | `walletconnect_auth/data/walletconnect_auth_repository_impl_body.part.dart` | walletconnect_auth |
@@ -37,7 +37,7 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 19 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
 | 20 | 223 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
 
-**Total feature Dart (non-generated):** ~82538 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~82827 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**
