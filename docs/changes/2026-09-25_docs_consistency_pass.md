@@ -16,7 +16,7 @@ honesty, and one optional local-symlink markdown link.
 | [`scope_register.md`](../scope_register.md) | Phase 4 heading → **shipped** |
 | [`README.md`](../README.md) | Replace long Core-docs catalog with thin highlights + folder READMEs |
 | [`new_developer_guide.md`](../new_developer_guide.md) | Compress §§3–6 to pointers (architecture / feature / validation / testing owners) |
-| Agent tracker docs | Mark `tasks/*/todo.md` as local/gitignored; link tracker template |
+| Agent tracker docs | Mark `tasks/*/todo.md` as local/gitignored; link tracker template (skip `agents_quick_reference.md` — that path triggers host asset-drift on CI) |
 | [`design_system.md`](../design_system.md) | Dedupe DESIGN.md CLI block; shorten Mix examples |
 | [`ai/gstack_integration.md`](../ai/gstack_integration.md) | Drop broken markdown link to optional host symlink |
 
