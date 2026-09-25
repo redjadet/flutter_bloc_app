@@ -36,7 +36,7 @@ credential is returned to Flutter.
 
 Before writing code, Cursor agents should confirm:
 
-1. The active slice and write set are recorded in `tasks/cursor/todo.md`.
+1. The active slice and write set are recorded in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md).
 2. Any STOP row the slice depends on is either resolved below or explicitly using the plan default.
 3. FastAPI contract fields used by Flutter are frozen here before repository/UI work begins.
 4. After Python changes under `demos/render_chat_api` or repo `tool/`, run **`./tool/check_pyright_python.sh`** before merge (or rely on **`./bin/checklist`**, which includes it).
@@ -73,10 +73,7 @@ Record these before broad Flutter integration starts:
 
 ## Expected first PR sequence
 
-1. FastAPI contract + orchestration skeleton + pytest using the shared fixture root.
-2. Flutter Render repository + provider/DI wiring against the frozen contract.
-3. UI/l10n + auth/session/token surfaced states.
-4. Docs / validation cleanup.
+Historical v1 sequence (contract → Flutter wiring → UI/l10n → docs) is complete; new work follows STOP table + [`render_chat_ops.md`](render_chat_ops.md).
 
 ## Python validation (FastAPI + repo `tool/`)
 
@@ -84,56 +81,22 @@ Record these before broad Flutter integration starts:
 - **pytest** — From `demos/render_chat_api`: `python -m pytest` (shared fixtures under [`test/fixtures/render_chat_contract/`](../../apps/mobile/test/fixtures/render_chat_contract)).
 - **Editor** — Basedpyright/Pyright: [`demos/render_chat_api/README.md`](../../demos/render_chat_api/README.md) (IDE section).
 
-## Render MCP (Cursor marketplace plugin)
+## Render MCP / deploy trigger
 
-The **Render** Cursor plugin (marketplace) ships skills, rules, and the same **hosted MCP** config pattern as [Render MCP docs](https://render.com/docs/mcp-server). **Enabling the plugin alone does not guarantee MCP tools in Agent Chat** until the hosted server is registered with a **Render API key** (separate from `render login` CLI tokens).
+Workspace Render MCP can list services, env, logs, and metrics after a service exists.
+**Blueprint provision**, deploy trigger, `RENDER_API_KEY` handling, provenance, readiness,
+rollback, and secret rotation live in [`render_chat_ops.md`](render_chat_ops.md).
 
-### One-time setup
+Quick pointers:
 
-1. Create an API key: [Dashboard → Account Settings → API Keys](https://dashboard.render.com/u/settings#api-keys).
-2. Export **`RENDER_API_KEY`** in the environment that launches Cursor (for example `direnv` in the repo root; never commit the key).
-3. Ensure **`render`** appears in MCP config with the hosted URL and Bearer header. The workspace may merge a **`render`** entry into gitignored `.cursor/mcp.json` at the repo root (same shape as the Render plugin’s bundled config):
+- Validate blueprint: `render blueprints validate demos/render_chat_api/render.yaml`
+- Trigger deploy: [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh)
+- Typical Render origin: `https://flutter-bloc-render-chat-api.onrender.com` (set Flutter base URL; never paste Render API keys into the app)
 
-   - `https://mcp.render.com/mcp`
-   - `Authorization: Bearer ${RENDER_API_KEY}`
+## Ops / timeouts (cold start)
 
-   Alternatively add the same block to **`~/.cursor/mcp.json`**. Reload Cursor (or **MCP: List Servers**) after changes.
-
-4. In chat, set the active workspace if prompted (`list_workspaces` / `select_workspace` in MCP terms).
-
-### What MCP can do for *this* demo
-
-| Goal | Use |
-| --- | --- |
-| **Provision** Docker web service + monorepo **`rootDir: demos/render_chat_api`** + `dockerfilePath` | **Blueprint or Dashboard**, using committed [`demos/render_chat_api/render.yaml`](../../demos/render_chat_api/render.yaml) (`plan: free` for Hobby). Render MCP **`create_web_service`** is limited to native **build/start** flows and does not replace blueprint fields for this layout. |
-| **Secrets / env** after the service exists | MCP **`update_environment_variables`** (or Dashboard): `CORS_ORIGINS`, `FIREBASE_PROJECT_ID`, `HUGGINGFACE_API_KEY`, optional `DEMO_SHARED_SECRET`. Keep all credential values server-side. |
-| **Observe** | MCP **`list_services`**, **`get_service`**, **`list_deploys`**, **`list_logs`**, **`get_metrics`**. |
-| **Trigger deploy** | Repo script [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh): `POST /v1/services/{id}/deploys` with **`RENDER_API_KEY`** (hosted Render MCP **cannot** start deploys; use this script, Dashboard, deploy hook, or `render deploys create`). |
-
-**CLI still useful:** `render blueprints validate demos/render_chat_api/render.yaml` (with default workspace) before applying a blueprint.
-
-### Provisioned endpoint (example)
-
-When the workspace service name matches [`demos/render_chat_api/render.yaml`](../../demos/render_chat_api/render.yaml) (`flutter-bloc-render-chat-api`), the public origin is typically:
-
-`https://flutter-bloc-render-chat-api.onrender.com`
-
-Set Flutter `CHAT_RENDER_DEMO_BASE_URL` to that origin (no trailing slash). **Do not** paste Render API keys into the app, repo, or chat—use Dashboard env vars / `PUT …/env-vars` from a local shell with `RENDER_API_KEY` in the environment, then **rotate** the key if it was ever exposed.
-
-**Hugging Face credential for real chat:** the handler in
-[`demos/render_chat_api/main.py`](../../demos/render_chat_api/main.py) reads
-`HUGGINGFACE_API_KEY` from the service environment and passes it only to the
-fixed Hugging Face upstream. It does not accept `X-HF-Authorization` or any
-other client-supplied provider credential. Optional `DEMO_SHARED_SECRET` on the
-service matches `X-Render-Demo-Secret` when that additional gate is enabled.
-
-### `RENDER_API_KEY` (Render REST / Cursor MCP only)
-
-- **Local:** `export RENDER_API_KEY=...` in gitignored **`.envrc`** or **`.env`** (see [`docs/envrc.example`](../envrc.example) and [`.env.example`](../../.env.example)). [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) loads `.env` / `.env.local` automatically.
-- **Do not** create a Firebase **Remote Config** parameter for `RENDER_API_KEY`. Remote Config is retrieved by the **client** app; Render API keys are **workspace-admin** credentials and would be exposed to anyone who can read your Remote Config payload.
-- **If you need Firebase-hosted server-side storage:** use **Cloud Functions secrets** (`firebase functions:secrets:set …`) or another server-only channel for Firebase code. The retired `issueRenderChatDemoHfReadToken` Callable fails closed and must not be repurposed to deliver the FastAPI provider credential to Flutter.
-
-## Ops / timeouts
+Cold-start measurement checklist and Dio timeouts: keep the evidence log here; full
+ops (health vs ready, smoke, rollback) → [`render_chat_ops.md`](render_chat_ops.md).
 
 ### Cold-start vs Flutter Dio (manual verification)
 
@@ -146,23 +109,13 @@ The Render path uses **dedicated Dio** options from [`render_chat_dio_factory.da
 | `receiveTimeout` | 120s |
 | `followRedirects` | `false` |
 
-Scale-to-zero or small Render plans can push the **first** `POST /v1/chat/completions` after idle toward **connect** or **receive** limits. When **`CHAT_RENDER_DEMO_STRICT`** is **false**, **retryable** failures (including some timeout-class behavior mapped in [`render_chat_failure_mapper.dart`](../../apps/mobile/lib/features/chat/data/render_chat_failure_mapper.dart)) may **fall through** to composite per the plan fallthrough matrix; when **strict** is **true**, the user sees a terminal Render failure without composite fallback.
+Scale-to-zero or small Render plans can push the **first** `POST /v1/chat/completions` after idle toward **connect** or **receive** limits. When **`CHAT_RENDER_DEMO_STRICT`** is **false**, **retryable** failures may **fall through** to composite; when **strict** is **true**, the user sees a terminal Render failure without composite fallback.
 
-#### Checklist (run after meaningful Render, Dio, or fallthrough policy changes)
-
-1. **Cold instance:** Idle the service until scale-to-zero (or use a fresh preview deploy).
-2. **Measure first POST:** Call `POST /v1/chat/completions` with production-like headers (`Authorization`, `Idempotency-Key`, optional `X-Render-Demo-Secret`) and record wall time to first complete response (e.g. `curl -w '\n%{time_total}\n'` or Render **Metrics / Logs**).
-3. **Compare to Dio:** Confirm typical cold path stays **under** `receiveTimeout` (120s) for success, or explicitly document product choice to rely on **fallthrough** / user-visible timeout when stricter budgets are set later.
-4. **Client path:** Repeat once on **emulator or device** on a representative network; watch for **connect** stalls approaching **30s**.
-5. **Append one evidence row** to the table below.
-
-#### Evidence log (append rows; keep history)
-
-Do not append numeric **Cold POST wall (s)** values without a primary measurement (for example `curl -w '%{time_total}\n'`, Render request metrics, or instrumented client timestamps). Keep the template row until a real cold run is recorded.
+Append measured cold-start rows only (no invented wall times):
 
 | Date (UTC) | Environment | Cold POST wall (s) | Strict (`CHAT_RENDER_DEMO_STRICT`) | Fallthrough observed | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 2026-04-12 | Render free web `flutter-bloc-render-chat-api` (Oregon) + `curl /health` | ~57 | n/a | n/a | First successful `GET https://flutter-bloc-render-chat-api.onrender.com/health` after cold start; wall time from `curl` run in agent shell (~56.7s). |
+| 2026-04-12 | Render free web `flutter-bloc-render-chat-api` (Oregon) + `curl /health` | ~57 | n/a | n/a | First successful `GET …/health` after cold start (~56.7s). |
 | *— add row per run —* | e.g. prod Render + `main_dev` iOS | *measure* | Y/N | Y/N / n/a | PR, ticket, or build id optional |
 
 ## Flutter client (`SecretConfig` compile-time defines)
@@ -191,10 +144,11 @@ CORS allowlist for browser clients includes **`x-client-correlation-id`** (see [
 
 ## Security notes
 
-- **Caller auth header** on the client: owned by a dedicated DI provider (see plan **Caller auth implementation contract**). The Render request path has no HF token provider or upstream credential header.
-- **FastAPI:** per-uid/IP limits, max body/header sizes, auth-failure telemetry; v1 **no** user-controlled upstream hosts (HF base fixed; future tools need allowlists).
+- **Caller auth** on the client: dedicated DI provider; Render path sends no HF credential header.
+- Hardening table, secret rotation, and accepted residual risks: [`render_chat_ops.md`](render_chat_ops.md).
 
 ## Links
 
+- Ops runbook: [`render_chat_ops.md`](render_chat_ops.md).
 - [`AGENTS.md`](../../AGENTS.md) — delivery and validation routing.
 - Codex plan review: `./tool/run_codex_plan_review.sh docs/integrations/render_fastapi_chat_demo.md`.
