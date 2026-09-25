@@ -5,10 +5,10 @@
 
 ## What
 
-| Old | New |
+| Old (removed) | New |
 | --- | --- |
-| `docs/authority_scope_register.md` | `docs/scope_register.md` |
-| `docs/offline_first/authority_invariants.md` | `docs/offline_first/invariants.md` |
+| [`docs/authority_scope_register.md`](../scope_register.md) | [`docs/scope_register.md`](../scope_register.md) |
+| [`docs/offline_first/authority_invariants.md`](../offline_first/invariants.md) | [`docs/offline_first/invariants.md`](../offline_first/invariants.md) |
 
 ## Why
 
