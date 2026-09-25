@@ -5,7 +5,7 @@ Host-specific deltas only. Canonical load order starts at
 
 ## Codex
 
-- Use [`../tasks/codex/todo.md`](../tasks/codex/todo.md) for non-trivial active work.
+- Use local/gitignored `../tasks/codex/todo.md` for non-trivial active work (template: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)).
 - Project [`AGENTS.md`](../AGENTS.md) is worktree-scoped and is **not** synced into
   the Codex home AGENTS file under `~/.codex/`. That home file is unmanaged user
   config: keep it a short host-neutral pointer to the nearest repository map, or
@@ -27,7 +27,7 @@ Host-specific deltas only. Canonical load order starts at
 
 ## Cursor
 
-- Use [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md) for non-trivial active work.
+- Use local/gitignored `../tasks/cursor/todo.md` for non-trivial active work (template: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)).
 - Keep slash commands thin wrappers over repo scripts.
 
 ## Delegation

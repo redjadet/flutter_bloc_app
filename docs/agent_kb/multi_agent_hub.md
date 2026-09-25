@@ -14,7 +14,8 @@ Use team when >=2 indicators: blast radius, cross-layer read, high-risk logic
 asked plan+implement+verify. Use single for small/local/mechanical. Tie-break:
 **single**.
 
-Record one branch in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md):
+Record one branch in local/gitignored [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md)
+(template: [`../engineering/task_tracker_template.md`](../engineering/task_tracker_template.md)):
 
 ```text
 Benefit: team - short reason

@@ -59,132 +59,51 @@ root when an existing category applies.
 
 ## Core docs (by concern)
 
+Folder READMEs under **Browse by folder** own the catalogs. Root highlights only
+(do not duplicate long lists here):
+
 ### Case studies
 
-- [`case_studies/README.md`](case_studies/README.md) — product briefs and engineering decision stories
-- [`case_studies/dentists.md`](case_studies/dentists.md) — dentist video case-study requirements
-- Implementation and Supabase extension plans live under [`changes/`](changes/README.md) (see index there)
+- [`case_studies/README.md`](case_studies/README.md) — product briefs; dentists brief → Case Study Demo
 
 ### Architecture and design
 
-- [`tech_stack.md`](tech_stack.md) — toolchain pins display; machine SoT [`toolchain_versions.env`](toolchain_versions.env)
-- [`../DESIGN.md`](../DESIGN.md) — agent-readable visual brief and DesignMD tokens
-- [`clean_architecture.md`](clean_architecture.md)
-- [`architecture_details.md`](architecture_details.md)
-- [`bloc_standards.md`](bloc_standards.md) — deterministic Cubit/BLoC rules for AI agents
-- [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) — feature folder and placement contract
-- [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) — use-case, DTO, mapper, and error-boundary policy
-- [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) — semantic judgment spine (guard clauses, naming, DTO boundaries, state shape, pure decisions, typed errors, reviewable diffs)
-- [`architecture/reference_features.md`](architecture/reference_features.md) — gold layouts + semantic grades
-- [`feature_overview.md`](feature_overview.md)
-- [`modularity.md`](modularity.md)
-- [`design_system.md`](design_system.md)
-- [`architecture/flutter_layout_constraints.md`](architecture/flutter_layout_constraints.md) — *Constraints go down. Sizes go up. Parents set positions.*
-- [`universal_links/README.md`](universal_links/README.md)
-- [`adr/README.md`](adr/README.md) - accepted architecture decision records and ADR lifecycle guidance
+- [`tech_stack.md`](tech_stack.md) · [`../DESIGN.md`](../DESIGN.md) · [`clean_architecture.md`](clean_architecture.md)
+- [`bloc_standards.md`](bloc_standards.md) · [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md)
+- [`architecture/reference_features.md`](architecture/reference_features.md) · [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md)
+- [`feature_overview.md`](feature_overview.md) · [`design_system.md`](design_system.md) · [`adr/README.md`](adr/README.md)
+- Layout contract: [`architecture/flutter_layout_constraints.md`](architecture/flutter_layout_constraints.md)
 
 ### Workflow and quality
 
-- [`new_developer_guide.md`](new_developer_guide.md)
-- [`engineering/flutter_fundamentals_and_production_practices.md`](engineering/flutter_fundamentals_and_production_practices.md) — Stateless/Stateful, widget tree, setState vs Cubit/BLoC/Provider/Riverpod, hot reload/restart; offline, performance, team structure, unreproducible crashes with repo stories
-- [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md) — problem decomposition, communication, design, review, debugging, security, product judgment, production accountability, agent supervision, and restraint/deletion when implementation is cheap
-- [`git_and_branching_strategy.md`](git_and_branching_strategy.md) — human and AI Git, branch, PR, and worktree workflow
-- [`agent_knowledge_base.md`](agent_knowledge_base.md)
-- [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) — bounded tasks where agents add value, with human controls and acceptance evidence
-- [`agent_project_context.md`](agent_project_context.md)
-- [`agent_environment_setup.md`](agent_environment_setup.md)
-- [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) — when agents run `preflight` / `closeout` / `after-host-edit`
-- [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) — AI failure risk register and prevention/detection/recovery map
-- [`ai/harness_scorecard.md`](ai/harness_scorecard.md) — Cursor/Codex max-score proof gate
-- [`ai/harness_auto_maintenance.md`](ai/harness_auto_maintenance.md) — Agent loop to preserve max harness score
-- [`validation_scripts.md`](validation_scripts.md)
-- [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
-- [`testing_overview.md`](testing_overview.md)
-- [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md)
-- [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md) — BLoC widget test how-to
-- [`logging.md`](engineering/logging.md)
-- [`code_review_graph.md`](ai/code_review_graph.md)
-- [`review/code_review_playbook.md`](review/code_review_playbook.md) — shared
-  AI/human review workflow, finding format, and decision record
-- [`contributing/PR_REVIEW_CHECKLIST.md`](contributing/PR_REVIEW_CHECKLIST.md) —
-  networking / pagination / Bloc / contract-test questions
-- [`ai_code_review_protocol.md`](ai_code_review_protocol.md) — AI-specific risk
-  matrix and Flutter review special cases
-- [`CODE_QUALITY.md`](CODE_QUALITY.md) — quality gates; clean code in the AI era; Dart 3.13 primary constructors
-- [`review/architecture_checklist.md`](review/architecture_checklist.md)
-- [`review/bloc_checklist.md`](review/bloc_checklist.md)
-- [`review/security_checklist.md`](review/security_checklist.md)
-- [`review/performance_checklist.md`](review/performance_checklist.md)
-- [`bloc/cubit_file_template.md`](bloc/cubit_file_template.md)
-- [`architecture/feature_brief_scaffold_example.md`](architecture/feature_brief_scaffold_example.md)
-- [`engineering/checklist_quality_gates_baseline.md`](engineering/checklist_quality_gates_baseline.md) — checklist quality-theme gates (MVP, May 2026)
-- [`engineering/checklist_quality_gates_deferred.md`](engineering/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
-- [`feature_implementation_guide.md`](feature_implementation_guide.md)
-- [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
-- [`ci_automation.md`](engineering/ci_automation.md)
-
-#### Performance / lifecycle
-
-- [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md) — DevTools / profile triage: jank is a symptom; find the delayed work first (`bash tool/triage_jank.sh`)
-- [`performance/dart_memory_under_the_hood.md`](performance/dart_memory_under_the_hood.md) — heap, GC, object lifetimes, DevTools investigation
-- [`performance/memory_management.md`](performance/memory_management.md) — ownership principles
-- [`performance/memory_testing.md`](performance/memory_testing.md) — leak_tracker tagged suite
-- [`performance/memory_lints.md`](performance/memory_lints.md) — `memory_lint` rule IDs
-- [`performance/memory_ci.md`](performance/memory_ci.md) — checklist / CI gates
-- [`performance/memory_checklist.md`](performance/memory_checklist.md) — reviewer checklist
-- [`performance/native_event_channel_telemetry.md`](performance/native_event_channel_telemetry.md) — EventChannel telemetry contract, native-side throttling, and physical-device proof plan
-
-#### Engineering (`docs/engineering/`)
-
-- [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md) — where to add tests; failure ownership
-- [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) — journeys → integration targets and tiers
-- [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md) — `./bin/integration_tests` env, tiers, artifacts
-- [`engineering/integration_metrics_baseline.md`](engineering/integration_metrics_baseline.md) — rollout metrics and baseline commands
-- [`engineering/agent_output_scorecard_v1.md`](engineering/agent_output_scorecard_v1.md) — agent scorecard event contract
-- [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md) — Cursor/Codex task tracker shape
-- [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md) — deferred work and scheduling patterns
-- [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) — iOS/macOS debug Hive + Keychain triage and regression guard
-- [`testing_integration_flows.md`](testing/testing_integration_flows.md) — authoring integration flows (companion to policy/contract)
+- [`new_developer_guide.md`](new_developer_guide.md) · [`quick_start.md`](quick_start.md)
+- [`agent_knowledge_base.md`](agent_knowledge_base.md) · [`agents_quick_reference.md`](agents_quick_reference.md)
+- [`validation_scripts.md`](validation_scripts.md) · [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
+- [`testing_overview.md`](testing_overview.md) · [`review/code_review_playbook.md`](review/code_review_playbook.md)
+- [`CODE_QUALITY.md`](CODE_QUALITY.md) · [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
+- [`ai/harness_scorecard.md`](ai/harness_scorecard.md) · [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md)
+- Performance: [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md) (`bash tool/triage_jank.sh`)
+- Integration: [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md), [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md)
 
 ### Offline-first and local storage
 
-- [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md)
-- [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md)
-- [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md)
+- [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md) · [`offline_first/invariants.md`](offline_first/invariants.md)
+- [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) · [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md)
 
 ### Setup, secrets, and integrations
 
-- [`firebase_setup.md`](integrations/firebase_setup.md)
-- [`authentication.md`](authentication.md)
-- [`ai_integration.md`](integrations/ai_integration.md)
-- [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
-- [`SECURITY.md`](SECURITY.md)
-- [`security_and_secrets.md`](security_and_secrets.md)
-- [`security/certificate_pinning.md`](security/certificate_pinning.md)
-- [`features/certificate_pinning_demo.md`](features/certificate_pinning_demo.md)
-- [`localization.md`](engineering/localization.md)
-- [`universal_links/README.md`](universal_links/README.md)
+- [`security_and_secrets.md`](security_and_secrets.md) · [`SECURITY.md`](SECURITY.md) · [`authentication.md`](authentication.md)
+- [`integrations/README.md`](integrations/README.md) · [`integrations/firebase_setup.md`](integrations/firebase_setup.md)
+- [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md) · [`integrations/render_chat_ops.md`](integrations/render_chat_ops.md)
 
 ### Feature walkthroughs and demos
 
-- [`ai_decision_workbench.md`](features/ai_decision_workbench.md)
-- [`staff_app_demo_walkthrough.md`](features/staff_app_demo_walkthrough.md)
-- [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
-- [`features/social_feed_demo.md`](features/social_feed_demo.md)
-- [`features/in_app_purchase_demo.md`](features/in_app_purchase_demo.md)
-- [`features/iot_ble.md`](features/iot_ble.md)
-- [`features/realtime_market.md`](features/realtime_market.md)
-- [`fcm_demo_integration.md`](integrations/fcm_demo_integration.md)
-- [`case_studies/README.md`](case_studies/README.md)
-- [`genui_demo_user_guide.md`](features/genui_demo_user_guide.md)
+See [`features/README.md`](features/README.md) and [`feature_overview.md`](feature_overview.md).
 
 ### Release and distribution
 
-- [`deployment.md`](deployment.md) — iOS, Android, dual-store Fastlane (`release_both_stores.sh`), web Pages
-- [`firebase_app_distribution.md`](integrations/firebase_app_distribution.md) — pre-release testers
-- [`android_play_store_release_sop.md`](engineering/android_play_store_release_sop.md) — Play validation gates and promotion
-- [`../fastlane/README.md`](../fastlane/README.md) — Fastlane lane index (`deploy_all`, platform lanes)
-- Env templates: [`.env.example`](../.env.example), [`docs/envrc.example`](envrc.example), [`.env.ios.release.example`](../.env.ios.release.example), [`.env.android.release.example`](../.env.android.release.example)
+- [`deployment.md`](deployment.md) · [`../fastlane/README.md`](../fastlane/README.md)
+- Env templates: [`.env.example`](../.env.example), [`docs/envrc.example`](envrc.example)
 
 ## Historical context (not source of truth)
 

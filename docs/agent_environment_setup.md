@@ -183,7 +183,7 @@ Use the narrowest honest lane:
 Where durable facts belong:
 
 - Tier 1, current context: current diff, errors, acceptance proof.
-- Tier 2, session memory: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) / [`tasks/codex/todo.md`](../tasks/codex/todo.md).
+- Tier 2, session memory: local/gitignored [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) / [`tasks/codex/todo.md`](../tasks/codex/todo.md) (template [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)).
 - Tier 3, project memory: `docs/changes/`, `docs/plans/`, ADRs, tests, tool scripts.
 - Tier 4, index: code-review-graph + targeted search, then raw reads before edits.
 

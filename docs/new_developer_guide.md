@@ -196,85 +196,46 @@ For feature-by-feature entry points, see [Feature Overview](feature_overview.md)
 
 ## 3. Application flow
 
-1. `apps/mobile/lib/main_dev.dart`, `apps/mobile/lib/main_staging.dart`, or
-   `apps/mobile/lib/main_prod.dart` selects a `Flavor` and calls
-   `runAppWithFlavor()`.
-2. `apps/mobile/lib/main_bootstrap.dart` initializes Flutter bindings,
-   registers the FCM background handler, and delegates startup to
-   `BootstrapCoordinator`.
-3. `AppCompositionRoot.createApp()` in
-   `apps/mobile/lib/app/composition/app_composition_root.dart` creates the
-   router, wires auth refresh when enabled, and injects resolved dependencies
-   into `MyApp`. `apps/mobile/lib/app.dart` renders `AppScope` and disposes
-   the injected auth refresh listener.
-4. `apps/mobile/lib/app/app_scope.dart` wires app-wide cubits and listeners
-   such as locale, theme, deep links, retry notifications, and sync status.
-5. `apps/mobile/lib/app/app_config.dart` builds `MaterialApp.router`, theme,
-   localization, and app overlays.
-6. Route files under `apps/mobile/lib/app/router/` compose the app route tree:
-   `routes_core.dart`, `routes_demos.dart`, and `route_groups.dart`.
-7. Most feature cubits are created at route scope, and heavy screens such as
-   charts, maps, markdown editor, and WebSocket are deferred-loaded.
+Boot path in brief: flavor `main_*.dart` → `main_bootstrap.dart` →
+`AppCompositionRoot.createApp()` → `MyApp` / `AppScope` → route groups under
+`apps/mobile/lib/app/router/`. Detail:
+[`architecture_details.md`](architecture_details.md),
+[`clean_architecture.md`](clean_architecture.md).
 
 ## 4. Change workflow
 
-When adding or changing a feature:
+1. Reuse patterns in `packages/*/`, `apps/mobile/lib/app/`, and adjacent features.
+2. Keep domain / data / presentation boundaries.
+3. Register DI under `apps/mobile/lib/app/composition/`; wire routes via
+   `app_routes.dart` (no `getIt` in router or presentation pages).
+4. Update l10n, codegen, docs, and tests when behavior changes.
 
-1. Reuse existing patterns in `packages/*/`, `apps/mobile/lib/app/`, and
-   adjacent features before creating new
-   abstractions.
-2. Keep logic in the proper layer:
-   domain contracts and models in `domain/`, implementations in `data/`,
-   cubits/pages/widgets in `presentation/`.
-3. Register dependencies under `apps/mobile/lib/app/composition/`.
-4. Wire navigation through `apps/mobile/lib/app/router/app_routes.dart` and
-   `apps/mobile/lib/app/router/`.
-5. Update localization, code generation, docs, and tests when the change
-   affects them.
-
-Use these docs while implementing:
-
-- [Feature Delivery Guide](feature_implementation_guide.md)
-- [Validation Scripts](validation_scripts.md)
-- [Testing Overview](testing_overview.md)
-- [Code Generation Guide](engineering/code_generation_guide.md)
-- [AGENTS.md](../AGENTS.md) + [Skill routing](ai/skill_routing.md) + [Agent quick reference](agents_quick_reference.md) when an AI agent (or you) is driving the change — cold-start map and validation chooser
+Owners: [`feature_implementation_guide.md`](feature_implementation_guide.md),
+[`agents_quick_reference.md`](agents_quick_reference.md),
+[`../AGENTS.md`](../AGENTS.md).
 
 ## 5. Development workflow
 
-Use repo commands instead of ad-hoc validation:
+Prefer repo entrypoints over ad-hoc commands:
 
 | Command | Purpose |
 | --- | --- |
-| `bash tool/workspace_pub_get.sh` | Refresh workspace dependencies from repo root. |
-| [Code Generation Guide](engineering/code_generation_guide.md) | Regenerate models/states/APIs and apply required post-generation cleanup. |
-| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (run when editing the Render FastAPI demo or repo shell tooling; also runs inside the full delivery gate). |
-| `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate. Broad/pre-ship runs still take the full sweep; some narrow local docs/tooling edits can use built-in fast paths while CI keeps the full checklist bar (`delivery_checklist.sh` is canonical). |
-| `./bin/checklist-fast` | Local-only sanity shortcut for clean trees or narrow docs/tooling work. Refuses CI and broader app/runtime diffs instead of weakening the full gate. |
-| `./bin/integration_tests` | Run integration flows on a supported device. |
-| `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |
+| `bash tool/workspace_pub_get.sh` | Refresh workspace deps |
+| [`Code Generation Guide`](engineering/code_generation_guide.md) | Models/states/APIs + Freezed cleanup |
+| `./bin/checklist-fast` | Narrow docs/tooling sanity |
+| `./bin/checklist` | Full / pre-ship gate |
+| `./bin/integration_tests` | Device integration flows |
 
-Optional local Codex tooling:
-
-- [Code Review Graph for Codex](ai/code_review_graph.md) — install, build, update, and verify the local MCP-backed code graph
-
-Docs-only changes can stay lightweight, but feature, routing, DI, and behavior
-changes should always go through the correct validation scope.
+Chooser + routing:
+[`agents_quick_reference.md`](agents_quick_reference.md),
+[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
 ## 6. Testing strategy
 
-The repo uses layered validation:
-
-- Unit and bloc tests for logic and state transitions
-- Widget and golden tests for UI behavior and regressions
-- Integration flows for cross-feature journeys and persistence
-- Shell validators for architecture, lifecycle, async safety, and UI guardrails
-
-Testing detail lives in:
-
-- [Testing Overview](testing_overview.md)
-- [Integration Flow Guide](testing/testing_integration_flows.md)
-- [Validation Scripts](validation_scripts.md)
+Unit / bloc / widget / golden / integration layers + shell validators. Detail:
+[`testing_overview.md`](testing_overview.md),
+[`testing/testing_integration_flows.md`](testing/testing_integration_flows.md),
+[`validation_scripts.md`](validation_scripts.md).
 
 ## Common Troubleshooting
 

@@ -71,7 +71,11 @@ Default wrapper for feature screens (`apps/mobile/lib/app/widgets/common_page_la
 - **Button styles:** `AppStyles.filledButton`, `outlinedButton` — use with Mix `Button`/`Pressable` or align custom `ButtonStyle` with these tokens.
 - **Status text styles:** `AppStyles.statusSuccessText` and `statusErrorText` pair with the status surfaces.
 - **Text styles:** `AppStyles.headingStyle`, `subheadingStyle`, `bodyStyle`, `bodyLargeStyle`, `captionStyle`, `captionSmallStyle` (use `$text.style.ref(AppTextStyleTokens.*)` in Mix). For new text in Mix-aware widgets, prefer these over `AppTypography` where applicable.
-- **Examples:** **GraphqlDataSourceBadge**, **SyncDiagnosticsSection** chips use `AppStyles.chip`; **CommonCard** in settings, **SettingsCard**, **CalculatorSummaryCard**, **WebsocketConnectionBanner**; **SearchAppBar** uses `AppStyles.appBar`; **TodoSearchField** uses `AppStyles.inputField`; **CommonStatusView** uses `AppStyles.emptyState` when padding is null; **PlatformAdaptiveSheets.showPickerModal** and **register_country_picker** sheet use `AppStyles.dialogContent`.
+- **Examples:** GraphqlDataSourceBadge / SyncDiagnosticsSection chips
+  (`AppStyles.chip`); CommonCard / SettingsCard / CalculatorSummaryCard /
+  WebsocketConnectionBanner; SearchAppBar (`appBar`); TodoSearchField
+  (`inputField`); CommonStatusView empty state; picker sheets (`dialogContent`).
+  Prefer these call sites over inventing parallel styles.
 - **Tests:** Widget tests that need Mix theme use `pumpWithMixTheme(tester, child: ...)` from `test/helpers/pump_with_mix_theme.dart`.
 - **Relation to Theme:** Flutter `Theme` / `ThemeData` remain the source for Material widgets and `Theme.of(context)`. Mix runs alongside: `MixScope` provides tokens; styles reference them. Legacy `AppTypography` and `UI` remain valid during migration. Prefer Mix/`AppStyles` when touching a screen.
 
@@ -316,15 +320,11 @@ Contract detail: [`architecture/flutter_layout_constraints.md`](architecture/flu
 ### DESIGN.md CLI workflow
 
 - Package: @google/design.md
-- Lint command: npx @google/design.md lint DESIGN.md
-- Diff command: npx @google/design.md diff DESIGN.md DESIGN.before.md
-
 - Lint (wrapped by `./tool/check_design_md.sh`): npx @google/design.md lint DESIGN.md
-- Diff (useful in reviews): npx @google/design.md diff DESIGN.md DESIGN.before.md
-- Prefer barrel imports for consistency:
-  - `package:flutter_bloc_app/app/config/constants.dart`
-  - `package:flutter_bloc_app/app/theme/theme.dart`
-  - `package:design_system/design_system.dart`
+- Diff (reviews): npx @google/design.md diff DESIGN.md DESIGN.before.md
+- Prefer barrel imports: `package:flutter_bloc_app/app/config/constants.dart`,
+  `package:flutter_bloc_app/app/theme/theme.dart`,
+  `package:design_system/design_system.dart`
 
 ## Related docs
 

@@ -110,7 +110,7 @@ Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Befo
 
 ## System Of Record Layout
 
-Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, invariants, host notes). Hub mechanics: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers: `../tasks/codex/todo.md`, `../tasks/cursor/todo.md`.
+Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, invariants, host notes). Hub mechanics: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers (local/gitignored): `../tasks/codex/todo.md`, `../tasks/cursor/todo.md`; template [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md).
 
 ## Multi-Agent Hub
 
