@@ -170,7 +170,7 @@ release/profile builds, including values loaded from `.env` / `.env.local`.
 Orchestration
 demo wiring is summarized in
 [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
-**`RENDER_API_KEY`** stays shell-only (for example `.envrc` or `.env`); use it for Render
+Chat backend secret **rotation** (HF / demo shared / Render API key): [`integrations/render_chat_ops.md`](integrations/render_chat_ops.md) § Secret rotation. **`RENDER_API_KEY`** stays shell-only (for example `.envrc` or `.env`); use it for Render
 REST, Cursor MCP, or
 [`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never
 as a Flutter `dart-define` or Remote Config parameter. The Render deploy helper

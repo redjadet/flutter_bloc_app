@@ -43,7 +43,7 @@ Memory (≤2 clicks from README via this map):
 | Invariant | Human-only? | Notes |
 | --- | --- | --- |
 | Release / store publishing | Yes | Dry-run ≠ publish |
-| Production deploy / Render dual-target decisions | Yes | Deferred **W12** (not Phase 3 deliverable) |
+| Production deploy / Render dual-target decisions | Yes | Follow **W12** ops ([`render_chat_ops.md`](../integrations/render_chat_ops.md)); human approves prod secrets/deploys |
 | Secret rotation & provider API keys | Yes | Never in client artifacts |
 | Architecture forks with high blast radius | Yes | ADR required |
 | Production auth / role-claims IAM | Yes | Defer — [spike note](../changes/2026-09-24_role_claims_iam_defer.md) |

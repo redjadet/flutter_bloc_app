@@ -19,7 +19,7 @@ See plan Non-goals. Highlights:
 - No first-class Linux/Windows consumer desktop.
 - No full role/claims IAM ([defer note](changes/2026-09-24_role_claims_iam_defer.md)).
 - No home-screen widgets or background-OS product without Archive swap.
-- No FastAPI/Render dual-deploy hardening (**W12 still deferred**).
+- FastAPI/Render dual-deploy ops shipped as **W12** ([`integrations/render_chat_ops.md`](integrations/render_chat_ops.md)).
 - No migrate-every-Depth-to-gold; no Hive → Isar/Drift.
 
 ## Phase 2 (shipped)
@@ -35,7 +35,7 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 | Role/claims IAM | [Defer note](changes/2026-09-24_role_claims_iam_defer.md) |
 | Measured spine perf vs budgets | Fixture gate (live device capture deferred) |
 | Sanitized AIDLC / SAFETY-REPORT sample | [`ai/sanitized_aidlc_safety_report_sample.md`](ai/sanitized_aidlc_safety_report_sample.md) |
-| FastAPI/Render ops (W12) | **Still deferred** |
+| FastAPI/Render ops (W12) | **Shipped** — [`integrations/render_chat_ops.md`](integrations/render_chat_ops.md) |
 
 ## Phase 4 (opened this slice)
 
@@ -47,9 +47,9 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 
 ## Still deferred
 
-| Item | Notes |
-| --- | --- |
-| W12 | Render/FastAPI chat ops — provenance, threat-model hardening, pytest/Pyright smoke, secret rotation |
+None from the quality-authority plan after W12. Optional leftovers (claim-ledger
+SHA hygiene, `authority_*` filename renames) stay human-optional — see store
+`docs/whats-next.md`.
 
 ## Dated decisions (defaults current)
 
@@ -60,7 +60,7 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 | Sync diagnostics E2E | Document gap; no fake PR-smoke | Human | Interview need | [ADR 0009](adr/0009-sync-diagnostics-interview-coverage.md) |
 | Sentry | No-go (Crashlytics-first) | Human | Real observability gap | [ADR 0008](adr/0008-sentry-go-no-go.md) |
 | Role/claims IAM | Defer | Human | Product auth need | [Spike note](changes/2026-09-24_role_claims_iam_defer.md) |
-| FastAPI/Render dual targets | Defer (W12) | Human | Public tour includes chat backend | Ops plan |
+| FastAPI/Render dual targets | Dual intentional; FastAPI Cloud canonical ([ops](integrations/render_chat_ops.md)) | Human | Tour cites chat backend | Ops + hardening table |
 | Native bridge tests beyond telemetry | Defer / optional follow-up | Human | Platform teaching need | Swift/Kotlin smoke |
 
 ## Archive rule reminder

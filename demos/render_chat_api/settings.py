@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     )
     max_body_bytes: int = Field(default=256_000, alias="MAX_BODY_BYTES")
     max_idempotency_key_len: int = Field(default=128, alias="MAX_IDEMPOTENCY_KEY_LEN")
+    max_correlation_id_len: int = Field(default=128, alias="MAX_CORRELATION_ID_LEN")
     response_cache_ttl_seconds: int = Field(default=900, alias="RESPONSE_CACHE_TTL_SECONDS")
     response_cache_max_entries: int = Field(default=256, alias="RESPONSE_CACHE_MAX_ENTRIES")
     hf_upstream_timeout_seconds: float = Field(
@@ -45,6 +46,10 @@ class Settings(BaseSettings):
         default=120,
         alias="RATE_LIMIT_PER_UID_PER_MINUTE",
     )
+    # Deploy provenance (optional; platforms inject these at build/deploy time).
+    git_sha: Optional[str] = Field(default=None, alias="GIT_SHA")
+    render_git_commit: Optional[str] = Field(default=None, alias="RENDER_GIT_COMMIT")
+    build_id: Optional[str] = Field(default=None, alias="BUILD_ID")
 
 
 @lru_cache
@@ -55,6 +60,14 @@ def get_settings() -> Settings:
 def parse_cors_origins(raw: str) -> list[str]:
     parts = [p.strip() for p in raw.split(",") if p.strip()]
     return parts if parts else ["http://localhost:7357"]
+
+
+def resolve_deploy_sha(settings: Settings) -> str | None:
+    """Prefer explicit GIT_SHA, then Render's injected commit, else None."""
+    for candidate in (settings.git_sha, settings.render_git_commit):
+        if candidate and candidate.strip():
+            return candidate.strip()
+    return None
 
 
 FROZEN_ALLOW_HEADERS: tuple[str, ...] = (

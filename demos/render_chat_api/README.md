@@ -8,7 +8,11 @@ integration.
 
 - **Live URL**: `https://render-chat-api.fastapicloud.dev`
 - **Docs**: `https://render-chat-api.fastapicloud.dev/docs`
-- **Health**: `https://render-chat-api.fastapicloud.dev/health`
+- **Health** (liveness): `https://render-chat-api.fastapicloud.dev/health`
+- **Ready** (credentials + optional `git_sha`): `https://render-chat-api.fastapicloud.dev/ready`
+
+Ops runbook (provenance, threat table, secret rotation, smoke/rollback):
+[`docs/integrations/render_chat_ops.md`](../../docs/integrations/render_chat_ops.md).
 
 ### Quick deploy (FastAPI Cloud)
 
@@ -79,6 +83,6 @@ Shared JSON fixtures live at
 
 ## Docker / Render
 
-See `Dockerfile` and `render.yaml`. The blueprint sets **`plan: free`** so Hobby workspaces validate without defaulting to paid **starter**. Use a **single** uvicorn worker when relying on in-process cache ([STOP #11](../../docs/integrations/render_fastapi_chat_demo.md)).
+See `Dockerfile` and `render.yaml`. Platform health checks use **`/health`**; confirm **`/ready`** after deploy. The blueprint sets **`plan: free`** so Hobby workspaces validate without defaulting to paid **starter**. Use a **single** uvicorn worker when relying on in-process cache ([STOP #11](../../docs/integrations/render_fastapi_chat_demo.md)).
 
 **Manual deploy from your machine:** with **`RENDER_API_KEY`** in the environment (for example `direnv`), run [`../../tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) from the repo root; hosted Render MCP cannot start deploys. The live image follows the **branch/commit** Render is pinned to, not uncommitted local edits alone.

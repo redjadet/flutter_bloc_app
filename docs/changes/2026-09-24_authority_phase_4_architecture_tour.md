@@ -13,7 +13,7 @@
 | [`contributing/contributing.md`](../contributing/contributing.md) | Spine-first + HITL review expectations |
 | [`llms.txt`](../../llms.txt) / [`CODEMAP.md`](../../CODEMAP.md) | Tour + Contributing entry rows |
 | README / docs index / showcase / contributing hub | Cross-links (no duplicate essays) |
-| Scope register | Phase 4 opened; W12 still deferred |
+| Scope register | Phase 4 opened; W12 later shipped separately |
 
 ## Dedupe
 
@@ -25,6 +25,6 @@
 
 ## Non-goals unchanged
 
-- **W12** FastAPI/Render ops — deferred
+- **W12** FastAPI/Render ops — shipped 2026-09-25 ([`2026-09-25_w12_render_chat_ops.md`](2026-09-25_w12_render_chat_ops.md))
 - No new product SDKs or demos
 - Design-system: docs-only; no invented tokens

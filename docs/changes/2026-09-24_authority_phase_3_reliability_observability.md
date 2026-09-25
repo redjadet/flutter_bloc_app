@@ -13,7 +13,7 @@
 | [`adr/0009-sync-diagnostics-interview-coverage.md`](../adr/0009-sync-diagnostics-interview-coverage.md) | Document gap; no fake PR-smoke |
 | [`2026-09-24_role_claims_iam_defer.md`](2026-09-24_role_claims_iam_defer.md) | AUTH-D03 spike-or-defer |
 | [`ai/sanitized_aidlc_safety_report_sample.md`](../ai/sanitized_aidlc_safety_report_sample.md) | Teaching SAFETY-REPORT / AIDLC shape |
-| Scope register + ADR index updates | Phase 3 opened; W12 still deferred |
+| Scope register + ADR index updates | Phase 3 opened; W12 later shipped separately |
 
 ## Perf proof (fixture gate)
 
@@ -38,7 +38,7 @@ python3 -m unittest tool.analyze_perf_trace_test
 
 ## Non-goals unchanged
 
-- **W12** FastAPI/Render ops hardening — deferred
+- **W12** FastAPI/Render ops hardening — shipped 2026-09-25 ([`2026-09-25_w12_render_chat_ops.md`](2026-09-25_w12_render_chat_ops.md))
 - Phase 4 public tour — not opened
 - No new product SDKs (Sentry/Mixpanel/Patrol)
 - No role/claims middleware

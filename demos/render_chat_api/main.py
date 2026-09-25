@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import uuid
 from contextlib import asynccontextmanager
@@ -19,7 +20,7 @@ from orchestration.pipeline import OrchestrationError, run_pipeline
 from orchestration.rate_limit import SlidingWindowCounter
 from orchestration.response_cache import ResponseCache
 from schemas import ChatCompletionRequest, ErrorBody
-from settings import FROZEN_ALLOW_HEADERS, get_settings, parse_cors_origins
+from settings import FROZEN_ALLOW_HEADERS, get_settings, parse_cors_origins, resolve_deploy_sha
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,30 @@ def _render_meta_payload(
     if client_correlation_id:
         meta["client_correlation_id"] = client_correlation_id
     return meta
+
+
+def _error_response(
+    *,
+    status_code: int,
+    code: str,
+    message: str,
+    request_id: str,
+    retryable: bool,
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=status_code,
+        content=ErrorBody(
+            code=code,
+            message=message,
+            request_id=request_id,
+            retryable=retryable,
+        ).model_dump(),
+    )
+
+
+def _client_ip(request: Request) -> str:
+    """Direct peer address only. Do not trust X-Forwarded-For (spoofable)."""
+    return request.client.host if request.client else "unknown"
 
 
 @asynccontextmanager
@@ -75,23 +100,52 @@ app = FastAPI(title="Render Chat Orchestration API", lifespan=lifespan)
 
 @app.middleware("http")
 async def max_body_guard(request: Request, call_next):
+    """Enforce MAX_BODY_BYTES for Content-Length and for streamed bodies without it."""
     settings = get_settings()
+    max_bytes = settings.max_body_bytes
     cl = request.headers.get("content-length")
     if cl is not None:
         try:
-            if int(cl) > settings.max_body_bytes:
-                rid = str(uuid.uuid4())
-                return JSONResponse(
-                    status_code=413,
-                    content=ErrorBody(
-                        code="invalid_request",
-                        message="Request body too large.",
-                        request_id=rid,
-                        retryable=False,
-                    ).model_dump(),
-                )
+            length = int(cl)
         except ValueError:
-            pass
+            rid = str(uuid.uuid4())
+            return _error_response(
+                status_code=400,
+                code="invalid_request",
+                message="Invalid Content-Length header.",
+                request_id=rid,
+                retryable=False,
+            )
+        if length > max_bytes:
+            rid = str(uuid.uuid4())
+            return _error_response(
+                status_code=413,
+                code="invalid_request",
+                message="Request body too large.",
+                request_id=rid,
+                retryable=False,
+            )
+        return await call_next(request)
+
+    if request.method in {"POST", "PUT", "PATCH"}:
+        body = bytearray()
+        async for chunk in request.stream():
+            body.extend(chunk)
+            if len(body) > max_bytes:
+                rid = str(uuid.uuid4())
+                return _error_response(
+                    status_code=413,
+                    code="invalid_request",
+                    message="Request body too large.",
+                    request_id=rid,
+                    retryable=False,
+                )
+        cached = bytes(body)
+
+        async def receive() -> dict[str, Any]:
+            return {"type": "http.request", "body": cached, "more_body": False}
+
+        request = Request(request.scope, receive)
     return await call_next(request)
 
 
@@ -157,8 +211,39 @@ async def validation_handler(_: Request, __: RequestValidationError) -> JSONResp
 
 
 @app.get("/health")
-async def health() -> dict:
+async def health() -> dict[str, str]:
+    """Liveness: process is up. Does not imply upstream credentials are configured."""
     return {"status": "ok"}
+
+
+@app.get("/ready")
+async def ready(request: Request) -> JSONResponse:
+    """Readiness: required config present for serving chat completions."""
+    settings: Any = request.app.state.settings
+    sha = resolve_deploy_sha(settings)
+    build_id = (settings.build_id or "").strip() or None
+    checks: dict[str, bool] = {
+        "settings_loaded": True,
+        "hf_credential_configured": bool((settings.hf_api_key or "").strip()),
+    }
+    if settings.caller_auth_mode == "firebase":
+        checks["firebase_project_configured"] = bool(
+            (settings.firebase_project_id or "").strip()
+        )
+    else:
+        checks["firebase_project_configured"] = True
+        checks["test_bypass_enabled"] = bool(settings.allow_test_auth_bypass)
+
+    ready_ok = all(checks.values())
+    payload: dict[str, Any] = {
+        "status": "ready" if ready_ok else "not_ready",
+        "checks": checks,
+    }
+    if sha:
+        payload["git_sha"] = sha
+    if build_id:
+        payload["build_id"] = build_id
+    return JSONResponse(status_code=200 if ready_ok else 503, content=payload)
 
 
 @app.post("/v1/chat/completions", response_model=None)
@@ -177,13 +262,27 @@ async def chat_completions(
     request_id = str(uuid.uuid4())
     request.state.request_id = request_id
     client_correlation_id = (x_client_correlation_id or "").strip() or None
+    if client_correlation_id and len(client_correlation_id) > settings.max_correlation_id_len:
+        return JSONResponse(
+            status_code=422,
+            content=ErrorBody(
+                code="invalid_request",
+                message="X-Client-Correlation-Id is too long.",
+                request_id=request_id,
+                retryable=False,
+            ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=None,
+            ),
+        )
 
     verify_demo_secret(
         settings=settings,
         x_render_demo_secret=x_render_demo_secret,
     )
 
-    client_ip = request.client.host if request.client else "unknown"
+    client_ip = _client_ip(request)
     logger.info(
         "chat_completions_begin server_request_id=%s client_correlation_id=%s client_ip=%s",
         request_id,
@@ -205,7 +304,12 @@ async def chat_completions(
             ),
         )
 
-    uid = verify_caller_uid(settings=settings, authorization=authorization)
+    # Firebase verification is sync/blocking; run off the event loop.
+    uid = await asyncio.to_thread(
+        verify_caller_uid,
+        settings=settings,
+        authorization=authorization,
+    )
 
     if not request.app.state.rate_uid.check(uid):
         return JSONResponse(
