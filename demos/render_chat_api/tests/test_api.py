@@ -27,10 +27,129 @@ def test_health() -> None:
     assert r.json() == {"status": "ok"}
 
 
+def test_ready_ok_with_test_bypass(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GIT_SHA", "deadbeefcafebabe")
+    monkeypatch.setenv("BUILD_ID", "local-pytest")
+    get_settings.cache_clear()
+    with TestClient(app) as client:
+        r = client.get("/ready")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["status"] == "ready"
+    assert body["checks"]["hf_credential_configured"] is True
+    assert body["git_sha"] == "deadbeefcafebabe"
+    assert body["build_id"] == "local-pytest"
+
+
+def test_ready_not_ready_without_hf(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("HUGGINGFACE_API_KEY", raising=False)
+    get_settings.cache_clear()
+    with TestClient(app) as client:
+        r = client.get("/ready")
+    assert r.status_code == 503
+    body = r.json()
+    assert body["status"] == "not_ready"
+    assert body["checks"]["hf_credential_configured"] is False
+
+
+def test_chat_rejects_missing_auth() -> None:
+    with TestClient(app) as client:
+        r = client.post(
+            "/v1/chat/completions",
+            headers={"Idempotency-Key": "k-missing-auth"},
+            json={
+                "model": "auto",
+                "messages": [{"role": "user", "content": "Hello"}],
+            },
+        )
+    assert r.status_code == 401
+    assert r.json()["code"] == "auth_required"
+
+
+def test_chat_rejects_missing_idempotency() -> None:
+    with TestClient(app) as client:
+        r = client.post(
+            "/v1/chat/completions",
+            headers={"Authorization": "Bearer test-token"},
+            json={
+                "model": "auto",
+                "messages": [{"role": "user", "content": "Hello"}],
+            },
+        )
+    assert r.status_code == 422
+    assert r.json()["code"] == "invalid_request"
+
+
+def test_chat_rejects_oversized_content_length(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("MAX_BODY_BYTES", "100")
+    get_settings.cache_clear()
+    with TestClient(app) as client:
+        r = client.post(
+            "/v1/chat/completions",
+            headers={
+                "Authorization": "Bearer test-token",
+                "Idempotency-Key": "k-big",
+                "Content-Length": "9999",
+            },
+            content=b"x" * 50,
+        )
+    assert r.status_code == 413
+    assert r.json()["code"] == "invalid_request"
+
+
+def test_chat_rejects_oversized_streamed_body(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Chunked body without Content-Length still hits MAX_BODY_BYTES."""
+    monkeypatch.setenv("MAX_BODY_BYTES", "64")
+    get_settings.cache_clear()
+
+    def _chunks() -> object:
+        yield b"x" * 40
+        yield b"y" * 40
+
+    with TestClient(app) as client:
+        r = client.post(
+            "/v1/chat/completions",
+            headers={
+                "Authorization": "Bearer test-token",
+                "Idempotency-Key": "k-stream-big",
+            },
+            content=_chunks(),
+        )
+    assert r.status_code == 413
+    assert r.json()["code"] == "invalid_request"
+
+
+def test_chat_rejects_long_correlation_id(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("MAX_CORRELATION_ID_LEN", "8")
+    get_settings.cache_clear()
+    with TestClient(app) as client:
+        r = client.post(
+            "/v1/chat/completions",
+            headers={
+                "Authorization": "Bearer test-token",
+                "Idempotency-Key": "k-corr",
+                "X-Client-Correlation-Id": "toolongcorrelation",
+            },
+            json={
+                "model": "auto",
+                "messages": [{"role": "user", "content": "Hi"}],
+            },
+        )
+    assert r.status_code == 422
+    assert r.json()["code"] == "invalid_request"
+
+
 def test_chat_rejects_missing_server_held_hf_token(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("HUGGINGFACE_API_KEY", raising=False)
+    get_settings.cache_clear()
     with TestClient(app) as client:
         r = client.post(
             "/v1/chat/completions",

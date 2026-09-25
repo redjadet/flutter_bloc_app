@@ -8,6 +8,7 @@ that.
 ## Index
 
 - [`2026-09-24_visitor_doc_scrub_p1.md`](2026-09-24_visitor_doc_scrub_p1.md): P1 after #907 — Portfolio reading path = HITL → platforms → architecture_tour; scrub visitor “Authority Thesis” labels (filenames kept).
+- [`2026-09-25_w12_render_chat_ops.md`](2026-09-25_w12_render_chat_ops.md): W12 — Render/FastAPI chat ops (provenance, threat table, readiness, secret rotation).
 - [`2026-09-24_authority_phase_4_architecture_tour.md`](2026-09-24_authority_phase_4_architecture_tour.md): Phase 4 — ≤15 min architecture tour, Contributing Spine-first + HITL, llms.txt/CODEMAP links.
 - [`2026-09-24_authority_phase_3_reliability_observability.md`](2026-09-24_authority_phase_3_reliability_observability.md): Phase 3 — Sentry no-go ADR 0008, sync diagnostics ADR 0009, role/claims defer, sanitized SAFETY-REPORT sample, perf fixture gate; W12 deferred.
 - [`2026-09-24_role_claims_iam_defer.md`](2026-09-24_role_claims_iam_defer.md): AUTH-D03 role/claims IAM spike-or-defer for authority Phase 3.

@@ -2,6 +2,8 @@
 
 Canonical **product / ops freezes** for the Render + FastAPI chat demo. Historical build plan removed 2026-07-17 — use this file + `demos/render_chat_api/`.
 
+**Ops / W12 runbook** (provenance, readiness, threat-model table, secret rotation, smoke/rollback): [`render_chat_ops.md`](render_chat_ops.md).
+
 ## FastAPI Cloud deployment (current)
 
 - **Live URL**: `https://render-chat-api.fastapicloud.dev`
