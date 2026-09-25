@@ -80,7 +80,7 @@ same shared helpers — they do **not** import the showcase adaptive helper.
 
 | Item | Status | Artifact |
 | --- | --- | --- |
-| Background OS demo (WorkManager / BGTask) | Non-goal | [`../authority_scope_register.md`](../authority_scope_register.md) |
+| Background OS demo (WorkManager / BGTask) | Non-goal | [`../scope_register.md`](../scope_register.md) |
 | Home-screen widgets | Non-goal | Same |
 | Net-new native demos | Forbidden without Archive swap | [ADR-0005](../adr/0005-interview-showcase-scope.md) |
 

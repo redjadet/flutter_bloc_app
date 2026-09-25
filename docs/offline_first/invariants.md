@@ -1,4 +1,4 @@
-# Offline-first authority invariants (W3)
+# Offline-first invariants (W3)
 
 **Date:** 2026-09-24  
 **Status:** Documented for Phase 1; enforcement via existing gates (no new sync engine).

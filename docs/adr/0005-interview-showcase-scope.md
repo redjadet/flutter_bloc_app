@@ -6,7 +6,7 @@
 | Date | 2026-05-20 |
 | Amended | 2026-07-31; **2026-09-24** (Archive / no net-new demos) |
 | Scope | Portfolio / interview curation |
-| Source docs | [interview_showcase.md](../interview_showcase.md), [feature_overview.md](../feature_overview.md) (Spine/Depth/Archive), [authority_scope_register.md](../authority_scope_register.md), [future_observability.md](../observability.md), [ADR 0006](0006-production-readiness-demo.md) |
+| Source docs | [interview_showcase.md](../interview_showcase.md), [feature_overview.md](../feature_overview.md) (Spine/Depth/Archive), [scope_register.md](../scope_register.md), [future_observability.md](../observability.md), [ADR 0006](0006-production-readiness-demo.md) |
 
 ## Context
 

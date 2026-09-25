@@ -13,7 +13,7 @@ and the next document to read.
 | **Archive** | Kept for history / screenshots; low priority | **No new investment** unless promoted (ADR-0005) |
 
 Promotion / replacement requires an ADR or change note plus PR checklist acknowledgment.
-NOT-in-scope (Phase 2–4 deferred work): [`authority_scope_register.md`](authority_scope_register.md).
+NOT-in-scope (Phase 2–4 deferred work): [`scope_register.md`](scope_register.md).
 Evidence baseline: [`changes/2026-09-24_authority_phase_0_evidence_baseline.md`](changes/2026-09-24_authority_phase_0_evidence_baseline.md).
 
 ## Source of truth
@@ -136,7 +136,7 @@ See [Architecture Details](architecture_details.md) and
 
 ## Deep-dive references
 
-- [Scope register](authority_scope_register.md)
+- [Scope register](scope_register.md)
 - [Case studies index](case_studies/README.md)
 - [AI Decision Workbench](features/ai_decision_workbench.md)
 - [Authentication](authentication.md)
