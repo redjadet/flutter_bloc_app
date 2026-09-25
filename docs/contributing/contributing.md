@@ -17,7 +17,7 @@ harness) and tagged **Spine** features in
 | **Archive** | No net-new investment unless promoted or swapped ([ADR 0005](../adr/0005-interview-showcase-scope.md)) |
 
 Acknowledge Archive / ADR-0005 on the PR checklist when adding a demo route.
-Scope freeze: [`authority_scope_register.md`](../authority_scope_register.md).
+Scope freeze: [`scope_register.md`](../scope_register.md).
 
 ## HITL review expectations
 

@@ -3,7 +3,7 @@
 **Date:** 2026-09-24  
 **Decision:** **Defer** full role/claims IAM.  
 **Owner:** Human (İlker Sevim)  
-**Related:** [`authority_scope_register.md`](../authority_scope_register.md),
+**Related:** [`scope_register.md`](../scope_register.md),
 [`authentication.md`](../authentication.md), Collaboration map security table.
 
 ## Why defer

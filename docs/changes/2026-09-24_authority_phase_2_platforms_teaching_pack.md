@@ -15,7 +15,7 @@
 | [`docs/platforms/native_interop.md`](../platforms/native_interop.md) | Layering, typed stub statuses, adaptive APIs |
 
 Cross-links: root README thesis + native section, [`CODEMAP.md`](../../CODEMAP.md), [`README.md`](../README.md),
-[`authority_scope_register.md`](../authority_scope_register.md), feature README, [`interview_showcase.md`](../interview_showcase.md).
+[`scope_register.md`](../scope_register.md), feature README, [`interview_showcase.md`](../interview_showcase.md).
 
 ## Design-system ↔ code check (this slice)
 

@@ -1,4 +1,4 @@
-# Authority scope register
+# Scope register
 
 **Date:** 2026-09-24  
 **Owner:** Human (İlker Sevim)  
@@ -6,7 +6,7 @@
 **Phase 3 delivery:** [`changes/2026-09-24_authority_phase_3_reliability_observability.md`](changes/2026-09-24_authority_phase_3_reliability_observability.md)  
 **Phase 4 delivery:** [`changes/2026-09-24_authority_phase_4_architecture_tour.md`](changes/2026-09-24_authority_phase_4_architecture_tour.md)
 
-This register freezes what the active authority window **will not** open.
+This register freezes what the active scope window **will not** open.
 Feature tier tags live in [`feature_overview.md`](feature_overview.md).
 Interview spine policy: [ADR-0005](adr/0005-interview-showcase-scope.md).
 
@@ -47,9 +47,9 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 
 ## Still deferred
 
-None from the quality-authority plan after W12. Claim-ledger SHA refresh +
-visitor P2 polish shipped in this leftovers pass; `authority_*` filename
-renames stay deferred (human-optional).
+None from the quality plan after W12. Claim-ledger SHA refresh +
+visitor P2 polish shipped earlier; `authority_*` filenames renamed to
+`scope_register.md` and `offline_first/invariants.md`.
 
 ## Dated decisions (defaults current)
 

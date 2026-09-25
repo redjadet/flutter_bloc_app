@@ -18,7 +18,7 @@
 
 - Behavior canon: docs/
 - Dated evidence: ai/reports/ (check generated_at + git_head)
-- Scope register: docs/authority_scope_register.md
+- Scope register: docs/scope_register.md
 - HITL map: docs/ai/human_ai_collaboration.md
 
 ## Validation router

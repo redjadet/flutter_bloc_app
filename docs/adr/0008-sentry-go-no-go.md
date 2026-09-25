@@ -5,7 +5,7 @@
 | Status | Accepted |
 | Date | 2026-09-24 |
 | Scope | Error monitoring / observability product SDK |
-| Source docs | [`observability.md`](../observability.md), [ADR 0005](0005-interview-showcase-scope.md), [ADR 0006](0006-production-readiness-demo.md), [`authority_scope_register.md`](../authority_scope_register.md) |
+| Source docs | [`observability.md`](../observability.md), [ADR 0005](0005-interview-showcase-scope.md), [ADR 0006](0006-production-readiness-demo.md), [`scope_register.md`](../scope_register.md) |
 
 ## Context
 

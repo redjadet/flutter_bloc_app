@@ -19,7 +19,7 @@ Firebase verify off the event loop).
 | `/ready` + provenance fields | `demos/render_chat_api/main.py` |
 | Body / header hardening | middleware + `MAX_CORRELATION_ID_LEN` |
 | Tests | `demos/render_chat_api/tests/test_api.py` (ready, auth, 413, correlation) |
-| Scope / plan ticks | `docs/authority_scope_register.md` + store plan |
+| Scope / plan ticks | `docs/scope_register.md` + store plan |
 
 ## Validation
 

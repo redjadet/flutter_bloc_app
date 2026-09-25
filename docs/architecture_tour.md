@@ -10,9 +10,9 @@ production-ownership walk (§3b).
 
 | Min | Pillar | Do | Open |
 | --- | --- | --- | --- |
-| 0–1 | Four pillars | Name all **four** pillars; point at README Four pillars + Scope register | [`README.md`](../README.md#four-pillars), [`authority_scope_register.md`](authority_scope_register.md) |
+| 0–1 | Four pillars | Name all **four** pillars; point at README Four pillars + Scope register | [`README.md`](../README.md#four-pillars), [`scope_register.md`](scope_register.md) |
 | 1–4 | Flutter / Cubit / CA | Feature module shape + sealed Cubit state; modularity gate | [`apps/mobile/lib/features/counter/`](../apps/mobile/lib/features/counter/), [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md), [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md) |
-| 4–7 | Offline-first | Sync honesty + offline invariants; one offline feature | [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`offline_first/authority_invariants.md`](offline_first/authority_invariants.md), Counter or Todo |
+| 4–7 | Offline-first | Sync honesty + offline invariants; one offline feature | [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`offline_first/invariants.md`](offline_first/invariants.md), Counter or Todo |
 | 7–11 | Native interop | Teaching pack matrices only (skim); live showcase ports (not “every API wrapped”) | [`platforms/README.md`](platforms/README.md), [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/) |
 | 11–15 | Human–AI HITL | Collaboration map → safety → finish gate; one sample closeout report | [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md), [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md), [`ai/sanitized_aidlc_safety_report_sample.md`](ai/sanitized_aidlc_safety_report_sample.md) |
 

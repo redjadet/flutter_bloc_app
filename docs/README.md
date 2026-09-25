@@ -26,7 +26,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
 | Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); AIDLC [`ai/aidlc_workflow.md`](ai/aidlc_workflow.md); overview [`ai-workflow.md`](ai-workflow.md) |
 | Human–AI collaboration map | [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md) |
-| Scope / Archive | [`authority_scope_register.md`](authority_scope_register.md), [`feature_overview.md`](feature_overview.md) |
+| Scope / Archive | [`scope_register.md`](scope_register.md), [`feature_overview.md`](feature_overview.md) |
 | Native platforms teaching pack | [`platforms/README.md`](platforms/README.md) |
 | Choose high-value AI-agent work | [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) |
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |

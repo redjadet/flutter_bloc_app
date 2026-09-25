@@ -12,7 +12,7 @@ files or feature presentation pages** (see
 3. **Repositories expose async contracts** — document error types (`Failure` / `Exception`).
 4. **Cubit public API** — document events/methods that UI relies on; test state transitions.
 5. **Routes** — add constant in `app_routes.dart` before page registration; gated routes update [`docs/architecture/deep_link_auth_matrix.md`](docs/architecture/deep_link_auth_matrix.md).
-6. **Offline-first** — document sync semantics when adding write paths; honor [`docs/offline_first/authority_invariants.md`](docs/offline_first/authority_invariants.md).
+6. **Offline-first** — document sync semantics when adding write paths; honor [`docs/offline_first/invariants.md`](docs/offline_first/invariants.md).
 7. **Secrets** — never commit; see [`docs/security_and_secrets.md`](docs/security_and_secrets.md).
 
 ## Contract template (per feature)

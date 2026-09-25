@@ -26,7 +26,7 @@ Memory (≤2 clicks from README via this map):
 
 | Decision type | Human owner | Agent may | Agent must not alone | Proof artifact |
 | --- | --- | --- | --- | --- |
-| Product scope / non-goals | Human | Propose options | Expand Archive without an approved swap; invent out-of-scope paths | ADR / change note / [`authority_scope_register.md`](../authority_scope_register.md) |
+| Product scope / non-goals | Human | Propose options | Expand Archive without an approved swap; invent out-of-scope paths | ADR / change note / [`scope_register.md`](../scope_register.md) |
 | Architecture fork (Riverpod, new sync engine, …) | Human | Spike notes inside write-set | Merge irreversible architecture | ADR + review |
 | Feature implementation (reversible) | Human approves intent | Implement inside agreed write-set | Broaden scope silently | Focused tests + finish gate |
 | Secrets / provider keys | Human | Point at docs | Put keys in Flutter artifacts / commit | [`security_and_secrets.md`](../security_and_secrets.md) |
