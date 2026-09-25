@@ -2,7 +2,8 @@
 
 **Date:** 2026-09-24  
 **Branch:** `cursor/authority-phase-0`  
-**SHA baseline:** `77150a6d` (see evidence change note)
+**SHA baseline (Phase 0A):** `77150a6d`  
+**Last claim-ledger refresh:** `512a09c2` — [`2026-09-25_claim_ledger_sha_refresh.md`](2026-09-25_claim_ledger_sha_refresh.md)
 
 ## Why
 

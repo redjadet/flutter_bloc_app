@@ -2,6 +2,10 @@
 
 Source-of-truth docs for Flutter BLoC app.
 
+**Outsider 15‑min path:** [`architecture_tour.md`](architecture_tour.md)
+→ [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md)
+→ [`platforms/README.md`](platforms/README.md) (matrices only).
+
 ## Start here
 
 Pick the current task below; full catalogs live under **Core docs** and

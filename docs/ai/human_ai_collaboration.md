@@ -1,10 +1,9 @@
 # Human–AI collaboration map
 
-**Audience:** Visitors, new developers, and reviewers who need HITL ownership
-without reading the entire agent harness.  
-**Date:** 2026-09-24  
-**Pillars / evidence:** README [Four pillars](../../README.md#four-pillars);
-[`../changes/2026-09-24_authority_phase_0_evidence_baseline.md`](../changes/2026-09-24_authority_phase_0_evidence_baseline.md).
+**Audience:** Visitors, new developers, and reviewers who need human-in-the-loop
+(HITL) ownership without reading the entire agent harness.  
+**Date:** 2026-09-25  
+**Pillars:** README [Four pillars](../../README.md#four-pillars).
 
 This is an **index**, not a parallel rule book. Prefer the linked owners.
 
@@ -12,11 +11,11 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 
 1. [`AGENTS.md`](../../AGENTS.md) — project entry map  
 2. This page — decision ownership  
-3. [`../agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) — SAFETY-01…06  
+3. [`../agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) — safety contracts  
 4. [`aidlc_workflow.md`](aidlc_workflow.md) — approve / continue  
 5. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
 6. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop  
-7. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample SAFETY-REPORT shape (fiction)  
+7. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample closeout report shape (fiction)  
 
 Memory (≤2 clicks from README via this map):
 
@@ -27,7 +26,7 @@ Memory (≤2 clicks from README via this map):
 
 | Decision type | Human owner | Agent may | Agent must not alone | Proof artifact |
 | --- | --- | --- | --- | --- |
-| Product scope / non-goals | Human | Propose options | Expand Archive without swap; invent Phase 2 paths | ADR / change note / [`authority_scope_register.md`](../authority_scope_register.md) |
+| Product scope / non-goals | Human | Propose options | Expand Archive without an approved swap; invent out-of-scope paths | ADR / change note / [`authority_scope_register.md`](../authority_scope_register.md) |
 | Architecture fork (Riverpod, new sync engine, …) | Human | Spike notes inside write-set | Merge irreversible architecture | ADR + review |
 | Feature implementation (reversible) | Human approves intent | Implement inside agreed write-set | Broaden scope silently | Focused tests + finish gate |
 | Secrets / provider keys | Human | Point at docs | Put keys in Flutter artifacts / commit | [`security_and_secrets.md`](../security_and_secrets.md) |
@@ -43,7 +42,7 @@ Memory (≤2 clicks from README via this map):
 | Invariant | Human-only? | Notes |
 | --- | --- | --- |
 | Release / store publishing | Yes | Dry-run ≠ publish |
-| Production deploy / Render dual-target decisions | Yes | Follow **W12** ops ([`render_chat_ops.md`](../integrations/render_chat_ops.md)); human approves prod secrets/deploys |
+| Production deploy / Render dual-target decisions | Yes | Follow Render chat ops ([`render_chat_ops.md`](../integrations/render_chat_ops.md)); human approves prod secrets/deploys |
 | Secret rotation & provider API keys | Yes | Never in client artifacts |
 | Architecture forks with high blast radius | Yes | ADR required |
 | Production auth / role-claims IAM | Yes | Defer — [spike note](../changes/2026-09-24_role_claims_iam_defer.md) |
@@ -62,5 +61,11 @@ Memory (≤2 clicks from README via this map):
 | [`best_areas_for_ai_agents.md`](best_areas_for_ai_agents.md) | Task-fit boundaries |
 | [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Automated-change review |
 | [`../review/code_review_playbook.md`](../review/code_review_playbook.md) | Human review |
-| [`harness_scorecard.md`](harness_scorecard.md) | Agent harness 10/10 (≠ Engineering) |
-| [`../engineering/engineering_quality_scorecard.md`](../engineering/engineering_quality_scorecard.md) | App/portfolio 10/10 |
+| [`harness_scorecard.md`](harness_scorecard.md) | Agent harness scorecard (≠ Engineering) |
+| [`../engineering/engineering_quality_scorecard.md`](../engineering/engineering_quality_scorecard.md) | App/portfolio engineering scorecard |
+
+---
+
+**Footnote — claim evidence:** dated ledger
+[`../changes/2026-09-24_authority_phase_0_evidence_baseline.md`](../changes/2026-09-24_authority_phase_0_evidence_baseline.md)
+(last SHA refresh: [`../changes/2026-09-25_claim_ledger_sha_refresh.md`](../changes/2026-09-25_claim_ledger_sha_refresh.md)).

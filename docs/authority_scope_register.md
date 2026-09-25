@@ -47,9 +47,9 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 
 ## Still deferred
 
-None from the quality-authority plan after W12. Optional leftovers (claim-ledger
-SHA hygiene, `authority_*` filename renames) stay human-optional — see store
-`docs/whats-next.md`.
+None from the quality-authority plan after W12. Claim-ledger SHA refresh +
+visitor P2 polish shipped in this leftovers pass; `authority_*` filename
+renames stay deferred (human-optional).
 
 ## Dated decisions (defaults current)
 
