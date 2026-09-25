@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-09-25_claim_ledger_sha_refresh.md`](2026-09-25_claim_ledger_sha_refresh.md): Re-stamp Phase 0A claim ledger SHAs to `512a09c2` (no new claims).
+- [`2026-09-25_visitor_p2_jargon_polish.md`](2026-09-25_visitor_p2_jargon_polish.md): P2 visitor jargon scrub on HITL / platforms / architecture tour / docs index.
 - [`2026-09-24_visitor_doc_scrub_p1.md`](2026-09-24_visitor_doc_scrub_p1.md): P1 after #907 — Portfolio reading path = HITL → platforms → architecture_tour; scrub visitor “Authority Thesis” labels (filenames kept).
 - [`2026-09-25_w12_render_chat_ops.md`](2026-09-25_w12_render_chat_ops.md): W12 — Render/FastAPI chat ops (provenance, threat table, readiness, secret rotation).
 - [`2026-09-25_post_w12_docs_cleanup.md`](2026-09-25_post_w12_docs_cleanup.md): Post-W12 docs dedupe — freezes vs ops runbook.
@@ -14,7 +16,7 @@ that.
 - [`2026-09-24_authority_phase_3_reliability_observability.md`](2026-09-24_authority_phase_3_reliability_observability.md): Phase 3 — Sentry no-go ADR 0008, sync diagnostics ADR 0009, role/claims defer, sanitized SAFETY-REPORT sample, perf fixture gate; W12 deferred.
 - [`2026-09-24_role_claims_iam_defer.md`](2026-09-24_role_claims_iam_defer.md): AUTH-D03 role/claims IAM spike-or-defer for authority Phase 3.
 - [`2026-09-24_authority_phase_2_platforms_teaching_pack.md`](2026-09-24_authority_phase_2_platforms_teaching_pack.md): Phase 2 native platforms teaching pack + fidelity matrices.
-- [`2026-09-24_authority_phase_0_evidence_baseline.md`](2026-09-24_authority_phase_0_evidence_baseline.md): Phase 0A scorecard/harness/checklist baseline + claim ledger (SHA `77150a6d`).
+- [`2026-09-24_authority_phase_0_evidence_baseline.md`](2026-09-24_authority_phase_0_evidence_baseline.md): Phase 0A scorecard/harness/checklist baseline + claim ledger (last verified SHA `512a09c2`; original `77150a6d`).
 - [`2026-09-24_authority_phase_0_1_delivery.md`](2026-09-24_authority_phase_0_1_delivery.md): Phase 0–1 thesis, Archive tags, HITL map, contracts, auth matrix.
 - [`2026-09-24_cubit_failure_migration.md`](2026-09-24_cubit_failure_migration.md): Finish CubitFailure/onFailure migration; optional onError; maps/todo use `failure.appError`.
 - [`2026-09-24_pr_ci_docs_only_routing.md`](2026-09-24_pr_ci_docs_only_routing.md): Keep required PR checks present while skipping Flutter setup and integration work for documentation-only diffs.
