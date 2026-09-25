@@ -13,7 +13,7 @@ point ops/hardening/rotation at [`integrations/render_chat_ops.md`](../integrati
 
 | Action | Detail |
 | --- | --- |
-| Dedupe | `render_fastapi_chat_demo.md` MCP/deploy/ops bulk → pointers to ops runbook |
+| Dedupe | [`render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) MCP/deploy/ops bulk → pointers to ops runbook |
 | Preserve | STOP table, contract freeze, Flutter client defines, log correlation, cold-start evidence log |
 | Index | This change note + store cleanup report |
 
