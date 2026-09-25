@@ -50,7 +50,7 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 
 | Trigger | Action |
 | --- | --- |
-| Start / scope change | Preflight/tool router; task-matched owner docs; non-trivial plan + proof in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
+| Start / scope change | Preflight/tool router; task-matched owner docs; non-trivial plan + proof in local/gitignored [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../tasks/codex/todo.md) (template: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)) |
 | Broad / high-risk work | [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); delegate only when allowed |
 | API, external state, Git, UI, runtime | Matching chooser row; inspect live state; authorize remote/destructive action |
 | AI-authored change | [`review/code_review_playbook.md`](review/code_review_playbook.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + routed validation |

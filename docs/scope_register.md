@@ -37,7 +37,7 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 | Sanitized AIDLC / SAFETY-REPORT sample | [`ai/sanitized_aidlc_safety_report_sample.md`](ai/sanitized_aidlc_safety_report_sample.md) |
 | FastAPI/Render ops (W12) | **Shipped** — [`integrations/render_chat_ops.md`](integrations/render_chat_ops.md) |
 
-## Phase 4 (opened this slice)
+## Phase 4 (shipped)
 
 | Work | Artifact |
 | --- | --- |
@@ -49,7 +49,7 @@ Teaching pack under [`platforms/README.md`](platforms/README.md).
 
 None from the quality plan after W12. Claim-ledger SHA refresh +
 visitor P2 polish shipped earlier; `authority_*` filenames renamed to
-`scope_register.md` and `offline_first/invariants.md`.
+[`scope_register.md`](scope_register.md) and [`offline_first/invariants.md`](offline_first/invariants.md).
 
 ## Dated decisions (defaults current)
 

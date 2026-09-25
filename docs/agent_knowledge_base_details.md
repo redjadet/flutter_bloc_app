@@ -19,13 +19,13 @@ Harness / history rows that stay here:
 | Code graph | [`code_review_graph.md`](ai/code_review_graph.md) | Narrow non-trivial exploration. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | End-to-end flow changes. |
 | Plans/history | [`plans/README.md`](plans/README.md) (local/gitignored working plans), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Plan routing stub, shipped rationale, historical snapshots. |
-| Active trackers | `../tasks/codex/todo.md`, `../tasks/cursor/todo.md` | Current plan/proof. |
+| Active trackers | `../tasks/codex/todo.md`, `../tasks/cursor/todo.md` (local/gitignored; template [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)) | Current plan/proof. |
 | Repeated lessons | [`../tasks/lessons.md`](../tasks/lessons.md) | Durable user corrections. |
 
 ## Plans As Artifacts
 
 - Small changes: tracker notes.
-- Non-trivial: [`tasks/codex/todo.md`](../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) with scope/risks/write set/validation.
+- Non-trivial: local/gitignored [`tasks/codex/todo.md`](../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) with scope/risks/write set/validation (template [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)).
 - Durable plans: `docs/plans/`; completed rationale: `docs/changes/`; debt: owning doc/ADR/plan.
 
 ## Harness Controls

@@ -128,8 +128,8 @@ For every AI agent in this repo:
 
 - `.agents/skills/gstack` resolves to `/Users/ilkersevim/gstack`.
 - gstack skills are discoverable from `.agents/skills/gstack/.agents/skills`.
-- Bundled gstack Codex skill path exists at
-  [`.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md`](../../.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md).
+- Bundled gstack Codex skill path (local host symlink only; not tracked in git):
+  .agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md
 - Cursor-to-Codex wrapper exists at
   `.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh` (repo
   override) or `~/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh`
