@@ -71,7 +71,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
         return cached;
       }
       rethrow;
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(logContext, error, stackTrace);
       if (cached.isNotEmpty) {
         lastSource = GraphqlDataSource.cache;

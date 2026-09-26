@@ -19,15 +19,20 @@ class _FakeRemoteRepository
     CounterSnapshot? initial,
     this.shouldThrowOnLoad = false,
     this.loadException,
+    this.loadError,
   }) : _snapshot = initial;
 
   CounterSnapshot? _snapshot;
   CounterSnapshot? saved;
   final bool shouldThrowOnLoad;
   final Exception? loadException;
+  final Object? loadError;
 
   @override
   Future<CounterSnapshot> load() async {
+    if (loadError != null) {
+      throw loadError!;
+    }
     if (loadException != null) {
       throw loadException!;
     }
@@ -355,6 +360,38 @@ void main() {
 
         final CounterSnapshot local = await localRepository.load();
         expect(local.count, 5);
+        expect(local.synchronized, isTrue);
+      },
+    );
+
+    test(
+      'pullRemote swallows non-Exception Errors without wiping local',
+      () async {
+        final DateTime localChanged = DateTime(2024, 1, 2, 12);
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          loadError: StateError('malformed remote snapshot'),
+        );
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await localRepository.save(
+          CounterSnapshot(
+            count: 9,
+            lastChanged: localChanged,
+            synchronized: true,
+            lastSyncedAt: localChanged,
+          ),
+        );
+
+        await repository.pullRemote();
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 9);
         expect(local.synchronized, isTrue);
       },
     );

@@ -36,7 +36,7 @@ extension _OfflineFirstRemoteConfigRepositorySync
     final Stopwatch stopwatch = Stopwatch()..start();
     try {
       await _remoteRepository.forceFetch();
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         IntegrationLogMessages.offlineFirstRemoteConfigFetchFailed(reason),
         error,

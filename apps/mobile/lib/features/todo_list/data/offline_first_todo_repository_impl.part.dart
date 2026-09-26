@@ -262,7 +262,7 @@ class OfflineFirstTodoRepository
       );
     } on SyncAuthUserChangedException {
       rethrow;
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstTodoRepository.pullRemote failed',
         error,

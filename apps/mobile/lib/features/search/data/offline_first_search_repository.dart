@@ -73,7 +73,7 @@ class OfflineFirstSearchRepository
         );
         await _cacheRepository.saveCachedResults(query, results);
         return results;
-      } on Exception catch (error, stackTrace) {
+      } on Object catch (error, stackTrace) {
         AppLogger.error(
           'OfflineFirstSearchRepository.search failed',
           error,
@@ -104,7 +104,7 @@ class OfflineFirstSearchRepository
     try {
       final List<SearchResult> results = await _remoteRepository.search(query);
       await _cacheRepository.saveCachedResults(query, results);
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstSearchRepository._refreshAndCache failed',
         error,
@@ -138,7 +138,7 @@ class OfflineFirstSearchRepository
       for (final String query in recentQueries.take(10)) {
         await _refreshAndCache(query);
       }
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstSearchRepository.pullRemote failed',
         error,

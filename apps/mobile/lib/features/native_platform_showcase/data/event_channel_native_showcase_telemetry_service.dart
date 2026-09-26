@@ -55,6 +55,11 @@ class EventChannelNativeShowcaseTelemetryService
       }
     } on MissingPluginException {
       yield _unavailableSnapshot(config.sessionId);
+    } on PlatformException {
+      // Native bridges can fail without unregistering the EventChannel
+      // (for example host dispose mid-session). Treat as unavailable rather
+      // than terminating the watch stream with an uncaught platform error.
+      yield _unavailableSnapshot(config.sessionId);
     }
   }
 
@@ -151,9 +156,17 @@ class EventChannelNativeShowcaseTelemetryService
     );
   }
 
+  /// Accepts platform-channel numeric shapes: Dart `int`, and integer-valued
+  /// `double` / `num` (common when JSON or NSNumber encoding is involved).
   static int? _readInt(Object? value) {
     if (value is int) {
       return value;
+    }
+    if (value is num) {
+      final double asDouble = value.toDouble();
+      if (asDouble.isFinite && asDouble == asDouble.roundToDouble()) {
+        return asDouble.toInt();
+      }
     }
     return null;
   }
