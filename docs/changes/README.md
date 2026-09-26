@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-26_offline_sync_native_edge_harden.md`](2026-09-26_offline_sync_native_edge_harden.md): Soft-fail sync `Object` catches; chat Error vs Exception enqueue; telemetry PlatformException + num int coercion.
 - [`2026-09-25_docs_consistency_pass.md`](2026-09-25_docs_consistency_pass.md): High-traffic docs consistency — Phase 4 shipped wording, index/onboarding shorten, tracker honesty, gstack link.
 - [`2026-09-25_authority_filename_rename.md`](2026-09-25_authority_filename_rename.md): Rename `authority_scope_register` → `scope_register`, `authority_invariants` → `invariants`; update links.
 - [`2026-09-25_claim_ledger_sha_refresh.md`](2026-09-25_claim_ledger_sha_refresh.md): Re-stamp Phase 0A claim ledger SHAs to `512a09c2` (no new claims).

@@ -18,11 +18,13 @@ class _FakeRemoteChatRepository implements ChatRepository {
     this.shouldFail = false,
     this.replyText = 'Hi!',
     this.failWithRemote,
+    this.failWithError,
   });
 
   bool shouldFail;
   String replyText;
   final ChatRemoteFailureException? failWithRemote;
+  final Object? failWithError;
 
   @override
   ChatRemotePath? get chatRemoteTransportHint => null;
@@ -36,6 +38,9 @@ class _FakeRemoteChatRepository implements ChatRepository {
     String? conversationId,
     String? clientMessageId,
   }) async {
+    if (failWithError != null) {
+      throw failWithError!;
+    }
     if (failWithRemote != null) {
       throw failWithRemote!;
     }
@@ -141,6 +146,38 @@ void main() {
       expect(pending.first.entityType, OfflineFirstChatRepository.chatEntity);
       expect(pending.first.payload['prompt'], 'Hello');
     });
+
+    test(
+      'sendMessage does not enqueue when remote throws a non-Exception Error',
+      () async {
+        final _FakeRemoteChatRepository remote = _FakeRemoteChatRepository(
+          failWithError: StateError('broken encoder'),
+        );
+        final OfflineFirstChatRepository repository =
+            OfflineFirstChatRepository(
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              syncOperationFactory: syncOperationFactory,
+              localConversationUpdater: localConversationUpdater,
+            );
+
+        await expectLater(
+          () => repository.sendMessage(
+            pastUserInputs: const <String>[],
+            generatedResponses: const <String>[],
+            prompt: 'Hello',
+            conversationId: 'c-error',
+            clientMessageId: 'm-error',
+          ),
+          throwsA(isA<StateError>()),
+        );
+
+        final List<SyncOperation> pending = await pendingRepository
+            .getPendingOperations(now: DateTime.now().toUtc());
+        expect(pending, isEmpty);
+      },
+    );
 
     test(
       'processOperation sends to remote and updates local history',

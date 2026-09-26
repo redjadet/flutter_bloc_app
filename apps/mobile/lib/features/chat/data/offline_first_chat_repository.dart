@@ -73,7 +73,17 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
         error: e,
       );
       throw const ChatOfflineEnqueuedException();
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
+      // Queue only Exception subtypes (transport / IO). Programming Errors are
+      // not retryable offline intents and must surface to the caller.
+      if (error is! Exception) {
+        AppLogger.error(
+          'OfflineFirstChatRepository.sendMessage failed with non-Exception',
+          error,
+          stackTrace,
+        );
+        rethrow;
+      }
       // Unknown transport exceptions remain queueable because this layer
       // cannot prove they are terminal.
       await _enqueueFailedSend(

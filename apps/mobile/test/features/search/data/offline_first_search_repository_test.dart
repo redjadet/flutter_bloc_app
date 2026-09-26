@@ -16,11 +16,15 @@ class _FakeRemoteRepository implements SearchRepository {
   _FakeRemoteRepository();
 
   bool shouldFail = false;
+  Object? failWithError;
   final List<String> calledQueries = <String>[];
 
   @override
   Future<List<SearchResult>> search(String query) async {
     calledQueries.add(query);
+    if (failWithError != null) {
+      throw failWithError!;
+    }
     if (shouldFail) {
       throw Exception('network error');
     }
@@ -261,6 +265,28 @@ void main() {
 
       expect(remoteRepository.calledQueries, isEmpty);
     });
+
+    test(
+      'pullRemote swallows non-Exception Errors during background refresh',
+      () async {
+        networkService.isOnline = true;
+        remoteRepository.failWithError = StateError('malformed payload');
+        final OfflineFirstSearchRepository repository = buildRepository();
+
+        const List<SearchResult> results = [
+          SearchResult(id: '1', imageUrl: 'https://example.com/1.jpg'),
+        ];
+        await cacheRepository.saveCachedResults('dogs', results);
+
+        await expectLater(repository.pullRemote(), completes);
+        expect(remoteRepository.calledQueries, contains('dogs'));
+
+        final List<SearchResult>? cached = await cacheRepository
+            .loadCachedResults('dogs');
+        expect(cached, isNotNull);
+        expect(cached!.single.id, '1');
+      },
+    );
 
     test('pullRemote limits refresh to top 10 queries', () async {
       networkService.isOnline = true;

@@ -154,6 +154,7 @@ class _FakeRemoteRepository
     this.shouldThrowOnDelete = false,
     this.shouldThrowOnFetch = false,
     this.fetchException,
+    this.fetchError,
     // Keep disabled by default to avoid background merges affecting tests.
     this.enableWatch = false,
   }) : _items = initial ?? [];
@@ -165,10 +166,14 @@ class _FakeRemoteRepository
   final bool shouldThrowOnDelete;
   final bool shouldThrowOnFetch;
   final Exception? fetchException;
+  final Object? fetchError;
   final bool enableWatch;
 
   @override
   Future<List<TodoItem>> fetchAll() async {
+    if (fetchError != null) {
+      throw fetchError!;
+    }
     if (fetchException != null) {
       throw fetchException!;
     }
@@ -843,6 +848,35 @@ void main() {
         expect(local.length, 1);
         expect(local.first.id, localItem.id);
         expect(local.first.title, 'Synced Local');
+      },
+    );
+
+    test(
+      'pullRemote swallows non-Exception Errors without wiping local',
+      () async {
+        final TodoItem localItem = TodoItem.create(title: 'Keep Local')
+            .copyWith(synchronized: true, lastSyncedAt: DateTime.now().toUtc());
+        await localRepository.save(localItem);
+
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          fetchError: StateError('malformed remote list'),
+          enableWatch: false,
+        );
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        await repository.pullRemote();
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local, hasLength(1));
+        expect(local.single.id, localItem.id);
+        expect(local.single.title, 'Keep Local');
       },
     );
 

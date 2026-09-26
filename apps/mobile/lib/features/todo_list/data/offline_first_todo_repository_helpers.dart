@@ -121,7 +121,7 @@ Future<void> _mergeRemoteIntoLocal(
         }
       }
     }
-  } on Exception catch (error, stackTrace) {
+  } on Object catch (error, stackTrace) {
     AppLogger.error(
       'OfflineFirstTodoRepository._mergeRemoteIntoLocal failed',
       error,

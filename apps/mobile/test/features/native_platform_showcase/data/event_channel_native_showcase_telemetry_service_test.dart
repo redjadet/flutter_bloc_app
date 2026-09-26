@@ -215,5 +215,57 @@ void main() {
       );
       expect(snapshots.single.sessionId, 'session-a');
     });
+
+    test('emits unavailable snapshot when injected event stream throws PlatformException', () async {
+      final service = EventChannelNativeShowcaseTelemetryService(
+        events: (_) => Stream<Object?>.error(
+          PlatformException(code: 'channel-error', message: 'host gone'),
+        ),
+      );
+
+      final snapshots = await service
+          .watchTelemetry(config: _config())
+          .toList();
+
+      expect(snapshots, hasLength(1));
+      expect(
+        snapshots.single.status,
+        NativeShowcaseTelemetryStatus.unavailable,
+      );
+      expect(snapshots.single.sessionId, 'session-a');
+    });
+
+    test(
+      'accepts integer-valued doubles from platform channel payloads',
+      () async {
+        final StreamController<Object?> controller =
+            StreamController<Object?>();
+        final service = EventChannelNativeShowcaseTelemetryService(
+          events: (_) => controller.stream,
+        );
+
+        final Future<List<NativeShowcaseTelemetrySnapshot>> values = service
+            .watchTelemetry(config: _config())
+            .toList();
+        controller.add(<String, Object>{
+          ..._validPayload(sequence: 1),
+          'schemaVersion': 1.0,
+          'bridgeEventSequence': 2.0,
+          'acceptedCount': 12.0,
+          'sourceReceivedCount': 15.0,
+          'sourceRateHz': 60.0,
+          'deliveredRateHz': 4.0,
+          'droppedBeforeBridgeCount': 3.0,
+          'nativeWindowStartedAtMillis': 1_700_000_000_000.0,
+          'nativeEmittedAtMillis': 1_700_000_000_100.0,
+        });
+        await controller.close();
+
+        final snapshots = await values;
+        expect(snapshots, hasLength(1));
+        expect(snapshots.single.sequence, 2);
+        expect(snapshots.single.acceptedCount, 12);
+      },
+    );
   });
 }
