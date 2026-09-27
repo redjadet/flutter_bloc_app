@@ -265,10 +265,9 @@ class NativeSecurityShowcaseHandler(
 
       override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
         isBiometricPromptActive = false
-        postResult(
-          result,
-          buildReply(status = mapBiometricErrorStatus(errorCode), reasonCode = mapBiometricErrorReason(errorCode)),
-        )
+        val (status, reasonCode) =
+          NativeSecurityShowcaseBiometricErrorPolicy.mapOutcome(errorCode)
+        postResult(result, buildReply(status = status, reasonCode = reasonCode))
       }
 
       override fun onAuthenticationFailed() {
@@ -280,36 +279,6 @@ class NativeSecurityShowcaseHandler(
       BiometricPrompt(activity, ContextCompat.getMainExecutor(activity), callback)
         .authenticate(promptInfo, BiometricPrompt.CryptoObject(signature))
     }
-  }
-
-  private fun mapBiometricErrorStatus(errorCode: Int): String = when (errorCode) {
-    BiometricPrompt.ERROR_LOCKOUT, BiometricPrompt.ERROR_LOCKOUT_PERMANENT -> STATUS_DENIED
-    BiometricPrompt.ERROR_USER_CANCELED,
-    BiometricPrompt.ERROR_CANCELED,
-    BiometricPrompt.ERROR_NEGATIVE_BUTTON,
-    -> STATUS_DENIED
-    BiometricPrompt.ERROR_NO_BIOMETRICS -> STATUS_UNAVAILABLE
-    BiometricPrompt.ERROR_HW_NOT_PRESENT,
-    BiometricPrompt.ERROR_HW_UNAVAILABLE,
-    BiometricPrompt.ERROR_UNABLE_TO_PROCESS,
-    BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL,
-    -> STATUS_UNAVAILABLE
-    else -> STATUS_FAILED
-  }
-
-  private fun mapBiometricErrorReason(errorCode: Int): String = when (errorCode) {
-    BiometricPrompt.ERROR_LOCKOUT, BiometricPrompt.ERROR_LOCKOUT_PERMANENT -> REASON_BIOMETRIC_LOCKOUT
-    BiometricPrompt.ERROR_USER_CANCELED,
-    BiometricPrompt.ERROR_CANCELED,
-    BiometricPrompt.ERROR_NEGATIVE_BUTTON,
-    -> REASON_BIOMETRIC_CANCELED
-    BiometricPrompt.ERROR_NO_BIOMETRICS -> REASON_BIOMETRIC_NOT_ENROLLED
-    BiometricPrompt.ERROR_HW_NOT_PRESENT,
-    BiometricPrompt.ERROR_HW_UNAVAILABLE,
-    BiometricPrompt.ERROR_UNABLE_TO_PROCESS,
-    BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL,
-    -> REASON_BIOMETRIC_UNSUPPORTED
-    else -> REASON_PLATFORM_ERROR
   }
 
   // endregion
