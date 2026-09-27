@@ -37,7 +37,9 @@ Future<_PullRemoteResult> _pullAllRemote({
         'BackgroundSyncCoordinator.pullRemote aborted for ${repo.entityType} '
         'after auth uid changed mid-pull',
       );
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
+      // Soft-fail Errors as well as Exceptions so one repo's programming fault
+      // cannot skip remaining pullRemote calls in the same cycle.
       AppLogger.error(
         'BackgroundSyncCoordinator.pullRemote failed for ${repo.entityType}',
         error,
@@ -198,6 +200,19 @@ Future<void> _processOperation({
       nextRetryAt: _nextRetryAt(operation.retryCount),
       retryCount: operation.retryCount + 1,
     );
+    emitStatus(SyncStatus.degraded);
+  } on Object catch (error, stackTrace) {
+    // Programming Errors are not retryable offline intents (same policy as
+    // chat enqueue). Discard the op so it cannot poison every future cycle,
+    // count the failure, and continue the remaining batch.
+    AppLogger.error(
+      'BackgroundSyncCoordinator.processOperation failed with non-Exception '
+      'for ${operation.entityType}; discarding operation ${operation.id}',
+      error,
+      stackTrace,
+    );
+    result.recordFailure(operation.entityType, error);
+    await pendingRepository.markCompleted(operation.id);
     emitStatus(SyncStatus.degraded);
   }
 }
