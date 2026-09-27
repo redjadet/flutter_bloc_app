@@ -416,14 +416,15 @@ class NativeSecurityShowcaseHandler(
     readMatched: Boolean? = null,
     deleted: Boolean? = null,
   ): Map<String, Any?> {
-    var resolvedStatus = status
-    var resolvedReason = reasonCode
-    if (status == STATUS_SUCCESS &&
-      !operationChecksPassed(verified, wrote, readMatched, deleted)
-    ) {
-      resolvedStatus = STATUS_FAILED
-      resolvedReason = REASON_PLATFORM_ERROR
-    }
+    val (resolvedStatus, resolvedReason) =
+      NativeSecurityShowcaseReplyPolicy.coerceOutcome(
+        status = status,
+        reasonCode = reasonCode,
+        verified = verified,
+        wrote = wrote,
+        readMatched = readMatched,
+        deleted = deleted,
+      )
     return mapOf(
       "schemaVersion" to SCHEMA_VERSION,
       "status" to resolvedStatus,
@@ -441,22 +442,6 @@ class NativeSecurityShowcaseHandler(
       "readMatched" to readMatched,
       "deleted" to deleted,
     )
-  }
-
-  /** Success only when every present check flag is true. */
-  private fun operationChecksPassed(
-    verified: Boolean?,
-    wrote: Boolean?,
-    readMatched: Boolean?,
-    deleted: Boolean?,
-  ): Boolean {
-    if (verified == false) {
-      return false
-    }
-    if (wrote == false || readMatched == false || deleted == false) {
-      return false
-    }
-    return true
   }
 
   companion object {

@@ -321,23 +321,18 @@ final class NativeSecurityShowcaseHandler {
     readMatched: Bool? = nil,
     deleted: Bool? = nil
   ) -> [String: Any?] {
-    var resolvedStatus = status
-    var resolvedReason = reasonCode
-    if status == Constants.statusSuccess &&
-      !Self.operationChecksPassed(
-        verified: verified,
-        wrote: wrote,
-        readMatched: readMatched,
-        deleted: deleted
-      )
-    {
-      resolvedStatus = Constants.statusFailed
-      resolvedReason = Constants.reasonPlatformError
-    }
+    let outcome = NativeSecurityShowcaseReplyPolicy.coerceOutcome(
+      status: status,
+      reasonCode: reasonCode,
+      verified: verified,
+      wrote: wrote,
+      readMatched: readMatched,
+      deleted: deleted
+    )
     return [
       "schemaVersion": Constants.schemaVersion,
-      "status": resolvedStatus,
-      "reasonCode": resolvedReason,
+      "status": outcome.status,
+      "reasonCode": outcome.reasonCode,
       "platform": Constants.platform,
       "hardwareBacked": hardwareBacked,
       "algorithm": algorithm,
@@ -351,22 +346,6 @@ final class NativeSecurityShowcaseHandler {
       "readMatched": readMatched,
       "deleted": deleted,
     ]
-  }
-
-  /// Success only when every present check flag is true.
-  private static func operationChecksPassed(
-    verified: Bool?,
-    wrote: Bool?,
-    readMatched: Bool?,
-    deleted: Bool?
-  ) -> Bool {
-    if verified == false {
-      return false
-    }
-    if wrote == false || readMatched == false || deleted == false {
-      return false
-    }
-    return true
   }
 
   fileprivate enum Constants {

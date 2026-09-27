@@ -1,9 +1,7 @@
-// Startup storage/plugin failures can arrive as FlutterError, but this guard is
-// only used for optional bootstrap work that should not block app launch.
-// ignore_for_file: avoid_catching_errors
+// Optional bootstrap must soft-fail on any thrown Object (Exception and Error
+// subtypes such as StateError / FlutterError) so launch is not aborted.
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/foundation.dart';
 
 /// Helper utilities for handling initialization errors gracefully.
 ///
@@ -17,6 +15,10 @@ class InitializationGuard {
   /// This is useful for non-critical initialization steps that shouldn't block
   /// app startup if they fail. Errors are logged but not rethrown, allowing
   /// the application to continue running.
+  ///
+  /// Catches all [Object] failures (including [Error] subtypes and Flutter's
+  /// FlutterError) so optional bootstrap cannot abort launch when a
+  /// programming or plugin error surfaces.
   ///
   /// Parameters:
   /// - [operation]: The async operation to execute
@@ -38,11 +40,8 @@ class InitializationGuard {
   }) async {
     try {
       await operation();
-    } on FlutterError catch (error, stackTrace) {
-      // Flutter wraps some platform/storage startup failures in FlutterError.
-      AppLogger.error('$context: $failureMessage', error, stackTrace);
-      // Don't rethrow - allow app to continue
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
+      // Soft-fail optional bootstrap: Exception and Error subtypes alike.
       AppLogger.error('$context: $failureMessage', error, stackTrace);
       // Don't rethrow - allow app to continue
     }
