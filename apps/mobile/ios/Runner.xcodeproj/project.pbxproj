@@ -24,6 +24,8 @@
 		DA684151935739E3CC9B7C98 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F63876893C416800C8DE36A /* Pods_Runner.framework */; };
 		E4F5A6B70718293A4B5E061 /* NativeShowcaseBannerPlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F5A6B70718293A4B5E062 /* NativeShowcaseBannerPlatformView.swift */; };
 		F1A2B3C4D5E6F7081920A1B1 /* NativeSecurityShowcaseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F7081920A1B2 /* NativeSecurityShowcaseHandler.swift */; };
+		A1B2C3D4E5F60718293A4C01 /* NativeSecurityShowcaseReplyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C02 /* NativeSecurityShowcaseReplyPolicy.swift */; };
+		A1B2C3D4E5F60718293A4C03 /* NativeSecurityShowcaseReplyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C04 /* NativeSecurityShowcaseReplyPolicyTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +85,8 @@
 		E4F5A6B70718293A4B5E062 /* NativeShowcaseBannerPlatformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeShowcaseBannerPlatformView.swift; sourceTree = "<group>"; };
 		E545FBD4C70B279E80D4E759 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F7081920A1B2 /* NativeSecurityShowcaseHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeSecurityShowcaseHandler.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4C02 /* NativeSecurityShowcaseReplyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeSecurityShowcaseReplyPolicy.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4C04 /* NativeSecurityShowcaseReplyPolicyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeSecurityShowcaseReplyPolicyTests.swift; sourceTree = "<group>"; };
 		FB43E27CA0B3B4BF03F3CFB7 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +116,7 @@
 			children = (
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
 				D3E4F5A60718293A4B5E056 /* NativeShowcaseTelemetryAccumulatorTests.swift */,
+				A1B2C3D4E5F60718293A4C04 /* NativeSecurityShowcaseReplyPolicyTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 				A1B2C3D4E5F60718293A4B5C /* SceneDelegate.swift */,
 				B2C3D4E5F60718293A4B5E04 /* NativeShowcaseBridge.swift */,
 				F1A2B3C4D5E6F7081920A1B2 /* NativeSecurityShowcaseHandler.swift */,
+				A1B2C3D4E5F60718293A4C02 /* NativeSecurityShowcaseReplyPolicy.swift */,
 				D3E4F5A60718293A4B5E052 /* NativeShowcaseTelemetryStreamHandler.swift */,
 				D3E4F5A60718293A4B5E054 /* NativeShowcaseTelemetryAccumulator.swift */,
 				E4F5A6B70718293A4B5E062 /* NativeShowcaseBannerPlatformView.swift */,
@@ -472,6 +478,7 @@
 			files = (
 				331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */,
 				D3E4F5A60718293A4B5E055 /* NativeShowcaseTelemetryAccumulatorTests.swift in Sources */,
+				A1B2C3D4E5F60718293A4C03 /* NativeSecurityShowcaseReplyPolicyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +490,7 @@
 				A1B2C3D4E5F60718293A4B5D /* SceneDelegate.swift in Sources */,
 				B2C3D4E5F60718293A4B5E03 /* NativeShowcaseBridge.swift in Sources */,
 				F1A2B3C4D5E6F7081920A1B1 /* NativeSecurityShowcaseHandler.swift in Sources */,
+				A1B2C3D4E5F60718293A4C01 /* NativeSecurityShowcaseReplyPolicy.swift in Sources */,
 				D3E4F5A60718293A4B5E051 /* NativeShowcaseTelemetryStreamHandler.swift in Sources */,
 				D3E4F5A60718293A4B5E053 /* NativeShowcaseTelemetryAccumulator.swift in Sources */,
 				E4F5A6B70718293A4B5E061 /* NativeShowcaseBannerPlatformView.swift in Sources */,

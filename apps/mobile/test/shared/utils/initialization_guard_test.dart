@@ -67,6 +67,32 @@ void main() {
       );
     });
 
+    test('executeSafely handles Error subtypes without rethrowing', () async {
+      final List<AppLogEntry> entries = <AppLogEntry>[];
+      AppLogger.observer = entries.add;
+
+      addTearDown(() {
+        AppLogger.observer = null;
+      });
+
+      await InitializationGuard.executeSafely(
+        () async {
+          throw StateError('optional bootstrap invariant failed');
+        },
+        context: 'bootstrapApp',
+        failureMessage: 'Optional bootstrap failed. App will continue.',
+      );
+
+      expect(entries, hasLength(1));
+      expect(entries.single.level, AppLogLevel.error);
+      expect(entries.single.message, contains('Optional bootstrap failed'));
+      expect(entries.single.error, isA<String>());
+      expect(
+        entries.single.error.toString(),
+        contains('optional bootstrap invariant failed'),
+      );
+    });
+
     test('executeSafely logs errors when operation fails', () async {
       // Silence logger to avoid noise in test output
       AppLogger.silenceGlobally();

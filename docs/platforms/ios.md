@@ -18,6 +18,7 @@ Capability/fidelity tables live in [`README.md`](README.md) — do not copy them
 | EventChannel telemetry | `apps/mobile/ios/Runner/NativeShowcaseTelemetryStreamHandler.swift` |
 | PlatformView banner | `apps/mobile/ios/Runner/NativeShowcaseBannerPlatformView.swift` |
 | Security demo handler | `apps/mobile/ios/Runner/NativeSecurityShowcaseHandler.swift` |
+| Security reply policy (unit-tested) | `apps/mobile/ios/Runner/NativeSecurityShowcaseReplyPolicy.swift` |
 
 Channel names and method tables: feature README (single source).
 
