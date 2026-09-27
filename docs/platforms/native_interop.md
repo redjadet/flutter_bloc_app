@@ -75,9 +75,11 @@ Focused coverage:
 Channel mocks registered once via `registerNativeShowcaseChannelMock()` in
 `test/flutter_test_config.dart` — do not re-register per file.
 
-Host reply-policy (security success-downgrade) unit tests live beside the
-telemetry accumulator host tests:
-`NativeSecurityShowcaseReplyPolicy{Test.kt,Tests.swift}`.
+Host reply-policy (security success-downgrade) and biometric error →
+status/reason mapping unit tests live beside the telemetry accumulator host
+tests:
+`NativeSecurityShowcaseReplyPolicy{Test.kt,Tests.swift}`,
+`NativeSecurityShowcaseBiometricErrorPolicy{Test.kt,Tests.swift}`.
 
 ## Contrast: Rust secure core
 

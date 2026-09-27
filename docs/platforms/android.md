@@ -18,6 +18,7 @@ Capability/fidelity tables live in [`README.md`](README.md) — do not copy them
 | PlatformView banner | `.../NativeShowcaseBannerPlatformView.kt` |
 | Security demo handler | `.../NativeSecurityShowcaseHandler.kt` |
 | Security reply policy (unit-tested) | `.../NativeSecurityShowcaseReplyPolicy.kt` |
+| Security biometric error policy (unit-tested) | `.../NativeSecurityShowcaseBiometricErrorPolicy.kt` |
 | FFI CMake wiring | `apps/mobile/android/app/src/main/cpp/CMakeLists.txt` |
 | Shared C sources | `native/native_showcase/native_showcase.{c,h}` |
 

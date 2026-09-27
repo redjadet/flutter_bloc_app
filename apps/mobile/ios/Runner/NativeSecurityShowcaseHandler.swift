@@ -178,7 +178,8 @@ final class NativeSecurityShowcaseHandler {
 
     var canEvaluateError: NSError?
     guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &canEvaluateError) else {
-      let (status, reasonCode) = mapAuthenticationError(canEvaluateError)
+      let (status, reasonCode) =
+        NativeSecurityShowcaseBiometricErrorPolicy.mapAuthenticationError(canEvaluateError)
       finishBiometric(status: status, reasonCode: reasonCode, result: result)
       return
     }
@@ -216,7 +217,8 @@ final class NativeSecurityShowcaseHandler {
           result: result
         )
       } catch {
-        let (status, reasonCode) = self.mapAuthenticationError(error as NSError)
+        let (status, reasonCode) =
+          NativeSecurityShowcaseBiometricErrorPolicy.mapAuthenticationError(error as NSError)
         self.finishBiometric(status: status, reasonCode: reasonCode, result: result)
       }
     }
@@ -275,24 +277,6 @@ final class NativeSecurityShowcaseHandler {
       accessibility: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
     )
     return key
-  }
-
-  private func mapAuthenticationError(_ error: NSError?) -> (String, String) {
-    guard let error, error.domain == LAError.errorDomain, let code = LAError.Code(rawValue: error.code) else {
-      return (Constants.statusFailed, Constants.reasonPlatformError)
-    }
-    switch code {
-    case .userCancel, .appCancel, .systemCancel:
-      return (Constants.statusDenied, Constants.reasonBiometricCanceled)
-    case .biometryLockout:
-      return (Constants.statusDenied, Constants.reasonBiometricLockout)
-    case .biometryNotEnrolled:
-      return (Constants.statusUnavailable, Constants.reasonBiometricNotEnrolled)
-    case .biometryNotAvailable, .passcodeNotSet:
-      return (Constants.statusUnavailable, Constants.reasonBiometricUnsupported)
-    default:
-      return (Constants.statusFailed, Constants.reasonPlatformError)
-    }
   }
 
   // MARK: - Helpers
