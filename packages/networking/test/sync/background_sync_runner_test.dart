@@ -597,5 +597,111 @@ void main() {
       expect(summary.pullRemoteFailures, 0);
       expect(summary.pullRemoteCount, 1);
     });
+
+    test(
+      'soft-fails pullRemote on Error and continues remaining repos',
+      () async {
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[]);
+
+        final _MockSyncableRepository failing = _MockSyncableRepository();
+        when(() => failing.entityType).thenReturn('failing');
+        when(() => failing.pullRemote())
+            .thenThrow(StateError('pull programming fault'));
+
+        final _MockSyncableRepository surviving = _MockSyncableRepository();
+        when(() => surviving.entityType).thenReturn('surviving');
+        when(() => surviving.pullRemote()).thenAnswer((_) async {});
+
+        registry.register(failing);
+        registry.register(surviving);
+
+        final SyncCycleSummary summary = await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (String event, Map<String, Object?> payload) {
+            telemetryEvent = event;
+            telemetryPayload = payload;
+          },
+        );
+
+        expect(summary.pullRemoteCount, 2);
+        expect(summary.pullRemoteFailures, 1);
+        expect(emittedStatuses.contains(SyncStatus.degraded), isTrue);
+        verify(() => surviving.pullRemote()).called(1);
+        expect(telemetryEvent, 'sync_cycle_completed');
+      },
+    );
+
+    test(
+      'discards pending op when processOperation throws Error; continues batch',
+      () async {
+        final SyncOperation failingOp = SyncOperation(
+          id: 'op-error',
+          entityType: 'failing',
+          payload: const <String, dynamic>{'k': 'v'},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'error-key',
+        );
+        final SyncOperation survivingOp = SyncOperation(
+          id: 'op-ok',
+          entityType: 'surviving',
+          payload: const <String, dynamic>{'k': 'v'},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'ok-key',
+        );
+
+        final _MockSyncableRepository failing = _MockSyncableRepository();
+        when(() => failing.entityType).thenReturn('failing');
+        when(() => failing.pullRemote()).thenAnswer((_) async {});
+        when(() => failing.processOperation(any()))
+            .thenThrow(StateError('process programming fault'));
+
+        final _MockSyncableRepository surviving = _MockSyncableRepository();
+        when(() => surviving.entityType).thenReturn('surviving');
+        when(() => surviving.pullRemote()).thenAnswer((_) async {});
+        when(() => surviving.processOperation(any())).thenAnswer((_) async {});
+
+        registry.register(failing);
+        registry.register(surviving);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[failingOp, survivingOp]);
+        when(() => pending.markCompleted(any())).thenAnswer((_) async {});
+
+        final SyncCycleSummary summary = await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (String event, Map<String, Object?> payload) {
+            telemetryEvent = event;
+            telemetryPayload = payload;
+          },
+        );
+
+        expect(summary.operationsProcessed, 2);
+        expect(summary.operationsFailed, 1);
+        expect(emittedStatuses.contains(SyncStatus.degraded), isTrue);
+        verifyNever(
+          () => pending.markFailed(
+            operationId: any(named: 'operationId'),
+            nextRetryAt: any(named: 'nextRetryAt'),
+            retryCount: any(named: 'retryCount'),
+          ),
+        );
+        verify(() => pending.markCompleted(failingOp.id)).called(1);
+        verify(() => pending.markCompleted(survivingOp.id)).called(1);
+      },
+    );
   });
 }
