@@ -13,6 +13,7 @@ that.
 - [`2026-09-26_offline_sync_native_edge_harden.md`](2026-09-26_offline_sync_native_edge_harden.md): Soft-fail sync `Object` catches; chat Error vs Exception enqueue; telemetry PlatformException + num int coercion.
 - [`2026-09-25_docs_consistency_pass.md`](2026-09-25_docs_consistency_pass.md): High-traffic docs consistency — Phase 4 shipped wording, index/onboarding shorten, tracker honesty, gstack link.
 - [`2026-09-25_authority_filename_rename.md`](2026-09-25_authority_filename_rename.md): Rename `authority_scope_register` → `scope_register`, `authority_invariants` → `invariants`; update links.
+- [`2026-09-28_live_ready_surface_honesty.md`](2026-09-28_live_ready_surface_honesty.md): FastAPI Cloud `/ready` live-claim honesty + `check_render_chat_live_surface` verify script.
 - [`2026-09-25_claim_ledger_sha_refresh.md`](2026-09-25_claim_ledger_sha_refresh.md): Re-stamp Phase 0A claim ledger SHAs to `512a09c2` (no new claims).
 - [`2026-09-25_visitor_p2_jargon_polish.md`](2026-09-25_visitor_p2_jargon_polish.md): P2 visitor jargon scrub on HITL / platforms / architecture tour / docs index.
 - [`2026-09-24_visitor_doc_scrub_p1.md`](2026-09-24_visitor_doc_scrub_p1.md): P1 after #907 — Portfolio reading path = HITL → platforms → architecture_tour; scrub visitor “Authority Thesis” labels (filenames kept).

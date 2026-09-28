@@ -10,6 +10,9 @@ integration.
 - **Docs**: `https://render-chat-api.fastapicloud.dev/docs`
 - **Health** (liveness): `https://render-chat-api.fastapicloud.dev/health`
 - **Ready** (credentials + optional `git_sha`): `https://render-chat-api.fastapicloud.dev/ready`
+  — requires a **W12+** deploy of this tree. Confirm with
+  `./tool/check_render_chat_live_surface.sh` (OpenAPI must list `/ready`).
+  If `/ready` 404s, the origin is behind tip — redeploy before citing readiness.
 
 Ops runbook (provenance, threat table, secret rotation, smoke/rollback):
 [`docs/integrations/render_chat_ops.md`](../../docs/integrations/render_chat_ops.md).
