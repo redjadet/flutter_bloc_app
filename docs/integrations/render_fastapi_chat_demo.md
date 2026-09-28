@@ -9,6 +9,9 @@ Canonical **product / ops freezes** for the Render + FastAPI chat demo. Historic
 - **Live URL**: `https://render-chat-api.fastapicloud.dev`
 - **Docs**: `https://render-chat-api.fastapicloud.dev/docs`
 - **Health**: `https://render-chat-api.fastapicloud.dev/health`
+- **Ready**: `https://render-chat-api.fastapicloud.dev/ready` (W12+ deploy;
+  verify with [`./tool/check_render_chat_live_surface.sh`](../../tool/check_render_chat_live_surface.sh)
+  — see [`render_chat_ops.md`](render_chat_ops.md) § Live surface verify)
 
 ### Quick deploy (FastAPI Cloud)
 

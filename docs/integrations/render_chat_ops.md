@@ -67,6 +67,31 @@ Flutter compile-time routing (non-secret): see
 Render blueprint `healthCheckPath` remains `/health` (liveness). Use `/ready`
 after deploy and before claiming the service can serve chat.
 
+## Live surface verify (post-deploy)
+
+After every FastAPI Cloud or Render deploy, confirm OpenAPI exposes the W12+
+surface (`/health`, `/ready`, `/v1/chat/completions`):
+
+```bash
+./tool/check_render_chat_live_surface.sh
+# Dual target:
+ORIGIN=https://flutter-bloc-render-chat-api.onrender.com \
+  ./tool/check_render_chat_live_surface.sh
+```
+
+Offline unit tests (no network):
+`python3 -m unittest tool/check_render_chat_live_surface_test.py`.
+
+**Do not** cite `GET /ready` as live evidence until this check passes on that
+origin. A 404 on `/ready` means the running image is behind tip (redeploy
+`demos/render_chat_api`). A **503** `not_ready` with a JSON `checks` body is a
+healthy W12 surface that still needs credentials — not a missing route.
+
+Measured 2026-09-28 (pass-4 probe): FastAPI Cloud OpenAPI listed `/health` +
+`/v1/chat/completions` only (`/ready` absent until redeploy). Render dual
+exposed `/ready` at commit `dd0ecec5` but returned `503 not_ready`
+(`hf_credential_configured=false`).
+
 ## Pre-deploy smoke
 
 From repo root (or `demos/render_chat_api`):

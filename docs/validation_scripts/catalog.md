@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **116** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **117** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **85** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -305,6 +305,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_dialog_text_controller_lifecycle.sh`**: Flags `final`/`var` locals assigned `TextEditingController(` inside `async` blocks when same file uses dialog APIs (prefer Stateful dialog + `initState`/`dispose`)
 - **`check_memory_pressure_centralized.sh`**: Ensures `didHaveMemoryPressure()` handling stays centralized in `apps/mobile/lib/app/app_scope.dart` so automatic memory trimming is coordinated through app shell
 - **`check_pyright_python.sh`**: Runs **Pyright** via `npx pyright` on `demos/render_chat_api` and repo `tool/` Python. Bootstraps `demos/render_chat_api/.venv` from `requirements.txt` when missing (so CI and fresh clones stay reproducible). Fails if `pyrightconfig.json` nests `venvPath` / `venv` under `executionEnvironments` (invalid; use top-level keys). Keep repo-root `exclude` including `**/.venv` so site-packages are not type-checked. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local non-Python change sets, but still runs in CI or when Python-related files changed. See [`demos/render_chat_api/README.md`](../../demos/render_chat_api/README.md) for editor setup.
+- **`check_render_chat_live_surface.sh`**: Operator / post-deploy smoke for the chat orchestration demo. Fetches `$ORIGIN/openapi.json` (default FastAPI Cloud canonical; cold-start retries) and requires paths `/health`, `/ready`, `/v1/chat/completions`. **Not** in `./bin/checklist` (network + deploy ownership). Offline unit tests: `python3 -m unittest tool/check_render_chat_live_surface_test.py`. Ops: [`integrations/render_chat_ops.md`](../integrations/render_chat_ops.md) § Live surface verify.
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
