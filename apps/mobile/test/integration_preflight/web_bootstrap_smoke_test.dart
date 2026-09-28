@@ -147,6 +147,36 @@ void main() {
       );
       expect(securitySection, findsOneWidget);
 
+      Future<void> tapSecurityRun(String key) async {
+        final Finder button = find.byKey(ValueKey(key));
+        await tester.scrollUntilVisible(
+          button,
+          300,
+          scrollable: find.byType(Scrollable).last,
+        );
+        await tester.ensureVisible(button);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
+        await tester.pump(const Duration(milliseconds: 500));
+        await tester.pumpAndSettle(const Duration(seconds: 3));
+      }
+
+      await tapSecurityRun('native-security-run-crypto');
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('native-security-outcome-p256-ready')),
+      );
+      await tapSecurityRun('native-security-run-aes');
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('native-security-outcome-aes-ready')),
+      );
+      await tapSecurityRun('native-security-run-storage');
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('native-security-outcome-storage-ready')),
+      );
+
       final Finder interopSwift = find.byKey(
         const ValueKey('native-platform-showcase-interop-swift'),
       );

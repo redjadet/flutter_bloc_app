@@ -50,7 +50,14 @@ class NativeSecurityStorageCard extends StatelessWidget {
                 child: Text(l10n.nativeSecurityRunStorageLabel),
               ),
               SizedBox(height: context.responsiveGapS),
-              NativeSecurityOutcomeText(result: slice.result),
+              NativeSecurityOutcomeText(
+                key: ValueKey<String>(
+                  slice.result == null
+                      ? 'native-security-outcome-storage-idle'
+                      : 'native-security-outcome-storage-ready',
+                ),
+                result: slice.result,
+              ),
             ],
           ),
         ),

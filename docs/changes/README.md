@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-09-28_portfolio_flawless_j7_security_e2e.md`](2026-09-28_portfolio_flawless_j7_security_e2e.md): Fix dual J6 → production readiness **J7**; assert native security outcome keys leave idle in integration + web preflight.
 - [`2026-09-27_native_security_biometric_error_policy.md`](2026-09-27_native_security_biometric_error_policy.md): Extract + unit-test native security biometric error → status/reason mapping (Android + iOS).
 - [`2026-09-27_background_sync_object_soft_fail.md`](2026-09-27_background_sync_object_soft_fail.md): Coordinator pull soft-fail catches `Object`; process Errors discard without markFailed retry.
 - [`2026-09-26_offline_sync_native_edge_harden.md`](2026-09-26_offline_sync_native_edge_harden.md): Soft-fail sync `Object` catches; chat Error vs Exception enqueue; telemetry PlatformException + num int coercion.

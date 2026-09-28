@@ -32,7 +32,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 2. **Alternate job-focused spine:** Production readiness → (optional) offline sync / native telemetry → CI/release dry-run evidence. Documented in [`interview_showcase.md`](../interview_showcase.md) §3b (“12-minute production ownership walkthrough”) and [ADR 0006](0006-production-readiness-demo.md). Does **not** replace §3.
 3. **Doc-only Mixpanel / Sentry / Patrol:** No Mixpanel, Sentry product SDK, or Patrol in `pubspec.yaml` until a real product requires them. Future seams remain in [`observability.md`](../observability.md).
 4. **Consent-gated Firebase Analytics exception:** A typed product-analytics port with SharedPreferences consent (default off), allowlisted params (`mode`, `source`, `result`, `variant`), in-memory buffer, and Firebase adapter that swallows platform-channel failures is **allowed** for the production-readiness demo. This does **not** authorize Mixpanel/Sentry/Patrol or unscoped event taxonomies. Policy detail: [ADR 0006](0006-production-readiness-demo.md).
-5. **PR smoke alignment:** `registerPrSmokeIntegrationFlows()` includes guest sign-in, counter persistence, chat list, launch/charts/search/settings/todo, and **production readiness (J6)**.
+5. **PR smoke alignment:** `registerPrSmokeIntegrationFlows()` includes guest sign-in, counter persistence, chat list, launch/charts/search/settings/todo, and **production readiness (J7)**.
 6. **Workspace packaging does not change the architecture story:** Melos separates reusable capabilities into `packages/*`; `apps/mobile` remains a modular-monolith composed through one app shell.
 7. **No net-new demo modules without Archive replacement (2026-09-24):** Feature catalog tags every module **Spine / Depth / Archive** in [`feature_overview.md`](../feature_overview.md). **Archive** means no new investment unless promoted. Adding a new demo route or feature module requires (a) retiring or promoting an Archive entry, and (b) a change note or ADR plus PR checklist acknowledgment. Depth modules may receive maintenance when touched; they are not a license for unbounded breadth.
 
@@ -57,7 +57,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 ### Costs
 
 - Manual demo for sync diagnostics on general spine
-- Longer PR smoke runtime on macOS (extra J6 flow)
+- Longer PR smoke runtime on macOS (extra J7 flow)
 - Two documented spines require agents/humans to pick the right one for the JD
 
 ## Implementation notes

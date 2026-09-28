@@ -76,9 +76,23 @@ class NativeSecurityCryptoCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: context.responsiveGapS),
-                NativeSecurityOutcomeText(result: slice.p256),
+                NativeSecurityOutcomeText(
+                  key: ValueKey<String>(
+                    slice.p256 == null
+                        ? 'native-security-outcome-p256-idle'
+                        : 'native-security-outcome-p256-ready',
+                  ),
+                  result: slice.p256,
+                ),
                 SizedBox(height: context.responsiveGapXS),
-                NativeSecurityOutcomeText(result: slice.aes),
+                NativeSecurityOutcomeText(
+                  key: ValueKey<String>(
+                    slice.aes == null
+                        ? 'native-security-outcome-aes-idle'
+                        : 'native-security-outcome-aes-ready',
+                  ),
+                  result: slice.aes,
+                ),
               ],
             ),
           ),

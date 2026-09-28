@@ -454,8 +454,24 @@ void registerNativePlatformShowcaseIntegrationFlow() {
       }
 
       await tapSecurityRun('native-security-run-crypto');
+      await pumpUntilFound(
+        tester,
+        find.byKey(
+          const ValueKey<String>('native-security-outcome-p256-ready'),
+        ),
+      );
       await tapSecurityRun('native-security-run-aes');
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey<String>('native-security-outcome-aes-ready')),
+      );
       await tapSecurityRun('native-security-run-storage');
+      await pumpUntilFound(
+        tester,
+        find.byKey(
+          const ValueKey<String>('native-security-outcome-storage-ready'),
+        ),
+      );
 
       // Outcomes must never surface secret-looking blobs.
       final RegExp secretLooking = RegExp(

@@ -36,7 +36,7 @@ Dual-mode demo ([ADR 0006](../adr/0006-production-readiness-demo.md)):
 | RC keys | `production_demo_enabled`, `production_demo_variant` |
 | Perf budgets | [`tool/perf_budgets.json`](../../tool/perf_budgets.json), [`tool/analyze_perf_trace.py`](../../tool/analyze_perf_trace.py) |
 | Dry-run CI | [`.github/workflows/mobile_release_dry_run.yml`](../../.github/workflows/mobile_release_dry_run.yml) |
-| Integration | `flow_scenarios_production_readiness.dart` (J6 in PR smoke) |
+| Integration | `flow_scenarios_production_readiness.dart` (J7 in PR smoke) |
 
 ## Failure paths handled
 
