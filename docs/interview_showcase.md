@@ -62,7 +62,7 @@ it is a registered alternate.
 ```bash
 cd apps/mobile && flutter test test/features/production_readiness test/app/analytics test/app/diagnostics
 python3 -m unittest tool/analyze_perf_trace_test.py
-./bin/integration_tests integration_test/pr_smoke_flows_test.dart   # includes J6 production readiness
+./bin/integration_tests integration_test/pr_smoke_flows_test.dart   # includes J7 production readiness
 ```
 
 Case study: [production readiness](changes/2026-07-31_production_readiness_case_study.md).
@@ -249,7 +249,7 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 6. Todo list
 7. Counter persistence
 8. Chat list
-9. Production readiness (J6: route → optional simulated emit → consent → release retry)
+9. Production readiness (J7: route → optional simulated emit → consent → release retry)
 
 ## 6. Testing story
 

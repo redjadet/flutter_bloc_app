@@ -228,6 +228,8 @@ gating **without ever surfacing key material, tokens, ciphertext, or certificate
 | `app-check` | Cached Firebase App Check token acquisition evidence only (`native-security-run-app-check`). Missing Console registration → calm **Setup needed** panel with guidance (expected demo state, not a crash). Token never shown. | `FirebaseAppCheck.instance.getToken(false)` |
 | `biometric` | Biometric-gated native operation (`native-security-run-biometric`) | `biometricProtectedOperation` |
 
+Outcome widgets use idle/ready keys `native-security-outcome-{p256,aes,storage}-{idle,ready}` so integration + web preflight can assert taps leave the idle state (J6).
+
 ### Channel + wire format
 
 Channel: `com.example.flutter_bloc_app/native_security_showcase` (separate from the

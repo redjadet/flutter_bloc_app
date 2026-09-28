@@ -61,16 +61,17 @@ tier expectations.
   `integration_test/native_platform_showcase_flow_test.dart`
   (`registerNativePlatformShowcaseIntegrationFlow`: Example →
   `example-native-platform-showcase-button` → summary → native security section
-  (`native-security-showcase-section` + five cards; noninteractive crypto/AES/storage
-  taps; no secret-looking text) → live interop tiles
+  (`native-security-showcase-section` + five cards; crypto/AES/storage taps assert
+  outcome keys leave idle (`native-security-outcome-{p256,aes,storage}-ready`);
+  no secret-looking text) → live interop tiles
   `native-platform-showcase-interop-{swift,kotlin,cpp}` + lesson 0 + platform/UI
   family labels). Scroll past the security section before asserting interop keys
   (ListView may not build off-screen children).
 - **Web lane:** `test/integration_preflight/web_bootstrap_smoke_test.dart`
-  (`opens native platform showcase from Example on web`; scroll security then
-  interop; via `./bin/integration_preflight`;
-  showcase channel mock registered globally in `test/flutter_test_config.dart` —
-  not `integration_test` on web).
+  (`opens native platform showcase from Example on web`; scroll security, tap
+  crypto/AES/storage and assert outcome `-ready` keys, then interop; via
+  `./bin/integration_preflight`; showcase channel mock registered globally in
+  `test/flutter_test_config.dart` — not `integration_test` on web).
 - **Primary target (social feed demo):**
   `integration_test/social_feed_demo_flow_test.dart`
   (`registerSocialFeedDemoIntegrationFlow`: Example →
@@ -80,7 +81,7 @@ tier expectations.
   `./bin/integration_preflight`
 - **Owner:** feature QA owner
 
-## J6 Production readiness walkthrough
+## J7 Production readiness walkthrough
 
 - **Intent:** Prove consent-gated analytics, simulated FCM emit, release-flag
   refresh, and diagnostics cards without Firebase credentials.

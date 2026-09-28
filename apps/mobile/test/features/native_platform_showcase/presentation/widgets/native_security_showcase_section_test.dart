@@ -158,6 +158,12 @@ void main() {
           find.textContaining(l10n.nativeSecurityStatusUnavailable),
           findsWidgets,
         );
+        expect(
+          find.byKey(
+            const ValueKey<String>('native-security-outcome-p256-ready'),
+          ),
+          findsOneWidget,
+        );
       },
     );
 
