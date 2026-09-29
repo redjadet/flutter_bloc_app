@@ -54,7 +54,7 @@ dependencies:
   core:
     path: ../../packages/core
   cross_file: ^0.3.5+2
-  cupertino_icons: ^1.0.9
+  cupertino_icons: ^2.0.0
   cupertino_ui: ^1.1.0
   design_system:
     path: ../../packages/design_system
