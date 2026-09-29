@@ -62,3 +62,4 @@ Thresholds can be overridden per run:
 - `MAX_FLAKE_RATE`
 - `MIN_SUCCESS_RATE`
 - `MAX_UNCATEGORIZED_FAILURES`
+- `MIN_INTEGRATION_RUNS` (default `5`; below this volume, enforcement is skipped)
