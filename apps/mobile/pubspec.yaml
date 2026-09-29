@@ -53,7 +53,7 @@ dependencies:
   connectivity_plus: ^7.3.1
   core:
     path: ../../packages/core
-  cross_file: ^0.3.5+2
+  cross_file: ^0.4.0
   cupertino_icons: ^1.0.9
   cupertino_ui: ^1.1.0
   design_system:
