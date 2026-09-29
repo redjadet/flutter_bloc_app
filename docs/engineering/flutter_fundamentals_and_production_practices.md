@@ -122,6 +122,35 @@ Comparison we actually teach:
 4. **Cubit/BLoC** — immutable Freezed (or allowed) states; methods/events;
    `TypeSafeBlocSelector` to avoid wide rebuilds; domain stays free of Cubits.
 
+### Async state under the hood (Cubit-first)
+
+Fetched feature data is a **lifecycle**, not a single model. Visible UI usually
+needs something like:
+
+`initial → loading → success | empty | error → retry / refresh`
+
+A lone `User?` cannot express “still loading” vs “loaded empty” vs “failed.”
+This repo models those as explicit Cubit/BLoC states
+([`bloc_standards.md`](../bloc_standards.md) § State Shape).
+
+| Concern | Rule here | Contrast (not our default) |
+| --- | --- | --- |
+| Loading / error / empty | Explicit status or sealed variants; typed failures | Riverpod `AsyncValue` packs loading/error/data |
+| Refresh | Prefer **retain prior success data** while reloading (chart refresh, social `refreshStatus`) unless UX wants a full skeleton | `AsyncValue.when(skipLoadingOnRefresh: true)` keeps previous value |
+| Empty vs null | Empty list/collection is success-empty; `null` is absence. Flutter `AsyncSnapshot.hasData` is `data != null`, so a successful `null` looks like “no data” | Same pitfall with raw `FutureBuilder` |
+| Where the Future lives | Cubit owns feature loads. Local `FutureBuilder` only for true UI futures (`DeferredPage`, asset decode). **Never** create the `Future` in `build` — use `initState` / `didUpdateWidget` / `didChangeDependencies` | Official [FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html) contract |
+| Overlapping requests | `isClosed` + `RequestIdGuard` / coalescers; dispose cancels streams/tokens but does **not** make a bare Future safe — ignore stale completions | Manual request ids or cancel tokens in widget `State` |
+| Streams | Prefer Cubit listening + emitting; `StreamBuilder` only for local UI streams with the same “create outside build” rule | `StreamBuilder` ≈ `FutureBuilder` + `active` |
+
+Practical takeaway for this codebase: put async ownership in the Cubit, make
+every visible phase explicit, retain prior data on refresh when useful, and
+treat request identity as part of correctness — not an optional polish.
+
+Repo anchors: [`architecture/state_management_choice.md`](../architecture/state_management_choice.md),
+[`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)
+(request-id / in-flight), [`engineering/flutter-anti-patterns.md`](flutter-anti-patterns.md)
+AP-06 / AP-19, ChartCubit + SearchCubit tests.
+
 ### Hot reload versus hot restart
 
 | | Hot reload | Hot restart |
@@ -275,6 +304,7 @@ native messengers — then lock it with automation.*
 | Question | Open |
 | --- | --- |
 | Stateless vs Stateful / widget tree / setState vs Bloc | This doc Part 1 + Counter presentation |
+| Async load / refresh / stale completions | This doc § Async state + [`bloc_standards.md`](../bloc_standards.md) |
 | Hot reload vs restart | This doc + agent-auto-hot-reload rule |
 | Offline | ADR 0002 + Counter offline repo + Social Feed case study |
 | Performance | Todo measurement case study + performance_bottlenecks |
