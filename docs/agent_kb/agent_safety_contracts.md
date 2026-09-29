@@ -149,4 +149,9 @@ Coding-task closeout must include:
    `No destructive or external actions were performed` unless a same-turn
    approved action is named with its approval
 
+A competent reviewer should reconstruct host/model (when known), tools/commands,
+diff, and approvals from those fields plus the PR/tracker in about ten minutes.
+Shape details: [`legibility_and_finish_gate.md`](legibility_and_finish_gate.md)
+§ Run reconstructability.
+
 Never fabricate lessons or verification results.

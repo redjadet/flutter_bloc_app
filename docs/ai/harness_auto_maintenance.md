@@ -8,6 +8,20 @@ canon; host-parity claims remain limited to Codex and Cursor. Canon:
 Better model choice helps, but repo value comes from harness structure:
 prompts, evaluators, tests, runtime checks, and feedback loops.
 
+### Stronger models: scaffolding vs durable harness
+
+Stronger models may need less *scaffolding* (long prompts, planning reminders,
+retry wrappers). Two surfaces become *more* important—not less:
+
+| Surface | Keep | Owners |
+| --- | --- | --- |
+| **Boundaries** | Permissions, sandboxing, credentials, same-turn approval for costly/hard-to-reverse actions (deploy, spend, secrets, destructive Git/cloud) | [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md), [`human_ai_collaboration.md`](human_ai_collaboration.md), [`aidlc_workflow.md`](aidlc_workflow.md) |
+| **Evidence** | Reconstructable run: host/model when known, tools/commands, what changed, who approved risk — aim for ~10 minutes from repo artifacts | [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md), SAFETY-REPORT, AIDLC `gate_events`, task trackers |
+
+Strip scaffolding only after a measured run shows a guard already owns the
+invariant. Context ladders and [`AGENTS.md`](../../AGENTS.md) maps are navigation, not disposable
+chat padding—thin them only when retrieval/scripts replace them.
+
 ## Agent loop
 
 Command when-table: [`host_maintenance_automation.md`](../agent_kb/host_maintenance_automation.md).
@@ -54,7 +68,8 @@ Git paths (staged, unstaged, untracked, deleted) matching:
 | New architecture/BLoC policy | Update contract + [`reference_features.md`](../architecture/reference_features.md) + scorecard gate needles |
 | Scorecard area or README badge below 10 | Add missing owner doc, script, synced skill, or README badge update; extend `check_harness_scorecard_gate.sh` |
 | Repeated agent mistake | Follow [Update Rule](ai_failure_risks.md#update-rule): script, fixture, doc, or skill |
-| Repeated prompt tweak | Add evaluator, test, runtime check, fixture, or feedback loop before adding more prose |
+| Repeated prompt tweak | Add evaluator, test, runtime check, fixture, or feedback loop before adding more prose; remove scaffolding only after that guard exists and a measured run shows the prose is unused |
+| Temptation to drop gates “because the model is strong” | Keep Boundaries + Evidence (above); do not weaken SAFETY-02/04, AIDLC approve/continue, or reconstructable closeout |
 
 ## Commands
 

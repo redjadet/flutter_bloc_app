@@ -2,6 +2,7 @@
 
 | Date | Decision | Rationale | Impact |
 | --- | --- | --- | --- |
+| 2026-09-29 | Stronger models: less prompt scaffolding; keep Boundaries + Evidence | Avoid dropping safety/AIDLC gates or reconstructable closeout because the model is stronger | [`harness_auto_maintenance.md`](harness_auto_maintenance.md); [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) § Run reconstructability |
 | 2026-05-21 | `docs/` remains behavior canon | Avoid drift vs `ai/` | Agents must link, not copy |
 | 2026-05-21 | Audits under `docs/audits/` with `git add -f` | Folder gitignored for generated audits | Track ranked findings explicitly |
 | 2026-05-21 | [`AGENTS.md`](../../AGENTS.md) Map bullets only for AI entry | 120-line gate | Roles live in [`governance.md`](governance.md) |

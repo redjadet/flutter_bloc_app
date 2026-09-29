@@ -32,7 +32,7 @@ Memory (≤2 clicks from README via this map):
 | Secrets / provider keys | Human | Point at docs | Put keys in Flutter artifacts / commit | [`security_and_secrets.md`](../security_and_secrets.md) |
 | Release / store publish / production deploy | Human | Prepare dry-run evidence | Ship or rotate production secrets | Deployment + dry-run workflow |
 | Production auth / IAM design | Human | Document options | Ship role/claims without spike | [Spike note](../changes/2026-09-24_role_claims_iam_defer.md) / ADR |
-| Destructive / external side effects | Human same-turn approval | List targets + rollback (SAFETY-02) | Run unapproved | Session log / SAFETY-REPORT |
+| Destructive / external side effects | Human same-turn approval | List targets + rollback (SAFETY-02) | Run unapproved | Session log / SAFETY-REPORT + ~10 min reconstructability |
 | Git push / PR when policy requires human | Human | Draft locally | Push/PR against policy | Branch + PR template |
 | Validation lane choice | Shared | Run narrowest lane | Claim full green without commands | Checklist / scorecard output |
 | Pattern Yellow → Green | Human prioritizes | Document intentional Yellow; fix when tasked | Claim all-Green gold path falsely | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) |

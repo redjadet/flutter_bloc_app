@@ -24,9 +24,14 @@ score in the table below.
 
 ## Harness Surfaces
 
+As models improve, shrink *prompt scaffolding*—not Boundaries or Evidence.
+Maps and ladders stay until scripts/retrieval replace them.
+
 | Surface | Owner |
 | --- | --- |
 | Prompts / context | [`AGENTS.md`](../../AGENTS.md), [`context_loading.md`](context_loading.md), [`agents_quick_reference.md`](../agents_quick_reference.md) |
+| Boundaries | [`agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md), [`human_ai_collaboration.md`](human_ai_collaboration.md), [`aidlc_workflow.md`](aidlc_workflow.md) |
+| Evidence / reconstructability | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) (SAFETY-REPORT + ~10 min reconstructability), AIDLC `gate_events`, `tasks/*/todo.md` |
 | Evaluators | `tool/check_*`, `./bin/checklist*`, [`ai_failure_risks.md`](ai_failure_risks.md) |
 | Tests | [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md), focused unit/cubit/widget/integration tests |
 | Runtime checks | [`agent_kb/devtools_runtime_errors.md`](../agent_kb/devtools_runtime_errors.md), `tool/check_runtime_errors.sh`, `./bin/integration_preflight` |

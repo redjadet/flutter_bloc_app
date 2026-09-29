@@ -79,6 +79,23 @@ For coding tasks after implementation, include:
 Keep teach-back, change summary, and unrelated observations separate. Never
 fabricate lessons or verification results.
 
+## Run reconstructability (~10 minutes)
+
+A reviewer who was not in the chat should reconstruct the run from repo
+artifacts in about ten minutes. Prefer pointers already required elsewhere—do
+not invent a parallel report format.
+
+| Question | Where it usually lives |
+| --- | --- |
+| Which host / model ran (when known)? | PR body, tracker Accountability, or host UI run metadata linked from the PR |
+| What was in scope? | Write-set / AIDLC inception; Files Changed |
+| Which tools / commands ran? | Verification table; validation command / proof_commands |
+| What changed? | Diff + Files Changed |
+| Who approved costly or hard-to-reverse risk? | Destructive/external actions; AIDLC `approve`/`continue` `gate_events`; same-turn SAFETY-02 template |
+
+If those answers are only in chat, the Evidence surface failed—land them in the
+tracker, PR, or SAFETY-REPORT before claiming done.
+
 ## Definition of done
 
 - Requirement implemented; existing architecture preserved
