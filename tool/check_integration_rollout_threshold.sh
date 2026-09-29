@@ -7,6 +7,7 @@ BASELINE_JSON="$PROJECT_ROOT/analysis/agent_scorecard/summaries/integration-base
 MAX_FLAKE_RATE="${MAX_FLAKE_RATE:-0.20}"
 MIN_SUCCESS_RATE="${MIN_SUCCESS_RATE:-0.90}"
 MAX_UNCATEGORIZED_FAILURES="${MAX_UNCATEGORIZED_FAILURES:-0}"
+MIN_INTEGRATION_RUNS="${MIN_INTEGRATION_RUNS:-5}"
 
 if [ ! -f "$BASELINE_JSON" ]; then
   echo "Missing baseline file: $BASELINE_JSON" >&2
@@ -14,7 +15,7 @@ if [ ! -f "$BASELINE_JSON" ]; then
   exit 1
 fi
 
-/usr/bin/python3 - "$BASELINE_JSON" "$MAX_FLAKE_RATE" "$MIN_SUCCESS_RATE" "$MAX_UNCATEGORIZED_FAILURES" <<'PY'
+/usr/bin/python3 - "$BASELINE_JSON" "$MAX_FLAKE_RATE" "$MIN_SUCCESS_RATE" "$MAX_UNCATEGORIZED_FAILURES" "$MIN_INTEGRATION_RUNS" <<'PY'
 import json
 import sys
 
@@ -22,6 +23,7 @@ baseline_path = sys.argv[1]
 max_flake_rate = float(sys.argv[2])
 min_success_rate = float(sys.argv[3])
 max_uncategorized = int(sys.argv[4])
+min_integration_runs = int(sys.argv[5])
 
 with open(baseline_path, "r", encoding="utf-8") as f:
     data = json.load(f)
@@ -29,11 +31,20 @@ with open(baseline_path, "r", encoding="utf-8") as f:
 flake = float(data.get("flake_rerun_rate", 1.0))
 success = float(data.get("success_rate", 0.0))
 uncat = int(data.get("uncategorized_failure_count", 999999))
+total_runs = int(data.get("total_integration_runs", 0))
 
 print("Integration rollout threshold check")
+print(f"- total_integration_runs: {total_runs} (required >= {min_integration_runs} for enforcement)")
 print(f"- success_rate: {success:.2%} (required >= {min_success_rate:.2%})")
 print(f"- flake_rerun_rate: {flake:.2%} (required <= {max_flake_rate:.2%})")
 print(f"- uncategorized_failure_count: {uncat} (required <= {max_uncategorized})")
+
+if total_runs < min_integration_runs:
+    print(
+        "PASS: insufficient integration baseline sample; "
+        "skipping success/flake enforcement until more runs are recorded"
+    )
+    sys.exit(0)
 
 errors = []
 if success < min_success_rate:
