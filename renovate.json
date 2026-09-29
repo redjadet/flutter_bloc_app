@@ -42,6 +42,18 @@
       "allowedVersions": "<0.4.0"
     },
     {
+      "description": "Hold cupertino_icons <2 until explicit v2 migration (cupertino_ui); closed #929 — major without plan",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["cupertino_icons"],
+      "allowedVersions": "<2.0.0"
+    },
+    {
+      "description": "Hold google_fonts <9 until theme/material_ui TextTheme migration; closed #941 — CI red (app_theme.dart type clash)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["google_fonts"],
+      "allowedVersions": "<9.0.0"
+    },
+    {
       "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["genui"],
