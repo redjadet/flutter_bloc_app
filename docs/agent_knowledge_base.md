@@ -15,7 +15,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Missing capability beats retry. | Repeated failure => add doc/tool/test/fixture/script. |
 | Enforce invariants, not taste. | Automate boundaries; keep local implementation freedom. |
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
-| Harness beats model choice. | Optimize prompts, evaluators, tests, runtime checks, and feedback loops before blaming the model. |
+| Harness beats model choice. | Stronger models may need less *prompt scaffolding* (long reminders, retry wrappers). Keep optimizing evaluators, tests, runtime checks, feedback loops—and especially **Boundaries** + **Evidence**—before blaming the model. Do not strip maps, safety gates, or AIDLC approvals because the model “should know.” |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 | Clean code is agent infrastructure. | Small focused units, explicit names, “why” comments, no dead code—cut context cost and change risk. See [`ai/agent_operating_manual.md`](ai/agent_operating_manual.md) § Readable code; [`CODE_QUALITY.md`](CODE_QUALITY.md) § Clean code in the AI era. |
 | Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
@@ -77,8 +77,12 @@ State each durable instruction once in its canonical owner; keep examples only
 when they encode a product requirement or repair a measured failure. Prompts
 name the target; evaluators, tests, and runtime checks decide trust. Preserve
 step order only for safety, validation, migrations, codegen, destructive, or
-repository-required flows; delete prose once a script, test, or owner doc
-enforces the invariant.
+repository-required flows. Delete prose only after a script, test, or owner doc
+enforces the invariant **and** a measured run shows the reminder is unused
+(same bar as [`agent_kb/self_improvement.md`](agent_kb/self_improvement.md)
+“no verifier, no persistence”). Never drop permission gates, sandboxing,
+credential rules, deploy/spend/sensitive-data approvals, or reconstructable
+closeout evidence to “save tokens.”
 
 ## Long Session Health
 
