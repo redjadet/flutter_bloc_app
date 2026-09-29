@@ -36,6 +36,12 @@
       "groupName": "pub-coordinated-pins"
     },
     {
+      "description": "Hold cross_file <0.4 until image_picker (latest 1.2.3) supports it; 0.4 conflicts with image_picker_platform_interface ^2.11 needing cross_file ^0.3 (see #933/#937/#939)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["cross_file"],
+      "allowedVersions": "<0.4.0"
+    },
+    {
       "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["genui"],
