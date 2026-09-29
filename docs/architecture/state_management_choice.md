@@ -92,14 +92,19 @@ string event names, or untyped service lookup to bypass analyzer checks.
 
 - Cancel subscriptions/timers in `close()` or use repo lifecycle helpers.
 - Guard emissions after async gaps (`isClosed` / request identity as suitable).
+- On refresh, retain prior success data in state when the UI should stay
+  populated (separate refresh channel or loading + prior payload).
 - Guard `BuildContext` after `await` with `context.mounted`.
 - Map infrastructure errors before state emission.
 - Log through `AppLogger`; expose user-safe messages through typed failures.
 - Keep navigation and UI side effects in presentation listeners, not domain/data.
+- Prefer Cubit for feature async; do not create `Future`s inside widget `build`
+  for `FutureBuilder` (see [`bloc_standards.md`](../bloc_standards.md)).
 
 Owners: [`bloc_standards.md`](../bloc_standards.md),
 [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md),
-and [`review/bloc_checklist.md`](../review/bloc_checklist.md).
+[`engineering/flutter_fundamentals_and_production_practices.md`](../engineering/flutter_fundamentals_and_production_practices.md)
+§ Async state, and [`review/bloc_checklist.md`](../review/bloc_checklist.md).
 
 ## Performance contract
 

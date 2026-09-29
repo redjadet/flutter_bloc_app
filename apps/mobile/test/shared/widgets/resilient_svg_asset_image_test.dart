@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
+  tearDown(ResilientSvgAssetImage.debugClearCache);
+
   group('ResilientSvgAssetImage', () {
     Widget createWidget({
       required String assetPath,
@@ -88,5 +90,58 @@ void main() {
       expect(fallbackCalled, isTrue);
       expect(find.text('Fallback'), findsOneWidget);
     });
+
+    testWidgets(
+      'parent rebuild does not restart asset load while waiting',
+      (tester) async {
+        ResilientSvgAssetImage.debugResetLoadStarts();
+
+        await tester.pumpWidget(
+          const _RebuildHost(
+            child: ResilientSvgAssetImage(
+              assetPath: 'assets/nonexistent_async.svg',
+              fit: BoxFit.contain,
+              fallbackBuilder: _loadingFallback,
+            ),
+          ),
+        );
+
+        expect(find.text('Loading...'), findsOneWidget);
+        expect(ResilientSvgAssetImage.debugLoadStarts, 1);
+
+        final hostState = tester.state(find.byType(_RebuildHost)) as _RebuildHostState;
+        hostState.rebuild();
+        await tester.pump();
+
+        expect(find.text('Loading...'), findsOneWidget);
+        expect(
+          ResilientSvgAssetImage.debugLoadStarts,
+          1,
+          reason: 'Future must live outside build so rebuilds do not restart load',
+        );
+
+        await tester.pumpAndSettle();
+      },
+    );
   });
+}
+
+Widget _loadingFallback() => const Text('Loading...');
+
+class _RebuildHost extends StatefulWidget {
+  const _RebuildHost({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_RebuildHost> createState() => _RebuildHostState();
+}
+
+class _RebuildHostState extends State<_RebuildHost> {
+  void rebuild() => setState(() {});
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        home: Scaffold(body: widget.child),
+      );
 }

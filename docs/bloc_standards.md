@@ -32,7 +32,13 @@ state for new feature state ([ADR 0007](adr/0007-blocsignal-evaluation.md)).
 - State fields expose domain models or presentation view data, not data-layer
   DTOs.
 - Loading, empty, success, error, retry, and offline/pending states must be
-  explicit when the UI can show them.
+  explicit when the UI can show them. A single nullable model (for example
+  `User?`) is not enough when the UI must distinguish initial, loading,
+  empty, success, and failure.
+- On **refresh**, prefer retaining prior success data while a reload runs
+  (separate refresh/loading channel or `status: loading` with non-null prior
+  payload) unless the product requires a full-screen skeleton. Exemplar:
+  `ChartCubit.refresh` + social feed `refreshStatus`.
 
 Choose the shape from reachable combinations, not taste:
 
@@ -70,10 +76,16 @@ Anti-pattern: `ViewStatus.success` + nullable payload.
   failures. Save/rollback paths in the same cubit follow the same rule.
 - Guard stale async completions and emissions with `isClosed` or request-id /
   `isAlive` checks (`RequestIdGuard` when overlapping loads can return stale
-  data).
+  data). Dispose/cancel alone does not make a bare `Future` safe — ignore
+  superseded completions (request identity) even when cancellation is absent.
 - `close()` must not throw on teardown (e.g. route `disconnect()` through
   `CubitExceptionHandler` when the repository may already be in a bad state).
 - Cancel streams, timers, controllers, and lifecycle observers in `close()`.
+- Keep feature async ownership in the Cubit. Ad hoc `FutureBuilder` /
+  `StreamBuilder` are allowed only for true local UI futures (deferred
+  libraries via `DeferredPage`, one-shot asset decode). Never create the
+  `Future`/`Stream` inside `build` — obtain it in `initState`,
+  `didUpdateWidget`, or `didChangeDependencies` ([FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)).
 - Keep navigation policy in presentation/router surfaces; reusable widgets
   receive callbacks or view data.
 - Keep storage, SDK calls, HTTP, DTO parsing, and offline sync queue logic in

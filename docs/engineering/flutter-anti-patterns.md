@@ -24,6 +24,7 @@ Static gates and review checklists reference these IDs. Status reflects the **20
 | AP-16 | Merge/eligibility policy in `data/` as business rule | Domain logic in wrong layer | Move to `domain/` pure function | **Fixed** — todo merge policy (2026-06 program) |
 | AP-17 | Copying legacy demo for new feature | Semantic drift | `reference_features` semantic grade + reduce_surprise guide | **Documented** — [`reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) |
 | AP-18 | Public domain `Map<String,dynamic>` model/contract | Wire bags leak into domain; callers cast string keys | Typed domain model + data mapper; intentional dynamic bags only via reviewed allowlist | **Warn gate** — `tool/check_domain_map_bags.sh` (baseline: Remote Config `values`, AI proof `inputSnapshot`/`extras`) |
+| AP-19 | `Future` / `Stream` created inside `build` for `FutureBuilder` / `StreamBuilder` | Every parent rebuild restarts the async work; races and flicker | Create the future in `initState` / `didUpdateWidget` / Cubit; use Cubit for feature loads | **Fixed** — `ResilientSvgAssetImage` stores load future on `State` |
 
 ## Enforcement
 
@@ -42,6 +43,7 @@ Static gates and review checklists reference these IDs. Status reflects the **20
 | AP-16 | Review; `todo_list/domain/todo_merge_policy.dart` unit tests |
 | AP-17 | [`reference_features.md`](../architecture/reference_features.md); agent guide |
 | AP-18 | `tool/check_domain_map_bags.sh` (warn); [`domain_map_bag_allowlist.txt`](../../tool/config/domain_map_bag_allowlist.txt) |
+| AP-19 | Review; `test/shared/widgets/resilient_svg_asset_image_test.dart` rebuild guard |
 
 ## Related
 
