@@ -7,7 +7,7 @@ Usage: request_codex_feedback.sh [options]
 
 Review the current git diff with the repo-managed cross-host review flow.
 Default behavior:
-  - prefers GPT-6 Sol with medium reasoning; retries GPT-5.6 Sol if unavailable
+  - prefers GPT-6.1 Sol with medium reasoning; retries GPT-6 Luna if unavailable
   - uses the Cursor->Codex delegate wrapper only with --backend cursor-wrapper
   - reviews staged diff first, then unstaged/untracked diff
 

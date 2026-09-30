@@ -8,7 +8,7 @@ Usage: run_codex_plan_review.sh PLAN_FILE [delegate options...]
 Concatenate the repo-tracked Codex instructions template with PLAN_FILE and
 pipe the combined prompt to the Cursor->Codex delegate wrapper (same entry
 point style as cross-host diff review, but plan-based instead of git diff).
-Prefer GPT-6 Sol with medium reasoning; retry GPT-5.6 Sol once if the account
+Prefer GPT-6.1 Sol with medium reasoning; retry GPT-6 Luna once if the account
 rejects the default model.
 
 Arguments:

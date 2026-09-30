@@ -40,8 +40,8 @@ if [[ -n "${MOCK_CODEX_CAPTURE_ATTEMPTS_FILE:-}" ]]; then
   printf '%s\n' "$*" >>"$MOCK_CODEX_CAPTURE_ATTEMPTS_FILE"
 fi
 if [[ "$mode" == "unsupported_primary" ]]; then
-  if [[ " $* " == *' -m gpt-6-sol '* ]]; then
-    echo "The gpt-6-sol model is not supported for this account." >&2
+  if [[ " $* " == *' -m gpt-6.1-sol '* ]]; then
+    echo "The gpt-6.1-sol model is not supported for this account." >&2
     exit 7
   fi
   mode="success"
@@ -275,6 +275,29 @@ if [[ -x "$CODEX_WRAPPER" ]]; then
   args_capture_file="$tmp_dir/codex-args.txt"
   MOCK_CODEX_CAPTURE_ARGS_FILE="$args_capture_file" \
     "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --skip-firebase-mcp >/dev/null
+  if ! grep -Fq -- '-m gpt-6.1-sol' "$args_capture_file" ||
+     ! grep -Fq -- 'model_reasoning_effort="medium"' "$args_capture_file"; then
+    echo "Cursor delegate must default to GPT-6.1 Sol with medium reasoning." >&2
+    exit 1
+  fi
+  cached_workspace="$tmp_dir/cached-workspace"
+  mkdir -p "$cached_workspace/.cursor/cache"
+  printf '%s|gpt-5.4\n' "$(date +%s)" >"$cached_workspace/.cursor/cache/codex_delegate_model.txt"
+  MOCK_CODEX_CAPTURE_ARGS_FILE="$args_capture_file" \
+    "$CODEX_WRAPPER" --prompt "ping" --workspace "$cached_workspace" >/dev/null
+  if ! grep -Fq -- '-m gpt-6.1-sol' "$args_capture_file"; then
+    echo "A cached model must not override the Cursor delegate default." >&2
+    exit 1
+  fi
+  MOCK_CODEX_CAPTURE_ARGS_FILE="$args_capture_file" \
+    "$CODEX_WRAPPER" --prompt "ping" --workspace "$cached_workspace" --model gpt-6-luna --profile fast >/dev/null
+  if ! grep -Fq -- '-m gpt-6-luna' "$args_capture_file" ||
+     ! grep -Fq -- 'model_reasoning_effort="low"' "$args_capture_file"; then
+    echo "Cursor delegate must preserve explicit model/profile overrides." >&2
+    exit 1
+  fi
+  MOCK_CODEX_CAPTURE_ARGS_FILE="$args_capture_file" \
+    "$CODEX_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" --skip-firebase-mcp >/dev/null
   if ! grep -Fq 'mcp_servers.firebase.enabled=false' "$args_capture_file"; then
     echo "Expected skip Firebase mode to add the Codex config override." >&2
     cat "$args_capture_file" >&2
@@ -318,9 +341,9 @@ if ! grep -Fq -- '--sandbox read-only' "$direct_args_capture_file"; then
   cat "$direct_args_capture_file" >&2
   exit 1
 fi
-if ! grep -Fq -- '-m gpt-6-sol' "$direct_args_capture_file" ||
+if ! grep -Fq -- '-m gpt-6.1-sol' "$direct_args_capture_file" ||
    ! grep -Fq -- 'model_reasoning_effort="medium"' "$direct_args_capture_file"; then
-  echo "Direct codex backend must default to GPT-6 Sol with medium reasoning." >&2
+  echo "Direct codex backend must default to GPT-6.1 Sol with medium reasoning." >&2
   cat "$direct_args_capture_file" >&2
   exit 1
 fi
@@ -358,9 +381,9 @@ fallback_output="$(
 )"
 if [[ "$fallback_output" != *'OK_FROM_MOCK_CODEX'* ]] ||
    [[ "$(wc -l <"$direct_attempts_file")" -ne 2 ]] ||
-   ! sed -n '1p' "$direct_attempts_file" | grep -Fq -- '-m gpt-6-sol' ||
-   ! sed -n '2p' "$direct_attempts_file" | grep -Fq -- '-m gpt-5.6-sol'; then
-  echo "Direct review must retry only an unsupported default model with GPT-5.6 Sol." >&2
+   ! sed -n '1p' "$direct_attempts_file" | grep -Fq -- '-m gpt-6.1-sol' ||
+   ! sed -n '2p' "$direct_attempts_file" | grep -Fq -- '-m gpt-6-luna'; then
+  echo "Direct review must retry only an unsupported default model with GPT-6 Luna." >&2
   cat "$direct_attempts_file" >&2
   exit 1
 fi
@@ -370,7 +393,7 @@ for mode in unsupported_primary transport_failure; do
   : >"$direct_attempts_file"
   args=(--backend codex-cli --workspace "$request_repo")
   if [[ "$mode" == "unsupported_primary" ]]; then
-    args+=(--model gpt-6-sol)
+    args+=(--model gpt-6.1-sol)
   fi
   if MOCK_CODEX_MODE="$mode" MOCK_CODEX_CAPTURE_ATTEMPTS_FILE="$direct_attempts_file" \
       "$PROJECT_ROOT/tool/request_codex_feedback.sh" "${args[@]}" >/dev/null 2>&1; then
@@ -419,8 +442,8 @@ done
 if [[ -n "${MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE:-}" ]]; then
   printf '%s\n' "$requested_model" >>"$MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE"
 fi
-if [[ "${MOCK_CURSOR_WRAPPER_MODE:-}" == "unsupported_primary" && "$requested_model" == "gpt-6-sol" ]]; then
-  echo "The gpt-6-sol model is not supported for this account." >&2
+if [[ "${MOCK_CURSOR_WRAPPER_MODE:-}" == "unsupported_primary" && "$requested_model" == "gpt-6.1-sol" ]]; then
+  echo "The gpt-6.1-sol model is not supported for this account." >&2
   exit 7
 fi
 printf '%s\n' 'OK_FROM_MOCK_CURSOR_WRAPPER'
@@ -442,9 +465,9 @@ if ! grep -Fq -- '--prompt' "$wrapper_args_capture_file" || \
   exit 1
 fi
 
-if ! grep -Fq -- '--model gpt-6-sol' "$wrapper_args_capture_file" ||
+if ! grep -Fq -- '--model gpt-6.1-sol' "$wrapper_args_capture_file" ||
    ! grep -Fq -- '--profile balanced' "$wrapper_args_capture_file"; then
-  echo "Cursor wrapper backend must default to GPT-6 Sol with medium reasoning." >&2
+  echo "Cursor wrapper backend must default to GPT-6.1 Sol with medium reasoning." >&2
   cat "$wrapper_args_capture_file" >&2
   exit 1
 fi
@@ -457,7 +480,7 @@ wrapper_fallback_output="$(
 )"
 if [[ "$wrapper_fallback_output" != *'OK_FROM_MOCK_CURSOR_WRAPPER'* ]] ||
    [[ "$(wc -l <"$wrapper_attempts_file")" -ne 2 ]] ||
-   [[ "$(sed -n '2p' "$wrapper_attempts_file")" != "gpt-5.6-sol" ]]; then
+   [[ "$(sed -n '2p' "$wrapper_attempts_file")" != "gpt-6-luna" ]]; then
   echo "Cursor wrapper review must retry the unsupported default once." >&2
   cat "$wrapper_attempts_file" >&2
   exit 1
@@ -473,9 +496,9 @@ printf '%s\n' '# Review plan fixture' >"$plan_file"
 plan_args_capture_file="$tmp_dir/plan-wrapper-args.txt"
 HOME="$plan_home" MOCK_CURSOR_WRAPPER_CAPTURE_ARGS_FILE="$plan_args_capture_file" \
   "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" >/dev/null
-if ! grep -Fq -- '--model gpt-6-sol' "$plan_args_capture_file" ||
+if ! grep -Fq -- '--model gpt-6.1-sol' "$plan_args_capture_file" ||
    ! grep -Fq -- '--profile balanced' "$plan_args_capture_file"; then
-  echo "Plan review must default to GPT-6 Sol with medium reasoning." >&2
+  echo "Plan review must default to GPT-6.1 Sol with medium reasoning." >&2
   cat "$plan_args_capture_file" >&2
   exit 1
 fi
@@ -484,7 +507,7 @@ HOME="$plan_home" MOCK_CURSOR_WRAPPER_MODE=unsupported_primary \
   MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE="$plan_attempts_file" \
   "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" >/dev/null
 if [[ "$(wc -l <"$plan_attempts_file")" -ne 2 ]] ||
-   [[ "$(sed -n '2p' "$plan_attempts_file")" != "gpt-5.6-sol" ]]; then
+   [[ "$(sed -n '2p' "$plan_attempts_file")" != "gpt-6-luna" ]]; then
   echo "Plan review must retry the unsupported default once." >&2
   cat "$plan_attempts_file" >&2
   exit 1
@@ -499,7 +522,7 @@ fi
 : >"$plan_attempts_file"
 if HOME="$plan_home" MOCK_CURSOR_WRAPPER_MODE=unsupported_primary \
     MOCK_CURSOR_WRAPPER_CAPTURE_ATTEMPTS_FILE="$plan_attempts_file" \
-    "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" --model gpt-6-sol >/dev/null 2>&1; then
+    "$PROJECT_ROOT/tool/run_codex_plan_review.sh" "$plan_file" --model gpt-6.1-sol >/dev/null 2>&1; then
   echo "Explicit plan model must fail without fallback when unsupported." >&2
   exit 1
 fi
