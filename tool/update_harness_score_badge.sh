@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Keep README harness score badge derived from docs/ai/harness_scorecard.md.
+# Validate README harness evidence links or derive an explicit score badge.
 set -euo pipefail
 
 usage() {
@@ -7,6 +7,7 @@ usage() {
 Usage: tool/update_harness_score_badge.sh [--check]
 
 Derive the visible README harness badge from docs/ai/harness_scorecard.md.
+An evidence link without a rating is also supported and remains unchanged.
 Overall score is the lowest score in the scorecard table; one weak area means
 the visible harness score drops.
 
@@ -85,6 +86,16 @@ pattern = re.compile(
 
 if pattern.search(content):
     updated = pattern.sub(expected, content, count=1)
+elif "[![Harness score]" in content:
+    raise SystemExit("README.md has a malformed Harness score badge")
+elif re.search(
+    r"^\[[^\]\n]+\]\(docs/ai/harness_scorecard\.md\)$",
+    content,
+    re.MULTILINE,
+):
+    # A direct evidence link makes no numeric claim; keep it through maintenance.
+    print("ok|harness-scorecard-link|no README rating claim")
+    raise SystemExit(0)
 else:
     anchor = "[![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)"
     if anchor not in content:

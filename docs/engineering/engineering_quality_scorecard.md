@@ -6,7 +6,10 @@ It is **not** the same thing as the Cursor/Codex **Harness 10/10** score (agent 
 
 ## Scoring rule
 
-- Visible badge: `Engineering X/10`.
+- [`README.md`](../../README.md) uses a direct evidence link without a rating.
+  `tool/update_engineering_quality_badge.sh` preserves that representation.
+- If an explicit `Engineering X/10` badge is used, it remains derived from this
+  table; `--check` rejects stale or malformed badges.
 - **Overall score = minimum** of all area scores.
 - Each area is **binary** for now: `10` when proof passes, otherwise `0`.
 - **Top-tier claim allowed only when:** Engineering is **10/10** AND

@@ -20,6 +20,68 @@ cd "$repo_root"
 
 echo "fixtures|start"
 
+echo "fixtures|readme_scorecards|evidence_and_legacy_badges"
+python3 - <<'PY'
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+
+# Exercise both public representations without modifying the checkout.
+for name, owner in (
+    ("Engineering", "docs/engineering/engineering_quality_scorecard.md"),
+    ("Harness", "docs/ai/harness_scorecard.md"),
+):
+    script_name = (
+        "update_engineering_quality_badge.sh"
+        if name == "Engineering" else "update_harness_score_badge.sh"
+    )
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        script = root / "tool" / script_name
+        script.parent.mkdir()
+        shutil.copyfile(Path("tool") / script_name, script)
+        scorecard = root / owner
+        scorecard.parent.mkdir(parents=True)
+        readme = root / "README.md"
+        neutral = f"[{name} evidence]({owner})\n"
+        badge = (
+            f"[![{name} score](https://img.shields.io/badge/"
+            f"{name}-10%2F10-brightgreen.svg)]({owner})\n"
+        )
+        scores = "| First | 10/10 | proof |\n| Second | 10/10 | proof |\n"
+
+        def run(content, arguments, should_pass, table=scores):
+            readme.write_text(content, encoding="utf-8")
+            scorecard.write_text(table, encoding="utf-8")
+            result = subprocess.run(
+                ["bash", str(script), *arguments],
+                capture_output=True, text=True, check=False,
+            )
+            assert (result.returncode == 0) == should_pass, (
+                name, arguments, content, result.stdout, result.stderr,
+            )
+            return readme.read_text(encoding="utf-8")
+
+        for arguments in (["--check"], []):
+            assert run(neutral, arguments, True) == neutral
+        assert run(badge, ["--check"], True) == badge
+        stale = badge.replace("10%2F10-brightgreen", "8%2F10-yellow")
+        run(stale + neutral, ["--check"], False)
+        assert run(stale + neutral, [], True) == badge + neutral
+        run("# Missing evidence\n", ["--check"], False)
+        run(neutral.replace(owner, "docs/wrong.md"), ["--check"], False)
+        run(neutral, ["--check"], False, "| Area | 11/10 | proof |\n")
+        run(neutral, ["--check"], False, "# No scores\n")
+        lower = "| First | 8/10 | proof |\n| Second | 4/10 | proof |\n"
+        run(badge, ["--check"], False, lower)
+        expected_lower = badge.replace("10%2F10-brightgreen", "4%2F10-red")
+        assert run(badge, [], True, lower) == expected_lower
+        malformed = badge.replace(owner, "docs/wrong.md")
+        run(malformed + neutral, ["--check"], False)
+print("ok|readme-scorecard-fixtures|evidence links and legacy badge enforcement")
+PY
+
 echo "fixtures|agent_session_bootstrap|help"
 bash tool/agent_session_bootstrap.sh --help >/dev/null
 

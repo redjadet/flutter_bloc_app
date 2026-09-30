@@ -4,9 +4,10 @@ Use before claiming this repo's AI harness is complete or at maximum score.
 Codex and Cursor are the primary validated hosts and define score claims. Other
 AI agents use the same repository canon but remain outside host-parity scoring.
 
-Visible score source: [`README.md`](../../README.md) badge. Agents update it
-with `bash tool/update_harness_score_badge.sh`; score equals the lowest area
-score in the table below.
+[`README.md`](../../README.md) links directly to this evidence without a numeric
+rating. `bash tool/update_harness_score_badge.sh` preserves that link. If an
+explicit badge is used, the script derives its score from the lowest area score
+in the table below; `--check` rejects stale or malformed badges.
 
 ## Score
 
@@ -69,7 +70,7 @@ This scorecard stays limited to scoring, owners, and proof gates.
 
 | Need | Owner |
 | --- | --- |
-| Visible score badge | [`README.md`](../../README.md) |
+| Public evidence link or explicit score badge | [`README.md`](../../README.md) |
 | Entry map | [`AGENTS.md`](../../AGENTS.md) |
 | Skill route | [`ai/skill_routing.md`](skill_routing.md) |
 | Failure risks | [`ai/ai_failure_risks.md`](ai_failure_risks.md) |

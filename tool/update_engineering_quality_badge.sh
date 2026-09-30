@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Keep README engineering score badge derived from docs/engineering/engineering_quality_scorecard.md.
+# Validate README engineering evidence links or derive an explicit score badge.
 set -euo pipefail
 
 usage() {
@@ -7,6 +7,7 @@ usage() {
 Usage: tool/update_engineering_quality_badge.sh [--check]
 
 Derive the visible README engineering badge from docs/engineering/engineering_quality_scorecard.md.
+An evidence link without a rating is also supported and remains unchanged.
 Overall score is the lowest score in the scorecard table; one weak area means
 the visible engineering score drops.
 
@@ -85,6 +86,16 @@ pattern = re.compile(
 
 if pattern.search(content):
     updated = pattern.sub(expected, content, count=1)
+elif "[![Engineering score]" in content:
+    raise SystemExit("README.md has a malformed Engineering score badge")
+elif re.search(
+    r"^\[[^\]\n]+\]\(docs/engineering/engineering_quality_scorecard\.md\)$",
+    content,
+    re.MULTILINE,
+):
+    # A direct evidence link makes no numeric claim; keep it through maintenance.
+    print("ok|engineering-scorecard-link|no README rating claim")
+    raise SystemExit(0)
 else:
     anchor = "[![Harness score](https://img.shields.io/badge/Harness-"
     idx = content.find(anchor)
@@ -108,4 +119,3 @@ if check_only:
 readme.write_text(updated, encoding="utf-8")
 print(f"updated|engineering-score-badge|{score}/10")
 PY
-
