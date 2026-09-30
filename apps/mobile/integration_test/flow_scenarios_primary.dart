@@ -24,7 +24,7 @@ void registerGuestSignInIntegrationFlow() {
       await tapAndPump(tester, guestButton);
       await pumpUntilFound(
         tester,
-        find.text('Home Page'),
+        find.text('Home'),
         timeout: const Duration(seconds: 20),
       );
 
@@ -65,7 +65,7 @@ void registerAppLaunchIntegrationFlow() {
     body: (tester) async {
       await launchTestApp(tester);
 
-      expect(find.text('Home Page'), findsOneWidget);
+      expect(find.text('Home'), findsOneWidget);
       expect(find.byType(MaterialApp), findsOneWidget);
       // Desktop Hive can retain a non-zero count across flows; drive relative
       // to CounterValueText (semantics finders are unreliable on macOS IT).

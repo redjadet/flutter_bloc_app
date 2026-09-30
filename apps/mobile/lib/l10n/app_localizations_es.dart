@@ -27,13 +27,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get lastChangedLabel => 'Último cambio:';
 
   @override
-  String get appTitle => 'Demostración de Flutter';
+  String get appTitle => 'Flutter BLoC App';
 
   @override
-  String get homeTitle => 'Página principal de la demostración';
+  String get homeTitle => 'Inicio';
 
   @override
-  String get pushCountLabel => 'Has pulsado el botón tantas veces:';
+  String get pushCountLabel => 'Contador actual:';
 
   @override
   String get incrementTooltip => 'Incrementar';

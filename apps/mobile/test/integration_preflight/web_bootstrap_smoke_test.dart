@@ -64,7 +64,7 @@ void main() {
         reason: 'No layout/runtime exceptions during home launch.',
       );
 
-      expect(find.text('Home Page'), findsOneWidget);
+      expect(find.text('Home'), findsOneWidget);
       expect(find.byType(MaterialApp), findsOneWidget);
       await pumpUntilFound(tester, find.text('0'));
       expect(find.text('0'), findsWidgets);
@@ -274,7 +274,7 @@ void main() {
         reason: 'No layout/runtime exceptions after case study demo settle.',
       );
 
-      expect(find.text('Home Page', skipOffstage: true), findsNothing);
+      expect(find.text('Home', skipOffstage: true), findsNothing);
     });
   });
 
