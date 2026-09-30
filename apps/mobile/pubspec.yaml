@@ -1,5 +1,5 @@
 name: flutter_bloc_app
-description: "Material 3 Flutter portfolio app with Clean Architecture, Cubit/BLoC, and offline-first workflows."
+description: "Portfolio Flutter reference: Clean Architecture, Cubit/BLoC, offline-first, native interop, and HITL."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

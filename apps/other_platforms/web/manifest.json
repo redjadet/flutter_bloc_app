@@ -1,11 +1,11 @@
 {
     "name": "Flutter BLoC App",
-    "short_name": "Flutter BLoC",
+    "short_name": "BLoC App",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFBFE",
     "theme_color": "#6750A4",
-    "description": "Material 3 Flutter portfolio app with Clean Architecture, Cubit/BLoC, and offline-first workflows.",
+    "description": "Clean Architecture, Cubit/BLoC, offline-first, native interop, and HITL portfolio reference.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
