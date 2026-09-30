@@ -142,7 +142,7 @@ dependencies:
   skeletonizer: ^3.0.0
   storage:
     path: ../../packages/storage
-  supabase_flutter: ^2.17.2
+  supabase_flutter: ^2.18.0
   utilities:
     path: ../../packages/utilities
   video_player: ^2.14.0
