@@ -127,7 +127,6 @@ require_file "tool/check_engineering_core_coverage.sh"
 require_file "tool/check_engineering_quality_scorecard_gate.sh"
 
 require_contains "AGENTS.md" "docs/engineering/engineering_quality_scorecard.md"
-require_contains "README.md" "Engineering score"
 require_contains "README.md" "docs/engineering/engineering_quality_scorecard.md"
 require_contains "README.md" "Do not conflate"
 require_contains "docs/CODE_QUALITY.md" "engineering_quality_scorecard"

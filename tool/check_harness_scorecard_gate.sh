@@ -66,7 +66,6 @@ require_file "tool/agent_host_templates/shared/skills/agents-regression-capture/
 require_contains "AGENTS.md" "docs/ai/harness_scorecard.md"
 require_contains "AGENTS.md" "docs/ai/harness_auto_maintenance.md"
 require_contains "AGENTS.md" "docs/ai/ai_failure_risks.md"
-require_contains "README.md" "Harness score"
 require_contains "README.md" "docs/ai/harness_scorecard.md"
 require_contains "docs/ai/harness_scorecard.md" "harness_auto_maintenance.md"
 require_contains "docs/ai/ai_failure_risks.md" "RISK-HARNESS-SCORE-DROP"

@@ -21,6 +21,20 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-09-30 - Scorecard evidence must survive presentation changes
+
+- What went wrong: Replacing README rating badges with direct evidence links
+  failed CI because generators and gates coupled evidence discovery to badges.
+- How it was fixed: Accept canonical evidence links without adding ratings;
+  continue validating explicit badges and parsing scorecards first.
+- Pattern: A presentation change can break validation and maintenance contracts
+  even when all evidence remains available.
+- Preventive rule: Test both the public representation and update behavior;
+  a neutral link must never hide a stale explicit rating or invalid scorecard.
+- Evidence or affected files: `tool/run_harness_fixtures.sh` reproduces the
+  original failure and covers both scorecard scripts; see
+  `docs/changes/2026-09-30_readme_evidence_links.md`.
+
 ### 2026-09-24 - CubitFailure migrate: named-arg rename + dead onAppError
 
 - What went wrong:
