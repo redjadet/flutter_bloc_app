@@ -17,7 +17,7 @@
       }
     }
   },
-  "autoDecrementPaused": "Auto-decrement paused !!!",
+  "autoDecrementPaused": "Auto-decrement paused",
   "@autoDecrementPaused": {
     "description": "Warning text shown when the automatic decrement routine is paused"
   },
@@ -25,15 +25,15 @@
   "@lastChangedLabel": {
     "description": "Caption shown before the timestamp of the last counter update"
   },
-  "appTitle": "Flutter Demo",
+  "appTitle": "Flutter BLoC App",
   "@appTitle": {
     "description": "Application title shown on the launcher and app switcher"
   },
-  "homeTitle": "Home Page",
+  "homeTitle": "Home",
   "@homeTitle": {
     "description": "Title for the home screen in the demo application"
   },
-  "pushCountLabel": "You have pushed the button this many times:",
+  "pushCountLabel": "Current count:",
   "@pushCountLabel": {
     "description": "Label preceding the current count value"
   },

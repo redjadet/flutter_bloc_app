@@ -165,8 +165,8 @@ Future<void> configureIntegrationTestDependencies({
     }
   }
   PackageInfo.setMockInitialValues(
-    appName: 'Flutter Demo',
-    packageName: 'com.example.flutter_bloc_app',
+    appName: 'Flutter BLoC App',
+    packageName: 'com.ilkersevim.blocflutter',
     version: '1.2.3',
     buildNumber: '42',
     buildSignature: '',

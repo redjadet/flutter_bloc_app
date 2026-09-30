@@ -27,13 +27,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get lastChangedLabel => 'Son değişiklik:';
 
   @override
-  String get appTitle => 'Flutter Demo';
+  String get appTitle => 'Flutter BLoC App';
 
   @override
   String get homeTitle => 'Ana Sayfa';
 
   @override
-  String get pushCountLabel => 'Butona bu kadar kez bastınız:';
+  String get pushCountLabel => 'Güncel sayaç:';
 
   @override
   String get incrementTooltip => '+';

@@ -21,19 +21,19 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get autoDecrementPaused => 'تم إيقاف التخفيض التلقائي مؤقتًا !!!';
+  String get autoDecrementPaused => 'تم إيقاف التخفيض التلقائي مؤقتًا';
 
   @override
   String get lastChangedLabel => 'آخر تغيير:';
 
   @override
-  String get appTitle => 'تطبيق BLoC';
+  String get appTitle => 'تطبيق Flutter BLoC';
 
   @override
   String get homeTitle => 'الصفحة الرئيسية';
 
   @override
-  String get pushCountLabel => 'لقد ضغطت على الزر عدة مرات:';
+  String get pushCountLabel => 'العداد الحالي:';
 
   @override
   String get incrementTooltip => 'زيادة';

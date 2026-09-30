@@ -27,14 +27,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lastChangedLabel => 'Dernière modification :';
 
   @override
-  String get appTitle => 'Flutter Démo';
+  String get appTitle => 'Flutter BLoC App';
 
   @override
-  String get homeTitle => 'Page d\'accueil Flutter Démo';
+  String get homeTitle => 'Accueil';
 
   @override
   String get pushCountLabel =>
-      'Vous avez appuyé sur le bouton autant de fois :';
+      'Compteur actuel :';
 
   @override
   String get incrementTooltip => 'Incrémenter';

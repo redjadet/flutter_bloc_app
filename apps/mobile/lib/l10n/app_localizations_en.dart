@@ -21,19 +21,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get autoDecrementPaused => 'Auto-decrement paused !!!';
+  String get autoDecrementPaused => 'Auto-decrement paused';
 
   @override
   String get lastChangedLabel => 'Last changed:';
 
   @override
-  String get appTitle => 'Flutter Demo';
+  String get appTitle => 'Flutter BLoC App';
 
   @override
-  String get homeTitle => 'Home Page';
+  String get homeTitle => 'Home';
 
   @override
-  String get pushCountLabel => 'You have pushed the button this many times:';
+  String get pushCountLabel => 'Current count:';
 
   @override
   String get incrementTooltip => 'Increment';

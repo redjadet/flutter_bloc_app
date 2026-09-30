@@ -127,7 +127,7 @@ abstract class AppLocalizations {
   /// Warning text shown when the automatic decrement routine is paused
   ///
   /// In en, this message translates to:
-  /// **'Auto-decrement paused !!!'**
+  /// **'Auto-decrement paused'**
   String get autoDecrementPaused;
 
   /// Caption shown before the timestamp of the last counter update
@@ -139,19 +139,19 @@ abstract class AppLocalizations {
   /// Application title shown on the launcher and app switcher
   ///
   /// In en, this message translates to:
-  /// **'Flutter Demo'**
+  /// **'Flutter BLoC App'**
   String get appTitle;
 
   /// Title for the home screen in the demo application
   ///
   /// In en, this message translates to:
-  /// **'Home Page'**
+  /// **'Home'**
   String get homeTitle;
 
   /// Label preceding the current count value
   ///
   /// In en, this message translates to:
-  /// **'You have pushed the button this many times:'**
+  /// **'Current count:'**
   String get pushCountLabel;
 
   /// Tooltip for the button that increases the counter

@@ -9,7 +9,7 @@ tier expectations.
   anonymous users off `/auth` except `?upgrade=true`; session-safe navigation.
 - **Primary target:** `integration_test/guest_sign_in_flow_test.dart`
   (`registerGuestSignInIntegrationFlow`: real Firebase Auth, Continue as guest,
-  Home Page + anonymous `AuthRepository` user).
+  Home + anonymous `AuthRepository` user).
 - **Secondary target:** `integration_test/standard_flows_test.dart` (broader
   auth/session navigation).
 - **Negative path:** stale session behavior during navigation guarded by app
