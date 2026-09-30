@@ -69,6 +69,9 @@ managed_cursor_project_files=(
   "cursor/rules/dependency-review.mdc|$repo_root/.cursor/rules/dependency-review.mdc"
   "cursor/rules/flutter-isolate-presentation.mdc|$repo_root/.cursor/rules/flutter-isolate-presentation.mdc"
   "cursor/rules/router-feature-validation.mdc|$repo_root/.cursor/rules/router-feature-validation.mdc"
+  "cursor/hooks.json|$repo_root/.cursor/hooks.json"
+  "cursor/hooks/format-dart-after-edit.sh|$repo_root/.cursor/hooks/format-dart-after-edit.sh"
+  "cursor/hooks/session-flutter-context.sh|$repo_root/.cursor/hooks/session-flutter-context.sh"
 )
 
 # shellcheck disable=SC2034
@@ -160,6 +163,10 @@ apply_copy_file() {
   src="$(agent_asset_source_path "$src_rel")"
   mkdir -p "$(dirname "$dst")"
   cp "$src" "$dst"
+  # Preserve executable bit for synced hook/scripts.
+  if [[ "$src" == *.sh ]]; then
+    chmod +x "$dst"
+  fi
 }
 
 extract_toolchain_versions() {

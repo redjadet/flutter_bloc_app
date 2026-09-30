@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/session-flutter-context.sh",
+        "timeout": 5
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/format-dart-after-edit.sh",
+        "matcher": "\\.dart$",
+        "timeout": 30
+      }
+    ]
+  }
+}
