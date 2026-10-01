@@ -100,7 +100,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | --- | --- |
 | Design system and theming | Material 3, Cupertino, `mix` `^1.7.0` |
 | Responsive layout | `flutter_screenutil` `^5.9.3`, `responsive_framework` `^1.5.1` |
-| Typography | `google_fonts` `^8.0.0` plus bundled font assets |
+| Typography | `google_fonts` `^9.0.0` plus bundled font assets |
 | Images and SVG | `cached_network_image` `^3.4.1`, `fancy_shimmer_image` `^2.0.3`, `flutter_svg` `^2.2.2`, `skeletonizer` `^2.1.0+1` |
 | Charts and visualization | `fl_chart` `^1.1.1` |
 | Media and device features | `image_picker` `^1.2.1`, `local_auth` `^3.0.0`, `device_info_plus` `^12.3.0`, `package_info_plus` `^9.0.0` |
