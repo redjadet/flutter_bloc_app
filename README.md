@@ -29,7 +29,7 @@ agent workflows. Details live in `docs/` — this README is navigation only.
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
 [![CodeQL](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml)
-[Coverage policy and measurement scope](docs/CODE_QUALITY.md)
+[![Coverage policy](https://img.shields.io/badge/Coverage-policy%20%26%20scope-546E7A.svg)](docs/CODE_QUALITY.md)
 [![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
 [![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
 [![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
@@ -64,8 +64,8 @@ agent workflows. Details live in `docs/` — this README is navigation only.
 ## Engineering practices
 
 [![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
-[Engineering evidence](docs/engineering/engineering_quality_scorecard.md)
-[AI workflow evidence and safeguards](docs/ai/harness_scorecard.md)
+[![Engineering score](https://img.shields.io/badge/Engineering-10%2F10-brightgreen.svg)](docs/engineering/engineering_quality_scorecard.md)
+[![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
