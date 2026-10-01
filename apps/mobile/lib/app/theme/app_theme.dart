@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart' as sdk;
 import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
@@ -25,6 +24,8 @@ const List<Color> defaultConfettiParticleColors = [
 ///
 /// Single place for [ThemeData], light/dark [ColorScheme], and [TextTheme].
 /// Used by AppConfig when building MaterialApp.
+///
+/// `google_fonts` 9+ returns `material_ui` [TextTheme] (not `flutter/material`).
 class AppTheme {
   new _();
 
@@ -56,8 +57,8 @@ class AppTheme {
 
   /// Text theme using Roboto with Comfortaa for display styles.
   static TextTheme createAppTextTheme(Brightness brightness) {
-    final sdk.TextTheme robotoTheme = GoogleFonts.robotoTextTheme(
-      sdk.ThemeData(brightness: brightness).textTheme,
+    final TextTheme robotoTheme = GoogleFonts.robotoTextTheme(
+      ThemeData(brightness: brightness).textTheme,
     );
     final String? comfortaaFamily = GoogleFonts.comfortaa().fontFamily;
     TextStyle? withComfortaa(TextStyle? style) =>

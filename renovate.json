@@ -36,22 +36,10 @@
       "groupName": "pub-coordinated-pins"
     },
     {
-      "description": "Hold cross_file <0.4 until image_picker (latest 1.2.3) supports it; 0.4 conflicts with image_picker_platform_interface ^2.11 needing cross_file ^0.3 (see #933/#937/#939)",
+      "description": "Hold cross_file <0.4 until image_picker_platform_interface supports it; as of image_picker 1.2.3 / image_picker_platform_interface 2.11.1 still requires cross_file ^0.3.1+1 (pub.dev 2026-10-01; see #933/#937/#939)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["cross_file"],
       "allowedVersions": "<0.4.0"
-    },
-    {
-      "description": "Hold cupertino_icons <2 until explicit v2 migration (cupertino_ui); closed #929 — major without plan",
-      "matchManagers": ["pub"],
-      "matchPackageNames": ["cupertino_icons"],
-      "allowedVersions": "<2.0.0"
-    },
-    {
-      "description": "Hold google_fonts <9 until theme/material_ui TextTheme migration; closed #941 — CI red (app_theme.dart type clash)",
-      "matchManagers": ["pub"],
-      "matchPackageNames": ["google_fonts"],
-      "allowedVersions": "<9.0.0"
     },
     {
       "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",
