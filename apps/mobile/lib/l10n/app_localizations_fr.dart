@@ -33,8 +33,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeTitle => 'Accueil';
 
   @override
-  String get pushCountLabel =>
-      'Compteur actuel :';
+  String get pushCountLabel => 'Compteur actuel :';
 
   @override
   String get incrementTooltip => 'Incrémenter';
