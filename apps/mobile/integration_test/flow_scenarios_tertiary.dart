@@ -155,10 +155,8 @@ void registerSettingsThemePersistenceIntegrationFlow() {
 
       // Navigate back to home (Material + Cupertino)
       await _pageBack(tester);
-      await pumpUntilFound(
-        tester,
-        find.text('Página principal de la demostración'),
-      );
+      // homeTitle ES after branding refresh (#959); keep in sync with app_es.arb
+      await pumpUntilFound(tester, find.text('Inicio'));
 
       // Verify dark theme is still applied while on Spanish home
       final MaterialApp app = tester.widget<MaterialApp>(
