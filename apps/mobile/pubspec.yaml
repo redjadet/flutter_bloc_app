@@ -50,7 +50,7 @@ dependencies:
   cloud_functions: ^6.5.0
   collection: ^1.19.1
   confetti: ^0.8.0
-  connectivity_plus: ^7.3.1
+  connectivity_plus: ^7.3.2
   core:
     path: ../../packages/core
   cross_file: ^0.3.5+2
@@ -58,7 +58,7 @@ dependencies:
   cupertino_ui: ^1.1.0
   design_system:
     path: ../../packages/design_system
-  device_info_plus: ^13.2.0
+  device_info_plus: ^13.3.0
   dio: ^5.11.1
   equatable: ^3.0.0
   event_bus: ^2.0.1
@@ -124,10 +124,10 @@ dependencies:
   markdown: ^7.3.1
   material_ui: ^1.5.0
   meta: ^1.16.0
-  mix: ^2.2.0
+  mix: ^2.2.1
   networking:
     path: ../../packages/networking
-  package_info_plus: ^10.2.1
+  package_info_plus: ^10.2.2
   path: ^1.9.1
   path_provider: ^2.1.6
   pdfrx: ^2.6.5
