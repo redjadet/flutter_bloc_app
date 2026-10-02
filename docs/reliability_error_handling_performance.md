@@ -18,6 +18,9 @@ overview.
 - **When adding new cross-cutting behavior**, update the owning utility doc
   (typically [`engineering/SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md)) and add/extend a validator or
   regression test when the pattern is important enough to enforce.
+- **Habit → owner map** (failure design, idempotency, flags, why-notes):
+  [`engineering/critical_human_skills.md`](engineering/critical_human_skills.md)
+  § Senior production habits.
 
 ## High-level overview
 

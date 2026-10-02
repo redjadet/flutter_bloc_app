@@ -158,6 +158,8 @@ This standard makes the project:
 
 ## 5. Debugging and root-cause analysis
 
+- Read the full error message, file, line, and stack trace before searching the
+  web or pasting into an agent—most failures already name the break site.
 - Write the observed symptom, expected behavior, environment, first bad boundary,
   and reproducible trigger before proposing a fix.
 - Form competing hypotheses; choose the next observation that best separates
@@ -287,6 +289,23 @@ This standard makes the project:
 - Keep deep reading and debugging skills sharp so rejection stays grounded in
   runtime truth, not vibe. Generating an app and engineering a reliable system
   remain different problems.
+
+## Senior production habits (article crosswalk)
+
+External essay
+[7 Coding Patterns Senior Engineers Use That Most Developers Learn Too Late](https://medium.com/stackademic/7-coding-patterns-senior-engineers-use-that-most-developers-learn-too-late-5670bbba0a80?sk=602e6d8b93fb858bbe3489850d4a55fa)
+names seven production habits. This repo already encodes them; use the owner docs
+below—do not invent a parallel guide.
+
+| Habit | Repo home |
+| --- | --- |
+| Design for failure (retry, circuit breaker, dead-letter) | [Reliability index](../reliability_error_handling_performance.md); networking + `RetryPolicy` |
+| Prefer boring, readable code | [CODE_QUALITY](../CODE_QUALITY.md) § Clean code in the AI era; [anti-patterns](flutter-anti-patterns.md) |
+| Make changes easy to reverse (flags, small deploys) | `packages/feature_flags`; [SAFETY-02](../agent_kb/agent_safety_contracts.md); production-readiness kill-switch |
+| Idempotent / safe-to-retry operations | [Offline-first invariants](../offline_first/invariants.md); HTTP retry opt-in for non-idempotent methods; Render chat `Idempotency-Key` |
+| Read the error before searching | This section §5; [Crashlytics triage](../observability/crashlytics_triage_runbook.md) |
+| Delete dead code (trust git) | [CODE_QUALITY](../CODE_QUALITY.md); [AI review protocol](../ai_code_review_protocol.md); this guide §13 |
+| Write down the *why* | ADRs; PR Decision note in [git strategy](../git_and_branching_strategy.md); why-comment waves under `docs/changes/` |
 
 ## Practical self-review
 
