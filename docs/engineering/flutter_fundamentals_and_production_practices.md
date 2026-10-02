@@ -60,6 +60,40 @@ Repo detail: [`performance/finding_jank_cause.md`](../performance/finding_jank_c
 (*Constraints go down. Sizes go up. Parents set positions.* also in
 [`architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md)).
 
+### Widget identity: update, replace, or rebuild
+
+`build()` returns **new widget instances**. The framework decides whether the
+live **Element** (and its **RenderObject** / `State`) can keep that slot by
+running `Widget.canUpdate(oldWidget, newWidget)` — same `runtimeType` **and**
+same `key` ([API](https://api.flutter.dev/flutter/widgets/Widget/canUpdate.html)):
+
+| Match | What happens |
+| --- | --- |
+| Same type + same key | Element is **updated** in place; `RenderObject`/`State` usually kept |
+| Type or key differs | Element is **torn down** and a new one is **inflated**; `State` is new |
+| Parent rebuild returns the **same widget instance** (often `const`) | Descendant rebuild walk can stop early |
+
+Keys choose identity among siblings. Prefer durable domain ids:
+
+| Key | Use | Avoid |
+| --- | --- | --- |
+| `ValueKey` / typed `ValueKey` | Stable row/domain id | Index-only keys when order can change |
+| `ObjectKey` | Identity truly is the Dart object | Builder rows that allocate fresh models each tick |
+| `GlobalKey` | Rare: `currentState` / same-frame reparent | Recreating it every `build` (throws away subtree state) |
+
+**StatefulWidget:** `State` is owned by the Element. Keep type+key stable so
+controllers, focus, and expansion survive parent rebuilds; change the key when
+the slot must reset.
+
+**Lists:** insert/remove/reorder without stable keys attaches the wrong Element —
+lost focus, stale expansion, wrong animation targets. Repo rule and gate:
+[`../changes/2026-06-16_widget-list-stable-keys.md`](../changes/2026-06-16_widget-list-stable-keys.md),
+`bash tool/check_widget_identity.sh`.
+
+Deeper framework reading: [Inside Flutter](https://docs.flutter.dev/resources/inside-flutter)
+(linear reconciliation) and
+[architectural overview](https://docs.flutter.dev/resources/architectural-overview).
+
 Practical consequence here: prefer **narrow rebuilds**. Counter body listens
 only to loading via `TypeSafeBlocSelector`, not the whole `CounterState`:
 
@@ -81,6 +115,10 @@ TypeSafeBlocSelector<CounterCubit, CounterState, bool>(
 | Holds | Only constructor fields | A `State` object that can change over time |
 | Rebuild trigger | Parent rebuild / inherited dependency | `setState`, inherited deps, parent |
 | Use when | Pure projection of inputs | Animation tickers, controllers, focus, one-off UI flags |
+
+`State` reuse follows Element identity (type + key) — see **Widget identity**
+above. Changing type/key recreates `State`; that is intentional for reset, a bug
+for list reorder without stable keys.
 
 **This repo’s default:** feature business and async flow live in **Cubit**, not
 in `State`. Pages may still be `StatefulWidget` when they need local UI
