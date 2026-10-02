@@ -42,6 +42,12 @@
       "allowedVersions": "<0.4.0"
     },
     {
+      "description": "Hold connectivity_plus <7.3.2 until geolocator_linux supports dbus ^0.8 (via nm ^0.6). 7.3.2 pulls nm ^0.6.0 → dbus ^0.8.0 while geolocator_linux 0.2.6 still requires dbus ^0.7.3 (pub solve fail on #968 2026-10-02).",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["connectivity_plus"],
+      "allowedVersions": "<7.3.2"
+    },
+    {
       "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["genui"],
