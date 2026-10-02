@@ -41,7 +41,7 @@ runs:
       if: ${{ inputs.install-rust == 'true' }}
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: '1.98.1'
+        toolchain: '1.99.0'
         components: rustfmt, clippy
 
     - name: Flutter pub get
