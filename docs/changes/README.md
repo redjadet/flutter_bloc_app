@@ -43,6 +43,7 @@ that.
 - [`2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md`](2026-09-22_why_comment_wave2_chat_iot_therapy_packages.md): Wave 2 why-comments on chat/IoT/therapy demos + HiveService.
 - [`2026-09-22_why_comment_wave1_shell_refs.md`](2026-09-22_why_comment_wave1_shell_refs.md): Wave 1 why-comments on AppScope/router/sync + reference offline features; links comment canon.
 - [`2026-09-21_cubit_async_ownership_guards.md`](2026-09-21_cubit_async_ownership_guards.md): Weather/AI-decision/GenUI Cubit stale-async ownership guards + race tests.
+- [`2026-10-02_flutter_3_47_6_pin.md`](2026-10-02_flutter_3_47_6_pin.md): Pin Flutter `3.47.5` → `3.47.6` and Dart `3.13.4` → `3.13.5`; CI/docs/README sinks synced from SDK.
 - [`2026-09-21_flutter_3_47_5_pin.md`](2026-09-21_flutter_3_47_5_pin.md): Pin Flutter `3.47.4` → `3.47.5` and Dart `3.13.3` → `3.13.4`; refresh `pubspec.lock` on new SDK.
 - [`2026-09-16_sync_now_trailing_button.md`](2026-09-16_sync_now_trailing_button.md): Shared `SyncNowTrailingButton` for chat/profile sync banners.
 - [`2026-09-16_network_sync_banner_ensure_mixin.md`](2026-09-16_network_sync_banner_ensure_mixin.md): Shared `NetworkSyncBanner` + `EnsureSyncStartedMixin` for sync UI.
