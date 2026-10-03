@@ -11,8 +11,7 @@ See also: [`agent_project_context.md`](../agent_project_context.md), [`code_revi
 Next session smarter, no bloated wiki.
 
 - Treat source docs, ADRs, plans, changes, tests, scripts, fixtures, and host trackers as compiled memory.
-- Root memory/error log files are not repo memory stores here. Route durable decisions to owning docs/ADRs/plans/changes/tasks, and recurring failure patterns to [`../../tasks/lessons.md`](../../tasks/lessons.md), `docs/changes/`, or the failing tool/test doc.
-- File reusable conclusions into owning source doc, `docs/changes/`, `docs/plans/`, or [`../tasks/lessons.md`](../../tasks/lessons.md). Keep transient state in host trackers.
+- Root memory/error log files are not repo memory stores here. File durable decisions and reusable conclusions into owning source docs, ADRs, `docs/plans/`, `docs/changes/`, or [`tasks/lessons.md`](../../tasks/lessons.md). Route recurring failures to those lessons or the failing tool/test doc; keep transient state in host trackers.
 - Preserve source-of-truth boundaries: code/tests beat summaries; source docs beat host templates; user corrections beat inferred rules.
 - Do not dump chat transcripts or generic summaries. Add compact, cited, actionable facts only.
 - At session end, persist only reusable conclusions, current blockers, and exact next step when they matter for future work; otherwise report proof without creating memory noise.
