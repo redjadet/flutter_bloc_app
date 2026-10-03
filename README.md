@@ -1,75 +1,59 @@
 # Flutter BLoC App
 
-Production-style Flutter portfolio reference: Clean Architecture, Cubit/BLoC,
-offline-first sync, native iOS/Android interop, and human-in-the-loop (HITL)
-agent workflows. Details live in `docs/` — this README is navigation only.
+A Flutter / Dart engineering portfolio for **iOS, Android, web and macOS**.
+The reference app demonstrates BLoC/Cubit state management, Clean Architecture,
+offline-first synchronization, native Swift/Kotlin integration and
+human-reviewed AI development workflows.
 
 [Live web demo](https://redjadet.github.io/flutter_bloc_app/) ·
 [Google Play](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter) ·
-[Reviewer walkthrough](docs/interview_showcase.md) ·
-[Architecture tour](docs/architecture_tour.md)
+[3-minute review](#3-minute-review) ·
+[Architecture tour](docs/architecture_tour.md) ·
+[İlker Sevim's portfolio](https://redjadet.github.io/react-web-portfolio/)
 
-## Platform and toolchain
+## Four pillars: engineering decisions and evidence
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.47.6-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.13.5-blue.svg)](https://dart.dev)
-[![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20Android%20%7C%20Web%20%7C%20Desktop-02569B.svg)](docs/deployment.md)
-[![style: very good analysis](https://img.shields.io/badge/Lint-very__good__analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Custom lint](https://img.shields.io/badge/Lint-analysis__server__plugin%20%7C%20mix__lint-64748B.svg)](docs/CODE_QUALITY.md)
-[![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
-[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
-[![Google Play](https://img.shields.io/badge/Google%20Play-Available-34A853.svg?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
-[![Web app](https://img.shields.io/badge/Web%20app-Live-4285F4.svg?logo=googlechrome&logoColor=white)](https://redjadet.github.io/flutter_bloc_app/)
+| Pillar | What to review | Implementation and verification |
+| --- | --- | --- |
+| **Flutter / Cubit / Clean Architecture** | Presentation state stays in Cubit; domain contracts separate feature behavior from UI and infrastructure. | [Counter feature](apps/mobile/lib/features/counter/) · [Cubit tests](apps/mobile/test/counter_cubit_test.dart) · [Layer boundaries](docs/clean_architecture.md) |
+| **Offline-first / reliability** | Persist local changes first, then queue remote synchronization when a remote repository is configured. | [Offline-first repository](apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart) · [Queue replay test](apps/mobile/test/features/counter/data/background_sync_counter_flow_test.dart) |
+| **Native iOS & Android interop** | Swift/Kotlin MethodChannel calls, EventChannel telemetry and platform views sit behind typed feature contracts. | [Native showcase](apps/mobile/lib/features/native_platform_showcase/README.md) · [Platform tests](apps/mobile/test/features/native_platform_showcase/) |
+| **Human–AI HITL** | Scoped plans, reusable AI skills, review and validation keep generated changes inspectable. | [Collaboration workflow](docs/ai/human_ai_collaboration.md) · [Safety contracts](docs/agent_kb/agent_safety_contracts.md) |
 
-## CI, quality, and supply chain
+These are portfolio examples. Backend-dependent flows require their documented
+configuration; native bridges report unavailable states on unsupported hosts.
+See the [feature tiers and scope](docs/feature_overview.md) and
+[testing strategy](docs/testing_overview.md) for what each example covers.
 
-[![CI](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
-[![Deploy web](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml)
-[![Dependency Review](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml)
-[![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
-[![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
-[![CodeQL](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml)
-[![Coverage policy](https://img.shields.io/badge/Coverage-policy%20%26%20scope-546E7A.svg)](docs/CODE_QUALITY.md)
-[![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
-[![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
-[![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
+## App preview
 
-## Architecture and app stack
+Existing screenshots from the mobile demo; use the live build for current UI.
 
-[![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
-[![ADRs](https://img.shields.io/badge/ADRs-Accepted%20Decisions-475569.svg)](docs/adr/README.md)
-[![Offline First](https://img.shields.io/badge/Data-Offline--First-16A34A.svg)](docs/offline_first/adoption_guide.md)
-[![State Management](https://img.shields.io/badge/State-BLoC%2FCubit-2563EB.svg)](https://pub.dev/packages/flutter_bloc)
-[![Routing](https://img.shields.io/badge/Routing-GoRouter-00ADD8.svg)](https://pub.dev/packages/go_router)
-[![DI](https://img.shields.io/badge/DI-get__it-8E44AD.svg)](https://pub.dev/packages/get_it)
-[![Persistence](https://img.shields.io/badge/Persistence-Hive-FFB300.svg)](docs/offline_first/hive_schema_migrations.md)
-[![Networking](https://img.shields.io/badge/Networking-Dio%20%7C%20Retrofit-0EA5E9.svg)](docs/reliability_error_handling_performance.md)
-[![Codegen](https://img.shields.io/badge/Codegen-Freezed%20%7C%20JSON-7C3AED.svg)](docs/architecture/freezed_usage_analysis.md)
-[![Design System](https://img.shields.io/badge/Design-Material%203%20%7C%20Mix-6200EE.svg)](docs/design_system.md)
-[![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
-[![Localization](https://img.shields.io/badge/Localization-6%20locales-009688.svg)](docs/engineering/localization.md)
-[![RTL](https://img.shields.io/badge/i18n-RTL%20%28ar%29-0D9488.svg)](docs/engineering/localization.md)
+<!-- markdownlint-disable MD033 -->
 
-## Integrations and platform services
+| Offline-capable counter | GraphQL countries browser |
+| --- | --- |
+| <img src="apps/mobile/assets/screenshots/small/counter_home.png" alt="Counter screen with paused auto-decrement and increment controls" width="240" /> | <img src="apps/mobile/assets/screenshots/small/graphQL_countries.png" alt="GraphQL countries browser with continent filter and country details" width="240" /> |
 
-[![Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](docs/integrations/firebase_setup.md)
-[![Supabase](https://img.shields.io/badge/Backend-Supabase-3ECF8E.svg)](supabase/README.md)
-[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
-[![GraphQL](https://img.shields.io/badge/GraphQL-Demo-E10098.svg)](docs/offline_first/graphql_demo.md)
-[![AI](https://img.shields.io/badge/AI-GenUI%20%7C%20chat-8B5CF6.svg)](docs/integrations/ai_integration.md)
-[![Deep links](https://img.shields.io/badge/Deep%20links-app__links-0F766E.svg)](docs/universal_links/README.md)
-[![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20plan-DC2626.svg)](docs/observability.md)
-[![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
+<!-- markdownlint-enable MD033 -->
 
-## Engineering practices
+## 3-minute review
 
-[![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
-[![Engineering score](https://img.shields.io/badge/Engineering-10%2F10-brightgreen.svg)](docs/engineering/engineering_quality_scorecard.md)
-[![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
-[![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
-[![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
+1. **Try the app:** open the [web demo](https://redjadet.github.io/flutter_bloc_app/)
+   and inspect the Counter.
+2. **Inspect one reliability decision:** compare the
+   [local-first save and pending queue](apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart)
+   with the [replay test](apps/mobile/test/features/counter/data/background_sync_counter_flow_test.dart).
+3. **Inspect mobile depth:** open the
+   [Swift/Kotlin interop guide](apps/mobile/lib/features/native_platform_showcase/README.md)
+   and [test directory](apps/mobile/test/features/native_platform_showcase/).
+4. **Review the development process:** follow the
+   [human–AI workflow](docs/ai/human_ai_collaboration.md) and
+   [validation gates](docs/validation_scripts.md).
 
-Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
+For an interview, continue with the [30-minute portfolio walkthrough](docs/interview_showcase.md),
+including Todo, Chat and Sync diagnostics. Detailed claims and caveats stay in
+the owning documents.
 
 ## Quick start
 
@@ -86,26 +70,6 @@ root routes to `apps/mobile`.
 
 - Agents: [docs/quick_start.md](docs/quick_start.md)
 - Full setup: [docs/new_developer_guide.md](docs/new_developer_guide.md)
-
-## Four pillars
-
-Equal pillars — do not collapse to Flutter-only demos:
-
-1. **Flutter / Cubit / Clean Architecture** —
-   [feature overview](docs/feature_overview.md),
-   [architecture tour](docs/architecture_tour.md)
-2. **Offline-first / reliability** —
-   [adoption guide](docs/offline_first/adoption_guide.md),
-   [offline-first docs](docs/offline_first/README.md)
-3. **Native iOS & Android interop** —
-   [platforms pack](docs/platforms/README.md),
-   [native showcase](apps/mobile/lib/features/native_platform_showcase/README.md)
-4. **Human–AI HITL** —
-   [collaboration map](docs/ai/human_ai_collaboration.md),
-   [AGENTS.md](AGENTS.md)
-
-Evidence and change notes: [docs/changes/](docs/changes/README.md).
-Interview walk: [interview showcase](docs/interview_showcase.md).
 
 | Goal | Start here |
 | --- | --- |
@@ -145,15 +109,18 @@ Index and hubs — open these instead of expanding this file:
   [Validation scripts](docs/validation_scripts.md) ·
   [Security](docs/SECURITY.md) · [Deployment](docs/deployment.md)
 
-## Screenshots
+## Additional screenshots
 
 <!-- markdownlint-disable MD033 -->
 
+<details>
+<summary>Browse the remaining mobile demo screens</summary>
+
 ### Core app
 
-| Counter | Countdown | Settings |
-| --- | --- | --- |
-| <img src="apps/mobile/assets/screenshots/small/counter_home.png" alt="Counter home screen" width="240" /> | <img src="apps/mobile/assets/screenshots/small/counter_home2.png" alt="Counter screen with countdown" width="240" /> | <img src="apps/mobile/assets/screenshots/small/settings.png" alt="Settings screen" width="240" /> |
+| Countdown | Settings |
+| --- | --- |
+| <img src="apps/mobile/assets/screenshots/small/counter_home2.png" alt="Counter screen with countdown" width="240" /> | <img src="apps/mobile/assets/screenshots/small/settings.png" alt="Settings screen" width="240" /> |
 
 ### Data, sync, and feature flows
 
@@ -165,9 +132,9 @@ Index and hubs — open these instead of expanding this file:
 | --- | --- | --- |
 | <img src="apps/mobile/assets/screenshots/IoT2.png" alt="IoT demo 2" width="240" /> | <img src="apps/mobile/assets/screenshots/todolist.png" alt="Todo List screen" width="240" /> | <img src="apps/mobile/assets/screenshots/todolistSwipe.png" alt="Todo List swipe action" width="240" /> |
 
-| Search | Charts | GraphQL |
-| --- | --- | --- |
-| <img src="apps/mobile/assets/screenshots/search.png" alt="Search demo" width="240" /> | <img src="apps/mobile/assets/screenshots/small/chart.png" alt="Charts page" width="240" /> | <img src="apps/mobile/assets/screenshots/small/graphQL_countries.png" alt="GraphQL countries browser" width="240" /> |
+| Search | Charts |
+| --- | --- |
+| <img src="apps/mobile/assets/screenshots/search.png" alt="Search demo" width="240" /> | <img src="apps/mobile/assets/screenshots/small/chart.png" alt="Charts page" width="240" /> |
 
 ### Integrations and demos
 
@@ -198,5 +165,80 @@ Index and hubs — open these instead of expanding this file:
 | Scapes | Social feed |
 | --- | --- |
 | <img src="apps/mobile/assets/screenshots/scapes.png" alt="Scapes screen" width="240" /> | <img src="apps/mobile/assets/screenshots/social_feed.png" alt="Social feed demo" width="240" /> |
+
+</details>
+
+<!-- markdownlint-enable MD033 -->
+
+## Toolchain, CI and supporting integrations
+
+<!-- markdownlint-disable MD033 -->
+
+<details>
+<summary>Versions, CI status, packages and engineering policies</summary>
+
+### Platform and toolchain
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.47.6-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.13.5-blue.svg)](https://dart.dev)
+[![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20Android%20%7C%20Web%20%7C%20Desktop-02569B.svg)](docs/deployment.md)
+[![style: very good analysis](https://img.shields.io/badge/Lint-very__good__analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
+[![Custom lint](https://img.shields.io/badge/Lint-analysis__server__plugin%20%7C%20mix__lint-64748B.svg)](docs/CODE_QUALITY.md)
+[![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+[![Google Play](https://img.shields.io/badge/Google%20Play-Available-34A853.svg?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
+[![Web app](https://img.shields.io/badge/Web%20app-Live-4285F4.svg?logo=googlechrome&logoColor=white)](https://redjadet.github.io/flutter_bloc_app/)
+
+### CI, quality, and supply chain
+
+[![CI](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
+[![Deploy web](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml)
+[![Dependency Review](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml)
+[![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
+[![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
+[![CodeQL](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml)
+[![Coverage policy](https://img.shields.io/badge/Coverage-policy%20%26%20scope-546E7A.svg)](docs/CODE_QUALITY.md)
+[![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
+[![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
+[![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
+
+### Architecture and app stack
+
+[![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
+[![ADRs](https://img.shields.io/badge/ADRs-Accepted%20Decisions-475569.svg)](docs/adr/README.md)
+[![Offline First](https://img.shields.io/badge/Data-Offline--First-16A34A.svg)](docs/offline_first/adoption_guide.md)
+[![State Management](https://img.shields.io/badge/State-BLoC%2FCubit-2563EB.svg)](https://pub.dev/packages/flutter_bloc)
+[![Routing](https://img.shields.io/badge/Routing-GoRouter-00ADD8.svg)](https://pub.dev/packages/go_router)
+[![DI](https://img.shields.io/badge/DI-get__it-8E44AD.svg)](https://pub.dev/packages/get_it)
+[![Persistence](https://img.shields.io/badge/Persistence-Hive-FFB300.svg)](docs/offline_first/hive_schema_migrations.md)
+[![Networking](https://img.shields.io/badge/Networking-Dio%20%7C%20Retrofit-0EA5E9.svg)](docs/reliability_error_handling_performance.md)
+[![Codegen](https://img.shields.io/badge/Codegen-Freezed%20%7C%20JSON-7C3AED.svg)](docs/architecture/freezed_usage_analysis.md)
+[![Design System](https://img.shields.io/badge/Design-Material%203%20%7C%20Mix-6200EE.svg)](docs/design_system.md)
+[![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
+[![Localization](https://img.shields.io/badge/Localization-6%20locales-009688.svg)](docs/engineering/localization.md)
+[![RTL](https://img.shields.io/badge/i18n-RTL%20%28ar%29-0D9488.svg)](docs/engineering/localization.md)
+
+### Integrations and platform services
+
+[![Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](docs/integrations/firebase_setup.md)
+[![Supabase](https://img.shields.io/badge/Backend-Supabase-3ECF8E.svg)](supabase/README.md)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
+[![GraphQL](https://img.shields.io/badge/GraphQL-Demo-E10098.svg)](docs/offline_first/graphql_demo.md)
+[![AI](https://img.shields.io/badge/AI-GenUI%20%7C%20chat-8B5CF6.svg)](docs/integrations/ai_integration.md)
+[![Deep links](https://img.shields.io/badge/Deep%20links-app__links-0F766E.svg)](docs/universal_links/README.md)
+[![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20plan-DC2626.svg)](docs/observability.md)
+[![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
+
+### Engineering practices
+
+[![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
+[Engineering evidence and measurement scope](docs/engineering/engineering_quality_scorecard.md)
+[AI harness policy and evidence](docs/ai/harness_scorecard.md)
+[![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
+[![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
+
+Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
+
+</details>
 
 <!-- markdownlint-enable MD033 -->
