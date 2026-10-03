@@ -879,27 +879,16 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 
 ### 2026-07-04 - Keep coverage artifacts in commits
 
-- What went wrong:
-  Before merge, agent removed `apps/mobile/coverage/lcov.base.info` from the
-  commit and added `apps/mobile/coverage/` to `.gitignore`, treating the
-  integration baseline as accidental churn.
-- How it was fixed:
-  Operator preference: keep coverage artifacts in commits. Revert gitignore
-  exclusion; restore tracked `apps/mobile/coverage/lcov.base.info`; document in
-  [`operator_preferences_durable.md`](../docs/agent_kb/operator_preferences_durable.md).
-- Pattern:
-  Integration merge staging copies workspace `coverage/lcov.base.info` into
-  `apps/mobile/coverage/` — that file is intentional repo state, not ephemeral
-  build output to strip pre-push.
-- Preventive rule:
-  **Superseded 2026-07-13** — regenerable coverage outputs are gitignored again
-  by explicit operator request. See top-of-file entry
-  `2026-07-13 - Regenerable outputs stay gitignored`.
-- Evidence or affected files:
-  `apps/mobile/coverage/lcov.base.info`
-  `.gitignore`
-  `tool/run_integration_tests.sh`
-  `docs/agent_kb/operator_preferences_durable.md`
+- **Superseded 2026-07-13:** Rebuildable coverage outputs are gitignored by
+  explicit operator request. Follow [Regenerable outputs stay gitignored](#2026-07-13---regenerable-outputs-stay-gitignored)
+  and current [`operator_preferences_durable.md`](../docs/agent_kb/operator_preferences_durable.md#durable-prefs).
+- Historical correction: The operator originally requested retaining
+  `apps/mobile/coverage/lcov.base.info` in commits when integration staging
+  copied `coverage/lcov.base.info` into `apps/mobile/coverage/`. That historical
+  preference no longer applies.
+- Evidence or affected files: `apps/mobile/coverage/lcov.base.info`,
+  `.gitignore`, `tool/run_integration_tests.sh`, and
+  `docs/agent_kb/operator_preferences_durable.md`.
 
 ### 2026-07-03 - Firebase forced refresh needs one getIdTokenResult(true)
 
@@ -1068,20 +1057,13 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 
 ### 2026-04-17 - Caveman-lite is the default when suitable
 
-- Correction:
-  Do not treat caveman mode as opt-in for this repo's normal agent replies.
-  Routine commentary and concise summaries should already use caveman-lite when
-  it preserves clarity.
-- Pattern:
-  I answered as if caveman mode had to be manually activated, ignoring the repo
-  canon that already sets compressed communication as the default behavior.
-- Preventive rule:
-  For this repo, assume caveman-lite is on by default for routine updates and
-  straightforward answers. Switch back to normal concise prose only when
-  precision, ambiguity, or tone makes compression risky.
-- Evidence or affected files:
-  `AGENTS.md`
-  `tasks/lessons.md`
+- **Superseded for Codex 2026-10-04:** Codex defaults to Caveman full in every
+  session, including resumed sessions, under its home [`~/.codex/AGENTS.md`](../docs/agent_host_notes.md#codex). Honor
+  session overrides and the current [operator preference](../docs/agent_kb/operator_preferences_durable.md#agent-docs).
+- Historical correction: Routine replies used caveman-lite by default rather
+  than requiring manual activation. Precision and clarity still take priority.
+- Evidence or affected files: `AGENTS.md`, `tasks/lessons.md`, and
+  `/Users/ilkersevim/.agents/skills/caveman/SKILL.md`.
 
 ### 2026-03-30 - Do not self-invoke Codex review helper from Codex
 
