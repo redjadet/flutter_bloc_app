@@ -21,6 +21,26 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-10-03 - Pre-complete gate is format + analyze + tests
+
+- What went wrong:
+  Format-before-finish was encoded, but agents could still skip analyze/targeted
+  tests or treat `./bin/checklist-fast` as the full validation lane.
+- How it was fixed:
+  One owner section (finish gate § Agent pre-complete gate) plus thin pointers;
+  checklist CLI contract asserts full-path analyze + `test_coverage.sh` stay wired.
+- Pattern:
+  Closeout needs three proof lanes; checklist-fast/docs-only are alternate routes,
+  not substitutes for the agent three-gate or full-checklist analyze/tests.
+- Preventive rule:
+  Before done → format → analyze → targeted tests (docs-only may skip tests with
+  note); never strip analyze/tests from `./bin/checklist` full path.
+- Evidence or affected files:
+  `docs/agent_kb/legibility_and_finish_gate.md`,
+  `docs/changes/2026-10-03_agent_precomplete_gate.md`,
+  `tool/check_checklist_cli_contract.sh`,
+  `tool/agent_host_templates/**`
+
 ### 2026-09-30 - Scorecard evidence must survive presentation changes
 
 - What went wrong: Replacing README rating badges with direct evidence links

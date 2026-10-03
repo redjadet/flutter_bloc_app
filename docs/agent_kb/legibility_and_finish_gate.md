@@ -96,12 +96,27 @@ not invent a parallel report format.
 If those answers are only in chat, the Evidence surface failed—land them in the
 tracker, PR, or SAFETY-REPORT before claiming done.
 
+## Agent pre-complete gate (mandatory before done)
+
+Source of truth for closeout proof. Run **before** claiming done / SAFETY-REPORT.
+`./bin/checklist` is complementary (full path keeps analyze + Flutter tests); it does
+**not** replace this gate.
+
+| Gate | Command | Skip rule |
+| --- | --- | --- |
+| Format | `./bin/format` (preferred) or `dart format .` | None when any `.dart` changed; otherwise N/A |
+| Analyze | `flutter analyze` or `./tool/analyze.sh` | None when Dart/analyzer surface touched; docs-only N/A with note |
+| Tests | Targeted `flutter test <paths>` | Docs-only may skip with explicit Verification note; else per [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) |
+
+Report each lane in Verification (pass / fail / skipped / N/A). Never claim done on
+intent alone. Full ship / mixed code: also `./bin/checklist` (analyze + tests stay on
+that path; do not strip them for a lighter full gate — `checklist-fast` / docs-only
+CI routes are separate, documented shortcuts).
+
 ## Definition of done
 
 - Requirement implemented; existing architecture preserved
 - Smallest practical diff; no duplicated logic
-- **Mandatory when any `.dart` file changed:** execute `./bin/format` (preferred) or `dart format .` before claiming done — include format in Verification; do not skip as “will format later”
-- `./tool/analyze.sh` when Dart touched
-- Tests per [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) or `Tests: N/A — reason`
+- **Agent pre-complete gate** above satisfied (format → analyze → targeted tests)
 - Cross-platform behavior preserved when shared UI/platform code touched
 - Documentation updated when behavior or policy changed

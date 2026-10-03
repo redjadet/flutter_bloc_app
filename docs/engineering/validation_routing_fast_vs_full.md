@@ -48,6 +48,14 @@ Command (wrapper and canonical script are equivalent):
 ./tool/delivery_checklist.sh
 ```
 
+Full `./bin/checklist` keeps **`flutter analyze`** (Step 3) and **Flutter tests via
+`tool/test_coverage.sh`** (Step 5), plus focused regression when selected. Do **not**
+strip analyze/tests from this path for a lighter full gate. Separately, agents still
+run the [pre-complete gate](../agent_kb/legibility_and_finish_gate.md#agent-pre-complete-gate-mandatory-before-done)
+(format → analyze → targeted tests) before claiming done. Docs-only CI early-exit and
+`./bin/checklist-fast` are intentional alternate routes, not replacements for the
+full checklist analyze/test steps.
+
 Local fast sanity shortcut:
 
 ```bash

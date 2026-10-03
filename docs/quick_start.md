@@ -42,14 +42,15 @@ For a quick technical read before cloning deeply:
 
 | Situation | Command |
 | --- | --- |
-| Narrow change / pre-commit | `./bin/checklist-fast` |
+| Agent pre-complete (before done) | Format → analyze → targeted tests — [finish gate](agent_kb/legibility_and_finish_gate.md#agent-pre-complete-gate-mandatory-before-done) |
+| Docs/tooling local sanity only | `./bin/checklist-fast` (skips app analyze/tests; not a code closeout substitute) |
 | Architecture import guards | `bash tool/check_clean_architecture_imports.sh` |
 | Feature modularity | `bash tool/check_feature_modularity_leaks.sh` |
 | Folder contract (legacy allowlisted on full scan) | `bash tool/check_feature_folder_contract.sh` |
 | Analyze changed Dart | `./tool/analyze.sh` |
 | Feature cubit tests | `cd apps/mobile && flutter test test/features/<feature>` |
 
-Full gate before ship: `./bin/checklist` — routing in [engineering/validation_routing_fast_vs_full.md](engineering/validation_routing_fast_vs_full.md).
+Full gate before ship: `./bin/checklist` (keeps `flutter analyze` + Flutter tests) — routing in [engineering/validation_routing_fast_vs_full.md](engineering/validation_routing_fast_vs_full.md).
 
 ## Feature delivery pointers
 

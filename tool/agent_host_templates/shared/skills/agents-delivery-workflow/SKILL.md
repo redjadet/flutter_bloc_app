@@ -31,8 +31,8 @@ Host maintain: `agent-maintain preflight`, `agent-maintain closeout`, `host_main
 
 ## Finish gate (before done / commit)
 
-1. **Format (Dart touched)** — if any `.dart` file changed this task, run `./bin/format` (preferred) or `dart format .` **before** other closeout claims. Prefer `./bin/format --changed` only for huge trees when full format is too slow; default is `./bin/format`.
-2. **Verify** — run narrowest honest validation lane (`docs/engineering/validation_routing_fast_vs_full.md`); report proof, not intent.
+1. **Agent pre-complete gate** — owner `docs/agent_kb/legibility_and_finish_gate.md` § Agent pre-complete gate: (a) `./bin/format` or `dart format .` when any `.dart` changed; (b) `flutter analyze` / `./tool/analyze.sh` when Dart/analyzer surface touched; (c) targeted `flutter test <paths>` (docs-only may skip with explicit Verification note). Prefer `./bin/format --changed` only for huge trees; default is `./bin/format`.
+2. **Verify** — run narrowest honest validation lane (`docs/engineering/validation_routing_fast_vs_full.md`); full `./bin/checklist` keeps analyze + Flutter tests — do not strip them. Report proof, not intent.
 3. **Bug-fix hardening** — if this task fixed a non-trivial bug, race, lifecycle issue, flaky test, or one-off failure that could recur: invoke `agents-regression-capture` **same turn** (before step 4). Skip only with explicit reason in report.
 4. **Report** — `SAFETY-REPORT` including **What We Learned** teach-back (or mechanical skip), Goal / Context / Boundaries / Verification; **Regression capture** block when step 3 ran (or skip reason).
 5. **Host** — `./bin/agent-maintain closeout` when templates or agent docs touched.

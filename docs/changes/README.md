@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-03_agent_precomplete_gate.md`](2026-10-03_agent_precomplete_gate.md): Mandatory agent format→analyze→targeted-tests gate; lock full `./bin/checklist` analyze + Flutter tests; fix checklist-fast misroute.
 - [`2026-10-01_held_majors_google_fonts_cupertino_icons.md`](2026-10-01_held_majors_google_fonts_cupertino_icons.md): Migrate `google_fonts` 9 + `cupertino_icons` 2; keep `cross_file` <0.4 until image_picker supports it.
 - [`2026-09-30_readme_evidence_links.md`](2026-09-30_readme_evidence_links.md): Portfolio reviewer links first; preserve neutral scorecard links while enforcing explicit badges and existing proof gates.
 - [`2026-09-29_async_state_guidance_pass.md`](2026-09-29_async_state_guidance_pass.md): Cubit-first async lifecycle guidance + Future-in-build fix for `ResilientSvgAssetImage`.
