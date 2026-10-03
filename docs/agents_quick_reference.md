@@ -16,8 +16,9 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 | Git branch / PR / merge / worktree | [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect `git status --short --branch` and upstream state before action |
 | Watch PR CI → merge when green | Skill `gh-watch-merge-pr` / `/watch-merge-pr`; `bash tool/commit_push_pr_watch_merge_cleanup.sh <pr>` |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
+| Agent pre-complete gate (before done) | Format + analyze + targeted tests — owner [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md) § Agent pre-complete gate |
 | Format Dart source | `./bin/format` or `./bin/format --changed` (**required before finish** when any `.dart` changed) |
-| Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
+| Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` (full path runs `flutter analyze` + Flutter tests/coverage; do not strip) |
 | Router / `AppRoutes` / auth gates / auth UI | `./bin/router_feature_validate` |
 | Integration journey / flow | `./bin/integration_tests` |
 | Integration/bootstrap/browser guardrails | `./bin/integration_preflight` (`INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` for browser-only lane) |

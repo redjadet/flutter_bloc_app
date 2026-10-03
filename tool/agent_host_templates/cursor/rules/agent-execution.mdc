@@ -12,7 +12,7 @@ Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AG
 - **Safety:** [`agent_safety_contracts.md`](docs/agent_kb/agent_safety_contracts.md) (`SAFETY-02`); destructive/external side effects need same-turn approval after listing targets, command, effect, and rollback.
 - **Prove:** plan → implement end-to-end → verify → teach back → report proof; narrowest honest validation lane.
 - **Cross-host review:** when user explicitly asks GPT or Codex for review, route diff review through `./tool/request_codex_feedback.sh`; plan review through `./tool/run_codex_plan_review.sh PATH/TO/plan.md`. Prefer GPT-6.1 Sol with medium reasoning; retry GPT-6 Luna once only when the account rejects the default model.
-- **Format:** after any `.dart` change, run `./bin/format` (or `dart format .`) before finish/closeout — not optional.
+- **Pre-complete gate:** before done — `./bin/format` / `dart format .` (when `.dart` changed), `flutter analyze`, targeted `flutter test` (docs-only may skip tests with note). Owner: `docs/agent_kb/legibility_and_finish_gate.md`. `./bin/checklist` full path keeps analyze+tests.
 - **Host maintain (agents run):** start → `./bin/agent-maintain preflight --intent "<task goal>"`; before finish → `./bin/agent-maintain closeout`; after `tool/agent_host_templates/**` → `./bin/agent-maintain after-host-edit` same turn. Policy: `docs/agent_kb/host_maintenance_automation.md`.
 - **Report:** coding-task closeout follows `SAFETY-REPORT` — What We Learned, Files Changed, Verification, Known limitations, Follow-up Actions, and destructive/external-action statement.
 - **Operating manual:** T1/T2 coding → `docs/ai/agent_operating_manual.md`; closeout tiers → `docs/agent_kb/legibility_and_finish_gate.md`.

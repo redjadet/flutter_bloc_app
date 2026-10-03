@@ -17,7 +17,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | HTTP / retries | [`apps/mobile/lib/app/http/`](apps/mobile/lib/app/http/), [`packages/networking/`](packages/networking/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
 | Native interop (MethodChannel / EventChannel / FFI) | Teaching pack [`docs/platforms/`](docs/platforms/README.md); feature [`apps/mobile/lib/features/native_platform_showcase/`](apps/mobile/lib/features/native_platform_showcase/) + [`README`](apps/mobile/lib/features/native_platform_showcase/README.md); [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md); Rust FFI: [`packages/secure_core_bridge/`](packages/secure_core_bridge/), [`docs/features/secure_messaging_demo.md`](docs/features/secure_messaging_demo.md) |
 | Tests | [`docs/testing_overview.md`](docs/testing_overview.md), [`apps/mobile/test/`](apps/mobile/test/) |
-| Validation commands | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), `./bin/checklist` |
+| Validation / pre-complete gate | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), [`docs/agent_kb/legibility_and_finish_gate.md`](docs/agent_kb/legibility_and_finish_gate.md) § Agent pre-complete gate, `./bin/checklist` |
 | Feature catalog | [`docs/feature_overview.md`](docs/feature_overview.md) |
 | Scope / Archive / non-goals | [`docs/scope_register.md`](docs/scope_register.md), [`docs/feature_overview.md`](docs/feature_overview.md) |
 | Social feed demo (judgment showcase) | [`docs/features/social_feed_demo.md`](docs/features/social_feed_demo.md), `apps/mobile/lib/features/social_feed_demo/` |

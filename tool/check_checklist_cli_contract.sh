@@ -328,4 +328,12 @@ assert_contains agent_maintain_closeout_docs_sync_scope \
   "$tmp_dir/agent_maintain_closeout_docs_sync_scope.out" \
   "plan|docs-sync|"
 
+# Full ./bin/checklist path must keep flutter analyze + Flutter tests (coverage).
+# Never strip these for a lighter full gate; docs-only/fast are separate routes.
+assert_contains delivery_analyze_step tool/delivery_checklist.sh "Step 3/5: Analyzing code with 'flutter analyze'"
+assert_contains delivery_analyze_cmd tool/delivery_checklist.sh "flutter analyze --no-pub"
+assert_contains delivery_coverage_step tool/delivery_checklist.sh "Step 5/5: Running test coverage with 'tool/test_coverage.sh'"
+assert_contains delivery_coverage_cmd tool/delivery_checklist.sh "bash tool/test_coverage.sh"
+assert_contains checklist_wrapper bin/checklist "tool/delivery_checklist.sh"
+
 echo "✅ Checklist CLI contract passed"

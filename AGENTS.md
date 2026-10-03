@@ -21,7 +21,8 @@ linked owner docs contain all rules, commands, and details.
 
 ## Finish
 
-1. Select proof through [`validation routing`](docs/engineering/validation_routing_fast_vs_full.md) and [`quick reference`](docs/agents_quick_reference.md).
-2. Review against [`safety contracts`](docs/agent_kb/agent_safety_contracts.md) and the [`review protocol`](docs/ai_code_review_protocol.md).
-3. Report through the [`finish gate`](docs/agent_kb/legibility_and_finish_gate.md); maintain environments through [`host maintenance`](docs/agent_kb/host_maintenance_automation.md).
-4. Verified reusable agent conclusion: update the [`owning documentation`](docs/agent_kb/operator_preferences_durable.md) or [`lessons`](tasks/lessons.md).
+1. Satisfy the [`agent pre-complete gate`](docs/agent_kb/legibility_and_finish_gate.md#agent-pre-complete-gate-mandatory-before-done) before claiming done.
+2. Select proof through [`validation routing`](docs/engineering/validation_routing_fast_vs_full.md) and [`quick reference`](docs/agents_quick_reference.md).
+3. Review against [`safety contracts`](docs/agent_kb/agent_safety_contracts.md) and the [`review protocol`](docs/ai_code_review_protocol.md).
+4. Report through the [`finish gate`](docs/agent_kb/legibility_and_finish_gate.md); maintain environments through [`host maintenance`](docs/agent_kb/host_maintenance_automation.md).
+5. Verified reusable agent conclusion: update the [`owning documentation`](docs/agent_kb/operator_preferences_durable.md) or [`lessons`](tasks/lessons.md).

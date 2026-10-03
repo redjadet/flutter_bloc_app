@@ -3,9 +3,12 @@
 # Runs all delivery checklist steps in order:
 # 1. flutter pub get (only when dependency metadata changed)
 # 2. ./bin/format --changed (changed Dart files only)
-# 3. flutter analyze
+# 3. flutter analyze  (full path — do not strip; docs-only/fast are separate routes)
 # 4. Best practices validation (parallel static checks + mix_lint + file_length_lint + optional focused tests)
-# 5. tool/test_coverage.sh (optional via CHECKLIST_RUN_COVERAGE=0/auto)
+# 5. tool/test_coverage.sh (Flutter tests + coverage; full path — do not strip)
+#
+# Agents still run the pre-complete gate (format → analyze → targeted tests) before
+# claiming done; see docs/agent_kb/legibility_and_finish_gate.md.
 
 set -euo pipefail
 

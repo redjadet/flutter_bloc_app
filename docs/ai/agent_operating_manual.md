@@ -88,16 +88,17 @@ For medium- and high-risk work, retain the teach-back in PR or task evidence.
 
 ## Verification mapping
 
-When any `.dart` file changed: run format **before finish** (mandatory) — prefer `./bin/format`.
+Owner gate: [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md)
+§ Agent pre-complete gate — format → analyze → targeted tests before done.
 
 | Manual command | Repo command |
 | --- | --- |
 | `dart format .` | `./bin/format` or `./bin/format --changed` |
 | `flutter analyze` | `./tool/analyze.sh` |
-| `flutter test` | Focused `flutter test <paths>`; broad `./bin/checklist-fast` |
+| `flutter test` | Focused `flutter test <paths>`; broad ship via `./bin/checklist` (analyze + coverage/tests) |
 | Integration test | `./bin/integration_tests`; `./bin/integration_preflight` when applicable |
 | `dart run build_runner build --delete-conflicting-outputs` | Same when codegen touched — [`contributing.md`](../contributing/contributing.md) |
-| Default full lane | `./bin/checklist-fast` or `./bin/checklist` per Validation Chooser |
+| Default full lane | `./bin/checklist` per Validation Chooser (`./bin/checklist-fast` is local docs/tooling sanity only) |
 
 ## Dependency gate
 

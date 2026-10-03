@@ -203,7 +203,11 @@ for path in "${cwd_sensitive_run_docs[@]}"; do
 done
 require_contains "docs/agent_kb/legibility_and_finish_gate.md" "Planning response shape"
 require_contains "docs/agent_kb/legibility_and_finish_gate.md" "SAFETY-REPORT"
-require_line_budget "docs/agent_kb/legibility_and_finish_gate.md" 120
+require_contains "docs/agent_kb/legibility_and_finish_gate.md" "Agent pre-complete gate"
+require_contains "AGENTS.md" "agent pre-complete gate"
+require_contains "docs/ai/agent_operating_manual.md" "Agent pre-complete gate"
+require_contains "docs/agents_quick_reference.md" "Agent pre-complete gate"
+require_line_budget "docs/agent_kb/legibility_and_finish_gate.md" 130
 require_file "docs/agent_kb/agent_safety_contracts.md"
 require_line_budget "docs/agent_kb/agent_safety_contracts.md"
 require_contains "AGENTS.md" "agent_safety_contracts.md"
