@@ -19,7 +19,7 @@ Durable operator choices. Keep simple; link to owner; avoid duplicate prose.
 
 ## README
 
-Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch, grouped repo-backed badges, quick start, one doc table. Put **Scope** before **Screenshots**; screenshots last. List **critical human skill** docs before any “work with an AI agent” section. Route detail to [`docs/README.md`](../README.md) and topic docs. No ADR tables, command essays, or duplicate deep dives in README body.
+Keep root [`README.md`](../../README.md) a professional entrypoint: title, then grouped **image badges at the top** (before other prose), then short pitch, quick start, one doc table. Put **Scope** before **Screenshots**; screenshots last. List **critical human skill** docs before any “work with an AI agent” section. Route detail to [`docs/README.md`](../README.md) and topic docs. No ADR tables, command essays, or duplicate deep dives in README body. Do not bury badges in collapsed footer sections or replace them with text-only links.
 
 ## Workflow
 
