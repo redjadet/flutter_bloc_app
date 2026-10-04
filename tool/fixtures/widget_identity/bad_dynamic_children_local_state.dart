@@ -29,11 +29,6 @@ class FixturePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FixtureSearchRow(),
-        ...trailing,
-      ],
-    );
+    return Column(children: [FixtureSearchRow(), ...trailing]);
   }
 }
