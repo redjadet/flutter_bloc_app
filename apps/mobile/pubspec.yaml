@@ -21,14 +21,17 @@ environment:
   sdk: ">=3.13.0 <4.0.0"
 resolution: workspace
 
-# Major bumps still blocked by the live graph (see root dependency_overrides):
-# - app_links 7: firebase_ui_auth 3.0.1 requires app_links ^6.4.
+# Major bumps still blocked by the live graph (see root dependency_overrides + renovate.json):
+# - app_links 7: firebase_ui_auth 3.1.1 requires app_links ^6.4.
+# - cached_network_image 4: fancy_shimmer_image 2.0.3 requires cached_network_image ^3.2.3.
+# - connectivity_plus 7.3.2+: pulls nm ^0.6 → dbus ^0.8; geolocator_linux 0.2.6 needs dbus ^0.7.3.
+# - cross_file 0.4: image_picker 1.2.3 / image_picker_platform_interface still need cross_file ^0.3.
 # - device_info_plus 13 + package_info_plus 10: geolocator_linux caps package_info_plus ^9; win32 major split vs device_info_plus 13.
-# - genui 0.9: genui_google_generative_ai 0.7.x requires genui ^0.7.
-# - json_serializable 6.14+ needs analyzer >=10; mix_lint 2.x uses analysis_server_plugin (see analysis_options.yaml plugins).
+# - genui 0.8+: genui_google_generative_ai 0.7.x requires genui ^0.7.
 # - google_sign_in_mocks 0.4+: needs google_sign_in 7; firebase_ui_oauth_google stays on google_sign_in 6.
 # - intl 0.20.3+: flutter_localizations from the SDK pins intl 0.20.2.
 # - meta 1.18: flutter_test from the SDK pins meta 1.17.0.
+# - melos 8: melos → cli_util ^0.5 conflicts with ffigen 22 (secure_core_bridge).
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -103,11 +106,11 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   ilkersevim_async_lifecycle: ^0.1.5
-  ilkersevim_async_utils: ^0.1.3
-  ilkersevim_disposables: ^0.1.3
+  ilkersevim_async_utils: ^0.1.4
+  ilkersevim_disposables: ^0.1.4
   ilkersevim_json_isolate: ^0.1.4
   ilkersevim_relative_time: ^0.1.5
-  ilkersevim_retry: ^0.1.5
+  ilkersevim_retry: ^0.1.6
   ilkersevim_safe_parse: ^0.1.6
   ilkersevim_type_safe_bloc: ^0.1.5
   image: ^4.10.1

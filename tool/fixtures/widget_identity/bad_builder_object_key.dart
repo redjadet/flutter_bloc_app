@@ -9,10 +9,7 @@ class FixtureObjectKeyList extends StatelessWidget {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return Text(
-          items[index],
-          key: ObjectKey(items[index]),
-        );
+        return Text(items[index], key: ObjectKey(items[index]));
       },
     );
   }
