@@ -32,8 +32,6 @@ resolution: workspace
 # - intl 0.20.3+: flutter_localizations from the SDK pins intl 0.20.2.
 # - meta 1.18: flutter_test from the SDK pins meta 1.17.0.
 # - melos 8: melos → cli_util ^0.5 conflicts with ffigen 22 (secure_core_bridge).
-# - ilkersevim_retry 0.1.6: dart2js rejects 0x7FFFFFFFFFFFFFFF in RetryDelay.calculateDelay
-#   (Deploy web failed on tip f375f503 / #977). Stay on 0.1.5 until a JS-safe pub release.
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -112,7 +110,7 @@ dependencies:
   ilkersevim_disposables: ^0.1.4
   ilkersevim_json_isolate: ^0.1.4
   ilkersevim_relative_time: ^0.1.5
-  ilkersevim_retry: 0.1.5
+  ilkersevim_retry: ^0.1.7
   ilkersevim_safe_parse: ^0.1.6
   ilkersevim_type_safe_bloc: ^0.1.5
   image: ^4.10.1

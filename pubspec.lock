@@ -1570,10 +1570,10 @@ packages:
     dependency: transitive
     description:
       name: ilkersevim_retry
-      sha256: "6a810527ed264b3bddcd1f75598c6de30c1798bcf1e393dc5e9d7dfe52f2b9f3"
+      sha256: "2cfc6bf6b20459138ee80e8d0e8c063a8562b571707116f3203fc74e91ca92eb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.7"
   ilkersevim_safe_parse:
     dependency: transitive
     description:
