@@ -48,6 +48,12 @@
       "allowedVersions": "<7.3.2"
     },
     {
+      "description": "Hold ilkersevim_retry <0.1.6; 0.1.6 uses 0x7FFFFFFFFFFFFFFF which dart2js rejects (web IT/build fail on tip 7c0f4b7e 2026-10-04).",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["ilkersevim_retry"],
+      "allowedVersions": "<0.1.6"
+    },
+    {
       "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["genui"],
