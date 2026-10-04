@@ -20,6 +20,10 @@ dependencies:
   freezed_annotation: ^3.1.0
   ilkersevim_async_lifecycle: ^0.1.5
   ilkersevim_disposables: ^0.1.4
+<<<<<<< HEAD
+=======
+  # Pin: 0.1.6 breaks dart2js (0x7FFFFFFFFFFFFFFF); see apps/mobile held-bump notes.
+>>>>>>> origin/main
   ilkersevim_retry: 0.1.5
   retrofit: ^4.10.0
   storage:
