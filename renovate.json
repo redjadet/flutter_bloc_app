@@ -77,13 +77,7 @@
       "allowedVersions": "<1.31.2"
     },
     {
-      "description": "Hold analyzer_testing below 0.3.4; custom_lints exact-pin 0.3.3 with analyzer 10.0.2 (tool/check_pubspec_codegen_compat.sh)",
-      "matchManagers": ["pub"],
-      "matchPackageNames": ["analyzer_testing"],
-      "allowedVersions": "<0.3.4"
-    },
-    {
-      "description": "Hold melos below 7.8.2 until flutter_launcher_icons/cli_util graph resolves",
+      "description": "Hold melos below 7.8.2; melos 8 needs cli_util >=0.5 which conflicts with ffigen 22 (secure_core_bridge)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["melos"],
       "allowedVersions": "<7.8.2"

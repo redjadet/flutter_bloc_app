@@ -117,10 +117,10 @@ packages:
     dependency: transitive
     description:
       name: approval_tests
-      sha256: "5bb7b6e561318ebd8c5cd140a147a9d098f28468099aaca2df3109f88d03027b"
+      sha256: c4ffcf4aff8ada2e4a5967e2e5230e5fbe7fdbc5eb0c93d7fca577c9c5a727b4
       url: "https://pub.dev"
     source: hosted
-    version: "1.7.1"
+    version: "1.7.2"
   archive:
     dependency: transitive
     description:
@@ -1117,10 +1117,10 @@ packages:
     dependency: transitive
     description:
       name: frontend_server_client
-      sha256: f64a0333a82f30b0cca061bc3d143813a486dc086b574bfb233b7c1372427694
+      sha256: "404dbf9bce29beafbe9dcb19219447b6f7d49900cd42b8d3b7af102b24508e25"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
@@ -1538,18 +1538,18 @@ packages:
     dependency: transitive
     description:
       name: ilkersevim_async_utils
-      sha256: "1d2314fa4fa869af836211ea07b2196fc120993a454c613930a81e41e6e8e7fe"
+      sha256: c64e5108f217898d992c552f5d3973ec87176755ed902a6b14f2be63f7f7849a
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.4"
   ilkersevim_disposables:
     dependency: transitive
     description:
       name: ilkersevim_disposables
-      sha256: "65e79f6430ed0808e5dfa1add157a593a2f3f91a7ce423a9ea8a60e6f6c8b01d"
+      sha256: "1a64e684860dcabb07226edf7f55fa5602f969ed763259c142f97d3b17a4167f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.4"
   ilkersevim_json_isolate:
     dependency: transitive
     description:
@@ -1570,10 +1570,10 @@ packages:
     dependency: transitive
     description:
       name: ilkersevim_retry
-      sha256: "6a810527ed264b3bddcd1f75598c6de30c1798bcf1e393dc5e9d7dfe52f2b9f3"
+      sha256: "69e71e00c38de5793d7304a721b7c7893cb556760961999a374607dabb761b51"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.6"
   ilkersevim_safe_parse:
     dependency: transitive
     description:
@@ -1610,10 +1610,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: "0a55d645a670d6ae11efa948f955ae904afa472f1344fc15a7ddacc20c1e7219"
+      sha256: "8a7823d5d3e884f7780829d85d92110d072bdcd9ed48e2be158d2abe91a912d4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.13+23"
+    version: "0.8.13+25"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -2740,10 +2740,10 @@ packages:
     dependency: transitive
     description:
       name: test_reflective_loader
-      sha256: d828d5ca15179aaac2aaf8f510cf0a52ec28e0031681b044ec5e581a4b8002e7
+      sha256: "9c4327839510a742171b9d37b37464d0d215ebee4d7701a272db337dbde3e17b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.6.0"
   toml:
     dependency: transitive
     description:
@@ -2764,10 +2764,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher
-      sha256: f6a7e5c4835bb4e3026a04793a4199ca2d14c739ec378fdfe23fc8075d0439f8
+      sha256: e8cc955c97e06df9879140a1fe301f3d493f01b7c62dec7f46834be31d7e9fda
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.2"
+    version: "6.3.3"
   url_launcher_android:
     dependency: transitive
     description:
@@ -2876,10 +2876,10 @@ packages:
     dependency: transitive
     description:
       name: video_player
-      sha256: "8c837b570dccb9ae6ff73d2e0b03c7e708bfefd3bd1194faa7f3e7f200dfc399"
+      sha256: "07ae1e03f2d4c8e2e9a75ee678f90acbc4506d4458a9c628512d119a1eee5754"
       url: "https://pub.dev"
     source: hosted
-    version: "2.14.0"
+    version: "2.14.1"
   video_player_android:
     dependency: transitive
     description:
