@@ -1,22 +1,21 @@
-# Change note: pin `ilkersevim_retry` 0.1.5 (web dart2js)
+# Change note: bump `ilkersevim_retry` to `0.1.7` (web dart2js)
 
 ## Why
 
-Tip `7c0f4b7e` (#977 bumped `ilkersevim_retry` to `^0.1.6`) fails web compile /
-`./bin/integration_preflight` chrome bootstrap:
+`ilkersevim_retry` `0.1.6` broke dart2js web compile / Deploy web with:
 
 `Error: The integer literal 0x7FFFFFFFFFFFFFFF can't be represented exactly in JavaScript`
-in `retry_policy.dart` (dart2js).
+
+in `retry_policy.dart`. Tip briefly pinned `0.1.5` via #979 as a stopgap.
 
 ## What landed
 
-- `apps/mobile` + `packages/networking`: pin `ilkersevim_retry: 0.1.5`
-- `renovate.json`: hold `ilkersevim_retry` `<0.1.6` until upstream ships a
-  JS-safe release
+- `apps/mobile` + `packages/networking`: `ilkersevim_retry: ^0.1.7`
+- Lockfile resolves `0.1.7` (JS-safe fix for the `0.1.6` literal)
+- No Renovate hold for retry (upstream fix published)
 
 ## Verification
 
 ```bash
-INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome ./bin/integration_preflight
-cd apps/mobile && flutter build web --debug --no-tree-shake-icons --no-wasm-dry-run
+REPO_NAME=flutter_bloc_app bash tool/build_web_github_pages.sh
 ```
