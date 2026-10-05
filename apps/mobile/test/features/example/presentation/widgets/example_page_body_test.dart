@@ -186,9 +186,11 @@ void main() {
         ),
       );
 
-      await tester.tap(
-        find.byKey(const ValueKey('example-case-study-demo-button')),
+      final Finder button = find.byKey(
+        const ValueKey('example-case-study-demo-button'),
       );
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pump();
 
       expect(caseStudyTapped, isTrue);

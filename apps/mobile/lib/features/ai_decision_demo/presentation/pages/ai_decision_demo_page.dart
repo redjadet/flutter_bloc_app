@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_mo
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/pages/ai_decision_demo_proof_widgets.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -61,7 +62,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
 
   @override
   Widget build(BuildContext context) {
-    const title = 'AI Decision Workbench';
+    final title = AppLocalizations.of(context).aiDecisionDemoTitle;
     return CommonPageLayout(
       title: title,
       body: Builder(

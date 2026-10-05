@@ -29,7 +29,7 @@ final List<OverflowItem> _counterPageOverflowItems = <OverflowItem>[
   OverflowItem(
     action: OverflowAction.onlineTherapyDemo,
     routeName: AppRoutes.onlineTherapyDemo,
-    labelBuilder: (_) => 'Open Online Therapy Demo',
+    labelBuilder: (l10n) => l10n.openOnlineTherapyDemoTooltip,
   ),
   OverflowItem(
     action: OverflowAction.googleMaps,

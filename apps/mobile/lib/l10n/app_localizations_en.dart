@@ -63,11 +63,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openCalculatorTooltip => 'Open payment calculator';
 
   @override
-  String get examplePageTitle => 'Example Page';
+  String get examplePageTitle => 'Feature demos';
 
   @override
   String get examplePageDescription =>
-      'This page demonstrates navigation with GoRouter.';
+      'Portfolio demo hub: interview-spine flows first, then depth and archive samples. Prefer the live Counter, Todo, Chat, and Settings walkthrough for hiring reviews.';
 
   @override
   String get exampleBackButtonLabel => 'Back to counter';
@@ -3787,4 +3787,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notesDemoNoBody => '(No body)';
+
+  @override
+  String get exampleAiDecisionDemoButton => 'AI Decision Workbench';
+
+  @override
+  String get exampleOnlineTherapyDemoButton => 'Online Therapy Demo';
+
+  @override
+  String get exampleStaffAppDemoButton => 'Staff App Demo';
+
+  @override
+  String get openOnlineTherapyDemoTooltip => 'Open Online Therapy Demo';
+
+  @override
+  String get onlineTherapyDemoTitle => 'Online Therapy Demo';
+
+  @override
+  String get onlineTherapyDemoChooseRole => 'Choose role';
+
+  @override
+  String get onlineTherapyDemoClientFlow => 'Client flow';
+
+  @override
+  String get onlineTherapyDemoTherapistFlow => 'Therapist flow';
+
+  @override
+  String get onlineTherapyDemoAdminFlow => 'Admin flow';
+
+  @override
+  String get aiDecisionDemoTitle => 'AI Decision Workbench';
+
+  @override
+  String get exampleInterviewSpineSection => 'Interview spine';
+
+  @override
+  String get exampleDepthDemosSection => 'Depth demos';
+
+  @override
+  String get exampleArchiveDemosSection => 'Archive (frozen)';
+
+  @override
+  String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';
+
+  @override
+  String get realtimeMarketSkeletonPricePlaceholder => '12,345.67';
 }

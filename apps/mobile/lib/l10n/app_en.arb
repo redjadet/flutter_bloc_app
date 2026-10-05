@@ -73,13 +73,13 @@
   "@openCalculatorTooltip": {
     "description": "Tooltip for navigating to the payment calculator page"
   },
-  "examplePageTitle": "Example Page",
+  "examplePageTitle": "Feature demos",
   "@examplePageTitle": {
-    "description": "Title of the example feature page"
+    "description": "Title of the portfolio feature demo hub"
   },
-  "examplePageDescription": "This page demonstrates navigation with GoRouter.",
+  "examplePageDescription": "Portfolio demo hub: interview-spine flows first, then depth and archive samples. Prefer the live Counter, Todo, Chat, and Settings walkthrough for hiring reviews.",
   "@examplePageDescription": {
-    "description": "Description shown on the example page summarising its purpose"
+    "description": "Intro copy explaining demo tiers on the example hub"
   },
   "exampleBackButtonLabel": "Back to counter",
   "@exampleBackButtonLabel": {
@@ -4569,5 +4569,65 @@
   "notesDemoBodyLabel": "Body",
   "notesDemoCancelButton": "Cancel",
   "notesDemoSaveButton": "Save",
-  "notesDemoNoBody": "(No body)"
+  "notesDemoNoBody": "(No body)",
+  "exampleAiDecisionDemoButton": "AI Decision Workbench",
+  "@exampleAiDecisionDemoButton": {
+    "description": "Button label for opening the AI Decision Workbench demo"
+  },
+  "exampleOnlineTherapyDemoButton": "Online Therapy Demo",
+  "@exampleOnlineTherapyDemoButton": {
+    "description": "Button label for opening the Online Therapy demo"
+  },
+  "exampleStaffAppDemoButton": "Staff App Demo",
+  "@exampleStaffAppDemoButton": {
+    "description": "Button label for opening the Staff App demo"
+  },
+  "openOnlineTherapyDemoTooltip": "Open Online Therapy Demo",
+  "@openOnlineTherapyDemoTooltip": {
+    "description": "Tooltip for opening the Online Therapy demo from the home overflow menu"
+  },
+  "onlineTherapyDemoTitle": "Online Therapy Demo",
+  "@onlineTherapyDemoTitle": {
+    "description": "App bar title for the Online Therapy demo"
+  },
+  "onlineTherapyDemoChooseRole": "Choose role",
+  "@onlineTherapyDemoChooseRole": {
+    "description": "Heading above role selection on the Online Therapy landing page"
+  },
+  "onlineTherapyDemoClientFlow": "Client flow",
+  "@onlineTherapyDemoClientFlow": {
+    "description": "List tile title for the client role flow"
+  },
+  "onlineTherapyDemoTherapistFlow": "Therapist flow",
+  "@onlineTherapyDemoTherapistFlow": {
+    "description": "List tile title for the therapist role flow"
+  },
+  "onlineTherapyDemoAdminFlow": "Admin flow",
+  "@onlineTherapyDemoAdminFlow": {
+    "description": "List tile title for the admin role flow"
+  },
+  "aiDecisionDemoTitle": "AI Decision Workbench",
+  "@aiDecisionDemoTitle": {
+    "description": "App bar title for the AI Decision Workbench"
+  },
+  "exampleInterviewSpineSection": "Interview spine",
+  "@exampleInterviewSpineSection": {
+    "description": "Section header for interview-spine demos on the example hub"
+  },
+  "exampleDepthDemosSection": "Depth demos",
+  "@exampleDepthDemosSection": {
+    "description": "Section header for depth demos on the example hub"
+  },
+  "exampleArchiveDemosSection": "Archive (frozen)",
+  "@exampleArchiveDemosSection": {
+    "description": "Section header for archive/frozen demos on the example hub"
+  },
+  "realtimeMarketSkeletonPairLabel": "BTC/USDT",
+  "@realtimeMarketSkeletonPairLabel": {
+    "description": "Skeleton placeholder pair label while market data loads"
+  },
+  "realtimeMarketSkeletonPricePlaceholder": "12,345.67",
+  "@realtimeMarketSkeletonPricePlaceholder": {
+    "description": "Skeleton placeholder price while market data loads"
+  }
 }

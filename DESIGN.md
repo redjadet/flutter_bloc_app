@@ -1,9 +1,9 @@
 ---
-version: alpha
+version: "1.0"
 name: Flutter BLoC App
 description: >-
-  Material 3 Flutter demo app with offline-first workflows, polished utilities,
-  and agent-readable design memory.
+  Material 3 Flutter portfolio reference with offline-first workflows, polished
+  utilities, and agent-readable design memory.
 colors:
   primary: "#6750A4"
   on-primary: "#FFFFFF"

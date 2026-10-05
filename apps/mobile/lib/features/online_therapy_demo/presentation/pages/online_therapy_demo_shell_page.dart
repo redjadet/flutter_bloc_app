@@ -78,7 +78,7 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
         >(selector: (state) => state.errorMessage);
 
     return CommonPageLayout(
-      title: 'Online Therapy Demo',
+      title: context.l10n.onlineTherapyDemoTitle,
       body: Column(
         children: <Widget>[
           const _TopControls(),

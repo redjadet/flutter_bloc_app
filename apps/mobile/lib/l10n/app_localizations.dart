@@ -208,16 +208,16 @@ abstract class AppLocalizations {
   /// **'Open payment calculator'**
   String get openCalculatorTooltip;
 
-  /// Title of the example feature page
+  /// Title of the portfolio feature demo hub
   ///
   /// In en, this message translates to:
-  /// **'Example Page'**
+  /// **'Feature demos'**
   String get examplePageTitle;
 
-  /// Description shown on the example page summarising its purpose
+  /// Intro copy explaining demo tiers on the example hub
   ///
   /// In en, this message translates to:
-  /// **'This page demonstrates navigation with GoRouter.'**
+  /// **'Portfolio demo hub: interview-spine flows first, then depth and archive samples. Prefer the live Counter, Todo, Chat, and Settings walkthrough for hiring reviews.'**
   String get examplePageDescription;
 
   /// Label for the button that returns from the example page to the counter
@@ -6882,6 +6882,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'(No body)'**
   String get notesDemoNoBody;
+
+  /// Button label for opening the AI Decision Workbench demo
+  ///
+  /// In en, this message translates to:
+  /// **'AI Decision Workbench'**
+  String get exampleAiDecisionDemoButton;
+
+  /// Button label for opening the Online Therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Online Therapy Demo'**
+  String get exampleOnlineTherapyDemoButton;
+
+  /// Button label for opening the Staff App demo
+  ///
+  /// In en, this message translates to:
+  /// **'Staff App Demo'**
+  String get exampleStaffAppDemoButton;
+
+  /// Tooltip for opening the Online Therapy demo from the home overflow menu
+  ///
+  /// In en, this message translates to:
+  /// **'Open Online Therapy Demo'**
+  String get openOnlineTherapyDemoTooltip;
+
+  /// App bar title for the Online Therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Online Therapy Demo'**
+  String get onlineTherapyDemoTitle;
+
+  /// Heading above role selection on the Online Therapy landing page
+  ///
+  /// In en, this message translates to:
+  /// **'Choose role'**
+  String get onlineTherapyDemoChooseRole;
+
+  /// List tile title for the client role flow
+  ///
+  /// In en, this message translates to:
+  /// **'Client flow'**
+  String get onlineTherapyDemoClientFlow;
+
+  /// List tile title for the therapist role flow
+  ///
+  /// In en, this message translates to:
+  /// **'Therapist flow'**
+  String get onlineTherapyDemoTherapistFlow;
+
+  /// List tile title for the admin role flow
+  ///
+  /// In en, this message translates to:
+  /// **'Admin flow'**
+  String get onlineTherapyDemoAdminFlow;
+
+  /// App bar title for the AI Decision Workbench
+  ///
+  /// In en, this message translates to:
+  /// **'AI Decision Workbench'**
+  String get aiDecisionDemoTitle;
+
+  /// Section header for interview-spine demos on the example hub
+  ///
+  /// In en, this message translates to:
+  /// **'Interview spine'**
+  String get exampleInterviewSpineSection;
+
+  /// Section header for depth demos on the example hub
+  ///
+  /// In en, this message translates to:
+  /// **'Depth demos'**
+  String get exampleDepthDemosSection;
+
+  /// Section header for archive/frozen demos on the example hub
+  ///
+  /// In en, this message translates to:
+  /// **'Archive (frozen)'**
+  String get exampleArchiveDemosSection;
+
+  /// Skeleton placeholder pair label while market data loads
+  ///
+  /// In en, this message translates to:
+  /// **'BTC/USDT'**
+  String get realtimeMarketSkeletonPairLabel;
+
+  /// Skeleton placeholder price while market data loads
+  ///
+  /// In en, this message translates to:
+  /// **'12,345.67'**
+  String get realtimeMarketSkeletonPricePlaceholder;
 }
 
 class _AppLocalizationsDelegate

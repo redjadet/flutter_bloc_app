@@ -64,11 +64,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get openCalculatorTooltip => 'فتح حاسبة الدفع';
 
   @override
-  String get examplePageTitle => 'صفحة المثال';
+  String get examplePageTitle => 'عروض الميزات';
 
   @override
   String get examplePageDescription =>
-      'توضح هذه الصفحة التنقل باستخدام GoRouter.';
+      'مركز عروض المحفظة: مسارات المقابلة أولاً، ثم عينات العمق والأرشيف. لمراجعات التوظيف فضّل عداد Counter وTodo وChat والإعدادات.';
 
   @override
   String get exampleBackButtonLabel => 'العودة إلى العداد';
@@ -3809,4 +3809,49 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notesDemoNoBody => '(بدون نص)';
+
+  @override
+  String get exampleAiDecisionDemoButton => 'منصة قرارات الذكاء الاصطناعي';
+
+  @override
+  String get exampleOnlineTherapyDemoButton => 'عرض العلاج عبر الإنترنت';
+
+  @override
+  String get exampleStaffAppDemoButton => 'عرض تطبيق الموظفين';
+
+  @override
+  String get openOnlineTherapyDemoTooltip => 'فتح عرض العلاج عبر الإنترنت';
+
+  @override
+  String get onlineTherapyDemoTitle => 'عرض العلاج عبر الإنترنت';
+
+  @override
+  String get onlineTherapyDemoChooseRole => 'اختر الدور';
+
+  @override
+  String get onlineTherapyDemoClientFlow => 'مسار العميل';
+
+  @override
+  String get onlineTherapyDemoTherapistFlow => 'مسار المعالج';
+
+  @override
+  String get onlineTherapyDemoAdminFlow => 'مسار المسؤول';
+
+  @override
+  String get aiDecisionDemoTitle => 'منصة قرارات الذكاء الاصطناعي';
+
+  @override
+  String get exampleInterviewSpineSection => 'مسار المقابلة';
+
+  @override
+  String get exampleDepthDemosSection => 'عروض العمق';
+
+  @override
+  String get exampleArchiveDemosSection => 'الأرشيف (مجمّد)';
+
+  @override
+  String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';
+
+  @override
+  String get realtimeMarketSkeletonPricePlaceholder => '12,345.67';
 }
