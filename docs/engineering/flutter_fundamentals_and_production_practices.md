@@ -54,6 +54,12 @@ Pipeline we care about in perf work:
 input/state → schedule frame → build → layout → paint → compose → raster
 ```
 
+Layout/paint are **dirty-tracked**, not full-tree: `markNeedsLayout` /
+`markNeedsPaint` (and semantics) batch work until the next
+`PipelineOwner` flush. Relayout boundaries vs `RepaintBoundary`:
+[`architecture/custom_painter_and_render_object.md`](../architecture/custom_painter_and_render_object.md)
+§ Dirty marking.
+
 Repo detail: [`performance/finding_jank_cause.md`](../performance/finding_jank_cause.md)
 (cause triage) and
 [`performance/performance_bottlenecks.md`](../performance/performance_bottlenecks.md)

@@ -21,7 +21,7 @@ Architecture contracts and reference implementations. Start with the root
 | App init and feature control | [app_initialization_and_feature_control.md](app_initialization_and_feature_control.md) |
 | Compile-time safety | [compile_time_safety.md](compile_time_safety.md) |
 | Historical Freezed migration inventory | [freezed_usage_analysis.md](freezed_usage_analysis.md) |
-| Advanced rendering | [custom_painter_and_render_object.md](custom_painter_and_render_object.md) (pair with [flutter_layout_constraints.md](flutter_layout_constraints.md)) |
+| Advanced rendering | [custom_painter_and_render_object.md](custom_painter_and_render_object.md) — CustomPainter vs RO; dirty marking / relayout vs `RepaintBoundary` (pair with [flutter_layout_constraints.md](flutter_layout_constraints.md)) |
 
 Keep cross-cutting architectural canon at `docs/` root only when it is a
 high-traffic entry document. Put focused contracts in this folder.
