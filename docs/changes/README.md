@@ -7,7 +7,11 @@ that.
 
 ## Index
 
+<<<<<<< HEAD
 - [`2026-10-05_dirty_renderobject_marking.md`](2026-10-05_dirty_renderobject_marking.md): Teach `markNeedsLayout` / paint / semantics dirty flags + relayout vs `RepaintBoundary` on the custom paint/RO contract.
+=======
+- [`2026-10-05_widget_composition_rebuild_boundaries.md`](2026-10-05_widget_composition_rebuild_boundaries.md): Teach intentional widget composition vs `_build*` helpers / file splits; official widgets-vs-methods + change-locality.
+>>>>>>> cb8b0604 (docs: teach widget composition vs helper methods)
 - [`2026-10-04_pin_ilkersevim_retry_web_js_literal.md`](2026-10-04_pin_ilkersevim_retry_web_js_literal.md): Bump `ilkersevim_retry` to `^0.1.7` (JS-safe; replaces #979 `0.1.5` pin).
 - [`2026-10-03_agent_precomplete_gate.md`](2026-10-03_agent_precomplete_gate.md): Mandatory agent format→analyze→targeted-tests gate; lock full `./bin/checklist` analyze + Flutter tests; fix checklist-fast misroute.
 - [`2026-10-01_held_majors_google_fonts_cupertino_icons.md`](2026-10-01_held_majors_google_fonts_cupertino_icons.md): Migrate `google_fonts` 9 + `cupertino_icons` 2; keep `cross_file` <0.4 until image_picker supports it.

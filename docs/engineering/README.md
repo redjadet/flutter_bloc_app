@@ -8,6 +8,7 @@ Operational quality, delivery controls, and technical maintenance. Start with
 | BuildContext scope and lifetime | [build_context_deep_dive.md](build_context_deep_dive.md) |
 | Critical human engineering skills | [critical_human_skills.md](critical_human_skills.md) — judgment, restraint, least surface when agents make typing cheap |
 | Widget/state fundamentals + production stories | [flutter_fundamentals_and_production_practices.md](flutter_fundamentals_and_production_practices.md) — Stateless/Stateful, widget tree, Element identity (`canUpdate` / keys), setState vs Cubit/BLoC, Cubit-first async load/refresh/stale guards, hot reload/restart; offline, perf, team structure, unreproducible crashes with repo evidence |
+| Widget composition / rebuild boundaries | [widget_composition_and_rebuild_boundaries.md](widget_composition_and_rebuild_boundaries.md) — intentional widgets vs file splits; widgets over `_build*` helpers; split by change locality; cross-links to fundamentals keys/`canUpdate` + design-system leaf contract |
 | Validation lane | [validation_routing_fast_vs_full.md](validation_routing_fast_vs_full.md) — full `./bin/checklist` keeps analyze + tests; agent closeout: [pre-complete gate](../agent_kb/legibility_and_finish_gate.md#agent-pre-complete-gate-mandatory-before-done) |
 | Engineering proof | [engineering_quality_scorecard.md](engineering_quality_scorecard.md) |
 | Lint posture | [linter_rules_review.md](linter_rules_review.md) |
