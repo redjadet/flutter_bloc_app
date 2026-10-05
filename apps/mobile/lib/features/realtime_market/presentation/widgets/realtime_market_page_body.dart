@@ -154,14 +154,37 @@ class RealtimeMarketSkeletonPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    final ColorScheme scheme = theme.colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('BTC/USDT', style: theme.textTheme.titleLarge),
+        Text(
+          l10n.realtimeMarketSkeletonPairLabel,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
+          ),
+        ),
         const SizedBox(height: 8),
-        Text('00000.00', style: theme.textTheme.headlineSmall),
+        Text(
+          l10n.realtimeMarketLastPrice,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        Text(
+          l10n.realtimeMarketSkeletonPricePlaceholder,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
         const SizedBox(height: 24),
-        Text('Lorem ipsum dolor sit', style: theme.textTheme.bodyLarge),
+        Text(
+          l10n.realtimeMarketOrderBookTitle,
+          style: theme.textTheme.bodyLarge,
+        ),
       ],
     );
   }

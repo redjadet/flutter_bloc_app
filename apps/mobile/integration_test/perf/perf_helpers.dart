@@ -12,7 +12,7 @@ Future<void> openExampleDestination(
 ) async {
   await pumpUntilFound(tester, find.byTooltip('Open example page'));
   await tapAndPump(tester, find.byTooltip('Open example page'));
-  await pumpUntilFound(tester, find.text('Example Page'));
+  await pumpUntilFound(tester, find.text('Feature demos'));
 
   final Finder destination = find.text(destinationLabel);
   await tester.scrollUntilVisible(

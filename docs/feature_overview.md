@@ -71,8 +71,8 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | FCM Demo | Depth | `/fcm-demo` | `apps/mobile/lib/features/fcm_demo/` | Permission, token, sync-trigger demo. |
 | Realtime market | Depth | `/realtime-market` | `apps/mobile/lib/features/realtime_market/` | Simulated order book; Hive cache. |
 | WebSocket Demo | Depth | `/websocket` | `apps/mobile/lib/features/websocket/` | Deferred reconnecting WebSocket. |
-| Notes demo | Archive | `/notes-demo` | `apps/mobile/lib/features/notes_demo/` | Local-only offline exception; no net-new investment. |
-| Weather demo | Archive | `/weather-demo` | `apps/mobile/lib/features/weather_demo/` | Portfolio filler; Archive unless promoted. |
+| Notes demo | Archive | `/notes-demo` | `apps/mobile/lib/features/notes_demo/` | Local-only offline sample; Archive — no net-new investment (ADR-0005). |
+| Weather demo | Archive | `/weather-demo` | `apps/mobile/lib/features/weather_demo/` | Historical portfolio sample; Archive unless promoted. |
 
 ## Platform, media, and UI demos
 
@@ -87,12 +87,12 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Calculator | Depth | `/calculator`, `/calculator/payment` | `apps/mobile/lib/features/calculator/` | Pure domain payment rules (gold layout). |
 | GenUI Demo | Depth | `/genui-demo` | `apps/mobile/lib/features/genui_demo/` | AI-generated UI. |
 | In-App Purchase Demo | Depth | `/iap-demo` | `apps/mobile/lib/features/in_app_purchase_demo/` | Purchase flow demo. |
-| Library Demo | Archive | `/library-demo` | `apps/mobile/lib/features/library_demo/` | Figma-inspired UI showcase; no net-new investment. |
+| Library Demo | Archive | `/library-demo` | `apps/mobile/lib/features/library_demo/` | Figma-inspired UI showcase; Archive — no net-new investment. |
 | Scapes | Depth | `/scapes` | `apps/mobile/lib/features/scapes/` | Visual grid; sealed-state gold reference. |
-| Playlearn | Archive | `/playlearn`, … | `apps/mobile/lib/features/playlearn/` | Vocabulary demo; Archive. |
-| iGaming Demo | Archive | `/igaming-demo`, … | `apps/mobile/lib/features/igaming_demo/` | Lobby/game filler; Archive. |
-| Whiteboard | Archive | `/whiteboard` | `apps/mobile/lib/features/example/…/whiteboard_page.dart` | CustomPainter toy. |
-| Markdown Editor | Archive | `/markdown-editor` | `apps/mobile/lib/features/example/…/markdown_editor_page.dart` | Deferred editor toy. |
+| Playlearn | Archive | `/playlearn`, … | `apps/mobile/lib/features/playlearn/` | Vocabulary sample; Archive. |
+| iGaming Demo | Archive | `/igaming-demo`, … | `apps/mobile/lib/features/igaming_demo/` | Lobby/game sample; Archive. |
+| Whiteboard | Archive | `/whiteboard` | `apps/mobile/lib/features/example/…/whiteboard_page.dart` | CustomPainter sample; Archive. |
+| Markdown Editor | Archive | `/markdown-editor` | `apps/mobile/lib/features/example/…/markdown_editor_page.dart` | Deferred editor sample; Archive. |
 | Firebase Functions Test | Depth | `/firebase-functions-test` | `apps/mobile/lib/features/example/…/firebase_functions_test_page.dart` | Auth-gated callable diagnostic. |
 
 ## Deferred-loaded features

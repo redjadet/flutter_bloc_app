@@ -63,11 +63,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openCalculatorTooltip => 'Ödeme hesaplayıcısını aç';
 
   @override
-  String get examplePageTitle => 'Örnek Sayfa';
+  String get examplePageTitle => 'Özellik demoları';
 
   @override
   String get examplePageDescription =>
-      'Bu sayfa GoRouter ile yönlendirmeyi gösterir.';
+      'Portföy demo merkezi: önce mülakat omurgası, ardından derinlik ve arşiv örnekleri. İşe alım incelemeleri için canlı Counter, Todo, Chat ve Settings yolunu tercih edin.';
 
   @override
   String get exampleBackButtonLabel => 'Sayaca dön';
@@ -3799,4 +3799,49 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get notesDemoNoBody => '(İçerik yok)';
+
+  @override
+  String get exampleAiDecisionDemoButton => 'AI Karar Çalışma Alanı';
+
+  @override
+  String get exampleOnlineTherapyDemoButton => 'Online Terapi Demosu';
+
+  @override
+  String get exampleStaffAppDemoButton => 'Personel Uygulama Demosu';
+
+  @override
+  String get openOnlineTherapyDemoTooltip => 'Online Terapi Demosunu aç';
+
+  @override
+  String get onlineTherapyDemoTitle => 'Online Terapi Demosu';
+
+  @override
+  String get onlineTherapyDemoChooseRole => 'Rol seç';
+
+  @override
+  String get onlineTherapyDemoClientFlow => 'Danışan akışı';
+
+  @override
+  String get onlineTherapyDemoTherapistFlow => 'Terapist akışı';
+
+  @override
+  String get onlineTherapyDemoAdminFlow => 'Yönetici akışı';
+
+  @override
+  String get aiDecisionDemoTitle => 'AI Karar Çalışma Alanı';
+
+  @override
+  String get exampleInterviewSpineSection => 'Mülakat omurgası';
+
+  @override
+  String get exampleDepthDemosSection => 'Derinlik demoları';
+
+  @override
+  String get exampleArchiveDemosSection => 'Arşiv (dondurulmuş)';
+
+  @override
+  String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';
+
+  @override
+  String get realtimeMarketSkeletonPricePlaceholder => '12.345,67';
 }

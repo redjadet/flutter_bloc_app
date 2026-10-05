@@ -54,21 +54,24 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
         ),
       ],
       const Divider(height: 24),
-      const Text('Choose role', style: TextStyle(fontWeight: FontWeight.w600)),
+      Text(
+        l10n.onlineTherapyDemoChooseRole,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
       const SizedBox(height: 8),
       _RoleTile(
         role: TherapyRole.client,
-        title: 'Client flow',
+        title: l10n.onlineTherapyDemoClientFlow,
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClient),
       ),
       _RoleTile(
         role: TherapyRole.therapist,
-        title: 'Therapist flow',
+        title: l10n.onlineTherapyDemoTherapistFlow,
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoTherapist),
       ),
       _RoleTile(
         role: TherapyRole.admin,
-        title: 'Admin flow',
+        title: l10n.onlineTherapyDemoAdminFlow,
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoAdmin),
       ),
       const SizedBox(height: 12),
@@ -80,7 +83,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
     ];
 
     return CommonPageLayout(
-      title: 'Online Therapy Demo',
+      title: l10n.onlineTherapyDemoTitle,
       body: ListView(padding: const EdgeInsets.all(16), children: items),
     );
   }
