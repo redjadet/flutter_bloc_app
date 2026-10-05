@@ -112,7 +112,7 @@ void main() {
         isNull,
         reason: 'No layout/runtime exceptions after opening Example.',
       );
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder showcaseButton = find.byKey(
         const ValueKey('example-native-platform-showcase-button'),
@@ -305,7 +305,7 @@ void main() {
         isNull,
         reason: 'No layout/runtime exceptions after opening Example.',
       );
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder cameraGalleryButton = find.byKey(
         const ValueKey('example-camera-gallery-button'),

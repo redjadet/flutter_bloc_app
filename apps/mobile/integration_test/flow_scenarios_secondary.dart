@@ -8,9 +8,9 @@ void registerNavigationIntegrationFlow() {
       await launchTestApp(tester);
 
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
-      expect(find.text('Example Page'), findsWidgets);
+      expect(find.text('Feature demos'), findsWidgets);
 
       final Finder libraryDemo = find.text('Library Demo');
       await tester.scrollUntilVisible(
@@ -202,7 +202,7 @@ void registerEventBusDemoIntegrationFlow() {
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder eventBusButton = find.byKey(
         const ValueKey('example-event-bus-demo-button'),
@@ -237,7 +237,7 @@ void registerSocialFeedDemoIntegrationFlow() {
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder feedButton = find.byKey(
         const ValueKey('example-social-feed-demo-button'),
@@ -305,7 +305,7 @@ void registerSecureMessagingDemoIntegrationFlow() {
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder demoButton = find.byKey(
         const ValueKey('example-secure-messaging-demo-button'),
@@ -360,7 +360,7 @@ void registerNativePlatformShowcaseIntegrationFlow() {
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder showcaseButton = find.byKey(
         const ValueKey('example-native-platform-showcase-button'),
@@ -579,7 +579,7 @@ void registerCameraGalleryIntegrationFlow() {
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder cameraGalleryButton = find.byKey(
         const ValueKey('example-camera-gallery-button'),

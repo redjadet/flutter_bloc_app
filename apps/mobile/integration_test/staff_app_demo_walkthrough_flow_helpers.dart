@@ -40,7 +40,7 @@ Future<void> openExamplePage(WidgetTester tester) async {
       .router
       .go(AppRoutes.examplePath);
   await tester.pump(const Duration(milliseconds: 100));
-  await pumpUntilFound(tester, find.text('Example Page'));
+  await pumpUntilFound(tester, find.text('Feature demos'));
 }
 
 Future<void> openStaffAppDemoFromExample(WidgetTester tester) async {

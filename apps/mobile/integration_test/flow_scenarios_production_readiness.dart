@@ -9,7 +9,7 @@ void registerProductionReadinessIntegrationFlow() {
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
       await tapAndPump(tester, find.byTooltip('Open example page'));
-      await pumpUntilFound(tester, find.text('Example Page'));
+      await pumpUntilFound(tester, find.text('Feature demos'));
 
       final Finder entry = find.byKey(
         const ValueKey('example-production-readiness-button'),
