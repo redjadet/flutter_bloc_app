@@ -148,14 +148,14 @@ dependencies:
   supabase_flutter: ^2.18.0
   utilities:
     path: ../../packages/utilities
-  video_player: ^2.14.0
+  video_player: ^2.14.1
   wallet_connect_v2: ^1.0.9
   web: ^1.1.1
   web_socket_channel: ^3.0.3
   window_manager: ^0.5.2
 
 dev_dependencies:
-  approval_tests: ^1.7.1
+  approval_tests: ^1.7.2
   bloc_test: ^10.0.0
   build_runner: ^2.16.1
   fake_async: ^1.3.3
