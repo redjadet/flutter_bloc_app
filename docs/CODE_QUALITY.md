@@ -75,7 +75,9 @@ Full principles and examples: [`solid_principles.md`](architecture/solid_princip
 
 ## Quality Metrics and Gates
 
-- File size policy: keep files under 225 LOC; extract widgets/helpers as needed
+- File size policy: keep files under 225 LOC; extract **widgets** (prefer
+  `StatelessWidget` / leaf classes over `_build*` helpers) as needed — see
+  [`engineering/widget_composition_and_rebuild_boundaries.md`](engineering/widget_composition_and_rebuild_boundaries.md)
   (QG-D02 / `./tool/run_file_length_lint.sh`). Oversized files also raise AI
   context cost—see [Clean code in the AI era](#clean-code-in-the-ai-era).
 - Coverage thresholds: [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
