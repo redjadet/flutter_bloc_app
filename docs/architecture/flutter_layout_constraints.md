@@ -98,6 +98,7 @@ Guards: `tool/check_row_text_overflow.sh`, `tool/check_row_action_overflow.sh`,
 - [`../review/ui_ux_responsive_review.md`](../review/ui_ux_responsive_review.md) — review chooser
 - [`../performance/performance_bottlenecks.md`](../performance/performance_bottlenecks.md) — layout stage + lists
 - [`../validation_scripts/guides_state_layout.md`](../validation_scripts/guides_state_layout.md) — static overflow guards
-- [`custom_painter_and_render_object.md`](custom_painter_and_render_object.md) — custom layout/paint
+- [`custom_painter_and_render_object.md`](custom_painter_and_render_object.md) — custom layout/paint + dirty marking (`markNeedsLayout` / relayout boundaries)
 - Official: [Understanding constraints](https://docs.flutter.dev/ui/layout/constraints),
-  [Layout](https://docs.flutter.dev/ui/layout)
+  [Layout](https://docs.flutter.dev/ui/layout),
+  [Inside Flutter — Sublinear layout](https://docs.flutter.dev/resources/inside-flutter)

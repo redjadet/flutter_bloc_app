@@ -84,8 +84,8 @@ smoothness.
 | Stage | Owns |
 | --- | --- |
 | Build | Dirty widget/element rebuild — keep `build()` pure and cheap |
-| Layout | **Constraints go down. Sizes go up. Parents set positions.** Detail: [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md) |
-| Paint | Drawing commands |
+| Layout | **Constraints go down. Sizes go up. Parents set positions.** Dirty via `markNeedsLayout` / relayout boundaries. Detail: [`../architecture/flutter_layout_constraints.md`](../architecture/flutter_layout_constraints.md), dirty marking in [`../architecture/custom_painter_and_render_object.md`](../architecture/custom_painter_and_render_object.md) |
+| Paint | Drawing commands — dirty via `markNeedsPaint`; isolate with `RepaintBoundary` |
 | Compositing | Layer tree |
 | Raster | Engine/raster thread → GPU / display |
 
