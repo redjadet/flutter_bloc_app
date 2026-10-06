@@ -54,6 +54,44 @@ replace newer remote state. For UI work, exercise the actual loading, error,
 repeat-action, and lifecycle paths on relevant form factors. If expected
 behavior is still disputed, settle that decision before accepting code or tests.
 
+## Collaboration mode by stakes (vibe → agentic)
+
+Industry “vibe coding” framing is a **spectrum**, not good versus bad. Match
+process intensity to blast radius. A weekend throwaway is not a payment,
+auth, offline-sync, or routing change.
+
+| Mode | Typical stakes | What you still own | Repo practice |
+| --- | --- | --- | --- |
+| Vibe — describe, accept, iterate | Disposable spike; no path to `main` / production | Secrets stay out; do not invent product scope | No AIDLC (T0); delete or quarantine the experiment |
+| Structured — better brief + review key seams | Reversible local feature or docs/tooling | Outcome, invariants, write boundary, proof | Request card + work loop; [AIDLC](../ai/aidlc_workflow.md) T1 Lite when non-trivial; focused tests; [review playbook](../review/code_review_playbook.md) |
+| Agentic engineering — AI inside specs, tests, CI, guardrails | Auth, PII, sync, routing, shared infra, release, multi-file contracts | Spec → executable tests → implementation → verification; process and residual risk | FEATURE_TEMPLATE RED tests; AIDLC T1/T2 gates; [validation routing](validation_routing_fast_vs_full.md) full/scoped lane; finish gate; harness owners via [`AGENTS.md`](../../AGENTS.md) |
+
+**Economics:** vibe is cheap up front and expensive later (rework, inconsistency,
+security). Agentic setup costs more before the first green diff and pays off on
+later features when contracts and gates already exist. This repository defaults
+toward structured or agentic for anything that can land on `main`.
+
+**Supervision style (both human-led):**
+
+- **Conductor** — step-by-step in the IDE; inspect each move. Prefer when the
+  seam is unfamiliar, high-risk, or the agent is “confidently wrong.”
+- **Orchestrator** — hand off a well-bounded task with contract and proof.
+  Prefer when the work matches
+  [Best Areas for AI Agents](../ai/best_areas_for_ai_agents.md).
+
+An agent is **model + harness** (tools, sandboxes, rule files, orchestration,
+gates, monitoring). Many failures come from missing or overloaded surroundings,
+not from the model alone—see the
+[harness scorecard](../ai/harness_scorecard.md) entry from the
+[HITL map](../ai/human_ai_collaboration.md). Generation accelerates drafts;
+verification, judgment, and direction remain the craft. Treat the last stretch
+(edge cases, integration, business assumptions) as human-owned, not as leftover
+typing.
+
+**Context for briefs:** keep always-on rules thin; point agents at on-demand
+owner docs for the task. Short human entry:
+[Context when briefing agents](../ai/human_ai_collaboration.md#context-when-briefing-agents).
+
 ## Shared evidence standard
 
 A skill is demonstrated by a decision and its evidence, not by naming a tool or

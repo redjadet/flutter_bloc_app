@@ -2,7 +2,7 @@
 
 **Audience:** Visitors, new developers, and reviewers who need human-in-the-loop
 (HITL) ownership without reading the entire agent harness.  
-**Date:** 2026-09-25  
+**Date:** 2026-10-06  
 **Pillars:** README [Four pillars](../../README.md#four-pillars).
 
 This is an **index**, not a parallel rule book. Prefer the linked owners.
@@ -14,13 +14,30 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 3. [`../agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) — safety contracts  
 4. [`aidlc_workflow.md`](aidlc_workflow.md) — approve / continue  
 5. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
-6. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop  
+6. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop + stakes spectrum  
 7. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample closeout report shape (fiction)  
 
 Memory (≤2 clicks from README via this map):
 
 - [`../../tasks/lessons.md`](../../tasks/lessons.md)  
 - [`../agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md)  
+
+## Context when briefing agents
+
+Humans choose **what stays always-on** versus **what loads on demand**. Too much
+always-loaded material wastes tokens and dilutes the instructions that matter.
+Agent load order lives in [`context_loading.md`](context_loading.md); use this
+table when writing a brief or trimming host rules.
+
+| Layer | Keep | Examples |
+| --- | --- | --- |
+| Always-on (thin) | Entry maps and non-negotiable safety | [`AGENTS.md`](../../AGENTS.md), host always-on rules, [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) |
+| On-demand (task-matched) | Owners for this change only | Conditional rows in [`context_loading.md`](context_loading.md); feature contract; validation lane; topic playbooks |
+
+Brief with the
+[request card](../engineering/critical_human_skills.md#humanai-work-loop-for-one-change)
+plus current owner paths—not a paste of the whole repository. Mode by stakes:
+[Collaboration mode by stakes](../engineering/critical_human_skills.md#collaboration-mode-by-stakes-vibe--agentic).
 
 ## Decision type → owner → agent may / must-not → proof
 
