@@ -6,6 +6,7 @@ decision is [ADR 0002](../adr/0002-offline-first-data.md).
 
 | Need | Read |
 | --- | --- |
+| Hiring / senior review (spine evidence) | [reviewer_guide.md](reviewer_guide.md) |
 | Adopt or review a feature | [adoption_guide.md](adoption_guide.md) |
 | Named offline invariants | [invariants.md](invariants.md) |
 | Preserve newer local state | [dont_overwrite_guide.md](dont_overwrite_guide.md) |

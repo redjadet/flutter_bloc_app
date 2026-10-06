@@ -20,6 +20,7 @@ Operational quality, delivery controls, and technical maintenance. Start with
 | CI automation | [ci_automation.md](ci_automation.md) |
 | Dependency updates | [DEPENDENCY_UPDATES.md](DEPENDENCY_UPDATES.md) |
 | Shared utilities | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) |
+| Cancellation and cache (reviewer) | [cancellation_and_cache.md](cancellation_and_cache.md) — Cubit close, RequestIdGuard, CancelToken, Hive vs HTTP vs image cache |
 | Anti-patterns | [flutter-anti-patterns.md](flutter-anti-patterns.md) |
 | Integration testing | [integration_test_policy.md](integration_test_policy.md) |
 | Play Store release SOP | [android_play_store_release_sop.md](android_play_store_release_sop.md) |

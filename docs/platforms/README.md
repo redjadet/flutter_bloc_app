@@ -15,6 +15,7 @@ architecture detail stays in the gold feature README — do not duplicate it her
 | Doc | Owns |
 | --- | --- |
 | This README | Capability + fidelity matrices; non-goals; adaptive chrome pointer |
+| [`reviewer_guide.md`](reviewer_guide.md) | Hiring / senior review: channels, hosts, threading, tests, CI gaps |
 | [`ios.md`](ios.md) | iOS/Swift host surfaces for the showcase |
 | [`android.md`](android.md) | Android/Kotlin host surfaces for the showcase |
 | [`native_interop.md`](native_interop.md) | Bridge kinds, typed statuses, web/desktop stubs, layering |
