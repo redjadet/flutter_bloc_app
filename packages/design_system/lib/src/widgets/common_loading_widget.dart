@@ -125,12 +125,16 @@ class CommonLoadingButton extends StatelessWidget {
       ],
     );
 
+    final Duration switchDuration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : const Duration(milliseconds: 200);
+
     return PlatformAdaptive.filledButton(
       context: context,
       onPressed: isLoading ? null : onPressed,
       materialStyle: style,
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
+        duration: switchDuration,
         child: isLoading
             ? KeyedSubtree(key: const ValueKey('loading'), child: loadingChild)
             : KeyedSubtree(key: const ValueKey('content'), child: child),

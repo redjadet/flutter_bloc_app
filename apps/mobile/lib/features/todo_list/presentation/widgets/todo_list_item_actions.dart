@@ -88,6 +88,9 @@ Widget buildTodoItemActions({
             unawaited(HapticFeedback.mediumImpact());
             onDelete();
           },
+          materialStyle: TextButton.styleFrom(
+            overlayColor: colors.error.withValues(alpha: 0.12),
+          ),
           child: Icon(
             Icons.delete_outline,
             color: colors.error,

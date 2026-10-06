@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class ChartLoadingList extends StatelessWidget {
   const new({super.key});
@@ -11,11 +10,8 @@ class ChartLoadingList extends StatelessWidget {
     final theme = Theme.of(context);
     final skeletonColor = theme.colorScheme.surfaceContainerHighest;
     final chartHeight = context.heightFraction(0.28);
-    return Skeletonizer(
-      effect: ShimmerEffect(
-        baseColor: theme.colorScheme.surfaceContainerHigh,
-        highlightColor: theme.colorScheme.surface,
-      ),
+    return SkeletonBase(
+      semanticLabel: 'Loading chart',
       child: ChartScrollable(
         children: [
           CommonCard(

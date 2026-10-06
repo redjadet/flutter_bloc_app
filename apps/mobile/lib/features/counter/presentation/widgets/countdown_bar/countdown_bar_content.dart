@@ -84,10 +84,13 @@ class CountdownBarContent extends StatelessWidget {
     }
 
     return Skeletonizer(
-      effect: ShimmerEffect(
-        baseColor: colors.surfaceContainerHighest,
-        highlightColor: colors.surface,
+      effect: SkeletonBase.loadingEffect(
+        colors,
+        reduceMotion: MediaQuery.disableAnimationsOf(context),
       ),
+      enableSwitchAnimation: MediaQuery.disableAnimationsOf(context)
+          ? false
+          : null,
       child: bar,
     );
   }
