@@ -40,13 +40,18 @@ app redraw.
 
 ### What the widget tree actually is
 
-Three related trees:
+Three related trees (plus a separate **focus** tree for keyboard):
 
 | Tree | Role |
 | --- | --- |
 | **Widget** | Immutable config (“what should this look like / do?”) |
 | **Element** | Mutable mount that holds a widget, lifecycle, and BuildContext |
 | **RenderObject** | Layout, paint, hit-test (where constraints and sizes live) |
+| **Focus** (sparse) | Which node has primary keyboard focus; key-event chain — not the same as hit-test |
+
+Keyboard focus / `FocusNode` / Shortcuts: see
+[`focus_and_keyboard_input.md`](focus_and_keyboard_input.md). Pointer targeting
+stays on the RenderObject hit-test path.
 
 Pipeline we care about in perf work:
 

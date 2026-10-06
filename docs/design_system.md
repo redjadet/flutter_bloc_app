@@ -255,7 +255,7 @@ layout or interaction that only works on the device under debug.
 | **Mobile** | &lt; 800 logical px (`LayoutBreakpoints.mobileBreakpoint`) | Touch targets; safe area; keyboard overlap; portrait/landscape reflow; no clipped primary actions |
 | **Tablet** | 800–1199 px | Use `context.isTabletOrLarger` / `responsiveValue`; multi-column or side-by-side where width allows; avoid phone-only stacks on wide tablet |
 | **Web** | Any viewport in browser | Web-safe imports (`kIsWeb`); URL/deep-link routes; pointer hover/focus; scroll without mobile-only assumptions; run web preflight when bootstrap/routing touched |
-| **Desktop (macOS)** | Often ≥ 1200 px; also **narrow windows** | Keyboard traversal and focus rings; mouse affordances; resizable window — prove compact width, not only full screen |
+| **Desktop (macOS)** | Often ≥ 1200 px; also **narrow windows** | Keyboard traversal and focus rings ([`focus_and_keyboard_input.md`](engineering/focus_and_keyboard_input.md)); mouse affordances; resizable window — prove compact width, not only full screen |
 
 Breakpoints: [`responsive_config.dart`](../packages/design_system/lib/src/responsive/responsive_config.dart)
 (mobile &lt; 800, tablet 800–1199, desktop ≥ 1200).
@@ -268,7 +268,8 @@ Breakpoints: [`responsive_config.dart`](../packages/design_system/lib/src/respon
 - **Mobile + tablet:** width-driven layout via `context.responsive*`,
   `LayoutBuilder`, `CommonPageLayout` (`useResponsiveBody`), grid column helpers.
 - **Web + desktop:** same components; add input-model checks (focus, hover,
-  keyboard shortcuts only when product requires them).
+  keyboard shortcuts only when product requires them). Framework model:
+  [`engineering/focus_and_keyboard_input.md`](engineering/focus_and_keyboard_input.md).
 - **Never** put `dart:io` or unguarded `Platform.is*` in presentation; isolate
   IO in data/shared adapters (`RISK-PLATFORM-SCOPE`).
 
