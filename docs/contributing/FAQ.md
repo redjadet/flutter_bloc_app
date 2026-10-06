@@ -48,6 +48,14 @@ bash tool/workspace_pub_get.sh
 cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
+## 🧰 Should I follow generic “Flutter CLI pro commands” blogs here?
+
+Use them as background only. Day-to-day work prefers repo wrappers
+(`workspace_pub_get`, `./bin/checklist`, Melos) over bare
+`flutter create` / casual `flutter upgrade`. Short map + official CLI link:
+[New Developer Guide § Raw Flutter CLI → this repo](../new_developer_guide.md#raw-flutter-cli--this-repo).
+Pin: Flutter **3.47.6** ([`tech_stack.md`](../tech_stack.md)).
+
 For platform setup and configuration, see [Developer Guide](../new_developer_guide.md) and [Security & Secrets](../security_and_secrets.md).
 
 ## 🔐 Which features need API keys or services?

@@ -53,6 +53,12 @@ without commands. Humans approve merge / production auth / secret rotation.
 | `./bin/integration_tests` | When integration-covered flows changed or you need device-level confidence. |
 | `dart run build_runner build --delete-conflicting-outputs` | When touching generated models, APIs, or annotations. |
 
+Raw `flutter analyze` / `flutter test` / `flutter pub get` are fine for narrow
+local loops; the gates above (and
+[`new_developer_guide.md` § Raw Flutter CLI → this repo](../new_developer_guide.md#raw-flutter-cli--this-repo))
+are the monorepo defaults. Do not treat generic CLI blog lists as this repo’s
+quality gate.
+
 For validator coverage and script behavior, see
 [Validation Scripts](../validation_scripts.md). For testing structure and suite
 layout, see [Testing Overview](../testing_overview.md).
