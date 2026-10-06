@@ -8,6 +8,8 @@ How agents and humans validate changes in this repo. Host map: [AGENTS.md](../AG
 
 - [agent_knowledge_base.md](agent_knowledge_base.md) — doctrine, loop, proof gate
 - [agents_quick_reference.md](agents_quick_reference.md) — validation chooser and commands
+- [ai-sdlc/README.md](ai-sdlc/README.md) — intent→spec→plan→REVIEW kit (tool-agnostic)
+- [ai-sdlc/gates.md](ai-sdlc/gates.md) — deterministic gates (scripts + required CI)
 - [ai/governance.md](ai/governance.md) — AI engineering governance
 - [ai/skill_routing.md](ai/skill_routing.md) — which skill to invoke
 - [ai/ai_failure_risks.md](ai/ai_failure_risks.md) — Pre-Flight risk register

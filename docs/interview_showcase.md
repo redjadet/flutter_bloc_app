@@ -33,7 +33,7 @@ follow-ups; Archive modules are frozen unless promoted ([ADR-0005](adr/0005-inte
   [`toolchain_versions.env`](toolchain_versions.env))
 - First run: [new_developer_guide.md](new_developer_guide.md)
 - Default entry: `apps/mobile/lib/main_dev.dart` (dev flavor)
-- Agent harness (optional): [AGENTS.md](../AGENTS.md), [agent_knowledge_base.md](agent_knowledge_base.md)
+- Agent harness (optional): [AGENTS.md](../AGENTS.md), [agent_knowledge_base.md](agent_knowledge_base.md), [ai-sdlc kit](ai-sdlc/README.md) (intent→spec→plan→review)
 
 ## 3. 30-minute walk (frozen spine)
 
@@ -43,7 +43,7 @@ follow-ups; Archive modules are frozen unless promoted ([ADR-0005](adr/0005-inte
 | 2 | `/todo-list` | List CRUD with filters, selection, realtime-capable repo; same sync patterns as counter. | [`apps/mobile/lib/features/todo_list/`](../apps/mobile/lib/features/todo_list/) |
 | 3 | `/chat-list` → `/chat` | API-first chat: local history, transport badges (Supabase / direct / Render orchestration). Open one thread; send is gated on connectivity/state. | [`apps/mobile/lib/features/chat/`](../apps/mobile/lib/features/chat/) |
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live** / manual). Policy: [ADR 0009](adr/0009-sync-diagnostics-interview-coverage.md). | [`sync_diagnostics_section.dart`](../apps/mobile/lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |
-| 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
+| 5 | Repo harness | Intent→spec→plan→verify: [`AGENTS.md`](../AGENTS.md), [`ai-sdlc`](ai-sdlc/README.md), `./bin/checklist`, gates. | [AGENTS.md](../AGENTS.md), [ai-sdlc/gates.md](ai-sdlc/gates.md), [validation_scripts.md](validation_scripts.md) |
 
 ### 3b. 12-minute production ownership walkthrough
 

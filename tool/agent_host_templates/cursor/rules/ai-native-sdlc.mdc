@@ -1,0 +1,20 @@
+---
+description: AI-native SDLC artifact loop (intent→spec→plan→REVIEW). Thin pointer.
+globs:
+  - docs/ai-sdlc/**
+  - docs/ai/aidlc_workflow.md
+  - apps/mobile/lib/features/**
+alwaysApply: false
+---
+
+# AI-native SDLC (project rule)
+
+When doing non-trivial feature work, follow the tool-agnostic artifact loop:
+
+1. Read [`docs/ai-sdlc/README.md`](docs/ai-sdlc/README.md).
+2. Prefer templates under `docs/ai-sdlc/templates/` and live folders under `docs/ai-sdlc/features/<slug>/`.
+3. Apply institutional skills in `docs/ai-sdlc/skills/` (offline-first, platform-channel-safety, cancellation-disposables, theme-tokens).
+4. Prove with [`docs/ai-sdlc/gates.md`](docs/ai-sdlc/gates.md) — scripts + required CI — not vendor hook JSON.
+5. Keep machine-checked AIDLC (`docs/ai/aidlc_workflow.md`) when T1/T2 lifecycle is active.
+
+Do not create `CLAUDE.md` or `.claude/`. Entry map: `AGENTS.md`.

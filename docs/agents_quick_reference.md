@@ -39,6 +39,7 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 | Agent-memory / memory-compounding drift | `./tool/check_agent_memory_compounding.sh`; `./tool/agent_memory_auto_maintain.sh --if-changed --verify` |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | AIDLC lifecycle (T1/T2) | [`ai/aidlc_workflow.md`](ai/aidlc_workflow.md); skill `agents-aidlc-workflow`; schemas [`engineering/aidlc_artifact_contract.md`](engineering/aidlc_artifact_contract.md); `bash tool/scaffold_aidlc_run.sh --help`; `bash tool/check_aidlc_artifacts.sh` |
+| AI-native SDLC (intent→spec→plan→review) | [`ai-sdlc/README.md`](ai-sdlc/README.md); skills [`ai-sdlc/skills/`](ai-sdlc/skills/README.md); gates [`ai-sdlc/gates.md`](ai-sdlc/gates.md); live folders [`ai-sdlc/features/`](ai-sdlc/features/README.md) |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
 | Host-template sync | `./tool/sync_agent_assets.sh --dry-run` / `--apply`; after template edits: `./bin/agent-maintain after-host-edit` |
 | Agent host maintain | [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md); `./bin/agent-maintain help`; `/agent-maintain` |

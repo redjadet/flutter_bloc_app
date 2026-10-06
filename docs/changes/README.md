@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-06_ai_native_sdlc_kit.md`](2026-10-06_ai_native_sdlc_kit.md): Tool-agnostic AI-native SDLC kit (intent→spec→plan→REVIEW, skills, CI gates); strengthen [`AGENTS.md`](../../AGENTS.md); no Claude Code config.
 - [`2026-10-06_ui_polish_production_trends.md`](2026-10-06_ui_polish_production_trends.md): Low-risk Material 3 / skeleton / list density polish mapped to Apr 2026 production UI trends.
 - [`2026-10-06_flutter_cli_repo_crosswalk.md`](2026-10-06_flutter_cli_repo_crosswalk.md): Map raw Flutter CLI habits → Melos/`workspace_pub_get`/`./bin/checklist` wrappers; pin caution vs casual `flutter upgrade`.
 - [`2026-10-06_agentic_sdlc_stakes_spectrum.md`](2026-10-06_agentic_sdlc_stakes_spectrum.md): Human spectrum vibe → structured → agentic by stakes; always-on vs on-demand context when briefing agents.
