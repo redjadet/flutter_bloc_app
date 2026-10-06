@@ -70,14 +70,19 @@ class ChatHistoryConversationTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: theme.textTheme.titleMedium?.copyWith(color: baseTextColor),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: baseTextColor,
+        ),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             l10n.chatHistoryUpdatedAt(timestamp),
-            style: theme.textTheme.bodySmall?.copyWith(
+            style: theme.textTheme.labelMedium?.copyWith(
               color: isActive
                   ? baseTextColor.withValues(alpha: 0.85)
                   : theme.colorScheme.onSurfaceVariant,
@@ -88,10 +93,12 @@ class ChatHistoryConversationTile extends StatelessWidget {
               padding: EdgeInsets.only(top: context.responsiveGapXS),
               child: Text(
                 preview,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: baseTextColor,
+                  color: isActive
+                      ? baseTextColor.withValues(alpha: 0.9)
+                      : theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ),

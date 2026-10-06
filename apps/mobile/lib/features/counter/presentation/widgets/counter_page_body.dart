@@ -28,10 +28,13 @@ class CounterPageBody extends StatelessWidget {
         selector: (state) => state.isLoading,
         builder: (context, isLoading) => Skeletonizer(
           enabled: isLoading,
-          effect: ShimmerEffect(
-            baseColor: theme.colorScheme.surfaceContainerHighest,
-            highlightColor: theme.colorScheme.surface,
+          effect: SkeletonBase.loadingEffect(
+            theme.colorScheme,
+            reduceMotion: MediaQuery.disableAnimationsOf(context),
           ),
+          enableSwitchAnimation: MediaQuery.disableAnimationsOf(context)
+              ? false
+              : null,
           child: _CounterContent(
             theme: theme,
             l10n: l10n,

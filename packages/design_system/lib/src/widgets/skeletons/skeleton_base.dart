@@ -6,7 +6,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 /// This widget encapsulates the common pattern used across all skeleton widgets:
 /// - RepaintBoundary for performance
 /// - Semantics label for accessibility
-/// - Consistent ShimmerEffect configuration
+/// - Consistent ShimmerEffect configuration (or solid color when animations
+///   are disabled via [MediaQuery.disableAnimations])
 /// - Theme-based color scheme
 class SkeletonBase extends StatelessWidget {
   const SkeletonBase({
@@ -21,19 +22,35 @@ class SkeletonBase extends StatelessWidget {
   /// Semantic label for accessibility (defaults to 'Loading content').
   final String semanticLabel;
 
+  /// Theme-aware loading paint effect.
+  ///
+  /// Uses a static solid color when the platform requests reduced motion /
+  /// disabled animations; otherwise a lightweight shimmer.
+  static PaintingEffect loadingEffect(
+    ColorScheme colors, {
+    required bool reduceMotion,
+  }) {
+    if (reduceMotion) {
+      return SolidColorEffect(color: colors.surfaceContainerHigh);
+    }
+    return ShimmerEffect(
+      baseColor: colors.surfaceContainerHigh,
+      highlightColor: colors.surface,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
+    final bool reduceMotion = MediaQuery.disableAnimationsOf(context);
 
     return RepaintBoundary(
       child: Semantics(
         label: semanticLabel,
         child: Skeletonizer(
-          effect: ShimmerEffect(
-            baseColor: colors.surfaceContainerHigh,
-            highlightColor: colors.surface,
-          ),
+          effect: loadingEffect(colors, reduceMotion: reduceMotion),
+          enableSwitchAnimation: reduceMotion ? false : null,
           child: child,
         ),
       ),

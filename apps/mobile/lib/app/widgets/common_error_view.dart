@@ -36,10 +36,11 @@ class CommonErrorView extends StatelessWidget {
       icon: effectiveIcon,
       iconSize: effectiveIconSize,
       iconColor: effectiveIconColor,
-      messageStyle: TextStyle(
-        fontSize: context.responsiveTitleSize,
-        fontWeight: FontWeight.w600,
+      messageStyle: theme.textTheme.bodyLarge?.copyWith(
+        color: colors.onSurface,
+        fontWeight: FontWeight.w500,
       ),
+      semanticsLabel: 'Error: $message',
       action: switch (onRetry) {
         final cb? => CommonRetryButton(
           key: retryButtonKey,

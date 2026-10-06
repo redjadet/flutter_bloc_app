@@ -58,10 +58,11 @@ class TodoListItem extends StatelessWidget {
     final double itemGapS = context.responsiveHorizontalGapS * horizontalScale;
     final TextStyle? titleStyle = theme.textTheme.titleMedium?.copyWith(
       fontSize: titleFontSize,
+      fontWeight: item.isCompleted ? FontWeight.w500 : FontWeight.w600,
       decoration: item.isCompleted ? TextDecoration.lineThrough : null,
       color: item.isCompleted ? colors.onSurfaceVariant : colors.onSurface,
     );
-    final TextStyle? descriptionStyle = theme.textTheme.bodyMedium?.copyWith(
+    final TextStyle? descriptionStyle = theme.textTheme.bodySmall?.copyWith(
       fontSize: descriptionFontSize,
       color: colors.onSurfaceVariant,
     );
