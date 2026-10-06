@@ -28,6 +28,24 @@ Live feature folders: [`features/README.md`](features/README.md).
 Institutional skills: [`skills/README.md`](skills/README.md).  
 Deterministic gates (hooks → CI): [`gates.md`](gates.md).
 
+## Progressive prompting
+
+**Progressive prompting** (Chris Dunlop, Cursor): sequence small agent turns
+instead of one mega-prompt. Each turn assumes the repo is already in a **working**
+state and adds **one** independently verifiable slice, then proves it before the
+next slice.
+
+| Rule | Repo habit |
+| --- | --- |
+| Start from green | Prior step’s proof commands pass (analyze + focused test) |
+| One behavior per turn | Matches a single numbered step in [`templates/plan.md`](templates/plan.md) |
+| Verifiable stop | Each step names command paths in the plan **Proof plan** table |
+| Expand after land | Next prompt references merged/working code, not a blank slate |
+
+Institutional skill: [`skills/progressive-prompting.md`](skills/progressive-prompting.md).
+Break feature plans into steps agents can execute and humans can review in isolation
+(see plan template examples: cancellation Cubit, offline pending queue).
+
 ## Concept map (industry → this repo)
 
 | Industry idea | Repo artifact | Notes |

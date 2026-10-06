@@ -10,6 +10,7 @@ this folder is the readable institutional set for the AI-native SDLC loop.
 
 | Skill | Load when | Owner doc |
 | --- | --- | --- |
+| [progressive-prompting](progressive-prompting.md) | Scoping agent turns, plan steps, Cursor/Codex prompts | [`ai-sdlc README`](../README.md) |
 | [offline-first](offline-first.md) | Hive, sync, conflict, pending queue | [`offline_first`](../../offline_first/README.md) |
 | [platform-channel-safety](platform-channel-safety.md) | MethodChannel, EventChannel, FFI, PlatformView | [`platforms`](../../platforms/README.md) |
 | [cancellation-disposables](cancellation-disposables.md) | Cubit close, timers, subscriptions, late futures | [`cancellation_and_cache`](../../engineering/cancellation_and_cache.md) |
