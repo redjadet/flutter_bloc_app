@@ -14,6 +14,9 @@ Claims cite the [claim ledger](changes/2026-09-24_authority_phase_0_evidence_bas
 (last refreshed [`changes/2026-09-25_claim_ledger_sha_refresh.md`](changes/2026-09-25_claim_ledger_sha_refresh.md)).
 Visitor HITL path: [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md).
 Native teaching pack: [`platforms/README.md`](platforms/README.md).
+Reviewer evidence maps: [`offline_first/reviewer_guide.md`](offline_first/reviewer_guide.md),
+[`platforms/reviewer_guide.md`](platforms/reviewer_guide.md),
+[`engineering/cancellation_and_cache.md`](engineering/cancellation_and_cache.md).
 Public ≤15 min architecture tour: [`architecture_tour.md`](architecture_tour.md).
 Feature tiers (Spine / Depth / Archive): [`feature_overview.md`](feature_overview.md).
 

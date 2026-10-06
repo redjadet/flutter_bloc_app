@@ -32,6 +32,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
 | ≤15 min architecture tour | [`architecture_tour.md`](architecture_tour.md) |
+| Hiring / senior review — offline, native, cancel/cache | [`offline_first/reviewer_guide.md`](offline_first/reviewer_guide.md) · [`platforms/reviewer_guide.md`](platforms/reviewer_guide.md) · [`engineering/cancellation_and_cache.md`](engineering/cancellation_and_cache.md) |
 | Flutter fundamentals + production Q&A | [`engineering/flutter_fundamentals_and_production_practices.md`](engineering/flutter_fundamentals_and_production_practices.md) — widgets/state, Cubit-first async lifecycle, offline, perf, structure, crash triage with this-repo stories |
 
 ## Browse by folder
@@ -87,8 +88,15 @@ Folder READMEs under **Browse by folder** own the catalogs. Root highlights only
 
 ### Offline-first and local storage
 
+- [`offline_first/reviewer_guide.md`](offline_first/reviewer_guide.md) — hiring/senior evidence map (Hive, sync, conflict, tests/CI)
 - [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md) · [`offline_first/invariants.md`](offline_first/invariants.md)
 - [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) · [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md)
+
+### Native interop and async lifecycle
+
+- [`platforms/reviewer_guide.md`](platforms/reviewer_guide.md) — channels, hosts, threading, tests/CI (no `super_demo_ios` in-repo)
+- [`platforms/README.md`](platforms/README.md) — capability/fidelity matrices
+- [`engineering/cancellation_and_cache.md`](engineering/cancellation_and_cache.md) — Cubit close, guards, HTTP vs Hive vs image cache
 
 ### Setup, secrets, and integrations
 
