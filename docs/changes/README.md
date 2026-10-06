@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-06_flutter_cli_repo_crosswalk.md`](2026-10-06_flutter_cli_repo_crosswalk.md): Map raw Flutter CLI habits → Melos/`workspace_pub_get`/`./bin/checklist` wrappers; pin caution vs casual `flutter upgrade`.
 - [`2026-10-06_agentic_sdlc_stakes_spectrum.md`](2026-10-06_agentic_sdlc_stakes_spectrum.md): Human spectrum vibe → structured → agentic by stakes; always-on vs on-demand context when briefing agents.
 - [`2026-10-06_focus_and_keyboard_input.md`](2026-10-06_focus_and_keyboard_input.md): Teach focus tree vs hit-test; `FocusNode` / scope / `FocusManager`; TextInput vs focus; Shortcuts/Actions; Todo Next + dispose anchors.
 - [`2026-10-05_dirty_renderobject_marking.md`](2026-10-05_dirty_renderobject_marking.md): Teach `markNeedsLayout` / paint / semantics dirty flags + relayout vs `RepaintBoundary` on the custom paint/RO contract.
