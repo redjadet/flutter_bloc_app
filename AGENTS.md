@@ -25,6 +25,10 @@ the validation chooser. Prefer the narrowest honest lane in
 - Theme tokens: [`DESIGN.md`](DESIGN.md), [`design_system`](docs/design_system.md). Skills: [`docs/ai-sdlc/skills/`](docs/ai-sdlc/skills/README.md).
 - Pitfalls before edit: [`ai_failure_risks`](docs/ai/ai_failure_risks.md) Pre-Flight.
 
+## Progressive prompting (Cursor / Codex)
+
+Sequence **small** prompts from **green** code (one verifiable slice per turn; land before expanding). Avoid one-shot whole-feature asks — [`progressive-prompting`](docs/ai-sdlc/skills/progressive-prompting.md), [`plan template`](docs/ai-sdlc/templates/plan.md).
+
 ## Task Map
 
 - Architecture: clean architecture, feature contract, [`reference features`](docs/architecture/reference_features.md), BLoC.
