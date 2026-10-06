@@ -32,6 +32,11 @@ Use global search/install only on explicit host-skill work:
 | Pre-flight / common mistakes | `agents-common-pitfalls`; owner [`ai_failure_risks.md`](ai_failure_risks.md) |
 | Cold start / commands / validation chooser | `agents-quick-reference` |
 | AIDLC / lifecycle / phase-gated delivery / resume lifecycle run | `agents-aidlc-workflow`; owner [`aidlc_workflow.md`](aidlc_workflow.md). Host sync apply may be pending — follow owner doc + this skill source under `tool/agent_host_templates/` until applied |
+| Intent→spec→plan→review / AI-native SDLC artifacts | [`../ai-sdlc/README.md`](../ai-sdlc/README.md); institutional skills [`../ai-sdlc/skills/`](../ai-sdlc/skills/README.md); gates [`../ai-sdlc/gates.md`](../ai-sdlc/gates.md) |
+| Offline sync / Hive merge / don’t-overwrite | [`../ai-sdlc/skills/offline-first.md`](../ai-sdlc/skills/offline-first.md) + owner [`../offline_first/adoption_guide.md`](../offline_first/adoption_guide.md) |
+| Platform channels / FFI / PlatformView | [`../ai-sdlc/skills/platform-channel-safety.md`](../ai-sdlc/skills/platform-channel-safety.md) + [`../platforms/README.md`](../platforms/README.md) |
+| Cubit cancel / disposables / late futures | [`../ai-sdlc/skills/cancellation-disposables.md`](../ai-sdlc/skills/cancellation-disposables.md) + `agents-bloc-standards` |
+| Theme tokens / Mix / DESIGN.md | [`../ai-sdlc/skills/theme-tokens.md`](../ai-sdlc/skills/theme-tokens.md); `agents-canonical-rules-presentation` |
 | Non-trivial delivery / finish gate | `agents-delivery-workflow` |
 | Non-trivial coding | `agents-delivery-workflow`; [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Plan / delegation reminders | `agents-meta-behavior` (**Cursor template**; Codex: same canon via [`agent_knowledge_base.md`](../agent_knowledge_base.md) + multi-agent hub) |

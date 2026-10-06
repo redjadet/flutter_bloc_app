@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Agent execution (always-on)
 
-Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AGENTS.md` (map), `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`.
+Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AGENTS.md` (map), `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`. Intent→spec→plan→review kit: `docs/ai-sdlc/README.md` (gates: `docs/ai-sdlc/gates.md`).
 
 - **Think:** unsafe ambiguity below 95% confidence → stop; evidence from repo docs, code, tests, or scripts (not guesses).
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.

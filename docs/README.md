@@ -25,6 +25,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Review a change | [`review/code_review_playbook.md`](review/code_review_playbook.md) |
 | Validation + tests | [`testing.md`](testing.md), [`validation_scripts.md`](validation_scripts.md) |
 | Agent harness | [`AGENTS.md`](../AGENTS.md) → [`ai/context_loading.md`](ai/context_loading.md); AIDLC [`ai/aidlc_workflow.md`](ai/aidlc_workflow.md); overview [`ai-workflow.md`](ai-workflow.md) |
+| AI-native SDLC (intent→spec→plan→review) | [`ai-sdlc/README.md`](ai-sdlc/README.md) — tool-agnostic artifact loop, skills, CI gates |
 | Human–AI collaboration map | [`ai/human_ai_collaboration.md`](ai/human_ai_collaboration.md) |
 | Scope / Archive | [`scope_register.md`](scope_register.md), [`feature_overview.md`](feature_overview.md) |
 | Native platforms teaching pack | [`platforms/README.md`](platforms/README.md) |
@@ -52,6 +53,7 @@ root when an existing category applies.
 | [performance/](performance/README.md) | Profiling, memory, performance improvement evidence |
 | [review/](review/README.md) | Architecture, BLoC, security, and performance review checklists |
 | [ai/](ai/README.md) | Coding-agent operations and governance |
+| [ai-sdlc/](ai-sdlc/README.md) | Tool-agnostic AI-native SDLC kit (templates, skills, gates) |
 | [contributing/](contributing/README.md) | Contributor guide, FAQ, PR checklist |
 | [offline_first/](offline_first/README.md) | Local-first storage, conflict, and sync guidance |
 | [platforms/](platforms/README.md) | Native capability/fidelity matrices; iOS/Android/interop teaching |

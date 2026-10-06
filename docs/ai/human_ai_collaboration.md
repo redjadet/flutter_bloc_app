@@ -13,9 +13,10 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 2. This page — decision ownership  
 3. [`../agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) — safety contracts  
 4. [`aidlc_workflow.md`](aidlc_workflow.md) — approve / continue  
-5. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
-6. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop + stakes spectrum  
-7. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample closeout report shape (fiction)  
+5. [`../ai-sdlc/README.md`](../ai-sdlc/README.md) — intent→spec→plan→REVIEW (tool-agnostic)  
+6. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
+7. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop + stakes spectrum  
+8. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample closeout report shape (fiction)  
 
 Memory (≤2 clicks from README via this map):
 

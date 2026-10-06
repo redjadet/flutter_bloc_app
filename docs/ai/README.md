@@ -12,6 +12,7 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 | [agent_operating_manual.md](agent_operating_manual.md) | T1/T2 coding discipline router; verification maps to [finish gate pre-complete](../agent_kb/legibility_and_finish_gate.md#agent-pre-complete-gate-mandatory-before-done) |
 | [governance.md](governance.md) | Roles, handoffs, stop conditions |
 | [aidlc_workflow.md](aidlc_workflow.md) | Repo-native AIDLC stages, gates, activation |
+| [AI-native SDLC kit](../ai-sdlc/README.md) | Tool-agnostic intent→spec→plan→REVIEW templates, skills, CI gates |
 | [context_loading.md](context_loading.md) | Context ladder |
 | [harness_scorecard.md](harness_scorecard.md) | Harness quality scorecard |
 | [harness_auto_maintenance.md](harness_auto_maintenance.md) | Keep harness score honest (`agent-maintain harness-maintain`) |

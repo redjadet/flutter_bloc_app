@@ -66,6 +66,7 @@ managed_cursor_files=(
 # shellcheck disable=SC2034
 managed_cursor_project_files=(
   "cursor/rules/agent-execution.mdc|$repo_root/.cursor/rules/agent-execution.mdc"
+  "cursor/rules/ai-native-sdlc.mdc|$repo_root/.cursor/rules/ai-native-sdlc.mdc"
   "cursor/rules/dependency-review.mdc|$repo_root/.cursor/rules/dependency-review.mdc"
   "cursor/rules/flutter-isolate-presentation.mdc|$repo_root/.cursor/rules/flutter-isolate-presentation.mdc"
   "cursor/rules/router-feature-validation.mdc|$repo_root/.cursor/rules/router-feature-validation.mdc"

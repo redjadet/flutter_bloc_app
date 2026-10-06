@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-09-30T20:27:17Z"
-  git_head: "7db2b3af5045242cb8d65b27eb71ee5547eda3bb"
+  generated_at: "2026-10-06T16:06:01Z"
+  git_head: "efe9bf3b8692c959871e5f5f5d60669815db4c8c"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -22,21 +22,21 @@ ai_snapshot:
 | staff_app_demo | 5629 | yes |
 | todo_list | 5514 | yes |
 | social_feed_demo | 5389 | yes |
-| online_therapy_demo | 5089 | yes |
+| online_therapy_demo | 5092 | yes |
 | case_study_demo | 4592 | yes |
 | counter | 4398 | yes |
 | native_platform_showcase | 3531 | yes |
 | iot | 3075 | yes |
 | iot_demo | 3025 | yes |
-| example | 2421 | yes |
+| example | 2438 | yes |
 | auth | 2403 | yes |
-| realtime_market | 2129 | yes |
+| realtime_market | 2152 | yes |
 | chart | 1978 | yes |
 | graphql_demo | 1900 | yes |
 | calculator | 1805 | yes |
 | walletconnect_auth | 1510 | yes |
 | google_maps | 1443 | yes |
-| ai_decision_demo | 1440 | yes |
+| ai_decision_demo | 1441 | yes |
 | in_app_purchase_demo | 1421 | yes |
 | settings | 1345 | yes |
 | profile | 1336 | yes |
