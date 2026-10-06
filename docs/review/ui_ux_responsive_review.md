@@ -62,7 +62,7 @@ For each changed screen/widget verify:
 - loading, empty, error, success, disabled, and offline states where applicable
 - tap targets at least 44–48 logical pixels
 - semantic labels for icon-only controls
-- visible keyboard focus and logical traversal
+- visible keyboard focus and logical traversal ([`../engineering/focus_and_keyboard_input.md`](../engineering/focus_and_keyboard_input.md))
 - color not sole carrier of meaning
 - contrast and theme behavior in light/dark mode
 - scroll ownership clear; no unbounded nested scrollables
@@ -85,7 +85,8 @@ and [`design_system.md`](../design_system.md) § Reusable widgets.
 
 - Test text scale at least 1.3; use 2.0 for sensitive layouts.
 - Verify semantics labels, button roles, and reading order.
-- Confirm keyboard-only operation on web/desktop.
+- Confirm keyboard-only operation on web/desktop (focus chain + traversal;
+  [`../engineering/focus_and_keyboard_input.md`](../engineering/focus_and_keyboard_input.md)).
 - Avoid hard-coded line heights that clip scaled text.
 - Respect reduced-motion/platform accessibility settings where animation exists.
 - Ensure errors are announced and remain understandable without color.

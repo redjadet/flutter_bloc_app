@@ -27,6 +27,9 @@ Own `TextEditingController`, `AnimationController`, `ScrollController`,
 `PageController`, `TabController`, and `FocusNode` in `State`. Create in
 `initState` (or `late final` assigned there); call `.dispose()` in `dispose()`
 before `super.dispose()`. Enforced by `memory_state_controller_missing_dispose`.
+Focus routing (primary focus, scopes, shortcuts) lives in
+[`../engineering/focus_and_keyboard_input.md`](../engineering/focus_and_keyboard_input.md)
+— dispose alone is not the full model.
 
 ## Cubits / Blocs
 
