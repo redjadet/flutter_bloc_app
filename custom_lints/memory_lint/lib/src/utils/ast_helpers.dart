@@ -1,6 +1,15 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
+/// Members of [node] when its body is a [BlockClassBody].
+Iterable<ClassMember> classMembers(ClassDeclaration node) {
+  final ClassBody body = node.body;
+  if (body is BlockClassBody) {
+    return body.members;
+  }
+  return const <ClassMember>[];
+}
+
 /// Declared base type name from a field's [NamedType], if present.
 String? declaredBaseTypeName(TypeAnnotation? type) {
   if (type is NamedType) {
@@ -100,8 +109,8 @@ class _ObserverThisFinder extends RecursiveAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.name == methodName) {
-      final NodeList<Expression> args = node.argumentList.arguments;
-      if (args.length == 1 && args.first is ThisExpression) {
+      final NodeList<Argument> args = node.argumentList.arguments;
+      if (args.length == 1 && args.first.argumentExpression is ThisExpression) {
         onFound();
         return;
       }

@@ -130,7 +130,7 @@ class Bad {
       final ClassDeclaration clazz = unit.declarations
           .whereType<ClassDeclaration>()
           .last;
-      final List<FieldDeclaration> staticContexts = clazz.members
+      final List<FieldDeclaration> staticContexts = classMembers(clazz)
           .whereType<FieldDeclaration>()
           .where(
             (FieldDeclaration f) =>
@@ -149,7 +149,7 @@ ClassDeclaration _firstClass(String source) {
 }
 
 MethodDeclaration? _method(ClassDeclaration clazz, String name) {
-  for (final ClassMember member in clazz.members) {
+  for (final ClassMember member in classMembers(clazz)) {
     if (member is MethodDeclaration &&
         !member.isStatic &&
         member.name.lexeme == name) {

@@ -60,7 +60,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     MethodDeclaration? disposeMethod;
-    for (final ClassMember member in node.members) {
+    for (final ClassMember member in classMembers(node)) {
       if (member is MethodDeclaration &&
           !member.isStatic &&
           member.name.lexeme == 'dispose') {
@@ -69,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
 
-    for (final ClassMember member in node.members) {
+    for (final ClassMember member in classMembers(node)) {
       if (member is! FieldDeclaration || member.isStatic) {
         continue;
       }
