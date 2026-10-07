@@ -46,7 +46,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final List<MethodDeclaration> teardown = <MethodDeclaration>[];
-    for (final ClassMember member in node.members) {
+    for (final ClassMember member in classMembers(node)) {
       if (member is MethodDeclaration &&
           !member.isStatic &&
           (member.name.lexeme == 'dispose' || member.name.lexeme == 'close')) {
@@ -54,7 +54,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
 
-    for (final ClassMember member in node.members) {
+    for (final ClassMember member in classMembers(node)) {
       if (member is! FieldDeclaration || member.isStatic) {
         continue;
       }
