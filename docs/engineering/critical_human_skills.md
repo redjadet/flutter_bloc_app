@@ -155,7 +155,7 @@ This standard makes the project:
   skipped checks as clearly as passing checks.
 - Make disagreements actionable: name the affected contract, concrete impact,
   smallest correction, and proof needed. Review format:
-  [Code Review Playbook](../review/code_review_playbook.md#write-actionable-findings).
+  [Code Review Playbook](../review/code_review_playbook.md#4-write-actionable-findings).
 
 ## 3. System design and architecture
 

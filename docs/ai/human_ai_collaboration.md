@@ -3,7 +3,7 @@
 **Audience:** Visitors, new developers, and reviewers who need human-in-the-loop
 (HITL) ownership without reading the entire agent harness.  
 **Date:** 2026-10-06  
-**Pillars:** README [Four pillars](../../README.md#four-pillars).
+**Pillars:** the README's [four reviewer paths](../../README.md#reviewer-path).
 
 This is an **index**, not a parallel rule book. Prefer the linked owners.
 

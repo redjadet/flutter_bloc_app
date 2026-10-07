@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-10-06T16:06:47Z"
-  git_head: "686f5cf301cdf85389b6340ad131ede393910792"
+  generated_at: "2026-10-07T12:57:41Z"
+  git_head: "7f34fcf1fe86de45ef85de4c9acad18068be0fc9"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -18,20 +18,20 @@ ai_snapshot:
 <!-- refresh_ai_reports:feature_metrics:start -->
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
-| chat | 6610 | yes |
+| chat | 6617 | yes |
 | staff_app_demo | 5629 | yes |
-| todo_list | 5514 | yes |
+| todo_list | 5518 | yes |
 | social_feed_demo | 5389 | yes |
 | online_therapy_demo | 5092 | yes |
 | case_study_demo | 4592 | yes |
-| counter | 4398 | yes |
+| counter | 4407 | yes |
 | native_platform_showcase | 3531 | yes |
 | iot | 3075 | yes |
 | iot_demo | 3025 | yes |
 | example | 2438 | yes |
 | auth | 2403 | yes |
 | realtime_market | 2152 | yes |
-| chart | 1978 | yes |
+| chart | 1974 | yes |
 | graphql_demo | 1900 | yes |
 | calculator | 1805 | yes |
 | walletconnect_auth | 1510 | yes |
