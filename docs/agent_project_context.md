@@ -10,7 +10,7 @@ Modern models know generic Flutter patterns. This repo's valuable context is:
 current constraints, pinned versions, local helpers, package caveats, migration
 contracts, known regressions, performance seams, and forbidden patterns.
 
-Also: avoid AI “almost-correct” trap loops; see [`agent_knowledge_base.md#ai-productivity-traps-and-how-this-repo-avoids-them`](agent_knowledge_base.md#ai-productivity-traps-and-how-this-repo-avoids-them).
+Also: avoid AI “almost-correct” trap loops; see [`agent_knowledge_base.md#ai-productivity-traps`](agent_knowledge_base.md#ai-productivity-traps).
 
 Ask: "What repo fact would not be in model training data?" Then open
 owning source below.

@@ -3,10 +3,10 @@
 **Audience:** Interviewers and engineers learning how this portfolio exercises
 native iOS/Android interop without claiming every host API.  
 **Date:** 2026-09-25  
-**Pillar:** Native iOS & Android interop (Four pillars #3).
+**Pillar:** Native iOS & Android interop (third pillar in the [architecture tour](../architecture_tour.md)).
 
 **Skim (≤15 min):** read the **Capability** and **Fidelity** matrices below,
-then stop. Deeper host notes (`ios.md` / `android.md` / `native_interop.md`)
+then stop. Deeper host notes ([`ios.md`](ios.md) / [`android.md`](android.md) / [`native_interop.md`](native_interop.md))
 are optional.
 
 This folder is the **canonical teaching home** for platform fidelity. Runnable
@@ -88,6 +88,6 @@ same shared helpers — they do **not** import the showcase adaptive helper.
 ## Related
 
 - Claim ledger: [`../changes/2026-09-24_authority_phase_0_evidence_baseline.md`](../changes/2026-09-24_authority_phase_0_evidence_baseline.md)
-- Root README evidence table: [`../../README.md`](../../README.md#native-android-and-ios-engineering)
+- Root README reviewer path: [`../../README.md`](../../README.md#reviewer-path)
 - Reference feature row: [`../architecture/reference_features.md`](../architecture/reference_features.md)
 - CODEMAP native row: [`../../CODEMAP.md`](../../CODEMAP.md)

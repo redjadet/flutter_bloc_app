@@ -15,7 +15,7 @@ native security showcase and belongs beside the other pure host policies.
 - Extract `NativeSecurityShowcaseBiometricErrorPolicy` (Kotlin + Swift)
 - Wire handlers to the shared mappers
 - Host unit tests (Android JUnit + iOS XCTest registered in pbxproj)
-- Platform doc pointers (`android.md`, `ios.md`, `native_interop.md`)
+- Platform doc pointers ([Android](../platforms/android.md), [iOS](../platforms/ios.md), [native interop](../platforms/native_interop.md))
 
 ## Proof
 

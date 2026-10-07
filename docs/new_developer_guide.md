@@ -142,7 +142,7 @@ Run these checks before starting a local debug session:
 # optional: CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist  (script → theme map)
 ```
 
-Theme gates (navigation/sync-io fail; image/cubit warn): [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp--promoted-warn-gates).
+Theme gates: navigation, sync-io, remote-image-cache, and Cubit-subscription checks fail. See the [`validation scripts catalog`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp--promoted-fail-gates).
 
 ### Run code generation when needed
 

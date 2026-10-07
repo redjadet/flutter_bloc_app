@@ -25,7 +25,7 @@ Mostly correct. Required corrections / nuance captured in
 
 | Area | Change |
 | --- | --- |
-| Docs | Cubit-first async section in fundamentals; refresh-retain + FutureBuilder rules in `bloc_standards.md` / `state_management_choice.md`; AP-19 in anti-patterns; index blurbs |
+| Docs | Cubit-first async section in fundamentals; refresh-retain + FutureBuilder rules in [`bloc_standards.md`](../bloc_standards.md) / [`state_management_choice.md`](../architecture/state_management_choice.md); AP-19 in anti-patterns; index blurbs |
 | Code | `ResilientSvgAssetImage` stores load `Future` on `State` (init/didUpdateWidget), not in `build` |
 | Tests | Rebuild during wait must not restart load (`debugLoadStarts`) |
 

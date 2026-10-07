@@ -105,4 +105,4 @@ flutter build web
 - Integration map: [`docs/engineering/integration_journey_map.md`](../engineering/integration_journey_map.md) (J6)
 - Selective integration: [`tool/integration_selective_map.json`](../../tool/integration_selective_map.json) (`native_platform_showcase`)
 - Testing matrix: [`docs/testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) (Example demo showcase)
-- Plan: `.cursor/plans/native_platform_showcase_3d75ad66.plan.md`
+- Plan: local Cursor plan; its contents are not retained in the repository.

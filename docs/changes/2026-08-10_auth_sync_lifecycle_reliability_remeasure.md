@@ -11,7 +11,7 @@ stale session-lifecycle test path in [`testing_overview.md`](../testing_overview
 
 - Audit: [`docs/audits/auth_sync_lifecycle_reliability_remeasure_review_2026-08-10.md`](../audits/auth_sync_lifecycle_reliability_remeasure_review_2026-08-10.md)
 - Local logs (gitignored): `tmp/reliability_remeasure/`
-- Local tracker (gitignored under `tasks/cursor/`): `todo_auth_sync_lifecycle_remeasure.md` — does not overwrite active web/iOS `todo.md`
+- Local tracker (gitignored under `tasks/cursor/`) kept this remeasure separate from the active web/iOS tracker.
 
 ## Locked follow-ups
 
