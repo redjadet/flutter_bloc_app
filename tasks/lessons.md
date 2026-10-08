@@ -4,7 +4,9 @@
 Local per-host trackers stay under `tasks/codex/` and `tasks/cursor/` (gitignored).
 
 Record patterns from user corrections or notable misses so they can be avoided
-next time.
+next time. **Success patterns** (verified reusable workflows) belong in owner
+docs or fat skills — see [`docs/agent_kb/self_improvement.md`](../docs/agent_kb/self_improvement.md)
+— not as chat-only notes and not as faux failure lessons here.
 
 Agents must answer **"What did you get wrong, and how did you fix it?"** before filing
 here: what went wrong, what fixed it, and what rule prevents recurrence.

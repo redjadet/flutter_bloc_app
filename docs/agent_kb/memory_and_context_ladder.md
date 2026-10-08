@@ -23,6 +23,34 @@ Next session smarter, no bloated wiki.
 - Before feature/refactor work, do a context audit: related code, tests, docs, plans, known bugs, workarounds, deprecated patterns, unusual helpers. Record only high-signal landmines in tracker or owning doc.
 - If an approach needs more than two attempts, record failed approaches, cause, and final fix in the owning doc, [`tasks/lessons.md`](../../tasks/lessons.md), or `docs/changes/` so future agents avoid the same path. Use the reflection prompt **"What did you get wrong, and how did you fix it?"** (see [`operator_preferences_durable.md`](operator_preferences_durable.md) § Workflow).
 
+- **Learn from success too:** when verification passes and the workflow will
+  recur, promote it to a fat skill or owning playbook (not chat). Pair with the
+  failure path above — success patterns and failure lessons both compound.
+  Owner: [`self_improvement.md`](self_improvement.md).
+
+## Memory by purpose (this portfolio)
+
+Industry stacks often say Redis (session) / Postgres (prefs) / vector DB
+(experiences) / knowledge graph (relationships). **Do not stand up that
+infra here.** Map purpose → existing surfaces:
+
+| Purpose | Industry metaphor | Store here |
+| --- | --- | --- |
+| Current session | Redis | Host trackers (`tasks/cursor/`, `tasks/codex/`), Agent Store `notes.md` / run scratch — ephemeral |
+| Preferences | Postgres | [`operator_preferences_durable.md`](operator_preferences_durable.md); Project `preferences.md` when Project-scoped |
+| Past experiences | Vector DB | [`tasks/lessons.md`](../../tasks/lessons.md), `docs/changes/`, owning docs, tests/scripts/fixtures — retrieve via maps/`rg`/graph |
+| Relationships / playbooks | Knowledge graph | Owner docs, [`skill_routing.md`](../ai/skill_routing.md), `docs/ai-sdlc/skills/`, ADRs, CODEMAP |
+
+## What to keep vs skip
+
+| Keep | Skip |
+| --- | --- |
+| Verified successful workflows (skills / owner docs) | Raw chat transcripts and prompt dumps |
+| Operator prefs and high-confidence fixes with proof | Failed attempts without a preventive rule |
+| Compact lessons + change notes | Duplicates of facts already in owning docs |
+| Regression guards and fixtures | Unverified “model feels better” tweaks |
+
+
 ## Context packet contract
 
 Retrieve a task-sized packet, not a history dump:
