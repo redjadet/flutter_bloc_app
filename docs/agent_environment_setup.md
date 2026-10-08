@@ -142,7 +142,7 @@ Restore from `~/.agents/skills/.archived/<timestamp>/`. Regenerate inventory: `d
 
 ## Cursor indexing (context load)
 
-Local `.cursorignore` excludes Flutter tooling noise (`.dart_tool/`, `build/`, `coverage/`, etc.) from Cursor indexing; it is machine-local and gitignored. Prefer a **small MCP set** for daily work (see "Enable useful MCP/connectors"); widen only for infra/deploy tasks. Skill/token budgets: `./bin/checklist-fast` resolves the newest `docs/audits/skill_inventory_*.json` and runs `tool/check_skill_budgets.sh` (report-only).
+Local `.cursorignore` excludes Flutter tooling noise (`.dart_tool/`, `build/`, `coverage/`, etc.) from Cursor indexing; it is machine-local and gitignored. Optional secret-path lines: merge [`agent_kb/cursorignore_secrets.example`](agent_kb/cursorignore_secrets.example) into your copy (pairs with project `beforeReadFile` hook — see [`ai/agent_customization_layers.md`](ai/agent_customization_layers.md)). Prefer a **small MCP set** for daily work (see "Enable useful MCP/connectors"); widen only for infra/deploy tasks. Skill/token budgets: `./bin/checklist-fast` resolves the newest `docs/audits/skill_inventory_*.json` and runs `tool/check_skill_budgets.sh` (report-only).
 
 ## Per Session
 

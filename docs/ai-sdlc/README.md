@@ -52,6 +52,7 @@ Break feature plans into steps agents can execute and humans can review in isola
 | --- | --- | --- |
 | Agent instruction file (vendor CLAUDE-style) | Root [`AGENTS.md`](../../AGENTS.md) | ≤50 lines; tool-agnostic; no vendor host sections |
 | Always-on thin rules | Host templates under `tool/agent_host_templates/` + synced project rules | Edit templates, then `./bin/agent-maintain after-host-edit` |
+| Layer chooser (doc / skill / hook / CI) | [`../ai/agent_customization_layers.md`](../ai/agent_customization_layers.md) | Prefer owner doc before new skills or hooks |
 | Intent → spec → plan → review | This kit’s templates + live `features/<slug>/` | Complements AIDLC; does not replace schemas |
 | Brownfield lifecycle gates | [`../ai/aidlc_workflow.md`](../ai/aidlc_workflow.md) + [`../engineering/aidlc_artifact_contract.md`](../engineering/aidlc_artifact_contract.md) | `approve` / `continue` still control T1/T2 |
 | Feature brief / tests contract | [`../engineering/FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md) | Spec should cite or embed Tests rows |

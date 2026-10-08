@@ -13,6 +13,12 @@
         "matcher": "\\.dart$",
         "timeout": 30
       }
+    ],
+    "beforeReadFile": [
+      {
+        "command": ".cursor/hooks/block-sensitive-file-read.sh",
+        "timeout": 5
+      }
     ]
   }
 }

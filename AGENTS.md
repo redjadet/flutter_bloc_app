@@ -32,7 +32,7 @@ the validation chooser. Prefer the narrowest honest lane in
 - Data/reliability: offline-first, [`reliability`](docs/reliability_error_handling_performance.md), [`observability`](docs/observability.md), [`jank triage`](docs/performance/finding_jank_cause.md).
 - Testing/quality: [`testing`](docs/testing_overview.md), validation routing, quick reference, [`CODE_QUALITY`](docs/CODE_QUALITY.md), [`engineering scorecard`](docs/engineering/engineering_quality_scorecard.md).
 - Review/delivery: [`review playbook`](docs/review/code_review_playbook.md), [`ai_code_review_protocol`](docs/ai_code_review_protocol.md), [`git/branching`](docs/git_and_branching_strategy.md), [`changes`](docs/changes/README.md).
-- Agent system: [`knowledge base`](docs/agent_knowledge_base.md), [`AIDLC`](docs/ai/aidlc_workflow.md), [`AI-SDLC kit`](docs/ai-sdlc/README.md), failure risks, [`harness`](docs/ai/harness_scorecard.md), [`harness maintenance`](docs/ai/harness_auto_maintenance.md), [`host notes`](docs/agent_host_notes.md), [`host maintenance`](docs/agent_kb/host_maintenance_automation.md).
+- Agent system: [`knowledge base`](docs/agent_knowledge_base.md), [`customization layers`](docs/ai/agent_customization_layers.md), [`AIDLC`](docs/ai/aidlc_workflow.md), [`AI-SDLC kit`](docs/ai-sdlc/README.md), failure risks, [`harness`](docs/ai/harness_scorecard.md), [`harness maintenance`](docs/ai/harness_auto_maintenance.md), [`host notes`](docs/agent_host_notes.md), [`host maintenance`](docs/agent_kb/host_maintenance_automation.md).
 
 ## Finish (verify before done)
 
