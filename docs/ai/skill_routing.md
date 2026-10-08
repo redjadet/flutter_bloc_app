@@ -2,6 +2,12 @@
 
 Canonical skill picker. Repo canon wins over vendor skill text.
 
+## Customization layer (before picking a skill)
+
+If the task is “how should we encode this guidance?” (not “which workflow?”),
+read [`agent_customization_layers.md`](agent_customization_layers.md) and stop at
+the lightest layer (owner doc → rule → shared skill → hook → CI).
+
 ## Start Rule
 
 | Situation | Action |

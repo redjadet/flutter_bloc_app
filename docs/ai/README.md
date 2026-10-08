@@ -8,6 +8,7 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 | [sanitized_aidlc_safety_report_sample.md](sanitized_aidlc_safety_report_sample.md) | Teaching SAFETY-REPORT / AIDLC closeout shape (fiction; no secrets) |
 | [best_areas_for_ai_agents.md](best_areas_for_ai_agents.md) | High-value agent work areas, boundaries, and acceptance evidence |
 | [skill_routing.md](skill_routing.md) | Which skill to invoke (repo canon over vendor text) |
+| [agent_customization_layers.md](agent_customization_layers.md) | Lightest layer: docs vs rules vs skills vs hooks vs CI |
 | [ai_failure_risks.md](ai_failure_risks.md) | Pre-Flight risk register + minimum proof |
 | [agent_operating_manual.md](agent_operating_manual.md) | T1/T2 coding discipline router; verification maps to [finish gate pre-complete](../agent_kb/legibility_and_finish_gate.md#agent-pre-complete-gate-mandatory-before-done) |
 | [governance.md](governance.md) | Roles, handoffs, stop conditions |

@@ -73,6 +73,7 @@ managed_cursor_project_files=(
   "cursor/hooks.json|$repo_root/.cursor/hooks.json"
   "cursor/hooks/format-dart-after-edit.sh|$repo_root/.cursor/hooks/format-dart-after-edit.sh"
   "cursor/hooks/session-flutter-context.sh|$repo_root/.cursor/hooks/session-flutter-context.sh"
+  "cursor/hooks/block-sensitive-file-read.sh|$repo_root/.cursor/hooks/block-sensitive-file-read.sh"
 )
 
 # shellcheck disable=SC2034

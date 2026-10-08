@@ -95,6 +95,8 @@ shape decisions testable without widget pumps.
 
 ## Codex And Cursor
 
+- Layer chooser (docs vs rules vs skills vs hooks vs git/CI):
+  [`ai/agent_customization_layers.md`](ai/agent_customization_layers.md).
 - Same doctrine. Source docs own behavior; host templates summarize/route.
 - Codex: direct repo shell entrypoints, tracker `../tasks/codex/todo.md`.
 - Cursor: thin skills/commands, tracker `../tasks/cursor/todo.md`.
