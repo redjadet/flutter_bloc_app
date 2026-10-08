@@ -8,6 +8,8 @@ set -euo pipefail
 input="$(cat)"
 
 python3 -c '
+from __future__ import annotations
+
 import json, os, sys
 
 def respond(permission: str, user_message: str | None = None) -> None:
