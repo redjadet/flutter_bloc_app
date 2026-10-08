@@ -36,8 +36,8 @@ infra here.** Map purpose → existing surfaces:
 
 | Purpose | Industry metaphor | Store here |
 | --- | --- | --- |
-| Current session | Redis | Host trackers (`tasks/cursor/`, `tasks/codex/`), Agent Store `notes.md` / run scratch — ephemeral |
-| Preferences | Postgres | [`operator_preferences_durable.md`](operator_preferences_durable.md); Project `preferences.md` when Project-scoped |
+| Current session | Redis | Host trackers (`tasks/cursor/`, `tasks/codex/`), Agent Store notes / run scratch — ephemeral |
+| Preferences | Postgres | [`operator_preferences_durable.md`](operator_preferences_durable.md); Project preferences file when Project-scoped |
 | Past experiences | Vector DB | [`tasks/lessons.md`](../../tasks/lessons.md), `docs/changes/`, owning docs, tests/scripts/fixtures — retrieve via maps/`rg`/graph |
 | Relationships / playbooks | Knowledge graph | Owner docs, [`skill_routing.md`](../ai/skill_routing.md), `docs/ai-sdlc/skills/`, ADRs, CODEMAP |
 
