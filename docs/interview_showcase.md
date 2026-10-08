@@ -23,6 +23,9 @@ Feature tiers (Spine / Depth / Archive): [`feature_overview.md`](feature_overvie
 For a **mobile SaaS** interview or technical screen, use this doc as a
 **30-minute walkthrough**. It is not a tour of every demo route.
 
+**Short path:** If you only need problem → design → exact tests → CI proof, read
+[EVIDENCE.md](EVIDENCE.md) first; return here for the timed walk and JD table.
+
 Positioning: one codebase with **~40 feature modules** and shared
 infrastructure. The spine features prove delivery depth; Depth modules answer
 follow-ups; Archive modules are frozen unless promoted ([ADR-0005](adr/0005-interview-showcase-scope.md)).

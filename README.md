@@ -41,6 +41,8 @@ synchronization, native Swift/Kotlin integration, and human-reviewed AI workflow
 [Google Play](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter) ·
 [Portfolio](https://redjadet.github.io/react-web-portfolio/)
 
+**Hiring reviewers:** start with **[Verifiable evidence](docs/EVIDENCE.md)** (problem → design → tests → CI), then the [30-minute showcase](docs/interview_showcase.md).
+
 ## Quick start
 
 ```bash
@@ -63,6 +65,7 @@ for full setup.
 | Human-reviewed AI workflow | [Collaboration workflow](docs/ai/human_ai_collaboration.md) · [Safety contracts](docs/agent_kb/agent_safety_contracts.md) | [Validation gates](docs/validation_scripts.md) |
 
 For the full walkthrough, see the [30-minute portfolio review](docs/interview_showcase.md).
+For a shorter, test-linked evidence sheet, see **[Verifiable evidence](docs/EVIDENCE.md)**.
 The [documentation index](docs/README.md) maps the remaining guides.
 
 [Agent harness scorecard](docs/ai/harness_scorecard.md) ·
@@ -70,13 +73,34 @@ The [documentation index](docs/README.md) maps the remaining guides.
 
 Do not conflate app proof with agent tooling.
 
-## Scope
+## My role and AI-assisted workflow
 
-This is a portfolio reference app, not a claim that every integration is enabled
-in the public demo. Backend-dependent flows need their documented configuration;
+I am **İlker Sevim**, the owner of this repository. I set architecture direction,
+feature scope, and review standards for the portfolio. I validate changes through
+PR review, CI, and targeted tests before they land on `main`.
+
+Implementation is **partly done with AI coding agents** (Cursor, Codex, and similar)
+under my direction: agents propose diffs inside an agreed write-set; I approve
+intent, reject scope creep, and require proof before merge. That workflow is
+documented for agents and humans in [AGENTS.md](AGENTS.md), [docs/ai/](docs/ai/)
+(including the [AI-native SDLC kit](docs/ai-sdlc/README.md)), and
+[human–AI collaboration](docs/ai/human_ai_collaboration.md)—not a separate
+“black box” process.
+
+Git history in this repo reflects my commits and reviewed merges (for example
+recent `main` commits authored as İlker Sevim). I do not claim solo authorship
+of every line when agents assisted; I do claim ownership of design choices,
+review gates, and what ships on `main`.
+
+## Scope and limits
+
+This is a **portfolio reference app**, not production software at scale. It does
+not establish additional years of platform experience, employer tenure, live user
+counts, or revenue. Backend-dependent flows need their documented configuration;
 native bridges report unavailable states on unsupported hosts. See
-[feature scope](docs/feature_overview.md) and the [testing strategy](docs/testing_overview.md)
-for prerequisites and verification coverage.
+[feature scope](docs/feature_overview.md), **[Verifiable evidence](docs/EVIDENCE.md)**,
+and the [testing strategy](docs/testing_overview.md) for prerequisites and
+verification coverage.
 
 ## Screenshots
 
