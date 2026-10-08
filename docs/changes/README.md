@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-08_self_improving_agent_loop.md`](2026-10-08_self_improving_agent_loop.md): Map self-improving after-run loop to existing owners; learn-from-success; memory-by-purpose without Redis/vector.
 - [`2026-10-07_pub_upgrade_constraint_bounded.md`](2026-10-07_pub_upgrade_constraint_bounded.md): Constraint-bounded `pub upgrade` (build_runner/sqflite/app_links/jni_flutter); Flutter `3.47.6` tip unchanged; keep Renovate majors held.
 - [`2026-10-06_ai_native_sdlc_kit.md`](2026-10-06_ai_native_sdlc_kit.md): Tool-agnostic AI-native SDLC kit (intent→spec→plan→REVIEW, skills, CI gates); strengthen [`AGENTS.md`](../../AGENTS.md); no Claude Code config.
 - [`2026-10-06_ui_polish_production_trends.md`](2026-10-06_ui_polish_production_trends.md): Low-risk Material 3 / skeleton / list density polish mapped to Apr 2026 production UI trends.

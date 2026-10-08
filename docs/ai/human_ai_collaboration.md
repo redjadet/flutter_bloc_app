@@ -20,8 +20,14 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 
 Memory (≤2 clicks from README via this map):
 
-- [`../../tasks/lessons.md`](../../tasks/lessons.md)  
-- [`../agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md)  
+- [`../../tasks/lessons.md`](../../tasks/lessons.md) — failure lessons  
+- [`../agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md) — durable prefs  
+- [`../agent_kb/self_improvement.md`](../agent_kb/self_improvement.md) — after-run learn loop (success + failure)  
+- Teach the harness: after a **verified** win, ask the agent to promote the
+  workflow into a skill/owner doc (not only chat). After a miss, require a
+  lesson + proof. Do **not** ask for Redis/vector agent memory — see
+  [`../agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md)
+  § Memory by purpose.
 
 ## Context when briefing agents
 

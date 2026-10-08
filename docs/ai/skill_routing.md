@@ -14,6 +14,8 @@ Canonical skill picker. Repo canon wins over vendor skill text.
 
 Load only the selected skill entrypoint; then follow repo validation overrides.
 Full context ladder: [`context_loading.md`](context_loading.md).
+Skills are the **playbook library** (proven workflows), not a prompt dump —
+promote verified wins per [`self_improvement.md`](../agent_kb/self_improvement.md).
 
 ## Discovery
 
