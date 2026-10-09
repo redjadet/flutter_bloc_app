@@ -1,6 +1,6 @@
 # Cancellation and cache — reviewer guide
 
-**Audience:** Hiring reviewers and senior engineers assessing async lifecycle
+**Audience:** Reviewers and senior engineers assessing async lifecycle
 and caching.  
 **Package ownership:** [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md).  
 **Timers / delayed work:** [`delayed_work_guide.md`](delayed_work_guide.md).  

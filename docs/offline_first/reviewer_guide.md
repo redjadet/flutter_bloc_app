@@ -1,6 +1,6 @@
 # Offline-first — reviewer guide
 
-**Audience:** Hiring reviewers and senior engineers assessing the offline
+**Audience:** Reviewers and senior engineers assessing the offline
 spine.  
 **Scope:** What this repo actually ships. Adoption how-to stays in
 [`adoption_guide.md`](adoption_guide.md); named invariants in
@@ -100,7 +100,7 @@ UI: `CounterSyncBanner`, `ChatSyncBanner`, `SearchSyncBanner`,
 | Chosen | Alternatives considered | Why (repo evidence) |
 | --- | --- | --- |
 | Hive + shared sync stack | Online-only repos; UI-owned retry queues; per-feature sync engines | ADR 0002 — preserve user data, keep I/O in data layer, one inspectable queue |
-| Hive over Drift/Isar/SQLite | Relational ORM | Stack is Hive-encrypted boxes + manifest migrations (`hive_schema_migrations.md`); no Drift/Isar deps |
+| Hive over Drift/Isar/SQLite | Relational ORM | Stack is Hive-encrypted boxes + manifest migrations ([`hive_schema_migrations.md`](hive_schema_migrations.md)); no Drift/Isar deps |
 | Coordinator backoff for queue; `ilkersevim_retry` for HTTP | One retry library for everything | Queue needs durable Hive metadata + auth dead-letter rules; HTTP uses interceptor/`RetryPolicy` |
 | Feature-specific status fields + global `SyncStatusCubit` | Universal Offline/Stale state machine | Spine features need pending counts; cache-first demos need cache age; forces less abstraction than a one-size Freezed union |
 | Notes local-only | Force every feature onto sync | Explicit product exception for private notes |

@@ -4,7 +4,7 @@ Flutter / Dart engineering portfolio for **iOS, Android, web and macOS**. The
 reference app demonstrates BLoC/Cubit, Clean Architecture, offline-first
 synchronization, native Swift/Kotlin integration, and human-reviewed AI workflows.
 
-**Hiring reviewers:** a late remote counter response must not overwrite newer
+**Reviewers:** a late remote counter response must not overwrite newer
 local work. The repository re-reads local state before saving the response.
 Inspect [`pullRemote re-checks local before save when local advances`](https://github.com/redjadet/flutter_bloc_app/blob/5aa04771392fccf77dd3ea7fd0f11bb4a2cb6372/apps/mobile/test/features/counter/data/offline_first_counter_repository_test.dart#L455)
 and its [passing app test run](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113729610021)

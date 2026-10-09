@@ -1,18 +1,18 @@
-# Portfolio polish for hiring reviewers
+# Portfolio polish for reviewers
 
 **Date:** 2026-10-05  
-**Branch:** `cursor/portfolio-polish-hiring-bb77`
+**Source:** [Original portfolio polish change](https://github.com/redjadet/flutter_bloc_app/commit/7e0d028bddfebbb6de0f2073f4105cc8a4fca3c6)
 
 ## Intent
 
-Tighten the first impression for recruiters and senior engineers reviewing this
+Tighten the first impression for reviewers and senior engineers reviewing this
 portfolio: lead with evidence, localize unfinished demo-hub copy, label Archive
 demos, and remove placeholder skeleton text.
 
 ## Scope
 
 - In: README presentation, Example hub grouping/l10n, demo entry titles,
-  realtime market skeleton, web meta, `DESIGN.md` / LICENSE / feature_overview
+  realtime market skeleton, web meta, [`DESIGN.md`](../../DESIGN.md) / LICENSE / feature_overview
   wording, integration title finds.
 - Out: Architecture rewrites, new demos, dependency bumps, Archive removal.
 

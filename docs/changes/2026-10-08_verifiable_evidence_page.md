@@ -1,4 +1,4 @@
-# Verifiable evidence page for hiring reviewers
+# Verifiable evidence page for reviewers
 
 **Date:** 2026-10-08; reviewed 2026-10-09
 
@@ -47,6 +47,13 @@ repository owner retains the merge decision. Local task planning is gitignored.
 | [`docs/interview_showcase.md`](../interview_showcase.md) | Route reviewers to recorded verification. |
 | [`docs/changes/2026-10-08_verifiable_evidence_page.md`](2026-10-08_verifiable_evidence_page.md) | Record review corrections, commands, results, responsibility, and scope. |
 | [`docs/changes/README.md`](README.md) | Index this change note. |
+| [`docs/engineering/cancellation_and_cache.md`](../engineering/cancellation_and_cache.md) | Use neutral reviewer audience wording. |
+| [`docs/platforms/README.md`](../platforms/README.md) | Use technical-review navigation wording. |
+| [`docs/platforms/reviewer_guide.md`](../platforms/reviewer_guide.md) | Use neutral reviewer audience wording. |
+| [`docs/offline_first/README.md`](../offline_first/README.md) | Use technical-review navigation wording. |
+| [`docs/offline_first/reviewer_guide.md`](../offline_first/reviewer_guide.md) | Use neutral reviewer audience wording. |
+| [`docs/review/README.md`](../review/README.md) | Use technical-review navigation wording. |
+| [Prior portfolio change note](2026-10-05_portfolio_hiring_polish.md) | Use neutral reviewer wording in the title and intent. |
 | [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) | Refresh generated snapshot metadata. |
 | [`ai/README.md`](../../ai/README.md) | Refresh generated snapshot metadata. |
 | [`ai/reports/README.md`](../../ai/reports/README.md) | Refresh generated snapshot metadata. |
