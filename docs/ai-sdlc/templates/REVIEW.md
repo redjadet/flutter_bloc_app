@@ -18,12 +18,14 @@ What changed and why (link intent/spec).
 ## Checklist
 
 - [ ] Matches accepted intent/spec; no silent scope creep
+- [ ] Architecture/state ownership matches the spec; consequential choices have a decision owner
 - [ ] Clean Architecture / feature folder contract respected
 - [ ] Cubit/BLoC async lifecycle safe (no emit after close)
 - [ ] Offline merge / don’t-overwrite honored (if sync touched)
 - [ ] Platform channels typed + stubbed on unsupported hosts (if native)
 - [ ] Theme/tokens via design system (no one-off magic colors)
 - [ ] Tests cover happy + failure; proof commands recorded
+- [ ] Expected results trace to requirements/contracts; relevant edge-case and recovery evidence inspected
 - [ ] Docs/owners updated when behavior/policy changed
 - [ ] Secrets absent; security checklist if auth/PII
 
@@ -44,7 +46,12 @@ What changed and why (link intent/spec).
 
 ## Human attention
 
-What a human must still judge (product risk, architecture fork, release).
+Record unresolved or consequential decisions (product risk, architecture fork,
+release), their human owner, and disposition. State untested cases and residual
+risk; distinguish an agent recommendation from a human acceptance decision.
+Passing checks cover only executed cases. Follow the
+[human focus triad](../../engineering/critical_human_skills.md#human-focus-triad-architecture-intent-edge-cases)
+and existing [decision ownership](../../ai/human_ai_collaboration.md#decision-type--owner--agent-may--must-not--proof).
 
 ---
 

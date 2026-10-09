@@ -14,21 +14,30 @@ cannot reject a bad concurrency or transaction boundary you do not understand.
 
 ### Human focus triad (architecture, intent, edge cases)
 
-Industry one-liner: AI handles typing and syntax so the human can focus on
-**architecture**, **intent**, and **edge cases**. Adopt that split—with nuance.
-“Entirely” is aspirational: analyzers, formatters, CI, and a human skim of the
-diff still catch typing and syntax; agents also propose wrong seams and happy
-paths. Judgment stays scarce; generation does not make architecture or edge-case
-ownership optional.
+**Delegate implementation effort; retain engineering accountability.** AI can
+draft code, tests, and documentation so humans spend more attention on
+**architecture**, **intent**, and **edge cases**. “Entirely” overstates the split:
+humans still need to understand the changed code and tests, inspect evidence,
+and accept the result. Formatters, analyzers, and CI check mechanical rules;
+passing them does not establish that the intended problem was solved.
 
-| Focus | You own | Soft limit on the slogan |
+| Focus | Human decision | Agent contribution and review evidence |
 | --- | --- | --- |
-| Architecture | Boundaries, ownership, destroy-boxes (§3); choose state/data source of truth | Agents also err here ([`RISK-ARCH-LAYER`](../ai/ai_failure_risks.md)); review seams before celebrating a green diff |
-| Intent | Outcome, non-goals, invariants, product decisions (request card; §7) | Chat is not the durable spec; settle disputed behavior before accepting code or tests |
-| Edge cases | Interrupted, retry, lifecycle, recovery examples and expected behavior (work loop; §9) | Happy-path generation is leftover typing if these stay undefined |
+| Architecture | Boundaries, state/data source of truth, trust and lifecycle ownership; whether new surface is justified (§3) | Inspect existing seams, propose trade-offs, and implement within accepted boundaries; review data/control flow and rejected simpler options. |
+| Intent | User outcome, non-goals, protected invariants, and expected observable results (request card; §7) | Restate the contract, expose assumptions, and map the diff to accepted examples; keep decisions in a brief/spec or owner doc. |
+| Edge cases | Which failures matter, what users should observe, and acceptable recovery or residual risk (§9) | Propose counterexamples and implement focused tests for repeated, interrupted, concurrent, stale, and recovery paths; derive expectations from the contract. |
 
-The work loop and stakes spectrum below operationalize this triad; they do not
-replace it with “let the agent finish typing.”
+Agents can help reason about all three areas. They can resolve routine,
+reversible implementation choices within an accepted contract; disputed product
+behavior, consequential architecture changes, and risk acceptance remain human
+decisions. Use the existing [collaboration map](../ai/human_ai_collaboration.md)
+for decision ownership and approval boundaries.
+
+A test generated alongside an implementation may repeat the same mistaken
+assumption. Establish expected results from user requirements, existing
+contracts, or an independently checked example before judging the generated
+tests. If proof reveals a contract gap, return to that decision rather than
+weaken assertions to make the implementation pass.
 
 Use this guide to make critical engineering skills observable in briefs, design
 records, reviews, tests, and operational evidence. It synthesizes the practices;
@@ -44,7 +53,7 @@ document so the next developer can work without the chat transcript.
 | Stage | Human developer action | Artifact or decision |
 | --- | --- | --- |
 | Before generation | Observe current behavior and confirm a change is worth shipping; name the user, desired outcome, non-goals, protected invariant, and who decides unresolved product choices. Include relevant device, network, accessibility, privacy, and support context that the agent cannot infer from code. | Brief with examples and expected results defined independently of generated code. |
-| Delegate | Point the agent at current owner docs and code. Bound paths and actions. Ask it to inspect first, expose assumptions and options, then make the smallest change that meets the agreed contract. | Scoped request and reviewable plan; human chooses architecture and state/data ownership and resolves materially different interpretations. |
+| Delegate | Point the agent at current owner docs and code. Bound paths and actions. Ask it to inspect first, expose assumptions and options, then make the smallest change that meets the agreed contract. | Scoped request and reviewable plan; human settles consequential architecture/state ownership choices and materially different interpretations; agent handles routine choices within those boundaries. |
 | While the agent works | Trace the real user journey and look for counterexamples: interrupted network, repeated taps, lifecycle changes, slow responses, denied permissions, and recovery. Decide expected behavior and feed missing facts back into the task. | Risk-ranked examples and decisions, rather than more generated code. |
 | Review the result | Read every changed file and changed test; trace callers and state/data ownership beyond the diff. Challenge clean-looking code, extra abstractions, weakened assertions, and assumptions about users or platforms. | Findings against the [review playbook](../review/code_review_playbook.md), including a reason to keep each new surface. |
 | Verify and hand off | Run proof chosen from the contract and [validation routing](validation_routing_fast_vs_full.md); inspect results and relevant runtime behavior. Record what remains unproven, failure signals, recovery, and the human decision. | Exact evidence and a discoverable [decision note](../git_and_branching_strategy.md) for consequential changes. |
@@ -60,6 +69,7 @@ Expected results for normal, repeated, interrupted, and recovery paths:
 Architecture owner and state/data source of truth:
 Write boundary and non-goals:
 Open product decision and human owner:
+Source of expected results (requirement, existing contract, checked example):
 Proof: focused tests, relevant validation commands, manual scenario:
 Agent task: inspect current code and owner docs; list assumptions and options;
 make the smallest in-scope change; report diff, proof, and remaining risks.
@@ -71,6 +81,27 @@ remote data cannot replace newer local state and stale queued replay cannot
 replace newer remote state. For UI work, exercise the actual loading, error,
 repeat-action, and lifecycle paths on relevant form factors. If expected
 behavior is still disputed, settle that decision before accepting code or tests.
+
+### Example — offline edit survives sync
+
+Frame the request as “preserve the user's newer edit while sync resumes,” rather
+than “add a retry button.” Architecture: keep local persistence and replay in the
+existing offline repository/coordinator; the Cubit exposes feature state. Reuse
+the [offline invariants](../offline_first/invariants.md) as the source of expected
+results; this example is a brief, not a claim of executed runtime proof.
+
+| Case | Expected result to agree before generation | Focused proof to request |
+| --- | --- | --- |
+| Older remote snapshot arrives after a local edit | Newer local state remains; merge re-reads local state before saving. | Repository test that changes local state between fetch and save. |
+| Older queued mutation meets newer remote state | Replay cannot overwrite the newer remote value. | Replay test with a newer remote version. |
+| Remote read fails | Failure is not interpreted as an empty remote collection; local rows remain. | Failed-pull test that asserts local retention. |
+| Persistence fails during replay | Queue entry remains available for recovery. | Persistence-failure test that asserts queue retention. |
+
+Humans settle feature-specific conflict/status behavior when the existing
+contract leaves it open. Agents implement and exercise the agreed cases; review
+checks both data retention and honest user-visible status. Carry these decisions
+into the [spec template](../ai-sdlc/templates/spec.md) and link their evidence in
+the [review template](../ai-sdlc/templates/REVIEW.md).
 
 ## Collaboration mode by stakes (vibe → agentic)
 

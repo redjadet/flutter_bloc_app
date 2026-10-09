@@ -33,6 +33,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
 | Verify portfolio claims | [`EVIDENCE.md`](EVIDENCE.md) — problem, decision, named regression, recorded run and proof limits |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
+| Captured mobile screens | [Full screenshot gallery](features/screenshots.md) |
 | ≤15 min architecture tour | [`architecture_tour.md`](architecture_tour.md) |
 | Technical review — offline, native, cancel/cache | [`offline_first/reviewer_guide.md`](offline_first/reviewer_guide.md) · [`platforms/reviewer_guide.md`](platforms/reviewer_guide.md) · [`engineering/cancellation_and_cache.md`](engineering/cancellation_and_cache.md) |
 | Flutter fundamentals + production Q&A | [`engineering/flutter_fundamentals_and_production_practices.md`](engineering/flutter_fundamentals_and_production_practices.md) — widgets/state, Cubit-first async lifecycle, offline, perf, structure, crash triage with this-repo stories |

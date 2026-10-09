@@ -7,7 +7,8 @@ that.
 
 ## Index
 
-- [`2026-10-09_ai_typing_human_focus_triad.md`](2026-10-09_ai_typing_human_focus_triad.md): Name architecture/intent/edge-cases human focus when agents draft typing; soften “entirely” (CI still checks syntax; AI also errs on architecture).
+- [`2026-10-09_readme_concise_entrypoint.md`](2026-10-09_readme_concise_entrypoint.md): Badges-first README, four reviewer paths, linked contribution details, and the preserved 33-screen gallery.
+- [`2026-10-09_ai_typing_human_focus_triad.md`](2026-10-09_ai_typing_human_focus_triad.md): Make architecture/intent/edge-case ownership actionable through contract-derived expectations, an offline-sync example, and intent/spec/review templates.
 - [`2026-10-08_verifiable_evidence_page.md`](2026-10-08_verifiable_evidence_page.md): Reviewer evidence chain, contribution/AI responsibility, reproducible commands, and explicit app/native verification scope.
 - [`2026-10-08_agent_customization_layers.md`](2026-10-08_agent_customization_layers.md): Codex/Cursor layer chooser doc; Cursor `beforeReadFile` secret-path hook; local `.cursorignore` secret pattern example.
 - [`2026-10-08_self_improving_agent_loop.md`](2026-10-08_self_improving_agent_loop.md): Map self-improving after-run loop to existing owners; learn-from-success; memory-by-purpose without Redis/vector.

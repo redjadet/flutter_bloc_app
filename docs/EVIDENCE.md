@@ -5,6 +5,23 @@ Follow its design decision to the named regression and the recorded verification
 The other cases cover Flutter boundaries and native interop. Use the
 [30-minute interview showcase](interview_showcase.md) for the full walkthrough.
 
+## Contribution and AI assistance
+
+I am **İlker Sevim**, the owner of this repository. I set feature scope and
+architecture direction: repository ports separate Cubits from storage, offline
+state has explicit replay/reconciliation rules, and native replies become typed
+results before reaching UI state. I review implementation choices, failure paths,
+and regression coverage, then validate changes through targeted tests and PR CI.
+
+AI coding agents, including Cursor and Codex, assist with implementation,
+documentation, and review. I define intent and the allowed write-set, assess
+proposed diffs, and own the acceptance decision. The [human–AI collaboration
+workflow](ai/human_ai_collaboration.md), [agent entry map](../AGENTS.md), and
+[AI-native SDLC kit](ai-sdlc/README.md) make those review gates inspectable.
+AI-assisted changes pass through those same review gates. My contribution is
+design, review, and validation responsibility, with implementation assistance
+acknowledged rather than sole authorship claimed for every line.
+
 ## Recorded verification
 
 [![CI on main](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml?query=branch%3Amain)

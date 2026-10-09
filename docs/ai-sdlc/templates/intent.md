@@ -20,6 +20,12 @@ What hurts today? Who notices?
 
 User-visible result when this is done.
 
+## Protected invariant and non-goals
+
+- Must remain true (and one example that would violate it):
+- Source of this rule (requirement or existing owner doc):
+- Explicitly out of scope:
+
 ## Why now
 
 Trigger (user request, incident, interview demo gap, tech debt gate).
@@ -38,11 +44,14 @@ Trigger (user request, incident, interview demo gap, tech debt gate).
 
 ## Open questions
 
-- [ ] …
+- [ ] Decision, human owner, and evidence needed to settle it. Resolve questions
+  that change behavior, architecture boundaries, or acceptance before implementation.
 
 ## Acceptance signals (draft)
 
 How we will know it worked (tests, demos, CI). Refined in [`spec.md`](spec.md).
+Name expected observable results independently of generated code; follow the
+[human work loop](../../engineering/critical_human_skills.md#humanai-work-loop-for-one-change).
 
 ---
 
@@ -59,11 +68,12 @@ related_feature: apps/mobile/lib/features/todo_list/
 **Problem:** After airplane mode, a remote refresh can replace newer local todo
 edits when sync resumes.
 
-**Desired outcome:** Pending local mutations win until acknowledged; UI shows
-stale/sync state honestly.
+**Desired outcome:** Newer local edits survive older remote snapshots; older
+queued mutations cannot overwrite newer remote data. Sync state follows the
+existing feature/diagnostics contract.
 
 **Constraints:** Must not invent a new sync engine; reuse Hive + existing merge
 invariants ([`docs/offline_first/invariants.md`](../../offline_first/invariants.md)).
 
-**Acceptance signals:** Unit tests for stale-remote overwrite; `bash
-tool/check_offline_first_remote_merge.sh` green.
+**Acceptance signals:** Unit tests for stale-remote merge and stale-queue replay;
+`bash tool/check_offline_first_remote_merge.sh` green.

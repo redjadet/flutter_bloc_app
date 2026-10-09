@@ -5,6 +5,7 @@ Feature contracts, demo guides, and feature-specific validation. Start with
 
 | Need | Read |
 | --- | --- |
+| Captured demo screens | [screenshots.md](screenshots.md) |
 | New or changed feature | [`../feature_implementation_guide.md`](../feature_implementation_guide.md) |
 | Todo-list behavior | [todo_list_feature_guide.md](todo_list_feature_guide.md) |
 | Todo manual ordering history | [todo_manual_order_improvements.md](todo_manual_order_improvements.md) |
