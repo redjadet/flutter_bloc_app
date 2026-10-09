@@ -39,6 +39,25 @@ integrated before validation. Codex performed this review and evidence audit in
 an isolated managed worktree under the user's requested portfolio goals; the
 repository owner retains the merge decision. Local task planning is gitignored.
 
+| Changed file | Purpose |
+| --- | --- |
+| [`README.md`](../../README.md) | Put problem, design decision, named regression, and passing app job before badges; clarify human contribution and AI assistance. |
+| [`docs/EVIDENCE.md`](../EVIDENCE.md) | Link exact regressions, runnable commands, dated proof, and native/mock boundaries. |
+| [`docs/README.md`](../README.md) | Index the evidence sheet. |
+| [`docs/interview_showcase.md`](../interview_showcase.md) | Route reviewers to recorded verification. |
+| [`docs/changes/2026-10-08_verifiable_evidence_page.md`](2026-10-08_verifiable_evidence_page.md) | Record review corrections, commands, results, responsibility, and scope. |
+| [`docs/changes/README.md`](README.md) | Index this change note. |
+| [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) | Refresh generated snapshot metadata. |
+| [`ai/README.md`](../../ai/README.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/README.md`](../../ai/reports/README.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/ai_recommendations.md`](../../ai/reports/ai_recommendations.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/anti_patterns.md`](../../ai/reports/anti_patterns.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/architecture_overview.md`](../../ai/reports/architecture_overview.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/context_hotspots.md`](../../ai/reports/context_hotspots.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/data_flow_map.md`](../../ai/reports/data_flow_map.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/dependency_map.md`](../../ai/reports/dependency_map.md) | Refresh generated snapshot metadata. |
+| [`ai/reports/feature_map.md`](../../ai/reports/feature_map.md) | Refresh generated snapshot metadata and metrics source commit. |
+
 ## Proof commands
 
 From the repository root:
@@ -62,7 +81,7 @@ AGENT_MEMORY_AUTO_MAINTAIN=0 bash tool/check_agent_knowledge_base.sh
 bash tool/refresh_ai_reports.sh
 bash tool/check_ai_snapshot_freshness.sh --strict-head
 DART_DATA_HOME=/tmp/pr-1012-dart-data ./bin/checklist-fast --no-reuse
-./bin/agent-maintain closeout
+DART_DATA_HOME=/tmp/pr-1012-dart-data AGENT_MEMORY_AUTO_MAINTAIN=0 ./bin/agent-maintain closeout
 ```
 
 All ten linked Dart test files passed locally: **115 tests** (2026-10-09).
@@ -71,6 +90,32 @@ freshness, fast checklist, and agent closeout also passed.
 The initial fast checklist failed because the host's cached Dart MCP executable
 was missing; the task-local `DART_DATA_HOME` above provides a clean tool cache
 without changing the repository's gates or the host's existing installation.
+
+Hosted verification used the existing CI workflow at
+[`5aa04771392fccf77dd3ea7fd0f11bb4a2cb6372`](https://github.com/redjadet/flutter_bloc_app/commit/5aa04771392fccf77dd3ea7fd0f11bb4a2cb6372):
+
+```bash
+gh workflow run ci.yml --repo redjadet/flutter_bloc_app \
+  --ref cursor/verifiable-evidence-page-d7c2 \
+  -f run_analyze=false -f run_tests=true -f run_integration=true \
+  -f integration_phase=enforced -f integration_tier=smoke
+```
+
+[App tests and coverage](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113729610021)
+passed: **3,095 tests passed, 1 skipped**, **85.76%** coverage, **79.88%** app-shell
+coverage. The Linux lane excludes `golden` and `skip-checklist` tags; the reported
+skipped suite is `error_snackbar_test.dart`. Both coverage floors remain 75%.
+
+[Enforced iOS smoke integration](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113730219449)
+passed **21 tests** on an **iPhone 17e simulator**, including
+`Native platform showcase flow opens showcase from Example and renders platform summary`.
+The uploaded summary records `exit_code: 0`, `retried: false`, target
+`integration_test/smoke_flows_test.dart`, and tier `smoke`. The native case runs
+P-256, AES-GCM, and secure-storage demo operations and asserts the Apple FFI
+greeting with `21 + 21 = 42`; backend/auth dependencies remain controlled.
+The complete [workflow run](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216)
+passed. Its result-recording follow-up changes only documentation: app/native
+sources, tests, dependency locks, and CI inputs match the tested SHA.
 
 Format and analyze are N/A for this documentation-only diff. Native device
 behavior, production traffic/scale, and additional professional platform years

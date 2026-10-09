@@ -9,11 +9,20 @@ The other cases cover Flutter boundaries and native interop. Use the
 
 [![CI on main](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml?query=branch%3Amain)
 
-The badge is rolling status; a passing workflow proves only the steps it executed.
-The passing [main maintenance run 37888087624](https://github.com/redjadet/flutter_bloc_app/actions/runs/37888087624)
-(2026-10-09, `946b1c4`) ran the checklist but skipped app test coverage. It is not
-proof that the named app tests or live native handlers ran. See the commands and
-proof boundaries below; setup once from the repository root:
+The badge is rolling status. The records below identify the executed proof on
+**2026-10-09**, tested commit
+[`5aa04771392fccf77dd3ea7fd0f11bb4a2cb6372`](https://github.com/redjadet/flutter_bloc_app/commit/5aa04771392fccf77dd3ea7fd0f11bb4a2cb6372).
+
+| Proof | Result and scope |
+| --- | --- |
+| Linked regressions, local Flutter tests | **115 passed** across all ten test files linked below; [exact command and local gates](changes/2026-10-08_verifiable_evidence_page.md#proof-commands). |
+| [Hosted app tests and coverage](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113729610021) | **3,095 passed, 1 skipped**; coverage **85.76%**, app-shell coverage **79.88%**, both above their 75% floors. The log records the stale-response and queue-replay regressions passing. |
+| [Hosted iOS smoke integration](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113730219449) | **21 passed** on **iPhone 17e simulator**, including `Native platform showcase flow opens showcase from Example and renders platform summary`. Artifact: exit **0**, `retried: false`, target `integration_test/smoke_flows_test.dart`, tier `smoke`. |
+
+Hosted app tests use the existing Linux lane, which excludes `golden` and
+`skip-checklist` tags; `error_snackbar_test.dart` is the reported skipped suite.
+This record does not claim every test or native handler executed. Commands and
+proof limits follow; setup once from the repository root:
 
 ```bash
 bash tool/workspace_pub_get.sh
@@ -21,6 +30,9 @@ bash tool/workspace_pub_get.sh
 
 Every command block below starts from the repository root and returns there.
 Toolchain versions are pinned in [toolchain_versions.env](toolchain_versions.env).
+PR #1012's result-recording follow-up changes documentation only; app/native
+sources, tests, dependency locks, and CI inputs match the tested commit. This is
+dated proof; later implementation or toolchain changes need fresh verification.
 
 ---
 
@@ -228,11 +240,15 @@ placeholder, not actual UIKit/Android view rendering.
   test/features/native_platform_showcase/presentation/widgets/native_platform_showcase_platform_view_section_test.dart)
 ```
 
-**Live native verification:** The existing
+**Live native verification:** The passing iOS smoke job above includes
 [`native_platform_showcase_flow_test.dart`](../apps/mobile/integration_test/native_platform_showcase_flow_test.dart)
-uses the app's registered native services on an iOS simulator and asserts
+through the smoke suite. It uses the app's registered native services, runs the
+P-256, AES-GCM, and secure-storage demo operations, and asserts
 `Hello from Apple native FFI (21 + 21 = 42)` after running security operations.
-This is a different proof layer from the mocked tests above. The
+Backend/auth dependencies remain controlled by the integration harness. This
+proves the encoded native simulator flow; it does not establish native view pixel
+rendering, telemetry producer timing, hardware-backed keys, biometric prompts,
+or real share sheets. The
 [native reviewer guide](platforms/reviewer_guide.md) documents how to run it.
 Physical-device behavior and Android native execution require their own runs.
 
