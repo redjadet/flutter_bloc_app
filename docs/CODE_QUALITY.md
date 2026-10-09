@@ -118,6 +118,7 @@ and useful comments. Review:
 - Guard `context.mounted` after `await` and avoid side effects in `build()`.
 - Prefer Dart optional-to-non-null pattern matching (`if (x case final value?)`, `switch` null patterns) over force unwrapping (`!`) and repeated nullable branching.
 - Avoid null assertion where possible; pattern matching gives a compile-time non-null local and lowers runtime crash risk.
+- Use records for multi-return helpers and short UI tuples; keep Freezed/sealed for domain and Cubit state. Prefer exhaustive switch expressions on sealed/enum types. See [`engineering/dart_records_and_patterns.md`](engineering/dart_records_and_patterns.md).
 - Dart 3.13 primary constructors for hand-written types that would otherwise duplicate constructor params and fields: DTOs, plain/Equatable records, DI bags, route factories, and constructor-driven widgets (`class const Foo({required final String id, super.key}) extends StatelessWidget`). Prefer `class const` when there is no constructor body, even if some call sites stay non-const (e.g. `DateTime` fields). Named constructors redirect with `: this(...)`. Leave generated `@freezed` types and Cubit/BLoC **state** factories alone. Cubits/services may use the same form when it shortens (`class Foo({required final Bar _bar}) extends Cubit<...>` plus `this : super(...)`). `final` on primary-constructor parameters is allowed; ordinary function `final` params remain forbidden.
 
 For full guidance, see [`flutter_best_practices_review.md`](review/flutter_best_practices_review.md).

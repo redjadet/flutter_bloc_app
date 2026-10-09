@@ -59,8 +59,8 @@ abstract final class LogRedaction {
   /// Preserve scheme/host/port/path; redact query and fragment values.
   static Uri sanitizeUri(Uri uri) {
     final query = <String, String>{};
-    for (final entry in uri.queryParameters.entries) {
-      query[entry.key] = redacted;
+    for (final MapEntry(:key) in uri.queryParameters.entries) {
+      query[key] = redacted;
     }
     final hasFragment = uri.fragment.isNotEmpty;
     return uri.replace(
@@ -121,8 +121,8 @@ abstract final class LogRedaction {
   /// Redact denylisted keys; safe primitives kept; nested maps one level.
   static Map<String, Object?> safeFields(Map<String, Object?> fields) {
     final out = <String, Object?>{};
-    for (final entry in fields.entries) {
-      out[entry.key] = _safeValue(entry.key, entry.value, depth: 0);
+    for (final MapEntry(:key, :value) in fields.entries) {
+      out[key] = _safeValue(key, value, depth: 0);
     }
     return out;
   }
@@ -148,11 +148,11 @@ abstract final class LogRedaction {
         return unsafe;
       }
       final nested = <String, Object?>{};
-      for (final entry in value.entries) {
-        final nestedKey = entry.key.toString();
+      for (final MapEntry(:key, value: Object? nestedValue) in value.entries) {
+        final nestedKey = key.toString();
         nested[nestedKey] = _safeValue(
           nestedKey,
-          entry.value,
+          nestedValue,
           depth: depth + 1,
         );
       }

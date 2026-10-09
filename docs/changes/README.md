@@ -8,6 +8,7 @@ that.
 ## Index
 
 - [`2026-10-09_readme_concise_entrypoint.md`](2026-10-09_readme_concise_entrypoint.md): Badges-first README, four reviewer paths, linked contribution details, and the preserved 33-screen gallery.
+- [`2026-10-09_dart_records_and_patterns.md`](2026-10-09_dart_records_and_patterns.md): Teach records/patterns vs Freezed; sync-banner switch + MapEntry object-pattern cleanups.
 - [`2026-10-09_ai_typing_human_focus_triad.md`](2026-10-09_ai_typing_human_focus_triad.md): Make architecture/intent/edge-case ownership actionable through contract-derived expectations, an offline-sync example, and intent/spec/review templates.
 - [`2026-10-08_verifiable_evidence_page.md`](2026-10-08_verifiable_evidence_page.md): Reviewer evidence chain, contribution/AI responsibility, reproducible commands, and explicit app/native verification scope.
 - [`2026-10-08_agent_customization_layers.md`](2026-10-08_agent_customization_layers.md): Codex/Cursor layer chooser doc; Cursor `beforeReadFile` secret-path hook; local `.cursorignore` secret pattern example.
