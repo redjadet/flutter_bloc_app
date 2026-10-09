@@ -2,7 +2,7 @@
 
 **Audience:** Visitors, new developers, and reviewers who need human-in-the-loop
 (HITL) ownership without reading the entire agent harness.  
-**Date:** 2026-10-06  
+**Date:** 2026-10-09  
 **Pillars:** the README's [four reviewer paths](../../README.md#reviewer-path).
 
 This is an **index**, not a parallel rule book. Prefer the linked owners.
@@ -15,7 +15,7 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 4. [`aidlc_workflow.md`](aidlc_workflow.md) — approve / continue  
 5. [`../ai-sdlc/README.md`](../ai-sdlc/README.md) — intent→spec→plan→REVIEW (tool-agnostic)  
 6. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
-7. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop + stakes spectrum  
+7. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop + stakes spectrum + architecture / intent / edge-cases triad
 8. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample closeout report shape (fiction)  
 
 Memory (≤2 clicks from README via this map):
