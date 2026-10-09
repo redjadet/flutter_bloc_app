@@ -273,4 +273,4 @@ Physical-device behavior and Android native execution require their own runs.
 
 ## Scope and limits
 
-This repository is a **portfolio reference app** for interviews and technical review. It is **not** evidence of production scale, employer-specific tenure, or live user counts. Backend demos may require local configuration documented in [`.env.example`](../.env.example) and [feature scope](feature_overview.md).
+This repository is a **portfolio reference app** for interviews and technical review. Backend demos may require local configuration documented in [`.env.example`](../.env.example) and [feature scope](feature_overview.md).

@@ -29,8 +29,8 @@ after current-head hosted checks pass.
 - [x] Start an isolated worktree from current `origin/main` and carry the eight local documentation refinements into it.
 - [x] Shorten README; move the existing role explanation and full gallery into linked owner docs.
 - [x] Check links, anchors, image preservation, badge contracts, documentation gates, and rendered layout.
-- [ ] Review the full diff, commit, push, and create a pull request.
-- [ ] Wait for fresh hosted checks, merge to main, verify the merge, and archive only this task's worktree.
+- [x] Review the full diff, commit, push, and create a pull request.
+- [x] Wait for fresh hosted checks, merge to main, and verify the merge. Retain this task's worktree for the requested follow-up.
 
 ## Risks
 
@@ -74,3 +74,38 @@ after current-head hosted checks pass.
 - Pull-request creation, current-head hosted checks, and merge: pending at this documentation commit; the PR's submitted head, checks, and final state are the delivery record.
 - Dart format, analyze, and Flutter tests: N/A for this documentation-only write-set.
 - Historical application/native proof in `docs/EVIDENCE.md` remains dated and unchanged.
+
+## Follow-up: badges and positive portfolio wording
+
+- User steering: remove the requested negative sentence from the evidence page
+  and retain all suitable badges in the main README. Merge authorization remains
+  in effect; keep the introduction short and screenshots last.
+- Base: PR [#1017](https://github.com/redjadet/flutter_bloc_app/pull/1017) merged as
+  `78d848b29e287aff60e562eb7ad47d345aefcdb4`. All required PR checks passed;
+  merge ancestry and identical submitted/merged trees verified. Post-merge
+  CI (including the delivery checklist), CodeQL, and Pages all passed.
+- Write-set: `README.md`, `docs/EVIDENCE.md`,
+  `docs/changes/2026-10-09_readme_concise_entrypoint.md`, this tracker.
+- Plan: restore the original 44-badge set above the introduction; remove only
+  the requested sentence; update the existing change note; validate links,
+  badge contracts, rendered layout, and scoped documentation gates; commit,
+  push, and merge a follow-up PR after fresh required checks.
+- Risks: crowded badge wrapping on mobile, badge/link drift, and accidental
+  changes to recorded proof. No runtime or configuration changes are required.
+- Implementation: all 44 original badges retained in compact groups; README
+  is 70 lines / 347 words. Requested sentence removed from `docs/EVIDENCE.md`.
+- Proof/results: 113 local links/anchors/image references across the four
+  changed files passed; original badge set and all 33 gallery images preserved.
+  GitHub-rendered desktop and 375px previews have no broken images or page-width
+  overflow; all 44 badges and both selected screenshots loaded. Harness gate,
+  generated badge check, engineering wiring, strict snapshot freshness, tracker
+  validation, and whitespace checks passed. `./bin/agent-maintain closeout`
+  passed, including scoped documentation gardening and badge/scorecard gates.
+  Follow-up PR checks and merge remain pending at this documentation commit;
+  the follow-up PR's submitted head, checks, and final state own delivery proof.
+- Local format/analyze/Flutter tests: N/A for the docs-only write-set. The
+  earlier `checklist-fast` host blocker remains recorded above; shared SDK/cache
+  state has not changed. New badges are covered by the dedicated gates.
+- Tooling: branch switch initially met an empty stale index lock in this
+  worktree's Git metadata (mtime 15:10:50 UTC). No open handles or Git processes
+  existed; removed only that verified stale lock before switching branches.

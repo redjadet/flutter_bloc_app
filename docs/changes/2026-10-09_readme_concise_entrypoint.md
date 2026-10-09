@@ -5,7 +5,7 @@
 
 ## Summary
 
-Make the main README a short entrypoint: key badges first, a brief introduction,
+Make the main README a short entrypoint: all suitable badges first, a brief introduction,
 quick start, four reviewer paths, and links to detailed guides. Selected
 screenshots form the final section. The complete gallery retains all 33 original
 images, captions, and alternate text in an existing documentation category.
@@ -18,7 +18,7 @@ responsibility; architecture, intent, and edge cases remain explicit decisions.
 
 | File | Change |
 | --- | --- |
-| [Main README](../../README.md) | Reduce 174 lines to 63; retain key badges, quick start, four reviewer paths, detailed-guide links, and two closing screenshots |
+| [Main README](../../README.md) | Reduce 174 lines to 81; retain all 44 original badges, quick start, four reviewer paths, detailed-guide links, and two closing screenshots |
 | [Evidence](../EVIDENCE.md#contribution-and-ai-assistance) | Own the existing contribution and AI-assistance explanation, moved from README |
 | [Screenshot gallery](../features/screenshots.md) | Preserve all 33 captured screens with corrected relative paths |
 | [Docs index](../README.md), [feature index](../features/README.md) | Link the full gallery |
@@ -34,6 +34,17 @@ tests are N/A: no application, dependency, tool, or CI inputs change.
 
 Exact results and delivery evidence are recorded in the [task tracker](../../tasks/codex/readme-human-ai-docs/todo.md).
 The dated application/native test evidence in [`EVIDENCE.md`](../EVIDENCE.md) is unchanged.
+
+## Badge and copy follow-up
+
+Keep all 44 existing badges above the introduction, grouped with spacing rather
+than extra headings. The README remains 70 lines / 347 words, with detailed
+content in linked guides and screenshots in the final section. Badge links and
+the canonical toolchain pins were checked before restoration.
+
+Remove the requested negative sentence from the evidence page's portfolio
+scope paragraph. Its positive description and backend setup links remain;
+dated test records and case-specific proof limits are unchanged.
 
 ## Recovery
 
