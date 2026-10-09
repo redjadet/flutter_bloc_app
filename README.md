@@ -1,5 +1,13 @@
 # Flutter BLoC App
 
+Flutter / Dart engineering portfolio for **iOS, Android, web and macOS**. The
+reference app demonstrates BLoC/Cubit, Clean Architecture, offline-first
+synchronization, native Swift/Kotlin integration, and human-reviewed AI workflows.
+
+**Hiring reviewers:** start with **[Verifiable evidence](docs/EVIDENCE.md)**:
+a stale remote snapshot, the decision that protects newer local state, its named
+regression, and recorded verification. Then use the [30-minute showcase](docs/interview_showcase.md).
+
 **Project and toolchain**
 
 [![Web app](https://img.shields.io/badge/Web%20app-Live-4285F4.svg?logo=googlechrome&logoColor=white)](https://redjadet.github.io/flutter_bloc_app/) [![Google Play](https://img.shields.io/badge/Google%20Play-Available-34A853.svg?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
@@ -33,15 +41,9 @@
 [![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md) [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
-Flutter / Dart engineering portfolio for **iOS, Android, web and macOS**. The
-reference app demonstrates BLoC/Cubit, Clean Architecture, offline-first
-synchronization, native Swift/Kotlin integration, and human-reviewed AI workflows.
-
 [Live web demo](https://redjadet.github.io/flutter_bloc_app/) ·
 [Google Play](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter) ·
 [Portfolio](https://redjadet.github.io/react-web-portfolio/)
-
-**Hiring reviewers:** start with **[Verifiable evidence](docs/EVIDENCE.md)** (problem → design → tests → CI), then the [30-minute showcase](docs/interview_showcase.md).
 
 ## Quick start
 
@@ -64,8 +66,6 @@ for full setup.
 | Native iOS and Android | [Showcase guide](apps/mobile/lib/features/native_platform_showcase/README.md) | [Platform tests](apps/mobile/test/features/native_platform_showcase/) |
 | Human-reviewed AI workflow | [Collaboration workflow](docs/ai/human_ai_collaboration.md) · [Safety contracts](docs/agent_kb/agent_safety_contracts.md) | [Validation gates](docs/validation_scripts.md) |
 
-For the full walkthrough, see the [30-minute portfolio review](docs/interview_showcase.md).
-For a shorter, test-linked evidence sheet, see **[Verifiable evidence](docs/EVIDENCE.md)**.
 The [documentation index](docs/README.md) maps the remaining guides.
 
 [Agent harness scorecard](docs/ai/harness_scorecard.md) ·
@@ -75,22 +75,20 @@ Do not conflate app proof with agent tooling.
 
 ## My role and AI-assisted workflow
 
-I am **İlker Sevim**, the owner of this repository. I set architecture direction,
-feature scope, and review standards for the portfolio. I validate changes through
-PR review, CI, and targeted tests before they land on `main`.
+I am **İlker Sevim**, the owner of this repository. I set feature scope and
+architecture direction: repository ports separate Cubits from storage, offline
+state has explicit replay/reconciliation rules, and native replies become typed
+results before reaching UI state. I review implementation choices, failure paths,
+and regression coverage, then validate changes through targeted tests and PR CI.
 
-Implementation is **partly done with AI coding agents** (Cursor, Codex, and similar)
-under my direction: agents propose diffs inside an agreed write-set; I approve
-intent, reject scope creep, and require proof before merge. That workflow is
-documented for agents and humans in [AGENTS.md](AGENTS.md), [docs/ai/](docs/ai/)
-(including the [AI-native SDLC kit](docs/ai-sdlc/README.md)), and
-[human–AI collaboration](docs/ai/human_ai_collaboration.md)—not a separate
-“black box” process.
-
-Git history in this repo reflects my commits and reviewed merges (for example
-recent `main` commits authored as İlker Sevim). I do not claim solo authorship
-of every line when agents assisted; I do claim ownership of design choices,
-review gates, and what ships on `main`.
+AI coding agents, including Cursor and Codex, assist with implementation,
+documentation, and review. I define intent and the allowed write-set, assess
+proposed diffs, and own the acceptance decision. The [human–AI collaboration
+workflow](docs/ai/human_ai_collaboration.md), [agent entry map](AGENTS.md), and
+[AI-native SDLC kit](docs/ai-sdlc/README.md) make those review gates inspectable.
+AI-assisted changes pass through those same review gates. My contribution is
+design, review, and validation responsibility, with implementation assistance
+acknowledged rather than sole authorship claimed for every line.
 
 ## Scope and limits
 

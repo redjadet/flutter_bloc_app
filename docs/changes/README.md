@@ -7,7 +7,7 @@ that.
 
 ## Index
 
-- [`2026-10-08_verifiable_evidence_page.md`](2026-10-08_verifiable_evidence_page.md): `docs/EVIDENCE.md` hiring sheet; README role/AI workflow + scope; link from interview showcase.
+- [`2026-10-08_verifiable_evidence_page.md`](2026-10-08_verifiable_evidence_page.md): Reviewer evidence chain, contribution/AI responsibility, reproducible commands, and explicit app/native verification scope.
 - [`2026-10-08_agent_customization_layers.md`](2026-10-08_agent_customization_layers.md): Codex/Cursor layer chooser doc; Cursor `beforeReadFile` secret-path hook; local `.cursorignore` secret pattern example.
 - [`2026-10-08_self_improving_agent_loop.md`](2026-10-08_self_improving_agent_loop.md): Map self-improving after-run loop to existing owners; learn-from-success; memory-by-purpose without Redis/vector.
 - [`2026-10-07_pub_upgrade_constraint_bounded.md`](2026-10-07_pub_upgrade_constraint_bounded.md): Constraint-bounded `pub upgrade` (build_runner/sqflite/app_links/jni_flutter); Flutter `3.47.6` tip unchanged; keep Renovate majors held.

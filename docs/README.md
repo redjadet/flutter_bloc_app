@@ -31,6 +31,7 @@ Pick the current task below; full catalogs live under **Core docs** and
 | Native platforms teaching pack | [`platforms/README.md`](platforms/README.md) |
 | Choose high-value AI-agent work | [`ai/best_areas_for_ai_agents.md`](ai/best_areas_for_ai_agents.md) |
 | Configure integrations safely | [`security_and_secrets.md`](security_and_secrets.md), [`integrations/README.md`](integrations/README.md) |
+| Verify portfolio claims | [`EVIDENCE.md`](EVIDENCE.md) — problem, decision, named regression, recorded run and proof limits |
 | Portfolio walk | [`interview_showcase.md`](interview_showcase.md) |
 | ≤15 min architecture tour | [`architecture_tour.md`](architecture_tour.md) |
 | Hiring / senior review — offline, native, cancel/cache | [`offline_first/reviewer_guide.md`](offline_first/reviewer_guide.md) · [`platforms/reviewer_guide.md`](platforms/reviewer_guide.md) · [`engineering/cancellation_and_cache.md`](engineering/cancellation_and_cache.md) |
