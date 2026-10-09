@@ -12,6 +12,24 @@ line carries cost: understand, test, secure, upgrade, debug, migrate, observe,
 refactor, or delete. Fundamentals matter more for evaluation, not less: you
 cannot reject a bad concurrency or transaction boundary you do not understand.
 
+### Human focus triad (architecture, intent, edge cases)
+
+Industry one-liner: AI handles typing and syntax so the human can focus on
+**architecture**, **intent**, and **edge cases**. Adopt that split—with nuance.
+“Entirely” is aspirational: analyzers, formatters, CI, and a human skim of the
+diff still catch typing and syntax; agents also propose wrong seams and happy
+paths. Judgment stays scarce; generation does not make architecture or edge-case
+ownership optional.
+
+| Focus | You own | Soft limit on the slogan |
+| --- | --- | --- |
+| Architecture | Boundaries, ownership, destroy-boxes (§3); choose state/data source of truth | Agents also err here ([`RISK-ARCH-LAYER`](../ai/ai_failure_risks.md)); review seams before celebrating a green diff |
+| Intent | Outcome, non-goals, invariants, product decisions (request card; §7) | Chat is not the durable spec; settle disputed behavior before accepting code or tests |
+| Edge cases | Interrupted, retry, lifecycle, recovery examples and expected behavior (work loop; §9) | Happy-path generation is leftover typing if these stay undefined |
+
+The work loop and stakes spectrum below operationalize this triad; they do not
+replace it with “let the agent finish typing.”
+
 Use this guide to make critical engineering skills observable in briefs, design
 records, reviews, tests, and operational evidence. It synthesizes the practices;
 linked owner documents remain authoritative for detailed repository rules.

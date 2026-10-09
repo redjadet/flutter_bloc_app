@@ -6,7 +6,7 @@ Operational quality, delivery controls, and technical maintenance. Start with
 | Need | Read |
 | --- | --- |
 | BuildContext scope and lifetime | [build_context_deep_dive.md](build_context_deep_dive.md) |
-| Critical human engineering skills | [critical_human_skills.md](critical_human_skills.md) — judgment, restraint, stakes spectrum (vibe → agentic), least surface when agents make typing cheap |
+| Critical human engineering skills | [critical_human_skills.md](critical_human_skills.md) — judgment, restraint, architecture/intent/edge-cases triad, stakes spectrum (vibe → agentic), least surface when agents make typing cheap |
 | Widget/state fundamentals + production stories | [flutter_fundamentals_and_production_practices.md](flutter_fundamentals_and_production_practices.md) — Stateless/Stateful, widget tree, Element identity (`canUpdate` / keys), setState vs Cubit/BLoC, Cubit-first async load/refresh/stale guards, hot reload/restart; offline, perf, team structure, unreproducible crashes with repo evidence |
 | Widget composition / rebuild boundaries | [widget_composition_and_rebuild_boundaries.md](widget_composition_and_rebuild_boundaries.md) — intentional widgets vs file splits; widgets over `_build*` helpers; split by change locality; cross-links to fundamentals keys/`canUpdate` + design-system leaf contract |
 | Focus / keyboard input | [focus_and_keyboard_input.md](focus_and_keyboard_input.md) — focus tree vs hit-test; `FocusNode` / scope / `FocusManager`; TextInput vs focus; Shortcuts/Actions; Todo Next + dispose anchors |
