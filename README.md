@@ -97,10 +97,9 @@ acknowledged rather than sole authorship claimed for every line.
 
 ## Scope and limits
 
-This is a **portfolio reference app**, not production software at scale. It does
-not establish additional years of platform experience, employer tenure, live user
-counts, or revenue. Backend-dependent flows need their documented configuration;
-native bridges report unavailable states on unsupported hosts. See
+This is a **portfolio reference app**. Backend-dependent flows need their
+documented configuration; native bridges report unavailable states on unsupported
+hosts. See
 [feature scope](docs/feature_overview.md), **[Verifiable evidence](docs/EVIDENCE.md)**,
 and the [testing strategy](docs/testing_overview.md) for prerequisites and
 verification coverage.
