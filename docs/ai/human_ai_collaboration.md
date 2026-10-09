@@ -15,7 +15,7 @@ This is an **index**, not a parallel rule book. Prefer the linked owners.
 4. [`aidlc_workflow.md`](aidlc_workflow.md) — approve / continue  
 5. [`../ai-sdlc/README.md`](../ai-sdlc/README.md) — intent→spec→plan→REVIEW (tool-agnostic)  
 6. [`../agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) — proof + closeout  
-7. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md) — request card + work loop + stakes spectrum + architecture / intent / edge-cases triad
+7. [`../engineering/critical_human_skills.md`](../engineering/critical_human_skills.md#human-focus-triad-architecture-intent-edge-cases) — architecture / intent / edge-cases ownership, request card, work loop, and worked example
 8. [`sanitized_aidlc_safety_report_sample.md`](sanitized_aidlc_safety_report_sample.md) — sample closeout report shape (fiction)  
 
 Memory (≤2 clicks from README via this map):
@@ -53,6 +53,7 @@ plus current owner paths—not a paste of the whole repository. Mode by stakes:
 | Product scope / non-goals | Human | Propose options | Expand Archive without an approved swap; invent out-of-scope paths | ADR / change note / [`scope_register.md`](../scope_register.md) |
 | Architecture fork (Riverpod, new sync engine, …) | Human | Spike notes inside write-set | Merge irreversible architecture | ADR + review |
 | Feature implementation (reversible) | Human approves intent | Implement inside agreed write-set | Broaden scope silently | Focused tests + finish gate |
+| Edge-case behavior / acceptance | Human settles expected outcomes | Propose counterexamples; implement tests from accepted contracts | Silently decide disputed behavior or weaken acceptance to match generated code | Spec behavior cases + reviewed test expectations + executed proof |
 | Secrets / provider keys | Human | Point at docs | Put keys in Flutter artifacts / commit | [`security_and_secrets.md`](../security_and_secrets.md) |
 | Release / store publish / production deploy | Human | Prepare dry-run evidence | Ship or rotate production secrets | Deployment + dry-run workflow |
 | Production auth / IAM design | Human | Document options | Ship role/claims without spike | [Spike note](../changes/2026-09-24_role_claims_iam_defer.md) / ADR |

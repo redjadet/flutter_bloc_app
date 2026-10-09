@@ -28,6 +28,21 @@ Live feature folders: [`features/README.md`](features/README.md).
 Institutional skills: [`skills/README.md`](skills/README.md).  
 Deterministic gates (hooks → CI): [`gates.md`](gates.md).
 
+## Human decisions and agent execution
+
+Use the [human focus triad](../engineering/critical_human_skills.md#human-focus-triad-architecture-intent-edge-cases)
+to divide the work: intent records the outcome and invariant; spec records
+architecture ownership and expected edge-case behavior; plan bounds implementation
+and proof; REVIEW checks the diff and evidence against that contract. Agents can
+draft each artifact and propose alternatives. Humans settle disputed behavior,
+consequential design choices, and residual risk. Routine implementation stays
+inside accepted boundaries; existing AIDLC and safety owners govern approvals.
+
+Expected results come from requirements, existing contracts, or checked examples,
+not from generated implementation. If review exposes a missing decision, update
+the owning intent/spec and its proof before accepting the result. Green CI alone
+cannot accept product intent or untested failure behavior.
+
 ## Progressive prompting
 
 **Progressive prompting** (Chris Dunlop, Cursor): sequence small agent turns
