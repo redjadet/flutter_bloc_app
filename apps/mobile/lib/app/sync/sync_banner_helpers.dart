@@ -32,27 +32,21 @@ bool shouldShowSyncBanner({
   required bool isOffline,
   required bool isSyncing,
   required int pendingCount,
-}) {
-  if (isOffline) {
-    return (
-      l10n.syncStatusOfflineTitle,
-      l10n.syncStatusOfflineMessage(pendingCount),
-    );
-  }
-  if (isSyncing) {
-    return (
-      l10n.syncStatusSyncingTitle,
-      l10n.syncStatusSyncingMessage(pendingCount),
-    );
-  }
-  if (!kShowPendingSyncQueueUi) {
-    return ('', '');
-  }
-  return (
+}) => switch ((isOffline, isSyncing)) {
+  (true, _) => (
+    l10n.syncStatusOfflineTitle,
+    l10n.syncStatusOfflineMessage(pendingCount),
+  ),
+  (false, true) => (
+    l10n.syncStatusSyncingTitle,
+    l10n.syncStatusSyncingMessage(pendingCount),
+  ),
+  (false, false) when !kShowPendingSyncQueueUi => ('', ''),
+  (false, false) => (
     l10n.syncStatusPendingTitle,
     l10n.syncStatusPendingMessage(pendingCount),
-  );
-}
+  ),
+};
 
 /// Shared content for sync status banners: [AppMessage] plus optional
 /// [trailing] (e.g. Sync now button). Wrap with [Padding] as needed.

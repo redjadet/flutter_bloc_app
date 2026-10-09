@@ -92,7 +92,8 @@ Use `TypeSafeBlocSelector` when you only need a subset of state. Use `TypeSafeBl
 
 ### Sealed State Helpers
 
-Prefer Dart pattern matching for sealed state classes:
+Prefer Dart pattern matching for sealed state classes (records vs Freezed
+decision table: [`dart_records_and_patterns.md`](../engineering/dart_records_and_patterns.md)):
 
 ```dart
 Widget buildStateWidget(DeepLinkState state) {
