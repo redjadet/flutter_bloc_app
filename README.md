@@ -1,5 +1,18 @@
 # Flutter BLoC App
 
+Flutter / Dart engineering portfolio for **iOS, Android, web and macOS**. The
+reference app demonstrates BLoC/Cubit, Clean Architecture, offline-first
+synchronization, native Swift/Kotlin integration, and human-reviewed AI workflows.
+
+**Reviewers:** a late remote counter response must not overwrite newer
+local work. The repository re-reads local state before saving the response.
+Inspect [`pullRemote re-checks local before save when local advances`](https://github.com/redjadet/flutter_bloc_app/blob/5aa04771392fccf77dd3ea7fd0f11bb4a2cb6372/apps/mobile/test/features/counter/data/offline_first_counter_repository_test.dart#L455)
+and its [passing app test run](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113729610021)
+and [iOS simulator smoke run](https://github.com/redjadet/flutter_bloc_app/actions/runs/37902949216/job/113730219449)
+(2026-10-09, `5aa0477`). **[Verifiable evidence](docs/EVIDENCE.md)** explains the
+decision and proof limits; the [30-minute showcase](docs/interview_showcase.md)
+provides the full walkthrough.
+
 **Project and toolchain**
 
 [![Web app](https://img.shields.io/badge/Web%20app-Live-4285F4.svg?logo=googlechrome&logoColor=white)](https://redjadet.github.io/flutter_bloc_app/) [![Google Play](https://img.shields.io/badge/Google%20Play-Available-34A853.svg?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
@@ -33,10 +46,6 @@
 [![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md) [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
-Flutter / Dart engineering portfolio for **iOS, Android, web and macOS**. The
-reference app demonstrates BLoC/Cubit, Clean Architecture, offline-first
-synchronization, native Swift/Kotlin integration, and human-reviewed AI workflows.
-
 [Live web demo](https://redjadet.github.io/flutter_bloc_app/) ·
 [Google Play](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter) ·
 [Portfolio](https://redjadet.github.io/react-web-portfolio/)
@@ -62,7 +71,6 @@ for full setup.
 | Native iOS and Android | [Showcase guide](apps/mobile/lib/features/native_platform_showcase/README.md) | [Platform tests](apps/mobile/test/features/native_platform_showcase/) |
 | Human-reviewed AI workflow | [Collaboration workflow](docs/ai/human_ai_collaboration.md) · [Safety contracts](docs/agent_kb/agent_safety_contracts.md) | [Validation gates](docs/validation_scripts.md) |
 
-For the full walkthrough, see the [30-minute portfolio review](docs/interview_showcase.md).
 The [documentation index](docs/README.md) maps the remaining guides.
 
 [Agent harness scorecard](docs/ai/harness_scorecard.md) ·
@@ -70,13 +78,31 @@ The [documentation index](docs/README.md) maps the remaining guides.
 
 Do not conflate app proof with agent tooling.
 
-## Scope
+## My role and AI-assisted workflow
 
-This is a portfolio reference app, not a claim that every integration is enabled
-in the public demo. Backend-dependent flows need their documented configuration;
-native bridges report unavailable states on unsupported hosts. See
-[feature scope](docs/feature_overview.md) and the [testing strategy](docs/testing_overview.md)
-for prerequisites and verification coverage.
+I am **İlker Sevim**, the owner of this repository. I set feature scope and
+architecture direction: repository ports separate Cubits from storage, offline
+state has explicit replay/reconciliation rules, and native replies become typed
+results before reaching UI state. I review implementation choices, failure paths,
+and regression coverage, then validate changes through targeted tests and PR CI.
+
+AI coding agents, including Cursor and Codex, assist with implementation,
+documentation, and review. I define intent and the allowed write-set, assess
+proposed diffs, and own the acceptance decision. The [human–AI collaboration
+workflow](docs/ai/human_ai_collaboration.md), [agent entry map](AGENTS.md), and
+[AI-native SDLC kit](docs/ai-sdlc/README.md) make those review gates inspectable.
+AI-assisted changes pass through those same review gates. My contribution is
+design, review, and validation responsibility, with implementation assistance
+acknowledged rather than sole authorship claimed for every line.
+
+## Scope and limits
+
+This is a **portfolio reference app**. Backend-dependent flows need their
+documented configuration; native bridges report unavailable states on unsupported
+hosts. See
+[feature scope](docs/feature_overview.md), **[Verifiable evidence](docs/EVIDENCE.md)**,
+and the [testing strategy](docs/testing_overview.md) for prerequisites and
+verification coverage.
 
 ## Screenshots
 

@@ -12,8 +12,8 @@ task-specific checklist.
 | Performance review | [performance_checklist.md](performance_checklist.md) |
 | Flutter best-practices review | [flutter_best_practices_review.md](flutter_best_practices_review.md) |
 | UI/UX responsive review | [ui_ux_responsive_review.md](ui_ux_responsive_review.md) |
-| Offline-first (hiring / senior) | [../offline_first/reviewer_guide.md](../offline_first/reviewer_guide.md) |
-| Native interop (hiring / senior) | [../platforms/reviewer_guide.md](../platforms/reviewer_guide.md) |
+| Offline-first (technical review) | [../offline_first/reviewer_guide.md](../offline_first/reviewer_guide.md) |
+| Native interop (technical review) | [../platforms/reviewer_guide.md](../platforms/reviewer_guide.md) |
 | Cancellation and cache | [../engineering/cancellation_and_cache.md](../engineering/cancellation_and_cache.md) |
 
 AI-specific review risks remain in [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md).

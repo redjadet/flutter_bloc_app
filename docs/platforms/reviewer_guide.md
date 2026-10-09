@@ -1,6 +1,6 @@
 # Native integration — reviewer guide
 
-**Audience:** Hiring reviewers and senior engineers assessing Flutter ↔ host
+**Audience:** Reviewers and senior engineers assessing Flutter ↔ host
 interop.  
 **Teaching pack (matrices):** [`README.md`](README.md).  
 **Contracts / layering:** [`native_interop.md`](native_interop.md).  
@@ -84,7 +84,7 @@ add-to-app module found.
 
 | Chosen | Alternatives | Why (evidence) |
 | --- | --- | --- |
-| MethodChannel + EventChannel + dart:ffi in app host | Pigeon; published plugin; add-to-app module | Teaching pack needs typed `NativeInteropStatus` / web stubs without codegen ceremony; gold feature README + `native_interop.md` |
+| MethodChannel + EventChannel + dart:ffi in app host | Pigeon; published plugin; add-to-app module | Teaching pack needs typed `NativeInteropStatus` / web stubs without codegen ceremony; gold feature README + [`native_interop.md`](native_interop.md) |
 | Typed Freezed results (`success` \| `unavailable` \| `failed`) | Raw `PlatformException` to UI | Web/desktop must report `unavailable` honestly; UI never dumps raw platform errors |
 | Background EventChannel task queue on iOS/Android; main queue on macOS | Same background queue everywhere | macOS `makeBackgroundTaskQueue` historically SIGABRT — documented host trade-off |
 | PlatformView banner for fidelity demo | Screenshot / catalog-only | Live `UiKitView` / `AndroidView` on mobile; catalog elsewhere (capability matrix) |
