@@ -113,7 +113,7 @@ dependencies:
   ilkersevim_retry: ^0.1.7
   ilkersevim_safe_parse: ^0.1.6
   ilkersevim_type_safe_bloc: ^0.1.5
-  image: ^4.10.1
+  image: ^4.10.2
   image_picker: ^1.2.4
   in_app_purchase: ^3.3.1
   # Workaround: Flutter 3.41 generates Android registrant for this plugin even
@@ -145,7 +145,7 @@ dependencies:
   skeletonizer: ^3.0.0
   storage:
     path: ../../packages/storage
-  supabase_flutter: ^2.18.0
+  supabase_flutter: ^2.18.2
   utilities:
     path: ../../packages/utilities
   video_player: ^2.14.1
