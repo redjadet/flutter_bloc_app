@@ -1,15 +1,15 @@
-# ✅ Flutter + Mobile Best Practices Review
+# Flutter + Mobile Best Practices Review
 
 **Scope:** app bootstrap, routing, shared utilities, and representative features (counter, settings, auth, profile, chat). This is a focused engineering review, not an exhaustive audit.
 
-## 🔍 What Was Reviewed
+## What was reviewed
 
 - App bootstrap and DI wiring (`apps/mobile/lib/app/`)
 - Navigation and route setup (`apps/mobile/lib/app/router/`)
 - Shared UI utilities and responsive helpers (`apps/mobile/lib/app/`)
 - Representative features (`apps/mobile/lib/features/counter/`, `apps/mobile/lib/features/settings/`, `apps/mobile/lib/features/chat/`)
 
-## 💪 Strengths Observed
+## Strengths observed
 
 - Clear domain/data/presentation boundaries across features.
 - Offline-first repositories use consistent queueing and sync helpers.
@@ -18,23 +18,23 @@
 - Null-safe pattern matching is used to convert optional values to non-null locals (`if (x case final value?)`, `switch` null patterns), which reduces reliance on `!`.
 - Custom lint rules and validation scripts help enforce architecture rules.
 
-## ⚠️ Risks and Follow-Ups
+## Risks and follow-ups
 
 - ~~`AppScope.build` triggers DI configuration and sync startup.~~ **RESOLVED (2026-08)**: `AppScope` receives `AppScopeDependencies` from `AppCompositionRoot`; no locator queries in the widget tree.
 - ~~Typography customization appears in a few widgets. If the theme is the single source of truth, consider moving ad-hoc font usage into `apps/mobile/lib/app/app_config.dart` to avoid drift.~~ **RESOLVED**: Created `AppTypography` helper class in `packages/design_system/lib/src/ui/typography.dart` that uses theme as single source of truth.
 - A small number of presentation widgets call into concrete repos for diagnostics. This is acceptable for tooling, but keep it contained to avoid architecture drift.
 
-## ✅ Recent Improvements
+## Recent improvements
 
 - **App composition root (2026-08)**: `AppCompositionRoot` wires `GoRouter` + `AppScopeDependencies` + typed route factories; router/deferred pages no longer call `getIt`. Shell deps, factories, and `MyApp`/`AppScope` use Dart 3.13 primary constructors. See [`changes/2026-08-20_app_composition_root_router_di.md`](../changes/2026-08-20_app_composition_root_router_di.md).
 - **Layering optimization (2026-06)**: Removed domain→data re-export shims (ai_decision, IAP, chat diagnostics, online_therapy network mode, staff timeclock local store). Presentation reads sync/pending state via cubits; DI registrars + composition root own data impl wiring. `tool/check_feature_modularity_leaks.sh` now fails on domain re-exports of `data/`.
-- **DI Organization**: Split `injector_registrations.dart` into feature-specific registration files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
-- **Repository Factory Pattern**: Created generic `createRemoteRepositoryOrNull<T>()` helper to consolidate duplicate error handling in repository factories.
-- **Typography Consolidation**: Created `AppTypography` helper class for consistent typography using theme as single source of truth.
+- **DI organization**: Split `injector_registrations.dart` into feature-specific registration files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
+- **Repository factory pattern**: Created generic `createRemoteRepositoryOrNull<T>()` helper to consolidate duplicate error handling in repository factories.
+- **Typography consolidation**: Created `AppTypography` helper class for consistent typography using theme as single source of truth.
 - **Input Decoration**: Additional widgets refactored to use shared `buildCommonInputDecoration` helper.
-- **ViewStatus Branching**: Additional pages refactored to use `ViewStatusSwitcher` for consistent status handling.
+- **ViewStatus branching**: Additional pages refactored to use `ViewStatusSwitcher` for consistent status handling.
 
-## 📚 Related References
+## Related references
 
 - [UI/UX Guidelines](ui_ux_responsive_review.md)
 - [Code Quality](../CODE_QUALITY.md)

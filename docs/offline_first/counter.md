@@ -45,10 +45,10 @@ This document defines how the counter feature adopts the shared offline-first st
 - `CounterCubit` exposes `pendingSyncOperationCount`, `pendingSyncQueueEntries`, and `refreshPendingSyncMetadata()`; repository handles persistence and enqueue.
 - Counter state loads instantly from Hive on app start.
 
-## Testing Checklist
+## Testing checklist
 
-- ✅ **Unit tests**: `test/features/counter/data/hive_counter_repository_test.dart` covers Hive serialization and sync metadata persistence.
-- ✅ **Repository tests**: `test/features/counter/data/offline_first_counter_repository_test.dart` covers:
+- **Unit tests**: `test/features/counter/data/hive_counter_repository_test.dart` covers Hive serialization and sync metadata persistence.
+- **Repository tests**: `test/features/counter/data/offline_first_counter_repository_test.dart` covers:
   - Stale-remote rejection when local `lastChanged` is newer than remote.
   - Stale pending replay rejection when remote `lastChanged` is newer than the queued snapshot.
   - `save` enqueues operations when remote exists.
@@ -56,9 +56,9 @@ This document defines how the counter feature adopts the shared offline-first st
   - `processOperation` syncs to remote and updates local metadata.
   - `pullRemote` merges newer remote snapshots.
   - Registry registration.
-- ✅ **Bloc tests**: `test/counter_cubit_test.dart` covers offline-first flows, ensuring cubit handles queued operations and sync state updates.
-- ✅ **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers banner visibility, offline/syncing states, and metadata display.
-- ✅ **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers the banner widget in isolation; `CounterPageBody` composes `CounterSyncBanner` on the live counter page.
+- **Bloc tests**: `test/counter_cubit_test.dart` covers offline-first flows, ensuring cubit handles queued operations and sync state updates.
+- **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers banner visibility, offline/syncing states, and metadata display.
+- **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers the banner widget in isolation; `CounterPageBody` composes `CounterSyncBanner` on the live counter page.
 - All tests use `FakeTimerService` + mock connectivity to cover offline/online transitions deterministically.
 
 ## Data Retention Policy
@@ -67,9 +67,9 @@ This document defines how the counter feature adopts the shared offline-first st
 - Pending operations are automatically processed by `BackgroundSyncCoordinator` when online.
 - Completed operations are pruned by the coordinator after successful sync.
 
-## Implementation Status
+## Implementation status
 
-✅ **Complete**: All components implemented and tested:
+**Complete.** All components implemented and tested:
 
 - `HiveCounterRepository` with sync metadata support (`apps/mobile/lib/features/counter/data/hive_counter_repository.dart`)
 - `OfflineFirstCounterRepository` implementing `SyncableRepository` (`apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`)

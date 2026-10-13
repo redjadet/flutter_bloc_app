@@ -1,15 +1,15 @@
-# ❓ FAQ
+# FAQ
 
-## 📌 What is this repository for?
+## What is this repository for?
 
 This is a reference Flutter application that demonstrates clean architecture, offline-first data access, and production-minded tooling. It is intended for technical evaluation and as a starting point for new features, not as a turnkey product.
 
-## 👥 Who should review this codebase?
+## Who should review this codebase?
 
 - Developers looking for architecture and testing patterns
 - Teams that want an offline-first template with BLoC/Cubit
 
-## ⚡ Quick answers
+## Quick answers
 
 - Architecture overview: [`clean_architecture.md`](../clean_architecture.md), [`architecture_details.md`](../architecture_details.md)
 - Offline-first architecture case study: [`engineering/offline_first_flutter_architecture_with_conflict_resolution.md`](../engineering/offline_first_flutter_architecture_with_conflict_resolution.md)
@@ -23,7 +23,7 @@ This is a reference Flutter application that demonstrates clean architecture, of
 - Cursor Runlayer hooks / “Config version must be a number”: `tool/fix_runlayer_cursor_hooks.py`, [runlayer/plugins#6](https://github.com/runlayer/plugins/pull/6)
 - Migrations (type-safe BLoC, Freezed, sealed, Cupertino): [`compile_time_safety.md`](../architecture/compile_time_safety.md), [`freezed_usage_analysis.md`](../architecture/freezed_usage_analysis.md), [`design_system.md`](../design_system.md)
 
-## 🔍 What should I review first?
+## What should I review first?
 
 Start with these entry points:
 
@@ -35,20 +35,20 @@ Start with these entry points:
 - `apps/mobile/lib/features/counter/` (core example feature)
 - `apps/mobile/lib/app/` (cross-cutting utilities)
 
-## 🧭 Why BLoC/Cubit over Riverpod or Provider?
+## Why BLoC/Cubit over Riverpod or Provider?
 
 This codebase emphasizes explicit state transitions, testable business logic, and predictable rebuilds. Cubits keep UI lean and enable focused unit/bloc tests without widget pumps.
 
 See [State Management Choice](../architecture/state_management_choice.md) for the full rationale.
 
-## 🚀 How do I run the app?
+## How do I run the app?
 
 ```bash
 bash tool/workspace_pub_get.sh
 cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
-## 🧰 Should I follow generic “Flutter CLI pro commands” blogs here?
+## Should I follow generic “Flutter CLI pro commands” blogs here?
 
 Use them as background only. Day-to-day work prefers repo wrappers
 (`workspace_pub_get`, `./bin/checklist`, Melos) over bare
@@ -58,7 +58,7 @@ Pin: Flutter **3.47.6** ([`tech_stack.md`](../tech_stack.md)).
 
 For platform setup and configuration, see [Developer Guide](../new_developer_guide.md) and [Security & Secrets](../security_and_secrets.md).
 
-## 🔐 Which features need API keys or services?
+## Which features need API keys or services?
 
 - Firebase (Auth, Remote Config, etc.)
 - Google Maps (Android/iOS keys)
@@ -67,7 +67,7 @@ For platform setup and configuration, see [Developer Guide](../new_developer_gui
 See [Security & Secrets](../security_and_secrets.md) for setup details. Local
 templates: [`envrc.example`](../envrc.example) and [`.env.example`](../../.env.example).
 
-## 📱 Are there platform-specific dependencies?
+## Are there platform-specific dependencies?
 
 Yes. Some packages only work on certain platforms:
 
@@ -77,14 +77,14 @@ Yes. Some packages only work on certain platforms:
 
 The app handles this automatically (e.g., maps switch based on platform). See [Tech Stack](../tech_stack.md#platform-specific-dependencies) for the full list.
 
-## 🛠️ Cursor reports Runlayer plugin hooks error (“Config version must be a number”)
+## Cursor reports Runlayer plugin hooks error (“Config version must be a number”)
 
 Cursor expects plugin `hooks/hooks.json` to include a numeric top-level `version` (usually `1`). If the Runlayer marketplace cache is older than upstream, you may see validation errors until the bundle is refreshed.
 
 - **Upstream fix:** [runlayer/plugins#6](https://github.com/runlayer/plugins/pull/6) adds `"version": 1` to `cursor-plugin/hooks/hooks.json`.
 - **Local repair (idempotent):** run `python3 tool/fix_runlayer_cursor_hooks.py` after plugin installs or cache updates. Use `--dry-run` to see what would change.
 
-## ✅ How is testing handled?
+## How is testing handled?
 
 The project uses unit, bloc, widget, golden (pixel), and approval (text/JSON)
 tests. Common pitfalls are captured in `test/shared/common_bugs_prevention_test.dart`.
@@ -92,7 +92,7 @@ Use `approval_tests` for complex payloads/DTO graphs; keep goldens for UI pixels
 
 See [Testing Overview](../testing_overview.md) for details.
 
-## 📱 How do I keep UI responsive and adaptive?
+## How do I keep UI responsive and adaptive?
 
 Use the shared responsive extensions and platform-adaptive widgets instead of raw Material buttons or hard-coded spacing. The base layout components handle safe areas and keyboard insets.
 
