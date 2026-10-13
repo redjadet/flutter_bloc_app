@@ -24,16 +24,18 @@ than engineering documentation.
   and the counter offline checklist
   ([`docs/offline_first/counter.md`](../offline_first/counter.md)).
 - Follow-up on review: removed leftover closing status emoji in
-  `ANALYSIS_AND_IMPROVEMENTS.md`; dropped markdown hard-break trailing spaces
-  that failed `git diff --check`.
+  [`docs/offline_first/ANALYSIS_AND_IMPROVEMENTS.md`](../offline_first/ANALYSIS_AND_IMPROVEMENTS.md);
+  dropped markdown hard-break trailing spaces that failed `git diff --check`.
 
 ## Intentionally unchanged
 
 - Inline `// ✅` / `// ❌` markers in validation-guide and similar code
   contrasts (teaching convention for good vs bad snippets), including the
   `// ✅ Added` annotation inside the ANALYSIS fix example.
-- Core indexes (`README.md`, `AGENTS.md`, `docs/README.md`, `DESIGN.md`,
-  `CODEMAP.md`) — already professional after prior consistency passes.
+- Core indexes ([`README.md`](../../README.md), [`AGENTS.md`](../../AGENTS.md),
+  [`docs/README.md`](../README.md), [`DESIGN.md`](../../DESIGN.md),
+  [`CODEMAP.md`](../../CODEMAP.md)) — already professional after prior
+  consistency passes.
 - Historical `docs/changes/` and `docs/audits/` content.
 - Broader Title Case normalization outside headings this pass already touched.
 
