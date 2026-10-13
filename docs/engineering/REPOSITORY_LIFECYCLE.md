@@ -29,7 +29,7 @@ All repositories are registered as **lazy singletons** in the dependency injecti
 
 ## When to Implement Dispose Methods
 
-### ✅ Repositories That Need Dispose
+### Repositories that need dispose
 
 Implement a `dispose()` method if your repository:
 
@@ -84,7 +84,7 @@ force an immediate GC. Dart heap size is also separate from native/external
 and resident memory — see
 [`../performance/dart_memory_under_the_hood.md`](../performance/dart_memory_under_the_hood.md).
 
-### ❌ Repositories That Don't Need Dispose
+### Repositories that don't need dispose
 
 Most repositories **don't need** a `dispose()` method:
 

@@ -150,9 +150,9 @@ require class state or complex behavior.
 4. **Maintain contracts**: Ensure consolidated code maintains existing
    interfaces and behavior
 
-### Good vs. Bad Examples
+### Good vs bad examples
 
-✅ **Good Practices**:
+**Good practices:**
 
 - `HiveLocaleRepository` and `HiveThemeRepository` extend
   `HiveSettingsRepository<T>`
@@ -169,7 +169,7 @@ require class state or complex behavior.
   constructors so params and `final` fields are not written twice
   (`class const Foo({required final String id})`)
 
-❌ **Bad Practices**:
+**Bad practices:**
 
 - Duplicating error handling logic in each cubit method
 - Copy-pasting repository load/save patterns without base class
