@@ -77,6 +77,13 @@
       "allowedVersions": "<1.31.2"
     },
     {
+      "description": "Hold tool/bloc_codegen test below 1.27; package pins analyzer 6.x (test>=1.27 needs analyzer>=8)",
+      "matchManagers": ["pub"],
+      "matchFileNames": ["tool/bloc_codegen/pubspec.yaml"],
+      "matchPackageNames": ["test"],
+      "allowedVersions": "<1.27.0"
+    },
+    {
       "description": "Hold melos below 7.8.2; melos 8 needs cli_util >=0.5 which conflicts with ffigen 22 (secure_core_bridge)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["melos"],
