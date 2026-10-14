@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_freshness.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
@@ -15,7 +16,8 @@ import 'package:meta/meta.dart';
 
 part 'native_platform_showcase_cubit_telemetry.part.dart';
 
-class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
+class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState>
+    with CubitSubscriptionMixin<NativePlatformShowcaseState> {
   new({
     required LoadNativePlatformShowcaseUseCase loadShowcase,
     required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
@@ -50,6 +52,7 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
   final NativeShowcaseTelemetryFreshnessTracker _freshnessTracker;
   final Duration _freshnessTickInterval;
   bool _loadInFlight = false;
+  // ignore: cancel_subscriptions - Managed by CubitSubscriptionMixin.
   StreamSubscription<NativeShowcaseTelemetrySnapshot>? _telemetrySubscription;
   Timer? _freshnessTimer;
   int _lastTelemetrySequence = 0;
@@ -130,7 +133,6 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
   Future<void> close() async {
     _freshnessTimer?.cancel();
     _freshnessTimer = null;
-    await _telemetrySubscription?.cancel();
     _telemetrySubscription = null;
     return await super.close();
   }

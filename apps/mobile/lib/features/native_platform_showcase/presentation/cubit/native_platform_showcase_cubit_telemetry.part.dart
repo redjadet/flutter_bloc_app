@@ -14,8 +14,12 @@ extension _NativePlatformShowcaseCubitTelemetry on NativePlatformShowcaseCubit {
           sessionId: 'showcase-${DateTime.now().microsecondsSinceEpoch}',
         );
 
-    _telemetrySubscription = _watchTelemetry(config: config)
-        .listen(_onTelemetrySnapshot, onError: _onTelemetryError);
+    _telemetrySubscription = registerSubscription(
+      _watchTelemetry(config: config).listen(
+        _onTelemetrySnapshot,
+        onError: _onTelemetryError,
+      ),
+    );
     _freshnessTimer ??= Timer.periodic(
       _freshnessTickInterval,
       (_) => _emitFreshnessIfChanged(),
