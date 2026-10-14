@@ -16,7 +16,7 @@ import 'package:meta/meta.dart';
 /// deadline.
 @immutable
 class NativeShowcaseTelemetryFreshness {
-  const NativeShowcaseTelemetryFreshness({
+  const new({
     required this.isValueStale,
     required this.isSourceLive,
     required this.receiptAge,
@@ -54,7 +54,7 @@ class NativeShowcaseTelemetryFreshness {
 
 /// Monotonic tracker that separates receipt liveness from displayed-value age.
 class NativeShowcaseTelemetryFreshnessTracker {
-  NativeShowcaseTelemetryFreshnessTracker({
+  new({
     Duration Function()? readElapsed,
     this.valueFreshnessDeadline = defaultValueFreshnessDeadline,
     this.sourceLivenessDeadline = defaultSourceLivenessDeadline,
@@ -73,7 +73,7 @@ class NativeShowcaseTelemetryFreshnessTracker {
   ///
   /// Hosts emit explicit liveness ticks when a window received source samples
   /// but accepted none (all filtered as duplicates), so a healthy quiet
-  /// channel still refreshes [receiptAge].
+  /// channel still refreshes [NativeShowcaseTelemetryFreshness.receiptAge].
   static const Duration defaultSourceLivenessDeadline = Duration(
     milliseconds: 750,
   );
