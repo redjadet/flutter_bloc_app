@@ -41,8 +41,9 @@ security acceptance, production access is needed, or success cannot be observed.
 - **Controls:** Human selects the reference pattern and confirms repetition is real, not
   accidental similarity.
 - Agent inventories variations before editing; preserve intentional exceptions.
-- Generated files remain generator-owned. Change inputs and rerun the generator
-  instead of hand-editing output.
+- Generated files remain generator-owned (`*.g.dart`, `*.freezed.dart`, and other
+  build_runner outputs). Change annotated inputs and rerun the generator instead
+  of hand-editing output — [`code_generation_guide.md`](../engineering/code_generation_guide.md).
 
 Output: small diff, list of copied conventions and exceptions, focused tests,
 and generator/analyzer proof. Owners: [Code Generation](../engineering/code_generation_guide.md)

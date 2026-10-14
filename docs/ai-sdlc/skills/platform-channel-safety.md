@@ -16,9 +16,10 @@ Gold feature:
 
 1. Keep bridge types/status codes explicit; map host errors to typed app results.
 2. Stub or degrade on web/desktop when the capability is mobile-only — no uncaught platform exceptions in UI.
-3. Put host-only code behind data/shared adapters; presentation stays Flutter-safe.
+3. Put host-only code behind data/shared adapters / domain ports; presentation and Cubits stay Flutter-safe (no raw `MethodChannel` / FFI in UI).
 4. Document fidelity (live vs catalog) honestly for interview surfaces.
 5. Cover unsupported-platform paths in tests.
+6. Treat Dart ↔ Swift/Kotlin signature parity, threading, and native memory handling as **human-review** surfaces — use [`reviewer_guide.md`](../../platforms/reviewer_guide.md); do not claim host parity from Dart-only proof.
 
 ## Must not
 

@@ -38,6 +38,17 @@ dart run tool/generate_sealed_switch.dart "<path-to-sealed-state.dart>"
 Use only when a sealed hierarchy needs generated `when`-style helpers and
 Freezed `when`/`map` is not already in play.
 
+## Agent rules (codegen)
+
+- **Never hand-edit** generated outputs: `*.g.dart`, `*.freezed.dart` (and other
+  build_runner parts). Change the annotated source, then regenerate.
+- After changing `@freezed`, `@JsonSerializable`, Retrofit, or related
+  annotations/`part` directives, run the build command above (including the
+  Freezed strip script). Do not patch generated files to “make analyze green.”
+- Orphan generated files with no matching source may be deleted; regenerate when
+  the source returns. See
+  [`agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md).
+
 ## Guards
 
 - `tool/check_freezed_preferred.sh` — prefer Freezed over Equatable for new
