@@ -1,9 +1,7 @@
-// Telemetry helpers share Cubit internals from the owning library.
-// ignore_for_file: invalid_use_of_protected_member
-
 part of 'native_platform_showcase_cubit.dart';
 
-extension _NativePlatformShowcaseCubitTelemetry on NativePlatformShowcaseCubit {
+/// Telemetry / freshness helpers mixed onto [NativePlatformShowcaseCubit].
+mixin _NativePlatformShowcaseCubitTelemetry on _NativePlatformShowcaseCubitBase {
   void _startTelemetryIfNeeded() {
     if (_telemetrySubscription != null || isClosed) {
       return;

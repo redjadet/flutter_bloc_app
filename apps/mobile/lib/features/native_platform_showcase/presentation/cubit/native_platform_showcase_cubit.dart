@@ -16,27 +16,10 @@ import 'package:meta/meta.dart';
 
 part 'native_platform_showcase_cubit_telemetry.part.dart';
 
-class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState>
+abstract class _NativePlatformShowcaseCubitBase
+    extends Cubit<NativePlatformShowcaseState>
     with CubitSubscriptionMixin<NativePlatformShowcaseState> {
-  new({
-    required LoadNativePlatformShowcaseUseCase loadShowcase,
-    required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
-    required TriggerNativeShowcaseHapticUseCase triggerHaptic,
-    required ShareNativeShowcaseTextUseCase shareText,
-    NativeShowcaseTelemetryFreshnessTracker? freshnessTracker,
-    @visibleForTesting
-    Duration freshnessTickInterval =
-        NativeShowcaseTelemetryFreshnessTracker.tickInterval,
-  }) : this._(
-         loadShowcase,
-         watchTelemetry,
-         triggerHaptic,
-         shareText,
-         freshnessTracker ?? NativeShowcaseTelemetryFreshnessTracker(),
-         freshnessTickInterval,
-       );
-
-  new _(
+  new(
     this._loadShowcase,
     this._watchTelemetry,
     this._triggerHaptic,
@@ -56,6 +39,27 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState>
   StreamSubscription<NativeShowcaseTelemetrySnapshot>? _telemetrySubscription;
   Timer? _freshnessTimer;
   int _lastTelemetrySequence = 0;
+}
+
+class NativePlatformShowcaseCubit extends _NativePlatformShowcaseCubitBase
+    with _NativePlatformShowcaseCubitTelemetry {
+  new({
+    required LoadNativePlatformShowcaseUseCase loadShowcase,
+    required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
+    required TriggerNativeShowcaseHapticUseCase triggerHaptic,
+    required ShareNativeShowcaseTextUseCase shareText,
+    NativeShowcaseTelemetryFreshnessTracker? freshnessTracker,
+    @visibleForTesting
+    Duration freshnessTickInterval =
+        NativeShowcaseTelemetryFreshnessTracker.tickInterval,
+  }) : super(
+         loadShowcase,
+         watchTelemetry,
+         triggerHaptic,
+         shareText,
+         freshnessTracker ?? NativeShowcaseTelemetryFreshnessTracker(),
+         freshnessTickInterval,
+       );
 
   Future<void> load() async {
     if (isClosed || _loadInFlight) return;
