@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-14_agent_codegen_feedback_loop_rules.md`](2026-10-14_agent_codegen_feedback_loop_rules.md): Explicit never-hand-edit generated files + regenerate/MCP/platform-channel human-review cues for agents.
 - [`2026-10-13_docs_professionalism_polish.md`](2026-10-13_docs_professionalism_polish.md): Strip emoji-decorated headings and decorative checklist marks from FAQ, review, DRY, repository-lifecycle, and offline-first living docs.
 - [`2026-10-09_readme_concise_entrypoint.md`](2026-10-09_readme_concise_entrypoint.md): Badges-first README, four reviewer paths, linked contribution details, and the preserved 33-screen gallery.
 - [`2026-10-09_dart_records_and_patterns.md`](2026-10-09_dart_records_and_patterns.md): Teach records/patterns vs Freezed; sync-banner switch + MapEntry object-pattern cleanups.

@@ -18,6 +18,7 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
 | Agent pre-complete gate (before done) | Format + analyze + targeted tests — owner [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md) § Agent pre-complete gate |
 | Format Dart source | `./bin/format` or `./bin/format --changed` (**required before finish** when any `.dart` changed) |
+| Freezed / json_serializable / Retrofit / `*.g.dart` / `*.freezed.dart` | Edit annotations only — **never hand-edit** generated files; then `(cd apps/mobile && dart run build_runner build --delete-conflicting-outputs) && bash tool/strip_freezed_dart_313_params.sh` — [`engineering/code_generation_guide.md`](engineering/code_generation_guide.md) |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` (full path runs `flutter analyze` + Flutter tests/coverage; do not strip) |
 | Router / `AppRoutes` / auth gates / auth UI | `./bin/router_feature_validate` |
 | Integration journey / flow | `./bin/integration_tests` |

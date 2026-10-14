@@ -114,4 +114,5 @@ Before `pubspec.yaml`: (1) Flutter SDK enough? (2) existing package? (3) activel
 | No silent destructive/external/Git effects | `RISK-DESTRUCTIVE-SIDE-EFFECT`; [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules |
 | No permission loops for safe in-scope work | [`agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) `SAFETY-01`, `SAFETY-05` |
 | No SDK/framework patches | `RISK-FLUTTER-SDK-MUTATION` |
+| No hand-edits to `*.g.dart` / `*.freezed.dart`; regenerate after annotation changes | [`code_generation_guide.md`](../engineering/code_generation_guide.md) |
 | No new state mgmt / DI / navigation | `RISK-ARCH-LAYER`, `RISK-BLOC-DIVERGENCE` |
