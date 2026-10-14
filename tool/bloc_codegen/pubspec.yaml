@@ -6,11 +6,12 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  analyzer: ^6.11.0
-  build: ^3.1.0
-  source_gen: ^4.3.0
-  dart_style: ^2.3.8
+  # Keep constraints aligned with committed pubspec.lock (stale codegen stack).
+  analyzer: ^6.4.1
+  build: ^2.4.1
+  source_gen: ^1.5.0
+  dart_style: ^2.3.6
 
 dev_dependencies:
-  test: ^1.32.0
-
+  # test>=1.27 needs analyzer>=7; lock pins 1.26.3 with analyzer 6.x.
+  test: ">=1.25.0 <1.27.0"
