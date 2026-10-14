@@ -73,6 +73,7 @@ class _TelemetryBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final NativeShowcaseTelemetrySnapshot? snapshot = telemetry;
+    final NativeShowcaseTelemetryFreshness? freshnessInfo = freshness;
     if (snapshot == null) {
       return Text(
         l10n.nativePlatformShowcaseTelemetryWaiting,
@@ -112,39 +113,41 @@ class _TelemetryBody extends StatelessWidget {
             label: l10n.nativePlatformShowcaseTelemetryAverageValueLabel,
             value: snapshot.averageValue.toStringAsFixed(2),
           ),
-          if (freshness != null) ...<Widget>[
+          if (freshnessInfo != null) ...<Widget>[
             _MetricRow(
               label: l10n.nativePlatformShowcaseTelemetryValueAgeLabel,
               value: l10n.nativePlatformShowcaseTelemetryAgeValue(
-                freshness!.valueAge.inMilliseconds,
+                freshnessInfo.valueAge.inMilliseconds,
               ),
             ),
             _MetricRow(
               label: l10n.nativePlatformShowcaseTelemetryReceiptAgeLabel,
               value: l10n.nativePlatformShowcaseTelemetryAgeValue(
-                freshness!.receiptAge.inMilliseconds,
+                freshnessInfo.receiptAge.inMilliseconds,
               ),
             ),
             Text(
               key: ValueKey<String>(
-                freshness!.isValueStale
+                freshnessInfo.isValueStale
                     ? 'native-platform-showcase-telemetry-stale'
                     : 'native-platform-showcase-telemetry-fresh',
               ),
-              freshness!.isValueStale
+              freshnessInfo.isValueStale
                   ? l10n.nativePlatformShowcaseTelemetryValueStale
                   : l10n.nativePlatformShowcaseTelemetryValueFresh,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: freshness!.isValueStale ? theme.colorScheme.error : null,
+                color: freshnessInfo.isValueStale
+                    ? theme.colorScheme.error
+                    : null,
               ),
             ),
             Text(
               key: ValueKey<String>(
-                freshness!.isSourceLive
+                freshnessInfo.isSourceLive
                     ? 'native-platform-showcase-telemetry-source-live'
                     : 'native-platform-showcase-telemetry-source-quiet',
               ),
-              freshness!.isSourceLive
+              freshnessInfo.isSourceLive
                   ? l10n.nativePlatformShowcaseTelemetrySourceLive
                   : l10n.nativePlatformShowcaseTelemetrySourceQuiet,
               style: theme.textTheme.bodyMedium,
