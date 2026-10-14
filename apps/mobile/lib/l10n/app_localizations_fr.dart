@@ -1278,6 +1278,34 @@ class AppLocalizationsFr extends AppLocalizations {
       'Moyenne la plus récente';
 
   @override
+  String get nativePlatformShowcaseTelemetryValueAgeLabel => 'Âge de la valeur';
+
+  @override
+  String get nativePlatformShowcaseTelemetryReceiptAgeLabel =>
+      'Âge de réception';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueStale =>
+      'La valeur affichée est périmée';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueFresh =>
+      'La valeur affichée est fraîche';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceLive =>
+      'La source est active';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceQuiet =>
+      'Réception source expirée';
+
+  @override
+  String nativePlatformShowcaseTelemetryAgeValue(int milliseconds) {
+    return '$milliseconds ms';
+  }
+
+  @override
   String nativePlatformShowcaseTelemetryRateValue(int rate) {
     return '$rate Hz';
   }

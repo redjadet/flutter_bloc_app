@@ -99,6 +99,21 @@ Do not compare unrelated Dart wall-clock and native wall-clock timestamps as
 latency. Publish end-to-end p50/p95 only from an on-device trace with a
 defensible common-clock correlation.
 
+### Freshness, staleness, and source liveness
+
+Delivery rate and displayed-value age are separate. Schema/session/sequence
+validation alone does not mark a reading stale.
+
+| Concern | Mechanism |
+| --- | --- |
+| Value freshness | Monotonic age since last event with `acceptedCount > 0`; Cubit deadline + periodic re-check without waiting for a new event |
+| Source liveness | Monotonic age since last bridge receipt; hosts emit `acceptedCount == 0` liveness ticks when a window heard source samples but accepted none |
+| Host sample timing | `nativeWindowStartedAtMillis` / `nativeEmittedAtMillis` (same native clock only) |
+
+Quiet channels from duplicate filtering must not be confused with a stalled
+source: liveness ticks keep receipt age fresh while value age can still cross
+the stale deadline.
+
 ## Execution plan
 
 ### 1. Freeze a baseline before changing behavior

@@ -1251,6 +1251,32 @@ class AppLocalizationsEn extends AppLocalizations {
       'Latest average';
 
   @override
+  String get nativePlatformShowcaseTelemetryValueAgeLabel => 'Value age';
+
+  @override
+  String get nativePlatformShowcaseTelemetryReceiptAgeLabel => 'Receipt age';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueStale =>
+      'Displayed value is stale';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueFresh =>
+      'Displayed value is fresh';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceLive => 'Source is live';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceQuiet =>
+      'Source receipt timed out';
+
+  @override
+  String nativePlatformShowcaseTelemetryAgeValue(int milliseconds) {
+    return '$milliseconds ms';
+  }
+
+  @override
   String nativePlatformShowcaseTelemetryRateValue(int rate) {
     return '$rate Hz';
   }

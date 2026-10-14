@@ -115,6 +115,15 @@ Unsupported platforms receive one `unavailable` snapshot. UI uses
 `NativePlatformShowcaseTelemetrySection` with `TypeSafeBlocSelector` so
 telemetry ticks do not rebuild static showcase content.
 
+**Freshness vs delivery rate:** session/sequence checks are not a freshness
+policy. The Cubit tracks monotonic **receipt age** (any bridge event, including
+`acceptedCount == 0` liveness ticks) separately from **value age** (last event
+with `acceptedCount > 0`). A periodic timer re-evaluates the value freshness
+deadline even when the channel is quiet. Hosts emit liveness ticks for
+all-duplicate windows that still heard source samples, so duplicate filtering
+does not look like a dead source. Native `emittedAt` / `windowStartedAt` stay
+host-relative and are not compared to Dart wall time for the local deadline.
+
 **Full rebuild required** after changing Swift/Kotlin handlers or PlatformView factories (hot reload is not enough).
 
 ### DI (`registerNativePlatformShowcaseServices`)

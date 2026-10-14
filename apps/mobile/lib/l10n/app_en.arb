@@ -1587,6 +1587,39 @@
   "@nativePlatformShowcaseTelemetryAverageValueLabel": {
     "description": "Label for latest aggregate average value"
   },
+  "nativePlatformShowcaseTelemetryValueAgeLabel": "Value age",
+  "@nativePlatformShowcaseTelemetryValueAgeLabel": {
+    "description": "Label for monotonic age of the displayed telemetry value"
+  },
+  "nativePlatformShowcaseTelemetryReceiptAgeLabel": "Receipt age",
+  "@nativePlatformShowcaseTelemetryReceiptAgeLabel": {
+    "description": "Label for monotonic age since Dart last heard from the host"
+  },
+  "nativePlatformShowcaseTelemetryValueStale": "Displayed value is stale",
+  "@nativePlatformShowcaseTelemetryValueStale": {
+    "description": "Status when the displayed telemetry value exceeded its freshness deadline"
+  },
+  "nativePlatformShowcaseTelemetryValueFresh": "Displayed value is fresh",
+  "@nativePlatformShowcaseTelemetryValueFresh": {
+    "description": "Status when the displayed telemetry value is within its freshness deadline"
+  },
+  "nativePlatformShowcaseTelemetrySourceLive": "Source is live",
+  "@nativePlatformShowcaseTelemetrySourceLive": {
+    "description": "Status when host liveness receipts are within the liveness deadline"
+  },
+  "nativePlatformShowcaseTelemetrySourceQuiet": "Source receipt timed out",
+  "@nativePlatformShowcaseTelemetrySourceQuiet": {
+    "description": "Status when Dart has not heard from the host within the liveness deadline"
+  },
+  "nativePlatformShowcaseTelemetryAgeValue": "{milliseconds} ms",
+  "@nativePlatformShowcaseTelemetryAgeValue": {
+    "description": "Formats a monotonic age in milliseconds",
+    "placeholders": {
+      "milliseconds": {
+        "type": "int"
+      }
+    }
+  },
   "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
   "@nativePlatformShowcaseTelemetryRateValue": {
     "description": "Formats a telemetry rate in hertz",

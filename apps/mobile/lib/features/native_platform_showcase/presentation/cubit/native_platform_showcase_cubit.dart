@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_freshness.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_ca
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
+import 'package:meta/meta.dart';
 
 class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
   new({
@@ -17,21 +19,37 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
     required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
     required TriggerNativeShowcaseHapticUseCase triggerHaptic,
     required ShareNativeShowcaseTextUseCase shareText,
-  }) : this._(loadShowcase, watchTelemetry, triggerHaptic, shareText);
+    NativeShowcaseTelemetryFreshnessTracker? freshnessTracker,
+    @visibleForTesting
+    Duration freshnessTickInterval =
+        NativeShowcaseTelemetryFreshnessTracker.tickInterval,
+  }) : this._(
+         loadShowcase,
+         watchTelemetry,
+         triggerHaptic,
+         shareText,
+         freshnessTracker ?? NativeShowcaseTelemetryFreshnessTracker(),
+         freshnessTickInterval,
+       );
 
   new _(
     this._loadShowcase,
     this._watchTelemetry,
     this._triggerHaptic,
     this._shareText,
+    this._freshnessTracker,
+    this._freshnessTickInterval,
   ) : super(const NativePlatformShowcaseState.initial());
 
   final LoadNativePlatformShowcaseUseCase _loadShowcase;
   final WatchNativeShowcaseTelemetryUseCase _watchTelemetry;
   final TriggerNativeShowcaseHapticUseCase _triggerHaptic;
   final ShareNativeShowcaseTextUseCase _shareText;
+  final NativeShowcaseTelemetryFreshnessTracker _freshnessTracker;
+  final Duration _freshnessTickInterval;
   bool _loadInFlight = false;
   StreamSubscription<NativeShowcaseTelemetrySnapshot>? _telemetrySubscription;
+  Timer? _freshnessTimer;
   int _lastTelemetrySequence = 0;
 
   Future<void> load() async {
@@ -78,6 +96,7 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       NativePlatformShowcaseState.loaded(
         loaded.data,
         telemetry: loaded.telemetry,
+        telemetryFreshness: loaded.telemetryFreshness,
         lastAction: loaded.lastAction,
         lastActionResult: loaded.lastActionResult,
         actionInFlight: action,
@@ -98,6 +117,7 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       NativePlatformShowcaseState.loaded(
         current.data,
         telemetry: current.telemetry,
+        telemetryFreshness: current.telemetryFreshness,
         lastAction: action,
         lastActionResult: result,
       ),
@@ -116,6 +136,10 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
 
     _telemetrySubscription = _watchTelemetry(config: config)
         .listen(_onTelemetrySnapshot, onError: _onTelemetryError);
+    _freshnessTimer ??= Timer.periodic(
+      _freshnessTickInterval,
+      (_) => _emitFreshnessIfChanged(),
+    );
   }
 
   void _onTelemetrySnapshot(NativeShowcaseTelemetrySnapshot snapshot) {
@@ -137,10 +161,63 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       _lastTelemetrySequence = snapshot.sequence;
     }
 
+    final NativeShowcaseTelemetrySnapshot displaySnapshot = _displaySnapshot(
+      previous: loaded.telemetry,
+      incoming: snapshot,
+    );
+    final NativeShowcaseTelemetryFreshness? freshness =
+        snapshot.status == NativeShowcaseTelemetryStatus.streaming
+        ? _freshnessTracker.onSnapshot(snapshot)
+        : loaded.telemetryFreshness;
+
     emit(
       NativePlatformShowcaseState.loaded(
         loaded.data,
-        telemetry: snapshot,
+        telemetry: displaySnapshot,
+        telemetryFreshness: freshness,
+        lastAction: loaded.lastAction,
+        lastActionResult: loaded.lastActionResult,
+        actionInFlight: loaded.actionInFlight,
+      ),
+    );
+  }
+
+  /// Liveness ticks (`acceptedCount == 0`) refresh receipt age only; keep the
+  /// last accepted average on screen so update rate and value age stay distinct.
+  static NativeShowcaseTelemetrySnapshot _displaySnapshot({
+    required NativeShowcaseTelemetrySnapshot? previous,
+    required NativeShowcaseTelemetrySnapshot incoming,
+  }) {
+    if (incoming.status != NativeShowcaseTelemetryStatus.streaming ||
+        incoming.acceptedCount > 0 ||
+        previous == null ||
+        previous.status != NativeShowcaseTelemetryStatus.streaming) {
+      return incoming;
+    }
+
+    return incoming.copyWith(averageValue: previous.averageValue);
+  }
+
+  void _emitFreshnessIfChanged() {
+    if (isClosed) {
+      return;
+    }
+
+    final loaded = state.mapOrNull(loaded: (value) => value);
+    if (loaded == null || loaded.telemetry == null) {
+      return;
+    }
+
+    final NativeShowcaseTelemetryFreshness? next = _freshnessTracker.evaluate();
+    if (next == null || next == loaded.telemetryFreshness) {
+      return;
+    }
+
+    emit(
+      NativePlatformShowcaseState.loaded(
+        loaded.data,
+        telemetry: loaded.telemetry,
+        telemetryFreshness: next,
         lastAction: loaded.lastAction,
         lastActionResult: loaded.lastActionResult,
         actionInFlight: loaded.actionInFlight,
@@ -179,6 +256,7 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
           emittedAt: DateTime.now(),
           message: error.toString(),
         ),
+        telemetryFreshness: loaded.telemetryFreshness,
         lastAction: loaded.lastAction,
         lastActionResult: loaded.lastActionResult,
         actionInFlight: loaded.actionInFlight,
@@ -188,6 +266,8 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
 
   @override
   Future<void> close() async {
+    _freshnessTimer?.cancel();
+    _freshnessTimer = null;
     await _telemetrySubscription?.cancel();
     _telemetrySubscription = null;
     return await super.close();

@@ -125,7 +125,7 @@ class NativeShowcaseTelemetryAccumulatorTest {
   }
 
   @Test
-  fun allDuplicateWindow_carriesDropsIntoNextEmit() {
+  fun allDuplicateWindow_emitsLivenessTickThenFreshValue() {
     var clock = 0L
     val accumulator =
       NativeShowcaseTelemetryAccumulator(
@@ -140,13 +140,33 @@ class NativeShowcaseTelemetryAccumulatorTest {
     accumulator.ingest(1.0001)
     accumulator.ingest(1.0002)
     clock = 500L
-    assertNull(accumulator.emitIfReady())
+    val liveness = accumulator.emitIfReady()!!
+    assertEquals(0, liveness["acceptedCount"])
+    assertEquals(2, liveness["sourceReceivedCount"])
+    assertEquals(2, liveness["droppedBeforeBridgeCount"])
+    assertEquals(1.0, liveness["averageValue"] as Double, 0.0001)
+    assertEquals(2, liveness["bridgeEventSequence"])
 
     accumulator.ingest(9.0)
     clock = 750L
     val payload = accumulator.emitIfReady()!!
-    assertEquals(2, payload["droppedBeforeBridgeCount"])
+    assertEquals(0, payload["droppedBeforeBridgeCount"])
     assertEquals(1, payload["acceptedCount"])
-    assertEquals(3, payload["sourceReceivedCount"])
+    assertEquals(1, payload["sourceReceivedCount"])
+    assertEquals(3, payload["bridgeEventSequence"])
+  }
+
+  @Test
+  fun emptyWindow_returnsNull() {
+    var clock = 0L
+    val accumulator =
+      NativeShowcaseTelemetryAccumulator(
+        sessionId = "session-empty",
+        aggregation = NativeShowcaseTelemetryAccumulator.Aggregation.MEAN,
+        deliveredRateHz = 4,
+        nowMillis = { clock },
+      )
+    clock = 250L
+    assertNull(accumulator.emitIfReady())
   }
 }
