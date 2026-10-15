@@ -107,15 +107,36 @@ final class NativeShowcaseTelemetryAccumulator {
     }
   }
 
+  /// Emits a schema-v1 payload for the current delivery window.
+  ///
+  /// Accepted samples update the displayed value. Windows that heard source
+  /// samples but accepted none emit an explicit liveness tick
+  /// (`acceptedCount == 0`) so Dart can separate a healthy quiet channel from
+  /// a stalled source. Windows with no source activity return nil.
   func emitIfReady() -> [String: Any]? {
     let emittedAt = nowMillis()
     if acceptedCount <= 0 {
-      let carriedDrops = droppedBeforeBridgeCount
-      let carriedSource = sourceReceivedCount
+      if sourceReceivedCount <= 0 {
+        openNewWindow(startedAtMillis: emittedAt)
+        return nil
+      }
+
+      bridgeEventSequence += 1
+      let payload: [String: Any] = [
+        "schemaVersion": Self.schemaVersion,
+        "sessionId": sessionId,
+        "bridgeEventSequence": bridgeEventSequence,
+        "acceptedCount": 0,
+        "sourceReceivedCount": sourceReceivedCount,
+        "averageValue": lastAcceptedValue.isNaN ? 0.0 : lastAcceptedValue,
+        "sourceRateHz": Self.sourceRateHz,
+        "deliveredRateHz": deliveredRateHz,
+        "droppedBeforeBridgeCount": droppedBeforeBridgeCount,
+        "nativeWindowStartedAtMillis": windowStartedAtMillis,
+        "nativeEmittedAtMillis": emittedAt,
+      ]
       openNewWindow(startedAtMillis: emittedAt)
-      sourceReceivedCount = carriedSource
-      droppedBeforeBridgeCount = carriedDrops
-      return nil
+      return payload
     }
 
     bridgeEventSequence += 1

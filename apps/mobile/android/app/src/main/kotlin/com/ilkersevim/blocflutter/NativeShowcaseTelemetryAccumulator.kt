@@ -58,24 +58,41 @@ class NativeShowcaseTelemetryAccumulator(
   }
 
   /**
-   * Emits a schema-v1 payload when the window has at least one accepted sample,
-   * otherwise returns null while still rolling the window (drops retained in
-   * counters only for emitted windows; all-dup windows still reset after
-   * accounting into the next open window start).
+   * Emits a schema-v1 payload for the current delivery window.
    *
-   * For all-duplicate windows, [droppedBeforeBridgeCount] is preserved across
-   * the reset into the next window so accounting is not lost silently.
+   * - Accepted samples (`acceptedCount > 0`): normal value update.
+   * - Source heard but all filtered (`sourceReceivedCount > 0`,
+   *   `acceptedCount == 0`): explicit **liveness** tick so Dart can tell a
+   *   healthy quiet channel from a stalled source. `averageValue` repeats the
+   *   last accepted reading; it does not refresh displayed-value age on Dart.
+   * - No source activity: returns null and rolls the window.
    */
   fun emitIfReady(): Map<String, Any>? {
     val emittedAt = nowMillis()
     if (acceptedCount <= 0) {
-      // Carry duplicate drops into the next window so they are not discarded.
-      val carriedDrops = droppedBeforeBridgeCount
-      val carriedSource = sourceReceivedCount
+      if (sourceReceivedCount <= 0) {
+        openNewWindow(emittedAt)
+        return null
+      }
+
+      bridgeEventSequence += 1
+      val payload =
+        mapOf(
+          "schemaVersion" to SCHEMA_VERSION,
+          "sessionId" to sessionId,
+          "bridgeEventSequence" to bridgeEventSequence,
+          "acceptedCount" to 0,
+          "sourceReceivedCount" to sourceReceivedCount,
+          "averageValue" to
+            if (lastAcceptedValue.isNaN()) 0.0 else lastAcceptedValue,
+          "sourceRateHz" to sourceRateHz,
+          "deliveredRateHz" to deliveredRateHz,
+          "droppedBeforeBridgeCount" to droppedBeforeBridgeCount,
+          "nativeWindowStartedAtMillis" to windowStartedAtMillis,
+          "nativeEmittedAtMillis" to emittedAt,
+        )
       openNewWindow(emittedAt)
-      sourceReceivedCount = carriedSource
-      droppedBeforeBridgeCount = carriedDrops
-      return null
+      return payload
     }
 
     bridgeEventSequence += 1

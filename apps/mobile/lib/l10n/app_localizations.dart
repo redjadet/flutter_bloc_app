@@ -2329,6 +2329,48 @@ abstract class AppLocalizations {
   /// **'Latest average'**
   String get nativePlatformShowcaseTelemetryAverageValueLabel;
 
+  /// Label for monotonic age of the displayed telemetry value
+  ///
+  /// In en, this message translates to:
+  /// **'Value age'**
+  String get nativePlatformShowcaseTelemetryValueAgeLabel;
+
+  /// Label for monotonic age since Dart last heard from the host
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt age'**
+  String get nativePlatformShowcaseTelemetryReceiptAgeLabel;
+
+  /// Status when the displayed telemetry value exceeded its freshness deadline
+  ///
+  /// In en, this message translates to:
+  /// **'Displayed value is stale'**
+  String get nativePlatformShowcaseTelemetryValueStale;
+
+  /// Status when the displayed telemetry value is within its freshness deadline
+  ///
+  /// In en, this message translates to:
+  /// **'Displayed value is fresh'**
+  String get nativePlatformShowcaseTelemetryValueFresh;
+
+  /// Status when host liveness receipts are within the liveness deadline
+  ///
+  /// In en, this message translates to:
+  /// **'Source is live'**
+  String get nativePlatformShowcaseTelemetrySourceLive;
+
+  /// Status when Dart has not heard from the host within the liveness deadline
+  ///
+  /// In en, this message translates to:
+  /// **'Source receipt timed out'**
+  String get nativePlatformShowcaseTelemetrySourceQuiet;
+
+  /// Formats a monotonic age in milliseconds
+  ///
+  /// In en, this message translates to:
+  /// **'{milliseconds} ms'**
+  String nativePlatformShowcaseTelemetryAgeValue(int milliseconds);
+
   /// Formats a telemetry rate in hertz
   ///
   /// In en, this message translates to:

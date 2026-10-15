@@ -1257,6 +1257,32 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nativePlatformShowcaseTelemetryAverageValueLabel => 'Son ortalama';
 
   @override
+  String get nativePlatformShowcaseTelemetryValueAgeLabel => 'Değer yaşı';
+
+  @override
+  String get nativePlatformShowcaseTelemetryReceiptAgeLabel => 'Alım yaşı';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueStale =>
+      'Gösterilen değer bayat';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueFresh =>
+      'Gösterilen değer taze';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceLive => 'Kaynak canlı';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceQuiet =>
+      'Kaynak alımı zaman aşımına uğradı';
+
+  @override
+  String nativePlatformShowcaseTelemetryAgeValue(int milliseconds) {
+    return '$milliseconds ms';
+  }
+
+  @override
   String nativePlatformShowcaseTelemetryRateValue(int rate) {
     return '$rate Hz';
   }

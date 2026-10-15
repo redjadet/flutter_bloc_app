@@ -1276,6 +1276,32 @@ class AppLocalizationsDe extends AppLocalizations {
       'Neuester Durchschnitt';
 
   @override
+  String get nativePlatformShowcaseTelemetryValueAgeLabel => 'Wertalter';
+
+  @override
+  String get nativePlatformShowcaseTelemetryReceiptAgeLabel => 'Empfangsalter';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueStale =>
+      'Angezeigter Wert ist veraltet';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueFresh =>
+      'Angezeigter Wert ist aktuell';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceLive => 'Quelle ist aktiv';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceQuiet =>
+      'Quellenempfang abgelaufen';
+
+  @override
+  String nativePlatformShowcaseTelemetryAgeValue(int milliseconds) {
+    return '$milliseconds ms';
+  }
+
+  @override
   String nativePlatformShowcaseTelemetryRateValue(int rate) {
     return '$rate Hz';
   }

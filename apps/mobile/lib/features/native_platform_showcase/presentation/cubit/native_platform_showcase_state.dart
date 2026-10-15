@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_freshness.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,6 +19,7 @@ abstract class NativePlatformShowcaseState with _$NativePlatformShowcaseState {
   const factory loaded(
     PlatformShowcaseData data, {
     NativeShowcaseTelemetrySnapshot? telemetry,
+    NativeShowcaseTelemetryFreshness? telemetryFreshness,
     NativePlatformShowcaseAction? lastAction,
     NativeInteropCallResult? lastActionResult,
     NativePlatformShowcaseAction? actionInFlight,

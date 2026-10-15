@@ -110,7 +110,7 @@ final class NativeShowcaseTelemetryAccumulatorTests: XCTestCase {
     XCTAssertEqual(payload?["droppedBeforeBridgeCount"] as? Int, 1)
   }
 
-  func testAllDuplicateWindowCarriesDropsIntoNextEmit() {
+  func testAllDuplicateWindowEmitsLivenessTickThenFreshValue() {
     var clock: Int64 = 0
     let accumulator = NativeShowcaseTelemetryAccumulator(
       sessionId: "session-c",
@@ -124,13 +124,31 @@ final class NativeShowcaseTelemetryAccumulatorTests: XCTestCase {
     accumulator.ingest(sampleValue: 1.0001)
     accumulator.ingest(sampleValue: 1.0002)
     clock = 500
-    XCTAssertNil(accumulator.emitIfReady())
+    let liveness = accumulator.emitIfReady()
+    XCTAssertEqual(liveness?["acceptedCount"] as? Int, 0)
+    XCTAssertEqual(liveness?["sourceReceivedCount"] as? Int, 2)
+    XCTAssertEqual(liveness?["droppedBeforeBridgeCount"] as? Int, 2)
+    XCTAssertEqual(liveness?["averageValue"] as? Double, 1.0)
+    XCTAssertEqual(liveness?["bridgeEventSequence"] as? Int, 2)
 
     accumulator.ingest(sampleValue: 9)
     clock = 750
     let payload = accumulator.emitIfReady()
-    XCTAssertEqual(payload?["droppedBeforeBridgeCount"] as? Int, 2)
+    XCTAssertEqual(payload?["droppedBeforeBridgeCount"] as? Int, 0)
     XCTAssertEqual(payload?["acceptedCount"] as? Int, 1)
-    XCTAssertEqual(payload?["sourceReceivedCount"] as? Int, 3)
+    XCTAssertEqual(payload?["sourceReceivedCount"] as? Int, 1)
+    XCTAssertEqual(payload?["bridgeEventSequence"] as? Int, 3)
+  }
+
+  func testEmptyWindowReturnsNil() {
+    var clock: Int64 = 0
+    let accumulator = NativeShowcaseTelemetryAccumulator(
+      sessionId: "session-empty",
+      aggregation: .mean,
+      deliveredRateHz: 4,
+      nowMillis: { clock }
+    )
+    clock = 250
+    XCTAssertNil(accumulator.emitIfReady())
   }
 }

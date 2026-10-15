@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_freshness.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
@@ -10,29 +12,54 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_ca
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
+import 'package:meta/meta.dart';
 
-class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
-  new({
-    required LoadNativePlatformShowcaseUseCase loadShowcase,
-    required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
-    required TriggerNativeShowcaseHapticUseCase triggerHaptic,
-    required ShareNativeShowcaseTextUseCase shareText,
-  }) : this._(loadShowcase, watchTelemetry, triggerHaptic, shareText);
+part 'native_platform_showcase_cubit_telemetry.part.dart';
 
-  new _(
+abstract class _NativePlatformShowcaseCubitBase
+    extends Cubit<NativePlatformShowcaseState>
+    with CubitSubscriptionMixin<NativePlatformShowcaseState> {
+  new(
     this._loadShowcase,
     this._watchTelemetry,
     this._triggerHaptic,
     this._shareText,
+    this._freshnessTracker,
+    this._freshnessTickInterval,
   ) : super(const NativePlatformShowcaseState.initial());
 
   final LoadNativePlatformShowcaseUseCase _loadShowcase;
   final WatchNativeShowcaseTelemetryUseCase _watchTelemetry;
   final TriggerNativeShowcaseHapticUseCase _triggerHaptic;
   final ShareNativeShowcaseTextUseCase _shareText;
+  final NativeShowcaseTelemetryFreshnessTracker _freshnessTracker;
+  final Duration _freshnessTickInterval;
   bool _loadInFlight = false;
+  // ignore: cancel_subscriptions - Managed by CubitSubscriptionMixin.
   StreamSubscription<NativeShowcaseTelemetrySnapshot>? _telemetrySubscription;
+  Timer? _freshnessTimer;
   int _lastTelemetrySequence = 0;
+}
+
+class NativePlatformShowcaseCubit extends _NativePlatformShowcaseCubitBase
+    with _NativePlatformShowcaseCubitTelemetry {
+  new({
+    required LoadNativePlatformShowcaseUseCase loadShowcase,
+    required WatchNativeShowcaseTelemetryUseCase watchTelemetry,
+    required TriggerNativeShowcaseHapticUseCase triggerHaptic,
+    required ShareNativeShowcaseTextUseCase shareText,
+    NativeShowcaseTelemetryFreshnessTracker? freshnessTracker,
+    @visibleForTesting
+    Duration freshnessTickInterval =
+        NativeShowcaseTelemetryFreshnessTracker.tickInterval,
+  }) : super(
+         loadShowcase,
+         watchTelemetry,
+         triggerHaptic,
+         shareText,
+         freshnessTracker ?? NativeShowcaseTelemetryFreshnessTracker(),
+         freshnessTickInterval,
+       );
 
   Future<void> load() async {
     if (isClosed || _loadInFlight) return;
@@ -78,6 +105,7 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       NativePlatformShowcaseState.loaded(
         loaded.data,
         telemetry: loaded.telemetry,
+        telemetryFreshness: loaded.telemetryFreshness,
         lastAction: loaded.lastAction,
         lastActionResult: loaded.lastActionResult,
         actionInFlight: action,
@@ -98,97 +126,17 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       NativePlatformShowcaseState.loaded(
         current.data,
         telemetry: current.telemetry,
+        telemetryFreshness: current.telemetryFreshness,
         lastAction: action,
         lastActionResult: result,
       ),
     );
   }
 
-  void _startTelemetryIfNeeded() {
-    if (_telemetrySubscription != null || isClosed) {
-      return;
-    }
-
-    final NativeShowcaseTelemetryStreamConfig config =
-        NativeShowcaseTelemetryStreamConfig.renderDefault(
-          sessionId: 'showcase-${DateTime.now().microsecondsSinceEpoch}',
-        );
-
-    _telemetrySubscription = _watchTelemetry(config: config)
-        .listen(_onTelemetrySnapshot, onError: _onTelemetryError);
-  }
-
-  void _onTelemetrySnapshot(NativeShowcaseTelemetrySnapshot snapshot) {
-    if (isClosed) {
-      return;
-    }
-
-    final loaded = state.mapOrNull(loaded: (value) => value);
-    if (loaded == null) {
-      return;
-    }
-
-    if (snapshot.status == NativeShowcaseTelemetryStatus.streaming &&
-        snapshot.sequence <= _lastTelemetrySequence) {
-      return;
-    }
-
-    if (snapshot.sequence > _lastTelemetrySequence) {
-      _lastTelemetrySequence = snapshot.sequence;
-    }
-
-    emit(
-      NativePlatformShowcaseState.loaded(
-        loaded.data,
-        telemetry: snapshot,
-        lastAction: loaded.lastAction,
-        lastActionResult: loaded.lastActionResult,
-        actionInFlight: loaded.actionInFlight,
-      ),
-    );
-  }
-
-  void _onTelemetryError(Object error) {
-    if (isClosed) {
-      return;
-    }
-
-    final loaded = state.mapOrNull(loaded: (value) => value);
-    if (loaded == null) {
-      return;
-    }
-
-    final NativeShowcaseTelemetrySnapshot? previous = loaded.telemetry;
-    emit(
-      NativePlatformShowcaseState.loaded(
-        loaded.data,
-        telemetry: NativeShowcaseTelemetrySnapshot(
-          status: NativeShowcaseTelemetryStatus.failed,
-          schemaVersion:
-              previous?.schemaVersion ??
-              NativeShowcaseTelemetryStreamConfig.supportedSchemaVersion,
-          sessionId: previous?.sessionId ?? '',
-          sequence: _lastTelemetrySequence,
-          acceptedCount: previous?.acceptedCount ?? 0,
-          sourceReceivedCount: previous?.sourceReceivedCount ?? 0,
-          averageValue: previous?.averageValue ?? 0,
-          sourceRateHz: previous?.sourceRateHz ?? 0,
-          deliveredRateHz: previous?.deliveredRateHz ?? 0,
-          droppedBeforeBridgeCount: previous?.droppedBeforeBridgeCount ?? 0,
-          windowStartedAt: previous?.windowStartedAt ?? DateTime.now(),
-          emittedAt: DateTime.now(),
-          message: error.toString(),
-        ),
-        lastAction: loaded.lastAction,
-        lastActionResult: loaded.lastActionResult,
-        actionInFlight: loaded.actionInFlight,
-      ),
-    );
-  }
-
   @override
   Future<void> close() async {
-    await _telemetrySubscription?.cancel();
+    _freshnessTimer?.cancel();
+    _freshnessTimer = null;
     _telemetrySubscription = null;
     return await super.close();
   }

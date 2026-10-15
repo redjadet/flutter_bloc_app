@@ -35,6 +35,7 @@ class NativePlatformShowcasePage extends StatelessWidget {
                   (
                     data,
                     telemetry,
+                    telemetryFreshness,
                     lastAction,
                     lastActionResult,
                     actionInFlight,

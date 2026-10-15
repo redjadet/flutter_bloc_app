@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_bridge_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_freshness.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
@@ -72,6 +73,13 @@ void main() {
       emittedAt: DateTime(2026, 1, 1, 0, 0, 1),
     );
 
+    const freshLive = NativeShowcaseTelemetryFreshness(
+      isValueStale: false,
+      isSourceLive: true,
+      receiptAge: Duration.zero,
+      valueAge: Duration.zero,
+    );
+
     final hapticSuccess = const NativeInteropCallResult(
       kind: NativeInteropBridgeKind.swift,
       status: NativeInteropStatus.success,
@@ -93,11 +101,16 @@ void main() {
       await telemetryController.close();
     });
 
-    NativePlatformShowcaseCubit buildCubit() => NativePlatformShowcaseCubit(
+    NativePlatformShowcaseCubit buildCubit({
+      NativeShowcaseTelemetryFreshnessTracker? freshnessTracker,
+      Duration freshnessTickInterval = const Duration(days: 1),
+    }) => NativePlatformShowcaseCubit(
       loadShowcase: loadShowcase,
       watchTelemetry: watchTelemetry,
       triggerHaptic: triggerHaptic,
       shareText: shareText,
+      freshnessTracker: freshnessTracker,
+      freshnessTickInterval: freshnessTickInterval,
     );
 
     blocTest<NativePlatformShowcaseCubit, NativePlatformShowcaseState>(
@@ -132,6 +145,7 @@ void main() {
         NativePlatformShowcaseState.loaded(
           loadedData,
           telemetry: telemetrySnapshot,
+          telemetryFreshness: freshLive,
         ),
       ],
     );
@@ -158,6 +172,7 @@ void main() {
         NativePlatformShowcaseState.loaded(
           loadedData,
           telemetry: telemetrySnapshot,
+          telemetryFreshness: freshLive,
         ),
       ],
     );
@@ -175,7 +190,14 @@ void main() {
 
         cubit.state.maybeWhen(
           loaded:
-              (data, telemetry, lastAction, lastActionResult, actionInFlight) {
+              (
+                data,
+                telemetry,
+                telemetryFreshness,
+                lastAction,
+                lastActionResult,
+                actionInFlight,
+              ) {
                 expect(data, loadedData);
                 expect(telemetry?.status, NativeShowcaseTelemetryStatus.failed);
                 expect(telemetry?.message, contains('stream failed'));
@@ -279,15 +301,18 @@ void main() {
         NativePlatformShowcaseState.loaded(
           loadedData,
           telemetry: telemetrySnapshot,
+          telemetryFreshness: freshLive,
         ),
         NativePlatformShowcaseState.loaded(
           loadedData,
           telemetry: telemetrySnapshot,
+          telemetryFreshness: freshLive,
           actionInFlight: NativePlatformShowcaseAction.haptic,
         ),
         NativePlatformShowcaseState.loaded(
           loadedData,
           telemetry: telemetrySnapshot,
+          telemetryFreshness: freshLive,
           lastAction: NativePlatformShowcaseAction.haptic,
           lastActionResult: hapticSuccess,
         ),
@@ -321,6 +346,7 @@ void main() {
         NativePlatformShowcaseState.loaded(
           loadedData,
           telemetry: telemetrySnapshot,
+          telemetryFreshness: freshLive,
           lastAction: NativePlatformShowcaseAction.haptic,
           lastActionResult: hapticSuccess,
         ),
@@ -353,6 +379,92 @@ void main() {
       addTearDown(cubit.close);
       await cubit.triggerHaptic();
       verifyNever(() => triggerHaptic());
+    });
+
+    test('liveness tick keeps prior average and ages value only', () async {
+      var elapsed = Duration.zero;
+      final tracker = NativeShowcaseTelemetryFreshnessTracker(
+        readElapsed: () => elapsed,
+      );
+      when(() => loadShowcase()).thenAnswer((_) async => loadedData);
+      final cubit = buildCubit(freshnessTracker: tracker);
+      addTearDown(cubit.close);
+
+      await cubit.load();
+      telemetryController.add(telemetrySnapshot);
+      await Future<void>.delayed(Duration.zero);
+
+      elapsed = const Duration(milliseconds: 400);
+      telemetryController.add(
+        telemetrySnapshot.copyWith(
+          sequence: 2,
+          acceptedCount: 0,
+          averageValue: 99,
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      cubit.state.maybeWhen(
+        loaded:
+            (
+              data,
+              telemetry,
+              telemetryFreshness,
+              lastAction,
+              lastActionResult,
+              actionInFlight,
+            ) {
+              expect(telemetry?.averageValue, 12.5);
+              expect(telemetry?.acceptedCount, 0);
+              expect(
+                telemetryFreshness?.valueAge,
+                const Duration(milliseconds: 400),
+              );
+              expect(telemetryFreshness?.receiptAge, Duration.zero);
+              expect(telemetryFreshness?.isSourceLive, isTrue);
+              expect(telemetryFreshness?.isValueStale, isFalse);
+            },
+        orElse: () => fail('expected loaded state'),
+      );
+    });
+
+    test('freshness timer marks stale without a new telemetry event', () async {
+      var elapsed = Duration.zero;
+      final tracker = NativeShowcaseTelemetryFreshnessTracker(
+        readElapsed: () => elapsed,
+        valueFreshnessDeadline: const Duration(milliseconds: 1500),
+        sourceLivenessDeadline: const Duration(milliseconds: 750),
+      );
+      when(() => loadShowcase()).thenAnswer((_) async => loadedData);
+      final cubit = buildCubit(
+        freshnessTracker: tracker,
+        freshnessTickInterval: const Duration(milliseconds: 20),
+      );
+      addTearDown(cubit.close);
+
+      await cubit.load();
+      telemetryController.add(telemetrySnapshot);
+      await Future<void>.delayed(Duration.zero);
+
+      elapsed = const Duration(milliseconds: 1600);
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      cubit.state.maybeWhen(
+        loaded:
+            (
+              data,
+              telemetry,
+              telemetryFreshness,
+              lastAction,
+              lastActionResult,
+              actionInFlight,
+            ) {
+              expect(telemetry, telemetrySnapshot);
+              expect(telemetryFreshness?.isValueStale, isTrue);
+              expect(telemetryFreshness?.isSourceLive, isFalse);
+            },
+        orElse: () => fail('expected loaded state'),
+      );
     });
   });
 }

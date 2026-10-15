@@ -1251,6 +1251,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nativePlatformShowcaseTelemetryAverageValueLabel => 'أحدث متوسط';
 
   @override
+  String get nativePlatformShowcaseTelemetryValueAgeLabel => 'عمر القيمة';
+
+  @override
+  String get nativePlatformShowcaseTelemetryReceiptAgeLabel => 'عمر الاستلام';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueStale =>
+      'القيمة المعروضة قديمة';
+
+  @override
+  String get nativePlatformShowcaseTelemetryValueFresh =>
+      'القيمة المعروضة حديثة';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceLive => 'المصدر نشط';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceQuiet =>
+      'انتهت مهلة استلام المصدر';
+
+  @override
+  String nativePlatformShowcaseTelemetryAgeValue(int milliseconds) {
+    return '$milliseconds مللي ثانية';
+  }
+
+  @override
   String nativePlatformShowcaseTelemetryRateValue(int rate) {
     return '$rate هرتز';
   }
