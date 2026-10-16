@@ -58,6 +58,17 @@ Primary references:
 - Offline/resume does not replay unbounded work on the main isolate.
 - Document known tradeoffs in feature brief **Risks** when deferring optimization.
 
+## Release size (store / APK candidates)
+
+- Do not treat debug or fat upload packages as download size; use
+  `--analyze-size` and store/thinning reports
+  ([`../performance/bundle_size_monitoring.md`](../performance/bundle_size_monitoring.md)).
+- Release candidates: consider `--split-debug-info` (official size win); pair
+  `--obfuscate` only when SYMBOLS are retained for `flutter symbolize` /
+  Crashlytics. Prefer AAB over `--split-per-abi` for Play.
+- New heavy deps / large assets: run `./tool/check_bundle_size.sh` when a
+  release-size budget claim matters.
+
 ## Proof
 
 Minimum: focused widget/cubit tests for changed states; perf scripts above when
