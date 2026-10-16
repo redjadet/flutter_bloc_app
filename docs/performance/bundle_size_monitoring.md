@@ -194,6 +194,43 @@ buildTypes {
 }
 ```
 
+### 6. Official Dart release size flags
+
+Flutter’s [app size](https://docs.flutter.dev/perf/app-size) and
+[obfuscate](https://docs.flutter.dev/deployment/obfuscate) docs call out build
+flags that this repo’s deferred routes / asset hygiene do **not** replace.
+Debug `flutter run` and unsplit upload packages are **not** end-user download
+size — measure with store/thinning reports and `--analyze-size` first.
+
+| Flag | What it does | When to use here |
+| --- | --- | --- |
+| `--split-debug-info=<dir>` | Writes DWARF/SYMBOLS out of the binary; **dramatically** reduces Dart AOT size | Prefer on real release / store candidates; keep `<dir>` for crash symbolization |
+| `--obfuscate` | Renames Dart symbols (requires `--split-debug-info`) | Optional hardening; **retain** SYMBOLS and use `flutter symbolize` (or Crashlytics upload) — never ship obfuscation without a de-obfuscation path |
+| `--split-per-abi` | Separate APKs per CPU ABI instead of one fat APK | Direct APK distribution only; **Play App Bundle already serves ABI/DPI splits** — prefer `flutter build appbundle` for store uploads |
+
+Example (local release candidate; adjust output dir and target):
+
+```bash
+cd apps/mobile
+flutter build appbundle --release \
+  --obfuscate \
+  --split-debug-info=build/symbols
+
+# Direct APK distribution (not the Play default path):
+# flutter build apk --release --split-per-abi \
+#   --obfuscate --split-debug-info=build/symbols
+```
+
+**CI note:** `mobile_release_dry_run` proves a plain `--release` AAB/iOS build
+and budget tooling. Do **not** flip dry-run to `--obfuscate` until symbol
+retention / Crashlytics (or equivalent) upload is wired — teaching the flags
+here is enough for interview and release planning.
+
+Also still apply: unused deps, compressed assets, deferred feature imports
+(§1), and deferred startup work
+([startup_time_profiling.md](startup_time_profiling.md),
+[architecture_lazy_loading_and_flow.md](../architecture/architecture_lazy_loading_and_flow.md)).
+
 ## CI/CD Integration
 
 ### GitHub Actions Example
@@ -302,6 +339,7 @@ EOF
 - [Lazy Loading Review](lazy_loading_review.md) - Comprehensive analysis of lazy loading patterns, deferred imports explanation, and performance optimization opportunities
 - [Startup Time Profiling](startup_time_profiling.md) - Guide for measuring and profiling app startup time
 - [Architecture Details — lazy loading](../architecture/architecture_lazy_loading_and_flow.md) - Deferred routes and startup impact
+- Upstream: [Measuring app size](https://docs.flutter.dev/perf/app-size), [Obfuscate Dart code](https://docs.flutter.dev/deployment/obfuscate)
 
 ## Tools Reference
 
@@ -309,3 +347,4 @@ EOF
 - **Flutter Build Analysis:** `flutter build apk --release --analyze-size`
 - **Size Tracking:** `.bundle_sizes.json`
 - **Bundletool:** <https://github.com/google/bundletool> (Android AAB analysis)
+- **Symbolize (obfuscated builds):** `flutter symbolize -i <stack> -d <symbols>`
