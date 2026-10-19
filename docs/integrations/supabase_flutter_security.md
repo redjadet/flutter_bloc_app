@@ -126,15 +126,17 @@ Agent rules:
 
 - Keep platform JWT verification on for `chat-complete`:
   `verify_jwt = true` in [`supabase/config.toml`](../../supabase/config.toml).
-  Do **not** deploy with `--no-verify-jwt`, and do **not** turn off JWT
-  verification in the Dashboard. The handler’s `Authorization: Bearer …`
-  prefix check is only a secondary guard; the platform gate is the auth
-  boundary that keeps invalid tokens from reaching paid Hugging Face calls.
-- Dashboard **Verify JWT with legacy secret** is a *signing-key path* toggle,
-  not “disable JWT verification.” Keep it **disabled** when the project uses
-  the newer signing-key / JWKS path (enabling it can cause false
-  `401 auth_required`). Enable only if the project intentionally uses the
-  legacy JWT secret. See [`supabase/README.md`](../../supabase/README.md).
+  Do **not** deploy with `--no-verify-jwt`. The handler’s
+  `Authorization: Bearer …` prefix check is only a secondary guard; it does
+  **not** validate the token. Without the platform gate (or equivalent real
+  JWT verification in the handler), `Bearer invalid` can reach paid Hugging
+  Face calls.
+- Do **not** change Dashboard JWT toggles from this handoff alone. Owner for
+  the hosted checklist (including any “legacy secret” / signing-key path
+  notes) is [`supabase/README.md`](../../supabase/README.md). If a signing-key
+  migration requires turning off platform `verify_jwt`, add real JWT
+  verification in the handler **before** disabling the gate — never rely on
+  the Bearer prefix alone.
 - Sync functions are intentionally unauthenticated call surfaces; rate/abuse
   hardening is a product decision — do not “fix” by adding anon table writes.
 - Service role usage in Edge is correct; logging must not print keys or JWTs.
