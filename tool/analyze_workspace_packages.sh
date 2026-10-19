@@ -29,7 +29,10 @@ analyze_package() {
   echo "workspace-analyze|pass|$rel"
 }
 
-for package_dir in "$WORKSPACE_ROOT"/packages/* "$WORKSPACE_ROOT"/custom_lints/*; do
+for package_dir in \
+  "$WORKSPACE_ROOT"/packages/* \
+  "$WORKSPACE_ROOT"/custom_lints/* \
+  "$WORKSPACE_ROOT"/tool/bloc_codegen; do
   [ -d "$package_dir" ] || continue
   [ -f "$package_dir/pubspec.yaml" ] || continue
   analyze_package "$package_dir"

@@ -1,15 +1,19 @@
-/// Generator for exhaustive switch helpers on sealed state classes
+/// Generator for exhaustive switch helpers on sealed state classes.
 library;
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:bloc_annotations/bloc_annotations.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../../../../lib/app/annotations/bloc_annotations.dart';
+import 'naming.dart';
 
-/// Generates exhaustive switch helpers for sealed state classes
+/// Generates exhaustive switch helpers for sealed state classes.
 class SealedStateSwitchGenerator
     extends GeneratorForAnnotation<GenerateSwitchHelper> {
+  /// Creates a generator that matches annotations from `bloc_annotations`.
+  const SealedStateSwitchGenerator() : super(inPackage: 'bloc_annotations');
+
   @override
   String generateForAnnotatedElement(
     Element element,
@@ -24,15 +28,14 @@ class SealedStateSwitchGenerator
     }
 
     final className = element.name;
-    final library = element.library;
-    if (library == null) {
+    if (className == null) {
       throw InvalidGenerationSourceError(
-        'Cannot determine library for $className',
+        'Annotated class must have a name.',
         element: element,
       );
     }
 
-    // Find all subclasses of this sealed class
+    final library = element.library;
     final subclasses = _findSubclasses(element, library);
 
     if (subclasses.isEmpty) {
@@ -42,24 +45,23 @@ class SealedStateSwitchGenerator
       );
     }
 
-    // Generate when() method with exhaustive switch
     final buffer = StringBuffer();
     buffer.writeln('// Generated code for $className');
     buffer.writeln('extension ${className}SwitchHelper on $className {');
     buffer.writeln('  /// Exhaustive pattern matching helper');
     buffer.writeln('  T when<T>({');
 
-    // Generate parameters for each subclass
     for (final subclass in subclasses) {
+      final subclassName = subclass.name!;
       final params = _extractConstructorParams(subclass);
       if (params.isEmpty) {
         buffer.writeln(
-          '    required T Function() ${_toCamelCase(subclass.name)},',
+          '    required T Function() ${toCamelCase(subclassName)},',
         );
       } else {
         final paramList = params.map((p) => '${p.type} ${p.name}').join(', ');
         buffer.writeln(
-          '    required T Function($paramList) ${_toCamelCase(subclass.name)},',
+          '    required T Function($paramList) ${toCamelCase(subclassName)},',
         );
       }
     }
@@ -67,17 +69,18 @@ class SealedStateSwitchGenerator
     buffer.writeln('  }) {');
     buffer.writeln('    return switch (this) {');
 
-    // Generate switch cases
     for (final subclass in subclasses) {
+      final subclassName = subclass.name!;
       final params = _extractConstructorParams(subclass);
       if (params.isEmpty) {
         buffer.writeln(
-          '      ${subclass.name}() => ${_toCamelCase(subclass.name)}(),',
+          '      $subclassName() => ${toCamelCase(subclassName)}(),',
         );
       } else {
         final paramBindings = params.map((p) => ':final ${p.name}').join(', ');
         buffer.writeln(
-          '      ${subclass.name}($paramBindings) => ${_toCamelCase(subclass.name)}(${params.map((p) => p.name).join(', ')}),',
+          '      $subclassName($paramBindings) => '
+          '${toCamelCase(subclassName)}(${params.map((p) => p.name).join(', ')}),',
         );
       }
     }
@@ -94,10 +97,9 @@ class SealedStateSwitchGenerator
     LibraryElement library,
   ) {
     final subclasses = <ClassElement>[];
-    for (final element in library.topLevelElements) {
-      if (element is ClassElement &&
-          element.supertype?.element == sealedClass) {
-        subclasses.add(element);
+    for (final candidate in library.classes) {
+      if (candidate.supertype?.element == sealedClass) {
+        subclasses.add(candidate);
       }
     }
     return subclasses;
@@ -110,32 +112,23 @@ class SealedStateSwitchGenerator
       return params;
     }
 
-    // Use the first public constructor
     final constructor = constructors.firstWhere(
       (c) => !c.isPrivate,
       orElse: () => constructors.first,
     );
 
-    for (final param in constructor.parameters) {
+    for (final param in constructor.formalParameters) {
       if (param.isNamed || param.isOptionalPositional) {
-        continue; // Skip optional parameters for now
+        continue;
       }
-      params.add(
-        _Param(
-          name: param.name,
-          type: param.type.getDisplayString(withNullability: true),
-        ),
-      );
+      final name = param.name;
+      if (name == null) {
+        continue;
+      }
+      params.add(_Param(name: name, type: param.type.getDisplayString()));
     }
 
     return params;
-  }
-
-  String _toCamelCase(String input) {
-    if (input.isEmpty) {
-      return input;
-    }
-    return input[0].toLowerCase() + input.substring(1);
   }
 }
 

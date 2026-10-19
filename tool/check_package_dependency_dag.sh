@@ -26,6 +26,7 @@ ALLOWED: dict[str, frozenset[str]] = {
     "ai": frozenset({"core", "utilities"}),
     "app_shared_flutter": frozenset({"core"}),
     "auth": frozenset({"core", "utilities"}),
+    "bloc_annotations": frozenset(),
     "core": frozenset(),
     "design_system": frozenset({"app_shared_flutter", "core", "utilities"}),
     "feature_flags": frozenset({"core", "utilities"}),

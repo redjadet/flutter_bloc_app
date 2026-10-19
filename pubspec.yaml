@@ -10,6 +10,7 @@ workspace:
   - packages/ai
   - packages/auth
   - packages/app_shared_flutter
+  - packages/bloc_annotations
   - packages/core
   - packages/design_system
   - packages/feature_flags
@@ -20,6 +21,7 @@ workspace:
   - custom_lints/file_length_lint
   - custom_lints/mix_lint
   - custom_lints/memory_lint
+  - tool/bloc_codegen
 
 dev_dependencies:
   melos: ^7.8.1
