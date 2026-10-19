@@ -97,14 +97,14 @@ class _ViewerSession {
     }
     _leaseCount -= 1;
     if (_leaseCount == 0) {
-      await _shutdown();
+      await close();
       onZeroLeases();
     }
   }
 
   Future<void> forceClose() async {
     _leaseCount = 0;
-    await _shutdown();
+    await close();
   }
 
   Future<void> _connect() async {
@@ -164,7 +164,7 @@ class _ViewerSession {
     }
   }
 
-  Future<void> _shutdown() async {
+  Future<void> close() async {
     _closed = true;
     _reconnectTimer?.dispose();
     _reconnectTimer = null;
