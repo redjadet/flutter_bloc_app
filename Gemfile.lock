@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/fastlane/fastlane.git
-  revision: d9b3f6bbe01de3db12d3052e3415ab38ff43d0bb
-  ref: d9b3f6bbe01de3db12d3052e3415ab38ff43d0bb
+  revision: e3ef1469e786892bc8c9d2773ae342d858c8567e
+  ref: e3ef1469e786892bc8c9d2773ae342d858c8567e
   specs:
-    fastlane (2.240.1)
+    fastlane (2.241.1)
       CFPropertyList (>= 2.3, < 5.0.0)
       abbrev (~> 0.1)
       addressable (>= 2.9.0, < 3.0.0)
@@ -19,7 +19,8 @@ GIT
       csv (~> 3.3)
       dotenv (>= 2.1.1, < 3.0.0)
       emoji_regex (>= 0.1, < 4.0)
-      excon (>= 0.71.0, < 2.0.0)
+      erb (>= 4.0, < 7.0)
+      excon (>= 1.0.0, < 2.0.0)
       faraday (~> 2.7)
       faraday-cookie_jar (~> 0.0.8)
       faraday-follow_redirects (~> 0.3)
@@ -30,7 +31,7 @@ GIT
       gh_inspector (>= 1.1.2, < 2.0.0)
       google-apis-androidpublisher_v3 (~> 0.99)
       google-apis-playcustomapp_v1 (~> 0.1)
-      google-cloud-env (>= 1.6.0, < 2.4.0)
+      google-cloud-env (>= 1.6.0, < 2.5.0)
       google-cloud-storage (~> 1.31)
       highline (~> 2.0)
       irb (>= 1.8)
@@ -49,7 +50,7 @@ GIT
       rubyzip (>= 3.4.0, < 4.0.0)
       security (~> 0.3)
       simctl (~> 1.6.3)
-      terminal-notifier (>= 2.0.0, < 3.0.0)
+      terminal-notifier (>= 3.1.0, < 4.0.0)
       terminal-table (~> 4)
       tty-screen (>= 0.6.3, < 1.0.0)
       tty-spinner (>= 0.8.0, < 1.0.0)
@@ -106,8 +107,8 @@ GEM
     erb (6.0.7)
     excon (1.5.0)
       logger
-    faraday (2.14.4)
-      faraday-net_http (>= 2.0, < 3.5)
+    faraday (2.15.0)
+      faraday-net_http (>= 2.0, < 3.6)
       json
       logger
     faraday-cookie_jar (0.0.8)
@@ -117,7 +118,7 @@ GEM
       faraday (>= 1, < 3)
     faraday-multipart (1.2.0)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.4)
+    faraday-net_http (3.5.0)
       net-http (~> 0.5)
     faraday-retry (2.4.0)
       faraday (~> 2.0)
@@ -187,8 +188,11 @@ GEM
     mutex_m (0.3.0)
     nanaimo (0.4.0)
     naturally (2.3.0)
-    net-http (0.9.1)
+    net-http (0.10.0)
+      net-protocol (>= 0.3.0)
       uri (>= 0.11.1)
+    net-protocol (0.4.0)
+      timeout
     nkf (0.3.0)
     optparse (0.8.1)
     os (1.1.4)
@@ -228,9 +232,10 @@ GEM
     simctl (1.6.10)
       CFPropertyList
       naturally
-    terminal-notifier (2.0.0)
+    terminal-notifier (3.1.0)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
+    timeout (0.6.1)
     trailblazer-option (0.1.2)
     tsort (0.2.0)
     tty-cursor (0.7.1)
@@ -239,7 +244,7 @@ GEM
       tty-cursor (~> 0.7)
     uber (0.1.0)
     unicode-display_width (2.6.0)
-    uri (1.1.1)
+    uri (1.1.2)
     word_wrap (1.0.0)
     xcodeproj (1.27.0)
       CFPropertyList (>= 2.3.3, < 4.0)
@@ -258,7 +263,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  faraday (>= 2.14.4)
+  faraday (>= 2.15.0)
   fastlane!
   jwt (~> 3.3)
 
