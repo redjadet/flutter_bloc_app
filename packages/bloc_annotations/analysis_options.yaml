@@ -1,0 +1,7 @@
+include: ../../analysis/workspace_lint_policy.yaml
+
+analyzer:
+  exclude:
+    - .dart_tool/**
+    - '**/.dart_tool/**'
+    - build/**

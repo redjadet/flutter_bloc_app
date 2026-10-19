@@ -5,7 +5,10 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/workspace_paths.sh"
 
-for package_dir in "$WORKSPACE_ROOT"/packages/* "$WORKSPACE_ROOT"/custom_lints/*; do
+for package_dir in \
+  "$WORKSPACE_ROOT"/packages/* \
+  "$WORKSPACE_ROOT"/custom_lints/* \
+  "$WORKSPACE_ROOT"/tool/bloc_codegen; do
   [ -d "$package_dir" ] || continue
   [ -f "$package_dir/pubspec.yaml" ] || continue
   [ -d "$package_dir/test" ] || continue

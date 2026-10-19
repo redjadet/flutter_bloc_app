@@ -48,6 +48,8 @@ dependencies:
   apple_maps_flutter: ^1.4.0
   auth:
     path: ../../packages/auth
+  bloc_annotations:
+    path: ../../packages/bloc_annotations
   cached_network_image: ^3.4.1
   cloud_firestore: ^6.10.0
   cloud_functions: ^6.5.0
