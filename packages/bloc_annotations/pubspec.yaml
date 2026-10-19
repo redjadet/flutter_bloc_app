@@ -1,0 +1,12 @@
+name: bloc_annotations
+publish_to: none
+description: Annotations for BLoC/Cubit code generation (consumed by tool/bloc_codegen).
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+dev_dependencies:
+  lints: ^6.1.0
+  test: ^1.31.1

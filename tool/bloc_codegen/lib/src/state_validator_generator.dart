@@ -1,15 +1,17 @@
-/// Generator for state transition validators
+/// Generator for state transition validators.
 library;
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:bloc_annotations/bloc_annotations.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../../../../lib/app/annotations/bloc_annotations.dart';
-
-/// Generates state transition validators from annotations
+/// Generates state transition validators from annotations.
 class StateValidatorGenerator
     extends GeneratorForAnnotation<GenerateStateValidator> {
+  /// Creates a generator that matches annotations from `bloc_annotations`.
+  const StateValidatorGenerator() : super(inPackage: 'bloc_annotations');
+
   @override
   String generateForAnnotatedElement(
     Element element,
@@ -24,6 +26,13 @@ class StateValidatorGenerator
     }
 
     final className = element.name;
+    if (className == null) {
+      throw InvalidGenerationSourceError(
+        'Annotated class must have a name.',
+        element: element,
+      );
+    }
+
     final transitions = annotation.read('transitions').listValue;
 
     if (transitions.isEmpty) {
@@ -36,7 +45,8 @@ class StateValidatorGenerator
     final buffer = StringBuffer();
     buffer.writeln('// Generated state transition validator for $className');
     buffer.writeln(
-      'class ${className}TransitionValidator extends StateTransitionValidator<$className> {',
+      'class ${className}TransitionValidator '
+      'extends StateTransitionValidator<$className> {',
     );
     buffer.writeln('  @override');
     buffer.writeln(
@@ -44,10 +54,10 @@ class StateValidatorGenerator
     );
     buffer.writeln('    return switch ((from, to)) {');
 
-    // Generate switch cases for each transition
     for (final transition in transitions) {
-      final from = transition.read('from').stringValue;
-      final to = transition.read('to').stringValue;
+      final reader = ConstantReader(transition);
+      final from = reader.read('from').stringValue;
+      final to = reader.read('to').stringValue;
       buffer.writeln('      ($from, $to) => true,');
     }
 

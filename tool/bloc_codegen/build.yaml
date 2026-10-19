@@ -1,3 +1,19 @@
+builders:
+  sealed_state_switch_generator:
+    import: "package:bloc_codegen/builder.dart"
+    builder_factories: ["sealedStateSwitchGenerator"]
+    build_extensions: {".dart": ["sealed_state_switch.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+  state_validator_generator:
+    import: "package:bloc_codegen/builder.dart"
+    builder_factories: ["stateValidatorGenerator"]
+    build_extensions: {".dart": ["state_validator.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
 targets:
   $default:
     builders:
@@ -9,4 +25,3 @@ targets:
         enabled: true
         generate_for:
           - lib/**/*.dart
-
