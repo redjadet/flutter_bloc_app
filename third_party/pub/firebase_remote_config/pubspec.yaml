@@ -21,8 +21,8 @@ environment:
 dependencies:
   firebase_core: ^4.15.0
   firebase_core_platform_interface: ^8.1.1
-  firebase_remote_config_platform_interface: ^3.0.7
-  firebase_remote_config_web: ^1.10.14
+  firebase_remote_config_platform_interface: ^3.0.8
+  firebase_remote_config_web: ^1.10.15
   flutter:
     sdk: flutter
 

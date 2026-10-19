@@ -16,5 +16,5 @@ dev_dependencies:
   analyzer_testing: 0.4.3
   test: ^1.31.1
   test_reflective_loader: ^0.6.0
-  dart_code_metrics_presets: ^2.33.0
+  dart_code_metrics_presets: ^2.34.0
   flutter_lints: ^6.0.0
