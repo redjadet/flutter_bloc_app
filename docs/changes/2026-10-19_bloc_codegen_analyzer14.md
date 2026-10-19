@@ -16,6 +16,8 @@ stack lagged the workspace `analyzer: 14.5.0` APIs.
 - Added missing `builder.dart` + `build.yaml` builder registrations.
 - App `bloc_annotations.dart` re-exports the package; workspace analyze/test
   scripts include `tool/bloc_codegen`.
+- List `bloc_annotations` in `tool/check_package_dependency_dag.sh` ALLOWED map
+  (leaf package, no path deps).
 
 ## Verification
 
@@ -23,3 +25,4 @@ stack lagged the workspace `analyzer: 14.5.0` APIs.
 - `cd packages/bloc_annotations && dart analyze lib test` — No issues found
 - `cd tool/bloc_codegen && dart test` — pass
 - `cd packages/bloc_annotations && dart test` — pass
+- `bash tool/check_package_dependency_dag.sh` — package-dag|pass
