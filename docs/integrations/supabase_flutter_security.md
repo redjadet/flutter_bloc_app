@@ -124,9 +124,17 @@ policies.
 
 Agent rules:
 
-- Do not deploy `chat-complete` with `--no-verify-jwt`.
-- Keep Dashboard “Verify JWT with legacy secret” disabled unless the project
-  intentionally uses the legacy JWT secret (false `401 auth_required` otherwise).
+- Keep platform JWT verification on for `chat-complete`:
+  `verify_jwt = true` in [`supabase/config.toml`](../../supabase/config.toml).
+  Do **not** deploy with `--no-verify-jwt`, and do **not** turn off JWT
+  verification in the Dashboard. The handler’s `Authorization: Bearer …`
+  prefix check is only a secondary guard; the platform gate is the auth
+  boundary that keeps invalid tokens from reaching paid Hugging Face calls.
+- Dashboard **Verify JWT with legacy secret** is a *signing-key path* toggle,
+  not “disable JWT verification.” Keep it **disabled** when the project uses
+  the newer signing-key / JWKS path (enabling it can cause false
+  `401 auth_required`). Enable only if the project intentionally uses the
+  legacy JWT secret. See [`supabase/README.md`](../../supabase/README.md).
 - Sync functions are intentionally unauthenticated call surfaces; rate/abuse
   hardening is a product decision — do not “fix” by adding anon table writes.
 - Service role usage in Edge is correct; logging must not print keys or JWTs.
