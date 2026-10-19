@@ -46,13 +46,17 @@ class _ViewerReplay {
       // Drop from the registry before awaiting close so a new acquire cannot
       // resurrect a replay whose stream controller is shutting down.
       onZero();
-      await _controller.close();
+      await close();
     }
   }
 
   Future<void> forceClose() async {
     _leases = 0;
     _timer?.dispose();
+    await close();
+  }
+
+  Future<void> close() async {
     await _controller.close();
   }
 
