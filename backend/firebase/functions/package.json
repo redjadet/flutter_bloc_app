@@ -30,7 +30,7 @@
     "axios": "^1.20.0",
     "body-parser": "2.3.0",
     "brace-expansion": "5.0.12",
-    "js-yaml": "5.4.3",
+    "js-yaml": "5.5.0",
     "minimatch": "^10.2.6",
     "protobufjs": "^8.8.1",
     "rimraf": "^6.1.3",
