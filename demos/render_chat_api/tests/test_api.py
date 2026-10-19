@@ -106,7 +106,7 @@ def test_chat_rejects_oversized_streamed_body(
     monkeypatch.setenv("MAX_BODY_BYTES", "64")
     get_settings.cache_clear()
 
-    def _chunks() -> object:
+    def _chunks() -> Iterator[bytes]:
         yield b"x" * 40
         yield b"y" * 40
 
