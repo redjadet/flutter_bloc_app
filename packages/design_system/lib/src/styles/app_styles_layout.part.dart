@@ -17,8 +17,8 @@ BoxStyler get _appStylesBanner => BoxStyler()
       ),
     )
     .shadows(const [])
-    .onTablet(BoxStyler().paddingX(AppMixTokens.gapL()))
-    .onDesktop(BoxStyler().paddingX(AppMixTokens.gapL()));
+    .onTablet(BoxStyler().padding(.horizontal(AppMixTokens.gapL())))
+    .onDesktop(BoxStyler().padding(.horizontal(AppMixTokens.gapL())));
 
 BoxStyler get _appStylesEmptyState => BoxStyler().padding(
   EdgeInsetsGeometryMix.only(
@@ -31,19 +31,19 @@ BoxStyler get _appStylesEmptyState => BoxStyler().padding(
 
 BoxStyler get _appStylesChip => BoxStyler()
     .color(AppMaterialColorTokens.surfaceContainerLow())
-    .borderRadiusAll(AppMixTokens.radiusPill())
+    .borderRadius(.all(AppMixTokens.radiusPill()))
     .padding(
       EdgeInsetsGeometryMix.symmetric(
         vertical: AppMixTokens.gapS(),
         horizontal: AppMixTokens.gapS(),
       ),
     )
-    .onTablet(BoxStyler().paddingX(AppMixTokens.gapM()))
-    .onDesktop(BoxStyler().paddingX(AppMixTokens.gapM()));
+    .onTablet(BoxStyler().padding(.horizontal(AppMixTokens.gapM())))
+    .onDesktop(BoxStyler().padding(.horizontal(AppMixTokens.gapM())));
 
 BoxStyler get _appStylesStatusSuccess => BoxStyler()
     .color(AppMaterialColorTokens.success())
-    .borderRadiusAll(AppMixTokens.radiusPill())
+    .borderRadius(.all(AppMixTokens.radiusPill()))
     .padding(
       EdgeInsetsGeometryMix.symmetric(
         vertical: AppMixTokens.gapS(),
@@ -58,7 +58,7 @@ TextStyler get _appStylesStatusSuccessText => TextStyler()
 
 BoxStyler get _appStylesStatusError => BoxStyler()
     .color(AppMaterialColorTokens.error())
-    .borderRadiusAll(AppMixTokens.radiusPill())
+    .borderRadius(.all(AppMixTokens.radiusPill()))
     .padding(
       EdgeInsetsGeometryMix.symmetric(
         vertical: AppMixTokens.gapS(),
