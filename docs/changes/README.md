@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-19_mix_shorthand_deprecation_migration.md`](2026-10-19_mix_shorthand_deprecation_migration.md): Migrate Mix `paddingX`/`paddingY`/`borderRadiusAll` shorthands in `design_system` ahead of Mix 3.0.
 - [`2026-10-16_release_size_flags_teaching.md`](2026-10-16_release_size_flags_teaching.md): Teach `--split-debug-info` / `--obfuscate`+SYMBOLS / `--split-per-abi` vs AAB on bundle-size + perf checklist.
 - [`2026-10-14_agent_codegen_feedback_loop_rules.md`](2026-10-14_agent_codegen_feedback_loop_rules.md): Explicit never-hand-edit generated files + regenerate/MCP/platform-channel human-review cues for agents.
 - [`2026-10-13_docs_professionalism_polish.md`](2026-10-13_docs_professionalism_polish.md): Strip emoji-decorated headings and decorative checklist marks from FAQ, review, DRY, repository-lifecycle, and offline-first living docs.

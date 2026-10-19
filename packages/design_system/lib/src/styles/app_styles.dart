@@ -26,7 +26,7 @@ class AppStyles {
 
   static BoxStyler get card => BoxStyler()
       .color(AppMaterialColorTokens.surface())
-      .borderRadiusAll(AppMixTokens.radiusM())
+      .borderRadius(.all(AppMixTokens.radiusM()))
       .elevation(.one)
       .padding(
         EdgeInsetsGeometryMix.only(
@@ -45,9 +45,9 @@ class AppStyles {
       .border(
         .all(BorderSideMix(color: AppMaterialColorTokens.primary(), width: 2)),
       )
-      .borderRadiusAll(AppMixTokens.radiusPill())
-      .paddingY(AppMixTokens.gapS())
-      .paddingX(AppMixTokens.gapM());
+      .borderRadius(.all(AppMixTokens.radiusPill()))
+      .padding(.vertical(AppMixTokens.gapS()))
+      .padding(.horizontal(AppMixTokens.gapM()));
 
   static TextStyler get profileOutlinedButtonText => TextStyler()
       .style(_labelLargeToken.mix())
@@ -56,9 +56,9 @@ class AppStyles {
 
   static BoxStyler get filledButton => BoxStyler()
       .color(AppMaterialColorTokens.primary())
-      .borderRadiusAll(AppMixTokens.radiusPill())
-      .paddingY(AppMixTokens.gapS())
-      .paddingX(AppMixTokens.gapM());
+      .borderRadius(.all(AppMixTokens.radiusPill()))
+      .padding(.vertical(AppMixTokens.gapS()))
+      .padding(.horizontal(AppMixTokens.gapM()));
 
   static TextStyler get filledButtonText => TextStyler()
       .style(_labelLargeToken.mix())
@@ -72,9 +72,9 @@ class AppStyles {
           BorderSideMix(color: AppMaterialColorTokens.primary(), width: 1.5),
         ),
       )
-      .borderRadiusAll(AppMixTokens.radiusPill())
-      .paddingY(AppMixTokens.gapS())
-      .paddingX(AppMixTokens.gapM());
+      .borderRadius(.all(AppMixTokens.radiusPill()))
+      .padding(.vertical(AppMixTokens.gapS()))
+      .padding(.horizontal(AppMixTokens.gapM()));
 
   static TextStyler get outlinedButtonText => TextStyler()
       .style(_labelLargeToken.mix())
@@ -90,8 +90,8 @@ class AppStyles {
           horizontal: AppMixTokens.gapM(),
         ),
       )
-      .onTablet(BoxStyler().paddingX(AppMixTokens.gapL()))
-      .onDesktop(BoxStyler().paddingX(AppMixTokens.gapL()));
+      .onTablet(BoxStyler().padding(.horizontal(AppMixTokens.gapL())))
+      .onDesktop(BoxStyler().padding(.horizontal(AppMixTokens.gapL())));
 
   /// Input field container style: padding, radius, surface-container
   /// background, and light border. Use with [Box] to wrap [TextField] or
@@ -107,7 +107,7 @@ class AppStyles {
           horizontal: AppMixTokens.gapL(),
         ),
       )
-      .borderRadiusAll(AppMixTokens.radiusM());
+      .borderRadius(.all(AppMixTokens.radiusM()));
 
   /// Input field shell: same as [inputField] but no padding. Use when
   /// [TextField] (or child) supplies its own contentPadding so height
@@ -117,7 +117,7 @@ class AppStyles {
       .border(
         .all(BorderSideMix(color: AppMaterialColorTokens.outlineVariant())),
       )
-      .borderRadiusAll(AppMixTokens.radiusM());
+      .borderRadius(.all(AppMixTokens.radiusM()));
 
   /// Shared field outline for custom controls that need to match TextField
   /// borders without adopting [inputField] padding/background.
@@ -125,7 +125,7 @@ class AppStyles {
       .border(
         .all(BorderSideMix(color: AppMaterialColorTokens.outlineVariant())),
       )
-      .borderRadiusAll(AppMixTokens.radiusS());
+      .borderRadius(.all(AppMixTokens.radiusS()));
 
   /// App bar area style: token-based horizontal/vertical padding, no elevation.
   /// Use with [Box] for custom app bar content.
