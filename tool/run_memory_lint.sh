@@ -16,6 +16,10 @@ if [ "${SKIP_MEMORY_LINT:-0}" = "1" ] || [ "${CHECKLIST_RUN_MEMORY_LINT:-1}" = "
   exit 0
 fi
 
+# Lib-scoped machine analyze can false-green when the plugin fails AOT compile.
+# Analyze the plugin package first so source/type errors fail this gate.
+preflight_analyzer_plugin_package custom_lints/memory_lint memory_lint
+
 set +e
 run_analyzer_plugin_machine_analysis lib memory_lint
 analyze_status=$?
@@ -27,9 +31,10 @@ fi
 
 analyze_output="$(cat "${ANALYZER_PLUGIN_MACHINE_OUTPUT}")"
 
-plugin_errors="$(printf '%s\n' "$analyze_output" | grep -E 'An error occurred while executing an analyzer plugin|PLUGIN_ERROR' || true)"
-if [ -n "$plugin_errors" ]; then
-  echo "$plugin_errors"
+if analyzer_plugin_is_plugin_failure_output "$analyze_output"; then
+  printf '%s\n' "$analyze_output" | grep -Ei \
+    'An error occurred while executing an analyzer plugin|PLUGIN_ERROR|Failed to compile|AOT compilation failed|Generating AOT kernel dill failed' \
+    || printf '%s\n' "$analyze_output"
   echo "❌ memory_lint analyzer plugin failed (see above)."
   exit 1
 fi

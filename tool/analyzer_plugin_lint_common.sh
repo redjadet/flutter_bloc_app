@@ -22,6 +22,57 @@ analyzer_plugin_is_crash_output() {
     'Bad state: The analysis server crashed|analysis server crashed|Analysis server exited unexpectedly|analysis server has terminated'
 }
 
+# Plugin AOT / load failures (lib-scoped machine analyze often omits these).
+analyzer_plugin_is_plugin_failure_output() {
+  local output="$1"
+  printf '%s\n' "$output" | grep -Eqi \
+    'An error occurred while executing an analyzer plugin|PLUGIN_ERROR|Failed to compile .*plugin\.dart|AOT compilation failed|Generating AOT kernel dill failed'
+}
+
+# Fail closed if a native analyzer plugin package itself has analyzer errors.
+# Lib-scoped app analyze can exit 0 while the bundled plugin fails AOT compile.
+preflight_analyzer_plugin_package() {
+  local plugin_pkg_rel="$1"
+  local label="${2:-analyzer plugin}"
+  local plugin_pkg="$WORKSPACE_ROOT/$plugin_pkg_rel"
+  local dart_bin
+  local out_file
+  local status
+
+  if [ ! -d "$plugin_pkg/lib" ]; then
+    echo "❌ $label preflight failed: missing package lib/ at $plugin_pkg" >&2
+    return 1
+  fi
+
+  dart_bin="$(resolve_flutter_dart)"
+  out_file="${CHECKLIST_TMP_DIR:-${TMPDIR:-/tmp}}/${label// /_}_preflight.out"
+  mkdir -p "$(dirname "$out_file")"
+
+  echo "Preflight: dart analyze $plugin_pkg_rel/lib ($label sources)..." >&2
+  set +e
+  (
+    cd "$plugin_pkg"
+    "$dart_bin" analyze lib >"$out_file" 2>&1
+  )
+  status=$?
+  set -e
+
+  if [ "$status" -ne 0 ]; then
+    cat "$out_file" >&2 || true
+    echo "❌ $label preflight failed: plugin package analyze exited $status." >&2
+    echo "   Fix $plugin_pkg_rel before relying on lib-scoped plugin lint." >&2
+    return 1
+  fi
+
+  if grep -Eq '^[[:space:]]*error -' "$out_file"; then
+    cat "$out_file" >&2 || true
+    echo "❌ $label preflight failed: plugin package reported analyzer errors." >&2
+    return 1
+  fi
+
+  return 0
+}
+
 run_analyzer_plugin_machine_analysis() {
   local scope="${1:-$ANALYZER_PLUGIN_SCOPE}"
   local tmp_dir="${CHECKLIST_TMP_DIR:-${TMPDIR:-/tmp}}"
