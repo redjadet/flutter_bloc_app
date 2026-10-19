@@ -7,6 +7,7 @@ rules remain in their dedicated owner folders.
 | --- | --- |
 | Firebase setup | [firebase_setup.md](firebase_setup.md) |
 | Firebase versus Supabase trade-offs | [firebase_vs_supabase.md](firebase_vs_supabase.md) |
+| Supabase Flutter security (AI handoff) | [supabase_flutter_security.md](supabase_flutter_security.md) |
 | Firebase App Distribution | [firebase_app_distribution.md](firebase_app_distribution.md) |
 | FCM demo | [fcm_demo_integration.md](fcm_demo_integration.md) |
 | Google Maps | [google_maps_integration.md](google_maps_integration.md) |
