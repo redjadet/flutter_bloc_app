@@ -96,9 +96,11 @@ policies.
 - Migration `20260309170000_iot_devices_rls_fixes.sql` **dropped** permissive
   anon read (`Allow anon read iot_devices`). Do not reintroduce it.
 - App inserts set `user_id` from `auth.currentUser`; RLS enforces ownership.
-- Realtime: `IotDemoRealtimeSubscription` listens to `iot_devices` changes;
-  table is in `supabase_realtime`. Rely on RLS for event visibility; do not
-  treat the client subscription filter as the sole ACL.
+- Realtime: `IotDemoRealtimeSubscription` listens to `iot_devices` changes
+  (`PostgresChangeEvent.all`); table is in `supabase_realtime`. Rely on RLS
+  for INSERT/UPDATE visibility; do not treat the client subscription filter
+  as the sole ACL. **Exception:** Supabase does not apply RLS to DELETE
+  postgres_changes events — do not treat delete fan-out as per-user private.
 
 ### `graphql_continents` / `graphql_countries` / `chart_trending_points`
 
@@ -118,7 +120,7 @@ policies.
 
 | Function | JWT | Secrets | Role |
 | --- | --- | --- | --- |
-| `chat-complete` | **Required** (`verify_jwt = true` in `supabase/config.toml`) | `HUGGINGFACE_*` | User JWT; never HF key in release client |
+| `chat-complete` | **Required** (`verify_jwt = true` in `supabase/config.toml`) | `HUGGINGFACE_*` | App sends user access token; platform gate accepts any valid project JWT (see gap below); never HF key in release client |
 | `sync-graphql-countries` | Off (`--no-verify-jwt`) | Service role | Public trigger → upsert with service role |
 | `sync-chart-trending` | Off | Service role | Same pattern |
 
@@ -131,6 +133,11 @@ Agent rules:
   **not** validate the token. Without the platform gate (or equivalent real
   JWT verification in the handler), `Bearer invalid` can reach paid Hugging
   Face calls.
+- Do **not** claim the current Edge gate is “signed-in user only.” The legacy
+  platform check accepts any cryptographically valid project JWT, including
+  the public `anon` JWT. The Flutter path uses a user access token, but the
+  handler does not deny anon today — document / fix that as a product change,
+  not by disabling `verify_jwt`.
 - Do **not** change Dashboard JWT toggles from this handoff alone. Owner for
   the hosted checklist (including any “legacy secret” / signing-key path
   notes) is [`supabase/README.md`](../../supabase/README.md). If a signing-key
@@ -168,7 +175,13 @@ These are **honest gaps**, not invention targets for drive-by changes:
 2. Sync Edge functions callable without JWT (demo tradeoff).
 3. Dual Firebase / Supabase identity (portfolio demo surface).
 4. No App Check / device attestation binding for Supabase calls documented here.
-5. Realtime channel has no client-side `user_id` filter (depends on RLS).
+5. Realtime channel has no client-side `user_id` filter (depends on RLS for
+   INSERT/UPDATE; DELETE events are not RLS-filtered by the platform).
+6. `chat-complete` platform `verify_jwt` does **not** establish a signed-in
+   user by itself: a valid public `anon` JWT can pass the gate, and the
+   handler only checks the Bearer prefix. User-only protection requires
+   verifying user identity (and denying anon) in the handler, plus a
+   negative test with the anon key.
 
 Do not “close” these by widening access. Prefer migrations, policies, and
 documented Edge contracts.
@@ -188,7 +201,10 @@ Before editing Flutter Supabase clients, migrations, or Edge code:
 6. Prefer git-tracked SQL; update
    [`offline_first/supabase_migrations.md`](../offline_first/supabase_migrations.md).
 7. Verify: signed-in user sees only own rows; signed-out cannot read protected
-   tables; `chat-complete` rejects bad JWT with `401` + `auth_required`.
+   tables. For `chat-complete`: malformed/missing JWT is rejected by the
+   **platform** (often `Invalid JWT` / missing-header style, before the
+   handler). Handler `401` + `code: auth_required` covers the Bearer-prefix
+   miss path only — do not conflate the two when asserting smoke checks.
 8. Run focused tests under `apps/mobile/test/` for touched features; follow
    `ai-safe-supabase-workflow`.
 
