@@ -95,4 +95,8 @@ class _PerfTodoRepository
     _items = _items.where((e) => !e.isCompleted).toList(growable: false);
     _controller.add(_items);
   }
+
+  Future<void> close() async {
+    await _controller.close();
+  }
 }

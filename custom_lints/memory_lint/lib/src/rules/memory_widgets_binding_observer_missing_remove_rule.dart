@@ -73,8 +73,9 @@ class _FirstAddObserverFinder extends RecursiveAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.name == 'addObserver') {
-      final NodeList<Expression> args = node.argumentList.arguments;
-      if (args.length == 1 && args.first is ThisExpression) {
+      final NodeList<Argument> args = node.argumentList.arguments;
+      if (args.length == 1 &&
+          args.first.argumentExpression is ThisExpression) {
         onFound(node);
         return;
       }
