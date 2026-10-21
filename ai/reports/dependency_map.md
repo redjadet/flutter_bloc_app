@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-10-09T09:29:20Z"
-  git_head: "de50fdfa3b935dc5042201986e957ca565898f6d"
+  generated_at: "2026-10-21T08:55:51Z"
+  git_head: "1bca0946b397a880f58b2768e811f8076c3eb4f1"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -21,14 +21,14 @@ ai_snapshot:
 | chat | 6617 | yes |
 | staff_app_demo | 5629 | yes |
 | todo_list | 5518 | yes |
-| social_feed_demo | 5389 | yes |
+| social_feed_demo | 5393 | yes |
 | online_therapy_demo | 5092 | yes |
 | case_study_demo | 4592 | yes |
-| counter | 4407 | yes |
-| native_platform_showcase | 3531 | yes |
+| counter | 4417 | yes |
+| native_platform_showcase | 3829 | yes |
 | iot | 3075 | yes |
 | iot_demo | 3025 | yes |
-| example | 2438 | yes |
+| example | 2429 | yes |
 | auth | 2403 | yes |
 | realtime_market | 2152 | yes |
 | chart | 1974 | yes |

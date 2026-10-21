@@ -118,6 +118,16 @@ they are not a claim of device or backend integration coverage.
 | `apps/mobile/test/goldens/counter_page_loading.phone.png` | Refresh the reviewed phone baseline for corrected icon sizing. |
 | `apps/mobile/test/goldens/counter_page_loading.tablet_portrait.png` | Refresh the reviewed tablet baseline for logical width caps and icon sizing. |
 | `tool/check_regression_guards.sh` | Register both regression files and their changed-path routes. |
+| `ai/CONTEXT_MAP.md` | Refresh canonical source-revision metadata. |
+| `ai/README.md` | Update the canonical refresh date. |
+| `ai/reports/README.md` | Record the refreshed snapshot source revision and date. |
+| `ai/reports/architecture_overview.md` | Refresh canonical source-revision metadata. |
+| `ai/reports/data_flow_map.md` | Refresh canonical source-revision metadata. |
+| `ai/reports/dependency_map.md` | Regenerate feature line counts and source metadata. |
+| `ai/reports/feature_map.md` | Regenerate feature inventory provenance. |
+| `ai/reports/context_hotspots.md` | Regenerate file-size hotspots, feature line total, and source metadata. |
+| `ai/reports/anti_patterns.md` | Refresh canonical source-revision metadata. |
+| `ai/reports/ai_recommendations.md` | Refresh canonical source-revision metadata. |
 | [docs/changes/README.md](README.md) | Index this change note. |
 | [docs/changes/2026-10-20_reviewer_quality.md](2026-10-20_reviewer_quality.md) | Record scope, contracts, failures, fixes, and verification. |
 
@@ -170,9 +180,17 @@ Closeout also passed. Fresh delivery logs are
 `/tmp/reviewer-quality-delivery-{format,analyze,design-system-analyze,l10n,targeted,checklist,closeout}.log`.
 
 An additional strict source-revision audit found that eight pre-existing AI
-discovery snapshots referenced an older source revision. Their canonical refresh
-will follow the application commit, so metadata can identify the reviewed source
-commit without a circular commit hash. No snapshot validator will be weakened.
+discovery snapshots referenced an older source revision. After committing the
+reviewed source as `1bca0946b397a880f58b2768e811f8076c3eb4f1`,
+`bash tool/refresh_ai_reports.sh` regenerated the ten canonical discovery
+documents. The generated diff changes source metadata, dates, and measured
+feature/file counts only. `bash tool/check_ai_snapshot_freshness.sh --strict-head`
+passed against that source commit. The generated-only follow-up uses scoped
+documentation checks; the runtime proof above remains applicable. No validator
+was weakened. Scoped documentation gardening, task/AIDLC checks, badge and
+scorecard gates, README inventory, tracked-secret scanning, whitespace, and
+closeout passed. Refresh log:
+`/tmp/reviewer-quality-delivery-snapshot-refresh.log`.
 
 The user explicitly authorized pre-commit corrections, commit, push, and merge
 after validation. The original implementation and README follow-up performed no
