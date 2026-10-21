@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-21_chat_dart_records_patterns.md`](2026-10-21_chat_dart_records_patterns.md): Chat failure and payload branches use Dart 3 records and switch patterns; behavior unchanged.
 - [`2026-10-20_reviewer_quality.md`](2026-10-20_reviewer_quality.md): Focus README and demo navigation; fix shared desktop sizing and counter accessibility with regression tests.
 - [`2026-10-19_mix_shorthand_deprecation_migration.md`](2026-10-19_mix_shorthand_deprecation_migration.md): Migrate Mix `paddingX`/`paddingY`/`borderRadiusAll` shorthands in `design_system` ahead of Mix 3.0.
 - [`2026-10-19_bloc_codegen_analyzer14.md`](2026-10-19_bloc_codegen_analyzer14.md): Package-ize BLoC annotations; repair `tool/bloc_codegen` for analyzer 14 / source_gen 4.

@@ -7,32 +7,36 @@ bool looksLikeUndeployedChatCompleteFunction(FunctionException e) {
   if (e.status == 404) {
     return true;
   }
-  final String phrase = (e.reasonPhrase ?? '').toLowerCase();
-  if (phrase.contains('not found') &&
-      (phrase.contains('function') || phrase.contains('requested'))) {
+  if (_mentionsMissingFunction(e.reasonPhrase)) {
     return true;
   }
-  final Object? d = e.details;
-  if (d is String) {
-    final String s = d.toLowerCase();
-    if (s.contains('not found') &&
-        (s.contains('function') || s.contains('requested'))) {
-      return true;
-    }
+  return _detailsMentionMissingFunction(e.details);
+}
+
+bool _mentionsMissingFunction(String? value) {
+  if (value == null) {
+    return false;
   }
-  if (d is Map) {
-    for (final String key in <String>['message', 'error', 'msg']) {
-      final Object? v = d[key];
-      if (v is String) {
-        final String s = v.toLowerCase();
-        if (s.contains('not found') &&
-            (s.contains('function') || s.contains('requested'))) {
+  final String lower = value.toLowerCase();
+  return lower.contains('not found') &&
+      (lower.contains('function') || lower.contains('requested'));
+}
+
+bool _detailsMentionMissingFunction(Object? details) {
+  switch (details) {
+    case final String text:
+      return _mentionsMissingFunction(text);
+    case final Map<dynamic, dynamic> map:
+      for (final String key in <String>['message', 'error', 'msg']) {
+        final Object? value = map[key];
+        if (value is String && _mentionsMissingFunction(value)) {
           return true;
         }
       }
-    }
+      return false;
+    default:
+      return false;
   }
-  return false;
 }
 
 /// Maps [FunctionException] from Supabase Functions `chat-complete` invoke.
@@ -67,60 +71,48 @@ ChatRemoteFailureException mapSupabaseChatCompleteFunctionException(
     );
   }
 
-  final int status = e.status;
-  if (status == 401) {
-    return const ChatRemoteFailureException(
+  return switch (e.status) {
+    401 => const ChatRemoteFailureException(
       'Sign in required or session expired.',
       code: 'auth_required',
       retryable: false,
       isEdge: true,
-    );
-  }
-  if (status == 403) {
-    return const ChatRemoteFailureException(
+    ),
+    403 => const ChatRemoteFailureException(
       'Not allowed to complete this chat request.',
       code: 'forbidden',
       retryable: false,
       isEdge: true,
-    );
-  }
-  if (status == 429) {
-    return const ChatRemoteFailureException(
+    ),
+    429 => const ChatRemoteFailureException(
       'Rate limited. Please wait and try again.',
       code: 'rate_limited',
       retryable: false,
       isEdge: true,
-    );
-  }
-  if (status == 504) {
-    return const ChatRemoteFailureException(
+    ),
+    504 => const ChatRemoteFailureException(
       'Cloud chat timed out.',
       code: 'upstream_timeout',
       retryable: true,
       isEdge: true,
-    );
-  }
-  if (status >= 500) {
-    return ChatRemoteFailureException(
-      'Cloud chat unavailable (HTTP $status).',
+    ),
+    >= 500 => ChatRemoteFailureException(
+      'Cloud chat unavailable (HTTP ${e.status}).',
       code: 'upstream_unavailable',
       retryable: true,
       isEdge: true,
-    );
-  }
-  if (status >= 400) {
-    return ChatRemoteFailureException(
-      'Invalid chat request (HTTP $status).',
+    ),
+    >= 400 => ChatRemoteFailureException(
+      'Invalid chat request (HTTP ${e.status}).',
       code: 'invalid_request',
       retryable: false,
       isEdge: true,
-    );
-  }
-
-  return const ChatRemoteFailureException(
-    'Cloud chat request failed.',
-    code: 'upstream_unavailable',
-    retryable: true,
-    isEdge: true,
-  );
+    ),
+    _ => const ChatRemoteFailureException(
+      'Cloud chat request failed.',
+      code: 'upstream_unavailable',
+      retryable: true,
+      isEdge: true,
+    ),
+  };
 }

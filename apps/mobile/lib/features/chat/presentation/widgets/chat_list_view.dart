@@ -53,11 +53,18 @@ class ChatListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       TypeSafeBlocSelector<ChatListCubit, ChatListState, _ChatListSelectorData>(
-        selector: (state) => _ChatListSelectorData(
-          isLoading: state is ChatListLoading,
-          contacts: state is ChatListLoaded ? state.contacts : null,
-          errorMessage: state is ChatListError ? state.failure.message : null,
-        ),
+        selector: (state) => switch (state) {
+          ChatListInitial() => const _ChatListSelectorData(isLoading: false),
+          ChatListLoading() => const _ChatListSelectorData(isLoading: true),
+          ChatListLoaded(:final contacts) => _ChatListSelectorData(
+            isLoading: false,
+            contacts: contacts,
+          ),
+          ChatListError(:final failure) => _ChatListSelectorData(
+            isLoading: false,
+            errorMessage: failure.message,
+          ),
+        },
         builder: (context, data) {
           if (data.isLoading) {
             return const CommonLoadingWidget();

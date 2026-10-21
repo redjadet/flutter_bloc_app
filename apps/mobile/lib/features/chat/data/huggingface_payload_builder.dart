@@ -38,16 +38,13 @@ class HuggingFacePayloadBuilder {
   }) {
     final List<Map<String, String>> messages = <Map<String, String>>[];
 
-    for (int i = 0; i < pastUserInputs.length; i++) {
-      messages.add(<String, String>{
-        'role': 'user',
-        'content': pastUserInputs[i],
-      });
+    for (final (int index, String input) in pastUserInputs.indexed) {
+      messages.add(<String, String>{'role': 'user', 'content': input});
 
-      if (i < generatedResponses.length) {
+      if (index < generatedResponses.length) {
         messages.add(<String, String>{
           'role': 'assistant',
-          'content': generatedResponses[i],
+          'content': generatedResponses[index],
         });
       }
     }

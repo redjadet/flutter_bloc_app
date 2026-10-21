@@ -106,17 +106,15 @@ List<String> _stringListFromJson(List<dynamic>? raw) {
   return raw.map((dynamic value) => value.toString()).toList(growable: false);
 }
 
-DateTime _parseDate(dynamic value, {DateTime? fallback}) {
-  if (value is String && value.isNotEmpty) {
-    final DateTime? parsed = DateTime.tryParse(value);
-    if (parsed != null) {
-      return parsed;
-    }
-  }
-  if (value is num) {
-    return DateTime.fromMillisecondsSinceEpoch(value.toInt());
-  }
-  return fallback ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+DateTime _parseDate(Object? value, {DateTime? fallback}) {
+  final DateTime resolvedFallback =
+      fallback ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+  return switch (value) {
+    final String text when text.isNotEmpty =>
+      DateTime.tryParse(text) ?? resolvedFallback,
+    final num millis => DateTime.fromMillisecondsSinceEpoch(millis.toInt()),
+    _ => resolvedFallback,
+  };
 }
 
 String? _normalizeModel(dynamic value) {
@@ -127,15 +125,14 @@ String? _normalizeModel(dynamic value) {
   return trimmed.isEmpty ? null : trimmed;
 }
 
-DateTime? _parseOptionalDate(dynamic value) {
-  if (value is String && value.isNotEmpty) {
-    return DateTime.tryParse(value);
-  }
-  if (value is num) {
-    return DateTime.fromMillisecondsSinceEpoch(value.toInt(), isUtc: true);
-  }
-  return null;
-}
+DateTime? _parseOptionalDate(Object? value) => switch (value) {
+  final String text when text.isNotEmpty => DateTime.tryParse(text),
+  final num millis => DateTime.fromMillisecondsSinceEpoch(
+    millis.toInt(),
+    isUtc: true,
+  ),
+  _ => null,
+};
 
 String? _normalizeChangeId(dynamic value) {
   if (value is! String) {

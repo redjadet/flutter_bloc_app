@@ -60,16 +60,10 @@ class ChatModelSelector extends StatelessWidget {
     );
   }
 
-  String _modelLabel(AppLocalizations l10n, String model) {
-    switch (model) {
-      case kChatOrchestrationAutoModelId:
-        return l10n.chatModelAuto;
-      case 'openai/gpt-oss-20b':
-        return l10n.chatModelGptOss20b;
-      case 'openai/gpt-oss-120b':
-        return l10n.chatModelGptOss120b;
-      default:
-        return model;
-    }
-  }
+  String _modelLabel(AppLocalizations l10n, String model) => switch (model) {
+    kChatOrchestrationAutoModelId => l10n.chatModelAuto,
+    'openai/gpt-oss-20b' => l10n.chatModelGptOss20b,
+    'openai/gpt-oss-120b' => l10n.chatModelGptOss120b,
+    _ => model,
+  };
 }

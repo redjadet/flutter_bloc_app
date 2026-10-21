@@ -163,33 +163,30 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
           return;
         }
 
-        if (error is ChatRemoteFailureException) {
-          _emitConversationSnapshot(
-            active: withUser,
-            history: historyAfterUser,
-            isLoading: false,
-            error: error.message,
-            remoteFailureL10nCode: error.code,
-          );
-          return;
+        switch (error) {
+          case ChatRemoteFailureException(:final message, :final code):
+            _emitConversationSnapshot(
+              active: withUser,
+              history: historyAfterUser,
+              isLoading: false,
+              error: message,
+              remoteFailureL10nCode: code,
+            );
+          case ChatException(:final message):
+            _emitConversationSnapshot(
+              active: withUser,
+              history: historyAfterUser,
+              isLoading: false,
+              error: message,
+            );
+          default:
+            _emitConversationSnapshot(
+              active: withUser,
+              history: historyAfterUser,
+              isLoading: false,
+              error: failure.message,
+            );
         }
-
-        if (error is ChatException) {
-          _emitConversationSnapshot(
-            active: withUser,
-            history: historyAfterUser,
-            isLoading: false,
-            error: error.message,
-          );
-          return;
-        }
-
-        _emitConversationSnapshot(
-          active: withUser,
-          history: historyAfterUser,
-          isLoading: false,
-          error: failure.message,
-        );
       },
     );
   }
