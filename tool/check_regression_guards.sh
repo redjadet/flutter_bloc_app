@@ -46,6 +46,8 @@ ALL_TESTS=(
   "test/account_section_test.dart"
   "test/app/bootstrap/bootstrap_coordinator_additional_test.dart"
   "test/features/counter/presentation/pages/counter_page_snackbar_timeout_test.dart"
+  "test/features/counter/presentation/widgets/counter_display_accessibility_test.dart"
+  "test/shared/responsive_shell_regression_test.dart"
   "test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart"
   "test/features/graphql_demo/data/supabase_graphql_demo_repository_test.dart"
   "test/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit_test.dart"
@@ -239,10 +241,15 @@ select_regression_guard_tests() {
       test/account_section_test.dart)
         add_test_once out_ref "test/account_section_test.dart"
         ;;
+      lib/features/example/*|\
+      test/shared/responsive_shell_regression_test.dart)
+        add_test_once out_ref "test/shared/responsive_shell_regression_test.dart"
+        ;;
       lib/features/counter/*|\
       test/features/counter/*)
         add_test_once out_ref "test/features/counter/presentation/pages/counter_page_snackbar_timeout_test.dart"
         add_test_once out_ref "test/features/counter/data/offline_first_counter_repository_test.dart"
+        add_test_once out_ref "test/features/counter/presentation/widgets/counter_display_accessibility_test.dart"
         ;;
       lib/features/graphql_demo/*|\
       test/features/graphql_demo/*)

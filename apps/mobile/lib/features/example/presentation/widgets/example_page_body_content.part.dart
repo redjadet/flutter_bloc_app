@@ -91,11 +91,19 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required IconData icon,
     required String label,
     Key? key,
-  }) => PlatformAdaptive.filledButton(
+  }) => SizedBox(
     key: key,
-    context: context,
-    onPressed: onPressed,
-    child: IconLabelRow(icon: icon, label: label),
+    width: double.infinity,
+    child: PlatformAdaptive.outlinedButton(
+      context: context,
+      onPressed: onPressed,
+      foregroundColor: colors.primary,
+      side: BorderSide(color: colors.outline),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: IconLabelRow(icon: icon, label: label),
+      ),
+    ),
   );
 
   Widget _sectionHeader(BuildContext context, String label) => Padding(
@@ -127,24 +135,6 @@ class _ExamplePageBodyContent extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-            child: FancyShimmerImage(
-              imageUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-              height: 180,
-              width: double.infinity,
-              boxFit: BoxFit.cover,
-              shimmerBaseColor: colors.surfaceContainerHighest,
-              shimmerHighlightColor: colors.surface,
-            ),
-          ),
-          SizedBox(height: context.responsiveGapL),
-          Icon(
-            Icons.explore,
-            size: context.responsiveIconSize * 2.5,
-            color: colors.primary,
-          ),
-          SizedBox(height: context.responsiveGapM),
           Text(
             l10n.examplePageDescription,
             style: theme.textTheme.bodyLarge,
@@ -340,12 +330,14 @@ class _ExamplePageBodyContent extends StatelessWidget {
             label: l10n.exampleIapDemoButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          _buildIconButton(
+          PlatformAdaptive.filledButton(
+            key: const ValueKey('example-run-isolates-button'),
             context: context,
             onPressed: onRunIsolates,
-            icon: Icons.bolt_outlined,
-            label: l10n.exampleRunIsolatesButton,
-            key: const ValueKey('example-run-isolates-button'),
+            child: IconLabelRow(
+              icon: Icons.bolt_outlined,
+              label: l10n.exampleRunIsolatesButton,
+            ),
           ),
           SizedBox(height: context.responsiveGapS),
           AnimatedSwitcher(

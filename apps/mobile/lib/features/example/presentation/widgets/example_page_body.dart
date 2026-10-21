@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';

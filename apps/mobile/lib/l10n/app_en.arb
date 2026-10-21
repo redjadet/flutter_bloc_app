@@ -77,9 +77,9 @@
   "@examplePageTitle": {
     "description": "Title of the portfolio feature demo hub"
   },
-  "examplePageDescription": "Portfolio demo hub: interview-spine flows first, then depth and archive samples. Prefer the live Counter, Todo, Chat, and Settings walkthrough for hiring reviews.",
+  "examplePageDescription": "Explore core workflows, native integrations, and smaller feature demos. Start with Counter, Todo, Chat, and Settings.",
   "@examplePageDescription": {
-    "description": "Intro copy explaining demo tiers on the example hub"
+    "description": "Introduction to the feature demos and suggested starting points"
   },
   "exampleBackButtonLabel": "Back to counter",
   "@exampleBackButtonLabel": {
@@ -4643,17 +4643,17 @@
   "@aiDecisionDemoTitle": {
     "description": "App bar title for the AI Decision Workbench"
   },
-  "exampleInterviewSpineSection": "Interview spine",
+  "exampleInterviewSpineSection": "Start here",
   "@exampleInterviewSpineSection": {
-    "description": "Section header for interview-spine demos on the example hub"
+    "description": "Section header for the suggested starting demos"
   },
-  "exampleDepthDemosSection": "Depth demos",
+  "exampleDepthDemosSection": "More demos",
   "@exampleDepthDemosSection": {
-    "description": "Section header for depth demos on the example hub"
+    "description": "Section header for additional feature demos"
   },
-  "exampleArchiveDemosSection": "Archive (frozen)",
+  "exampleArchiveDemosSection": "Archive",
   "@exampleArchiveDemosSection": {
-    "description": "Section header for archive/frozen demos on the example hub"
+    "description": "Section header for archived demos"
   },
   "realtimeMarketSkeletonPairLabel": "BTC/USDT",
   "@realtimeMarketSkeletonPairLabel": {

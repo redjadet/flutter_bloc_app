@@ -25,7 +25,7 @@
   "openCaseStudyDemoTooltip": "Ouvrir la démo d'étude de cas dentiste",
   "openCalculatorTooltip": "Ouvrir la calculatrice de paiement",
   "examplePageTitle": "Démos de fonctionnalités",
-  "examplePageDescription": "Hub de démos portfolio : d'abord le parcours d'entretien, puis les démos Depth et Archive. Pour les revues d'embauche, privilégiez Counter, Todo, Chat et Settings.",
+  "examplePageDescription": "Explorez les parcours principaux, les intégrations natives et les autres démos. Commencez par Compteur, Tâches, Chat et Paramètres.",
   "exampleBackButtonLabel": "Retour au compteur",
   "exampleNativeInfoButton": "Récupérer les infos natives",
   "exampleNativeInfoTitle": "Informations sur la plateforme",
@@ -1098,11 +1098,11 @@
   "@openWalletconnectAuthTooltip": {
     "description": "Tooltip for navigating to the WalletConnect Auth feature"
   },
-  "exampleTodoListButton": "Todo List Demo",
+  "exampleTodoListButton": "Démo de liste de tâches",
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
   },
-  "exampleChatListButton": "Chat List Demo",
+  "exampleChatListButton": "Démo de conversations",
   "@exampleChatListButton": {
     "description": "Button label for opening the chat list demo"
   },
@@ -2762,9 +2762,9 @@
   "onlineTherapyDemoTherapistFlow": "Parcours thérapeute",
   "onlineTherapyDemoAdminFlow": "Parcours admin",
   "aiDecisionDemoTitle": "AI Decision Workbench",
-  "exampleInterviewSpineSection": "Parcours d'entretien",
-  "exampleDepthDemosSection": "Démos Depth",
-  "exampleArchiveDemosSection": "Archive (figé)",
+  "exampleInterviewSpineSection": "Commencer ici",
+  "exampleDepthDemosSection": "Autres démos",
+  "exampleArchiveDemosSection": "Archives",
   "realtimeMarketSkeletonPairLabel": "BTC/USDT",
   "realtimeMarketSkeletonPricePlaceholder": "12 345,67"
 }

@@ -12,8 +12,7 @@ class CounterActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    // `responsiveIconSize` scales via ScreenUtil; on wide web it can exceed the
-    // default FAB's visual bounds. Clamp to keep glyph inside circle.
+    // Keep glyphs inside the default FAB's visual bounds.
     final double iconSize = math.min(context.responsiveIconSize, 28);
     return Column(
       mainAxisSize: MainAxisSize.min,

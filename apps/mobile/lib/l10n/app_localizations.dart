@@ -214,10 +214,10 @@ abstract class AppLocalizations {
   /// **'Feature demos'**
   String get examplePageTitle;
 
-  /// Intro copy explaining demo tiers on the example hub
+  /// Introduction to the feature demos and suggested starting points
   ///
   /// In en, this message translates to:
-  /// **'Portfolio demo hub: interview-spine flows first, then depth and archive samples. Prefer the live Counter, Todo, Chat, and Settings walkthrough for hiring reviews.'**
+  /// **'Explore core workflows, native integrations, and smaller feature demos. Start with Counter, Todo, Chat, and Settings.'**
   String get examplePageDescription;
 
   /// Label for the button that returns from the example page to the counter
@@ -6985,22 +6985,22 @@ abstract class AppLocalizations {
   /// **'AI Decision Workbench'**
   String get aiDecisionDemoTitle;
 
-  /// Section header for interview-spine demos on the example hub
+  /// Section header for the suggested starting demos
   ///
   /// In en, this message translates to:
-  /// **'Interview spine'**
+  /// **'Start here'**
   String get exampleInterviewSpineSection;
 
-  /// Section header for depth demos on the example hub
+  /// Section header for additional feature demos
   ///
   /// In en, this message translates to:
-  /// **'Depth demos'**
+  /// **'More demos'**
   String get exampleDepthDemosSection;
 
-  /// Section header for archive/frozen demos on the example hub
+  /// Section header for archived demos
   ///
   /// In en, this message translates to:
-  /// **'Archive (frozen)'**
+  /// **'Archive'**
   String get exampleArchiveDemosSection;
 
   /// Skeleton placeholder pair label while market data loads
