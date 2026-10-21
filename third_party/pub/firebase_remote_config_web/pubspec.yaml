@@ -20,7 +20,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  # Stay on 2.16.x: 2.17.0 retracted; 2.17.1 needs build 5.x, retrofit_generator still needs build ^4.
+  # 2.17.0 is retracted. 2.17.1 needs build 5.0.x; retrofit_generator 10.3 allows build <6.
   build_runner: ^2.17.1
   firebase_core_platform_interface: ^8.1.1
   flutter_test:

@@ -8,9 +8,9 @@ environment:
 resolution: workspace
 
 dependencies:
-  analysis_server_plugin: 0.3.24
-  analyzer: 14.5.0
-  analyzer_plugin: 0.14.18
+  analysis_server_plugin: 0.3.25
+  analyzer: 14.6.0
+  analyzer_plugin: 0.14.19
   yaml: ^3.1.4
 
 dev_dependencies:
