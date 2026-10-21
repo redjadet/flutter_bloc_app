@@ -68,7 +68,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get examplePageDescription =>
-      'مركز عروض المحفظة: مسارات المقابلة أولاً، ثم عينات العمق والأرشيف. لمراجعات التوظيف فضّل عداد Counter وTodo وChat والإعدادات.';
+      'استكشف المسارات الأساسية والتكاملات الأصلية وعروض الميزات الأخرى. ابدأ بالعداد والمهام والدردشة والإعدادات.';
 
   @override
   String get exampleBackButtonLabel => 'العودة إلى العداد';
@@ -3867,13 +3867,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiDecisionDemoTitle => 'منصة قرارات الذكاء الاصطناعي';
 
   @override
-  String get exampleInterviewSpineSection => 'مسار المقابلة';
+  String get exampleInterviewSpineSection => 'ابدأ هنا';
 
   @override
-  String get exampleDepthDemosSection => 'عروض العمق';
+  String get exampleDepthDemosSection => 'عروض أخرى';
 
   @override
-  String get exampleArchiveDemosSection => 'الأرشيف (مجمّد)';
+  String get exampleArchiveDemosSection => 'الأرشيف';
 
   @override
   String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';

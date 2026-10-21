@@ -6,7 +6,7 @@ extension ResponsiveTypographyContext on BuildContext {
       _scaledFont(this, mobile: 14, tablet: 16, desktop: 16);
 
   double get responsiveIconSize =>
-      _scaledFont(this, mobile: 20, tablet: 24, desktop: 24);
+      responsiveValue<double>(mobile: 20, tablet: 24, desktop: 24);
 
   double get responsiveHeadlineSize =>
       _scaledFont(this, mobile: 24, tablet: 32, desktop: 32);

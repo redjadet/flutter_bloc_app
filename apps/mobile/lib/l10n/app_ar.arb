@@ -18,7 +18,7 @@
   "openCaseStudyDemoTooltip": "افتح العرض التوضيحي لدراسة حالة طبيب الأسنان",
   "openCalculatorTooltip": "فتح حاسبة الدفع",
   "examplePageTitle": "عروض الميزات",
-  "examplePageDescription": "مركز عروض المحفظة: مسارات المقابلة أولاً، ثم عينات العمق والأرشيف. لمراجعات التوظيف فضّل عداد Counter وTodo وChat والإعدادات.",
+  "examplePageDescription": "استكشف المسارات الأساسية والتكاملات الأصلية وعروض الميزات الأخرى. ابدأ بالعداد والمهام والدردشة والإعدادات.",
   "exampleBackButtonLabel": "العودة إلى العداد",
   "exampleNativeInfoButton": "جلب المعلومات الأصلية",
   "exampleNativeInfoTitle": "معلومات المنصة",
@@ -3866,9 +3866,9 @@
   "onlineTherapyDemoTherapistFlow": "مسار المعالج",
   "onlineTherapyDemoAdminFlow": "مسار المسؤول",
   "aiDecisionDemoTitle": "منصة قرارات الذكاء الاصطناعي",
-  "exampleInterviewSpineSection": "مسار المقابلة",
-  "exampleDepthDemosSection": "عروض العمق",
-  "exampleArchiveDemosSection": "الأرشيف (مجمّد)",
+  "exampleInterviewSpineSection": "ابدأ هنا",
+  "exampleDepthDemosSection": "عروض أخرى",
+  "exampleArchiveDemosSection": "الأرشيف",
   "realtimeMarketSkeletonPairLabel": "BTC/USDT",
   "realtimeMarketSkeletonPricePlaceholder": "12,345.67"
 }

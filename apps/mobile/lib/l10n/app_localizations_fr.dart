@@ -69,7 +69,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get examplePageDescription =>
-      'Hub de démos portfolio : d\'abord le parcours d\'entretien, puis les démos Depth et Archive. Pour les revues d\'embauche, privilégiez Counter, Todo, Chat et Settings.';
+      'Explorez les parcours principaux, les intégrations natives et les autres démos. Commencez par Compteur, Tâches, Chat et Paramètres.';
 
   @override
   String get exampleBackButtonLabel => 'Retour au compteur';
@@ -1750,10 +1750,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get exampleTodoListButton => 'Todo List Demo';
+  String get exampleTodoListButton => 'Démo de liste de tâches';
 
   @override
-  String get exampleChatListButton => 'Chat List Demo';
+  String get exampleChatListButton => 'Démo de conversations';
 
   @override
   String get exampleSearchDemoButton => 'Search Demo';
@@ -3896,13 +3896,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get aiDecisionDemoTitle => 'AI Decision Workbench';
 
   @override
-  String get exampleInterviewSpineSection => 'Parcours d\'entretien';
+  String get exampleInterviewSpineSection => 'Commencer ici';
 
   @override
-  String get exampleDepthDemosSection => 'Démos Depth';
+  String get exampleDepthDemosSection => 'Autres démos';
 
   @override
-  String get exampleArchiveDemosSection => 'Archive (figé)';
+  String get exampleArchiveDemosSection => 'Archives';
 
   @override
   String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';

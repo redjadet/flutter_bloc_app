@@ -67,7 +67,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get examplePageDescription =>
-      'Portföy demo merkezi: önce mülakat omurgası, ardından derinlik ve arşiv örnekleri. İşe alım incelemeleri için canlı Counter, Todo, Chat ve Settings yolunu tercih edin.';
+      'Temel akışları, yerel platform entegrasyonlarını ve diğer özellik demolarını keşfedin. Sayaç, Yapılacaklar, Sohbet ve Ayarlar ile başlayın.';
 
   @override
   String get exampleBackButtonLabel => 'Sayaca dön';
@@ -1730,10 +1730,10 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get exampleTodoListButton => 'Todo List Demo';
+  String get exampleTodoListButton => 'Yapılacaklar demosu';
 
   @override
-  String get exampleChatListButton => 'Chat List Demo';
+  String get exampleChatListButton => 'Sohbet demosu';
 
   @override
   String get exampleSearchDemoButton => 'Search Demo';
@@ -3857,13 +3857,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get aiDecisionDemoTitle => 'AI Karar Çalışma Alanı';
 
   @override
-  String get exampleInterviewSpineSection => 'Mülakat omurgası';
+  String get exampleInterviewSpineSection => 'Buradan başlayın';
 
   @override
-  String get exampleDepthDemosSection => 'Derinlik demoları';
+  String get exampleDepthDemosSection => 'Diğer demolar';
 
   @override
-  String get exampleArchiveDemosSection => 'Arşiv (dondurulmuş)';
+  String get exampleArchiveDemosSection => 'Arşiv';
 
   @override
   String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';

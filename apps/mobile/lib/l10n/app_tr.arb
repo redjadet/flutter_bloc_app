@@ -26,7 +26,7 @@
   "openCaseStudyDemoTooltip": "Diş hekimi vaka çalışması demoyu aç",
   "openCalculatorTooltip": "Ödeme hesaplayıcısını aç",
   "examplePageTitle": "Özellik demoları",
-  "examplePageDescription": "Portföy demo merkezi: önce mülakat omurgası, ardından derinlik ve arşiv örnekleri. İşe alım incelemeleri için canlı Counter, Todo, Chat ve Settings yolunu tercih edin.",
+  "examplePageDescription": "Temel akışları, yerel platform entegrasyonlarını ve diğer özellik demolarını keşfedin. Sayaç, Yapılacaklar, Sohbet ve Ayarlar ile başlayın.",
   "exampleBackButtonLabel": "Sayaca dön",
   "exampleNativeInfoButton": "Yerel bilgileri getir",
   "exampleNativeInfoTitle": "Platform bilgisi",
@@ -1160,11 +1160,11 @@
   "@openWalletconnectAuthTooltip": {
     "description": "Tooltip for navigating to the WalletConnect Auth feature"
   },
-  "exampleTodoListButton": "Todo List Demo",
+  "exampleTodoListButton": "Yapılacaklar demosu",
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
   },
-  "exampleChatListButton": "Chat List Demo",
+  "exampleChatListButton": "Sohbet demosu",
   "@exampleChatListButton": {
     "description": "Button label for opening the chat list demo"
   },
@@ -2843,9 +2843,9 @@
   "onlineTherapyDemoTherapistFlow": "Terapist akışı",
   "onlineTherapyDemoAdminFlow": "Yönetici akışı",
   "aiDecisionDemoTitle": "AI Karar Çalışma Alanı",
-  "exampleInterviewSpineSection": "Mülakat omurgası",
-  "exampleDepthDemosSection": "Derinlik demoları",
-  "exampleArchiveDemosSection": "Arşiv (dondurulmuş)",
+  "exampleInterviewSpineSection": "Buradan başlayın",
+  "exampleDepthDemosSection": "Diğer demolar",
+  "exampleArchiveDemosSection": "Arşiv",
   "realtimeMarketSkeletonPairLabel": "BTC/USDT",
   "realtimeMarketSkeletonPricePlaceholder": "12.345,67"
 }

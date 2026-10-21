@@ -26,6 +26,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colors = theme.colorScheme;
     final l10n = context.l10n;
+    final bool reduceMotion = MediaQuery.disableAnimationsOf(context);
 
     return TypeSafeBlocSelector<CounterCubit, CounterState, _DisplayState>(
       selector: (state) => _DisplayState(
@@ -59,8 +60,8 @@ class _CounterDisplayState extends State<CounterDisplay> {
           colors: colors,
           textTheme: textTheme,
           l10n: l10n,
-          animFast: _animFast,
-          animMedium: _animMedium,
+          animFast: reduceMotion ? Duration.zero : _animFast,
+          animMedium: reduceMotion ? Duration.zero : _animMedium,
         );
       },
     );

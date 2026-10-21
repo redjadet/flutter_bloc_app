@@ -67,7 +67,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get examplePageDescription =>
-      'Portfolio demo hub: interview-spine flows first, then depth and archive samples. Prefer the live Counter, Todo, Chat, and Settings walkthrough for hiring reviews.';
+      'Explore core workflows, native integrations, and smaller feature demos. Start with Counter, Todo, Chat, and Settings.';
 
   @override
   String get exampleBackButtonLabel => 'Back to counter';
@@ -3845,13 +3845,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiDecisionDemoTitle => 'AI Decision Workbench';
 
   @override
-  String get exampleInterviewSpineSection => 'Interview spine';
+  String get exampleInterviewSpineSection => 'Start here';
 
   @override
-  String get exampleDepthDemosSection => 'Depth demos';
+  String get exampleDepthDemosSection => 'More demos';
 
   @override
-  String get exampleArchiveDemosSection => 'Archive (frozen)';
+  String get exampleArchiveDemosSection => 'Archive';
 
   @override
   String get realtimeMarketSkeletonPairLabel => 'BTC/USDT';

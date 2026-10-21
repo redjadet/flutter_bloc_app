@@ -8,12 +8,13 @@ extension ResponsiveLayoutContext on BuildContext {
   double get pageVerticalPadding =>
       _scaledHeight(this, mobile: 12, tablet: 16, desktop: 16);
 
+  // Width caps use logical pixels; viewport scaling would remove the cap.
   double get contentMaxWidth =>
-      _scaledWidth(this, mobile: 560, tablet: 720, desktop: 840);
+      responsiveValue<double>(mobile: 560, tablet: 720, desktop: 840);
 
   double get barMaxWidth {
-    if (isDesktop) return UI.scaleWidth(900);
-    if (isTabletOrLarger) return UI.scaleWidth(720);
+    if (isDesktop) return 900;
+    if (isTabletOrLarger) return 720;
     return double.infinity;
   }
 
