@@ -49,24 +49,23 @@ class ChatLocalDataSource extends HiveRepositoryBase
       );
 
   Future<List<ChatConversation>> _parseStored(dynamic raw) async {
-    if (raw is String && raw.isNotEmpty) {
-      try {
-        final List<dynamic> decoded = await decodeJsonList(raw);
-        return _parseIterable(decoded);
-      } on Exception {
+    switch (raw) {
+      case final String text when text.isNotEmpty:
+        try {
+          final List<dynamic> decoded = await decodeJsonList(text);
+          return _parseIterable(decoded);
+        } on Exception {
+          return const <ChatConversation>[];
+        }
+      case final Iterable<dynamic> items:
+        try {
+          return _parseIterable(items);
+        } on Object {
+          return const <ChatConversation>[];
+        }
+      default:
         return const <ChatConversation>[];
-      }
     }
-
-    if (raw is Iterable<dynamic>) {
-      try {
-        return _parseIterable(raw);
-      } on Object {
-        return const <ChatConversation>[];
-      }
-    }
-
-    return const <ChatConversation>[];
   }
 
   List<ChatConversation> _parseIterable(Iterable<dynamic> raw) => raw

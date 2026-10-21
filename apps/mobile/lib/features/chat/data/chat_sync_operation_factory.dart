@@ -64,10 +64,8 @@ class ChatSyncOperationFactory {
     );
   }
 
-  List<String> _readStringList(dynamic raw) {
-    if (raw is List) {
-      return raw.map((dynamic item) => item.toString()).toList();
-    }
-    return const <String>[];
-  }
+  List<String> _readStringList(Object? raw) => switch (raw) {
+    final List<dynamic> items => items.map((item) => item.toString()).toList(),
+    _ => const <String>[],
+  };
 }

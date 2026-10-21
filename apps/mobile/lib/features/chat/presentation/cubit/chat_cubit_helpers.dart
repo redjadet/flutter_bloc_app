@@ -151,17 +151,14 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final ChatRemotePath? nextCompletion = clearLastCompletionTransport
         ? null
         : (lastCompletionTransport ?? current.lastCompletionTransport);
-    final ChatFailure? nextFailure;
-    if (clearError) {
-      nextFailure = null;
-    } else if (error != null) {
-      nextFailure = ChatFailure(
-        message: error,
+    final ChatFailure? nextFailure = switch ((clearError, error)) {
+      (true, _) => null,
+      (false, final String message) => ChatFailure(
+        message: message,
         l10nCode: remoteFailureL10nCode,
-      );
-    } else {
-      nextFailure = current.failure;
-    }
+      ),
+      (false, null) => current.failure,
+    };
     emitState(
       current.copyWith(
         history: history,

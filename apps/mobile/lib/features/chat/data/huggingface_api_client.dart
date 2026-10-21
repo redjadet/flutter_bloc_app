@@ -131,21 +131,19 @@ class HuggingFaceApiClient {
     return _formatErrorFromStatusAndBody(code, body);
   }
 
-  static String _responseDataAsString(Object? data) {
-    if (data == null) {
+  static String _responseDataAsString(Object? data) => switch (data) {
+    null => '',
+    final String text => text,
+    final List<int> bytes => _decodeUtf8OrEmpty(bytes),
+    _ => '',
+  };
+
+  static String _decodeUtf8OrEmpty(List<int> bytes) {
+    try {
+      return utf8.decode(bytes);
+    } on FormatException {
       return '';
     }
-    if (data is String) {
-      return data;
-    }
-    if (data is List<int>) {
-      try {
-        return utf8.decode(data);
-      } on FormatException {
-        return '';
-      }
-    }
-    return '';
   }
 
   static String _formatErrorFromStatusAndBody(int code, String body) {
@@ -164,30 +162,24 @@ class HuggingFaceApiClient {
       }
     }
 
-    if (code == 401 || code == 403) {
-      if (detail == null) {
-        return 'Chat service authentication failed (HTTP $code). '
-            'Check your Hugging Face token or model.';
-      }
-      return 'Chat service authentication failed (HTTP $code): '
-          '$detail. Verify your Hugging Face token/model access.';
-    }
-
-    if (detail == null || detail.isEmpty) {
-      return 'Chat service error (HTTP $code).';
-    }
-    return 'Chat service error (HTTP $code): $detail';
+    return switch (code) {
+      401 || 403 when detail == null =>
+        'Chat service authentication failed (HTTP $code). '
+            'Check your Hugging Face token or model.',
+      401 || 403 =>
+        'Chat service authentication failed (HTTP $code): '
+            '$detail. Verify your Hugging Face token/model access.',
+      _ when detail == null || detail.isEmpty =>
+        'Chat service error (HTTP $code).',
+      _ => 'Chat service error (HTTP $code): $detail',
+    };
   }
 
-  static bool _looksLikeTimeout(Object error) {
-    if (error is TimeoutException) {
-      return true;
-    }
-    if (error is DioException) {
-      return error.type == DioExceptionType.connectionTimeout ||
-          error.type == DioExceptionType.sendTimeout ||
-          error.type == DioExceptionType.receiveTimeout;
-    }
-    return false;
-  }
+  static bool _looksLikeTimeout(Object error) => switch (error) {
+    TimeoutException() => true,
+    DioException(type: DioExceptionType.connectionTimeout) ||
+    DioException(type: DioExceptionType.sendTimeout) ||
+    DioException(type: DioExceptionType.receiveTimeout) => true,
+    _ => false,
+  };
 }

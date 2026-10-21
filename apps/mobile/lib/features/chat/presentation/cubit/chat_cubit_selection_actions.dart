@@ -44,9 +44,12 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     if (isClosed || !isRequestCurrent(requestId)) {
       return;
     }
-    if (loaded != null) {
-      conversation = loaded.conversation;
-      targetHistory = loaded.history;
+    if (loaded case (
+      conversation: final ChatConversation loadedConversation,
+      history: final List<ChatConversation> loadedHistory,
+    )) {
+      conversation = loadedConversation;
+      targetHistory = loadedHistory;
     }
 
     conversation ??= _conversationById(targetHistory, conversationId);
@@ -137,15 +140,14 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     if (found == null) {
       return null;
     }
-    return _LoadedConversation(conversation: found, history: mergedHistory);
+    return (conversation: found, history: mergedHistory);
   }
 
   ChatConversation _rebuildFromTranscripts(ChatConversation conversation) {
     final List<ChatMessage> messages = <ChatMessage>[];
-    final int pairs = conversation.pastUserInputs.length;
     final int responses = conversation.generatedResponses.length;
-    for (int i = 0; i < pairs; i++) {
-      final String userText = conversation.pastUserInputs[i];
+    for (final (int i, String userText)
+        in conversation.pastUserInputs.indexed) {
       messages.add(
         ChatMessage(
           author: ChatAuthor.user,
@@ -170,9 +172,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 }
 
-class _LoadedConversation {
-  new({required this.conversation, required this.history});
-
-  final ChatConversation conversation;
-  final List<ChatConversation> history;
-}
+typedef _LoadedConversation = ({
+  ChatConversation conversation,
+  List<ChatConversation> history,
+});

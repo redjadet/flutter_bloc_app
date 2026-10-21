@@ -14,79 +14,49 @@ ChatRemoteFailureException _directRemoteFailure(
 /// Maps direct Hugging Face [ChatException] messages to [ChatRemoteFailureException]
 /// for queue classification (plan: terminal vs retryable).
 ChatRemoteFailureException mapDirectChatException(ChatException error) {
-  final String m = error.message;
-  final String lower = m.toLowerCase();
+  final ({String code, bool retryable}) classified = _classifyDirectChatMessage(
+    error.message.toLowerCase(),
+  );
+  return _directRemoteFailure(
+    error,
+    code: classified.code,
+    retryable: classified.retryable,
+  );
+}
 
+/// Phrase checks stay ordered: the first matching hint wins, then an HTTP
+/// status embedded in the message, then the retryable upstream fallback.
+({String code, bool retryable}) _classifyDirectChatMessage(String lower) {
   if (lower.contains('rate limit')) {
-    return _directRemoteFailure(error, code: 'rate_limited', retryable: false);
+    return (code: 'rate_limited', retryable: false);
   }
-
   if (lower.contains('http 401') || lower.contains('authentication failed')) {
-    return _directRemoteFailure(error, code: 'auth_required', retryable: false);
+    return (code: 'auth_required', retryable: false);
   }
-
   if (lower.contains('http 403')) {
-    return _directRemoteFailure(error, code: 'forbidden', retryable: false);
+    return (code: 'forbidden', retryable: false);
   }
-
   if (lower.contains('timed out') || lower.contains('timeout')) {
-    return _directRemoteFailure(
-      error,
-      code: 'upstream_timeout',
-      retryable: true,
-    );
+    return (code: 'upstream_timeout', retryable: true);
   }
-
   if (lower.contains('failed to contact') ||
       lower.contains('chat service returned invalid') ||
       lower.contains('unsupported content')) {
-    return _directRemoteFailure(
-      error,
-      code: 'upstream_unavailable',
-      retryable: true,
-    );
+    return (code: 'upstream_unavailable', retryable: true);
   }
 
   final RegExpMatch? httpMatch = RegExp(r'http (\d{3})').firstMatch(lower);
-  if (httpMatch != null) {
-    final String? statusDigits = httpMatch.group(1);
-    final int code = int.tryParse(statusDigits ?? '') ?? 0;
-    if (code == 429) {
-      return _directRemoteFailure(
-        error,
-        code: 'rate_limited',
-        retryable: false,
-      );
-    }
-    if (code == 401) {
-      return _directRemoteFailure(
-        error,
-        code: 'auth_required',
-        retryable: false,
-      );
-    }
-    if (code == 403) {
-      return _directRemoteFailure(error, code: 'forbidden', retryable: false);
-    }
-    if (code >= 500) {
-      return _directRemoteFailure(
-        error,
-        code: 'upstream_unavailable',
-        retryable: true,
-      );
-    }
-    if (code >= 400) {
-      return _directRemoteFailure(
-        error,
-        code: 'invalid_request',
-        retryable: false,
-      );
-    }
+  if (httpMatch?.group(1) case final String statusDigits) {
+    final int statusCode = int.tryParse(statusDigits) ?? 0;
+    return switch (statusCode) {
+      429 => (code: 'rate_limited', retryable: false),
+      401 => (code: 'auth_required', retryable: false),
+      403 => (code: 'forbidden', retryable: false),
+      >= 500 => (code: 'upstream_unavailable', retryable: true),
+      >= 400 => (code: 'invalid_request', retryable: false),
+      _ => (code: 'upstream_unavailable', retryable: true),
+    };
   }
 
-  return _directRemoteFailure(
-    error,
-    code: 'upstream_unavailable',
-    retryable: true,
-  );
+  return (code: 'upstream_unavailable', retryable: true);
 }
