@@ -68,7 +68,11 @@ def verify_firebase_bearer(
             audience=project_id,
         )
     except ValueError as e:
-        logger.info("firebase_token_invalid", extra={"reason": str(e)})
+        # google-auth error text can echo token segments; log the type only.
+        logger.info(
+            "firebase_token_invalid",
+            extra={"reason": type(e).__name__},
+        )
         raise CallerAuthError("invalid_token") from e
 
     uid = info.get("sub")

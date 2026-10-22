@@ -240,7 +240,8 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
       return address;
     }
     AppLogger.warning(
-      'Invalid wallet address format in Firestore: $walletAddress',
+      'Invalid wallet address format in Firestore '
+      '(length=${walletAddress.length})',
     );
     return null;
   }

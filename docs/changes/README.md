@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-22_secure_logging_redaction.md`](2026-10-22_secure_logging_redaction.md): Close LogRedaction gaps (compound keys, JSON text, emails), drop user id / raw values from release warnings, stop echoing google-auth errors; extend the logging guide.
 - [`2026-10-22_buildcontext_guidance.md`](2026-10-22_buildcontext_guidance.md): Fill BuildContext deep-dive gaps (lookups, read/watch/select, modals, mounted, lifecycle) and use `MediaQuery.viewInsetsOf` in three sheets.
 - [`2026-10-21_chat_dart_records_patterns.md`](2026-10-21_chat_dart_records_patterns.md): Chat failure and payload branches use Dart 3 records and switch patterns; behavior unchanged.
 - [`2026-10-20_reviewer_quality.md`](2026-10-20_reviewer_quality.md): Focus README and demo navigation; fix shared desktop sizing and counter accessibility with regression tests.
