@@ -68,6 +68,33 @@ than creating an accidental rebuild dependency. Do not make a widget's `build`
 output depend on a non-listening lookup: Flutter will have no dependency to
 notify if that ancestor changes.
 
+| Lookup | Returns | Registers dependency | Typical use |
+| --- | --- | --- | --- |
+| `dependOnInheritedWidgetOfExactType<T>()` | nearest `T` widget | yes | `of(context)` read in `build` / `didChangeDependencies` |
+| `getInheritedWidgetOfExactType<T>()` | nearest `T` widget | no | one-off read in a callback (`maybeOf` without listening) |
+| `getElementForInheritedWidgetOfExactType<T>()` | the `InheritedElement` | no | library code that needs the element (Provider's `read`) |
+
+[`ResponsiveConfig.maybeDataOf`](../../packages/design_system/lib/src/responsive/responsive_config.dart)
+is a deliberate non-listening read: `ScreenUtilInit` already marks the whole
+tree for rebuild when the screen size changes, so a second dependency would only
+duplicate rebuilds.
+
+### Provider and BLoC placement
+
+`context.read`, `context.watch`, and `context.select` (and the type-safe
+`context.cubit` / `watchBloc` / `selectState` wrappers) are the same inherited
+lookups with different dependency rules:
+
+- `watch` / `select` register a dependency, so call them only inside `build`
+  (or a builder callback). `select` asserts outside `build`.
+- `read` does not listen. Use it in callbacks, listeners, `initState`, and
+  post-frame work. Do not use it in `build` for values that must refresh.
+  `tool/check_context_read_watch.sh` blocks `read`/`watch` misuse in
+  presentation `build()`.
+- A provider created in this `build` is below this `context`. Read it through
+  a `Builder`, a child widget, or the `BlocBuilder`/`BlocListener` callback
+  context.
+
 ## Lifetime: a context can become invalid
 
 An element can be unmounted while a future, dialog, permission request, or
@@ -89,6 +116,49 @@ inherited dependency there. `initState` cannot be rerun when the dependency
 changes, and the tree is no longer stable in `dispose`. Read reactive inherited
 values in `build` or `didChangeDependencies`; use a post-frame callback only
 when an initial imperative action is necessary, then re-check `mounted`.
+
+Check the right flag. `State.mounted` only guards the State's own `context`.
+A dialog builder context, `BlocListener` context, or `BuildContext` parameter
+needs its own `context.mounted`. `use_build_context_synchronously` enforces
+this after `await`; it does not treat `.then`, `Stream.listen`, `Timer`,
+`addPostFrameCallback`, or `addListener` callbacks as async gaps. Those
+callbacks need a manual `mounted` check before any context use. Run
+`tool/check_context_mounted.sh` and `tool/check_setstate_mounted.sh` for the
+mechanical cases.
+
+Lifecycle rules:
+
+- `initState`: no `dependOnInheritedWidgetOfExactType` (and no `Theme.of`,
+  `MediaQuery.of`, `l10n`). A non-listening `read` is allowed.
+- `didChangeDependencies`: first safe place for inherited reads outside
+  `build`; it reruns when a dependency changes.
+- `deactivate` / `dispose`: do not look up ancestors. Save the reference
+  (for example `ScaffoldMessenger.of(context)`) in `didChangeDependencies`
+  and use the saved object.
+
+A State's `context` is the same `Element` for the State's whole life. What
+changes is its position and its ancestors (for example after a `GlobalKey`
+reparent). Different builder callbacks receive different contexts because they
+are different elements.
+
+## Overlays, routes, and environment lookups
+
+- Dialogs, sheets, and new routes are inserted into the `Navigator`/`Overlay`,
+  not below the page. They do not see page-scoped providers. Re-provide with
+  `BlocProvider.value(value: cubit, child: ...)`, reading `cubit` from the page
+  context before showing. `tool/check_modal_bloc_provider.sh` guards sheets.
+- `showDialog` uses the root navigator by default (`useRootNavigator: true`).
+  Inside a nested navigator (for example a `ShellRoute`), `Navigator.of(pageContext)`
+  finds the shell navigator, not the dialog's. Close the dialog with its own
+  builder context. [`ErrorHandling.hideLoadingDialog`](../../apps/mobile/lib/app/utils/error_handling.dart)
+  pops with `useRootNavigator: true` for this reason.
+- Use `ScaffoldMessenger.of(context)` for snackbars; it survives route changes
+  and does not need a `Scaffold` ancestor. Use `Overlay.of(context, rootOverlay: true)`
+  when an entry must sit above nested navigators.
+- Prefer aspect lookups: `MediaQuery.sizeOf`, `paddingOf`, `viewInsetsOf`,
+  `orientationOf`. `MediaQuery.of(context)` rebuilds on any `MediaQueryData`
+  change (keyboard, text scale, padding); the aspect methods rebuild only when
+  that value changes.
 
 ## Project application
 
@@ -126,3 +196,16 @@ questions above for that decision.
 - Flutter API: [dependOnInheritedWidgetOfExactType](https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html)
 - Flutter API: [InheritedWidget](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html)
 - Flutter architectural overview: [widget, element, and inherited-state model](https://docs.flutter.dev/resources/architectural-overview)
+- Flutter API: [getInheritedWidgetOfExactType](https://api.flutter.dev/flutter/widgets/BuildContext/getInheritedWidgetOfExactType.html),
+  [getElementForInheritedWidgetOfExactType](https://api.flutter.dev/flutter/widgets/BuildContext/getElementForInheritedWidgetOfExactType.html),
+  [BuildContext.mounted](https://api.flutter.dev/flutter/widgets/BuildContext/mounted.html)
+- Flutter API: [State.initState](https://api.flutter.dev/flutter/widgets/State/initState.html),
+  [State.didChangeDependencies](https://api.flutter.dev/flutter/widgets/State/didChangeDependencies.html),
+  [State.deactivate](https://api.flutter.dev/flutter/widgets/State/deactivate.html)
+- Flutter API: [showDialog](https://api.flutter.dev/flutter/material/showDialog.html),
+  [ScaffoldMessenger](https://api.flutter.dev/flutter/material/ScaffoldMessenger-class.html),
+  [Overlay.of](https://api.flutter.dev/flutter/widgets/Overlay/of.html),
+  [MediaQuery](https://api.flutter.dev/flutter/widgets/MediaQuery-class.html)
+- Dart lint: [use_build_context_synchronously](https://dart.dev/tools/linter-rules/use_build_context_synchronously)
+- Packages: [provider read/watch/select](https://pub.dev/packages/provider),
+  [flutter_bloc concepts](https://bloclibrary.dev/flutter-bloc-concepts/)

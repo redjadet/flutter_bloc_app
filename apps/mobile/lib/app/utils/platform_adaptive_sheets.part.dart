@@ -152,7 +152,7 @@ class _CupertinoPickerSheetContentState<T>
     return Container(
       height: 250,
       padding: const EdgeInsets.only(top: 6),
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      margin: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       color: CupertinoColors.systemBackground.resolveFrom(context),
       child: SafeArea(
         top: false,
