@@ -95,6 +95,107 @@ lookups with different dependency rules:
   a `Builder`, a child widget, or the `BlocBuilder`/`BlocListener` callback
   context.
 
+## How `InheritedElement` propagates changes
+
+The `InheritedWidget` is immutable configuration. Its `InheritedElement`
+does the work: it is found by lookups, keeps the dependents, and notifies
+them. Framework source
+([`framework.dart`](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/widgets/framework.dart))
+shows four mechanics that the summary APIs hide.
+
+1. **Lookup is O(1), keyed by exact type.** Each `Element` holds
+   `_inheritedElements`, a persistent hash map from `Type` to
+   `InheritedElement` that it copies from its parent. An `InheritedElement`
+   adds itself under `widget.runtimeType`. `dependOn…`, `get…Widget…` and
+   `getElementFor…` are all one map read, not a walk up the tree. The inner
+   entry overwrites the outer one, so the nearest ancestor wins. Because the
+   key is the exact runtime type, a lookup for a base class does not find a
+   subclass, and `Foo<int>` is a different key from `Foo<Object>`.
+2. **Registration lasts until the element moves.** `dependOnInheritedElement`
+   adds the ancestor to the dependent's `_dependencies` and calls
+   `ancestor.updateDependencies(dependent, aspect)`. That records the
+   dependent in the ancestor's `_dependents` map (`Element → aspect data`).
+   Dependencies are not cleared on each build. They are dropped only when the
+   element is deactivated, so an `of(context)` call inside an `if` keeps the
+   subscription after the branch stops running.
+3. **Notification is gated by `updateShouldNotify`.** When a parent rebuilds
+   with a *new* widget instance, `InheritedElement.updated(oldWidget)` calls
+   `updateShouldNotify(oldWidget)`. If it returns true, `notifyClients` calls
+   `didChangeDependencies` on every dependent, which marks it dirty (a
+   `State` gets `State.didChangeDependencies` before its next `build`). It is
+   not called on first mount. It is also skipped when the parent passes the
+   identical widget instance, because `updateChild` then leaves the element
+   alone.
+4. **Only dependents rebuild.** Notification does not rebuild the inherited
+   widget's subtree. If `child` is the same instance (const, or a `child`
+   passed into the parent), only the elements that registered rebuild. When
+   `updateShouldNotify` returns false, dependents are not told. They keep the
+   old value until something else rebuilds them.
+
+### Writing a custom inherited scope
+
+The repository has no hand-written `InheritedWidget`, `InheritedModel`, or
+`InheritedNotifier` today. Scopes come from `BlocProvider`, `RepositoryProvider`,
+`ResponsiveScope` (responsive_framework and ScreenUtil), and Mix's `MixScope`.
+If you add one, this is the review checklist:
+
+- **API shape.** Provide `maybeOf` (nullable) and `of` (calls `maybeOf`,
+  then `assert(result != null, 'No Foo found in context')`). Return the data,
+  not the widget, when callers only need the data. Keep the inherited widget
+  private and put `of` on the public class when it is an implementation
+  detail (this is how `Theme` works).
+- **`updateShouldNotify` compares what dependents read, by value.**
+  `return true` notifies on every parent rebuild. Comparing a mutable object
+  by identity misses updates when it is mutated in place and passed again.
+  Hold immutable values (Freezed or Equatable) or use `InheritedNotifier`.
+- **No new collections or closures per build** when the comparison uses
+  identity. Use `const`, memoise in the owning `State`, or compare with
+  `listEquals` / `mapEquals`. `MixScope` rebuilds its token maps in
+  `buildAppMixScope` but compares them with `mapEquals`, so dependents are
+  notified only when a token value changes.
+- **Aspects when dependents read disjoint parts.** `InheritedModel<T>` lets a
+  dependent call `InheritedModel.inheritFrom<M>(context, aspect: …)`. After
+  `updateShouldNotify` returns true, `updateShouldNotifyDependent(old,
+  aspects)` decides per dependent. `MediaQuery` is an `InheritedModel`, which
+  is why `MediaQuery.sizeOf` rebuilds less than `MediaQuery.of`. A dependent
+  that passes no aspect is rebuilt on every change.
+- **Listenables.** `InheritedNotifier<T extends Listenable>` notifies
+  dependents when the notifier fires (coalesced to one rebuild per frame) or
+  when the notifier instance changes. It removes its listener on unmount, but
+  it does **not** dispose the notifier. The `State` that created the
+  notifier disposes it.
+- **Routes and overlays.** A dialog or route is not below the page, so it
+  does not see the page's themes. `InheritedTheme.capture(from:, to:)` and
+  `CapturedThemes.wrap` carry them across. Page-scoped Cubits are re-provided
+  with `BlocProvider.value` (see below).
+- **`didChangeDependencies` runs again after every notification.** Guard
+  one-shot work with a flag and keep the method cheap. Do not cache an
+  inherited value with `??=` there: the call still subscribes, but the field
+  keeps the first value. Read it in `build`, or keep `null` to mean "follow
+  the ambient value" (see the whiteboard row in [Project application](#project-application)).
+
+### How Provider and flutter_bloc use it
+
+- `InheritedProvider` is a `StatelessWidget` that builds a private
+  `_InheritedProviderScope`. That inherited widget's `updateShouldNotify`
+  always returns false. The element notifies dependents itself, through
+  `markNeedsNotifyDependents`, when the value changes (the optional
+  `updateShouldNotify` callback, default `!=`) or when `startListening`
+  fires.
+- `read` uses `getElementForInheritedWidgetOfExactType`, so no dependency.
+  `watch` uses `dependOnInheritedElement`. `select` registers a selector
+  closure as the *aspect*. On each notification the element runs every
+  dependent's selectors and only notifies a dependent whose result differs
+  under `DeepCollectionEquality`.
+- `BlocProvider` wraps `InheritedProvider`. Its `startListening` subscribes
+  to `bloc.stream` and calls `markNeedsNotifyDependents` on every emission.
+  So `context.watch<Cubit>()` rebuilds on every emitted state, and
+  `select` / `BlocSelector` filter. `BlocBase.emit` drops a state that is
+  `==` to the current one (after the first emit). Value equality on state
+  classes therefore decides whether an unchanged `copyWith` reaches the UI.
+- `BlocProvider(create: …)` closes the bloc it created. `BlocProvider.value`
+  does not.
+
 ## Lifetime: a context can become invalid
 
 An element can be unmounted while a future, dialog, permission request, or
@@ -167,6 +268,8 @@ are different elements.
 | Device-aware formatting | [`formatDeviceDateTime`](../../packages/app_shared_flutter/lib/src/date_time/date_time_formatting.dart) reads `MaterialLocalizations` and `MediaQuery` at the presentation call site; its test creates that scope with `Builder`. | Locale and 24-hour preference are ambient UI values, not domain inputs. |
 | Initial Cubit work | [`CameraGalleryPage`](../../apps/mobile/lib/features/camera_gallery/presentation/pages/camera_gallery_page.dart) waits for the first frame and checks `mounted` before reading the scoped Cubit. | Avoids an inherited lookup during `initState` and avoids acting after disposal. |
 | Delayed navigation | [`DeepLinkListener`](../../apps/mobile/lib/features/deeplink/presentation/deep_link_listener.dart) routes through [`NavigationUtils.safeGo`](../../apps/mobile/lib/app/utils/navigation.dart). | Navigation stays in presentation; the helper verifies the context remains mounted before `GoRouter.go`. |
+| Theme-following default | [`WhiteboardWidget`](../../apps/mobile/lib/features/example/presentation/widgets/whiteboard/whiteboard_widget.dart) keeps the pen color `null` until the user picks one and resolves `colorScheme.onSurface` on read. | A `didChangeDependencies` `??=` cache froze the first theme, so the default pen was dark on a dark canvas after a theme switch. |
+| Notifier ownership | [`SocialFeedCommentComposer`](../../apps/mobile/lib/features/social_feed_demo/presentation/widgets/social_feed_comment_composer.dart) creates its `TextEditingController` in the sheet's `State` and disposes it there. | The sheet's `TextField` still listens during the exit animation, so the owner must be the widget that outlives it, not the static `show` call. |
 | Business work | [BLoC Standards](../bloc_standards.md) keeps Cubits in presentation state management and domain/data free of Flutter UI imports. | A Cubit may emit state; a listener with a live context performs the snackbar, dialog, or navigation. |
 
 These are ownership boundaries, not blanket rules against context parameters.
@@ -184,6 +287,9 @@ sources, and long-lived Cubits must not retain it.
 4. Is UI scope leaking into a Cubit, domain type, repository, or service?
 5. Could a nested `Navigator`, local theme, dialog, or provider intentionally
    change the nearest result? If yes, name that scope in the code or test.
+
+6. If this adds an inherited scope, does `updateShouldNotify` compare the
+   values dependents read, and who disposes any notifier it exposes?
 
 For mechanically detectable lifecycle errors, run the repository's context and
 async checks through the documented validation route. A passing guard does not
@@ -206,6 +312,17 @@ questions above for that decision.
   [ScaffoldMessenger](https://api.flutter.dev/flutter/material/ScaffoldMessenger-class.html),
   [Overlay.of](https://api.flutter.dev/flutter/widgets/Overlay/of.html),
   [MediaQuery](https://api.flutter.dev/flutter/widgets/MediaQuery-class.html)
+- Flutter API: [InheritedElement](https://api.flutter.dev/flutter/widgets/InheritedElement-class.html),
+  [InheritedModel](https://api.flutter.dev/flutter/widgets/InheritedModel-class.html),
+  [InheritedNotifier](https://api.flutter.dev/flutter/widgets/InheritedNotifier-class.html),
+  [InheritedTheme](https://api.flutter.dev/flutter/widgets/InheritedTheme-class.html)
+- Flutter source: [`framework.dart`](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/widgets/framework.dart)
+  (`_inheritedElements`, `InheritedElement`) and
+  [`inherited_notifier.dart`](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/widgets/inherited_notifier.dart)
+- Provider: [InheritedProvider](https://pub.dev/documentation/provider/latest/provider/InheritedProvider-class.html),
+  [`inherited_provider.dart`](https://github.com/rrousselGit/provider/blob/master/packages/provider/lib/src/inherited_provider.dart) (`select`)
+- flutter_bloc: [`bloc_provider.dart`](https://github.com/felangel/bloc/blob/master/packages/flutter_bloc/lib/src/bloc_provider.dart),
+  [`bloc_base.dart`](https://github.com/felangel/bloc/blob/master/packages/bloc/lib/src/bloc_base.dart) (`emit`)
 - Dart lint: [use_build_context_synchronously](https://dart.dev/tools/linter-rules/use_build_context_synchronously)
 - Packages: [provider read/watch/select](https://pub.dev/packages/provider),
   [flutter_bloc concepts](https://bloclibrary.dev/flutter-bloc-concepts/)

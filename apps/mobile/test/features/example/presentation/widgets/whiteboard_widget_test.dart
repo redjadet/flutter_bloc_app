@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart';
+import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -86,6 +87,45 @@ void main() {
       paintWidget = tester.widget<CustomPaint>(canvas);
       painter = paintWidget.painter! as WhiteboardPainter;
       expect(painter.strokes.length, 1);
+    });
+
+    testWidgets('default pen color follows the theme after a theme switch', (
+      WidgetTester tester,
+    ) async {
+      final ThemeData light = ThemeData(brightness: Brightness.light);
+      final ThemeData dark = ThemeData(brightness: Brightness.dark);
+      expect(light.colorScheme.onSurface, isNot(dark.colorScheme.onSurface));
+
+      Widget app(ThemeData theme) => MaterialApp(
+        theme: theme,
+        home: const Scaffold(body: WhiteboardWidget()),
+      );
+
+      Color toolbarColor() => tester
+          .widget<WhiteboardToolbar>(find.byType(WhiteboardToolbar))
+          .currentColor;
+
+      await tester.pumpWidget(app(light));
+      expect(toolbarColor(), light.colorScheme.onSurface);
+
+      await tester.pumpWidget(app(dark));
+      await tester.pumpAndSettle();
+      expect(toolbarColor(), dark.colorScheme.onSurface);
+
+      final Finder canvas = find.byWidgetPredicate(
+        (Widget widget) =>
+            widget is CustomPaint && widget.painter is WhiteboardPainter,
+      );
+      final TestGesture gesture = await tester.startGesture(
+        tester.getCenter(canvas),
+      );
+      await gesture.moveBy(const Offset(20, 0));
+      await gesture.up();
+      await tester.pump();
+
+      final WhiteboardPainter painter =
+          tester.widget<CustomPaint>(canvas).painter! as WhiteboardPainter;
+      expect(painter.strokes.single.color, dark.colorScheme.onSurface);
     });
   });
 }

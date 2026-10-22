@@ -21,16 +21,14 @@ class WhiteboardWidget extends StatefulWidget {
 class _WhiteboardWidgetState extends State<WhiteboardWidget> {
   final List<WhiteboardStroke> _strokes = <WhiteboardStroke>[];
   final List<WhiteboardStroke> _undoStack = <WhiteboardStroke>[];
+
+  /// User-picked pen color. `null` means "follow the theme": the default pen
+  /// is resolved from [Theme] on every read so it stays visible after a
+  /// light/dark switch instead of freezing the first theme's `onSurface`.
   Color? _currentColor;
   double _currentWidth = 3;
   WhiteboardStroke? _currentStroke;
   int _version = 0;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _currentColor ??= Theme.of(context).colorScheme.onSurface;
-  }
 
   Color get _effectiveColor =>
       _currentColor ?? Theme.of(context).colorScheme.onSurface;
