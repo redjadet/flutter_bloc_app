@@ -75,7 +75,7 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
                 height: 350,
                 padding: const EdgeInsets.only(top: 6),
                 margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  bottom: MediaQuery.viewInsetsOf(context).bottom,
                 ),
                 color: CupertinoColors.systemBackground.resolveFrom(context),
                 child: SafeArea(
