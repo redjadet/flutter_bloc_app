@@ -9,6 +9,7 @@ that.
 
 - [`2026-10-22_clean_architecture_boundary_audit.md`](2026-10-22_clean_architecture_boundary_audit.md): Inject bootstrap/flavor values into production-readiness and FCM demo presentation, guard that rule, test `SubmitCaseStudyUseCase`, map the repo to Flutter's architecture guide.
 - [`2026-10-22_secure_logging_redaction.md`](2026-10-22_secure_logging_redaction.md): Close LogRedaction gaps (compound keys, JSON text, emails), drop user id / raw values from release warnings, stop echoing google-auth errors; extend the logging guide.
+- [`2026-10-22_perf_measurement_workflow_docs.md`](2026-10-22_perf_measurement_workflow_docs.md): Impeller + in-app FrameTiming/overlay + measure-first path on jank triage canon; AGENTS / quick reference / checklist / `triage_jank.sh` entry points.
 - [`2026-10-22_buildcontext_guidance.md`](2026-10-22_buildcontext_guidance.md): Fill BuildContext deep-dive gaps (lookups, read/watch/select, modals, mounted, lifecycle) and use `MediaQuery.viewInsetsOf` in three sheets.
 - [`2026-10-21_chat_dart_records_patterns.md`](2026-10-21_chat_dart_records_patterns.md): Chat failure and payload branches use Dart 3 records and switch patterns; behavior unchanged.
 - [`2026-10-20_reviewer_quality.md`](2026-10-20_reviewer_quality.md): Focus README and demo navigation; fix shared desktop sizing and counter accessibility with regression tests.

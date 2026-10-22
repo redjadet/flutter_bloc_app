@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Jank triage entry for humans and agents.
 # Prints the measure-first cause map and optionally analyzes a perf report.
+# Canon docs/performance/finding_jank_cause.md also covers Impeller defaults and
+# in-app FrameTiming / ENABLE_PERFORMANCE_OVERLAY (complements DevTools only).
 #
 # Usage:
 #   bash tool/triage_jank.sh
@@ -42,9 +44,11 @@ Canon: $ROOT/$DOC
 1. Reproduce in profile mode (debug frame times lie).
    Interactive:  cd apps/mobile && flutter run --profile
                  (iOS Simulator often cannot run --profile; physical device for final accept)
+   Optional:     --dart-define=ENABLE_PERFORMANCE_OVERLAY=true (UI/Raster stage bars; DevTools for costly ops)
    Automated:    CHECKLIST_INTEGRATION_DEVICE=<udid> bash tool/capture_perf_trace.sh
                  python3 tool/analyze_perf_trace.py artifacts/perf/perf_report_data_<stamp>.json --triage
-   Budgets:      tool/perf_budgets.json (p90≤8.3ms, p99≤16.7ms) — UI vs Raster still needs DevTools
+   Budgets:      tool/perf_budgets.json (p90≤8.3ms, p99≤16.7ms) — costly ops still need DevTools
+   Renderer:     Impeller is default on modern iOS/Android — remeasure on current defaults
 
 2. Follow the slow side in DevTools Performance (select a red frame).
    High UI time  → BUILD/LAYOUT/PAINT timeline + CPU Profiler
@@ -52,7 +56,7 @@ Canon: $ROOT/$DOC
                    bash tool/check_perf_nonbuilder_lists.sh
                    bash tool/check_perf_shrinkwrap_lists.sh
                    bash tool/check_side_effects_build.sh
-   High Raster   → clips, opacity, shadows, saveLayer, offscreen layers
+   High Raster   → clips, opacity, shadows, saveLayer, offscreen layers (Impeller)
                    bash tool/check_perf_missing_repaint_boundary.sh
 
 3. Related symptoms (separate investigations):

@@ -77,6 +77,9 @@ or cross-feature performance changes.
 
 When the user reports **jank / stutter / missed frames**: do **not** patch from
 intuition. Run `bash tool/triage_jank.sh`, measure in profile mode or
-`tool/capture_perf_trace.sh`, identify UI vs Raster (or the limiting span), then
-one targeted change and remeasure. Canon:
+`tool/capture_perf_trace.sh`, identify UI vs Raster on Impeller defaults (or the
+limiting span), then one targeted change and remeasure. In-app
+`ENABLE_PERFORMANCE_OVERLAY` shows stage-level UI vs Raster; DevTools is still
+required for costly-op attribution. `FrameTimingMonitor` remains a symptom aid.
+Canon:
 [`../performance/finding_jank_cause.md`](../performance/finding_jank_cause.md).
