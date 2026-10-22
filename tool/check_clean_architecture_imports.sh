@@ -20,7 +20,9 @@ Default scope: apps/mobile/lib/features and lib/shared (via APP_ROOT). --paths
 supports fixture/focused runs (workspace-root paths like tool/fixtures/... resolve).
 Rules:
   domain: no Flutter/SDK/DI/app/data/presentation imports
-  presentation: no data-layer imports
+  presentation: no data-layer imports; no app/bootstrap or app/config
+    singletons (inject router/composition values instead; app/config/
+    backend_availability.dart is the documented exception)
   data: no presentation-layer imports
   shared: no feature imports
 EOF
@@ -128,6 +130,8 @@ while IFS= read -r file; do
           reason="domain must not import Flutter"
         elif [[ "$spec" =~ ^package:(get_it|hive|supabase|dio|retrofit) ]]; then
           reason="domain must not import SDK/DI/data infrastructure"
+        elif [[ "$spec" =~ ^package:(firebase_[a-z_]+|cloud_firestore|cloud_functions|http|shared_preferences|go_router|flutter_bloc|bloc)/ ]]; then
+          reason="domain must not import SDK/DI/data infrastructure"
         elif [[ "$spec" =~ ^package:flutter_bloc_app/(app/|core/di/) ]]; then
           reason="domain must not import app or DI"
         elif [[ "$spec" =~ ^package:flutter_bloc_app/features/[^\"\']+/(data|presentation)/ ]]; then
@@ -143,6 +147,10 @@ while IFS= read -r file; do
           reason="presentation must not import data layer"
         elif [[ -n "$resolved" && "$resolved" =~ (^|/)lib/features/[^/]+/data/ ]]; then
           reason="presentation must not import relative data layer"
+        elif [[ "$spec" =~ ^package:flutter_bloc_app/app/bootstrap/ ]] ||
+          [[ "$spec" =~ ^package:flutter_bloc_app/app/config/ &&
+            "$spec" != "package:flutter_bloc_app/app/config/backend_availability.dart" ]]; then
+          reason="presentation must not read app bootstrap/config singletons (inject from router/composition)"
         fi
         ;;
       data)

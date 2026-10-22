@@ -6,7 +6,6 @@ import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart
 import 'package:flutter_bloc_app/app/analytics/app_analytics_event.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
@@ -26,12 +25,12 @@ class ProductionReadinessCubit extends _ProductionReadinessCubitBase
     required super.remoteConfig,
     required super.consentRepository,
     required super.analytics,
+    required super.firebaseInitialized,
     super.memoryAnalytics,
     super.messaging,
     super.frameMonitor,
     super.simulationController,
     super.fcmMode,
-    super.firebaseInitialized,
     super.recordNonFatal,
   });
 }
@@ -43,17 +42,14 @@ abstract class _ProductionReadinessCubitBase
     required this._remoteConfig,
     required this._consentRepository,
     required this._analytics,
+    required this._firebaseInitialized,
     this._memoryAnalytics,
     this._messaging,
     this._frameMonitor,
     this._simulationController,
     this.recordNonFatal,
     FcmDemoMode? fcmMode,
-    bool? firebaseInitialized,
   }) : _fcmMode = fcmMode ?? FcmDemoMode.simulated,
-       _firebaseInitialized =
-           firebaseInitialized ??
-           FirebaseBootstrapService.isFirebaseInitialized,
        super(const ProductionReadinessState());
 
   static const String fcmStreamErrorMessage =

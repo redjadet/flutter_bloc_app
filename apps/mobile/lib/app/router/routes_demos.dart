@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_crashlytics_bootstrap.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';

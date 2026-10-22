@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -17,8 +16,22 @@ import 'package:utilities/utilities.dart';
 part 'fcm_demo_page.part.dart';
 
 /// FCM demo page: permission, tokens, last message.
+///
+/// Token visibility policy is injected by the router (flavor-derived) so this
+/// view never reads app config singletons. Release builds always mask and never
+/// offer copy, regardless of the injected values.
 class FcmDemoPage extends StatelessWidget {
-  const new({super.key});
+  const new({
+    required this.maskTokens,
+    required this.allowTokenCopy,
+    super.key,
+  });
+
+  /// Show a masked placeholder instead of raw push tokens (prod flavor).
+  final bool maskTokens;
+
+  /// Offer a copy-token action (dev/qa flavors, non-release builds only).
+  final bool allowTokenCopy;
 
   static String _permissionLabel(
     FcmPermissionState state,
@@ -39,14 +52,20 @@ class FcmDemoPage extends StatelessWidget {
       title: l10n.fcmDemoPageTitle,
       body: SingleChildScrollView(
         padding: context.pagePadding,
-        child: const _FcmDemoBody(),
+        child: _FcmDemoBody(
+          maskTokens: maskTokens,
+          allowTokenCopy: allowTokenCopy,
+        ),
       ),
     );
   }
 }
 
 class _FcmDemoBody extends StatelessWidget {
-  const new();
+  const new({required this.maskTokens, required this.allowTokenCopy});
+
+  final bool maskTokens;
+  final bool allowTokenCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +102,15 @@ class _FcmDemoBody extends StatelessWidget {
         _TokenSectionContainer(
           label: context.l10n.fcmDemoFcmTokenLabel,
           selector: (state) => state.fcmToken,
+          maskTokens: maskTokens,
+          allowTokenCopy: allowTokenCopy,
         ),
         SizedBox(height: context.responsiveGapS),
         _TokenSectionContainer(
           label: context.l10n.fcmDemoApnsTokenLabel,
           selector: (state) => state.apnsToken,
+          maskTokens: maskTokens,
+          allowTokenCopy: allowTokenCopy,
         ),
         SizedBox(height: context.responsiveGapM),
         const _LastMessageSectionContainer(),
@@ -140,17 +163,30 @@ class _PermissionSection extends StatelessWidget {
 }
 
 class _TokenSectionContainer extends StatelessWidget {
-  const new({required this.label, required this.selector});
+  const new({
+    required this.label,
+    required this.selector,
+    required this.maskTokens,
+    required this.allowTokenCopy,
+  });
 
   final String label;
   final String? Function(FcmDemoState state) selector;
+  final bool maskTokens;
+  final bool allowTokenCopy;
 
   @override
   Widget build(BuildContext context) {
     final value = context.selectState<FcmDemoCubit, FcmDemoState, String?>(
       selector: selector,
     );
-    return _TokenSection(label: label, value: value, l10n: context.l10n);
+    return _TokenSection(
+      label: label,
+      value: value,
+      l10n: context.l10n,
+      maskTokens: maskTokens,
+      allowTokenCopy: allowTokenCopy,
+    );
   }
 }
 

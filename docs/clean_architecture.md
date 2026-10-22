@@ -115,6 +115,65 @@ The important dependency rule is:
 So the dependency picture is closer to `Presentation -> Domain <- Data` than a
 literal runtime pipeline of `Presentation -> Domain -> Data`.
 
+## Mapping to Flutter's official architecture guide
+
+Flutter's [app architecture guide](https://docs.flutter.dev/app-architecture/guide)
+names the same roles differently. Use this table when reading external advice:
+
+| Flutter guide | This repo | Notes |
+| --- | --- | --- |
+| View | `presentation/pages/`, `presentation/widgets/` | Only show/hide flags, animation, layout, simple routing. |
+| View model (+ commands) | Cubit/BLoC in `presentation/cubit/` | Cubit methods play the role of commands. |
+| Use case (optional domain layer) | `domain/use_cases/` (optional) | Same rule: add one only for multi-repository, complex, or reused logic ([policy](architecture/use_case_dto_policy.md)). |
+| Repository (source of truth) | Domain contract + `data/` implementation | Guide calls abstract repositories "strongly recommend"; here the contract is required. |
+| Service (stateless, one per data source) | `*DataSource` leaves, SDK adapters, `packages/networking` | Hold no app state. |
+| Domain model vs API model | Domain model in `domain/`, DTO in `data/` | Guide marks separate API models "conditional, large apps"; the DTO rule here applies when shapes can drift. |
+
+Deliberate differences from the guide: the domain **contract** layer is
+mandatory here (Clean Architecture dependency inversion), while the guide treats
+the whole domain layer as optional; state management is `flutter_bloc`, not
+`ChangeNotifier`; DI is GetIt composition plus constructor injection, not
+`provider`; folders are feature-first for all layers, while the guide's case
+study groups `ui/` by feature and `data/` by type.
+
+Rules taken from the guide that apply unchanged:
+
+- **Repositories don't know each other.** Combine data from two domain
+  repositories in a Cubit or a domain use case. Facades that wrap leaves of the
+  same contract (offline-first, auth-aware, composite) are fine: in the guide's
+  terms those leaves are services, even where legacy names still say
+  `*Repository` ([naming table](architecture/use_case_dto_policy.md#repository-vs-leaf-datasource-naming)).
+- **Unidirectional data flow.** Data moves data → domain → presentation; user
+  events go back through Cubit methods.
+- **Blocs don't listen to blocs** ([bloc architecture](https://bloclibrary.dev/architecture/)).
+  Connect them through a `BlocListener` in presentation or a shared reactive
+  repository stream.
+
+### Error flow across layers
+
+Dart exceptions are unchecked, so a missed `catch` can crash a flow (see the
+guide's [Result pattern](https://docs.flutter.dev/app-architecture/design-patterns/result)).
+This repo uses two shapes; pick one per contract and don't mix them inside it:
+
+- **Typed throw + Cubit catch** (most features): data maps SDK/transport errors
+  to domain or `package:utilities` failures (for example `HttpRequestFailure`);
+  Cubits run async work through `CubitExceptionHandler` and emit failure state.
+- **`Result<T>` / `Failure`** from `package:core` (for example the IoT BLE
+  contracts): use it when callers must branch on expected failures; unwrap with
+  an exhaustive `switch`.
+
+Either way, SDK exception types never cross into domain contracts or Cubit
+state ([error mapping](architecture/use_case_dto_policy.md#error-mapping)).
+
+### Presentation reads no app singletons
+
+Presentation must not import `app/bootstrap/**` or `app/config/**` (except
+`backend_availability.dart`) to read static flags such as
+`FirebaseBootstrapService.isFirebaseInitialized` or `FlavorManager.I`. The
+router or composition root resolves those values and passes them to pages and
+Cubits through constructors. `tool/check_clean_architecture_imports.sh` enforces
+this.
+
 ## SOLID decision rule
 
 Agents must preserve Clean Architecture and apply SOLID to every new or changed
