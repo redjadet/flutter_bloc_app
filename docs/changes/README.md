@@ -7,12 +7,8 @@ that.
 
 ## Index
 
-<<<<<<< HEAD
 - [`2026-10-22_secure_logging_redaction.md`](2026-10-22_secure_logging_redaction.md): Close LogRedaction gaps (compound keys, JSON text, emails), drop user id / raw values from release warnings, stop echoing google-auth errors; extend the logging guide.
-- [`2026-10-22_perf_measurement_workflow_docs.md`](2026-10-22_perf_measurement_workflow_docs.md): Impeller + in-app FrameTiming/overlay pointers and rebuild≠jank corrections on the jank triage canon; measurement index row.
-=======
 - [`2026-10-22_perf_measurement_workflow_docs.md`](2026-10-22_perf_measurement_workflow_docs.md): Impeller + in-app FrameTiming/overlay + measure-first path on jank triage canon; AGENTS / quick reference / checklist / `triage_jank.sh` entry points.
->>>>>>> 8ef51ba6 (docs(perf): wire measure-first entry points for Impeller/FrameTiming)
 - [`2026-10-22_buildcontext_guidance.md`](2026-10-22_buildcontext_guidance.md): Fill BuildContext deep-dive gaps (lookups, read/watch/select, modals, mounted, lifecycle) and use `MediaQuery.viewInsetsOf` in three sheets.
 - [`2026-10-21_chat_dart_records_patterns.md`](2026-10-21_chat_dart_records_patterns.md): Chat failure and payload branches use Dart 3 records and switch patterns; behavior unchanged.
 - [`2026-10-20_reviewer_quality.md`](2026-10-20_reviewer_quality.md): Focus README and demo navigation; fix shared desktop sizing and counter accessibility with regression tests.
