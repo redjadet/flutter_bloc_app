@@ -52,7 +52,7 @@ root when an existing category applies.
 | [integrations/](integrations/README.md) | External-service setup, adapters, comparisons |
 | [security/](security/README.md) | Privacy, security hardening, certificate guidance |
 | [testing/](testing/README.md) | Test strategy, matrices, widget-test guidance |
-| [performance/](performance/README.md) | Profiling, memory, performance improvement evidence |
+| [performance/](performance/README.md) | Measure-first jank triage, Impeller/FrameTiming notes, memory, profiling evidence |
 | [review/](review/README.md) | Architecture, BLoC, security, and performance review checklists |
 | [ai/](ai/README.md) | Coding-agent operations and governance |
 | [ai-sdlc/](ai-sdlc/README.md) | Tool-agnostic AI-native SDLC kit (templates, skills, gates) |
@@ -87,7 +87,7 @@ Folder READMEs under **Browse by folder** own the catalogs. Root highlights only
 - [`testing_overview.md`](testing_overview.md) · [`review/code_review_playbook.md`](review/code_review_playbook.md)
 - [`CODE_QUALITY.md`](CODE_QUALITY.md) · [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
 - [`ai/harness_scorecard.md`](ai/harness_scorecard.md) · [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md)
-- Performance: [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md) (`bash tool/triage_jank.sh`)
+- Performance (measure first): [`performance/finding_jank_cause.md`](performance/finding_jank_cause.md) — `bash tool/triage_jank.sh`; Impeller + in-app `FrameTiming` / overlay in that canon
 - Integration: [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md), [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md)
 
 ### Offline-first and local storage

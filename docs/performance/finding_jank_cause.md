@@ -20,8 +20,10 @@ capture: [`flutter_performance_improvements_b1fcaecb.md`](flutter_performance_im
 
 ## Takeaway
 
-Capture the slow interaction, identify the late frame and expensive operation,
-make **one** targeted change, then measure the same interaction again.
+**Measure-first path:** (1) reproduce the slow interaction in **profile** mode
+(or `capture_perf_trace`), (2) name the late frame’s limiting stage (**UI** vs
+**Raster** in DevTools Performance — Impeller is the default renderer), (3) make
+**one** targeted change, (4) remeasure the same interaction.
 
 Do **not** treat debug-mode smoothness, intuition, or a single low `build()`
 time as proof. Do **not** optimize PipelineProduce / PipelineItem noise unless
@@ -84,10 +86,13 @@ Debug frame times do not represent release performance.
 ```bash
 # Interactive (physical device preferred for final proof)
 cd apps/mobile && flutter run --profile
+# Optional on-device FPS bars (not a DevTools substitute):
+# flutter run --profile --dart-define=ENABLE_PERFORMANCE_OVERLAY=true
 
 # Automated symptom capture (simulator OK for regression)
 CHECKLIST_INTEGRATION_DEVICE=<iphone_sim_udid> bash tool/capture_perf_trace.sh
 python3 tool/analyze_perf_trace.py artifacts/perf/perf_report_data_<stamp>.json --triage
+# or: bash tool/triage_jank.sh --latest
 ```
 
 Agent entry: `bash tool/triage_jank.sh` (prints this map; analyzes a report when
