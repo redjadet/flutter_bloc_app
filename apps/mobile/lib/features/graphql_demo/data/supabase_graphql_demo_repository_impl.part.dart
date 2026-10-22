@@ -87,7 +87,7 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
       'SupabaseGraphqlDemoRepository edge 401 Invalid JWT diagnostics: '
       'initialized=${SupabaseBootstrapService.isSupabaseInitialized} '
       'configuredUrl=${configuredUrl ?? 'null'} '
-      'userId=${userId ?? 'null'} '
+      'hasUser=${userId != null && userId.isNotEmpty} '
       'iss=${iss ?? 'null'}',
     );
   }

@@ -1,3 +1,4 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/supabase_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
@@ -17,6 +18,34 @@ void main() {
   tearDown(resetSupabaseTestState);
 
   group('SupabaseGraphqlDemoRepository', () {
+    test('edge 401 diagnostics log hasUser, never the raw user id', () async {
+      final List<AppLogEntry> entries = <AppLogEntry>[];
+      AppLogger.observer = entries.add;
+      addTearDown(() => AppLogger.observer = null);
+      const String userId = 'user-uuid-should-not-leak';
+      final SupabaseGraphqlDemoRepository repository =
+          SupabaseGraphqlDemoRepository(
+            readAccessToken: () => 'access-token',
+            readCurrentUserId: () => userId,
+            invokeEdgeFunction: ({
+              required String functionName,
+              required String accessToken,
+              required Map<String, dynamic> body,
+            }) async => throw const FunctionException(status: 401),
+            fetchCountryRows: (_) async => const <Map<String, Object?>>[],
+          );
+
+      await repository.fetchCountries();
+
+      final Iterable<String> messages = entries.map((e) => e.message);
+      expect(
+        messages.any((m) => m.contains('Invalid JWT diagnostics')),
+        isTrue,
+      );
+      expect(messages.any((m) => m.contains('hasUser=true')), isTrue);
+      expect(messages.any((m) => m.contains(userId)), isFalse);
+    });
+
     test('throws when Supabase is not configured', () async {
       resetSupabaseTestState();
       final SupabaseGraphqlDemoRepository repository =

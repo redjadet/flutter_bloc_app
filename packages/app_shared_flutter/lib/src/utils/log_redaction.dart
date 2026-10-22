@@ -7,18 +7,19 @@ abstract final class LogRedaction {
   static const String truncationMarker = '…[truncated]';
   static const int maxMessageLength = 1024;
 
-  static const Set<String> _secretKeyNormalized = {
+  /// Normalized key suffixes treated as secrets. Suffix match covers compound
+  /// names such as `client_secret`, `x-api-key`, `set-cookie`, `csrfToken`.
+  static const Set<String> _secretKeySuffixes = {
     'password',
+    'passwd',
     'token',
-    'accesstoken',
-    'refreshtoken',
-    'idtoken',
     'authorization',
     'cookie',
     'apikey',
     'sessionid',
     'secret',
     'bearer',
+    'privatekey',
   };
 
   static final RegExp _controlChars = RegExp(r'[\x00-\x1f\x7f]+');
@@ -30,19 +31,29 @@ abstract final class LogRedaction {
   static final RegExp _jwtLike = RegExp(
     r'\b[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b',
   );
+  // Optional `prefix_` / `prefix-` segments catch compound names
+  // (`client_secret`, `x-api-key`); optional quotes catch JSON-style
+  // `"refresh_token":"..."` text inside exception messages.
   static final RegExp _secretAssignment = RegExp(
-    r'\b(password|token|access[_-]?token|refresh[_-]?token|id[_-]?token|'
-    r'authorization|cookie|api[_-]?key|session[_-]?id|secret|bearer)\s*[=:]\s*'
-    r'([^\s&,;]+)',
+    r'(?<![A-Za-z0-9])((?:[A-Za-z0-9]+[_-])*'
+    r'(?:password|passwd|token|access[_-]?token|refresh[_-]?token|'
+    r'id[_-]?token|authorization|cookie|api[_-]?key|session[_-]?id|secret|'
+    r'bearer|private[_-]?key))'
+    r'''["']?\s*[=:]\s*["']?([^\s&,;"'}\]]+)''',
     caseSensitive: false,
+  );
+  static final RegExp _email = RegExp(
+    r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b',
   );
 
   /// Normalize key for denylist: strip `_`/`-`, lowercase.
   static String normalizeKey(String key) =>
       key.replaceAll(RegExp(r'[_-]'), '').toLowerCase();
 
-  static bool isSecretKey(String key) =>
-      _secretKeyNormalized.contains(normalizeKey(key));
+  static bool isSecretKey(String key) {
+    final normalized = normalizeKey(key);
+    return _secretKeySuffixes.any(normalized.endsWith);
+  }
 
   /// Collapse CR/LF/control chars, scrub secret patterns, truncate.
   static String sanitizeMessage(String message) {
@@ -161,9 +172,11 @@ abstract final class LogRedaction {
     return unsafe;
   }
 
-  /// Best-effort free-text scrub for Bearer / JWT / secret assignments.
+  /// Best-effort free-text scrub for Bearer / JWT / secret assignments and
+  /// email addresses.
   static String scrubSecretPatterns(String input) {
     var out = input.replaceAllMapped(_bearer, (_) => 'Bearer $redacted');
+    out = out.replaceAllMapped(_email, (_) => redacted);
     out = out.replaceAllMapped(_jwtLike, (_) => redacted);
     out = out.replaceAllMapped(_secretAssignment, (match) {
       final name = match.group(1)!;

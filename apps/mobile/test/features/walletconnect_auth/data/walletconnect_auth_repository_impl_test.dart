@@ -353,6 +353,37 @@ void main() {
       });
     });
   });
+
+  group('getLinkedWalletAddress', () {
+    test('malformed stored address logs length only, not the value', () async {
+      const String malformed = 'not-a-wallet-secret-value';
+      final List<AppLogEntry> entries = <AppLogEntry>[];
+      AppLogger.observer = entries.add;
+      addTearDown(() => AppLogger.observer = null);
+      final auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'test-uid'),
+      );
+      stubLinkedUserDoc(
+        linkedData: <String, dynamic>{'walletAddress': malformed},
+      );
+      final repository = WalletConnectAuthRepositoryImpl(
+        walletConnectService: mockWalletConnectService,
+        firebaseAuth: auth,
+        firestore: mockFirestore,
+      );
+
+      final WalletAddress? result = await repository.getLinkedWalletAddress();
+
+      expect(result, isNull);
+      final Iterable<String> messages = entries.map((e) => e.message);
+      expect(
+        messages.any((m) => m.contains('length=${malformed.length}')),
+        isTrue,
+      );
+      expect(messages.any((m) => m.contains(malformed)), isFalse);
+    });
+  });
 }
 
 /// Minimal fake for Firestore document snapshot.

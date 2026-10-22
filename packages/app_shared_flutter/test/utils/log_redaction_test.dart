@@ -113,6 +113,57 @@ void main() {
     });
   });
 
+  group('LogRedaction compound keys, JSON text, and emails', () {
+    test('safeFields redacts compound secret key names', () {
+      final safe = LogRedaction.safeFields({
+        'client_secret': 'cs',
+        'x-api-key': 'xk',
+        'set-cookie': 'sid=1',
+        'csrfToken': 'ct',
+        'private_key': 'pk',
+        'maxTokens': 256,
+        'tokenCount': 3,
+      });
+
+      expect(safe['client_secret'], LogRedaction.redacted);
+      expect(safe['x-api-key'], LogRedaction.redacted);
+      expect(safe['set-cookie'], LogRedaction.redacted);
+      expect(safe['csrfToken'], LogRedaction.redacted);
+      expect(safe['private_key'], LogRedaction.redacted);
+      expect(safe['maxTokens'], 256);
+      expect(safe['tokenCount'], 3);
+    });
+
+    test('sanitizeMessage scrubs JSON-style and compound assignments', () {
+      final text = LogRedaction.sanitizeMessage(
+        'HTTP 400 body={"refresh_token":"opaque-r1","client_secret": "cs-2",'
+        ' "status":"bad"} x-api-key: xk-3',
+      );
+      expect(text, isNot(contains('opaque-r1')));
+      expect(text, isNot(contains('cs-2')));
+      expect(text, isNot(contains('xk-3')));
+      expect(text, contains('refresh_token=${LogRedaction.redacted}'));
+      expect(text, contains('"status":"bad"'));
+    });
+
+    test('sanitizeMessage scrubs email addresses', () {
+      final text = LogRedaction.sanitizeMessage(
+        'profile.update failed for jane.doe+demo@example.com reason=conflict',
+      );
+      expect(text, isNot(contains('jane.doe')));
+      expect(text, isNot(contains('example.com')));
+      expect(text, contains('reason=conflict'));
+    });
+
+    test('sanitizeError scrubs secrets inside exception JSON payloads', () {
+      final scrubbed = LogRedaction.sanitizeError(
+        const FormatException('{"password": "hunter2", "email": "a@b.io"}'),
+      );
+      expect(scrubbed.toString(), isNot(contains('hunter2')));
+      expect(scrubbed.toString(), isNot(contains('a@b.io')));
+    });
+  });
+
   group('LogRedaction.sanitizeError', () {
     test('returns null and scrubs exception text', () {
       expect(LogRedaction.sanitizeError(null), isNull);
