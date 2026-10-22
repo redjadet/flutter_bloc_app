@@ -130,7 +130,10 @@ List<RouteBase> createDemoRoutesTail(DemoRouteFactory factory) => <RouteBase>[
       coordinator: factory.backgroundSyncCoordinator,
     ),
     init: (cubit) => cubit.initialize(),
-    child: const FcmDemoPage(),
+    child: FcmDemoPage(
+      maskTokens: FlavorManager.I.isProd,
+      allowTokenCopy: FlavorManager.I.isDev || FlavorManager.I.isQa,
+    ),
   ),
   RouteScopedPage.route(
     path: AppRoutes.productionReadinessPath,
@@ -149,6 +152,7 @@ List<RouteBase> createDemoRoutesTail(DemoRouteFactory factory) => <RouteBase>[
           frameMonitor: factory.frameTimingMonitor,
           simulationController: simulation,
           fcmMode: factory.fcmDemoMode,
+          firebaseInitialized: FirebaseBootstrapService.isFirebaseInitialized,
           recordNonFatal: FirebaseBootstrapService.isFirebaseInitialized
               ? FirebaseCrashlyticsBootstrap
                     .recordProductionReadinessTestNonFatal

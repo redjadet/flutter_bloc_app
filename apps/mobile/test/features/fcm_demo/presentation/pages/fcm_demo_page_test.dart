@@ -101,6 +101,8 @@ PushMessage _message() => PushMessage(
 Future<void> _pumpPage(
   WidgetTester tester, {
   required FcmDemoState state,
+  bool maskTokens = false,
+  bool allowTokenCopy = true,
 }) async {
   final cubit = _TestFcmDemoCubit()..setTestState(state);
   addTearDown(cubit.close);
@@ -115,7 +117,10 @@ Future<void> _pumpPage(
           context,
           child: BlocProvider<FcmDemoCubit>.value(
             value: cubit,
-            child: const FcmDemoPage(),
+            child: FcmDemoPage(
+              maskTokens: maskTokens,
+              allowTokenCopy: allowTokenCopy,
+            ),
           ),
         ),
       ),
@@ -201,6 +206,27 @@ void main() {
       expect(copiedText, 'fcm-token-1');
       expect(tester.takeException(), isNull);
       expect(find.text(l10n.fcmDemoCopySuccess), findsOneWidget);
+    });
+
+    testWidgets('masks tokens and hides copy when policy says so', (
+      tester,
+    ) async {
+      await _pumpPage(
+        tester,
+        state: const FcmDemoState(
+          status: FcmDemoStatus.ready,
+          permissionState: FcmPermissionState.authorized,
+          fcmToken: 'fcm-token-1',
+          apnsToken: 'apns-token-1',
+        ),
+        maskTokens: true,
+        allowTokenCopy: false,
+      );
+
+      expect(find.text('fcm-token-1'), findsNothing);
+      expect(find.text('apns-token-1'), findsNothing);
+      expect(find.text('••••••••'), findsNWidgets(2));
+      expect(find.text(l10n.fcmDemoCopyToken), findsNothing);
     });
   });
 }

@@ -1,18 +1,25 @@
 part of 'fcm_demo_page.dart';
 
 class _TokenSection extends StatelessWidget {
-  const new({required this.label, required this.value, required this.l10n});
+  const new({
+    required this.label,
+    required this.value,
+    required this.l10n,
+    required this.maskTokens,
+    required this.allowTokenCopy,
+  });
 
   final String label;
   final String? value;
   final AppLocalizations l10n;
+  final bool maskTokens;
+  final bool allowTokenCopy;
 
   static const String _maskedToken = '••••••••';
 
-  bool get _shouldMaskToken => kReleaseMode || FlavorManager.I.isProd;
+  bool get _shouldMaskToken => kReleaseMode || maskTokens;
 
-  bool get _canRevealToken =>
-      !kReleaseMode && (FlavorManager.I.isDev || FlavorManager.I.isQa);
+  bool get _canRevealToken => !kReleaseMode && allowTokenCopy;
 
   @override
   Widget build(BuildContext context) {

@@ -405,10 +405,41 @@ if ! grep -q -- "data must not import relative presentation layer" <<<"$clean_ar
   exit 1
 fi
 
+echo "fixtures|check_clean_architecture_imports|presentation_app_config"
+set +e
+  clean_arch_bad_app_config="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/lib/features/orders/presentation/bad_app_config_import.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected clean architecture check to fail on presentation app/config import" >&2
+  exit 1
+fi
+if ! grep -q -- "presentation must not read app bootstrap/config singletons" <<<"$clean_arch_bad_app_config"; then
+  echo "❌ fixtures failed: clean architecture app/config failure missing reason" >&2
+  echo "$clean_arch_bad_app_config" >&2
+  exit 1
+fi
+
+echo "fixtures|check_clean_architecture_imports|domain_sdk"
+set +e
+  clean_arch_bad_sdk="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/lib/features/orders/domain/bad_sdk_import.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected clean architecture check to fail on domain SDK import" >&2
+  exit 1
+fi
+if ! grep -q -- "domain must not import SDK/DI/data infrastructure" <<<"$clean_arch_bad_sdk"; then
+  echo "❌ fixtures failed: clean architecture domain SDK failure missing reason" >&2
+  echo "$clean_arch_bad_sdk" >&2
+  exit 1
+fi
+
 echo "fixtures|check_clean_architecture_imports|suppressed_good"
 bash tool/check_clean_architecture_imports.sh --paths \
   "$fixture_clean_arch/lib/features/orders/domain/suppressed.dart" \
-  "$fixture_clean_arch/lib/features/orders/domain/good.dart" >/dev/null
+  "$fixture_clean_arch/lib/features/orders/domain/good.dart" \
+  "$fixture_clean_arch/lib/features/orders/presentation/good_backend_availability_import.dart" >/dev/null
 
 fixture_folder_contract="tool/fixtures/feature_folder_contract"
 
