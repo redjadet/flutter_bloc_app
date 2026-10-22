@@ -86,7 +86,7 @@ Debug frame times do not represent release performance.
 ```bash
 # Interactive (physical device preferred for final proof)
 cd apps/mobile && flutter run --profile
-# Optional on-device FPS bars (not a DevTools substitute):
+# Optional on-device UI/Raster stage bars (PerformanceOverlay; DevTools for costly ops):
 # flutter run --profile --dart-define=ENABLE_PERFORMANCE_OVERLAY=true
 
 # Automated symptom capture (simulator OK for regression)
@@ -101,8 +101,9 @@ given a path or `--latest`).
 **Budgets:** interactive frame target is ≈16.7 ms @ 60 Hz / ≈8.3 ms @ 120 Hz.
 Automated gate thresholds live in `tool/perf_budgets.json` (p90 ≤ 8.3 ms, p99 ≤
 16.7 ms). A gate **fail** with zero `>16.7ms` frames still means pressure —
-identify the limiting work before patching. UI vs Raster attribution still
-requires profile-mode DevTools.
+identify the limiting work before patching. Stage-level UI vs Raster can come
+from the performance overlay; identifying expensive operations still needs
+profile-mode DevTools.
 
 In DevTools **Performance**, select a slow (red) frame and compare **UI** vs
 **Raster** durations.
@@ -120,7 +121,9 @@ or `--no-enable-impeller` as an optimization path
 | Rolling frame p90/p99 | `SchedulerFrameTimingMonitor` (`addTimingsCallback`) in `apps/mobile/lib/app/diagnostics/frame_timing_monitor.dart` — production-readiness demo |
 | Rebuild / frame helpers | `PerformanceProfiler` under `app/diagnostics/` |
 
-These surface symptoms; UI vs Raster attribution still needs DevTools.
+The overlay shows stage-level UI vs Raster durations; DevTools is still required
+to identify expensive operations inside the slow stage. `FrameTiming` /
+profiler helpers remain symptom aids only.
 
 ### 2. Follow the slow side
 

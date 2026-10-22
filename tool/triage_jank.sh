@@ -44,10 +44,10 @@ Canon: $ROOT/$DOC
 1. Reproduce in profile mode (debug frame times lie).
    Interactive:  cd apps/mobile && flutter run --profile
                  (iOS Simulator often cannot run --profile; physical device for final accept)
-   Optional:     --dart-define=ENABLE_PERFORMANCE_OVERLAY=true (FPS bars; not UI vs Raster)
+   Optional:     --dart-define=ENABLE_PERFORMANCE_OVERLAY=true (UI/Raster stage bars; DevTools for costly ops)
    Automated:    CHECKLIST_INTEGRATION_DEVICE=<udid> bash tool/capture_perf_trace.sh
                  python3 tool/analyze_perf_trace.py artifacts/perf/perf_report_data_<stamp>.json --triage
-   Budgets:      tool/perf_budgets.json (p90≤8.3ms, p99≤16.7ms) — UI vs Raster still needs DevTools
+   Budgets:      tool/perf_budgets.json (p90≤8.3ms, p99≤16.7ms) — costly ops still need DevTools
    Renderer:     Impeller is default on modern iOS/Android — remeasure on current defaults
 
 2. Follow the slow side in DevTools Performance (select a red frame).
