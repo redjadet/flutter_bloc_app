@@ -5,12 +5,14 @@ the frame before changing code.
 
 Upstream:
 
+- [Flutter Performance](https://docs.flutter.dev/perf) (metrics entry)
 - [Flutter Performance view](https://docs.flutter.dev/tools/devtools/performance)
 - [CPU Profiler](https://docs.flutter.dev/tools/devtools/cpu-profiler)
 - [Performance best practices](https://docs.flutter.dev/perf/best-practices)
 - [Memory view](https://docs.flutter.dev/tools/devtools/memory)
 - [Network view](https://docs.flutter.dev/tools/devtools/network)
 - [Isolates](https://docs.flutter.dev/perf/isolates)
+- [Impeller](https://docs.flutter.dev/perf/impeller)
 
 Pipeline and list/scroll guidelines:
 [`performance_bottlenecks.md`](performance_bottlenecks.md). Automated frame
@@ -24,6 +26,18 @@ make **one** targeted change, then measure the same interaction again.
 Do **not** treat debug-mode smoothness, intuition, or a single low `build()`
 time as proof. Do **not** optimize PipelineProduce / PipelineItem noise unless
 it coincides with frame-budget misses.
+
+## Common mistakes
+
+| Wrong | Right |
+| --- | --- |
+| Rebuild count = jank | Rebuild ≠ relayout/repaint. Prove a late frame and the limiting stage first. |
+| `async` / `await` fixes stutter | Async interleaves on one isolate; CPU-bound work still blocks frames. |
+| Always move work to an isolate | Isolate **after** measurement shows main-isolate CPU blowing the budget. |
+| Debug overlay / banner = ship proof | Profile-mode DevTools (UI vs Raster) owns accept claims. |
+
+Optional debug correlation only (not release proof): framework flags such as
+`debugPrintBeginFrameBanner` / rebuild trackers. Prefer the Performance view.
 
 ## Frame budget
 
@@ -88,6 +102,21 @@ requires profile-mode DevTools.
 In DevTools **Performance**, select a slow (red) frame and compare **UI** vs
 **Raster** durations.
 
+**Impeller:** default on modern iOS / Android API 29+. On iOS there is no Skia
+fallback — remeasure on current defaults; do not treat Skia-era raster advice
+or `--no-enable-impeller` as an optimization path
+([Impeller](https://docs.flutter.dev/perf/impeller)).
+
+### In-app hooks (complement DevTools)
+
+| Hook | How |
+| --- | --- |
+| Performance overlay | `flutter run --profile --dart-define=ENABLE_PERFORMANCE_OVERLAY=true` (`AppConfig`) |
+| Rolling frame p90/p99 | `SchedulerFrameTimingMonitor` (`addTimingsCallback`) in `apps/mobile/lib/app/diagnostics/frame_timing_monitor.dart` — production-readiness demo |
+| Rebuild / frame helpers | `PerformanceProfiler` under `app/diagnostics/` |
+
+These surface symptoms; UI vs Raster attribution still needs DevTools.
+
 ### 2. Follow the slow side
 
 #### High UI time
@@ -136,5 +165,7 @@ Repo static guard when scroll jank is plausible:
 | This triage | `finding_jank_cause.md` |
 | Pipeline + list/scroll guidelines | [`performance_bottlenecks.md`](performance_bottlenecks.md) |
 | Automated traces + budgets | `tool/capture_perf_trace.sh`, `tool/analyze_perf_trace.py`, `tool/perf_budgets.json` |
+| Perf integration_test targets | `apps/mobile/integration_test/perf/` (`traceAction` / Timeline) |
 | Review questions | [`../review/performance_checklist.md`](../review/performance_checklist.md) |
 | Reliability performance rules | [`../reliability_error_handling_performance.md`](../reliability_error_handling_performance.md) |
+| Performance docs index | [`README.md`](README.md) |

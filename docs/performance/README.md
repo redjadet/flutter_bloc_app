@@ -6,6 +6,7 @@ for repository-wide reliability rules.
 
 | Need | Read |
 | --- | --- |
+| **How to measure (official → repo)** | [finding_jank_cause.md](finding_jank_cause.md) — DevTools Performance / CPU / Memory, Impeller, profile mode, `tool/capture_perf_trace.sh`, in-app `FrameTiming` / overlay; entry `bash tool/triage_jank.sh` |
 | **Jank / late frames (cause first)** | [finding_jank_cause.md](finding_jank_cause.md) — `bash tool/triage_jank.sh` |
 | Heap / GC / object lifetimes | [dart_memory_under_the_hood.md](dart_memory_under_the_hood.md) |
 | Memory ownership | [memory_management.md](memory_management.md) |
