@@ -37,6 +37,13 @@ final class _FakeSession implements AgentEngineSession {
   }
 
   @override
+  Future<void> dispose() async {
+    await disconnect();
+    await _controller.close();
+    await _faults.close();
+  }
+
+  @override
   Future<AgentEngineInfo> ping() async {
     if (!connected) {
       throw const AgentCommsNotConnectedFailure();

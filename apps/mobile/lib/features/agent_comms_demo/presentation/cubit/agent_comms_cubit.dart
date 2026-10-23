@@ -26,15 +26,33 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
     );
     try {
       await _session.connect();
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       await _eventsSub?.cancel();
       await _faultsSub?.cancel();
-      _eventsSub = _session.events.listen(_onEvent);
-      _faultsSub = _session.faults.listen(_onFault);
+      _eventsSub = _session.events.listen(
+        _onEvent,
+        onError: (Object error, StackTrace stackTrace) {
+          _onFault(
+            error is AgentCommsFailure
+                ? error
+                : AgentCommsTransportFailure('$error'),
+          );
+        },
+      );
+      _faultsSub = _session.faults.listen(
+        _onFault,
+        onError: (Object error, StackTrace stackTrace) {
+          _onFault(
+            error is AgentCommsFailure
+                ? error
+                : AgentCommsTransportFailure('$error'),
+          );
+        },
+      );
       final String identity = await _trustedHelper.identity();
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(
@@ -46,12 +64,12 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
         ),
       );
     } on AgentCommsFailure catch (failure) {
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(state.copyWith(status: AgentCommsStatus.failure, failure: failure));
     } on Object catch (e) {
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(
@@ -77,7 +95,7 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
     emit(state.copyWith(status: AgentCommsStatus.busy, clearFailure: true));
     try {
       final AgentEngineInfo info = await _session.ping();
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(
@@ -91,7 +109,7 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
         ),
       );
     } on AgentCommsFailure catch (failure) {
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(state.copyWith(status: AgentCommsStatus.failure, failure: failure));
@@ -112,7 +130,7 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
     emit(state.copyWith(status: AgentCommsStatus.busy, clearFailure: true));
     try {
       final int streamed = await _session.streamDemo();
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(
@@ -125,7 +143,7 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
         ),
       );
     } on AgentCommsFailure catch (failure) {
-      if (!_isActive(generation)) {
+      if (isClosed || generation != _generation) {
         return;
       }
       emit(state.copyWith(status: AgentCommsStatus.failure, failure: failure));
@@ -139,6 +157,9 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
     _eventsSub = null;
     _faultsSub = null;
     await _session.disconnect();
+    if (isClosed) {
+      return;
+    }
     emit(
       state.copyWith(
         status: AgentCommsStatus.disconnected,
@@ -181,14 +202,12 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
     );
   }
 
-  bool _isActive(int generation) => !isClosed && generation == _generation;
-
   @override
   Future<void> close() async {
     ++_generation;
     await _eventsSub?.cancel();
     await _faultsSub?.cancel();
-    await _session.disconnect();
+    await _session.dispose();
     await super.close();
   }
 }

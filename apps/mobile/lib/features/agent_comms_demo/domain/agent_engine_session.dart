@@ -21,4 +21,7 @@ abstract interface class AgentEngineSession {
   Future<int> streamDemo({int count = 3});
 
   Future<void> disconnect();
+
+  /// Tears down transport subscriptions and closes event/fault streams.
+  Future<void> dispose();
 }

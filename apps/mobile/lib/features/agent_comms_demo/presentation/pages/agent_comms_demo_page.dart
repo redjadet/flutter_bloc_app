@@ -38,16 +38,16 @@ class AgentCommsDemoPage extends StatelessWidget {
                 Text('Launcher: ${state.launcherDescription}'),
               if (state.trustedHelperIdentity != null)
                 Text('Trusted helper: ${state.trustedHelperIdentity}'),
-              if (state.engineInfo != null)
+              if (state.engineInfo case final engineInfo?)
                 Text(
-                  'Engine: ${state.engineInfo!.engine} '
-                  'v${state.engineInfo!.version} pid=${state.engineInfo!.pid}',
+                  'Engine: ${engineInfo.engine} '
+                  'v${engineInfo.version} pid=${engineInfo.pid}',
                 ),
-              if (state.failure != null)
+              if (state.failure case final failure?)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    'Error: ${state.failure!.message}',
+                    'Error: ${failure.message}',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                     ),
