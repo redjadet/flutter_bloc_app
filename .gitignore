@@ -47,6 +47,7 @@ GEMINI.md
 
 # Rust crate build outputs (secure_core_bridge and future native crates)
 **/rust/**/target/
+native/agent_engine/target/
 **/Cargo.toml.orig
 
 # Coverage outputs — regenerate: bash tool/test_coverage.sh
