@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-23_flutter_3_47_7_pin.md`](2026-10-23_flutter_3_47_7_pin.md): Pin Flutter `3.47.6` → `3.47.7` (Dart `3.13.5` unchanged); CI/docs/README sinks synced from SDK.
 - [`2026-10-22_inheritedwidget_audit.md`](2026-10-22_inheritedwidget_audit.md): InheritedElement mechanics and custom-scope checklist in the BuildContext deep dive; whiteboard pen follows the theme; comment sheet disposes its controller.
 - [`2026-10-22_clean_architecture_boundary_audit.md`](2026-10-22_clean_architecture_boundary_audit.md): Inject bootstrap/flavor values into production-readiness and FCM demo presentation, guard that rule, test `SubmitCaseStudyUseCase`, map the repo to Flutter's architecture guide.
 - [`2026-10-22_secure_logging_redaction.md`](2026-10-22_secure_logging_redaction.md): Close LogRedaction gaps (compound keys, JSON text, emails), drop user id / raw values from release warnings, stop echoing google-auth errors; extend the logging guide.

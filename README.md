@@ -47,7 +47,7 @@ GitHub runs. See the scorecard for validation scope and coverage policy.
 
 **Toolchain**
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.47.6-blue.svg)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.47.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.13.5-blue.svg)](https://dart.dev)
 [![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
 [![Codegen](https://img.shields.io/badge/Codegen-Freezed%20%7C%20JSON-7C3AED.svg)](docs/architecture/freezed_usage_analysis.md)
