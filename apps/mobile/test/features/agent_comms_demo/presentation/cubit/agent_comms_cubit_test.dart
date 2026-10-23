@@ -9,11 +9,16 @@ final class _FakeSession implements AgentEngineSession {
 
   final StreamController<AgentEngineEvent> _controller =
       StreamController<AgentEngineEvent>.broadcast();
+  final StreamController<AgentCommsFailure> _faults =
+      StreamController<AgentCommsFailure>.broadcast();
   bool connected = false;
   int streamCalls = 0;
 
   @override
   Stream<AgentEngineEvent> get events => _controller.stream;
+
+  @override
+  Stream<AgentCommsFailure> get faults => _faults.stream;
 
   @override
   bool get isConnected => connected;

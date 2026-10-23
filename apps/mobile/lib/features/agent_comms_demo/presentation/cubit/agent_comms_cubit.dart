@@ -16,6 +16,7 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
   final AgentEngineSession _session;
   final TrustedNativeHelper _trustedHelper;
   StreamSubscription<AgentEngineEvent>? _eventsSub;
+  StreamSubscription<AgentCommsFailure>? _faultsSub;
   int _generation = 0;
 
   Future<void> connect() async {
@@ -29,7 +30,9 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
         return;
       }
       await _eventsSub?.cancel();
+      await _faultsSub?.cancel();
       _eventsSub = _session.events.listen(_onEvent);
+      _faultsSub = _session.faults.listen(_onFault);
       final String identity = await _trustedHelper.identity();
       if (!_isActive(generation)) {
         return;
@@ -132,7 +135,9 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
   Future<void> disconnect() async {
     ++_generation;
     await _eventsSub?.cancel();
+    await _faultsSub?.cancel();
     _eventsSub = null;
+    _faultsSub = null;
     await _session.disconnect();
     emit(
       state.copyWith(
@@ -162,12 +167,27 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
     );
   }
 
+  void _onFault(AgentCommsFailure failure) {
+    if (isClosed) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        status: AgentCommsStatus.failure,
+        failure: failure,
+        clearEngineInfo: true,
+        eventLog: <String>[...state.eventLog, 'fault: ${failure.message}'],
+      ),
+    );
+  }
+
   bool _isActive(int generation) => !isClosed && generation == _generation;
 
   @override
   Future<void> close() async {
     ++_generation;
     await _eventsSub?.cancel();
+    await _faultsSub?.cancel();
     await _session.disconnect();
     await super.close();
   }

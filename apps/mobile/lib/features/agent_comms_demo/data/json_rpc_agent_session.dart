@@ -17,6 +17,8 @@ final class JsonRpcAgentSession implements AgentEngineSession {
   final AgentEngineLauncher _launcher;
   final StreamController<AgentEngineEvent> _events =
       StreamController<AgentEngineEvent>.broadcast();
+  final StreamController<AgentCommsFailure> _faults =
+      StreamController<AgentCommsFailure>.broadcast();
 
   Process? _process;
   int _processEpoch = 0;
@@ -24,6 +26,7 @@ final class JsonRpcAgentSession implements AgentEngineSession {
   bool _disposeRequested = false;
   StreamSubscription<String>? _stdoutSub;
   StreamSubscription<String>? _stderrSub;
+  StreamSubscription<void>? _stdinDoneSub;
   final Map<int, Completer<Map<String, Object?>>> _pending =
       <int, Completer<Map<String, Object?>>>{};
   int _nextId = 1;
@@ -31,6 +34,9 @@ final class JsonRpcAgentSession implements AgentEngineSession {
 
   @override
   Stream<AgentEngineEvent> get events => _events.stream;
+
+  @override
+  Stream<AgentCommsFailure> get faults => _faults.stream;
 
   @override
   bool get isConnected => _process != null;
@@ -88,14 +94,24 @@ final class JsonRpcAgentSession implements AgentEngineSession {
           .transform(utf8.decoder)
           .transform(const LineSplitter())
           .listen((_) {}, onError: (_) {});
+      _stdinDoneSub = process.stdin.done.asStream().listen(
+        (_) {},
+        onError: (Object error) {
+          _onTransportError(
+            AgentCommsTransportFailure('Agent stdin closed: $error'),
+          );
+        },
+      );
       unawaited(
         process.exitCode.then((code) {
           if (_processEpoch != epoch || !identical(_process, process)) {
             return;
           }
-          _failAllPending(
-            AgentCommsTransportFailure('Agent process exited ($code)'),
+          final AgentCommsTransportFailure failure = AgentCommsTransportFailure(
+            'Agent process exited ($code)',
           );
+          _failAllPending(failure);
+          _emitFault(failure);
           _clearProcess(epoch: epoch);
         }),
       );
@@ -115,11 +131,15 @@ final class JsonRpcAgentSession implements AgentEngineSession {
   @override
   Future<AgentEngineInfo> ping() async {
     final Map<String, Object?> result = await _request('ping');
-    return AgentEngineInfo(
-      engine: result['engine'] as String? ?? 'unknown',
-      version: result['version'] as String? ?? 'unknown',
-      pid: (result['pid'] as num?)?.toInt() ?? 0,
-    );
+    final Object? engine = result['engine'];
+    final Object? version = result['version'];
+    final Object? pid = result['pid'];
+    if (engine is! String || version is! String || pid is! num) {
+      throw const AgentCommsTransportFailure(
+        'ping result missing string engine/version or numeric pid',
+      );
+    }
+    return AgentEngineInfo(engine: engine, version: version, pid: pid.toInt());
   }
 
   @override
@@ -128,7 +148,13 @@ final class JsonRpcAgentSession implements AgentEngineSession {
       'agent/streamDemo',
       params: <String, Object?>{'count': count},
     );
-    return (result['streamed'] as num?)?.toInt() ?? 0;
+    final Object? streamed = result['streamed'];
+    if (streamed is! num) {
+      throw const AgentCommsTransportFailure(
+        'streamDemo result missing numeric streamed',
+      );
+    }
+    return streamed.toInt();
   }
 
   @override
@@ -177,7 +203,12 @@ final class JsonRpcAgentSession implements AgentEngineSession {
       'method': method,
       'params': params,
     });
-    process.stdin.writeln(payload);
+    try {
+      process.stdin.writeln(payload);
+    } on Object catch (e) {
+      _pending.remove(id);
+      throw AgentCommsTransportFailure('Failed to write RPC request: $e');
+    }
     try {
       return await completer.future.timeout(const Duration(seconds: 5));
     } on TimeoutException {
@@ -263,6 +294,13 @@ final class JsonRpcAgentSession implements AgentEngineSession {
         ? error
         : AgentCommsTransportFailure('$error');
     _failAllPending(failure);
+    _emitFault(failure);
+  }
+
+  void _emitFault(AgentCommsFailure failure) {
+    if (!_faults.isClosed) {
+      _faults.add(failure);
+    }
   }
 
   void _failAllPending(AgentCommsFailure failure) {
@@ -280,8 +318,10 @@ final class JsonRpcAgentSession implements AgentEngineSession {
     }
     unawaited(_stdoutSub?.cancel() ?? Future<void>.value());
     unawaited(_stderrSub?.cancel() ?? Future<void>.value());
+    unawaited(_stdinDoneSub?.cancel() ?? Future<void>.value());
     _stdoutSub = null;
     _stderrSub = null;
+    _stdinDoneSub = null;
     _process = null;
   }
 }

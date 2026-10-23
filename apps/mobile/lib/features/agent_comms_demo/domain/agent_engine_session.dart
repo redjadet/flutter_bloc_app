@@ -1,8 +1,12 @@
+import 'package:flutter_bloc_app/features/agent_comms_demo/domain/agent_comms_failure.dart';
 import 'package:flutter_bloc_app/features/agent_comms_demo/domain/agent_engine_info.dart';
 
 /// Port for an out-of-process agent session (JSON-RPC client).
 abstract interface class AgentEngineSession {
   Stream<AgentEngineEvent> get events;
+
+  /// Idle connection loss / transport faults not tied to an in-flight RPC.
+  Stream<AgentCommsFailure> get faults;
 
   bool get isConnected;
 

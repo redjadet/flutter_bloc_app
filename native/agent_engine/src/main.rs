@@ -53,7 +53,7 @@ async fn main() {
     let (tx, mut rx) = mpsc::unbounded_channel::<String>();
 
     // Single writer task keeps stdout line-oriented and ordered.
-    tokio::spawn(async move {
+    let writer = tokio::spawn(async move {
         let mut stdout = io::stdout();
         while let Some(line) = rx.recv().await {
             let _ = writeln!(stdout, "{line}");
@@ -149,6 +149,10 @@ async fn main() {
             ),
         }
     }
+
+    // Drop the sender so the writer drains remaining lines, then join.
+    drop(tx);
+    let _ = writer.await;
 }
 
 fn respond_ok(tx: &mpsc::UnboundedSender<String>, id: Option<Value>, result: Value) {
