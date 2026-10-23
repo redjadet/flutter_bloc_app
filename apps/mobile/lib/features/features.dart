@@ -1,3 +1,4 @@
+export 'agent_comms_demo/agent_comms_demo.dart';
 export 'ai_decision_demo/ai_decision_demo.dart';
 export 'auth/auth.dart';
 export 'calculator/calculator.dart';
