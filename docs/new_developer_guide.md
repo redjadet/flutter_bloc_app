@@ -243,7 +243,7 @@ do **not** invent a second cheat sheet here.
 | `flutter create …` for a new app/feature | Existing Melos workspace + feature scaffold (`bash tool/scaffold_feature_contract.sh`); see [Feature structure](architecture/feature_structure_contract.md) |
 | `flutter pub get` at a random package root | `bash tool/workspace_pub_get.sh` from repo root (then Melos as needed) |
 | Bare `flutter analyze` / `flutter test` as the quality gate | `./tool/analyze.sh` or focused `flutter test <paths>`; escalate to `./bin/checklist` — [validation routing](engineering/validation_routing_fast_vs_full.md) |
-| `flutter upgrade` / `flutter channel …` casually | Stay on the pinned SDK in [`toolchain_versions.env`](toolchain_versions.env) / [`tech_stack.md`](tech_stack.md) (**Flutter 3.47.6** / Dart **3.13.5**). After an intentional local upgrade: `python3 tool/update_agent_toolchain_versions.py --from-sdk` then verify with `--check` ([pin note](changes/2026-10-02_flutter_3_47_6_pin.md)) |
+| `flutter upgrade` / `flutter channel …` casually | Stay on the pinned SDK in [`toolchain_versions.env`](toolchain_versions.env) / [`tech_stack.md`](tech_stack.md) (**Flutter 3.47.7** / Dart **3.13.5**). After an intentional local upgrade: `python3 tool/update_agent_toolchain_versions.py --from-sdk` then verify with `--check` ([pin note](changes/2026-10-23_flutter_3_47_7_pin.md)) |
 | `dart pub …` inside Flutter packages | Prefer `flutter pub …` ([Dart pub](https://dart.dev/tools/pub/cmd)) |
 | `flutter doctor` / `flutter devices` | Fine for host/device diagnosis; app run still uses flavor targets (`-t lib/main_dev.dart`) and direnv/`--dart-define` wrappers above |
 

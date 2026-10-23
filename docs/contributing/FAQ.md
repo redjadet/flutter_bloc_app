@@ -55,7 +55,7 @@ Use them as background only. Day-to-day work prefers repo wrappers
 (`workspace_pub_get`, `./bin/checklist`, Melos) over bare
 `flutter create` / casual `flutter upgrade`. Short map + official CLI link:
 [New Developer Guide § Raw Flutter CLI → this repo](../new_developer_guide.md#raw-flutter-cli--this-repo).
-Pin: Flutter **3.47.6** ([`tech_stack.md`](../tech_stack.md)).
+Pin: Flutter **3.47.7** ([`tech_stack.md`](../tech_stack.md)).
 
 For platform setup and configuration, see [Developer Guide](../new_developer_guide.md) and [Security & Secrets](../security_and_secrets.md).
 
