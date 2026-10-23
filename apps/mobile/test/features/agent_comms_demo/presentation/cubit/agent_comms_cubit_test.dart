@@ -70,6 +70,10 @@ final class _FakeSession implements AgentEngineSession {
     }
     return count;
   }
+
+  void emitFault(AgentCommsFailure failure) {
+    _faults.add(failure);
+  }
 }
 
 void main() {
@@ -128,5 +132,44 @@ void main() {
         expect(cubit.state.failure, isA<AgentCommsNotConnectedFailure>());
       },
     );
+
+    test(
+      'fault during connect keeps failure (not overwritten to connected)',
+      () async {
+        final _SlowTrustedHelper helper = _SlowTrustedHelper();
+        final AgentCommsCubit cubit = AgentCommsCubit(
+          session: session,
+          trustedHelper: helper,
+        );
+        addTearDown(cubit.close);
+
+        final Future<void> connecting = cubit.connect();
+        await Future<void>.delayed(Duration.zero);
+        session.emitFault(
+          const AgentCommsTransportFailure('child exited early'),
+        );
+        helper.complete();
+        await connecting;
+
+        expect(cubit.state.status, AgentCommsStatus.failure);
+        expect(cubit.state.failure, isA<AgentCommsTransportFailure>());
+      },
+    );
   });
+}
+
+final class _SlowTrustedHelper implements TrustedNativeHelper {
+  final Completer<void> _gate = Completer<void>();
+
+  void complete() {
+    if (!_gate.isCompleted) {
+      _gate.complete();
+    }
+  }
+
+  @override
+  Future<String> identity() async {
+    await _gate.future;
+    return 'slow-helper';
+  }
 }

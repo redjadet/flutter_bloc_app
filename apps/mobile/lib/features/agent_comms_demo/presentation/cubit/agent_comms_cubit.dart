@@ -189,6 +189,9 @@ class AgentCommsCubit extends Cubit<AgentCommsState> {
   }
 
   void _onFault(AgentCommsFailure failure) {
+    // Invalidate in-flight connect/ping/stream so late completions cannot
+    // overwrite a fault with a stale "connected" emit.
+    ++_generation;
     if (isClosed) {
       return;
     }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/agent_comms_demo/data/agent_engine_launcher.dart';
+import 'package:flutter_bloc_app/features/agent_comms_demo/data/bounded_ndjson_line_splitter.dart';
 import 'package:flutter_bloc_app/features/agent_comms_demo/domain/agent_comms_failure.dart';
 import 'package:flutter_bloc_app/features/agent_comms_demo/domain/agent_engine_info.dart';
 import 'package:flutter_bloc_app/features/agent_comms_demo/domain/agent_engine_session.dart';
@@ -101,19 +102,16 @@ final class JsonRpcAgentSession implements AgentEngineSession {
   }
 
   void _attachIo(Process process, int epoch) {
-    _stdoutSub = process.stdout
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
-        .listen((line) {
-          try {
-            _onStdoutLine(line);
-          } on Object catch (error) {
-            _onTransportError(error);
-          }
-        }, onError: _onTransportError);
+    const BoundedNdjsonLineSplitter splitter = BoundedNdjsonLineSplitter();
+    _stdoutSub = process.stdout.transform(splitter).listen((line) {
+      try {
+        _onStdoutLine(line);
+      } on Object catch (error) {
+        _onTransportError(error);
+      }
+    }, onError: _onTransportError);
     _stderrSub = process.stderr
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
+        .transform(splitter)
         .listen((_) {}, onError: (_) {});
     _stdinDoneSub = process.stdin.done.asStream().listen(
       (_) {},

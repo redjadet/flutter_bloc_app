@@ -144,8 +144,14 @@ extension on JsonRpcAgentSession {
     final AgentCommsFailure failure = error is AgentCommsFailure
         ? error
         : AgentCommsTransportFailure('$error');
+    final Process? process = _process;
+    final int epoch = _processEpoch;
     _failAllPending(failure);
     _emitFault(failure);
+    if (process != null) {
+      process.kill();
+      _clearProcess(epoch: epoch);
+    }
   }
 
   void _emitFault(AgentCommsFailure failure) {
