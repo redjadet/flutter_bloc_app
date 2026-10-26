@@ -36,6 +36,12 @@
       "groupName": "pub-coordinated-pins"
     },
     {
+      "description": "Hold firebase_app_check <0.5 while firebase_core stays on 4.x (0.5+ requires firebase_core ^5)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_app_check"],
+      "allowedVersions": "<0.5.0"
+    },
+    {
       "description": "Hold cross_file <0.4 until image_picker_platform_interface supports it; as of image_picker 1.2.3 / image_picker_platform_interface 2.11.1 still requires cross_file ^0.3.1+1 (pub.dev 2026-10-01; see #933/#937/#939)",
       "matchManagers": ["pub"],
       "matchPackageNames": ["cross_file"],
