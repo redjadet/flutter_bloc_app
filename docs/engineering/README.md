@@ -25,6 +25,7 @@ Operational quality, delivery controls, and technical maintenance. Start with
 | Anti-patterns | [flutter-anti-patterns.md](flutter-anti-patterns.md) |
 | Integration testing | [integration_test_policy.md](integration_test_policy.md) |
 | Play Store release SOP | [android_play_store_release_sop.md](android_play_store_release_sop.md) |
+| Shipping / release (both stores, CI shape) | [`../deployment.md`](../deployment.md) — GHA + Fastlane; no Codemagic; no Shorebird/OTA |
 | Delayed or background work | [delayed_work_guide.md](delayed_work_guide.md) |
 
 Put focused operations, quality controls, and maintenance guidance here. Keep

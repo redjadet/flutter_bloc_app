@@ -7,6 +7,18 @@ vendor docs.
 
 For the complete docs index, see [docs index](README.md).
 
+## What this portfolio actually uses
+
+| Concern | In this repo | Not in this repo |
+| --- | --- | --- |
+| CI / gates | GitHub Actions + `./bin/checklist` ([`engineering/ci_automation.md`](engineering/ci_automation.md)) | Codemagic (or other Flutter-only CI vendors) |
+| Store upload | Fastlane via `tool/fastlane.sh` / `tool/release_*.sh` | Manual Xcode/Play Console as the primary path |
+| Critical Dart hotfix without a new binary | Firebase Remote Config / feature flags (already-shipped branches only) | Shorebird or other Dart OTA / code-push |
+
+Do **not** document or claim OTA code-push here. Instant mitigations are
+flags/RC (and backend); binary fixes still use TestFlight / Play tracks in
+[Canonical routes](#canonical-routes) below.
+
 ## Canonical routes
 
 | Goal | Primary doc | Primary commands |

@@ -20,6 +20,7 @@ the matching row. Detail: [`engineering/validation_routing_fast_vs_full.md`](eng
 | Format Dart source | `./bin/format` or `./bin/format --changed` (**required before finish** when any `.dart` changed) |
 | Freezed / json_serializable / Retrofit / `*.g.dart` / `*.freezed.dart` | Edit annotations only — **never hand-edit** generated files; then `(cd apps/mobile && dart run build_runner build --delete-conflicting-outputs) && bash tool/strip_freezed_dart_313_params.sh` — [`engineering/code_generation_guide.md`](engineering/code_generation_guide.md) |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` (full path runs `flutter analyze` + Flutter tests/coverage; do not strip) |
+| Store release / TestFlight / Play / “code push” | [`deployment.md`](deployment.md) (GHA + Fastlane); **no** Shorebird/OTA in tree — RC/flags first, then store binaries |
 | Router / `AppRoutes` / auth gates / auth UI | `./bin/router_feature_validate` |
 | Integration journey / flow | `./bin/integration_tests` |
 | Integration/bootstrap/browser guardrails | `./bin/integration_preflight` (`INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` for browser-only lane) |
