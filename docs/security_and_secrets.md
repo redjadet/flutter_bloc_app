@@ -21,8 +21,10 @@ secret injection**, not vulnerability triage.
 - **Dart defines are client-visible**: `--dart-define` values used by Flutter
   are compiled into distributable artifacts. Use them only for public client
   configuration; never use them for provider tokens or shared backend secrets.
-- **Fail safe**: when a key is missing, the owning feature should be disabled
-  or fall back to a safe local-only mode.
+- **Fail safe and fail visible**: when a key is missing, the owning feature
+  should be disabled or fall back to a safe local-only mode. Do not invent
+  keys, silent placeholders, or fake “configured” success paths that hide the
+  gap.
 
 ## Client trust and privacy by design
 

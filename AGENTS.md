@@ -23,7 +23,8 @@ the validation chooser. Prefer the narrowest honest lane in
 - BLoC / Clean Architecture: [`bloc_standards`](docs/bloc_standards.md), [`feature contract`](docs/architecture/feature_structure_contract.md), [`clean_architecture`](docs/clean_architecture.md).
 - Offline / native / cancel: [`offline-first`](docs/offline_first/adoption_guide.md), platform notes in [`project context`](docs/agent_project_context.md), [`cancellation`](docs/engineering/cancellation_and_cache.md).
 - Theme tokens: [`DESIGN.md`](DESIGN.md), [`design_system`](docs/design_system.md). Skills: [`docs/ai-sdlc/skills/`](docs/ai-sdlc/skills/README.md).
-- Pitfalls before edit: [`ai_failure_risks`](docs/ai/ai_failure_risks.md) Pre-Flight.
+- Pitfalls before edit: [`ai_failure_risks`](docs/ai/ai_failure_risks.md) Pre-Flight (includes Flutter agent slip classes: unrequested Cloud/Edge functions, auth≠ownership rules, async `forEach`, `context.mounted`, fail-visible config, no weakened tests, no feature `ChangeNotifier`).
+- Review order: security → correctness → architecture ([`code_review_playbook`](docs/review/code_review_playbook.md)); AI review ≠ human merge.
 
 ## Task Map
 

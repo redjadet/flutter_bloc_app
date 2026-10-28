@@ -31,6 +31,23 @@ root, run `bash tool/...` instead.
 | P1 — during implementation | Async, offline, seams, BLoC, tests, platform scope, false “done” | `RISK-ASYNC-LIFECYCLE`, `RISK-OFFLINE-OVERWRITE`, `RISK-INTEGRATION-SEAM`, `RISK-BLOC-DIVERGENCE`, `RISK-TEST-GAP`, `RISK-PLATFORM-SCOPE`, `RISK-VALIDATION-SHORTCUT`, `RISK-SECURITY-GAP` |
 | P2 — session hygiene | Host/docs/context/API/UI/harness drift | `RISK-HOST-DRIFT`, `RISK-DOC-DRIFT`, `RISK-HARNESS-SCORE-DROP`, `RISK-CONTEXT-OVERLOAD`, `RISK-STALE-API`, `RISK-UI-REGRESSION` |
 
+## Flutter agent slip classes
+
+Recurring agent mistakes. Map to existing risk IDs; review **security →
+correctness → architecture**. Lints `unawaited_futures`, `discarded_futures`,
+and `use_build_context_synchronously` are analyzer **errors** (root
+`analysis_options.yaml`).
+
+| Class | Do / don't | Risk IDs | Owners |
+| --- | --- | --- | --- |
+| Unrequested Cloud/Edge functions | Do not add under `backend/firebase/functions/` or `supabase/functions/` unless requested and briefed; inspect existing surface first | `RISK-SCOPE-CREEP`, `RISK-SECURITY-GAP` | [`../review/security_checklist.md`](../review/security_checklist.md); firebase/supabase setup docs |
+| Auth ≠ ownership in rules | Signed-in (`request.auth != null` / JWT) is not ownership; bind `request.auth.uid` / `auth.uid()` to owner fields in rules/RLS | `RISK-SECURITY-GAP` | security checklist; `backend/firebase/firestore_rules/firestore.rules`; [`../security/todo_list_firebase_security_rules.md`](../security/todo_list_firebase_security_rules.md) |
+| Async `forEach` | Do not `await` inside `Iterable.forEach`; use `for` + `await` (or collect then `Future.wait` when ordered concurrency is intentional) | `RISK-ASYNC-LIFECYCLE` | analyzer errors; `agents-canonical-rules-async` |
+| `BuildContext` after `await` | Guard with `context.mounted` (or `mounted`) before using context | `RISK-ASYNC-LIFECYCLE` | [`../engineering/build_context_deep_dive.md`](../engineering/build_context_deep_dive.md) |
+| Missing configuration keys | Fail safe **and** fail visible: disable feature / local-only; never invent keys, silent placeholders, or fake “configured” success | `RISK-MISSING-TARGET`, `RISK-SECRET-LEAK` | [`../security_and_secrets.md`](../security_and_secrets.md) |
+| Weakened tests | Do not delete, skip, or dilute failing tests to green a change; fix product code or justify with reviewed reason | `RISK-TEST-GAP`, `RISK-VALIDATION-SHORTCUT` | [`../review/code_review_playbook.md`](../review/code_review_playbook.md) |
+| Feature `ChangeNotifier` | Feature/app state is Cubit/BLoC; do not introduce `ChangeNotifier`/Provider for feature state (documented shell adapters only) | `RISK-BLOC-DIVERGENCE` | [`../bloc_standards.md`](../bloc_standards.md); [`../architecture/state_management_choice.md`](../architecture/state_management_choice.md) |
+
 ## Risk Register
 
 | ID | Failure risk | Prevention | Detection | Recovery |
