@@ -21,9 +21,23 @@ Primary protocol: [`ai_code_review_protocol.md`](../ai_code_review_protocol.md)
 - Mutations require auth gate or documented demo exception.
 - User-scoped data reads/writes include ownership checks in repository or use
   case — not only in UI.
+- **Auth ≠ ownership in rules/RLS:** `request.auth != null` / a valid JWT is not
+  enough for user-owned docs. Bind `request.auth.uid` (Firestore) or
+  `auth.uid()` (Supabase RLS) to the owner path/field (`userId`, `user_id`,
+  doc id). Reject rules that grant any signed-in user read/write to another
+  user's private data unless the product role model explicitly allows it.
 - Token/session refresh and revocation paths match existing auth feature
   patterns.
 - Route/auth gates updated together with repository changes.
+
+## Backend surface (Cloud / Edge Functions)
+
+- Do **not** invent Firebase Cloud Functions (`backend/firebase/functions/`) or
+  Supabase Edge Functions (`supabase/functions/`) unless the request and feature
+  brief call for them. Prefer existing callables/Edge endpoints and client/repo
+  patterns documented in firebase/supabase setup docs.
+- New functions require authz review (callable auth, JWT/`verify_jwt`, secrets
+  not returned to clients) and focused denial-path proof.
 
 ## Input and Injection
 

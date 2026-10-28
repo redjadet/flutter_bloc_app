@@ -21,6 +21,12 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | `context.read` / `BlocProvider.of` | `RISK-BLOC-DIVERGENCE` | Global skill `type-safe-bloc-access` if installed; else [`bloc_standards.md`](../../../../../docs/bloc_standards.md) + `context.cubit<T>()` |
 | Emit after `close()` or leaked subscriptions | `RISK-ASYNC-LIFECYCLE` | `agents-canonical-rules-async`; cancel in `close()` |
 | `context` after `await` without `mounted` | `RISK-ASYNC-LIFECYCLE` | Guard `mounted`; keep side effects in Cubit |
+| `Iterable.forEach` with async/`await` body | `RISK-ASYNC-LIFECYCLE` | Use `for` + `await` (or intentional `Future.wait`); `unawaited_futures` / `discarded_futures` are errors |
+| Invent Firebase/Supabase Cloud or Edge Functions without request | `RISK-SCOPE-CREEP` / `RISK-SECURITY-GAP` | Inspect existing `functions/`; [`security_checklist.md`](../../../../../docs/review/security_checklist.md) |
+| Rules/RLS treat signed-in as ownership | `RISK-SECURITY-GAP` | Bind `request.auth.uid` / `auth.uid()` to owner fields |
+| Invent config keys or silent “configured” defaults | `RISK-MISSING-TARGET` / `RISK-SECRET-LEAK` | [`security_and_secrets.md`](../../../../../docs/security_and_secrets.md) fail-safe + fail-visible |
+| Feature/`app` state via `ChangeNotifier` | `RISK-BLOC-DIVERGENCE` | Cubit/BLoC only; shell adapters are documented exceptions |
+| Delete/skip/weaken failing tests to green | `RISK-TEST-GAP` | Fix product code; playbook requires reviewed reason for test removals |
 | Remote fetch overwrites offline-pending local | `RISK-OFFLINE-OVERWRITE` | `agents-shared-patterns`; offline adoption guide |
 | Skip DI / routes / l10n / codegen | `RISK-INTEGRATION-SEAM` | `agents-feature-delivery` wire-DI rule |
 | Start feature without brief/tests | `RISK-FEATURE-BRIEF-SKIP` | `scaffold_feature_contract.sh`; feature brief |

@@ -79,17 +79,24 @@ Questions to answer:
 
 ### 3. Review in risk order
 
-Review correctness and safety before style. Do not let formatting discussion hide
-a behavioral defect.
+Mandatory priority for this portfolio: **security → correctness → architecture**,
+then UI/performance polish. Do not let formatting or layering discussion hide a
+security or behavioral defect. AI review output is draft evidence only; a human
+owns the merge decision.
 
-1. Scope and public contract — solves requested problem; no unrelated rewrite.
-2. Architecture and ownership — apply
+1. Scope and public contract — solves requested problem; no unrelated rewrite;
+   no unrequested Cloud Functions / Edge Functions / backend surface.
+2. Security and privacy — apply [`security_checklist.md`](security_checklist.md):
+   authz, **auth ≠ ownership** in rules/RLS, input boundaries, secrets,
+   logging, storage, replay/idempotency.
+3. Correctness — state and async behavior via [`bloc_checklist.md`](bloc_checklist.md)
+   (visible states, request freshness, disposal, no stale completion); async
+   `for` + `await` (not `forEach`); `context.mounted` after `await`; fail-visible
+   missing config; tests not deleted/weakened to green.
+4. Architecture and ownership — apply
    [`architecture_checklist.md`](architecture_checklist.md):
-   `Presentation -> Domain <- Data`, pure domain, no feature leakage.
-3. State and async behavior — apply [`bloc_checklist.md`](bloc_checklist.md):
-   explicit visible states, request freshness, disposal, no stale completion.
-4. Security and privacy — apply [`security_checklist.md`](security_checklist.md):
-   authz, input boundaries, secrets, logging, storage, replay/idempotency.
+   `Presentation -> Domain <- Data`, pure domain, Cubit/BLoC (no feature
+   `ChangeNotifier`), no feature leakage.
 5. UI and platform behavior — use [`../../DESIGN.md`](../../DESIGN.md) and
    [`../design_system.md`](../design_system.md): loading/error/empty states,
    responsive layouts, keyboard/accessibility, supported-platform paths.
@@ -203,15 +210,17 @@ Before approval, reviewer can answer yes to all:
 
 - Requested outcome and boundaries understood; diff tells one coherent story.
 - Diff has no unrelated changes or each exception is justified (including
-  inseparable refactor).
+  inseparable refactor); no unrequested Cloud/Edge Functions.
 - Rollback/reversibility impact is clear for risky changes.
-- Layering, state, security, UI, and performance checks relevant to paths ran.
+- Security (incl. auth≠ownership), correctness (async/`mounted`/config/tests),
+  then architecture/layering, UI, and performance checks relevant to paths ran.
 - Tests prove behavior and failure paths, not only implementation details.
 - Changed tests retain meaningful assertions; deleted, skipped, or mocked tests
   have a reviewed reason.
 - Validation is fresh, scope-matched, and independently inspected.
 - Findings have disposition; accepted risks have owner and revisit trigger.
-- Final decision and residual risks are recorded.
+- Final decision and residual risks are recorded; AI review did not substitute
+  for human merge judgment.
 - LOC/size alone did not decide approve/split.
 
 ## Related
