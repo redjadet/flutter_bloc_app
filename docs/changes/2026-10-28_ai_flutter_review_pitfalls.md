@@ -20,3 +20,5 @@ were incomplete.
 
 - `bash tool/check_ai_failure_risk_register.sh`
 - Docs gardening / agent closeout for host-skill template sync when applicable
+- CI: `check_agent_asset_drift.sh` applies host assets when `CI` is set (empty
+  runner HOME), then verifies — unblocks AGENTS/template docs-only PRs

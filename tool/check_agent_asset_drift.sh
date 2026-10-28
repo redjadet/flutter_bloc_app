@@ -39,6 +39,18 @@ if ! require_agent_asset_runtime; then
   exit 1
 fi
 
+# CI runners start with empty ~/.cursor and ~/.codex. Apply templates into the
+# runner HOME (and workspace project rules/hooks) before comparing, matching
+# tool/upgrade_validate_all.sh. Local hosts must sync via
+# ./bin/agent-maintain after-host-edit; this script stays compare-only there.
+if [[ -n "${CI:-}" ]]; then
+  echo "CI detected; applying managed AI agent host assets before drift check."
+  if ! bash "$(cd "$(dirname "$0")" && pwd)/sync_agent_assets.sh" --apply; then
+    echo "Agent asset drift check failed because CI host asset apply failed." >&2
+    exit 1
+  fi
+fi
+
 failures=0
 
 normalize_status_line() {
