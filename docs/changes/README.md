@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-10-28_ai_code_review_playbook_gaps.md`](2026-10-28_ai_code_review_playbook_gaps.md): Align review playbook with DONE-style checks, proof-before-diff, Spec vs Standards, and three-round rethink stop.
 - [`2026-10-28_ai_flutter_review_pitfalls.md`](2026-10-28_ai_flutter_review_pitfalls.md): Map seven Flutter agent slip classes into AGENTS / failure-risks / security checklist / review order / pitfalls skill; no lint toggles (already errors).
 - [`2026-10-23_flutter_3_47_7_pin.md`](2026-10-23_flutter_3_47_7_pin.md): Pin Flutter `3.47.6` → `3.47.7` (Dart `3.13.5` unchanged); CI/docs/README sinks synced from SDK.
 - [`2026-10-22_inheritedwidget_audit.md`](2026-10-22_inheritedwidget_audit.md): InheritedElement mechanics and custom-scope checklist in the BuildContext deep dive; whiteboard pen follows the theme; comment sheet disposes its controller.

@@ -5,9 +5,11 @@ AI code = draft until review gate passes. Use the
 review sequence, findings, validation, and decision records. This document owns
 AI-specific risks and Flutter review special cases.
 
-Before report: apply the playbook's **Scope discipline** and
-**Self-verification** requirements; AI must **Self-verify** conclusions against
-the request, diff, proof, blockers, and residual risks.
+Before report: apply the playbook's **Scope discipline** (pass/fail checks,
+proof before the diff, risk → reading depth) and **Self-verification**
+requirements; AI must **Self-verify** conclusions against the request, diff,
+proof, blockers, and residual risks. Separate **Spec** vs **Standards**
+findings; stop and rethink after three non-converging review/fix rounds.
 
 Toolchain: [`tech_stack.md`](tech_stack.md) (pins:
 [`toolchain_versions.env`](toolchain_versions.env)). Human review remains the
