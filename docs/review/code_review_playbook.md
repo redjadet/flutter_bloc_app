@@ -37,16 +37,27 @@ offline sync, routing, dependency/DI changes, and broad shared infrastructure.
 
 ### 1. Establish review contract
 
+#### Scope discipline
+
 Before reading implementation, capture:
 
 - Intended user outcome and non-goals (one primary user/risk story).
 - Changed paths, base branch, and whether unrelated changes exist.
 - Whether behavior change and opportunistic refactoring are separated; if
   inseparable, explicit justification in the PR body.
+- **Pass/fail result checks** the change must meet (command + observable
+  evidence each), not implementation how-to. Prefer a short linked brief,
+  PR checklist, or feature Tests rows over a prose-only “done” claim.
 - Acceptance criteria, known constraints, and rollback/recovery impact.
 - Expected behavior from the requirement or domain contract, including an
   invariant, a boundary/invalid case, and failure behavior before comparing tests.
-- Risk classification: low, medium, or high.
+- Risk classification: low, medium, or high — and the matching **human reading
+  depth** (see Roles table and
+  [`../ai/governance.md`](../ai/governance.md) § Human verdict by risk):
+  low → prioritize evidence and findings; medium → one independent human on
+  behavior and seams; high → independent reviewer (two when policy requires)
+  on security/data/lifecycle paths. Agent approval never counts as a human
+  verdict. Product code still needs a human merge decision in this portfolio.
 - Required validation lane from
   [`../engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).
 - Size is a review **prompt**, not a merge gate; coherence and reversibility
@@ -56,13 +67,19 @@ For non-trivial feature work, require a feature brief with executable test rows;
 use [`../architecture/feature_structure_contract.md`](../architecture/feature_structure_contract.md)
 and [`../testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md).
 
+**Proof before the diff:** for AI-authored work, the author (or implementer
+agent) must present evidence against each pass/fail check before the reviewer
+opens the implementation diff. A summary that only says “done” or “tests pass”
+is not evidence. Reviewers start from that evidence and the contract, then read
+code where risk and failed/weak checks demand it.
+
 ### 2. Read context before diff
 
 Start with [`../../AGENTS.md`](../../AGENTS.md), then load only relevant owner
 docs through [`../ai/context_loading.md`](../ai/context_loading.md). **Read the
 current implementation**, adjacent tests, and caller/callee seams before
-commenting or approving edits—do not review from the diff alone. For
-AI-authored changes, also apply
+commenting or approving edits—do not review from the diff alone. Match reading
+depth to the risk tier from step 1. For AI-authored changes, also apply
 [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md).
 
 Questions to answer:
@@ -116,10 +133,15 @@ tests alone cannot validate a mistaken contract.
 
 ### 4. Write actionable findings
 
+Label each finding as **Spec** (breaks a stated pass/fail check or requested
+outcome) or **Standards** (breaks a repo rule, checklist, or named smell). Keep
+the two sets apart so a clean Standards pass cannot hide a Spec miss. Treat AI
+findings as hypotheses until a human or independent proof confirms them.
+
 Each finding contains:
 
 ```text
-[severity] title
+[severity] [Spec|Standards] title
 Location: path:line
 Impact: concrete failure or violated contract.
 Evidence: code path, test result, or owner rule.
@@ -142,8 +164,12 @@ unless the proposed change makes the risk worse or the task includes it.
 
 ### 5. Validate independently
 
-Author command output is input, not final proof. Re-run narrowest honest checks
-from repository root and inspect output. Minimum lanes:
+#### Self-verification
+
+Author command output is input, not final proof. Before approving, re-check
+conclusions against the request, contract checks, diff, proof, blockers, and
+residual risks. Re-run narrowest honest checks from repository root and inspect
+output. Minimum lanes:
 
 | Change surface | Minimum independent proof |
 | --- | --- |
@@ -170,6 +196,14 @@ After a patch, review final diff again. Confirm no finding was fixed by moving
 the failure across a layer, hiding an error, weakening a test, or adding an
 unbounded retry. Re-run checks affected by the fix.
 
+**Three-round rethink:** after three author↔reviewer fix rounds on the same
+change without converging, stop looping. Step back, tighten or correct the
+pass/fail contract, and rethink the approach before another AI fix pass. Do not
+run AI review in a loop until it comes back clean.
+
+When a finding class repeats, land a durable guardrail (focused test, lint,
+script, or owner-doc check) and add it to the pass/fail contract for later work.
+
 Review record:
 
 ```markdown
@@ -191,6 +225,10 @@ For risk acceptance, record owner, rationale, mitigation, and revisit trigger.
 
 - Separate evidence from inference. Quote paths, commands, and observed output;
   label any unverified conclusion.
+- Prefer a **fresh-session** AI review (and optional second model) that did not
+  author the change; keep Spec and Standards answers apart. Cross-host second
+  opinion when useful: `./tool/request_codex_feedback.sh`,
+  `./tool/run_codex_plan_review.sh`.
 - Search for existing repository helpers, contracts, and tests before suggesting
   a new abstraction or dependency.
 - Inspect success and failure paths: empty/malformed input, repeated tap,
@@ -199,26 +237,31 @@ For risk acceptance, record owner, rationale, mitigation, and revisit trigger.
 - Never expose credentials, tokens, PII, or full sensitive payloads in review
   comments or logs.
 - Keep AI suggestions non-authoritative until a human accepts them; human
-  reviewer remains accountable for merge decision.
+  reviewer remains accountable for merge decision. An agent’s approval never
+  counts as a person’s.
 - After repeated failure class, propose a durable guardrail—test fixture,
   validation script, template, or owner-doc update—rather than another prompt
-  instruction.
+  instruction. Honor the three-round rethink stop in § Resolve and close.
 
 ## Fast Checklist
 
 Before approval, reviewer can answer yes to all:
 
-- Requested outcome and boundaries understood; diff tells one coherent story.
+- Requested outcome and boundaries understood; pass/fail checks exist; diff
+  tells one coherent story.
+- Author evidence for those checks was inspected before deep-diving the diff.
 - Diff has no unrelated changes or each exception is justified (including
   inseparable refactor); no unrequested Cloud/Edge Functions.
 - Rollback/reversibility impact is clear for risky changes.
 - Security (incl. auth≠ownership), correctness (async/`mounted`/config/tests),
   then architecture/layering, UI, and performance checks relevant to paths ran.
+- Spec vs Standards findings are separated; AI findings treated as hypotheses.
 - Tests prove behavior and failure paths, not only implementation details.
 - Changed tests retain meaningful assertions; deleted, skipped, or mocked tests
   have a reviewed reason.
 - Validation is fresh, scope-matched, and independently inspected.
-- Findings have disposition; accepted risks have owner and revisit trigger.
+- Findings have disposition; accepted risks have owner and revisit trigger;
+  three-round rethink applied when looping.
 - Final decision and residual risks are recorded; AI review did not substitute
   for human merge judgment.
 - LOC/size alone did not decide approve/split.
