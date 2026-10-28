@@ -114,7 +114,8 @@ See [`features/README.md`](features/README.md) and [`feature_overview.md`](featu
 
 ### Release and distribution
 
-- [`deployment.md`](deployment.md) · [`../fastlane/README.md`](../fastlane/README.md)
+- [`deployment.md`](deployment.md) — GHA + Fastlane store path; **no** Codemagic; **no** Shorebird/OTA (RC/flags first)
+- [`../fastlane/README.md`](../fastlane/README.md)
 - Env templates: [`.env.example`](../.env.example), [`docs/envrc.example`](envrc.example)
 
 ## Historical context (not source of truth)
