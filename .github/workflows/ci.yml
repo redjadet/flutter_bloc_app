@@ -166,6 +166,7 @@ jobs:
           install-ripgrep: 'true'
           install-lcov: 'true'
           install-rust: 'true'
+          install-linux-native-build-deps: 'true'
 
       - name: Install documentation check tools
         if: needs.changes.outputs.docs_only == 'true'

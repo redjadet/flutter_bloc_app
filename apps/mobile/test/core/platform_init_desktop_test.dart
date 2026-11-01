@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:window_manager/legacy.dart';
 
 class _MockWindowManager extends Mock implements WindowManager {}
 

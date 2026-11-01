@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:material_ui/material_ui.dart' show Size;
-import 'package:window_manager/window_manager.dart';
+import 'package:window_manager/legacy.dart';
 
 Future<void> initializePlatformWindowingImpl({
   required Object minWindowSize,

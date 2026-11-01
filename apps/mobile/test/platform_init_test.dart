@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:window_manager/legacy.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

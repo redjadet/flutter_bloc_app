@@ -44,6 +44,7 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           install-ripgrep: 'true'
           install-rust: 'true'
+          install-linux-native-build-deps: 'true'
 
       - name: Run delivery checklist
         run: ./bin/checklist
@@ -64,6 +65,7 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           install-ripgrep: 'true'
           install-rust: 'true'
+          install-linux-native-build-deps: 'true'
 
       - name: Run upgrade + validate workflow
         run: ./bin/upgrade_validate_all

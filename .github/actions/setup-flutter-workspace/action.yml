@@ -26,6 +26,12 @@ inputs:
       Linux host is for package/Cargo tests only — not a product desktop target.
     required: false
     default: 'false'
+  install-linux-native-build-deps:
+    description: >-
+      Install pkg-config + GTK/X11 dev libraries for cnativeapi (window_manager
+      0.6+) native hooks when running flutter test/analyze on Linux CI.
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -49,7 +55,11 @@ runs:
       run: bash tool/workspace_pub_get.sh
 
     - name: Install apt packages
-      if: ${{ inputs.install-ripgrep == 'true' || inputs.install-lcov == 'true' || inputs.install-chrome == 'true' }}
+      if: >-
+        ${{ inputs.install-ripgrep == 'true' ||
+            inputs.install-lcov == 'true' ||
+            inputs.install-chrome == 'true' ||
+            inputs.install-linux-native-build-deps == 'true' }}
       shell: bash
       run: |
         set -euo pipefail
@@ -66,6 +76,11 @@ runs:
              ! command -v chromium-browser >/dev/null 2>&1 && \
              ! command -v chromium >/dev/null 2>&1; then
             packages+=(google-chrome-stable)
+          fi
+        fi
+        if [[ '${{ inputs.install-linux-native-build-deps }}' == 'true' ]]; then
+          if ! pkg-config --exists gtk+-3.0 2>/dev/null; then
+            packages+=(pkg-config libgtk-3-dev libx11-dev libxi-dev)
           fi
         fi
         if ((${#packages[@]} == 0)); then
