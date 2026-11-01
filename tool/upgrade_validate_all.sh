@@ -200,6 +200,50 @@ else
     fi
   done
 
+  # 0.6 is a breaking API rewrite; migrate deliberately later.
+  # `pub upgrade --major-versions` lifts ^0.5.2 to ^0.6.x. 0.6 removes
+  # windowManager, WindowManager.ensureInitialized, and setMinimumSize, and
+  # pulls cnativeapi (GTK/X11 on Linux). Put the 0.5.x constraint back.
+  window_manager_pin_action="$(
+    python3 - "apps/mobile/pubspec.yaml" <<'PY'
+from __future__ import annotations
+
+import re
+import sys
+from pathlib import Path
+
+mobile = Path(sys.argv[1])
+if not mobile.is_file():
+    raise SystemExit(f"missing {mobile}")
+
+text = mobile.read_text(encoding="utf-8")
+pattern = r"^  window_manager:.*$"
+match = re.search(pattern, text, flags=re.MULTILINE)
+if match is None:
+    raise SystemExit(f"could not restore window_manager in {mobile}")
+
+constraint = match.group(0).split(":", 1)[1].split("#", 1)[0].strip()
+if constraint == "^0.5.2":
+    print("unchanged")
+else:
+    text, count = re.subn(
+        pattern,
+        "  window_manager: ^0.5.2",
+        text,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    if count != 1:
+        raise SystemExit(f"could not restore window_manager in {mobile}")
+    mobile.write_text(text, encoding="utf-8")
+    print("restored")
+PY
+  )"
+  if [ "$window_manager_pin_action" = "restored" ]; then
+    echo "==> Step 2a/6: Restore window_manager ^0.5.2 after major upgrade"
+    "$FLUTTER_BIN" pub get
+  fi
+
   echo "==> Step 2b/6: Verify pubspec codegen/analyzer compatibility"
   if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
     echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring pinned analyzer/codegen stack."
