@@ -155,6 +155,7 @@ dependencies:
   wallet_connect_v2: ^1.0.9
   web: ^1.1.2
   web_socket_channel: ^3.0.3
+  # 0.6 is a breaking API rewrite; migrate deliberately later.
   window_manager: ^0.5.2
 
 dev_dependencies:
