@@ -60,3 +60,30 @@ point to executable proof. Never leave current ADRs pointing at removed
 - **Accepted**: current governing decision.
 - **Superseded**: replaced by a newer ADR; link to the replacement record.
 - **Deprecated**: no longer recommended, but kept for history.
+
+## Coding agents and AI reviewers
+
+ADRs hold **why** the repo rejected an alternative (cost, scope, ops complexity,
+interview spine, SDK policy), not just what the code does today. Implementation
+guides and tests can pass while a change still overturns that reasoning.
+
+Before proposing or approving a change that touches architecture layering,
+persistence/sync, routing/startup, observability SDKs, portfolio scope, or
+shared state-management policy:
+
+1. Read this index and every **Accepted** ADR whose scope matches the task
+   (for example ADR 0008 before adding Sentry, ADR 0007 before BlocSignal or
+   a second state stack, ADR 0005/0006 before expanding analytics or CI smoke).
+2. Distinguish **implementation improvement** (same decision, clearer or safer
+   code) from **decision reversal** (reintroducing a rejected alternative or
+   dropping an accepted trade-off because it looks slower or redundant locally).
+3. If the diff conflicts with an Accepted ADR, **stop and flag it**. Ask the
+   human whether to preserve the decision or **supersede** it with a new ADR
+   (status `Superseded` on the old record, link both ways). Do not silently
+   optimize back to a rejected option because tests pass or the local path is
+   simpler.
+4. Humans and AI reviewers must not assume review checklists or green CI replace
+   ADR context — business and scope constraints live here.
+
+Challenge accepted decisions by writing a superseding ADR with fresh context,
+alternatives, and review triggers; do not edit history in place to erase rationale.
