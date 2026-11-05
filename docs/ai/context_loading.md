@@ -22,6 +22,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | T1/T2 AIDLC, phase gates, or active lifecycle run | [`aidlc_workflow.md`](aidlc_workflow.md) + [`../engineering/aidlc_artifact_contract.md`](../engineering/aidlc_artifact_contract.md); load after core routing only |
 | Intent→spec→plan→review / AI-native SDLC feature artifacts | [`../ai-sdlc/README.md`](../ai-sdlc/README.md); templates + [`../ai-sdlc/skills/`](../ai-sdlc/skills/README.md); prove via [`../ai-sdlc/gates.md`](../ai-sdlc/gates.md) |
 | Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
+| Architecture / persistence / sync / routing / observability SDK / portfolio scope | [`../adr/README.md`](../adr/README.md) + matching **Accepted** ADRs from the index (conflict → flag human; supersede via new ADR, do not silent optimize) |
 | Commands / validation choice | Tool-router output, then matching [`agents_quick_reference.md`](../agents_quick_reference.md) row |
 | PR / CI evidence | [`github_mcp_guide.md`](github_mcp_guide.md) |
 | Code review | [`../review/code_review_playbook.md`](../review/code_review_playbook.md); AI-authored change: also [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md) |

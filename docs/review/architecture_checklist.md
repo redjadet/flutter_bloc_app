@@ -6,6 +6,13 @@ and the violated rule.
 Primary contracts: [Feature Structure](../architecture/feature_structure_contract.md)
 and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 
+**ADRs:** For changes in layering, offline/sync, deferred routes, observability
+SDKs, portfolio scope, or state-management policy, read scoped **Accepted**
+records in [`../adr/README.md`](../adr/README.md). If the diff reintroduces a
+rejected alternative or drops an accepted trade-off, block review until the
+human chooses to preserve the decision or supersede the ADR — passing tests or
+import guards alone is not enough.
+
 ## Layering
 
 - Domain contains pure Dart contracts, models, and reusable business policies.

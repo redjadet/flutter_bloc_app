@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-11-05_adr_agent_retrieval.md`](2026-11-05_adr_agent_retrieval.md): Wire existing ADRs into agent/reviewer context — retrieve before boundary/SDK changes; flag ADR conflicts; supersede instead of silent optimize (maps “code persisted, reasoning didn’t” gap).
 - [`2026-10-28_roadmap_shipping_index_honesty.md`](2026-10-28_roadmap_shipping_index_honesty.md): Index Codemagic/Shorebird honesty — GHA + Fastlane; no OTA; RC/flags first (deployment + AGENTS + quick ref).
 - [`2026-10-28_ai_code_review_playbook_gaps.md`](2026-10-28_ai_code_review_playbook_gaps.md): Align review playbook with DONE-style checks, proof-before-diff, Spec vs Standards, and three-round rethink stop.
 - [`2026-10-28_ai_flutter_review_pitfalls.md`](2026-10-28_ai_flutter_review_pitfalls.md): Map seven Flutter agent slip classes into AGENTS / failure-risks / security checklist / review order / pitfalls skill; no lint toggles (already errors).

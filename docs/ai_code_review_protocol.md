@@ -17,6 +17,22 @@ final trust boundary; see [OpenAI's Codex safety guidance](https://openai.com/in
 
 Pointers: [`agent_knowledge_base.md`](agent_knowledge_base.md) (traps, finish gate) · [`agents_quick_reference.md`](agents_quick_reference.md) · [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) · [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md) (report shape, legibility, response tiers) · [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) (`./bin/agent-maintain closeout`). Deterministic checklists: [`review/architecture_checklist.md`](review/architecture_checklist.md), [`review/bloc_checklist.md`](review/bloc_checklist.md), [`review/security_checklist.md`](review/security_checklist.md), [`review/performance_checklist.md`](review/performance_checklist.md). Cross-host review only when explicitly requested: `./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`.
 
+## Architecture decisions (ADRs)
+
+Before approving AI-authored diffs that touch layering, persistence/sync,
+routing, observability SDKs, portfolio scope, or shared Cubit/BLoC policy,
+retrieve scoped **Accepted** ADRs from [`adr/README.md`](adr/README.md).
+
+- **Implementation fix:** same governing decision; clearer or safer code — OK
+  when architecture checklists and proof still pass.
+- **Decision reversal:** reintroduces an alternative listed as rejected in an
+  ADR, or removes an intentional trade-off (for example Crashlytics-only per
+  ADR 0008, `flutter_bloc`-only per ADR 0007, interview spine per ADR 0005) —
+  **flag as Block** until the human explicitly chooses to supersede the ADR.
+- Do not treat green tests, import guards, or generic “looks cleaner” rationale
+  as permission to overturn ADR reasoning. Record supersede intent in a new ADR,
+  not only in PR prose.
+
 ## AI-Generated-Code Risk Matrix
 
 | Risk | Smell | Fix | Proof |

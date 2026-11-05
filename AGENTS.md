@@ -20,6 +20,7 @@ the validation chooser. Prefer the narrowest honest lane in
 
 ## Conventions + pitfalls
 
+- Accepted architecture decisions (WHY, not only HOW): [`docs/adr/README.md`](docs/adr/README.md) — retrieve scoped **Accepted** ADRs before boundary or SDK changes; if a fix conflicts with an ADR, flag and ask to preserve or supersede (do not silently revert to a rejected alternative).
 - BLoC / Clean Architecture: [`bloc_standards`](docs/bloc_standards.md), [`feature contract`](docs/architecture/feature_structure_contract.md), [`clean_architecture`](docs/clean_architecture.md).
 - Offline / native / cancel: [`offline-first`](docs/offline_first/adoption_guide.md), platform notes in [`project context`](docs/agent_project_context.md), [`cancellation`](docs/engineering/cancellation_and_cache.md).
 - Theme tokens: [`DESIGN.md`](DESIGN.md), [`design_system`](docs/design_system.md). Skills: [`docs/ai-sdlc/skills/`](docs/ai-sdlc/skills/README.md).
