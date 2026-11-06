@@ -69,6 +69,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
         itemsKey: _keyItems,
         readable: updated,
         unreadable: partition.unreadable,
+        deleteKey: (String key) => safeDeleteKey(box, key),
       );
     }),
   );
@@ -87,6 +88,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
         itemsKey: _keyItems,
         readable: updated,
         unreadable: partition.unreadable,
+        deleteKey: (String key) => safeDeleteKey(box, key),
       );
     }),
   );
@@ -151,6 +153,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
           ),
         ],
         unreadable: const <Object>[],
+        deleteKey: (String key) => safeDeleteKey(box, key),
       );
       await box.put(_keySeeded, true);
     }),

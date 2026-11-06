@@ -1,7 +1,6 @@
 import 'package:flutter_bloc_app/features/carrier_line_demo/data/carrier_inbox_item_dto.dart';
 import 'package:flutter_bloc_app/features/carrier_line_demo/domain/carrier_inbox_item.dart';
 import 'package:hive/hive.dart';
-import 'package:storage/storage.dart';
 
 /// Sentinel when the items key exists but the stored value is null.
 const Object carrierInboxMissingTopLevelSentinel = Object();
@@ -75,9 +74,10 @@ Future<void> writeCarrierInboxPayload(
   required String itemsKey,
   required List<CarrierInboxItem> readable,
   required List<Object> unreadable,
+  required Future<void> Function(String key) deleteKey,
 }) async {
   if (readable.isEmpty && unreadable.isEmpty) {
-    await safeDeleteKey(box, itemsKey);
+    await deleteKey(itemsKey);
     return;
   }
   final List<Object> serialized = <Object>[
