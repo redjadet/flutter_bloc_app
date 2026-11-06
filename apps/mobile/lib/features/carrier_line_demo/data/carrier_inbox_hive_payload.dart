@@ -7,7 +7,7 @@ const Object carrierInboxMissingTopLevelSentinel = Object();
 
 /// Readable domain rows plus quarantined raw entries from a Hive inbox box.
 class CarrierInboxHivePartition {
-  const CarrierInboxHivePartition({
+  const new({
     required this.readable,
     required this.unreadable,
     this.malformedTopLevel,
@@ -83,7 +83,7 @@ Future<void> writeCarrierInboxPayload(
   final List<Object> serialized = <Object>[
     ...readable
         .map(CarrierInboxItemDto.fromDomain)
-        .map((CarrierInboxItemDto dto) => dto.toMap()),
+        .map((dto) => dto.toMap()),
     ...unreadable,
   ];
   await box.put(itemsKey, serialized);
