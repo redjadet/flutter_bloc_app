@@ -54,6 +54,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
     logContext: 'HiveCarrierInboxRepository.save',
     action: () => runWithBox((box) async {
       final _InboxPartition partition = _partitionBox(box);
+      _rejectMalformedTopLevel(partition);
       final List<CarrierInboxItem> updated = List<CarrierInboxItem>.from(
         partition.readable,
       );
@@ -76,6 +77,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
     logContext: 'HiveCarrierInboxRepository.markRead',
     action: () => runWithBox((box) async {
       final _InboxPartition partition = _partitionBox(box);
+      _rejectMalformedTopLevel(partition);
       final List<CarrierInboxItem> updated = partition.readable
           .map((row) => row.id == id ? row.copyWith(isUnread: false) : row)
           .toList(growable: false);
@@ -105,9 +107,9 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
       }
       if (box.containsKey(_keyItems)) {
         final _InboxPartition partition = _partitionBox(box);
-        final Object? raw = box.get(_keyItems);
+        _rejectMalformedTopLevel(partition);
         final bool hasUnreadablePayload =
-            raw is Iterable && raw.isNotEmpty && partition.readable.isEmpty;
+            partition.unreadable.isNotEmpty && partition.readable.isEmpty;
         if (hasUnreadablePayload) {
           throw StateError(
             'Carrier line inbox payload is present but unreadable; '
@@ -159,11 +161,18 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   }
 
   _InboxPartition _partitionBox(Box<dynamic> box) {
-    final Object? raw = box.get(_keyItems);
-    if (raw is! Iterable) {
+    if (!box.containsKey(_keyItems)) {
       return const _InboxPartition(
         readable: <CarrierInboxItem>[],
         unreadable: <Object>[],
+      );
+    }
+    final Object? raw = box.get(_keyItems);
+    if (raw is! Iterable) {
+      return _InboxPartition(
+        readable: const <CarrierInboxItem>[],
+        unreadable: const <Object>[],
+        malformedTopLevel: raw ?? _missingTopLevelSentinel,
       );
     }
     final List<CarrierInboxItem> readable = <CarrierInboxItem>[];
@@ -187,6 +196,16 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
     return _InboxPartition(readable: readable, unreadable: unreadable);
   }
 
+  void _rejectMalformedTopLevel(_InboxPartition partition) {
+    if (partition.malformedTopLevel == null) {
+      return;
+    }
+    throw StateError(
+      'Carrier line inbox top-level payload is malformed; '
+      'refusing to mutate or reseed',
+    );
+  }
+
   Future<void> _writePayload(
     Box<dynamic> box, {
     required List<CarrierInboxItem> readable,
@@ -206,9 +225,19 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   }
 }
 
+/// Sentinel when the items key exists but the stored value is null.
+const Object _missingTopLevelSentinel = Object();
+
 class _InboxPartition {
-  const _InboxPartition({required this.readable, required this.unreadable});
+  const _InboxPartition({
+    required this.readable,
+    required this.unreadable,
+    this.malformedTopLevel,
+  });
 
   final List<CarrierInboxItem> readable;
   final List<Object> unreadable;
+
+  /// Non-null when [_keyItems] exists but is not an [Iterable].
+  final Object? malformedTopLevel;
 }

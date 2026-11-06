@@ -239,5 +239,58 @@ void main() {
         isTrue,
       );
     });
+
+    test(
+      'regression: malformed top-level map/string payloads are preserved',
+      () async {
+        final Box<dynamic> box = await repository.getBox();
+        const String stringPayload = 'not-a-list';
+        await box.put('items', stringPayload);
+        expect(box.get('seeded'), isNull);
+
+        await expectLater(repository.ensureSeeded(), throwsStateError);
+        expect(box.get('items'), stringPayload);
+        expect(box.get('seeded'), isNull);
+
+        await expectLater(repository.markRead('any'), throwsStateError);
+        expect(box.get('items'), stringPayload);
+
+        await expectLater(
+          repository.save(
+            CarrierInboxItem(
+              id: 'new',
+              kind: CarrierInboxKind.message,
+              peerLabel: 'X',
+              preview: 'Y',
+              occurredAt: DateTime.utc(2026, 5, 1),
+            ),
+          ),
+          throwsStateError,
+        );
+        expect(box.get('items'), stringPayload);
+
+        final Map<String, Object?> mapPayload = <String, Object?>{
+          'id': 'not-a-list',
+        };
+        await box.put('items', mapPayload);
+        await expectLater(repository.ensureSeeded(), throwsStateError);
+        expect(box.get('items'), mapPayload);
+        await expectLater(repository.markRead('any'), throwsStateError);
+        expect(box.get('items'), mapPayload);
+        await expectLater(
+          repository.save(
+            CarrierInboxItem(
+              id: 'new',
+              kind: CarrierInboxKind.message,
+              peerLabel: 'X',
+              preview: 'Y',
+              occurredAt: DateTime.utc(2026, 5, 1),
+            ),
+          ),
+          throwsStateError,
+        );
+        expect(box.get('items'), mapPayload);
+      },
+    );
   });
 }
