@@ -32,4 +32,18 @@ void main() {
       throwsFormatException,
     );
   });
+
+  test('rejects unsupported kind instead of coercing to message', () {
+    expect(
+      () => CarrierInboxItemDto.fromMap(<String, dynamic>{
+        'id': 'x',
+        'kind': 'fax',
+        'peerLabel': 'Peer',
+        'preview': 'Unknown',
+        'occurredAtMs': DateTime.utc(2026, 6, 1).millisecondsSinceEpoch,
+        'isUnread': true,
+      }).toDomain(),
+      throwsFormatException,
+    );
+  });
 }

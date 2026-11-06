@@ -241,6 +241,61 @@ void main() {
     });
 
     test(
+      'regression: unknown kind rows are preserved across markRead/save',
+      () async {
+        final Box<dynamic> box = await repository.getBox();
+        await box.put('items', <Object?>[
+          <String, Object?>{
+            'id': 'valid',
+            'kind': 'message',
+            'peerLabel': 'Keep',
+            'preview': 'Readable',
+            'occurredAtMs': DateTime.utc(2026, 6, 2).millisecondsSinceEpoch,
+            'isUnread': true,
+          },
+          <String, Object?>{
+            'id': 'unknown-kind',
+            'kind': 'fax',
+            'peerLabel': 'Legacy',
+            'preview': 'Unsupported kind',
+            'occurredAtMs': DateTime.utc(2026, 6, 3).millisecondsSinceEpoch,
+            'isUnread': true,
+          },
+        ]);
+        await box.put('seeded', true);
+
+        await repository.markRead('valid');
+        List<Object?> rows = List<Object?>.from(box.get('items')! as Iterable);
+        expect(
+          rows.whereType<Map>().any(
+            (Map<dynamic, dynamic> row) =>
+                row['id'] == 'unknown-kind' && row['kind'] == 'fax',
+          ),
+          isTrue,
+        );
+
+        await repository.save(
+          CarrierInboxItem(
+            id: 'valid',
+            kind: CarrierInboxKind.message,
+            peerLabel: 'Keep',
+            preview: 'Updated',
+            occurredAt: DateTime.utc(2026, 6, 2),
+          ),
+        );
+        rows = List<Object?>.from(box.get('items')! as Iterable);
+        expect(
+          rows.whereType<Map>().any(
+            (Map<dynamic, dynamic> row) =>
+                row['id'] == 'unknown-kind' && row['kind'] == 'fax',
+          ),
+          isTrue,
+        );
+        expect((await repository.fetchAll()).single.preview, 'Updated');
+      },
+    );
+
+    test(
       'regression: seeded malformed top-level fails fetch and watch',
       () async {
         final Box<dynamic> box = await repository.getBox();

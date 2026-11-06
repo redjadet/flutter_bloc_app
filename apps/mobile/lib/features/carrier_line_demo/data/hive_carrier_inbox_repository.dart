@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/carrier_line_demo/data/carrier_inbox_item_dto.dart';
+import 'package:flutter_bloc_app/features/carrier_line_demo/data/carrier_inbox_hive_payload.dart';
 import 'package:flutter_bloc_app/features/carrier_line_demo/domain/carrier_inbox_item.dart';
 import 'package:flutter_bloc_app/features/carrier_line_demo/domain/carrier_inbox_repository.dart';
 import 'package:hive/hive.dart';
@@ -53,8 +53,8 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   Future<void> save(CarrierInboxItem item) => StorageGuard.run<void>(
     logContext: 'HiveCarrierInboxRepository.save',
     action: () => runWithBox((box) async {
-      final _InboxPartition partition = _partitionBox(box);
-      _rejectMalformedTopLevel(partition);
+      final CarrierInboxHivePartition partition = _partition(box);
+      rejectMalformedCarrierInboxTopLevel(partition);
       final List<CarrierInboxItem> updated = List<CarrierInboxItem>.from(
         partition.readable,
       );
@@ -64,8 +64,9 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
       } else {
         updated[index] = item;
       }
-      await _writePayload(
+      await writeCarrierInboxPayload(
         box,
+        itemsKey: _keyItems,
         readable: updated,
         unreadable: partition.unreadable,
       );
@@ -76,13 +77,14 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   Future<void> markRead(String id) => StorageGuard.run<void>(
     logContext: 'HiveCarrierInboxRepository.markRead',
     action: () => runWithBox((box) async {
-      final _InboxPartition partition = _partitionBox(box);
-      _rejectMalformedTopLevel(partition);
+      final CarrierInboxHivePartition partition = _partition(box);
+      rejectMalformedCarrierInboxTopLevel(partition);
       final List<CarrierInboxItem> updated = partition.readable
           .map((row) => row.id == id ? row.copyWith(isUnread: false) : row)
           .toList(growable: false);
-      await _writePayload(
+      await writeCarrierInboxPayload(
         box,
+        itemsKey: _keyItems,
         readable: updated,
         unreadable: partition.unreadable,
       );
@@ -106,8 +108,8 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
         return;
       }
       if (box.containsKey(_keyItems)) {
-        final _InboxPartition partition = _partitionBox(box);
-        _rejectMalformedTopLevel(partition);
+        final CarrierInboxHivePartition partition = _partition(box);
+        rejectMalformedCarrierInboxTopLevel(partition);
         final bool hasUnreadablePayload =
             partition.unreadable.isNotEmpty && partition.readable.isEmpty;
         if (hasUnreadablePayload) {
@@ -120,8 +122,9 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
         return;
       }
       final DateTime now = DateTime.now().toUtc();
-      await _writePayload(
+      await writeCarrierInboxPayload(
         box,
+        itemsKey: _keyItems,
         readable: <CarrierInboxItem>[
           CarrierInboxItem(
             id: 'seed-call-1',
@@ -154,94 +157,14 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   );
 
   List<CarrierInboxItem> _loadFromBox(Box<dynamic> box) {
-    final _InboxPartition partition = _partitionBox(box);
-    // Seeded or not: never treat a malformed top-level payload as an empty
-    // successful inbox — preserve raw storage and surface the failure.
-    _rejectMalformedTopLevel(partition);
+    final CarrierInboxHivePartition partition = _partition(box);
+    rejectMalformedCarrierInboxTopLevel(partition);
     final List<CarrierInboxItem> items = List<CarrierInboxItem>.from(
       partition.readable,
     )..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
     return List<CarrierInboxItem>.unmodifiable(items);
   }
 
-  _InboxPartition _partitionBox(Box<dynamic> box) {
-    if (!box.containsKey(_keyItems)) {
-      return const _InboxPartition(
-        readable: <CarrierInboxItem>[],
-        unreadable: <Object>[],
-      );
-    }
-    final Object? raw = box.get(_keyItems);
-    if (raw is! Iterable) {
-      return _InboxPartition(
-        readable: const <CarrierInboxItem>[],
-        unreadable: const <Object>[],
-        malformedTopLevel: raw ?? _missingTopLevelSentinel,
-      );
-    }
-    final List<CarrierInboxItem> readable = <CarrierInboxItem>[];
-    final List<Object> unreadable = <Object>[];
-    for (final Object? entry in raw) {
-      if (entry is! Map) {
-        if (entry != null) {
-          unreadable.add(entry);
-        }
-        continue;
-      }
-      try {
-        readable.add(
-          CarrierInboxItemDto.fromMap(Map<dynamic, dynamic>.from(entry))
-              .toDomain(),
-        );
-      } on Object {
-        unreadable.add(Map<dynamic, dynamic>.from(entry));
-      }
-    }
-    return _InboxPartition(readable: readable, unreadable: unreadable);
-  }
-
-  void _rejectMalformedTopLevel(_InboxPartition partition) {
-    if (partition.malformedTopLevel == null) {
-      return;
-    }
-    throw StateError(
-      'Carrier line inbox top-level payload is malformed; '
-      'refusing to mutate or reseed',
-    );
-  }
-
-  Future<void> _writePayload(
-    Box<dynamic> box, {
-    required List<CarrierInboxItem> readable,
-    required List<Object> unreadable,
-  }) async {
-    if (readable.isEmpty && unreadable.isEmpty) {
-      await safeDeleteKey(box, _keyItems);
-      return;
-    }
-    final List<Object> serialized = <Object>[
-      ...readable
-          .map(CarrierInboxItemDto.fromDomain)
-          .map((dto) => dto.toMap()),
-      ...unreadable,
-    ];
-    await box.put(_keyItems, serialized);
-  }
-}
-
-/// Sentinel when the items key exists but the stored value is null.
-const Object _missingTopLevelSentinel = Object();
-
-class _InboxPartition {
-  const new({
-    required this.readable,
-    required this.unreadable,
-    this.malformedTopLevel,
-  });
-
-  final List<CarrierInboxItem> readable;
-  final List<Object> unreadable;
-
-  /// Non-null when the items key exists but is not an [Iterable].
-  final Object? malformedTopLevel;
+  CarrierInboxHivePartition _partition(Box<dynamic> box) =>
+      partitionCarrierInboxBox(box, itemsKey: _keyItems);
 }

@@ -65,7 +65,8 @@ class const CarrierInboxItemDto({
   CarrierInboxItem toDomain() {
     final CarrierInboxKind parsedKind = CarrierInboxKind.values.firstWhere(
       (value) => value.name == kind,
-      orElse: () => CarrierInboxKind.message,
+      orElse: () =>
+          throw FormatException('Unsupported CarrierInboxKind: $kind'),
     );
     return CarrierInboxItem(
       id: id,
