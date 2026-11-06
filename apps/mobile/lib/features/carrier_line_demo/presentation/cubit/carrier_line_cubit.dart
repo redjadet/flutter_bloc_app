@@ -48,6 +48,11 @@ class CarrierLineCubit({
       _connectionSub = null;
       return;
     }
+    // Gate script resets after any await (including the cancel above); keep an
+    // isClosed return immediately before emit.
+    if (isClosed || _isClosing) {
+      return;
+    }
     emit(
       state.copyWith(
         connection: realtimeClient.currentStatus,

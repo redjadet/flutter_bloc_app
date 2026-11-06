@@ -222,7 +222,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
     final List<Object> serialized = <Object>[
       ...readable
           .map(CarrierInboxItemDto.fromDomain)
-          .map((CarrierInboxItemDto dto) => dto.toMap()),
+          .map((dto) => dto.toMap()),
       ...unreadable,
     ];
     await box.put(_keyItems, serialized);
@@ -233,7 +233,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
 const Object _missingTopLevelSentinel = Object();
 
 class _InboxPartition {
-  const _InboxPartition({
+  const new({
     required this.readable,
     required this.unreadable,
     this.malformedTopLevel,
@@ -242,6 +242,6 @@ class _InboxPartition {
   final List<CarrierInboxItem> readable;
   final List<Object> unreadable;
 
-  /// Non-null when [_keyItems] exists but is not an [Iterable].
+  /// Non-null when the items key exists but is not an [Iterable].
   final Object? malformedTopLevel;
 }
