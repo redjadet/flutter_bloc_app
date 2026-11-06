@@ -231,6 +231,7 @@ List<RouteBase> createDemoRoutesTail(DemoRouteFactory factory) => <RouteBase>[
   createSocialFeedDemoRoute(factory),
   createSecureMessagingDemoRoute(factory.secureMessagingDemoRouteFactory),
   createAgentCommsDemoRoute(factory.agentCommsDemoRouteFactory),
+  createCarrierLineDemoRoute(factory.carrierLineDemoRouteFactory),
   createOnlineTherapyDemoRoute(factory.onlineTherapyDemoRouteFactory),
   createStaffAppDemoShellRoute(factory.staffAppDemoRouteFactory),
   createCaseStudyDemoShellRoute(factory.caseStudyDemoRouteFactory),

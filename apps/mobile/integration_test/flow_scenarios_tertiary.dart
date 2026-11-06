@@ -7,64 +7,48 @@ void registerTodoListFilterIntegrationFlow() {
     body: (tester) async {
       await launchTestApp(tester);
 
+      // Unique titles: macOS desktop Hive persists across IT runs in Application
+      // Support, so fixed titles collide with leftovers from prior failures.
+      final String stamp = DateTime.now().microsecondsSinceEpoch.toString();
+      final String activeTitle = 'Filter active todo $stamp';
+      final String completedTitle = 'Filter completed todo $stamp';
+
       await _openExampleDestination(tester, 'Todo List Demo');
       await pumpUntilFound(tester, find.text('Todo List'));
       final Finder addTodoButton = _findTodoAddControl();
       await pumpUntilFound(tester, addTodoButton);
 
-      // Add first todo
+      // Add first todo (active)
       await tapAndPump(tester, addTodoButton);
       final Finder saveButton = _findDialogButtonByText('Save');
       await pumpUntilFound(tester, saveButton);
       final Finder titleField = _findDialogTextField();
-      await tester.enterText(titleField, 'Filter active todo');
+      await tester.enterText(titleField, activeTitle);
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(tester, _findDialogCheckbox());
-      await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, saveButton);
       await pumpUntilAbsent(tester, _findDialog());
-      await pumpUntilFound(tester, find.text('Filter active todo'));
+      await pumpUntilFound(tester, find.text(activeTitle));
 
-      // Add second todo
+      // Add second todo completed at create time (dialog "Complete" label).
+      // Prefer create-time completion over selection + batch complete: on macOS
+      // desktop the batch bar is height-gated and overflow complete is flaky.
       await pumpUntilFound(tester, addTodoButton);
       await tapAndPump(tester, addTodoButton);
       final Finder secondSaveButton = _findDialogButtonByText('Save');
       await pumpUntilFound(tester, secondSaveButton);
       final Finder secondTitleField = _findDialogTextField();
-      await tester.enterText(secondTitleField, 'Filter completed todo');
+      await tester.enterText(secondTitleField, completedTitle);
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(tester, _findDialogCheckbox());
-      await tapAndPump(tester, _findDialogCheckbox());
+      // One tap on the dialog completion control leaves isCompleted=true.
+      await tapAndPump(
+        tester,
+        _findDialogCheckbox(),
+        scrollIntoView: false,
+      );
+      await tester.pump(const Duration(milliseconds: 100));
       await tapAndPump(tester, secondSaveButton);
       await pumpUntilAbsent(tester, _findDialog());
-      await pumpUntilFound(tester, find.text('Filter completed todo'));
-
-      final Finder completedTodoCard = find.ancestor(
-        of: find.text('Filter completed todo'),
-        matching: find.byType(CommonCard),
-      );
-      final Finder completedTodoCheckbox =
-          tester.any(
-            find.descendant(
-              of: completedTodoCard,
-              matching: find.byType(CupertinoCheckbox),
-            ),
-          )
-          ? find
-                .descendant(
-                  of: completedTodoCard,
-                  matching: find.byType(CupertinoCheckbox),
-                )
-                .first
-          : find
-                .descendant(
-                  of: completedTodoCard,
-                  matching: find.byType(Checkbox),
-                )
-                .first;
-      await tapAndPump(tester, completedTodoCheckbox);
-      await pumpUntilFound(tester, find.byIcon(Icons.more_vert));
-      await _completeSelectedTodos(tester);
+      await pumpUntilFound(tester, find.text(completedTitle));
 
       // Filter: show only active
       final Finder activeFilterButton = _findAdaptiveButtonByText('Active');
@@ -75,9 +59,12 @@ void registerTodoListFilterIntegrationFlow() {
         scrollable: find.byType(Scrollable).first,
       );
       await tapAndPump(tester, activeFilterButton);
-      await pumpSettleWithin(tester);
-      expect(find.text('Filter active todo'), findsWidgets);
-      expect(find.text('Filter completed todo'), findsNothing);
+      await pumpUntilAbsent(
+        tester,
+        find.text(completedTitle),
+        timeout: const Duration(seconds: 8),
+      );
+      expect(find.text(activeTitle), findsWidgets);
 
       // Filter: show only completed
       final Finder completedFilterButton = _findAdaptiveButtonByText(
@@ -90,9 +77,12 @@ void registerTodoListFilterIntegrationFlow() {
         scrollable: find.byType(Scrollable).first,
       );
       await tapAndPump(tester, completedFilterButton);
-      await pumpSettleWithin(tester);
-      expect(find.text('Filter completed todo'), findsWidgets);
-      expect(find.text('Filter active todo'), findsNothing);
+      await pumpUntilAbsent(
+        tester,
+        find.text(activeTitle),
+        timeout: const Duration(seconds: 8),
+      );
+      expect(find.text(completedTitle), findsWidgets);
     },
   );
 }

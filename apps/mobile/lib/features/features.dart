@@ -3,6 +3,7 @@ export 'ai_decision_demo/ai_decision_demo.dart';
 export 'auth/auth.dart';
 export 'calculator/calculator.dart';
 export 'camera_gallery/camera_gallery.dart';
+export 'carrier_line_demo/carrier_line_demo.dart';
 export 'case_study_demo/case_study_demo.dart';
 export 'certificate_pinning_demo/certificate_pinning_demo.dart';
 export 'chart/chart.dart';

@@ -29,6 +29,7 @@ abstract class TodoItem with _$TodoItem {
     String? description,
     DateTime? dueDate,
     TodoPriority priority = TodoPriority.none,
+    bool isCompleted = false,
     DateTime? now,
   }) {
     final DateTime timestamp = (now ?? DateTime.now()).toUtc();
@@ -40,6 +41,7 @@ abstract class TodoItem with _$TodoItem {
       updatedAt: timestamp,
       dueDate: dueDate?.toUtc(),
       priority: priority,
+      isCompleted: isCompleted,
     );
   }
 

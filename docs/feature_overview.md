@@ -72,7 +72,8 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Realtime market | Depth | `/realtime-market` | `apps/mobile/lib/features/realtime_market/` | Simulated order book; Hive cache. |
 | WebSocket Demo | Depth | `/websocket` | `apps/mobile/lib/features/websocket/` | Deferred reconnecting WebSocket. |
 | Notes demo | Archive | `/notes-demo` | `apps/mobile/lib/features/notes_demo/` | Local-only offline sample; Archive — no net-new investment (ADR-0005). |
-| Weather demo | Archive | `/weather-demo` | `apps/mobile/lib/features/weather_demo/` | Historical portfolio sample; Archive unless promoted. |
+| Weather demo | Archive (retired for swap) | `/weather-demo` | `apps/mobile/lib/features/weather_demo/` | **Retired 2026-11-06** as ADR-0005 Archive replacement for `carrier_line_demo`. Route retained for history; no new investment. |
+| Carrier line demo | Depth | `/carrier-line-demo` | `apps/mobile/lib/features/carrier_line_demo/` | Business-line narrative: local activity + simulated connection + status cards. Doc: [`features/carrier_line_demo.md`](features/carrier_line_demo.md). |
 
 ## Platform, media, and UI demos
 

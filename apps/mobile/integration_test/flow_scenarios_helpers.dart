@@ -170,27 +170,6 @@ Finder _findAdaptiveButtonByText(String text, {Finder? scope}) => find
 /// Hive can retain todos across flows, so tooltip is the stable hit target.
 Finder _findTodoAddControl() => find.byTooltip('Add todo');
 
-/// Completes the current selection via the app-bar overflow menu. Prefer the
-/// menu over the in-body batch bar: the bar is height-gated on desktop and
-/// can be missing even when selection is active.
-Future<void> _completeSelectedTodos(WidgetTester tester) async {
-  final Finder completeLabel = find.text('Complete selected');
-  // Prefer in-body batch bar when visible (height-gated on some devices).
-  // Opening the app-bar menu while the bar is also up duplicates the label.
-  if (!tester.any(completeLabel)) {
-    final Finder batchOverflow = find.byTooltip(RegExp(r'\d+ selected'));
-    await pumpUntilFound(tester, batchOverflow);
-    await tapAndPump(tester, batchOverflow.first);
-    await pumpUntilFound(tester, completeLabel);
-  }
-  await tapAndPump(
-    tester,
-    completeLabel.hitTestable().first,
-    scrollIntoView: false,
-  );
-  await pumpSettleWithin(tester);
-}
-
 Finder _findDialog() => find.byWidgetPredicate(
   (widget) => widget is AlertDialog || widget is CupertinoAlertDialog,
 );

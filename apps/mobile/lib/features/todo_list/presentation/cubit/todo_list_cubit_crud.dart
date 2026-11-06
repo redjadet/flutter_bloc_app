@@ -54,6 +54,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     String? description,
     DateTime? dueDate,
     TodoPriority priority = TodoPriority.none,
+    bool isCompleted = false,
   }) async {
     if (isClosed) return;
     final String trimmedTitle = title.trim();
@@ -68,6 +69,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
       },
       dueDate: dueDate,
       priority: priority,
+      isCompleted: isCompleted,
     );
     await saveItem(item, logContext: 'TodoListCubit.addTodo');
   }

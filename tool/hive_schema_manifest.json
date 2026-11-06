@@ -82,6 +82,16 @@
         "lib/features/notes_demo/data/note_dto.dart",
         "lib/features/notes_demo/domain/note.dart"
       ]
+    },
+    {
+      "name": "carrier_line_demo:inbox",
+      "spec": "carrier_line_demo:v1{items:list<inbox_item_map{id,kind,peerLabel,preview,occurredAtMs,isUnread}>,seeded:bool}",
+      "inputs": [
+        "lib/features/carrier_line_demo/data/hive_carrier_inbox_repository.dart",
+        "lib/features/carrier_line_demo/data/carrier_inbox_hive_payload.dart",
+        "lib/features/carrier_line_demo/data/carrier_inbox_item_dto.dart",
+        "lib/features/carrier_line_demo/domain/carrier_inbox_item.dart"
+      ]
     }
   ]
 }
