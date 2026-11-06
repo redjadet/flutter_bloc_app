@@ -17,7 +17,7 @@ const Map<String, String> hiveSchemaFingerprints = <String, String>{
 
 const Map<String, String> hiveSchemaInputDigests = <String, String>{
   'lib/features/carrier_line_demo/data/carrier_inbox_item_dto.dart': '373d864ad6261310',
-  'lib/features/carrier_line_demo/data/hive_carrier_inbox_repository.dart': '14b9b03a91666432',
+  'lib/features/carrier_line_demo/data/hive_carrier_inbox_repository.dart': 'b4fe1d33d5fe0449',
   'lib/features/carrier_line_demo/domain/carrier_inbox_item.dart': 'cb9a414eb7e1fb97',
   'lib/features/counter/data/hive_counter_repository.dart': '3fff55522714e049',
   'lib/features/counter/data/hive_counter_repository_migration.dart': '5a64c8f5a2b2516a',

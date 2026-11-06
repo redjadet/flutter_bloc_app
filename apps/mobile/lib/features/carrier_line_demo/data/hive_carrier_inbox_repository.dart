@@ -53,9 +53,9 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   Future<void> save(CarrierInboxItem item) => StorageGuard.run<void>(
     logContext: 'HiveCarrierInboxRepository.save',
     action: () => runWithBox((box) async {
-      final List<CarrierInboxItem> existing = _loadFromBox(box);
+      final _InboxPartition partition = _partitionBox(box);
       final List<CarrierInboxItem> updated = List<CarrierInboxItem>.from(
-        existing,
+        partition.readable,
       );
       final int index = updated.indexWhere((row) => row.id == item.id);
       if (index == -1) {
@@ -63,7 +63,11 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
       } else {
         updated[index] = item;
       }
-      await _save(box, updated);
+      await _writePayload(
+        box,
+        readable: updated,
+        unreadable: partition.unreadable,
+      );
     }),
   );
 
@@ -71,11 +75,15 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   Future<void> markRead(String id) => StorageGuard.run<void>(
     logContext: 'HiveCarrierInboxRepository.markRead',
     action: () => runWithBox((box) async {
-      final List<CarrierInboxItem> existing = _loadFromBox(box);
-      final List<CarrierInboxItem> updated = existing
+      final _InboxPartition partition = _partitionBox(box);
+      final List<CarrierInboxItem> updated = partition.readable
           .map((row) => row.id == id ? row.copyWith(isUnread: false) : row)
           .toList(growable: false);
-      await _save(box, updated);
+      await _writePayload(
+        box,
+        readable: updated,
+        unreadable: partition.unreadable,
+      );
     }),
   );
 
@@ -96,10 +104,10 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
         return;
       }
       if (box.containsKey(_keyItems)) {
-        final List<CarrierInboxItem> existing = _loadFromBox(box);
+        final _InboxPartition partition = _partitionBox(box);
         final Object? raw = box.get(_keyItems);
         final bool hasUnreadablePayload =
-            raw is Iterable && raw.isNotEmpty && existing.isEmpty;
+            raw is Iterable && raw.isNotEmpty && partition.readable.isEmpty;
         if (hasUnreadablePayload) {
           throw StateError(
             'Carrier line inbox payload is present but unreadable; '
@@ -110,67 +118,97 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
         return;
       }
       final DateTime now = DateTime.now().toUtc();
-      await _save(box, <CarrierInboxItem>[
-        CarrierInboxItem(
-          id: 'seed-call-1',
-          kind: CarrierInboxKind.call,
-          peerLabel: 'Acme Ops Desk',
-          preview: 'Missed · synthetic receptionist fixture',
-          occurredAt: now.subtract(const Duration(minutes: 12)),
-          isUnread: true,
-        ),
-        CarrierInboxItem(
-          id: 'seed-msg-1',
-          kind: CarrierInboxKind.message,
-          peerLabel: '+1 (415) 555-0142',
-          preview: 'Synthetic SMS preview · not delivered',
-          occurredAt: now.subtract(const Duration(hours: 2)),
-          isUnread: true,
-        ),
-        CarrierInboxItem(
-          id: 'seed-msg-2',
-          kind: CarrierInboxKind.message,
-          peerLabel: 'Billing bot',
-          preview: 'Synthetic invoice notice · demo only',
-          occurredAt: now.subtract(const Duration(days: 1)),
-        ),
-      ]);
+      await _writePayload(
+        box,
+        readable: <CarrierInboxItem>[
+          CarrierInboxItem(
+            id: 'seed-call-1',
+            kind: CarrierInboxKind.call,
+            peerLabel: 'Acme Ops Desk',
+            preview: 'Missed · synthetic receptionist fixture',
+            occurredAt: now.subtract(const Duration(minutes: 12)),
+            isUnread: true,
+          ),
+          CarrierInboxItem(
+            id: 'seed-msg-1',
+            kind: CarrierInboxKind.message,
+            peerLabel: '+1 (415) 555-0142',
+            preview: 'Synthetic SMS preview · not delivered',
+            occurredAt: now.subtract(const Duration(hours: 2)),
+            isUnread: true,
+          ),
+          CarrierInboxItem(
+            id: 'seed-msg-2',
+            kind: CarrierInboxKind.message,
+            peerLabel: 'Billing bot',
+            preview: 'Synthetic invoice notice · demo only',
+            occurredAt: now.subtract(const Duration(days: 1)),
+          ),
+        ],
+        unreadable: const <Object>[],
+      );
       await box.put(_keySeeded, true);
     }),
   );
 
   List<CarrierInboxItem> _loadFromBox(Box<dynamic> box) {
-    final Object? raw = box.get(_keyItems);
-    if (raw is! Iterable) {
-      return const <CarrierInboxItem>[];
-    }
-    final List<CarrierInboxItem> items =
-        raw
-            .whereType<Map<dynamic, dynamic>>()
-            .map((map) {
-              try {
-                return CarrierInboxItemDto.fromMap(map).toDomain();
-              } on Object {
-                // Skip corrupt rows (FormatException, ArgumentError from
-                // out-of-range timestamps, etc.) without wiping the box.
-                return null;
-              }
-            })
-            .whereType<CarrierInboxItem>()
-            .toList(growable: true)
-          ..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
+    final List<CarrierInboxItem> items = List<CarrierInboxItem>.from(
+      _partitionBox(box).readable,
+    )..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
     return List<CarrierInboxItem>.unmodifiable(items);
   }
 
-  Future<void> _save(Box<dynamic> box, List<CarrierInboxItem> items) async {
-    if (items.isEmpty) {
+  _InboxPartition _partitionBox(Box<dynamic> box) {
+    final Object? raw = box.get(_keyItems);
+    if (raw is! Iterable) {
+      return const _InboxPartition(
+        readable: <CarrierInboxItem>[],
+        unreadable: <Object>[],
+      );
+    }
+    final List<CarrierInboxItem> readable = <CarrierInboxItem>[];
+    final List<Object> unreadable = <Object>[];
+    for (final Object? entry in raw) {
+      if (entry is! Map) {
+        if (entry != null) {
+          unreadable.add(entry);
+        }
+        continue;
+      }
+      try {
+        readable.add(
+          CarrierInboxItemDto.fromMap(Map<dynamic, dynamic>.from(entry))
+              .toDomain(),
+        );
+      } on Object {
+        unreadable.add(Map<dynamic, dynamic>.from(entry));
+      }
+    }
+    return _InboxPartition(readable: readable, unreadable: unreadable);
+  }
+
+  Future<void> _writePayload(
+    Box<dynamic> box, {
+    required List<CarrierInboxItem> readable,
+    required List<Object> unreadable,
+  }) async {
+    if (readable.isEmpty && unreadable.isEmpty) {
       await safeDeleteKey(box, _keyItems);
       return;
     }
-    final List<Map<String, dynamic>> serialized = items
-        .map(CarrierInboxItemDto.fromDomain)
-        .map((dto) => dto.toMap())
-        .toList(growable: false);
+    final List<Object> serialized = <Object>[
+      ...readable
+          .map(CarrierInboxItemDto.fromDomain)
+          .map((CarrierInboxItemDto dto) => dto.toMap()),
+      ...unreadable,
+    ];
     await box.put(_keyItems, serialized);
   }
+}
+
+class _InboxPartition {
+  const _InboxPartition({required this.readable, required this.unreadable});
+
+  final List<CarrierInboxItem> readable;
+  final List<Object> unreadable;
 }

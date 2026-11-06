@@ -148,5 +148,96 @@ void main() {
         expect(await repository.fetchAll(), isEmpty);
       },
     );
+
+    test('regression: markRead preserves unrelated malformed rows', () async {
+      final Box<dynamic> box = await repository.getBox();
+      await box.put('items', <Object?>[
+        <String, Object?>{
+          'id': 'kept-valid',
+          'kind': 'message',
+          'peerLabel': 'Keep',
+          'preview': 'Valid unread',
+          'occurredAtMs': DateTime.utc(2026, 4, 1).millisecondsSinceEpoch,
+          'isUnread': true,
+        },
+        <String, Object?>{'id': 'broken-only'},
+        'not-a-map',
+        <String, Object?>{
+          'id': 'bad-ts',
+          'kind': 'message',
+          'peerLabel': 'Boom',
+          'preview': 'Out of range',
+          'occurredAtMs': 1 << 62,
+          'isUnread': false,
+        },
+      ]);
+      await box.put('seeded', true);
+
+      await repository.markRead('kept-valid');
+
+      final List<CarrierInboxItem> after = await repository.fetchAll();
+      expect(after.single.id, 'kept-valid');
+      expect(after.single.isUnread, isFalse);
+
+      final Object? raw = box.get('items');
+      expect(raw, isA<Iterable>());
+      final List<Object?> rows = List<Object?>.from(raw! as Iterable);
+      expect(rows, hasLength(4));
+      expect(
+        rows.whereType<Map>().any(
+          (Map<dynamic, dynamic> row) => row['id'] == 'broken-only',
+        ),
+        isTrue,
+      );
+      expect(rows.contains('not-a-map'), isTrue);
+      expect(
+        rows.whereType<Map>().any(
+          (Map<dynamic, dynamic> row) => row['id'] == 'bad-ts',
+        ),
+        isTrue,
+      );
+    });
+
+    test('regression: save preserves unrelated malformed rows', () async {
+      final Box<dynamic> box = await repository.getBox();
+      await box.put('items', <Object?>[
+        <String, Object?>{
+          'id': 'existing',
+          'kind': 'call',
+          'peerLabel': 'Peer',
+          'preview': 'Existing',
+          'occurredAtMs': DateTime.utc(2026, 4, 2).millisecondsSinceEpoch,
+          'isUnread': false,
+        },
+        'not-a-map',
+        <String, Object?>{'id': 'broken-only'},
+      ]);
+      await box.put('seeded', true);
+
+      await repository.save(
+        CarrierInboxItem(
+          id: 'existing',
+          kind: CarrierInboxKind.call,
+          peerLabel: 'Peer',
+          preview: 'Updated preview',
+          occurredAt: DateTime.utc(2026, 4, 2),
+        ),
+      );
+
+      final CarrierInboxItem updated = (await repository.fetchAll()).single;
+      expect(updated.preview, 'Updated preview');
+
+      final List<Object?> rows = List<Object?>.from(
+        box.get('items')! as Iterable,
+      );
+      expect(rows, hasLength(3));
+      expect(rows.contains('not-a-map'), isTrue);
+      expect(
+        rows.whereType<Map>().any(
+          (Map<dynamic, dynamic> row) => row['id'] == 'broken-only',
+        ),
+        isTrue,
+      );
+    });
   });
 }
