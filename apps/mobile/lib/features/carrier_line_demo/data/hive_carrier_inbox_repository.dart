@@ -82,8 +82,11 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   /// Seeds once. Empty after a prior seed (or parse-skipped rows) does **not**
   /// reseed — avoids destructive wipe/reseed on malformed payloads.
   ///
-  /// If items were persisted but the seed marker write was interrupted, keep
-  /// those rows and only complete the marker (do not replace with fixtures).
+  /// Raw [_keyItems] presence is checked separately from parsed rows. If the
+  /// key exists (valid partial seed, empty list, or all-unreadable rows), keep
+  /// the stored payload and never replace it with fixtures. All-unreadable
+  /// rows with a missing seed marker surface a [StateError] instead of
+  /// silently reseeding.
   @override
   Future<void> ensureSeeded() => StorageGuard.run<void>(
     logContext: 'HiveCarrierInboxRepository.ensureSeeded',
@@ -92,8 +95,17 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
       if (alreadySeeded) {
         return;
       }
-      final List<CarrierInboxItem> existing = _loadFromBox(box);
-      if (existing.isNotEmpty) {
+      if (box.containsKey(_keyItems)) {
+        final List<CarrierInboxItem> existing = _loadFromBox(box);
+        final Object? raw = box.get(_keyItems);
+        final bool hasUnreadablePayload =
+            raw is Iterable && raw.isNotEmpty && existing.isEmpty;
+        if (hasUnreadablePayload) {
+          throw StateError(
+            'Carrier line inbox payload is present but unreadable; '
+            'refusing to reseed',
+          );
+        }
         await box.put(_keySeeded, true);
         return;
       }

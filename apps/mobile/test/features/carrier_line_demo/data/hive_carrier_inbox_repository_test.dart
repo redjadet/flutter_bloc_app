@@ -121,5 +121,32 @@ void main() {
         expect(box.get('seeded'), isTrue);
       },
     );
+
+    test(
+      'regression: malformed items without seed marker are not overwritten',
+      () async {
+        final Box<dynamic> box = await repository.getBox();
+        final List<Object?> malformed = <Object?>[
+          <String, Object?>{'id': 'broken-only'},
+          'not-a-map',
+          <String, Object?>{
+            'id': 'bad-ts',
+            'kind': 'message',
+            'peerLabel': 'Boom',
+            'preview': 'Out of range',
+            'occurredAtMs': 1 << 62,
+            'isUnread': false,
+          },
+        ];
+        await box.put('items', malformed);
+        expect(box.get('seeded'), isNull);
+
+        await expectLater(repository.ensureSeeded(), throwsStateError);
+
+        expect(box.get('items'), malformed);
+        expect(box.get('seeded'), isNull);
+        expect(await repository.fetchAll(), isEmpty);
+      },
+    );
   });
 }
