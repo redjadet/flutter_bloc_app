@@ -1,26 +1,30 @@
 import 'dart:async';
 
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/carrier_line_demo/domain/carrier_connection_status.dart';
 import 'package:flutter_bloc_app/features/carrier_line_demo/domain/carrier_realtime_client.dart';
 
 /// In-process WS contract stub: toggles connecting → connected without sockets.
 class StubCarrierRealtimeClient implements CarrierRealtimeClient {
-  StubCarrierRealtimeClient({
+  new({
     Uri? endpoint,
     this.connectDelay = const Duration(milliseconds: 120),
-  }) : endpoint = endpoint ?? Uri.parse('wss://line.example.invalid/v1');
+    TimerService? timerService,
+  }) : endpoint = endpoint ?? Uri.parse('wss://line.example.invalid/v1'),
+       _timerService = timerService ?? DefaultTimerService();
 
   @override
   final Uri endpoint;
 
   final Duration connectDelay;
+  final TimerService _timerService;
 
   final StreamController<CarrierConnectionStatus> _controller =
       StreamController<CarrierConnectionStatus>.broadcast();
 
   CarrierConnectionStatus _status = CarrierConnectionStatus.disconnected;
   String? _lastError;
-  Timer? _connectTimer;
+  TimerDisposable? _connectTimer;
   Completer<void>? _pendingConnect;
 
   @override
@@ -40,10 +44,10 @@ class StubCarrierRealtimeClient implements CarrierRealtimeClient {
     }
     _lastError = null;
     _emit(CarrierConnectionStatus.connecting);
-    _connectTimer?.cancel();
+    _connectTimer?.dispose();
     final Completer<void> done = Completer<void>();
     _pendingConnect = done;
-    _connectTimer = Timer(connectDelay, () {
+    _connectTimer = _timerService.runOnce(connectDelay, () {
       if (_pendingConnect != done) {
         return;
       }
@@ -75,7 +79,7 @@ class StubCarrierRealtimeClient implements CarrierRealtimeClient {
   }
 
   void _cancelPendingConnect() {
-    _connectTimer?.cancel();
+    _connectTimer?.dispose();
     _connectTimer = null;
     _completePending();
   }

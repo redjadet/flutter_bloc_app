@@ -31,7 +31,7 @@ class CarrierInboxList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
       separatorBuilder: (_, _) => const Divider(height: 1),
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (context, index) {
         final CarrierInboxItem item = items[index];
         final IconData icon = switch (item.kind) {
           CarrierInboxKind.call => Icons.call_outlined,

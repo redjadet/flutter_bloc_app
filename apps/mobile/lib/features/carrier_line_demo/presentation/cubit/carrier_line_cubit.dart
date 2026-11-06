@@ -52,7 +52,7 @@ class CarrierLineCubit({
     }
 
     _inboxSub = inboxRepository.watchAll().listen(
-      (List<CarrierInboxItem> items) {
+      (items) {
         if (isClosed) {
           return;
         }
@@ -66,9 +66,7 @@ class CarrierLineCubit({
       },
     );
 
-    _connectionSub = realtimeClient.connectionStates.listen((
-      CarrierConnectionStatus status,
-    ) {
+    _connectionSub = realtimeClient.connectionStates.listen((status) {
       if (isClosed) {
         return;
       }

@@ -19,7 +19,7 @@ class CarrierLineDemoPage extends StatelessWidget {
     return CommonPageLayout(
       title: l10n.carrierLineTitle,
       body: BlocBuilder<CarrierLineCubit, CarrierLineState>(
-        builder: (BuildContext context, CarrierLineState state) {
+        builder: (context, state) {
           final CarrierLineCubit cubit = context.read<CarrierLineCubit>();
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());

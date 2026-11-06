@@ -73,10 +73,7 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
     action: () => runWithBox((box) async {
       final List<CarrierInboxItem> existing = _loadFromBox(box);
       final List<CarrierInboxItem> updated = existing
-          .map(
-            (CarrierInboxItem row) =>
-                row.id == id ? row.copyWith(isUnread: false) : row,
-          )
+          .map((row) => row.id == id ? row.copyWith(isUnread: false) : row)
           .toList(growable: false);
       await _save(box, updated);
     }),

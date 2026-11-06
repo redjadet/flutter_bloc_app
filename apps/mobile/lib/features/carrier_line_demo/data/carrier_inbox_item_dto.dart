@@ -64,7 +64,7 @@ class const CarrierInboxItemDto({
 
   CarrierInboxItem toDomain() {
     final CarrierInboxKind parsedKind = CarrierInboxKind.values.firstWhere(
-      (CarrierInboxKind value) => value.name == kind,
+      (value) => value.name == kind,
       orElse: () => CarrierInboxKind.message,
     );
     return CarrierInboxItem(

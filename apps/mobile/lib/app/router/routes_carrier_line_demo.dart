@@ -31,7 +31,7 @@ class const CarrierLineDemoRouteFactory({
       lineStatusRepository: lineStatusRepository,
       fcmMessagingService: fcmMessagingService,
     ),
-    init: (CarrierLineCubit cubit) => cubit.start(),
+    init: (cubit) => cubit.start(),
     child: const CarrierLineDemoPage(),
   );
 }
