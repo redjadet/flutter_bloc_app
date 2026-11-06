@@ -29,6 +29,7 @@ Future<void> _handleAddTodo(BuildContext context) async {
     description: result.description,
     dueDate: result.dueDate,
     priority: result.priority,
+    isCompleted: result.isCompleted,
   );
 }
 

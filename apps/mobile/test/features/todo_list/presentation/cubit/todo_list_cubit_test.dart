@@ -50,6 +50,26 @@ void main() {
     );
 
     blocTest<TodoListCubit, TodoListState>(
+      'addTodo honors isCompleted at create time',
+      build: () => buildCubit(),
+      seed: () => const TodoListState(status: ViewStatus.success, items: []),
+      act: (cubit) async {
+        await cubit.addTodo(
+          title: 'Already done',
+          description: '',
+          isCompleted: true,
+        );
+      },
+      expect: () => [
+        isA<TodoListState>().having(
+          (s) => s.items.single.isCompleted,
+          'isCompleted',
+          true,
+        ),
+      ],
+    );
+
+    blocTest<TodoListCubit, TodoListState>(
       'toggleTodo flips completion state',
       build: () => buildCubit(
         initialItems: [_todoItem(id: 'a', title: 'Task')],
