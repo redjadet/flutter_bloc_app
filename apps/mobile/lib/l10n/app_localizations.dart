@@ -7014,6 +7014,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'12,345.67'**
   String get realtimeMarketSkeletonPricePlaceholder;
+
+  /// No description provided for @carrierLineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Business phone line (demo)'**
+  String get carrierLineTitle;
+
+  /// No description provided for @carrierLineIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Synthetic activity and simulated connection only. Not carrier calling, SMS, provisioning, or push-backend registration. Cubit + local Hive; shared FcmMessagingService is composed for P1 push UI.'**
+  String get carrierLineIntro;
+
+  /// No description provided for @carrierLineSimulatedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated connection'**
+  String get carrierLineSimulatedBadge;
+
+  /// No description provided for @carrierLineConnectionConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime connected (demo)'**
+  String get carrierLineConnectionConnected;
+
+  /// No description provided for @carrierLineConnectionConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting (demo)…'**
+  String get carrierLineConnectionConnecting;
+
+  /// No description provided for @carrierLineConnectionDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime offline (demo)'**
+  String get carrierLineConnectionDisconnected;
+
+  /// No description provided for @carrierLineConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime error (demo)'**
+  String get carrierLineConnectionError;
+
+  /// No description provided for @carrierLineConnectButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get carrierLineConnectButton;
+
+  /// No description provided for @carrierLineDisconnectButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get carrierLineDisconnectButton;
+
+  /// No description provided for @carrierLineStatusSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Line status (fixture)'**
+  String get carrierLineStatusSection;
+
+  /// No description provided for @carrierLineEsimTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'eSIM'**
+  String get carrierLineEsimTitle;
+
+  /// No description provided for @carrierLinePortingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Porting'**
+  String get carrierLinePortingTitle;
+
+  /// No description provided for @carrierLineBillingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing'**
+  String get carrierLineBillingTitle;
+
+  /// No description provided for @carrierLineEsimDetailFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixture: eSIM installed · demo only'**
+  String get carrierLineEsimDetailFallback;
+
+  /// No description provided for @carrierLinePortingDetailFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixture: port-in pending · demo only'**
+  String get carrierLinePortingDetailFallback;
+
+  /// No description provided for @carrierLineBillingDetailFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixture: payment method needs attention · demo only'**
+  String get carrierLineBillingDetailFallback;
+
+  /// No description provided for @carrierLineStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get carrierLineStatusUnknown;
+
+  /// No description provided for @carrierLineStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'pending'**
+  String get carrierLineStatusPending;
+
+  /// No description provided for @carrierLineStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get carrierLineStatusActive;
+
+  /// No description provided for @carrierLineStatusAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'attention'**
+  String get carrierLineStatusAttention;
+
+  /// No description provided for @carrierLineStatusBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'blocked'**
+  String get carrierLineStatusBlocked;
+
+  /// No description provided for @carrierLinePushComposedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Push: composes shared FcmMessagingService. Interactive registration deferred to P1.'**
+  String get carrierLinePushComposedNote;
+
+  /// No description provided for @carrierLineInboxSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity (local-only)'**
+  String get carrierLineInboxSection;
+
+  /// No description provided for @carrierLineInboxEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No local activity. Seed runs once on first open.'**
+  String get carrierLineInboxEmpty;
+
+  /// No description provided for @carrierLineInboxKindCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get carrierLineInboxKindCall;
+
+  /// No description provided for @carrierLineInboxKindMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get carrierLineInboxKindMessage;
+
+  /// No description provided for @carrierLineMarkReadTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark read'**
+  String get carrierLineMarkReadTooltip;
 }
 
 class _AppLocalizationsDelegate

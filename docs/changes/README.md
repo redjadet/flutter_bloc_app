@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-11-06_carrier_line_demo_archive_swap.md`](2026-11-06_carrier_line_demo_archive_swap.md): ADR-0005 Archive swap — retire `weather_demo`, add Depth `carrier_line_demo` (local activity + simulated connection + status cards).
 - [`2026-11-05_adr_agent_retrieval.md`](2026-11-05_adr_agent_retrieval.md): Wire existing ADRs into agent/reviewer context — retrieve before boundary/SDK changes; flag ADR conflicts; supersede instead of silent optimize (maps “code persisted, reasoning didn’t” gap).
 - [`2026-10-28_roadmap_shipping_index_honesty.md`](2026-10-28_roadmap_shipping_index_honesty.md): Index Codemagic/Shorebird honesty — GHA + Fastlane; no OTA; RC/flags first (deployment + AGENTS + quick ref).
 - [`2026-10-28_ai_code_review_playbook_gaps.md`](2026-10-28_ai_code_review_playbook_gaps.md): Align review playbook with DONE-style checks, proof-before-diff, Spec vs Standards, and three-round rethink stop.

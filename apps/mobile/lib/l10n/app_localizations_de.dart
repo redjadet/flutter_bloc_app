@@ -3909,4 +3909,91 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get realtimeMarketSkeletonPricePlaceholder => '12.345,67';
+
+  @override
+  String get carrierLineTitle => 'Business phone line (demo)';
+
+  @override
+  String get carrierLineIntro =>
+      'Synthetic activity and simulated connection only. Not carrier calling, SMS, provisioning, or push-backend registration. Cubit + local Hive; shared FcmMessagingService is composed for P1 push UI.';
+
+  @override
+  String get carrierLineSimulatedBadge => 'Simulated connection';
+
+  @override
+  String get carrierLineConnectionConnected => 'Realtime connected (demo)';
+
+  @override
+  String get carrierLineConnectionConnecting => 'Connecting (demo)…';
+
+  @override
+  String get carrierLineConnectionDisconnected => 'Realtime offline (demo)';
+
+  @override
+  String get carrierLineConnectionError => 'Realtime error (demo)';
+
+  @override
+  String get carrierLineConnectButton => 'Connect';
+
+  @override
+  String get carrierLineDisconnectButton => 'Disconnect';
+
+  @override
+  String get carrierLineStatusSection => 'Line status (fixture)';
+
+  @override
+  String get carrierLineEsimTitle => 'eSIM';
+
+  @override
+  String get carrierLinePortingTitle => 'Porting';
+
+  @override
+  String get carrierLineBillingTitle => 'Billing';
+
+  @override
+  String get carrierLineEsimDetailFallback =>
+      'Fixture: eSIM installed · demo only';
+
+  @override
+  String get carrierLinePortingDetailFallback =>
+      'Fixture: port-in pending · demo only';
+
+  @override
+  String get carrierLineBillingDetailFallback =>
+      'Fixture: payment method needs attention · demo only';
+
+  @override
+  String get carrierLineStatusUnknown => 'unknown';
+
+  @override
+  String get carrierLineStatusPending => 'pending';
+
+  @override
+  String get carrierLineStatusActive => 'active';
+
+  @override
+  String get carrierLineStatusAttention => 'attention';
+
+  @override
+  String get carrierLineStatusBlocked => 'blocked';
+
+  @override
+  String get carrierLinePushComposedNote =>
+      'Push: composes shared FcmMessagingService. Interactive registration deferred to P1.';
+
+  @override
+  String get carrierLineInboxSection => 'Activity (local-only)';
+
+  @override
+  String get carrierLineInboxEmpty =>
+      'No local activity. Seed runs once on first open.';
+
+  @override
+  String get carrierLineInboxKindCall => 'Call';
+
+  @override
+  String get carrierLineInboxKindMessage => 'Message';
+
+  @override
+  String get carrierLineMarkReadTooltip => 'Mark read';
 }

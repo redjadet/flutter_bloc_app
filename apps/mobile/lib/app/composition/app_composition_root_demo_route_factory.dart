@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/app/composition/native_security_showcase_cubit_
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/app/router/routes_agent_comms_demo.dart';
+import 'package:flutter_bloc_app/app/router/routes_carrier_line_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_certificate_pinning_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_demos.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_bloc_app/app/router/routes_staff_app_demo.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/features/agent_comms_demo/agent_comms_demo.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/carrier_line_demo/carrier_line_demo.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
@@ -199,6 +201,12 @@ DemoRouteFactory resolveDemoRouteFactory({
     ),
     agentCommsDemoRouteFactory: const AgentCommsDemoRouteFactory(
       createSession: JsonRpcAgentSession.new,
+    ),
+    carrierLineDemoRouteFactory: CarrierLineDemoRouteFactory(
+      inboxRepository: getIt<CarrierInboxRepository>(),
+      createRealtimeClient: StubCarrierRealtimeClient.new,
+      lineStatusRepository: getIt<LineStatusRepository>(),
+      fcmMessagingService: getIt<FcmMessagingService>(),
     ),
   );
 }

@@ -16,6 +16,7 @@ import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/route_scoped_page.dart';
 import 'package:flutter_bloc_app/app/router/routes_agent_comms_demo.dart';
+import 'package:flutter_bloc_app/app/router/routes_carrier_line_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_certificate_pinning_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
@@ -134,6 +135,7 @@ class const DemoRouteFactory({
   required final SecureMessagingDemoRouteFactory
   secureMessagingDemoRouteFactory,
   required final AgentCommsDemoRouteFactory agentCommsDemoRouteFactory,
+  required final CarrierLineDemoRouteFactory carrierLineDemoRouteFactory,
 }) {
   List<RouteBase> createRoutes() => <RouteBase>[
     ...createDemoRoutesHead(this),

@@ -144,6 +144,8 @@ class AppRoutes {
   static const secureMessagingDemoPath = '/secure-messaging-demo';
   static const agentCommsDemo = 'agent-comms-demo';
   static const agentCommsDemoPath = '/agent-comms-demo';
+  static const carrierLineDemo = 'carrier-line-demo';
+  static const carrierLineDemoPath = '/carrier-line-demo';
   static const nativePlatformShowcase = 'native-platform-showcase';
   static const nativePlatformShowcasePath = '/native-platform-showcase';
   static const staffAppDemoDashboard = 'staff-app-demo-dashboard';

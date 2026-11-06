@@ -271,6 +271,51 @@ Physical-device behavior and Android native execution require their own runs.
 
 ---
 
+## 5. Business phone line demo (carrier surface)
+
+**Problem:** A Senior Mobile portfolio needs one carrier-**narrative** surface
+that ties local activity, simulated connection, and line-status UI to the same
+Clean Architecture + Cubit stack reviewers already see in deeper demos.
+
+**Design decision:** `carrier_line_demo` is a thin composition: Hive **local-only**
+activity (seed-once), deterministic **simulated** WS-shaped client with visible
+demo labels, design-system status cards from a stub fixture, and composition of
+shared `FcmMessagingService` without interactive push UI in P0. Cubit stays
+(see [Cubit ↔ Riverpod JD mapping](architecture/cubit_riverpod_jd_mapping.md)).
+ADR-0005 Archive swap: retire `weather_demo` — 
+[`2026-11-06_carrier_line_demo_archive_swap.md`](changes/2026-11-06_carrier_line_demo_archive_swap.md).
+
+**Honesty:** Not production calling, SMS, eSIM provisioning, porting, billing,
+or push-backend registration.
+
+**Source (start here):**
+
+- [`apps/mobile/lib/features/carrier_line_demo/`](../apps/mobile/lib/features/carrier_line_demo/)
+- Feature brief: [`docs/features/carrier_line_demo.md`](features/carrier_line_demo.md)
+- Route: `/carrier-line-demo` (blocked in prod/release)
+
+**Tests:**
+
+| File | What it establishes |
+| --- | --- |
+| [`carrier_inbox_item_dto_test.dart`](../apps/mobile/test/features/carrier_line_demo/data/carrier_inbox_item_dto_test.dart) | DTO round-trip + reject incomplete maps |
+| [`hive_carrier_inbox_repository_test.dart`](../apps/mobile/test/features/carrier_line_demo/data/hive_carrier_inbox_repository_test.dart) | Seed-once + malformed skip/no reseed + mark-read |
+| [`carrier_line_cubit_test.dart`](../apps/mobile/test/features/carrier_line_demo/presentation/carrier_line_cubit_test.dart) | Start/connect/disconnect + fail/retry + dispose mid-connect |
+| [`carrier_line_demo_page_test.dart`](../apps/mobile/test/features/carrier_line_demo/presentation/carrier_line_demo_page_test.dart) | Banner/cards/inbox; no push register UI |
+| [`carrier_line_route_di_smoke_test.dart`](../apps/mobile/test/features/carrier_line_demo/presentation/carrier_line_route_di_smoke_test.dart) | Route path/name with DI-shaped factory |
+
+**Run:**
+
+```bash
+(cd apps/mobile && flutter test test/features/carrier_line_demo)
+```
+
+Deeper proofs for offline reconciliation, live WebSocket, and FCM remain in
+cases 1–4 and the existing websocket/FCM demos—this section is the carrier
+narrative pointer, not a replacement.
+
+---
+
 ## Scope and limits
 
 This repository is a **portfolio reference app** for interviews and technical review. Backend demos may require local configuration documented in [`.env.example`](../.env.example) and [feature scope](feature_overview.md).

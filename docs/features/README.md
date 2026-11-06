@@ -21,6 +21,7 @@ Feature contracts, demo guides, and feature-specific validation. Start with
 | Realtime market demo | [realtime_market.md](realtime_market.md) |
 | Secure messaging demo (Rust FFI) | [secure_messaging_demo.md](secure_messaging_demo.md) |
 | Social feed demo | [social_feed_demo.md](social_feed_demo.md) |
+| Carrier / business phone line demo | [carrier_line_demo.md](carrier_line_demo.md) |
 
 Keep product-specific documentation in this folder. Keep shared architecture and
 delivery rules in their owning folders.

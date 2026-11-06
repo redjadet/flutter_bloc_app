@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/app/composition/features/register_app_memory_se
 import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_calculator_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_camera_gallery_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_carrier_line_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_case_study_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_certificate_pinning_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_chart_services.dart';
