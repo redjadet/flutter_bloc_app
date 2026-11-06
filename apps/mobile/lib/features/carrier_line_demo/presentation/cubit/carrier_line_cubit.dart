@@ -40,6 +40,22 @@ class CarrierLineCubit({
       return;
     }
 
+    // Connection observation is independent of inbox seeding so Connect /
+    // Disconnect remain usable if startup seed/read fails.
+    _attachConnectionSubscription();
+    if (isClosed || _isClosing) {
+      await _connectionSub?.cancel();
+      _connectionSub = null;
+      return;
+    }
+    emit(
+      state.copyWith(
+        connection: realtimeClient.currentStatus,
+        connectionError: realtimeClient.lastError,
+        clearConnectionError: realtimeClient.lastError == null,
+      ),
+    );
+
     try {
       await inboxRepository.ensureSeeded();
       if (isClosed || _isClosing) {
@@ -49,13 +65,7 @@ class CarrierLineCubit({
       if (isClosed || _isClosing) {
         return;
       }
-      emit(
-        state.copyWith(
-          lineStatus: lineStatus,
-          connection: realtimeClient.currentStatus,
-          connectionError: realtimeClient.lastError,
-        ),
-      );
+      emit(state.copyWith(lineStatus: lineStatus));
     } on Object catch (error) {
       if (isClosed || _isClosing) {
         return;
@@ -86,9 +96,10 @@ class CarrierLineCubit({
     if (isClosed || _isClosing) {
       await _inboxSub?.cancel();
       _inboxSub = null;
-      return;
     }
+  }
 
+  void _attachConnectionSubscription() {
     _connectionSub = realtimeClient.connectionStates.listen((status) {
       if (isClosed || _isClosing) {
         return;
@@ -101,13 +112,6 @@ class CarrierLineCubit({
         ),
       );
     });
-
-    if (isClosed || _isClosing) {
-      await _inboxSub?.cancel();
-      await _connectionSub?.cancel();
-      _inboxSub = null;
-      _connectionSub = null;
-    }
   }
 
   Future<void> connectRealtime() => realtimeClient.connect();

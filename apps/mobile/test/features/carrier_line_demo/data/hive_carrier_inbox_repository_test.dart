@@ -241,6 +241,22 @@ void main() {
     });
 
     test(
+      'regression: seeded malformed top-level fails fetch and watch',
+      () async {
+        final Box<dynamic> box = await repository.getBox();
+        const String stringPayload = 'not-a-list';
+        await box.put('items', stringPayload);
+        await box.put('seeded', true);
+
+        await expectLater(repository.fetchAll(), throwsStateError);
+        expect(box.get('items'), stringPayload);
+
+        await expectLater(repository.watchAll().first, throwsStateError);
+        expect(box.get('items'), stringPayload);
+      },
+    );
+
+    test(
       'regression: malformed top-level map/string payloads are preserved',
       () async {
         final Box<dynamic> box = await repository.getBox();

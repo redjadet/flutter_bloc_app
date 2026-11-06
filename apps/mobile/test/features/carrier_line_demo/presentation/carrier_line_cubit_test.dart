@@ -11,9 +11,10 @@ import 'package:flutter_bloc_app/features/fcm_demo/data/no_op_fcm_messaging_serv
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeInboxRepository implements CarrierInboxRepository {
-  _FakeInboxRepository({this.seedGate});
+  _FakeInboxRepository({this.seedGate, this.seedError});
 
   final Completer<void>? seedGate;
+  final Object? seedError;
   final StreamController<List<CarrierInboxItem>> _controller =
       StreamController<List<CarrierInboxItem>>.broadcast();
   final List<CarrierInboxItem> _items = <CarrierInboxItem>[];
@@ -64,6 +65,10 @@ class _FakeInboxRepository implements CarrierInboxRepository {
     final Completer<void>? gate = seedGate;
     if (gate != null) {
       await gate.future;
+    }
+    final Object? error = seedError;
+    if (error != null) {
+      throw error;
     }
     seeded = true;
     if (_items.isNotEmpty) {
@@ -210,6 +215,40 @@ void main() {
 
       expect(cubit.isClosed, isTrue);
       expect(inbox.watchListenCount, 0);
+      await inbox.dispose();
+    },
+  );
+
+  test(
+    'regression: seed failure still allows connect/disconnect updates',
+    () async {
+      final _FakeInboxRepository inbox = _FakeInboxRepository(
+        seedError: StateError('seed boom'),
+      );
+      final StubCarrierRealtimeClient realtime = StubCarrierRealtimeClient(
+        connectDelay: Duration.zero,
+      );
+      final CarrierLineCubit cubit = CarrierLineCubit(
+        inboxRepository: inbox,
+        realtimeClient: realtime,
+        lineStatusRepository: const StubLineStatusRepository(),
+        fcmMessagingService: NoOpFcmMessagingService(),
+      );
+
+      await cubit.start();
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state.errorMessage, contains('seed boom'));
+      expect(cubit.state.isLoading, isFalse);
+
+      await cubit.connectRealtime();
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state.connection, CarrierConnectionStatus.connected);
+
+      await cubit.disconnectRealtime();
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state.connection, CarrierConnectionStatus.disconnected);
+
+      await cubit.close();
       await inbox.dispose();
     },
   );

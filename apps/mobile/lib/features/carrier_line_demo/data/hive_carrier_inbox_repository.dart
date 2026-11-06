@@ -154,8 +154,12 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
   );
 
   List<CarrierInboxItem> _loadFromBox(Box<dynamic> box) {
+    final _InboxPartition partition = _partitionBox(box);
+    // Seeded or not: never treat a malformed top-level payload as an empty
+    // successful inbox — preserve raw storage and surface the failure.
+    _rejectMalformedTopLevel(partition);
     final List<CarrierInboxItem> items = List<CarrierInboxItem>.from(
-      _partitionBox(box).readable,
+      partition.readable,
     )..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
     return List<CarrierInboxItem>.unmodifiable(items);
   }
