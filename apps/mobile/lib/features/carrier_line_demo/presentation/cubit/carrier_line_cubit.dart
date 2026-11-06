@@ -24,16 +24,30 @@ class CarrierLineCubit({
 
   StreamSubscription<List<CarrierInboxItem>>? _inboxSub;
   StreamSubscription<CarrierConnectionStatus>? _connectionSub;
+  bool _isClosing = false;
+
+  bool get _unavailable => isClosed || _isClosing;
 
   Future<void> start() async {
+    if (_unavailable) {
+      return;
+    }
     emit(state.copyWith(isLoading: true, clearError: true));
     await _inboxSub?.cancel();
     await _connectionSub?.cancel();
+    _inboxSub = null;
+    _connectionSub = null;
+    if (_unavailable) {
+      return;
+    }
 
     try {
       await inboxRepository.ensureSeeded();
+      if (_unavailable) {
+        return;
+      }
       final LineStatusSnapshot lineStatus = await lineStatusRepository.fetch();
-      if (isClosed) {
+      if (_unavailable) {
         return;
       }
       emit(
@@ -44,30 +58,40 @@ class CarrierLineCubit({
         ),
       );
     } on Object catch (error) {
-      if (isClosed) {
+      if (_unavailable) {
         return;
       }
       emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
       return;
     }
 
+    if (_unavailable) {
+      return;
+    }
+
     _inboxSub = inboxRepository.watchAll().listen(
       (items) {
-        if (isClosed) {
+        if (_unavailable) {
           return;
         }
         emit(state.copyWith(isLoading: false, inbox: items, clearError: true));
       },
       onError: (Object error) {
-        if (isClosed) {
+        if (_unavailable) {
           return;
         }
         emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
       },
     );
 
+    if (_unavailable) {
+      await _inboxSub?.cancel();
+      _inboxSub = null;
+      return;
+    }
+
     _connectionSub = realtimeClient.connectionStates.listen((status) {
-      if (isClosed) {
+      if (_unavailable) {
         return;
       }
       emit(
@@ -78,6 +102,13 @@ class CarrierLineCubit({
         ),
       );
     });
+
+    if (_unavailable) {
+      await _inboxSub?.cancel();
+      await _connectionSub?.cancel();
+      _inboxSub = null;
+      _connectionSub = null;
+    }
   }
 
   Future<void> connectRealtime() => realtimeClient.connect();
@@ -87,11 +118,11 @@ class CarrierLineCubit({
   Future<void> markRead(String id) async {
     try {
       await inboxRepository.markRead(id);
-      if (!isClosed) {
+      if (!_unavailable) {
         emit(state.copyWith(clearError: true));
       }
     } on Object catch (error) {
-      if (isClosed) {
+      if (_unavailable) {
         return;
       }
       emit(state.copyWith(errorMessage: error.toString()));
@@ -100,8 +131,11 @@ class CarrierLineCubit({
 
   @override
   Future<void> close() async {
+    _isClosing = true;
     await _inboxSub?.cancel();
     await _connectionSub?.cancel();
+    _inboxSub = null;
+    _connectionSub = null;
     await realtimeClient.dispose();
     await super.close();
   }

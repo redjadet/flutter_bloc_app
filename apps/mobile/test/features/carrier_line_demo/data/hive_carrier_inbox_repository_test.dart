@@ -95,5 +95,31 @@ void main() {
         expect(box.get('seeded'), isTrue);
       },
     );
+
+    test(
+      'acceptance: partial seed (items without marker) preserves rows',
+      () async {
+        final Box<dynamic> box = await repository.getBox();
+        await box.put('items', <Object?>[
+          <String, Object?>{
+            'id': 'partial-kept',
+            'kind': 'call',
+            'peerLabel': 'Saved Peer',
+            'preview': 'Persisted before marker',
+            'occurredAtMs': DateTime.utc(2026, 3, 1).millisecondsSinceEpoch,
+            'isUnread': true,
+          },
+        ]);
+        expect(box.get('seeded'), isNull);
+
+        await repository.ensureSeeded();
+        final List<CarrierInboxItem> after = await repository.fetchAll();
+        expect(after.map((CarrierInboxItem row) => row.id), <String>[
+          'partial-kept',
+        ]);
+        expect(after.single.isUnread, isTrue);
+        expect(box.get('seeded'), isTrue);
+      },
+    );
   });
 }

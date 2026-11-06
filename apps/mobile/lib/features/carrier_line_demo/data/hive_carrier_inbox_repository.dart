@@ -81,12 +81,20 @@ class HiveCarrierInboxRepository extends HiveRepositoryBase
 
   /// Seeds once. Empty after a prior seed (or parse-skipped rows) does **not**
   /// reseed — avoids destructive wipe/reseed on malformed payloads.
+  ///
+  /// If items were persisted but the seed marker write was interrupted, keep
+  /// those rows and only complete the marker (do not replace with fixtures).
   @override
   Future<void> ensureSeeded() => StorageGuard.run<void>(
     logContext: 'HiveCarrierInboxRepository.ensureSeeded',
     action: () => runWithBox((box) async {
       final bool alreadySeeded = box.get(_keySeeded) == true;
       if (alreadySeeded) {
+        return;
+      }
+      final List<CarrierInboxItem> existing = _loadFromBox(box);
+      if (existing.isNotEmpty) {
+        await box.put(_keySeeded, true);
         return;
       }
       final DateTime now = DateTime.now().toUtc();
