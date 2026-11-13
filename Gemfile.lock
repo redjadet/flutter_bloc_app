@@ -107,7 +107,7 @@ GEM
     erb (6.0.7)
     excon (1.5.0)
       logger
-    faraday (2.15.0)
+    faraday (2.15.1)
       faraday-net_http (>= 2.0, < 3.6)
       json
       logger
@@ -263,7 +263,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  faraday (>= 2.15.0)
+  faraday (>= 2.15.1)
   fastlane!
   jwt (~> 3.3)
 
