@@ -101,7 +101,7 @@ void registerIntegrationFlow({
       try {
         await body(tester);
       } finally {
-        await _postTestCleanupPumps(tester);
+        await postTestCleanupPumps(tester);
       }
     });
   });
@@ -251,7 +251,7 @@ Future<void> restartTestApp(
   await launchTestApp(tester, requireAuth: requireAuth);
 }
 
-Future<void> _postTestCleanupPumps(WidgetTester tester) async {
+Future<void> postTestCleanupPumps(WidgetTester tester) async {
   // Keep cleanup lightweight. Avoid unmounting the whole widget tree here since
   // the integration device runner manages app lifecycle (install/launch/kill).
   try {
