@@ -1,5 +1,5 @@
 // Split helper extension owns UI callbacks and State.setState for this dialog.
-// ignore_for_file: avoid_positional_boolean_parameters, invalid_use_of_protected_member
+// ignore_for_file: invalid_use_of_protected_member
 
 part of 'iot_demo_add_device_dialog.dart';
 

@@ -53,6 +53,10 @@ void main() {
     try {
       await body();
     } finally {
+      // Drain pending frame callbacks before DI teardown (Flutter 3.47+ system-font
+      // relayout can otherwise trip "animation still running" after dispose).
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
       await postTestCleanupPumps(tester);
     }
   }

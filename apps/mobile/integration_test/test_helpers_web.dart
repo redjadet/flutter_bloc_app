@@ -97,13 +97,13 @@ Future<void> overrideCounterRepository() async {
 
 Future<void> overrideNetworkAndSync() async {
   if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
-    getIt.unregister<BackgroundSyncCoordinator>();
+    await getIt.unregister<BackgroundSyncCoordinator>();
   }
   if (getIt.isRegistered<PendingSyncRepository>()) {
-    getIt.unregister<PendingSyncRepository>();
+    await getIt.unregister<PendingSyncRepository>();
   }
   if (getIt.isRegistered<NetworkStatusService>()) {
-    getIt.unregister<NetworkStatusService>();
+    await getIt.unregister<NetworkStatusService>();
   }
 
   getIt
