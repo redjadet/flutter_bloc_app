@@ -91,7 +91,19 @@ class _IotDemoAddDeviceDialogBodyState
         _selectedType == IotDeviceType.sensor;
 
     return useCupertino
-        ? buildCupertinoDialog(context, l10n, cancelLabel, okLabel, hasValue)
-        : buildMaterialDialog(context, l10n, cancelLabel, okLabel, hasValue);
+        ? buildCupertinoDialog(
+            context,
+            l10n,
+            cancelLabel,
+            okLabel,
+            hasValue: hasValue,
+          )
+        : buildMaterialDialog(
+            context,
+            l10n,
+            cancelLabel,
+            okLabel,
+            hasValue: hasValue,
+          );
   }
 }

@@ -8,9 +8,9 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
     BuildContext context,
     AppLocalizations l10n,
     String cancelLabel,
-    String okLabel,
-    bool hasValue,
-  ) => AlertDialog(
+    String okLabel, {
+    required bool hasValue,
+  }) => AlertDialog(
     title: Text(l10n.iotDemoAddDevice),
     content: SingleChildScrollView(
       child: Column(
@@ -98,9 +98,9 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
     BuildContext context,
     AppLocalizations l10n,
     String cancelLabel,
-    String okLabel,
-    bool hasValue,
-  ) => CupertinoAlertDialog(
+    String okLabel, {
+    required bool hasValue,
+  }) => CupertinoAlertDialog(
     title: Text(l10n.iotDemoAddDevice),
     content: Builder(
       builder: (_) => Material(
