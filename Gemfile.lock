@@ -178,7 +178,7 @@ GEM
       reline (>= 0.4.2)
     jmespath (1.6.2)
     json (2.21.2)
-    jwt (3.3.0)
+    jwt (3.3.1)
       base64
     logger (1.7.0)
     mini_magick (4.13.2)
@@ -265,7 +265,7 @@ PLATFORMS
 DEPENDENCIES
   faraday (>= 2.15.0)
   fastlane!
-  jwt (~> 3.3)
+  jwt (~> 3.3, >= 3.3.1)
 
 BUNDLED WITH
    2.7.1
